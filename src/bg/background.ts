@@ -27,6 +27,9 @@ void (async function main() {
   IPC.setInstanceType(InstanceType.bg)
   Logs.setInstanceType(InstanceType.bg)
 
+  const ts = performance.now()
+  Logs.info('Init start')
+
   // Register globaly available actions
   IPC.registerActions({
     cacheTabsData: Tabs.cacheTabsData,
@@ -85,6 +88,8 @@ void (async function main() {
 
   // Update title preface on sidebar connection/disconnection
   IPC.onConnected(InstanceType.sidebar, winId => {
+    Logs.info('IPC.onConnected sidebar', winId)
+
     const tabs = Windows.byId[winId]?.tabs
     if (tabs) Tabs.initInternalPageScripts(tabs)
 
@@ -93,6 +98,8 @@ void (async function main() {
     }
   })
   IPC.onDisconnected(InstanceType.sidebar, winId => {
+    Logs.info('IPC.onDisconnected sidebar', winId)
+
     if (Windows.byId[winId]) {
       browser.windows.update(winId, { titlePreface: '' })
     }
@@ -107,6 +114,8 @@ void (async function main() {
   }
 
   initToolbarButton()
+
+  Logs.info(`Init end: ${performance.now() - ts}ms`)
 })()
 
 function initToolbarButton(): void {

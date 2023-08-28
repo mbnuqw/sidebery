@@ -31,6 +31,9 @@ async function main(): Promise<void> {
   IPC.setInstanceType(InstanceType.sidebar)
   Logs.setInstanceType(InstanceType.sidebar)
 
+  const ts = performance.now()
+  Logs.info('Init start')
+
   IPC.registerActions({
     reloadTab: Tabs.reloadTab,
     queryTab: Tabs.queryTab,
@@ -147,5 +150,7 @@ async function main(): Promise<void> {
       Search, Styles, Menu, Snapshots,
     }
   }
+
+  Logs.info(`Init end: ${performance.now() - ts}ms`)
 }
 main()

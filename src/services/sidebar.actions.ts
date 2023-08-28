@@ -64,6 +64,9 @@ export function registerHorizontalNavBarEl(el: HTMLElement): void {
 }
 
 export async function loadPanels(): Promise<void> {
+  const ts = performance.now()
+  Logs.info('Sidebar.loadPanels')
+
   const gettingActiveId = browser.sessions.getWindowValue<ID>(Windows.id, 'activePanelId')
   const gettingHiddenPanels = browser.sessions.getWindowValue<ID[]>(Windows.id, 'hiddenPanels')
   const gettingStorage = browser.storage.local.get<Stored>('sidebar')
@@ -123,6 +126,8 @@ export async function loadPanels(): Promise<void> {
   }
 
   Sidebar.ready = true
+
+  Logs.info(`Sidebar.loadPanels: Done: ${performance.now() - ts}ms`)
 }
 
 export async function loadNav(): Promise<void> {

@@ -114,6 +114,7 @@ export function closeWindowsPopup(): void {
 
 const lockedWindowsTabs: Record<ID, boolean | TabCache[]> = {}
 export function isWindowTabsLocked(id: ID): boolean | TabCache[] {
+  Logs.info('Windows.isWindowTabsLocked', id)
   return lockedWindowsTabs[id] ?? false
 }
 

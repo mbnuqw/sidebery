@@ -146,6 +146,9 @@ export async function waitForTabsReady(): Promise<void> {
 }
 
 export async function load(): Promise<void> {
+  const ts = performance.now()
+  Logs.info('Tabs.load')
+
   if (Tabs.shadowMode) Tabs.unloadShadowed()
 
   Tabs.setupTabsListeners()
@@ -196,6 +199,8 @@ export async function load(): Promise<void> {
   Tabs.ready = true
   waitingForTabs.forEach(cb => cb())
   waitingForTabs = []
+
+  Logs.info(`Tabs.load: Done: ${performance.now() - ts}ms`)
 }
 
 export function unload(): void {
@@ -241,6 +246,9 @@ export function unload(): void {
 
 async function restoreTabsState(): Promise<void> {
   if (!Sidebar.hasTabs) return
+
+  const ts = performance.now()
+  Logs.info('Tabs.restoreTabsState')
 
   const results = await Promise.allSettled([
     browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT }),
@@ -332,6 +340,8 @@ async function restoreTabsState(): Promise<void> {
   }
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
+
+  Logs.info(`Tabs.restoreTabsState: Done: ${performance.now() - ts}ms`)
 }
 
 function restoreTabsFromCache(
@@ -339,6 +349,8 @@ function restoreTabsFromCache(
   cache: Record<ID, TabCache>,
   lastPanel: Panel
 ): Tab[] {
+  Logs.info('Tabs.restoreTabsFromCache')
+
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
@@ -402,6 +414,8 @@ function restoreTabsFromSessionData(
   tabsData: (TabSessionData | undefined)[],
   lastPanel: Panel
 ): Tab[] {
+  Logs.info('Tabs.restoreTabsFromSessionData')
+
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
