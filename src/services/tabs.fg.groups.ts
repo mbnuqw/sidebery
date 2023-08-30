@@ -228,60 +228,54 @@ export function getGroupTab(tab?: Tab): Tab | undefined {
   }
 }
 
-let updateGroupTabTimeout: number | undefined
-export function resetUpdateGroupTabTimeout(): void {
-  clearTimeout(updateGroupTabTimeout)
+export function updateGroupTab(groupTab: Tab) {
+  const tabsCount = Tabs.list.length
+  const tabs: GroupedTabInfo[] = []
+  let subGroupLvl = null
+  let len = 0
+
+  for (let i = groupTab.index + 1; i < tabsCount; i++) {
+    const tab = Tabs.list[i]
+    if (tab.lvl <= groupTab.lvl) break
+    len++
+
+    if (subGroupLvl && tab.lvl > subGroupLvl) continue
+    else subGroupLvl = null
+    if (tab.isGroup) subGroupLvl = tab.lvl
+
+    tabs.push({
+      id: tab.id,
+      index: tab.index,
+      lvl: tab.lvl - groupTab.lvl - 1,
+      title: tab.customTitle ?? tab.title,
+      url: tab.url,
+      discarded: !!tab.discarded,
+      favIconUrl: tab.favIconUrl ?? '',
+    })
+  }
+
+  const msg: GroupMsg = {
+    index: groupTab.index,
+    parentId: groupTab.parentId,
+    tabs,
+    len,
+  }
+
+  const parentTab = Tabs.byId[groupTab.parentId]
+  if (parentTab && parentTab.isGroup) {
+    msg.parentId = parentTab.id
+  }
+
+  IPC.groupPage(groupTab.id, msg)
 }
-export function updateGroupTab(groupTab: Tab): void {
-  clearTimeout(updateGroupTabTimeout)
-  updateGroupTabTimeout = setTimeout(() => {
-    const tabsCount = Tabs.list.length
-    const tabs: GroupedTabInfo[] = []
-    let subGroupLvl = null
-    let len = 0
-
-    for (let i = groupTab.index + 1; i < tabsCount; i++) {
-      const tab = Tabs.list[i]
-      if (tab.lvl <= groupTab.lvl) break
-      len++
-
-      if (subGroupLvl && tab.lvl > subGroupLvl) continue
-      else subGroupLvl = null
-      if (tab.isGroup) subGroupLvl = tab.lvl
-
-      tabs.push({
-        id: tab.id,
-        index: tab.index,
-        lvl: tab.lvl - groupTab.lvl - 1,
-        title: tab.customTitle ?? tab.title,
-        url: tab.url,
-        discarded: !!tab.discarded,
-        favIconUrl: tab.favIconUrl ?? '',
-      })
-    }
-
-    const msg: GroupMsg = {
-      index: groupTab.index,
-      parentId: groupTab.parentId,
-      tabs,
-      len,
-    }
-
-    const parentTab = Tabs.byId[groupTab.parentId]
-    if (parentTab && parentTab.isGroup) {
-      msg.parentId = parentTab.id
-    }
-
-    IPC.groupPage(groupTab.id, msg)
-  }, 256)
-}
+const updateGroupTabDebounced = Utils.debounce(updateGroupTab)
 
 export function updateActiveGroupPage(): void {
   let activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return
   if (activeTab.isGroup) {
-    updateGroupTab(activeTab)
+    updateGroupTabDebounced(256, activeTab)
   }
 }
 

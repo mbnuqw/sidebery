@@ -253,6 +253,9 @@ export async function move(
     Tabs.autoDiscardFolded(dstParent)
   }
 
+  // Update group page
+  if (dstParent?.isGroup) Tabs.updateGroupTab(dstParent)
+
   tabs.forEach(t => Tabs.saveTabData(t.id))
   Tabs.cacheTabsData()
 
