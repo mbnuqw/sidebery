@@ -1528,6 +1528,32 @@ export function recalcBranchLen(id: ID): void {
   tab.reactive.branchLen = branchLen
 }
 
+export function autoDiscardFolded(rootTab: Tab) {
+  if (!Settings.state.discardFolded) return
+
+  if (Settings.state.discardFoldedDelay === 0) {
+    const childIds = Tabs.getBranch(rootTab, false).map(t => t.id)
+    if (!childIds.length) return
+
+    browser.tabs.discard(childIds)
+  } else {
+    let delayMS = Settings.state.discardFoldedDelay
+    if (Settings.state.discardFoldedDelayUnit === 'sec') delayMS *= 1000
+    if (Settings.state.discardFoldedDelayUnit === 'min') delayMS *= 60000
+
+    clearTimeout(rootTab.autoUnloadFoldedTimeout)
+    rootTab.autoUnloadFoldedTimeout = setTimeout(() => {
+      const parentTab = Tabs.byId[rootTab.id]
+      if (parentTab?.isParent && parentTab.folded) {
+        const childIds = Tabs.getBranch(rootTab, false).map(t => t.id)
+        if (!childIds.length) return
+
+        browser.tabs.discard(childIds)
+      }
+    }, delayMS)
+  }
+}
+
 /**
  * Hide children of tab
  */
@@ -1564,20 +1590,7 @@ export function foldTabsBranch(rootTabId: ID): void {
   Tabs.incrementScrollRetainer(panel, len)
 
   if (Settings.state.discardFolded) {
-    if (Settings.state.discardFoldedDelay === 0) {
-      browser.tabs.discard(toHide)
-    } else {
-      let delayMS = Settings.state.discardFoldedDelay
-      if (Settings.state.discardFoldedDelayUnit === 'sec') delayMS *= 1000
-      if (Settings.state.discardFoldedDelayUnit === 'min') delayMS *= 60000
-      clearTimeout(rootTab.autoUnloadFoldedTimeout)
-      rootTab.autoUnloadFoldedTimeout = setTimeout(() => {
-        const parentTab = Tabs.byId[rootTabId]
-        if (parentTab?.isParent && parentTab.folded) {
-          browser.tabs.discard(Tabs.getBranch(parentTab, false).map(t => t.id))
-        }
-      }, delayMS)
-    }
+    Tabs.autoDiscardFolded(rootTab)
   }
 
   if (hideFolded && toHide.length) {

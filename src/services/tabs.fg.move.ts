@@ -248,6 +248,11 @@ export async function move(
     })
   }
 
+  // Auto discard folded tabs
+  if (dstParent?.folded && Settings.state.discardFolded) {
+    Tabs.autoDiscardFolded(dstParent)
+  }
+
   tabs.forEach(t => Tabs.saveTabData(t.id))
   Tabs.cacheTabsData()
 
