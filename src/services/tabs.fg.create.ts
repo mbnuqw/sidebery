@@ -624,7 +624,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 
 interface IndexForNewTabConf {
   openerTabId?: ID
-  autoGroupped: boolean
+  autoGroupped?: boolean
   index: number
 }
 
