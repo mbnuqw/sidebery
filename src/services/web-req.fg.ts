@@ -24,6 +24,10 @@ function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockin
       const dst = { panelId: tab.panelId, containerId: tab.reopenInContainer }
       const item = { id: tab.id, url: info.url, active: tab.active, index: tab.index }
       delete tab.reopenInContainer
+      if (info.method == "POST") {
+        Logs.warn("onBeforeRequestHandler not reopening, POST.")
+        return {}
+      }
       Tabs.reopen([item], dst)
       return { cancel: true }
     }
