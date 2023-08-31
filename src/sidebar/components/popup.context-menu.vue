@@ -289,8 +289,11 @@ function selectOption(dir: number): void {
 function activateOption(opt?: MenuOption, altMode?: boolean): boolean | undefined {
   if (!opt) {
     if (state.selected < 0) return
-    const opts = state.tickActive ? tickAll.value : tackAll.value
+    let opts
+    if (state.sub) opts = state.sub.opts
+    else opts = state.tickActive ? tickAll.value : tackAll.value
     opt = opts[state.selected]
+    if (!opt) return
   }
   if (opt.inactive) return false
   if (altMode && opt.onAltClick) opt.onAltClick()
