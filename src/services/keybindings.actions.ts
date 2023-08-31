@@ -540,24 +540,39 @@ function onKeyMenu(): void {
   }
   if (!Selection.isSet()) return
 
-  Sidebar.updateBounds()
-  if (!activePanel.bounds || !activePanel.bounds.length) return
-
+  let targetEl: HTMLElement | undefined | null
+  let targetType: MenuType
   const targetId = Selection.getFirst()
-  const targetSlot = activePanel.bounds.find(s => s.id === targetId)
-  if (!targetSlot) return
+  // Tabs
+  if (Selection.isTabs()) {
+    targetEl = document.getElementById(`tab${targetId}`)
+    targetType = MenuType.Tabs
+  }
+  // Bookmarks
+  else if (Selection.isBookmarks()) {
+    const actPanelId = Sidebar.activePanelId
+    targetEl = document.getElementById(`bookmark${actPanelId}${targetId}`)
+    targetType = MenuType.Bookmarks
+  }
+  // Nav item
+  else if (Selection.isNavItem()) {
+    const panel = Sidebar.panelsById[targetId]
+    if (Utils.isTabsPanel(panel)) targetType = MenuType.TabsPanel
+    else if (Utils.isBookmarksPanel(panel)) targetType = MenuType.BookmarksPanel
+    else if (Utils.isHistoryPanel(panel)) targetType = MenuType.Panel
+    else return
 
-  let target: Tab | Bookmark | undefined
-  const isTab = targetSlot.type === ItemBoundsType.Tab
-  const isBookmark = targetSlot.type === ItemBoundsType.Bookmarks
-  if (isTab) target = Tabs.byId[targetId]
-  if (isBookmark) target = Bookmarks.reactive.byId[targetId]
+    targetEl = document.getElementById(`nav${targetId}`)
+  }
+  // Unsuported targets
+  else {
+    return
+  }
 
-  if (!target || !activePanel.scrollEl) return
-  const offset = (activePanel.topOffset ?? 0) - activePanel.scrollEl.scrollTop
-  const start = targetSlot.start + offset
-  if (isTab) Menu.open(MenuType.Tabs, 16, start + 15, true)
-  if (isBookmark) Menu.open(MenuType.Bookmarks, 16, start + 15, true)
+  if (!targetEl) return
+
+  const br = targetEl.getBoundingClientRect()
+  Menu.open(targetType, br.left + 1, br.bottom + 1, true)
 }
 
 /**

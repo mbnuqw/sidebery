@@ -152,8 +152,8 @@
     "zh_TW": "激活選擇或折疊/展開活動選項卡分支或選定的書籤文件夾"
   },
   "KbMenu": {
-    "en": "Open menu for selected (or active) tab or bookmark",
-    "ru": "Открыть меню для выделенной (или активной) вкладки или закладки",
+    "en": "Open menu for selected (or active) tab, bookmark or panel",
+    "ru": "Открыть меню для выделенной (или активной) вкладки, закладки или панели",
     "de": "Menü öffnen",
     "zh_CN": "打开菜单",
     "zh_TW": "打開菜單"
