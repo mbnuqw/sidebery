@@ -2203,11 +2203,11 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '關閉',
   },
   'settings.auto_fold_tabs': {
-    en: 'Auto fold tabs',
-    ru: 'Автоматически сворачивать вкладки',
-    de: 'Tabs automatisch einklappen',
-    zh_CN: '自动折叠标签页',
-    zh_TW: '自動折疊標籤頁',
+    en: 'Auto fold tabs branch on expanding another branch',
+    ru: 'Автоматическое сворачивание ветки вкладок при открытии другой ветки',
+    de: 'Tabs werden beim Öffnen eines anderen Zweigs automatisch gefaltet', // Auto-translated
+    zh_CN: '打开另一个分支时自动折叠选项卡分支', // Auto-translated
+    zh_TW: '展開另一個分支時自動折疊選項卡分支', // Auto-translated
   },
   'settings.auto_fold_tabs_except': {
     en: 'Max count of open branches',
