@@ -16,7 +16,7 @@ function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockin
   const tab = Tabs.byId[info.tabId]
   if (!tab) return
 
-  if (handledReqId !== info.requestId && tab.reopenInContainer) {
+  if (handledReqId !== info.requestId && tab.reopenInContainer && info.method === 'GET') {
     handledReqId = info.requestId
 
     const panel = Sidebar.panelsById[tab.panelId]
@@ -24,10 +24,6 @@ function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockin
       const dst = { panelId: tab.panelId, containerId: tab.reopenInContainer }
       const item = { id: tab.id, url: info.url, active: tab.active, index: tab.index }
       delete tab.reopenInContainer
-      if (info.method == "POST") {
-        Logs.warn("onBeforeRequestHandler not reopening, POST.")
-        return {}
-      }
       Tabs.reopen([item], dst)
       return { cancel: true }
     }
