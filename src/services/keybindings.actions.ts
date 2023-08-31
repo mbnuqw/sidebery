@@ -533,10 +533,12 @@ function onKeyMenu(): void {
   const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
 
+  const activeTab = Tabs.byId[Tabs.activeId]
   const actPanelIsTabs = Utils.isTabsPanel(activePanel)
-  if (!Selection.isSet() && actPanelIsTabs) {
-    const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab && activeTab.panelId === activePanel.id) Selection.selectTab(Tabs.activeId)
+  const pinnedGlobally = activeTab?.pinned && Settings.state.pinnedTabsPosition !== 'panel'
+  if (!Selection.isSet() && activeTab) {
+    const panelIsOk = actPanelIsTabs && activeTab.panelId === activePanel.id
+    if (pinnedGlobally || panelIsOk) Selection.selectTab(Tabs.activeId)
   }
   if (!Selection.isSet()) return
 
