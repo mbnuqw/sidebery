@@ -16,14 +16,18 @@ function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockin
   const tab = Tabs.byId[info.tabId]
   if (!tab) return
 
-  if (handledReqId !== info.requestId && tab.reopenInContainer && info.method === 'GET') {
+  if (handledReqId !== info.requestId && tab.reopenInContainer) {
     handledReqId = info.requestId
 
     const panel = Sidebar.panelsById[tab.panelId]
-    if (Utils.isTabsPanel(panel) && panel.newTabCtx === tab.reopenInContainer) {
-      const dst = { panelId: tab.panelId, containerId: tab.reopenInContainer }
+    if (!Utils.isTabsPanel(panel)) return
+
+    const reopenInContainer = tab.reopenInContainer
+    delete tab.reopenInContainer
+
+    if (panel.newTabCtx === reopenInContainer && info.method === 'GET') {
+      const dst = { panelId: tab.panelId, containerId: reopenInContainer }
       const item = { id: tab.id, url: info.url, active: tab.active, index: tab.index }
-      delete tab.reopenInContainer
       Tabs.reopen([item], dst)
       return { cancel: true }
     }
