@@ -222,6 +222,7 @@ export async function createWithTabs(
     if (tab.cookieStoreId !== defaultContainerId) cachedData.ctx = tab.cookieStoreId
     if (srcInfo.customTitle) cachedData.customTitle = srcInfo.customTitle
     if (srcInfo.customColor) cachedData.customColor = srcInfo.customColor
+    if (srcInfo.pinned) cachedData.pin = true
     cache.push(cachedData)
 
     // Save tabs data

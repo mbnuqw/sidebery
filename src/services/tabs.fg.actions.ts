@@ -180,6 +180,8 @@ export async function load(): Promise<void> {
 
     if (t.isGroup) Tabs.linkGroupWithPinnedTab(t, Tabs.list)
 
+    Tabs.saveTabData(t.id)
+
     // Recalc branch length for folded (invisible) parent tabs
     if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
   })
@@ -509,7 +511,7 @@ function findCachedData(
 
       // Match
       const blindspot = tab.status === 'loading' && tab.url === 'about:blank'
-      if (tabData.url === tab.url || blindspot) {
+      if ((tabData.url === tab.url && !!tabData.pin === tab.pinned) || blindspot) {
         existedTabs[tab.id] = tabData
         equalityCounter++
       }
@@ -528,6 +530,17 @@ function findCachedData(
         }
         tabIndex--
       }
+    }
+
+    const mismatchedLen = tabs.length - equalityCounter
+    const mismatchedTh = tabs.length < 3 ? 0 : tabs.length < 10 ? 1 : 2
+
+    if (
+      (tabs.length <= winTabs.length && mismatchedLen > mismatchedTh) ||
+      (tabs.length > winTabs.length && mismatchedLen > mismatchedTh + tabs.length - winTabs.length)
+    ) {
+      Logs.warn('Tabs.findCachedData: mismatched:', mismatchedLen, tabs.length, winTabs.length)
+      continue
     }
 
     if (maxEqualityCounter <= equalityCounter) {
