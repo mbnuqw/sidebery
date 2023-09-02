@@ -1112,7 +1112,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (Search.rawValue && prevPanel) {
     if (
       Settings.state.searchPanelSwitch === 'any' ||
-      (Settings.state.searchPanelSwitch === 'same_type' && prevPanel.type === panel.type)
+      (Settings.state.searchPanelSwitch === 'same_type' && prevPanel.type === panel.type) ||
+      Search.rawValue.startsWith('. ')
     ) {
       if (loading) loading.then(() => Search.search())
       else Search.search()
