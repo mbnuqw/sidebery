@@ -53,7 +53,7 @@ function changeKeybinding(cmd: Command): void {
 
 function normalizeShortcut(s?: string): string {
   if (!s) return '---'
-  if (Info.reactive.os === 'mac') return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
+  if (Info.reactive.os === 'mac') return s.replace('Command', '⌘').replace('MacCtrl', '⌃')
   if (Info.reactive.os === 'win') return s.replace('Command', 'Win')
   if (Info.reactive.os === 'linux') return s.replace('Command', 'Super')
   return s
