@@ -2082,6 +2082,9 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     throw Logs.warn('Restoring panel from bookmarks: Root folder is empty')
   }
 
+  const existedNormalTabs = [...panel.tabs]
+  const existedPinnedTabs = [...panel.pinnedTabs]
+
   const idsMap: Record<ID, ID> = {}
   const reusedTabs: Record<ID, Tab> = {}
   const usedAsParent: Record<ID, true> = {}
@@ -2130,7 +2133,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     const isPinned = info.pinned
 
     // Find existed tab
-    const existedTab = (isPinned ? panel.pinnedTabs : panel.tabs).find(t => {
+    const existedTab = (isPinned ? existedPinnedTabs : existedNormalTabs).find(t => {
       const sameURL = t.url === rawUrl || t.url === info.url
       return sameURL && t.title === info.title && !reusedTabs[t.id]
     })
