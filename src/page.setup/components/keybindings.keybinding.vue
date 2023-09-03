@@ -147,6 +147,8 @@ function onKBKey(e: KeyboardEvent, cmd: Command): void {
     e.key === 'Right'
   ) {
     keys.push(e.key)
+  } else if (e.code.startsWith('Digit')) {
+    keys.push(e.code.slice(5))
   }
 
   const shortcut = keys.join('+')
