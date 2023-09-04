@@ -12,7 +12,7 @@
 
   section
     h2 {{translate('settings.kb_switching_panel')}}
-    span.header-shadowd
+    span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.next_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.prev_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_0")
@@ -28,7 +28,7 @@
 
   section
     h2 {{translate('settings.kb_scroll_active_panel')}}
-    span.header-shadowd
+    span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.scroll_to_active_panel_top")
     KeybindingField(:keybinding="Keybindings.reactive.byName.scroll_to_active_panel_bottom")
 
@@ -94,7 +94,7 @@
 
   section
     h2 {{translate('settings.kb_active_tabs_history')}}
-    span.header-shadowd
+    span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.activate_prev_active_tab_c")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate_prev_active_tab")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate_next_active_tab")
@@ -103,7 +103,7 @@
 
   section
     h2 {{translate('settings.kb_switching_tab')}}
-    span.header-shadowd
+    span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.switch_to_next_tab")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_prev_tab")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_parent_tab")
@@ -131,7 +131,7 @@
 
   section
     h2 {{translate('settings.kb_move_tabs')}}
-    span.header-shadowd
+    span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.move_tab_to_active")
     KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_up")
     KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_down")
