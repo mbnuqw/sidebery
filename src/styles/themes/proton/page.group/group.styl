@@ -48,18 +48,60 @@ body input
   resize: none
   z-index: 1
 
+.title-box
+  position: relative
+  width: 100%
+  max-width: var(--max-width)
+  margin: 20px 0 24px
+body[data-pin="true"] .title-box
+  display: none
+
 .title
   position: relative
   display: block
-  width: 100%
-  max-width: var(--max-width)
+  width: calc(100% - 16px)
   font-size: 2.5rem
   font-weight: 700
   text-align: center
   color: var(--toolbar-fg)
-  margin: 20px 0 24px
-body[data-pin="true"] .title
-  display: none
+  margin: 0
+  padding: 0 8px
+  z-index: 1
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: 6px
+    background-color: var(--toolbar-fg)
+    opacity: 1
+
+.title-highlight
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: 6px
+    background-color: var(--toolbar-fg)
+    opacity: .05
+  &:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: 6px
+    box-shadow: 0 0 0 1px var(--toolbar-fg)
+    opacity: .12
+.title-box:hover .title-highlight
+.title-box .title:focus + .title-highlight
+  opacity: 1
 
 .disconnected-warn
   position: absolute
