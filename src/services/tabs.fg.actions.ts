@@ -814,10 +814,13 @@ let switchTabPause: number | undefined
  */
 export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned?: boolean): void {
   if (switchTabPause) return
-  switchTabPause = setTimeout(() => {
-    clearTimeout(switchTabPause)
-    switchTabPause = undefined
-  }, 50)
+  const delay = Settings.state.tabSwitchDelay ?? 0
+  if (delay > 0) {
+    switchTabPause = setTimeout(() => {
+      clearTimeout(switchTabPause)
+      switchTabPause = undefined
+    }, delay)
+  }
 
   const pinnedAndPanel = Settings.state.pinnedTabsPosition === 'panel' || (globaly && cycle)
   const visibleOnly = Settings.state.scrollThroughVisibleTabs

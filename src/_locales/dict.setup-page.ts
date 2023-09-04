@@ -1830,6 +1830,11 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   //   ru: 'Предварительная прогрузка вкладки при наведении мыши',
   //   de: 'Tab-Inhalte beim Bewegen der Maus vorladen (Tab-Aufwärmen)',
   // },
+  'settings.tabs_switch_delay': {
+    en: 'Min delay between tabs switching (ms)',
+    ru: 'Минимальная задержка между переключениями вкладок (мс)',
+    de: 'Mindestverzögerung beim Wechsel zwischen Tabs (ms)',
+  },
   'settings.select_active_tab_first': {
     en: 'Select the active tab first',
     ru: 'Выделять сначала активную вкладку',

@@ -83,6 +83,7 @@ export interface SettingsState {
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
   newTabCtxReopen: boolean
   tabWarmupOnHover: boolean
+  tabSwitchDelay: number
 
   // New tab position
   moveNewTabPin: (typeof SETTINGS_OPTIONS.moveNewTabPin)[number]

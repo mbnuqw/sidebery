@@ -84,6 +84,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsUrlInTooltip: 'full',
   newTabCtxReopen: false,
   tabWarmupOnHover: true,
+  tabSwitchDelay: 0,
 
   // New tab position
   moveNewTabPin: 'start',

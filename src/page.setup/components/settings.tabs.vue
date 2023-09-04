@@ -119,6 +119,11 @@ section(ref="el")
   //-   label="settings.tab_warmup_on_hover"
   //-   v-model:value="Settings.state.tabWarmupOnHover"
   //-   @update:value="Settings.saveDebounced(150)")
+  NumField.-inline(
+    label="settings.tabs_switch_delay"
+    v-model:value="Settings.state.tabSwitchDelay"
+    :or="0"
+    @update:value="Settings.saveDebounced(500)")
 
   .wrapper
     .sub-title: .text {{translate('settings.new_tab_position')}}
