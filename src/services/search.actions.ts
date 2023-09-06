@@ -169,11 +169,11 @@ export function bookmarks() {
 
     if (!Utils.isBookmarksPanel(actPanel)) {
       searchPrevPanelId = actPanel.id
-      Sidebar.activatePanel(firstPanel.id)
+      Sidebar.activatePanel(firstPanel.id, true, true)
     } else if (nextPanel) {
-      Sidebar.activatePanel(nextPanel.id)
+      Sidebar.activatePanel(nextPanel.id, true, true)
     } else if (searchPrevPanelId !== undefined) {
-      Sidebar.activatePanel(searchPrevPanelId)
+      Sidebar.activatePanel(searchPrevPanelId, true, true)
       searchPrevPanelId = undefined
     }
   }
@@ -198,9 +198,9 @@ export function history() {
   else if (Sidebar.hasHistory) {
     if (!Utils.isHistoryPanel(actPanel)) {
       searchPrevPanelId = actPanel.id
-      Sidebar.activatePanel('history')
+      Sidebar.activatePanel('history', true, true)
     } else if (searchPrevPanelId !== undefined) {
-      Sidebar.activatePanel(searchPrevPanelId)
+      Sidebar.activatePanel(searchPrevPanelId, true, true)
       searchPrevPanelId = undefined
     }
   }

@@ -1092,7 +1092,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   else turnOffBeforeRequestHandler()
 }
 
-export function activatePanel(panelId: ID, loadPanels = true): void {
+export function activatePanel(panelId: ID, loadPanels = true, keepSearching?: boolean): void {
   if (Sidebar.activePanelId === panelId) return
 
   const prevPanel = Sidebar.panelsById[Sidebar.activePanelId]
@@ -1111,6 +1111,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
 
   if (Search.rawValue && prevPanel) {
     if (
+      keepSearching ||
       Settings.state.searchPanelSwitch === 'any' ||
       (Settings.state.searchPanelSwitch === 'same_type' && prevPanel.type === panel.type) ||
       Search.rawValue.startsWith('. ')
