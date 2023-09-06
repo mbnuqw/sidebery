@@ -388,6 +388,12 @@ function onKeySelect(dir: number): void {
     return
   }
 
+  if (Search.rawValue) {
+    if (dir > 0) Search.next()
+    else Search.prev()
+    return
+  }
+
   const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
 
   if (Utils.isTabsPanel(activePanel)) {
