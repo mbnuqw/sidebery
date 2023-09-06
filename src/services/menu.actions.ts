@@ -211,15 +211,22 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
   }
 }
 
-function createOption(optName: string): MenuOption | MenuOption[] | undefined {
+function createOption(
+  optName: string,
+  prevOpt: MenuOption | undefined
+): MenuOption | MenuOption[] | undefined {
   const gen = menuOptions[optName]
   if (gen) return gen()
-  else if (optName.startsWith('separator')) return { type: 'separator' }
+  else if (optName.startsWith('separator')) {
+    if (prevOpt?.type === 'separator') return
+    return { type: 'separator' }
+  }
 }
 
 function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[] {
   let blocks: MenuBlock[] = []
   let block: MenuBlock | undefined
+  let prevOpt: MenuOption | undefined
   for (const optConf of config) {
     // Create plain list block
     if (typeof optConf === 'string') {
@@ -227,12 +234,19 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
         block = { type: 'list', opts: [] }
         blocks.push(block)
       }
-      const opt = createOption(optConf)
-      if (opt) block.opts = block.opts.concat(opt)
+      const opt = createOption(optConf, prevOpt)
+      if (opt) {
+        block.opts = block.opts.concat(opt)
+        prevOpt = block.opts[block.opts.length - 1]
+      }
     } else {
       const opts = optConf.opts.reduce<MenuOption[]>((a, subOpt) => {
-        const opt = createOption(subOpt)
-        if (opt) return a.concat(opt)
+        const opt = createOption(subOpt, prevOpt)
+        if (opt) {
+          const aOpts = a.concat(opt)
+          prevOpt = aOpts[aOpts.length - 1]
+          return aOpts
+        }
         return a
       }, [])
 
