@@ -366,6 +366,9 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_rm_branch',
       onClick: () => Tabs.removeBranches(Selection.get()),
     }
+    const firstTab = Tabs.byId[Selection.getFirst()]
+    if (!firstTab) return
+    if (firstTab.pinned) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
