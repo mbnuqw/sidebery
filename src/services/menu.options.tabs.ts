@@ -354,10 +354,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_close',
       onClick: () => Tabs.removeTabs(Selection.get()),
     }
-    const minCount = Settings.state.ctxMenuRenderInact ? 1 : 2
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
-    if (Selection.getLength() < minCount && !firstTab.pinned) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
