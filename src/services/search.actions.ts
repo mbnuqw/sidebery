@@ -39,6 +39,11 @@ export function onOutsideSearchExit(): void {
 
   if (Sidebar.subPanelActive && subPanelOpenBySearch) Sidebar.closeSubPanel()
 
+  if (searchPrevPanelId !== undefined) {
+    Sidebar.activatePanel(searchPrevPanelId, true, true)
+    searchPrevPanelId = undefined
+  }
+
   const sidebarFocused = document.hasFocus()
   if (!sidebarFocused) Search.close()
   else if (inputEl && inputEl !== document.activeElement) Search.reactive.barIsActive = false
@@ -368,6 +373,10 @@ export function reset(panel?: Panel): void {
 }
 
 export function stop(): void {
+  if (searchPrevPanelId !== undefined) {
+    Sidebar.activatePanel(searchPrevPanelId, true, true)
+    searchPrevPanelId = undefined
+  }
   if (Settings.state.searchBarMode === 'dynamic') Search.hideBar()
   Search.reactive.rawValue = Search.rawValue = ''
   Search.search('')
