@@ -122,7 +122,8 @@ export function removeOtherTabs(tabIds?: ID[]): void {
   removeTabs(toRm)
 }
 
-const RECENTLY_REMOVED_LIMIT_MS = 30 * 60 * 1000
+const RECENTLY_REMOVED_LIMIT_MIN = 100
+const RECENTLY_REMOVED_LIMIT_MAX = 150
 export function rememberRemoved(tabs: Tab[]) {
   let minLvl = 0
   let parent
@@ -174,11 +175,8 @@ export function rememberRemoved(tabs: Tab[]) {
   }
 
   // Limit recentlyRemoved list
-  const limitIndex = Tabs.recentlyRemoved.findIndex(t => {
-    return timestamp - t.time > RECENTLY_REMOVED_LIMIT_MS
-  })
-  if (limitIndex !== -1) {
-    Tabs.recentlyRemoved = Tabs.recentlyRemoved.slice(0, limitIndex)
+  if (Tabs.recentlyRemoved.length > RECENTLY_REMOVED_LIMIT_MAX) {
+    Tabs.recentlyRemoved = Tabs.recentlyRemoved.slice(0, RECENTLY_REMOVED_LIMIT_MIN)
   }
 
   Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
