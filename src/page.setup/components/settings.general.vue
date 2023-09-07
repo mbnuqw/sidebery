@@ -78,7 +78,7 @@ async function calcStorageInfo(): Promise<void> {
 }
 
 async function toggleSelWinScreenshots(): Promise<void> {
-  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+  if (!Settings.state.selWinScreenshots && !Permissions.reactive.webData) {
     const result = await Permissions.request('<all_urls>')
     if (!result) return
   }
