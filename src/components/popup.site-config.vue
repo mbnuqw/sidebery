@@ -25,7 +25,8 @@
       v-model:value="reopenInContainerId"
       :opts="availableContainerOpts"
       :inline="false"
-      :folded="true")
+      :folded="true"
+      @update:value="onReopenContainerUpd")
     .space
     SelectField.-no-separator(
       label="popup.url_rules.move_label"
@@ -59,6 +60,7 @@ import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups'
 import { Tabs } from 'src/services/tabs.fg'
 import { Windows } from 'src/services/windows'
+import { Permissions } from 'src/services/permissions'
 
 interface Option {
   value: string
@@ -171,6 +173,14 @@ function init() {
   matchOptions.value = options.reverse()
 
   findExistedRules()
+}
+
+async function onReopenContainerUpd(value: string) {
+  if (value !== 'none' && !Permissions.reactive.webData) {
+    reopenInContainerId.value = 'none'
+    const result = await Permissions.request('<all_urls>')
+    if (result) reopenInContainerId.value = value
+  }
 }
 
 let foundReopenRule: FindReopenRuleResult | undefined
