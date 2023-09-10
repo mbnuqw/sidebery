@@ -159,7 +159,7 @@ export function updateReqHandlers(): void {
 
     // Reopen rules
     if (ctr.reopenRulesActive) {
-      const ctrExclude = excludeHostsRules[ctr.id]
+      let ctrExclude = excludeHostsRules[ctr.id]
 
       for (const rule of ctr.reopenRules) {
         if (!rule.active) continue
@@ -180,7 +180,10 @@ export function updateReqHandlers(): void {
           includeHostsRules.push({ ctx: ctr.id, value: urlMatchRe ?? urlMatchStr })
         } else {
           if (ctrExclude) ctrExclude.push(urlMatchRe ?? urlMatchStr)
-          else excludeHostsRules[ctr.id] = [urlMatchRe ?? urlMatchStr]
+          else {
+            ctrExclude = [urlMatchRe ?? urlMatchStr]
+            excludeHostsRules[ctr.id] = ctrExclude
+          }
         }
       }
     }
