@@ -48,6 +48,7 @@ import { CONTAINER_ID, DOMAIN_RE, NEWID } from 'src/defaults'
 import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
+import * as IPC from 'src/services/ipc'
 import { Windows } from 'src/services/windows'
 import { translate } from 'src/dict'
 import { DnD } from 'src/services/drag-and-drop'
@@ -337,11 +338,17 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
       containerId: targetContainerId,
       panelId: props.panel.id,
     }
+
+    const idsMap: Record<ID, ID> = {}
+    IPC.bg('disableAutoReopening', targetContainerId, 1000)
+
     try {
-      await Tabs.reopen(toReopen, dst)
+      await Tabs.reopen(toReopen, dst, idsMap)
     } catch (err) {
       Logs.err('NewTabBar: Cannot reopen tabs', err)
     }
+
+    IPC.bg('enableAutoReopening', Object.values(idsMap))
   }
 }
 
