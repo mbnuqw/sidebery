@@ -40,6 +40,9 @@ export interface SettingsState {
   // Group page
   groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]
 
+  // Containers
+  containersSortByName: boolean
+
   // Drag and drop
   dndTabAct: boolean
   dndTabActDelay: number

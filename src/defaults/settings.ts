@@ -37,6 +37,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Group page
   groupLayout: 'grid',
 
+  // Containers
+  containersSortByName: false,
+
   // Panels
   skipEmptyPanels: false,
 

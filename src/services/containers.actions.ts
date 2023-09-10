@@ -300,7 +300,8 @@ export function getContainerFor(url: string): string | undefined {
 }
 
 export function sortContainers(containers: Container[]): Container[] {
-  return containers.sort((a, b) => {
-    return a.name.localeCompare(b.name)
-  })
+  if (Settings.state.containersSortByName) {
+    return containers.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  return containers
 }

@@ -1202,6 +1202,13 @@ export const setupPageTranslations: Translations = {
     de: 'Umgebung',
     zh: '容器',
   },
+  'settings.containers_sort_by_name': {
+    en: 'Sort containers by name',
+    ru: 'Сортировать контейнеры по имени',
+    de: 'Sortieren Sie Container nach Namen',
+    zh_CN: '按名称对容器进行排序',
+    zh_TW: '按名稱對容器進行排序',
+  },
   'settings.contianer_remove_confirm_prefix': {
     en: 'Are you sure you want to delete "',
     ru: 'Вы действительно хотите удалить контейнер "',

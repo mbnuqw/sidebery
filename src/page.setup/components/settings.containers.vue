@@ -2,26 +2,31 @@
 section(ref="el")
   h2 {{translate('settings.containers_title')}}
   span.header-shadow
-  .card(
-    v-for="(container, id) in Containers.sortContainers(Object.values(Containers.reactive.byId))"
-    :key="container.id"
-    :data-color="container.color")
-    .card-body(@click="SetupPage.reactive.selectedContainer = container")
-      .card-icon: svg: use(:xlink:href="'#' + container.icon")
-      .card-name {{container.name}}
-    .card-badges
-      .card-badge(
-        v-if="container.reopenRules?.length"
-        :title="translate('container.manage_reopen_rules_label')"
-        :data-inactive="!container.reopenRulesActive"
-        @click="Popups.openTabReopenRulesPopup(container.id)")
-        svg: use(xlink:href="#icon_reload")
-        .len {{container.reopenRules.length}}
-    .card-ctrls
-      .card-ctrl.-rm(
-        @click="removeContainer(container)")
-        svg: use(xlink:href="#icon_remove")
-  .card-placeholder(v-if="!Object.keys(Containers.reactive.byId).length")
+  ToggleField(
+    label="settings.containers_sort_by_name"
+    v-model:value="Settings.state.containersSortByName"
+    @update:value="Settings.saveDebounced(150)")
+  .sub-fields
+    .card(
+      v-for="(container, id) in Containers.sortContainers(Object.values(Containers.reactive.byId))"
+      :key="container.id"
+      :data-color="container.color")
+      .card-body(@click="SetupPage.reactive.selectedContainer = container")
+        .card-icon: svg: use(:xlink:href="'#' + container.icon")
+        .card-name {{container.name}}
+      .card-badges
+        .card-badge(
+          v-if="container.reopenRules?.length"
+          :title="translate('container.manage_reopen_rules_label')"
+          :data-inactive="!container.reopenRulesActive"
+          @click="Popups.openTabReopenRulesPopup(container.id)")
+          svg: use(xlink:href="#icon_reload")
+          .len {{container.reopenRules.length}}
+      .card-ctrls
+        .card-ctrl.-rm(
+          @click="removeContainer(container)")
+          svg: use(xlink:href="#icon_remove")
+    .card-placeholder(v-if="!Object.keys(Containers.reactive.byId).length")
   .ctrls: .btn(@click="createContainer") {{translate('settings.containers_create_btn')}}
   Transition(name="popup")
     .popup-layer(
@@ -39,10 +44,12 @@ import { Container } from 'src/types'
 import { Containers } from 'src/services/containers'
 import { SetupPage } from 'src/services/setup-page'
 import ContainerConfig from './popup.container-config.vue'
+import ToggleField from '../../components/toggle-field.vue'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups'
 import { DEFAULT_CONTAINER } from 'src/defaults'
 import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
+import { Settings } from 'src/services/settings'
 
 const el = ref<HTMLElement | null>(null)
 
