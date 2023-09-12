@@ -474,11 +474,11 @@
     "zh_TW": "固定/取消固定選定（或活動）標籤頁"
   },
   "KbHideActPanel": {
-    "en": "Hide active panel",
-    "ru": "Скрыть активную панель",
-    "de": "Aktives Panel verstecken",
-    "zh_CN": "隐藏活动面板",
-    "zh_TW": "隱藏活動面板"
+    "en": "Hide selected (or active) panel",
+    "ru": "Скрыть выделенную (или активную) панель",
+    "de": "Ausgewähltes (oder aktives) Panel ausblenden",
+    "zh_CN": "隐藏选定（或活动）面板",
+    "zh_TW": "隱藏選定（或活動）面板"
   },
   "KbSearch": {
     "en": "Search",

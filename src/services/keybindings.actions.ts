@@ -190,7 +190,7 @@ function onCmd(name: string): void {
     onKeyScrollToTopBottom(1)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
-  else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.activePanelId)
+  else if (name === 'hide_act_panel') onKeyHidePanel()
 }
 
 function onKeyScrollToTopBottom(dir: 1 | -1) {
@@ -1123,6 +1123,13 @@ function onKeyPinTabs() {
 
   if (firstTab.pinned) Tabs.unpinTabs(ids)
   else Tabs.pinTabs(ids)
+}
+
+function onKeyHidePanel() {
+  let panelId = Selection.getFirst()
+  if (!Sidebar.panelsById[panelId]) panelId = Sidebar.activePanelId
+
+  Sidebar.hidePanel(panelId)
 }
 
 /**
