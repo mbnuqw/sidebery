@@ -7,11 +7,11 @@
     "zh_TW": "Sidebery"
   },
   "ExtDesc": {
-    "en": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more.",
-    "ru": "Управление вкладками и закладками в боковой панели.",
-    "de": "Erweiterung zum Verwalten von Tabs, Umgebungen (kontextbezogene Identitäten) und Lesezeichen in der Seitenleiste. Unterstützt flache und verschachtelte Tab-Layouts, umgebungsabhängige Regeln zum Ein-/Ausschließen, Proxykonfigurationen für jede Umgebung und vieles mehr.",
-    "zh_CN": "用于管理标签、容器（上下文身份）和侧边栏的书签的插件。支持横向、树形标签布局，每个容器的“include”/“exclude”设置，每个容器的代理配置等等。",
-    "zh_TW": "用於管理標籤、容器（上下文身份）和側邊欄的書籤的插件。支持橫向、樹形標籤佈局，每個容器的“include”/“exclude”設置，每個容器的代理配置等等。 "
+    "en": "Tabs tree, bookmarks and history in a highly configurable sidebar.",
+    "ru": "Древовидные вкладки, закладки и история на настраиваемой боковой панели.",
+    "de": "Baumstruktur der Tabs, Lesezeichen und Verlauf in einer hochgradig konfigurierbaren Seitenleiste.",
+    "zh_CN": "高度可配置的侧边栏中的选项卡、书签和历史记录的树结构。",
+    "zh_TW": "高度可配置的側邊欄中的選項卡、書籤和歷史記錄的樹結構。"
   },
   "ActionTitle": {
     "en": "Toggle Sidebery sidebar\nMiddle click: Open settings",

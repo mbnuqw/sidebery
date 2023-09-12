@@ -1,1 +1,1 @@
-Tabs tree and bookmarks in sidebar with advanced containers configuration.
+Tabs tree, bookmarks and history in a highly configurable sidebar.
