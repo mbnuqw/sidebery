@@ -1,18 +1,41 @@
-# Sidebery
+<div align="center">
+
+<img src="docs/assets/readme-logo.svg" height="96" alt="Sidebery">
+
+<br>
+<br>
 
 Firefox extension for managing tabs and bookmarks in sidebar.
 
+</div>
+
+<br>
+
+<div align="center">
+
+<img src="docs/assets/screenshot-003.png" width="20%" alt="screenshot-003" title="Firefox theme: Modern Light"><img src="docs/assets/screenshot-002.png" width="20%" alt="screenshot-002" title="Firefox theme: Arc Dark Theme"><img src="docs/assets/screenshot-005.png" width="20%" alt="screenshot-005" title="Firefox theme: Modern Light"><img src="docs/assets/screenshot-009.png" width="20%" alt="screenshot-009" title="Firefox theme: Vampyric Dark"><img src="docs/assets/screenshot-011.png" width="20%" alt="screenshot-011" title="Firefox theme: Modern Light">
+
+</div>
+
+<br>
+
+<div align="center">
+
+![Mozilla Add-on Users](https://img.shields.io/amo/users/%7B3c078156-979c-498b-8990-85f7987dd929%7D?label=Users)
+![Mozilla Add-on Downloads](https://img.shields.io/amo/dw/%7B3c078156-979c-498b-8990-85f7987dd929%7D?label=Downloads&color=%2311aa55)
+![Mozilla Add-on Stars](https://img.shields.io/amo/stars/%7B3c078156-979c-498b-8990-85f7987dd929%7D?label=Rating&color=%23aa5566)
+
+</div>
+
 ## Install
 
-**Stable** (4.10.2):
+**addons.mozilla.org** (v4.10.2):
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v4.10.2) |
 [Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
-[Install](https://addons.mozilla.org/firefox/downloads/file/3994928/sidebery-4.10.2.xpi)  
-**Beta** (v5.0.0rc5):
+[Install](https://addons.mozilla.org/firefox/downloads/file/3994928/sidebery-4.10.2.xpi) (reviewed by Mozilla)  
+**github.com** (v5.0.0rc5):
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0rc5) |
 [Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc5/sidebery-5.0.0rc5.xpi)
-
-> Note: Before installing the beta version make sure to save backup of the Add-on data (Sidebery settings / Help / Export).
 
 ## About
 
@@ -20,8 +43,8 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 
 - Vertical tabs panels with tree or flat layout
 - Bookmarks panels
-- (v5) History panel
-- (v5) Search in panels
+- History panel
+- Search in panels
 - Customizable context menu
 - Customizable styles
 - Snapshots (saved windows/panels/tabs)
