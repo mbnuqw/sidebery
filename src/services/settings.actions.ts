@@ -140,7 +140,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
 
-  if (newTabCtxReopen) updateWebReqHandlers()
+  if (Info.isSidebar && newTabCtxReopen) updateWebReqHandlers()
 
   if (tabsUrlInTooltip) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))

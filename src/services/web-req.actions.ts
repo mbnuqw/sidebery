@@ -264,6 +264,7 @@ function proxyReqHandler(info: browser.proxy.RequestDetails): browser.proxy.Prox
   // return promise with the process of reopening new tab.
   // This will block request from the original tab.
   if (
+    !info.incognito &&
     tab &&
     !tab.preventAutoReopening &&
     info.type === 'main_frame' &&

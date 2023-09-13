@@ -12,6 +12,7 @@ let handledReqId: string | undefined
 
 function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockingResponse {
   if (!Tabs.byId) return
+  if (info.incognito) return
 
   const tab = Tabs.byId[info.tabId]
   if (!tab) return
@@ -57,6 +58,8 @@ export function turnOffBeforeRequestHandler() {
 }
 
 export function updateWebReqHandlers() {
+  if (Windows.incognito) return
+
   let listen = false
 
   // Check panels config
