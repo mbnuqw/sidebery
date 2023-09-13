@@ -110,7 +110,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   autoFoldTabsExcept: 'none',
   autoExpandTabs: false,
   autoExpandTabsOnNew: false,
-  rmChildTabs: 'none',
+  rmChildTabs: 'folded',
   tabsLvlDots: true,
   discardFolded: false,
   discardFoldedDelay: 0,
