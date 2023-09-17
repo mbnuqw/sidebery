@@ -385,6 +385,9 @@ export function stop(): void {
 }
 
 export function check(str: string): boolean {
+  if (str === undefined) {
+    return false
+  }
   str = str.toLowerCase()
   return str.includes(query)
 }
