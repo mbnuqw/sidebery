@@ -185,7 +185,11 @@ export function rememberRemoved(tabs: Tab[]) {
 /**
  * Remove tabs
  */
-export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> {
+export async function removeTabs(
+  tabIds: ID[],
+  silent?: boolean,
+  removedParent?: Tab
+): Promise<void> {
   if (!tabIds || !tabIds.length) return
 
   const firstTabId = tabIds[0]
@@ -232,7 +236,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     }
   }
 
-  const count = tabs.length
+  let count = tabs.length
   const warn =
     Settings.state.warnOnMultiTabClose === 'any' ||
     (hasInvisibleTab && Settings.state.warnOnMultiTabClose === 'collapsed')
@@ -258,9 +262,12 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     t.invisible = true
     if (t.active) activeTab = t
   })
+
   if (tabs.length === 1) Sidebar.removeFromVisibleTabs(tabs[0].panelId, tabs[0].id)
   else Sidebar.recalcVisibleTabs(tabs[0]?.panelId ?? NOID)
+
   const tabsInfo = Tabs.getTabsInfo(toRemove, true)
+
   if (Tabs.removingTabs && Tabs.removingTabs.length) {
     Tabs.removingTabs = [...Tabs.removingTabs, ...toRemove]
   } else {
@@ -279,7 +286,16 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
 
   if (!silent && count > 1 && Settings.state.tabsRmUndoNote && !warn) {
-    const nTabs = count > 3 ? tabs.slice(0, 2) : tabs
+    if (removedParent) {
+      const parentInfo = Tabs.getTabInfo(removedParent.id, true)
+      if (parentInfo) {
+        parents[removedParent.id] = removedParent.parentId
+        tabsInfo.unshift(parentInfo)
+        count++
+      }
+    }
+
+    const nTabs = count > 3 ? tabsInfo.slice(0, 2) : tabsInfo
     let detailsList = nTabs.map(t => {
       return '- ' + t.title
     })

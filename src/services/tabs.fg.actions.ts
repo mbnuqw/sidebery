@@ -2358,6 +2358,27 @@ export function tabFlip() {
   if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
 }
 
+export function getTabInfo(id: ID, setPanelId?: boolean): ItemInfo | undefined {
+  const tab = Tabs.byId[id]
+  if (!tab) return
+
+  const info: ItemInfo = {
+    id,
+    url: tab.url,
+    parentId: tab.parentId,
+    title: tab.title,
+    active: tab.active,
+    index: tab.index,
+    pinned: tab.pinned,
+    container: tab.cookieStoreId,
+  }
+  if (tab.customTitle) info.customTitle = tab.customTitle
+  if (tab.customColor) info.customColor = tab.customColor
+  if (setPanelId) info.panelId = tab.panelId
+
+  return info
+}
+
 export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
   const items: ItemInfo[] = []
 

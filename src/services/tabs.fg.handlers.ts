@@ -981,7 +981,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
     // Remove child tabs
     if (Settings.state.rmChildTabs !== 'none' && toRemove.length) {
-      Tabs.removeTabs(toRemove)
+      Tabs.removeTabs(toRemove, false, tab)
     }
 
     // Show hidden native tabs
