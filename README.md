@@ -50,6 +50,19 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 - Snapshots (saved windows/panels/tabs)
 - ...and more
 
+## How to hide native (horizontal) tabs?
+
+Firefox doesn't allow addons to hide native tabs, so you have two options:
+
+- You know CSS and can maintain it after Firefox updates: [Use userChrome.css hack](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css)#completely-hide-native-tabs-strip)
+- Otherwise: [Use floorp](https://floorp.app/) ([github](https://github.com/Floorp-Projects/Floorp))
+  - Install Sidebery
+  - In Floorp settings set:
+    - Design >> Tab Bar Style >> Horizontal Tab Bar
+    - Design >> Tab Bar >> Hide tabs on Horizontal Tab Bar
+    - [To hide the sidebar header] Design >> Tab Bar Style >> Collapse Tree Style Tab
+    - [To auto-hide sidebar] Use "Lepton UI" and check its settings
+
 ## Build
 
 > Prerequisites: latest LTS Node.js version
