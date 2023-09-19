@@ -1,7 +1,4 @@
-# 🚧 Work In Progress 🚧
-
-
-# Sidebery's custom css snippets
+## General Info
 
 Styles editor can be found in:  
 `Sidebery settings` > `Styles editor` (in the navigation sidebar)  
@@ -18,8 +15,9 @@ To get currently available css-selectors use debugger:
     - Select "/group/group.html" for group page frame
   - Browse "Inspector" tab
 
+<br>
 
-### Tab Favicons on the Right
+## Tab Favicons on the Right
 
 ![Tabs favicons on the right](./assets/tabs-favs-right.png)
 
@@ -39,8 +37,9 @@ To get currently available css-selectors use debugger:
 }
 ```
 
+<br>
 
-### Tabs multiline titles
+## Tabs multiline titles
 
 ![Tabs multiline titles](./assets/tabs-multiline-titles.png)
 
@@ -50,7 +49,7 @@ To get currently available css-selectors use debugger:
 #root {
   --tabs-height: 36px !important;
   --tabs-title-padding: 8px;
-  --tabs-font-size: 12px;
+  --tabs-font-size: .8rem;
   --tabs-title-lines: 2;
 }
 
@@ -67,8 +66,9 @@ To get currently available css-selectors use debugger:
 }
 ```
 
+<br>
 
-### Vertical panel labels
+## Vertical panel labels
 
 ![Vertical panel labels](./assets/vert-nav-labels.png)
 
@@ -78,60 +78,59 @@ To get currently available css-selectors use debugger:
 
 ```css
 #root {
-  --nav-btn-width: 22px;
-  --name-font-size: 12px;
-  --count-font-size: 10px;
+  --nav-btn-width: 24px;
+  --nav-btn-height: 24px;
+  --name-font-size: .8rem;
+  --count-font-size: .65rem;
 }
 
-.NavigationBar .panel-btn {
+.NavigationBar .main-items .nav-item[data-class="panel"] {
   display: flex;
   flex-direction: column-reverse;
   padding: 6px 0;
   height: auto;
 }
 
-.NavigationBar .panels-box .panel-btn[data-type="add"] {
-  height: var(--nav-btn-width);
+.NavigationBar .main-items .nav-item[data-class="panel"] .badge {
+	top: 1px;
+  left: auto;
+  right: 1px;
 }
 
-.NavigationBar .panels-box .panel-btn:not([data-type="add"]) > svg,
-.NavigationBar .panels-box .panel-btn > img {
-  display: none;
+.NavigationBar .main-items .nav-item[data-class="panel"] .icon,
+.NavigationBar .main-items .nav-item[data-class="panel"] .bookmarks-badge-icon {
+	display: none;
 }
 
-.NavigationBar .panel-btn .update-badge {
-  top: 1px;
-  left: 1px;
+.NavigationBar .main-items .nav-item .bookmarks-badge-icon {
+	top: auto;
+	left: auto;
+	bottom: 3px;
+	right: 1px;
 }
 
-.NavigationBar .panel-btn .ok-badge,
-.NavigationBar .panel-btn .err-badge,
-.NavigationBar .panel-btn .progress-spinner {
-  display: none;
-}
-
-.NavigationBar .panel-btn .len {
+.NavigationBar .main-items .nav-item .len {
   position: relative;
   font-size: var(--count-font-size);
   writing-mode: sideways-lr;
   text-orientation: mixed;
   background-color: transparent;
   padding: 0;
-  margin: 0 2px 0 0;
+  margin: 2px 2px 1px 0;
   top: 0;
   right: 0;
-  color: var(--container-fg, var(--nav-btn-fg));
+	color: var(--container-fg, var(--nav-btn-fg));
 }
-.NavigationBar .panel-btn .len:before {
+.NavigationBar .main-items .nav-item .len:before {
   content: ": ";
   font-size: var(--name-font-size);
 }
 
-.NavigationBar .panel-btn .name {
+.NavigationBar .main-items .nav-item[data-class="panel"] .name-box {
   position: relative;
   display: block;
   padding: 0;
-  margin: 0 2px 0 0;
+  margin: 0 2px 0px 0;
   font-size: var(--name-font-size);
   color: var(--container-fg, var(--nav-btn-fg));
   writing-mode: sideways-lr;
