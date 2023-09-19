@@ -3,13 +3,12 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{3c078156-979c-498b-8990-85f7987dd929}",
-      "strict_min_version": "115.0",
-      "update_url": "https://raw.githubusercontent.com/mbnuqw/sidebery/v5/updates.json"
+      "strict_min_version": "115.0"
     }
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "5.0.0rc5",
+  "version": "5.0.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
