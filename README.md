@@ -55,7 +55,7 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 Firefox doesn't allow addons to hide native tabs, so you have two options:
 
 - You know CSS and can maintain it after Firefox updates: [Use userChrome.css hack](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css)#completely-hide-native-tabs-strip)
-- Otherwise: [Use floorp](https://floorp.app/) ([github](https://github.com/Floorp-Projects/Floorp))
+- Otherwise: [Use Floorp](https://floorp.app/) ([github](https://github.com/Floorp-Projects/Floorp))
   - Install Sidebery
   - In Floorp settings set:
     - Design >> Tab Bar Style >> Horizontal Tab Bar
