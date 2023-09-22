@@ -18,28 +18,28 @@
   justify-content: center
   align-items: center
   width: 100%
-  height: var(--nav-height)
+  height: var(--bottom-bar-height)
   background-color: var(--toolbar-bg)
 
 .BookmarksSubPanel .nav .up-btn
 .BookmarksSubPanel .nav .down-btn
   position: relative
   width: 50%
-  height: var(--nav-height)
+  height: var(--bottom-bar-height)
   flex-shrink: 0
   z-index: 1
   &:before
     content: ''
     position: absolute
     top: 2px
-    width: calc(var(--nav-height) - 4px)
+    width: calc(var(--bottom-bar-height) - 4px)
     height: calc(100% - 4px)
     background-color: var(--toolbar-fg)
     border-radius: 4px
     opacity: 0
   > svg
     position: absolute
-    top: calc(var(--nav-height) / 2 - 8px)
+    top: calc(var(--bottom-bar-height) / 2 - 8px)
     width: 16px
     height: 16px
     fill: var(--toolbar-fg)
@@ -64,20 +64,20 @@
       opacity: 0
 .BookmarksSubPanel .nav .down-btn
   > svg
-    right: calc(var(--nav-height) / 2 - 8px)
+    right: calc(var(--bottom-bar-height) / 2 - 8px)
   &:before
     right: 2px
 .BookmarksSubPanel .nav .up-btn
   > svg
-    left: calc(var(--nav-height) / 2 - 8px)
+    left: calc(var(--bottom-bar-height) / 2 - 8px)
     transform: rotateZ(90deg)
   &:before
     left: 2px
 
 .BookmarksSubPanel .nav .title-block
   position: absolute
-  width: calc(100% - var(--nav-height) * 2)
-  left: var(--nav-height)
+  width: calc(100% - var(--bottom-bar-height) * 2)
+  left: var(--bottom-bar-height)
   padding: 0 2px
   overflow: hidden
 
@@ -97,7 +97,7 @@
   flex-direction: column
   flex-grow: 1
   padding-top: var(--general-margin)
-  height: calc(100% - var(--nav-height))
+  height: calc(100% - var(--bottom-bar-height))
   width: 100%
   background-color: var(--frame-bg)
   overflow: hidden
