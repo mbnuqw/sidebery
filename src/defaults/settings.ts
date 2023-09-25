@@ -101,6 +101,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   pinnedTabsList: false,
   pinnedAutoGroup: false,
   pinnedNoUnload: false,
+  pinnedForcedDiscard: false,
 
   // Tabs tree
   tabsTree: true,
