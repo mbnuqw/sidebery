@@ -90,6 +90,7 @@
     span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.fold_branch")
     KeybindingField(:keybinding="Keybindings.reactive.byName.expand_branch")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.toggle_branch")
     KeybindingField(:keybinding="Keybindings.reactive.byName.fold_inact_branches")
 
   section

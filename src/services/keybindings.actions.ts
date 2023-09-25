@@ -141,6 +141,7 @@ function onCmd(name: string): void {
   else if (name === 'unload_all_tabs_in_inact_panels') onKeyUnloadAllTabsInInactPanels()
   else if (name === 'fold_branch') onKeyFoldBranch()
   else if (name === 'expand_branch') onKeyExpandBranch()
+  else if (name === 'toggle_branch') onKeyToggleBranch()
   else if (name === 'fold_inact_branches') onKeyFoldInactiveBranches()
   else if (name === 'activate_prev_active_tab_c') Tabs.tabFlip()
   else if (name === 'activate_prev_active_tab') {
@@ -636,6 +637,27 @@ function onKeyExpandBranch(): void {
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
       if (!bookmark || isExpanded) continue
       Bookmarks.expandBookmark(bookmarkId, activePanelId)
+    }
+  }
+}
+
+function onKeyToggleBranch(): void {
+  if (!Selection.isSet()) {
+    Tabs.toggleBranch(Tabs.activeId)
+  } else if (Selection.isTabs()) {
+    for (const tabId of Selection) {
+      const tab = Tabs.byId[tabId]
+      if (!tab || !tab.isParent) continue
+      Tabs.toggleBranch(tabId)
+    }
+  } else if (Selection.isBookmarks()) {
+    const activePanelId = Sidebar.activePanelId
+    for (const bookmarkId of Selection) {
+      const bookmark = Bookmarks.reactive.byId[bookmarkId]
+      if (!bookmark) continue
+      const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
+      if (isExpanded) Bookmarks.foldBookmark(bookmarkId, activePanelId)
+      else Bookmarks.expandBookmark(bookmarkId, activePanelId)
     }
   }
 }

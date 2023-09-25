@@ -183,6 +183,9 @@
     "expand_branch": {
       "description": "__MSG_KbExpandBranch__"
     },
+    "toggle_branch": {
+      "description": "__MSG_KbToggleBranch__"
+    },
     "fold_inact_branches": {
       "description": "__MSG_KbFoldInactBranches__"
     },
