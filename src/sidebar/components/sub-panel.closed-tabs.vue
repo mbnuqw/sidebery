@@ -61,7 +61,9 @@ onMounted(() => {
 function onTabMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   Mouse.setTarget('closedTab', tab.id)
 
-  if (e.button === 2) {
+  if (e.button === 1) {
+    e.preventDefault()
+  } else if (e.button === 2) {
     e.stopPropagation()
     e.preventDefault()
   }
