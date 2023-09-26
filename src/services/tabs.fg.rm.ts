@@ -397,15 +397,16 @@ let checkRemovedTabsTimeout: number | undefined
  */
 export function checkRemovedTabs(delay = 750): void {
   clearTimeout(checkRemovedTabsTimeout)
-  checkRemovedTabsTimeout = setTimeout(() => {
+  checkRemovedTabsTimeout = setTimeout(async () => {
     if (!Tabs.removingTabs || !Tabs.removingTabs.length) return
     const panelIds = new Set<ID>()
+    const checking: Promise<void>[] = []
 
     for (const tabId of Tabs.removingTabs) {
       const t = Tabs.byId[tabId]
       if (t) panelIds.add(t.panelId)
 
-      browser.tabs
+      const checkingTab = browser.tabs
         .get(tabId)
         .then(() => {
           const tab = Tabs.byId[tabId]
@@ -422,7 +423,11 @@ export function checkRemovedTabs(delay = 750): void {
         .catch(() => {
           // Tab already removed
         })
+
+      checking.push(checkingTab)
     }
+
+    await Promise.all(checking)
 
     for (const panelId of panelIds) {
       Sidebar.recalcVisibleTabs(panelId)
