@@ -1883,7 +1883,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh: '分',
   },
   'settings.tabs_second_click_act_prev': {
-    en: 'Activate previously active tab when clicking on the active tab (Tab flip',
+    en: 'Activate previously active tab when clicking on the active tab (Tab flip)',
     ru: 'Активировать ранее активную вкладку при нажатии на активную вкладку',
     de: 'Beim Klicken auf aktiven Tab Aktivierung umkehren',
     zh_CN: '单击活动标签页时向后激活',
