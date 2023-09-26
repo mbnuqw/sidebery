@@ -28,7 +28,8 @@
   .badge
   .audio(
     v-if="item.reactive.mediaState !== MediaState.Silent"
-    @mousedown="onAudioMouseDown($event, item)")
+    @mousedown="onAudioMouseDown($event, item)"
+    @mouseup.stop)
     svg.-audible: use(xlink:href="#icon_loud_badge")
     svg.-paused: use(xlink:href="#icon_pause_12")
     svg.-muted: use(xlink:href="#icon_mute_badge")
