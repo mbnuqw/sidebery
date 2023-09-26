@@ -214,6 +214,9 @@
     "zh_CN": "展开选定的分支",
     "zh_TW": "展開選定的分支"
   },
+  "KbToggleBranch": {
+    "en": "Toggle selected branch"
+  },
   "KbFoldInactBranches": {
     "en": "Fold inactive branches",
     "ru": "Свернуть неактивные ветви вкладок",
