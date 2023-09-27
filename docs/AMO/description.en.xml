@@ -57,29 +57,30 @@ Source code can be found here: <a href="https://github.com/mbnuqw/sidebery">http
 
 <strong>Permissions</strong>
 <ul>
-- Read and modify bookmarks - needed for bookmarking the tabs and bookmarks panel functionality.
-- Access recently closed tabs - needed for the "Undo close tab" function.
-- Access browser tabs - needed to get info and control tabs.
+- "Access recently closed tabs" - needed for the "Undo close tab" function.
+- "Access browser tabs" - needed to get info and control tabs.
+- "Store unlimited amount of client-side data" - needed to store favicons cache and snapshots.
 </ul>
 
 
 <strong>Optional permissions</strong>
 <ul>
-- Websites Data - Required for next features:
+- "Access your data for all websites" and "Control browser proxy settings" - Required for the next features:
 <ul>
 - Context menu option for cleaning cookies
 - Proxy and url rules of containers
 - Page-screenshots for the group page and windows selection panel
 - Changing the User-Agent per container
 </ul>
-- Hiding tabs - Required for next features:
+- "Hide and show browser tabs" - Required for the next features:
 <ul>
 - Hiding tabs on inactive panels
 - Hiding folded tabs
 </ul>
-- Clipboard write - Context menu option for copying urls of tabs and bookmarks
-- Web requests blocking - Changing the User-Agent per container
-- Control browser proxy settings - needed for proxy configuration per container and it can be used only with granted optional permission "Websites Data".
+- "Read and modify bookmarks" - needed for bookmarking the tabs and bookmarks panel functionality.
+- "Access browsing history" - for history panel functionality.
+- "Input data to the clipboard" - Context menu option for copying urls of tabs and bookmarks
+- "Download files and read and modify the browser’s download history" - Auto-export of snapshots.
 </ul>
 Note: You can deny these permissions at any time on the settings page.
 
