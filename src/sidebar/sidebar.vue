@@ -282,6 +282,12 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     // Sub-panel
     if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
   }
+
+  // Confirm popups
+  if (e.code === 'Enter') {
+    // Confirm popup
+    if (Popups.reactive.confirm?.ok) Popups.reactive.confirm.ok()
+  }
 }
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
