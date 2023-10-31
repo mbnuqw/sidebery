@@ -160,6 +160,10 @@ export async function move(
     return
   }
 
+  // Info about the moved tabs previous state:
+  const oneAfterAnother = tabs.every((tab, ix) => ix === 0 || tab.index === tabs[ix - 1].index + 1)
+  const srcIndex = tabs[0].index
+
   const ids = []
   let dstIndexIncluded = -1
   let prevIndex = 0
@@ -286,13 +290,10 @@ export async function move(
   }
 
   // Move tabs
-  const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
-  const canSkipMove =
-    tabs[0].index <= nativeDstIndex &&
-    nativeDstIndex <= tabs[tabs.length - 1].index &&
-    // all tabs go one after another:
-    tabs.every((tab, ix) => ix === 0 || tab.index === tabs[ix - 1].index + 1)
+  const samePosition = srcIndex === tabs[0].index
+  const canSkipMove = oneAfterAnother && samePosition
   if (!canSkipMove) {
+    const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
     await browser.tabs.move(ids, { windowId: Windows.id, index: nativeDstIndex }).catch(err => {
       Logs.err('Tabs.move: Cannot move native tabs', err)
     })
