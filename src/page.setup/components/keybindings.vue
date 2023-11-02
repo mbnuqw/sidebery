@@ -106,7 +106,9 @@
     h2 {{translate('settings.kb_switching_tab')}}
     span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.switch_to_next_tab")
+    .info {{translate('settings.kb_switch_act_note')}}
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_prev_tab")
+    .info {{translate('settings.kb_switch_act_note')}}
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_parent_tab")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_0")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_1")

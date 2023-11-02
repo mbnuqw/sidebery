@@ -3852,6 +3852,12 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '切换标签',
     zh_TW: '切換分頁',
   },
+  'settings.kb_switch_act_note': {
+    en: '- using mouse-wheel settings for tabs switching',
+    ru: '- используя настройки колесика мыши для переключения вкладок',
+    zh_CN: '- 使用鼠标滚轮切换设置决定：\n  - 切换范围（面板/全局）\n  - 切换时是否跳过/循环',
+    zh_TW: '- 依據滑鼠滾輪切換設定決定：\n  - 切換範圍（面板/全域）\n  - 切換時是否跳過/循環',
+  },
   'settings.kb_move_tabs': {
     en: 'Moving tabs',
     ru: 'Перемещение вкладок',

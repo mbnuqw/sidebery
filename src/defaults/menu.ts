@@ -9,7 +9,7 @@ export const TABS_MENU: MenuConf = [
   },
   {
     name: '%menu.tab.reopen_in_sub_menu_name',
-    opts: ['reopenInNewWin', 'reopenInWin', 'reopenInCtr', 'reopenInNewCtr'],
+    opts: ['reopenInNewWin', 'reopenInWin', 'separator-6', 'reopenInCtr', 'reopenInNewCtr'],
   },
   {
     name: '%menu.tab.colorize_',
