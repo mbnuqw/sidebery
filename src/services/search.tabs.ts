@@ -13,7 +13,9 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
   const samePanel = prevActivePanelId === activePanel.id
   prevActivePanelId = activePanel.id
 
-  if (activePanel.tabs.length) {
+  const combined = activePanel.tabs.concat(activePanel.pinnedTabs)
+
+  if (combined.length) {
     // Filter tabs
     if (value) {
       const prevValue = Search.prevValue
@@ -23,7 +25,7 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
       if (prevValue && moreSpecific && value.startsWith(prevValue) && samePanel) {
         tabs = activePanel.filteredTabs
       }
-      if (!tabs) tabs = activePanel.tabs
+      if (!tabs) tabs = combined
 
       const filtered: Tab[] = []
       const filteredIds: ID[] = []
@@ -43,9 +45,11 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
       activePanel.filteredTabs = filtered.concat(filteredInvisible)
       activePanel.reactive.filteredLen = activePanel.filteredTabs.length
       activePanel.reactive.visibleTabIds = filteredIds.concat(filteredInvisibleIds)
+      activePanel.reactive.pinnedTabIds = []
     } else {
       activePanel.filteredTabs = undefined
       activePanel.reactive.filteredLen = undefined
+      activePanel.reactive.pinnedTabIds = activePanel.pinnedTabs.map(t => t.id)
       Sidebar.recalcVisibleTabs(activePanel.id)
     }
 
