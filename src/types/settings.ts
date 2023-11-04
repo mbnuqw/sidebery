@@ -61,6 +61,8 @@ export interface SettingsState {
   searchPanelSwitch: (typeof SETTINGS_OPTIONS.searchPanelSwitch)[number]
   searchBookmarksShortcut: string
   searchHistoryShortcut: string
+  searchPinnedTabsFirst: boolean
+  searchAllPanelsAlways: boolean
 
   // Tabs
   warnOnMultiTabClose: (typeof SETTINGS_OPTIONS.warnOnMultiTabClose)[number]

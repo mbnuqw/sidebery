@@ -61,6 +61,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   searchPanelSwitch: 'same_type',
   searchBookmarksShortcut: '',
   searchHistoryShortcut: '',
+  searchPinnedTabsFirst: true,
+  searchAllPanelsAlways: true,
 
   // Tabs
   warnOnMultiTabClose: 'collapsed',

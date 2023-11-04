@@ -15,6 +15,14 @@ section(ref="el")
     :opts="Settings.getOpts('searchPanelSwitch')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.search.pinned_tabs_first"
+    v-model:value="Settings.state.searchPinnedTabsFirst"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.search.all_panels_always"
+    v-model:value="Settings.state.searchAllPanelsAlways"
+    @update:value="Settings.saveDebounced(150)")
   InfoField(
     label="settings.search.shortcuts"
     :value="translate('settings.search.shortcuts.note')")
@@ -37,6 +45,7 @@ import { Settings } from 'src/services/settings'
 import SelectField from '../../components/select-field.vue'
 import TextField from 'src/components/text-field.vue'
 import InfoField from 'src/components/info-field.vue'
+import ToggleField from 'src/components/toggle-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

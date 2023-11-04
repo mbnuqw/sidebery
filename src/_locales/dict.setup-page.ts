@@ -1476,6 +1476,14 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '切换到历史记录',
     zh_TW: '切換到歷史紀錄',
   },
+  'settings.search.pinned_tabs_first': {
+    en: 'Return pinned tabs first',
+    de: 'Angeheftete Tabs zuerst anzeigen',
+  },
+  'settings.search.all_panels_always': {
+    en: 'Always search all panels',
+    de: 'Immer alle Panele durchsuchen',
+  },
 
   // - Tabs
   'settings.tabs_title': {
@@ -4513,7 +4521,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   - Browse "Inspector" tab`,
     de: `HINWEIS: für derzeit verfügbare CSS-Selectors den Debugger verwenden:
   - Klicke auf "Kopiere Devtools URL" in der Leiste unten
-  - Öffne neuen Tab mit dieser URL 
+  - Öffne neuen Tab mit dieser URL
   - Wähle Frame zum inspizieren aus
 	- Klicke auf rechteckiges Symbol (mit drei Teilstücken) oben rechts auf der Debugger Seite
 	- Wähle "/sidebar/sidebar.html" für Seitenleisten Frame

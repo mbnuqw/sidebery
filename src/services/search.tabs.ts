@@ -4,6 +4,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Selection } from 'src/services/selection'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
+import { Settings } from 'src/services/settings'
 
 let prevActivePanelId: ID | undefined
 export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
@@ -13,7 +14,14 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
   const samePanel = prevActivePanelId === activePanel.id
   prevActivePanelId = activePanel.id
 
-  const combined = activePanel.pinnedTabs.concat(activePanel.tabs)
+  const pinned = Settings.state.searchAllPanelsAlways ? Tabs.pinned : activePanel.pinnedTabs
+  const unpinned = Settings.state.searchAllPanelsAlways
+    ? Tabs.list.filter(p => !p.pinned)
+    : activePanel.tabs
+
+  const combined = Settings.state.searchPinnedTabsFirst
+    ? pinned.concat(unpinned)
+    : unpinned.concat(pinned)
 
   if (combined.length) {
     // Filter tabs
