@@ -13,7 +13,7 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
   const samePanel = prevActivePanelId === activePanel.id
   prevActivePanelId = activePanel.id
 
-  const combined = activePanel.tabs.concat(activePanel.pinnedTabs)
+  const combined = activePanel.pinnedTabs.concat(activePanel.tabs)
 
   if (combined.length) {
     // Filter tabs
