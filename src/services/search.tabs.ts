@@ -14,8 +14,8 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
   const samePanel = prevActivePanelId === activePanel.id
   prevActivePanelId = activePanel.id
 
-  const pinned = Settings.state.searchAllPanelsAlways ? Tabs.pinned : activePanel.pinnedTabs
-  const unpinned = Settings.state.searchAllPanelsAlways
+  const pinned = Settings.state.searchAllPanels ? Tabs.pinned : activePanel.pinnedTabs
+  const unpinned = Settings.state.searchAllPanels
     ? Tabs.list.filter(p => !p.pinned)
     : activePanel.tabs
 

@@ -1479,10 +1479,14 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.search.pinned_tabs_first': {
     en: 'Return pinned tabs first',
     de: 'Angeheftete Tabs zuerst anzeigen',
+    zh_CN: '首先显示已固定标签页',
+    zh_TW: '首先顯示已釘選分頁',
   },
-  'settings.search.all_panels_always': {
-    en: 'Always search all panels',
-    de: 'Immer alle Panele durchsuchen',
+  'settings.search.all_panels': {
+    en: 'Search in all panels',
+    de: 'Alle Panele durchsuchen',
+    zh_CN: '在所有面板中搜索',
+    zh_TW: '在所有面板中搜尋',
   },
 
   // - Tabs

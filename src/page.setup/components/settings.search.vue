@@ -20,8 +20,8 @@ section(ref="el")
     v-model:value="Settings.state.searchPinnedTabsFirst"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
-    label="settings.search.all_panels_always"
-    v-model:value="Settings.state.searchAllPanelsAlways"
+    label="settings.search.all_panels"
+    v-model:value="Settings.state.searchAllPanels"
     @update:value="Settings.saveDebounced(150)")
   InfoField(
     label="settings.search.shortcuts"
