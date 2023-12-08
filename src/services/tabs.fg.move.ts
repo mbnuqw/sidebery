@@ -160,6 +160,10 @@ export async function move(
     return
   }
 
+  // Info about the moved tabs previous state:
+  const oneAfterAnother = tabs.every((tab, ix) => ix === 0 || tab.index === tabs[ix - 1].index + 1)
+  const srcIndex = tabs[0].index
+
   const ids = []
   let dstIndexIncluded = -1
   let prevIndex = 0
@@ -195,7 +199,7 @@ export async function move(
 
     // Update parent-child relation
     const oldParent = Tabs.byId[tab.parentId]
-    if (!oldParent || !tabs.includes(oldParent)) {
+    if (tab.parentId !== dst.parentId && (!oldParent || !tabs.includes(oldParent))) {
       tab.parentId = dst.parentId
 
       if (dstParent) browser.tabs.update(tab.id, { openerTabId: dst.parentId })
@@ -286,11 +290,14 @@ export async function move(
   }
 
   // Move tabs
-  const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
-  // TODO: Do not call this fn if: all tabs go one after another and srcIndex === dstIndex
-  await browser.tabs.move(ids, { windowId: Windows.id, index: nativeDstIndex }).catch(err => {
-    Logs.err('Tabs.move: Cannot move native tabs', err)
-  })
+  const samePosition = srcIndex === tabs[0].index
+  const canSkipMove = oneAfterAnother && samePosition
+  if (!canSkipMove) {
+    const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
+    await browser.tabs.move(ids, { windowId: Windows.id, index: nativeDstIndex }).catch(err => {
+      Logs.err('Tabs.move: Cannot move native tabs', err)
+    })
+  }
 
   // Reset moving tabs marks
   tabs.forEach(t => (t.moving = undefined))
