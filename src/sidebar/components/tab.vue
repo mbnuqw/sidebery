@@ -337,6 +337,8 @@ function onCtxMenu(e: MouseEvent): void {
 }
 
 function onDoubleClick(): void {
+  if (tab.reactive.customTitleEdit) return
+
   const dc = Settings.state.tabDoubleClick
   if (dc === 'reload') Tabs.reloadTabs([tab.id])
   if (dc === 'duplicate') Tabs.duplicateTabs([tab.id])
