@@ -24,25 +24,25 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.6.0",
-    "@typescript-eslint/parser": "6.6.0",
-    "@vue/compiler-sfc": "3.3.4",
-    "@vue/eslint-config-typescript": "11.0.3",
-    "@vue/language-plugin-pug": "1.8.10",
+    "@typescript-eslint/eslint-plugin": "6.13.2",
+    "@typescript-eslint/parser": "6.13.2",
+    "@vue/compiler-sfc": "3.3.11",
+    "@vue/eslint-config-typescript": "12.0.0",
+    "@vue/language-plugin-pug": "1.8.25",
     "csso": "5.0.5",
-    "esbuild": "0.19.2",
-    "eslint": "8.48.0",
-    "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-prettier": "5.0.0",
-    "eslint-plugin-vue": "9.17.0",
-    "prettier": "3.0.3",
+    "esbuild": "0.19.8",
+    "eslint": "8.55.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.0.1",
+    "eslint-plugin-vue": "9.19.2",
+    "prettier": "3.1.0",
     "pug": "3.0.2",
-    "stylus": "0.60.0",
-    "typescript": "5.2.2",
-    "web-ext": "7.6.2"
+    "stylus": "0.62.0",
+    "typescript": "5.3.3",
+    "web-ext": "7.9.0"
   },
   "dependencies": {
-    "vue": "3.3.4"
+    "vue": "3.3.11"
   },
   "prettier": {
     "arrowParens": "avoid",
