@@ -41,7 +41,7 @@ section(ref="el")
     NumField.-inline(
       label="settings.scroll_through_tabs_scroll_area"
       v-model:value="Settings.state.scrollThroughTabsScrollArea"
-      :inactive="Settings.state.scrollThroughTabs === 'none'"
+      :inactive="Settings.state.scrollThroughTabs === 'none' || Settings.state.scrollThroughTabsExceptOverflow"
       :or="0"
       :allowNegative="true"
       :note="translate('settings.scroll_through_tabs_scroll_area_note')"

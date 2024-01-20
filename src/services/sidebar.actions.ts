@@ -169,7 +169,7 @@ function onSidebarResize(): void {
         Sidebar.reactive.horNavWidth = horizontalNavBarEl.offsetWidth
       }
 
-      if (panelsBoxEl) {
+      if (panelsBoxEl && !Settings.state.scrollThroughTabsExceptOverflow) {
         const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
         const area = Settings.state.scrollThroughTabsScrollArea
         if (area >= 0) {
@@ -233,7 +233,7 @@ export function recalcSidebarSize(): void {
     Sidebar.width = document.body.offsetWidth
     Sidebar.height = document.body.offsetHeight
 
-    if (panelsBoxEl) {
+    if (panelsBoxEl && !Settings.state.scrollThroughTabsExceptOverflow) {
       const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
       const area = Settings.state.scrollThroughTabsScrollArea
       if (area >= 0) {
@@ -243,6 +243,9 @@ export function recalcSidebarSize(): void {
         Sidebar.scrollAreaRightX = 0
         Sidebar.scrollAreaLeftX = panelsBoxBounds.left - area
       }
+    } else {
+      Sidebar.scrollAreaRightX = 0
+      Sidebar.scrollAreaLeftX = 0
     }
 
     if (horizontalNavBarEl) {
