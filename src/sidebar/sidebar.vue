@@ -290,7 +290,6 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
-const maxSwitches = 1
 let panelsSwitched: boolean = false
 let lastDelta: number | undefined
 const switchDebouncer = Utils.debounce(() => {
