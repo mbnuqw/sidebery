@@ -22,7 +22,7 @@
       LoadingDots(v-if="state.historyLoading")
 
   PanelPlaceholder(
-    :isLoading="!History.reactive.ready"
+    :isLoading="History.reactive.loading"
     :isNotPerm="!Permissions.reactive.history"
     :permMsg="translate('panel.history.req_perm')"
     perm="history"

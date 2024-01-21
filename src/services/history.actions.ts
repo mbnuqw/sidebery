@@ -90,8 +90,9 @@ export function createVisit(
 
 export async function load(): Promise<void> {
   if (!browser.history) return
+
   History.ready = false
-  History.reactive.ready = false
+  History.reactive.loading = true
 
   const endTime = Date.now()
   const startTime = endTime - LOAD_RANGE
@@ -115,11 +116,11 @@ export async function load(): Promise<void> {
   const historyPanel = Sidebar.panelsById.history
   if (historyPanel) historyPanel.reactive.ready = historyPanel.ready = true
   History.ready = true
-  History.reactive.ready = true
+  History.reactive.loading = false
 }
 
 export function unload(): void {
-  History.reactive.ready = false
+  History.reactive.loading = false
   History.reactive.days = []
 
   History.ready = false
@@ -523,7 +524,7 @@ export function deleteVisits(ids: ID[]) {
 }
 
 export async function deleteSites(ids: ID[]) {
-  History.reactive.ready = false
+  History.reactive.loading = true
   History.resetListeners()
 
   let stopDeletion = false
@@ -570,7 +571,7 @@ export async function deleteSites(ids: ID[]) {
       icon: '#icon_clock',
       title: translate('notif.history_del_sites_nothing'),
     })
-    History.reactive.ready = true
+    History.reactive.loading = false
     return
   }
 

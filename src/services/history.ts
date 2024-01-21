@@ -2,12 +2,12 @@ import { HistoryDay, Visit } from 'src/types'
 import * as HistoryActions from 'src/services/history.actions'
 
 export interface HistoryState {
-  ready: boolean
+  loading: boolean
   days: HistoryDay[]
 }
 
 export const History = {
-  reactive: { days: [], ready: false } as HistoryState,
+  reactive: { days: [], loading: false } as HistoryState,
 
   visits: [] as Visit[],
   filtered: undefined as Visit[] | undefined,

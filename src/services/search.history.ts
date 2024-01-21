@@ -5,7 +5,8 @@ import { Selection } from 'src/services/selection'
 import * as Logs from 'src/services/logs'
 
 export async function onHistorySearch(noSel?: boolean): Promise<void> {
-  History.reactive.ready = History.ready = false
+  History.ready = false
+  History.reactive.loading = true
   History.reactive.days = []
 
   if (Search.reactive.value) {
@@ -36,7 +37,8 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
     if (Search.prevValue) Selection.resetSelection()
   }
 
-  History.reactive.ready = History.ready = true
+  History.ready = true
+  History.reactive.loading = false
 }
 
 export function onHistorySearchNext(): void {
