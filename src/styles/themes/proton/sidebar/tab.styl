@@ -307,6 +307,7 @@
   flex-shrink: 0
   opacity: 1
   z-index: 10
+  transform: translateZ(0)
 
 .Tab[data-pin="false"] .fav
   margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
@@ -391,21 +392,34 @@
 // ---
 // -- Progress spinner
 // -
+// .Tab .progress-spinner
+//   position: absolute
+//   box-sizing: border-box
+//   width: 12px
+//   height: 12px
+//   right: -4px
+//   bottom: -4px
+//   border-radius: 50%
+//   border-top: 2px solid var(--tabs-normal-fg)
+//   border-left: 2px solid var(--tabs-progress-bg)
+//   border-right: 2px solid var(--tabs-progress-bg)
+//   border-bottom: 2px solid var(--tabs-progress-bg)
+//   animation: rotating-animation .5s infinite linear
+// .Tab[data-active="true"] .progress-spinner
+//   border-top: 2px solid var(--tabs-activated-fg)
+
 .Tab .progress-spinner
   position: absolute
   box-sizing: border-box
-  width: 12px
-  height: 12px
-  right: -4px
-  bottom: -4px
-  border-radius: 50%
-  border-top: 2px solid var(--tabs-normal-fg)
-  border-left: 2px solid var(--tabs-progress-bg)
-  border-right: 2px solid var(--tabs-progress-bg)
-  border-bottom: 2px solid var(--tabs-progress-bg)
-  animation: rotating-animation .5s infinite linear
+  width: 14px
+  height: 14px
+  right: -5px
+  bottom: -5px
+  background-color: var(--tabs-normal-fg)
+  mask: url(/assets/load-5.webp)
+  mask-size: 100%
 .Tab[data-active="true"] .progress-spinner
-  border-top: 2px solid var(--tabs-activated-fg)
+  background-color: var(--tabs-activated-fg)
 
 // ---
 // -- Update / highlight badge
