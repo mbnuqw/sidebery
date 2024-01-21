@@ -98,7 +98,7 @@
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
       PinnedTabsBar(v-if="pinnedTabsBarRight")
       NavigationBar.-vert(v-if="navBarRight")
-  
+
   UpgradeScreen(v-if="reactiveUpgrading.status")
 </template>
 
@@ -290,19 +290,47 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
+const maxSwitches = 1
+let panelsSwitched: boolean = false
+let lastDelta: number | undefined
+const switchDebouncer = Utils.debounce(() => {
+  panelsSwitched = false
+})
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
   if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
 
   if (Settings.state.hScrollAction === 'switch_panels') {
-    if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
-    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
+    // If switched directions, ignore debouncer
+    if (lastDelta !== undefined && (lastDelta < 0 && e.deltaX > 0 || lastDelta > 0 && e.deltaX < 0)) {
+      panelsSwitched = false
+    }
+
+    // Store last direction for switch
+    lastDelta = e.deltaX
+
+    // Check if setting disabled
+    if (!Settings.state.onePanelSwitchPerScroll) {
+      switchPanels(e)
+    } else {
+      // Count switches and either do switch or start debouncer
+      switchDebouncer(50)
+      if (!panelsSwitched) {
+        switchPanels(e)
+      }
+      panelsSwitched = true
+    }
   } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
     if (e.deltaX > 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
     if (e.deltaX < 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
   }
 })
+
+function switchPanels(e: MouseEvent): void {
+  if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
+  if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
+}
 
 let leaveTimeout: number | undefined
 let subPanelTimeout: number | undefined
