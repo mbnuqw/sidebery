@@ -290,11 +290,7 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
-let panelsSwitched: boolean = false
 let lastDelta: number | undefined
-const switchDebouncer = Utils.debounce(() => {
-  panelsSwitched = false
-})
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
@@ -302,34 +298,16 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
 
   if (Settings.state.hScrollAction === 'switch_panels') {
     // If switched directions, ignore debouncer
-    if (lastDelta !== undefined && (lastDelta < 0 && e.deltaX > 0 || lastDelta > 0 && e.deltaX < 0)) {
-      panelsSwitched = false
-    }
-
-    // Store last direction for switch
+    const didSwitchDelta = lastDelta !== undefined && (lastDelta < 0 && e.deltaX > 0 || lastDelta > 0 && e.deltaX < 0)
     lastDelta = e.deltaX
 
-    // Check if setting disabled
-    if (!Settings.state.onePanelSwitchPerScroll) {
-      switchPanels(e)
-    } else {
-      // Count switches and either do switch or start debouncer
-      switchDebouncer(50)
-      if (!panelsSwitched) {
-        switchPanels(e)
-      }
-      panelsSwitched = true
-    }
+    if (e.deltaX > 0) return Sidebar.switchPanel(1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
+    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
   } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
     if (e.deltaX > 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
     if (e.deltaX < 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
   }
 })
-
-function switchPanels(e: MouseEvent): void {
-  if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
-  if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
-}
 
 let leaveTimeout: number | undefined
 let subPanelTimeout: number | undefined

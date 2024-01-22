@@ -1239,20 +1239,29 @@ export function switchToNeighbourPanel(): void {
   if (target) switchToPanel(target.id)
 }
 
-let switchPanelPause: number | undefined
+let switchPanelPaused: boolean = false
+const switchPanelPause = Utils.debounce(() => {
+  switchPanelPaused = false
+})
 export function switchPanel(
   dir: 1 | -1,
   ignoreHidden?: boolean,
-  withoutTabCreation?: boolean
+  withoutTabCreation?: boolean,
+  restartDebouncer?: boolean
 ): void {
-  // Debounce switching
-  if (switchPanelPause) return
+  // Single panel switch
   const delay = Settings.state.navSwitchPanelsDelay ?? 128
+  if (switchPanelPaused) {
+    if (restartDebouncer) {
+      switchPanelPause(delay)
+    }
+    return
+  }
+
+  // Debounce switching
   if (delay > 0) {
-    switchPanelPause = setTimeout(() => {
-      clearTimeout(switchPanelPause)
-      switchPanelPause = undefined
-    }, delay)
+    switchPanelPause(delay)
+    switchPanelPaused = true
   }
 
   Menu.close()
