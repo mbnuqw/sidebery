@@ -3009,6 +3009,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '使用滚轮水平滚动',
     zh_TW: '使用滾輪水平滾動',
   },
+  'settings.one_panel_switch_per_scroll': {
+    en: 'Limit to one panel switch per scroll',
+  },
   'settings.h_scroll_action_switch_panels': {
     en: 'switch panels',
     ru: 'переключения панелей',
@@ -4513,7 +4516,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   - Browse "Inspector" tab`,
     de: `HINWEIS: für derzeit verfügbare CSS-Selectors den Debugger verwenden:
   - Klicke auf "Kopiere Devtools URL" in der Leiste unten
-  - Öffne neuen Tab mit dieser URL 
+  - Öffne neuen Tab mit dieser URL
   - Wähle Frame zum inspizieren aus
 	- Klicke auf rechteckiges Symbol (mit drei Teilstücken) oben rechts auf der Debugger Seite
 	- Wähle "/sidebar/sidebar.html" für Seitenleisten Frame

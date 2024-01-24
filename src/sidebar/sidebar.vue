@@ -98,7 +98,7 @@
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
       PinnedTabsBar(v-if="pinnedTabsBarRight")
       NavigationBar.-vert(v-if="navBarRight")
-  
+
   UpgradeScreen(v-if="reactiveUpgrading.status")
 </template>
 
@@ -290,14 +290,19 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
+let lastDelta: number | undefined
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
   if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
 
   if (Settings.state.hScrollAction === 'switch_panels') {
-    if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
-    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
+    // If switched directions, ignore debouncer
+    const didSwitchDelta = lastDelta !== undefined && (lastDelta < 0 && e.deltaX > 0 || lastDelta > 0 && e.deltaX < 0)
+    lastDelta = e.deltaX
+
+    if (e.deltaX > 0) return Sidebar.switchPanel(1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
+    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
   } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
     if (e.deltaX > 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
     if (e.deltaX < 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
