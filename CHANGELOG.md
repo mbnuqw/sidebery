@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Added
+- Mouse setting: One panel switch per scroll setting (thanks [@ImTheSquid](https://github.com/ImTheSquid), [#1424](https://github.com/mbnuqw/sidebery/pull/1424))
+- Confirm popup by pressing the enter key (thanks [@into-the-v0id](https://github.com/into-the-v0id), [#1326](https://github.com/mbnuqw/sidebery/pull/1326))
+- A "Toggle branch" keyboard shortcut setter (thanks [@paul-ohl](https://github.com/paul-ohl), [#1276](https://github.com/mbnuqw/sidebery/pull/1276))
+
+### Fixed
+- zh_TW improvements (thanks [@llc0930](https://github.com/llc0930), [#1298](https://github.com/mbnuqw/sidebery/pull/1298))
+- Wrong initial state of History service, leading to high CPU usage ([#1388](https://github.com/mbnuqw/sidebery/issues/1388))
+- Wrong initial background color (white flash) ([#969](https://github.com/mbnuqw/sidebery/issues/969))
+- Don't count double-clicking the title editor as double-clicking the tab (thanks [@cpmsmith](https://github.com/cpmsmith), [#1385](https://github.com/mbnuqw/sidebery/pull/1385))
+- Optimize moving tabs inside the same window (thanks [@Lej77](https://github.com/Lej77), [#1338](https://github.com/mbnuqw/sidebery/pull/1338))
+- Audio badge of tabs panel: In some cases, a context menu opens
+- Recently Closed Tabs sub-panel: Middle click results in auto-scrolling
+- Disappearing of tab with "close confirmation dialog" ([#1246](https://github.com/mbnuqw/sidebery/issues/1246))
+- Unloading pinned tabs at startup ([#1265](https://github.com/mbnuqw/sidebery/issues/1265))
+- Bookmarks sub-panel: False-positive triggering of lvl-up on dnd
+
 ## 5.0.0 - 2023-09-19
 
 ### Added
