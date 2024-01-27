@@ -290,19 +290,22 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
-let lastDelta: number | undefined
+let lastDir: number | undefined
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
   if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
+  if (e.deltaX === 0) return
 
   if (Settings.state.hScrollAction === 'switch_panels') {
-    // If switched directions, ignore debouncer
-    const didSwitchDelta = lastDelta !== undefined && (lastDelta < 0 && e.deltaX > 0 || lastDelta > 0 && e.deltaX < 0)
-    lastDelta = e.deltaX
+    const dir = e.deltaX > 0 ? 1 : -1
 
-    if (e.deltaX > 0) return Sidebar.switchPanel(1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
-    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true, undefined, Settings.state.onePanelSwitchPerScroll && !didSwitchDelta)
+    // Restart debouncer if direction is the same
+    const restartDebouncer =
+      Settings.state.onePanelSwitchPerScroll && (lastDir === undefined || lastDir === dir)
+    lastDir = dir
+
+    return Sidebar.switchPanel(dir, true, false, restartDebouncer)
   } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
     if (e.deltaX > 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
     if (e.deltaX < 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)

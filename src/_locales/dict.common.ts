@@ -63,7 +63,7 @@ export const commonTranslations: Translations = {
     zh_CN: '确认',
     zh_TW: '確定',
   },
-  'btn.ok': {    // TODO: Doesn't appear to be used.
+  'btn.ok': {
     en: 'Ok',
     ru: 'Ок',
     de: 'Ok',
@@ -1114,19 +1114,6 @@ export const commonTranslations: Translations = {
     zh_CN: '关闭其他标签页',
     zh_TW: '關閉其他分頁',
   },
-  'menu.tab.edit': {    // TODO: Doesn't appear to be used.
-    en: 'Configure...',
-    ru: 'Настроить...',
-    zh_CN: '配置...',
-    zh_TW: '設定...',
-  },
-  'menu.tab.bookmarks': {    // TODO: Doesn't appear to be used.
-    en: 'Create bookmarks',
-    ru: 'В закладки',
-    de: 'Lesezeichen erstellen',
-    zh_CN: '新建书签',
-    zh_TW: '新建書籤',
-  },
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute all audible tabs',
@@ -1228,18 +1215,18 @@ export const commonTranslations: Translations = {
   },
   // - Common
   'menu.copy_urls': {
-    en: n => ((n === 1 || n === undefined) ? 'Copy URL' : 'Copy URLs'),
-    ru: n => ((n === 1 || n === undefined) ? 'Копировать адрес' : 'Копировать адреса'),
-    de: n => ((n === 1 || n === undefined) ? 'URL kopieren' : 'URLs kopieren'),
-    zh_CN: n => ((n === 1 || n === undefined) ? '复制网址' : '复制全部网址'),
-    zh_TW: n => ((n === 1 || n === undefined) ? '複製網址' : '複製全部網址'),
+    en: n => (n === 1 || n === undefined ? 'Copy URL' : 'Copy URLs'),
+    ru: n => (n === 1 || n === undefined ? 'Копировать адрес' : 'Копировать адреса'),
+    de: n => (n === 1 || n === undefined ? 'URL kopieren' : 'URLs kopieren'),
+    zh_CN: n => (n === 1 || n === undefined ? '复制网址' : '复制全部网址'),
+    zh_TW: n => (n === 1 || n === undefined ? '複製網址' : '複製全部網址'),
   },
   'menu.copy_titles': {
-    en: n => ((n === 1 || n === undefined) ? 'Copy title' : 'Copy titles'),
-    ru: n => ((n === 1 || n === undefined) ? 'Копировать заголовок' : 'Копировать заголовки'),
-    de: n => ((n === 1 || n === undefined) ? 'Titel kopieren' : 'Mehrere Titel kopieren'),
-    zh_CN: n => ((n === 1 || n === undefined) ? '复制标题' : '复制全部标题'),
-    zh_TW: n => ((n === 1 || n === undefined) ? '複製標題' : '複製全部標題'),
+    en: n => (n === 1 || n === undefined ? 'Copy title' : 'Copy titles'),
+    ru: n => (n === 1 || n === undefined ? 'Копировать заголовок' : 'Копировать заголовки'),
+    de: n => (n === 1 || n === undefined ? 'Titel kopieren' : 'Mehrere Titel kopieren'),
+    zh_CN: n => (n === 1 || n === undefined ? '复制标题' : '复制全部标题'),
+    zh_TW: n => (n === 1 || n === undefined ? '複製標題' : '複製全部標題'),
   },
   'menu.common.pin_panel': {
     en: 'Pin panel',
@@ -1359,18 +1346,6 @@ export const commonTranslations: Translations = {
     de: 'Untermenü Bezeichnung...',
     zh_CN: '子菜单标签...',
     zh_TW: '子選單標籤...',
-  },
-  'menu.editor.list_title': {    // TODO: Doesn't appear to be used.
-    en: 'List',
-    ru: 'Список',
-    de: 'Liste',
-    zh: '列表',
-  },
-  'menu.editor.disabled_title': {    // TODO: Doesn't appear to be used.
-    en: 'Disabled',
-    ru: 'Отключено',
-    de: 'Deaktiviert',
-    zh: '已禁用',
   },
 
   // ---

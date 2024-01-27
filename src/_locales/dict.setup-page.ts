@@ -486,13 +486,6 @@ export const setupPageTranslations: Translations = {
     zh_CN: '新标签页的位置',
     zh_TW: '新分頁的位置',
   },
-  'settings.nav_settings_pinned_tabs': {    // TODO: Doesn't appear to be used.
-    en: 'Pinned tabs',
-    ru: 'Закрепленные вкладки',
-    de: 'Angeheftete Tabs',
-    zh_CN: '已固定的标签页',
-    zh_TW: '已釘選的分頁',
-  },
   'settings.nav_settings_tabs_tree': {
     en: 'Tabs tree',
     ru: 'Дерево вкладок',
@@ -548,13 +541,6 @@ export const setupPageTranslations: Translations = {
     zh_TW: '幫助',
   },
   'settings.nav_keybindings': {
-    en: 'Keybindings',
-    ru: 'Клавиши',
-    de: 'Tastenbelegung',
-    zh_CN: '按键绑定',
-    zh_TW: '按鍵綁定',
-  },
-  'settings.nav_settings_keybindings': {    // TODO: Doesn't appear to be used.
     en: 'Keybindings',
     ru: 'Клавиши',
     de: 'Tastenbelegung',
@@ -2818,8 +2804,10 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     en: '- To apply theme color to Sidebery buttons in browser interface set "svg.context-properties.content.enabled" to "true" in about:config page.',
     ru: '- Чтобы применить цвет темы к кнопкам Sidebery в интерфейсе браузера, установите «svg.context-properties.content.enabled» в «true» на странице about:config.',
     de: '- Um Theme-Farbe auf Sidebery-Schaltflächen in Browseroberfläche anzuwenden, setze "svg.context-properties.content.enabled" auf "true" auf about:config Seite.',
-    zh_CN: '- 为了将主题颜色应用于浏览器界面的 Sidebery 按钮，需要在 about:config 页面中设置 "svg.context-properties.content.enabled" 的值为 "true".',
-    zh_TW: '- 要將主題顏色應用於瀏覽器界面中的 Sidebery 按鈕，請在 about:config 頁面中將 "svg.context-properties.content.enabled" 設定為 "true"。',
+    zh_CN:
+      '- 为了将主题颜色应用于浏览器界面的 Sidebery 按钮，需要在 about:config 页面中设置 "svg.context-properties.content.enabled" 的值为 "true".',
+    zh_TW:
+      '- 要將主題顏色應用於瀏覽器界面中的 Sidebery 按鈕，請在 about:config 頁面中將 "svg.context-properties.content.enabled" 設定為 "true"。',
   },
 
   // - Snapshots
@@ -3062,6 +3050,8 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.one_panel_switch_per_scroll': {
     en: 'Limit to one panel switch per scroll',
+    de: 'Wechseln Sie ein Panel pro Scroll',
+    ru: 'Одно переключение на одну прокрутку',
     zh_CN: '每次滚动仅切换一个面板',
     zh_TW: '每次捲動僅切換一個面板',
   },
@@ -3677,43 +3667,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Keybindings
-  // TODO: The following 5 items appear to be unused.
-  'settings.kb_title': {
-    en: 'Keybindings',
-    ru: 'Клавиши',
-    de: 'Tastenbelegung',
-    zh_CN: '按键绑定',
-    zh_TW: '按鍵綁定',
-  },
-  'settings.toggle_kb': {
-    en: 'Enable/Disable Keybindings',
-    ru: 'Включить / отключить сочетания клавиш',
-    zh_CN: '启用/禁用按键绑定',
-    zh_TW: '啟用/禁用按鍵綁定',
-    de: 'Tastenbelegung aktiviere/deaktiviere',
-  },
-  'settings.enable_kb': {
-    en: 'Enable Keybindings',
-    ru: 'Включить сочетания клавиш',
-    zh_CN: '启用按键绑定',
-    zh_TW: '啟用按鍵綁定',
-    de: 'Aktiviere Tastenbelegung',
-  },
-  'settings.disable_kb': {
-    en: 'Disable Keybindings',
-    ru: 'Отключить сочетания клавиш',
-    de: 'Deaktiviere Tastenbelegung',
-    zh_CN: '禁用按键绑定',
-    zh_TW: '禁用按鍵綁定',
-  },
-  'settings.kb_create_remove_tabs': {
-    en: 'Creating / Removing tabs',
-    ru: 'Создание / Закрытие вкладок',
-    de: 'Erstelle / Entferne Tabs',
-    zh_CN: '创建/删除标签',
-    zh_TW: '建立/刪除分頁',
-  },
-  // TODO: The 5 items above appear to be unused.
   'settings.kb_input': {
     en: 'Press new shortcut',
     ru: 'Нажмете новое сочетание клавиш',
@@ -3822,8 +3775,10 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     en: '- activate selected tab\n- open selected bookmark\n- fold/unfold an active tab branch or a selected bookmarks folder\n- activate selected context-menu option\n- activate selected panel',
     ru: '- активировать выделенную вкладку\n- открыть выделенную закладку\n- свернуть/развернуть ветку активной вкладки или выделенную папку закладок\n- активировать выделенный пункт контекстного меню\n- активировать выделенную панель',
     de: '- Aktiviere ausgewählten Tab\n- Öffne ausgewähltes Lesezeichen\n- Klappe aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein/aus\n- Aktiviere ausgewählte Kontextmenü-Option\n- Aktiviere ausgewähltes Panel',
-    zh_CN: '- 激活选定的标签页\n- 打开选定的书签\n- 折叠/展开活动标签页分支或选定的书签文件夹\n- 激活选定的上下文菜单选项\n- 激活选定的面板',
-    zh_TW: '- 啟動選定的分頁\n- 開啟選定的書籤\n- 折疊/展開當前分頁分支或選定的書籤資料夾\n- 啟動選定的快捷選單選項\n- 啟動選定的面板',
+    zh_CN:
+      '- 激活选定的标签页\n- 打开选定的书签\n- 折叠/展开活动标签页分支或选定的书签文件夹\n- 激活选定的上下文菜单选项\n- 激活选定的面板',
+    zh_TW:
+      '- 啟動選定的分頁\n- 開啟選定的書籤\n- 折疊/展開當前分頁分支或選定的書籤資料夾\n- 啟動選定的快捷選單選項\n- 啟動選定的面板',
   },
   'settings.kb_unloading_tabs': {
     en: 'Unload tabs',
@@ -4627,13 +4582,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     de: 'Navigationsleiste',
     zh_CN: '导航栏',
     zh_TW: '導覽列',
-  },
-  'styles.vars_group.pinned_dock': {    // TODO: Doesn't appear to be used.
-    en: 'Pinned tabs dock',
-    ru: 'Область закрепленных вкладок',
-    de: 'Bereich für angeheftete Tabs',
-    zh_CN: '固定标签页停靠',
-    zh_TW: '已釘選分頁列',
   },
   'styles.vars_group.tabs': {
     en: 'Tabs',

@@ -14,8 +14,7 @@ section(ref="el")
       label="settings.one_panel_switch_per_scroll"
       v-model:value="Settings.state.onePanelSwitchPerScroll"
       :inactive="Settings.state.hScrollAction !== 'switch_panels'"
-      @update:value="Settings.saveDebounced(150)"
-    )
+      @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"

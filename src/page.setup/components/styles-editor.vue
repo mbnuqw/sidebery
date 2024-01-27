@@ -113,7 +113,6 @@ const state = reactive({
     { id: '--notification-', label: 'Notification', vars: [] },
     { id: '--btn-', label: translate('styles.vars_group.buttons'), vars: [] },
     { id: '--scroll-', label: translate('styles.vars_group.scroll'), vars: [] },
-    { id: '--pinned-dock-', label: translate('styles.vars_group.pinned_dock'), vars: [] },
     { id: '--d-', label: translate('styles.vars_group.animation'), vars: [] },
     { id: 'other', label: translate('styles.vars_group.other'), vars: [] },
   ] as CssVarsGroup[],
