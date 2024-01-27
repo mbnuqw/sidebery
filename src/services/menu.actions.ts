@@ -15,7 +15,7 @@ import { BOOKMARKS_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults/menu'
 import { HISTORY_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
 import { OTHER_PANELS_MENU } from 'src/defaults/menu'
 import { Snapshots } from './snapshots'
-import { translate } from 'src/dict'
+import { translate, LANG } from 'src/dict'
 import { Search } from 'src/services/search'
 
 export type OpenCallback = (blocks: MenuBlock[], x?: number, y?: number) => void
@@ -292,7 +292,7 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
 }
 
 export function shrinkLabel(parentLabel: string, label?: string): string | undefined {
-  if (!label || label.length - parentLabel.length < 2) return
+  if (!label || label.length - parentLabel.length < 2 || LANG === 'zh') return
 
   const preLen = parentLabel.length
   let cutIndex = preLen

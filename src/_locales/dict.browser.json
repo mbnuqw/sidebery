@@ -388,16 +388,16 @@
     "zh_TW": "後一分頁（當前面板）"
   },
   "KbSwitchToNextTab": {
-    "en": "Switch to the next tab (using mouse-wheel settings for tabs switching)",
-    "ru": "Переключиться на следующую вкладку (используя настройки колесика мыши для переключения вкладок)",
-    "zh_CN": "切换到下一个标签页(使用鼠标滚轮设置切换标签页)",
-    "zh_TW": "切換到下一個分頁(依據滑鼠滾輪切換設定決定切換行為)"
+    "en": "Switch to the next tab",
+    "ru": "Переключиться на следующую вкладку",
+    "zh_CN": "切换到下一个标签页",
+    "zh_TW": "切換到下一個分頁"
   },
   "KbSwitchToPrevTab": {
-    "en": "Switch to the prev tab (using mouse-wheel settings for tabs switching)",
-    "ru": "Переключиться на предыдущую вкладку (используя настройки колесика мыши для переключения вкладок)",
-    "zh_CN": "切换到上一个标签页(使用鼠标滚轮设置切换标签页)",
-    "zh_TW": "切換到上一個分頁(依據滑鼠滾輪切換設定決定切換行為)"
+    "en": "Switch to the prev tab",
+    "ru": "Переключиться на предыдущую вкладку",
+    "zh_CN": "切换到上一个标签页",
+    "zh_TW": "切換到上一個分頁"
   },
   "KbSwitchToParentTab": {
     "en": "Switch to parent tab",

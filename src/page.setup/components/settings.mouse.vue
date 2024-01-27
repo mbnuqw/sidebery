@@ -9,19 +9,20 @@ section(ref="el")
     :opts="Settings.getOpts('hScrollAction')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.one_panel_switch_per_scroll"
-    v-model:value="Settings.state.onePanelSwitchPerScroll"
-    :inactive="Settings.state.hScrollAction !== 'switch_panels'"
-    @update:value="Settings.saveDebounced(150)"
-  )
+  .sub-fields
+    ToggleField(
+      label="settings.one_panel_switch_per_scroll"
+      v-model:value="Settings.state.onePanelSwitchPerScroll"
+      :inactive="Settings.state.hScrollAction !== 'switch_panels'"
+      @update:value="Settings.saveDebounced(150)"
+    )
   SelectField(
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"
     v-model:value="Settings.state.scrollThroughTabs"
     :folded="true"
     :opts="Settings.getOpts('scrollThroughTabs')"
-    :note="Settings.state.scrollThroughTabs === 'psp' ? translate('settings.scroll_through_tabs_preselect_note') : undefined"
+    :note="(Settings.state.scrollThroughTabs === 'psp' || Settings.state.scrollThroughTabs === 'psg') ? translate('settings.scroll_through_tabs_preselect_note') : undefined"
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
