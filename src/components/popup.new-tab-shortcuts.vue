@@ -174,7 +174,6 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
   ]
 
   for (let c of Object.values(Containers.reactive.byId)) {
-    if (panel.newTabCtx === c.id) continue
     const icon = '#' + c.icon
     result.push({ value: c.id, color: c.color, icon, title: c.name, tooltip: c.name })
   }
