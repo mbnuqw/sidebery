@@ -5,7 +5,7 @@ import { ADDON_PATH } from './utils.js'
 let lastArg = process.argv[process.argv.length - 1]
 if (!lastArg || lastArg.startsWith('-')) lastArg = 'firefox'
 
-const IS_FF = lastArg.includes('irefox')
+const IS_FF = lastArg.includes('irefox') || lastArg.includes('loorp')
 const cliOpts = {
   target: IS_FF ? 'firefox-desktop' : 'chromium',
   sourceDir: ADDON_PATH,
