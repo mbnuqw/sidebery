@@ -42,7 +42,11 @@
         @mouseup="onExpandMouseUp")
         svg.exp-icon: use(xlink:href="#icon_expand")
       .badge
-      .progress-spinner(v-if="tab.reactive.status === TabStatus.Loading")
+      template(v-if="Settings.state.animations")
+        .progress-spinner(v-show="tab.reactive.status === TabStatus.Loading")
+      template(v-else)
+        svg.progress-spinner(v-show="tab.reactive.status === TabStatus.Loading")
+          use(xlink:href="#icon_hourglass")
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"

@@ -20,6 +20,10 @@
   .loading-dots-c
     animation: loading-dots .7s .2s infinite
 
+#root[data-animations="none"] .LoadingDots
+  .loading-dots-a, .loading-dots-b, .loading-dots-c
+    animation: none
+
 @keyframes loading-dots
   0%
     opacity: 0
