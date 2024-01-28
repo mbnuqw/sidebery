@@ -4,14 +4,12 @@ import { NOID } from 'src/defaults'
 
 interface InfoState {
   os: string
-  ffVer: number
   addonVer: string
 }
 
 export const Info = {
   reactive: {
     os: 'unknown',
-    ffVer: -1,
     addonVer: browser.runtime.getManifest().version,
   } as InfoState,
 

@@ -9,12 +9,6 @@ export async function loadPlatformInfo(): Promise<void> {
   Info.reactive.os = info.os
 }
 
-export async function loadBrowserInfo(): Promise<void> {
-  const info = await browser.runtime.getBrowserInfo()
-  Info.reactive.ffVer = parseInt(info.version.slice(0, 2))
-  if (isNaN(Info.reactive.ffVer)) Info.reactive.ffVer = 0
-}
-
 export async function loadVersionInfo(): Promise<void> {
   const stored = await browser.storage.local.get<Stored>(['ver', 'favAutoCleanTime'])
 

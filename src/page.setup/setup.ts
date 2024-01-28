@@ -73,7 +73,6 @@ async function main(): Promise<void> {
   setupSidebarConfigListeners()
   Styles.loadCustomCSS()
   Info.loadPlatformInfo()
-  Info.loadBrowserInfo()
   Info.loadVersionInfo()
   Permissions.loadPermissions()
   Permissions.setupListeners()
