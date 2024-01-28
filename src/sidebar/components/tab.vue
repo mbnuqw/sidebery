@@ -50,7 +50,7 @@
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
-      @mousedown.stop=""
+      @mousedown.stop.prevent=""
       @mouseup.stop="onAudioMouseDown($event, tab)")
       svg.audio-icon.-loud: use(xlink:href="#icon_loud_badge")
       svg.audio-icon.-mute: use(xlink:href="#icon_mute_badge")
