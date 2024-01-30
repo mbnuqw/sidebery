@@ -14,8 +14,8 @@ import { ScrollBoxComponent } from 'src/types'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 
-let recalcScrollOnResize: Utils.FuncCtx | null = null
-let resizeObserver: ResizeObserver | null = null
+// let recalcScrollOnResize: Utils.FuncCtx | null = null
+// let resizeObserver: ResizeObserver | null = null
 
 const emit = defineEmits(['bottom'])
 const props = defineProps<{
@@ -28,6 +28,7 @@ const el = ref<HTMLElement | null>(null)
 const scrollBoxEl = ref<HTMLElement | null>(null)
 const scrollContentEl = ref<HTMLElement | null>(null)
 
+const recalcScrollOnResize = Utils.asap(() => recalcScroll(), 180)
 const state = reactive({
   topOverflow: false,
   bottomOverflow: false,
@@ -45,14 +46,20 @@ onMounted(() => {
     throw Logs.err('ScrollBox: No DOM elements registered')
   }
 
-  recalcScrollOnResize = Utils.asap(() => recalcScroll(), 180)
-  resizeObserver = new ResizeObserver(recalcScrollOnResize.func)
-  resizeObserver.observe(scrollBoxEl.value)
-  resizeObserver.observe(scrollContentEl.value)
+  // Temporary replace ResizeObserver to avoid perf drop with animations.
+  // - https://bugzilla.mozilla.org/show_bug.cgi?id=1877531
+  // - https://github.com/mbnuqw/sidebery/issues/1388
+  // - https://github.com/mbnuqw/sidebery/issues/1428
+  // - https://github.com/mbnuqw/sidebery/issues/1434
+  // resizeObserver = new ResizeObserver(recalcScrollOnResize.func)
+  // resizeObserver.observe(scrollBoxEl.value)
+  // resizeObserver.observe(scrollContentEl.value)
+  window.addEventListener('resize', recalcScrollOnResize.func)
 })
 
 onBeforeUnmount(() => {
-  if (resizeObserver) resizeObserver.disconnect()
+  // if (resizeObserver) resizeObserver.disconnect()
+  window.removeEventListener('resize', recalcScrollOnResize.func)
 })
 
 function onWheel(e: WheelEvent): void {

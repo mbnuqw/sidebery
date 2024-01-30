@@ -170,6 +170,7 @@ function forceUpdateHoverState(el: HTMLElement) {
 }
 
 function forceReflow() {
-  document.body.offsetHeight
+  if (props.panel.scrollComponent) props.panel.scrollComponent.recalcScroll()
+  else document.body.offsetHeight
 }
 </script>
