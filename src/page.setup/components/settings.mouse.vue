@@ -15,6 +15,13 @@ section(ref="el")
       v-model:value="Settings.state.onePanelSwitchPerScroll"
       :inactive="Settings.state.hScrollAction !== 'switch_panels'"
       @update:value="Settings.saveDebounced(150)")
+    NumField.-inline(
+      label="settings.panel_switch_threshold"
+      v-model:value="Settings.state.panelSwitchThreshold"
+      :inactive="Settings.state.hScrollAction !== 'switch_panels'"
+      :or="0"
+      :allowNegative="false"
+      @update:value="Settings.saveDebounced(500)")
   SelectField(
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"
