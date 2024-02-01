@@ -42,10 +42,6 @@ onMounted(() => {
     throw Logs.err('ScrollBox: No DOM elements registered')
   }
 
-  // Using ResizeObserver results in extra CPU usage when playing
-  // animation, and there is no reasonable workaround other than
-  // just turn off animations (I hope temporary).
-  // - https://bugzilla.mozilla.org/show_bug.cgi?id=1877531
   recalcScrollOnResize = Utils.asap(() => recalcScroll(), 180)
   resizeObserver = new ResizeObserver(recalcScrollOnResize.func)
   resizeObserver.observe(scrollBoxEl.value)
