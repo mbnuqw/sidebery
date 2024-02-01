@@ -8,6 +8,13 @@
 - A "Toggle branch" keyboard shortcut setter (thanks [@paul-ohl](https://github.com/paul-ohl), [#1276](https://github.com/mbnuqw/sidebery/pull/1276))
 
 ### Fixed
+- Handle all selected tabs on middle click action (close/unload)
+- Preserve scroll position of active panel after settings change
+- New Tab Shortcuts: Allow to use any container
+- Auto-scrolling after middle-click on the audio badge of tab
+- No-animations mode: Show static icons for loading tabs and panels
+- Incorrect rendering of note for "scroll through tabs" setting (thanks [@llc0930](https://github.com/llc0930), [#1344](https://github.com/mbnuqw/sidebery/pull/1344))
+- Truncating labels for sub-options with zh lang (thanks [@llc0930](https://github.com/llc0930), [#1344](https://github.com/mbnuqw/sidebery/pull/1344))
 - zh_TW improvements (thanks [@llc0930](https://github.com/llc0930), [#1298](https://github.com/mbnuqw/sidebery/pull/1298))
 - Wrong initial state of History service, leading to high CPU usage ([#1388](https://github.com/mbnuqw/sidebery/issues/1388))
 - Wrong initial background color (white flash) ([#969](https://github.com/mbnuqw/sidebery/issues/969))
