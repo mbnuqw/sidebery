@@ -178,6 +178,7 @@ function recalcStaticVars() {
 }
 
 Sidebar.reMountSidebar = () => {
+  Sidebar.rememberActivePanelScrollPosition()
   recalcStaticVars()
   rrc.value++
   nextTick(updSidebarEls)
@@ -201,6 +202,7 @@ function updSidebarEls() {
   if (rootEl.value) Sidebar.registerRootEl(rootEl.value)
   Sidebar.recalcElementSizes()
   Sidebar.recalcSidebarSize()
+  Sidebar.restoreActivePanelScrollPosition()
 }
 
 onMounted(() => {

@@ -2676,3 +2676,21 @@ export function getRecentTabsPanelId(): ID {
   }
   return panelId
 }
+
+let actPanelPrevScrollPos: number | undefined
+export function rememberActivePanelScrollPosition() {
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (!actPanel?.scrollEl) return
+
+  actPanelPrevScrollPos = actPanel.scrollEl.scrollTop
+}
+
+export function restoreActivePanelScrollPosition() {
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (!actPanel?.scrollEl || !actPanel?.scrollComponent || actPanelPrevScrollPos === undefined) {
+    return
+  }
+
+  actPanel.scrollEl.scrollTop = actPanelPrevScrollPos
+  actPanel.scrollComponent.recalcScroll()
+}
