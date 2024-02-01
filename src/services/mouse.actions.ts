@@ -263,15 +263,12 @@ export function getWheelDebouncer(
   else threshold = Settings.state.wheelThresholdX
 
   let stopTimeout: number | undefined
-  let first = true
   let delta = 0
-  let deltaBuf = 0
 
   return (e: WheelEvent) => {
     clearTimeout(stopTimeout)
     stopTimeout = setTimeout(() => {
-      deltaBuf = 0
-      first = true
+      delta = 0
       stopTimeout = undefined
     }, 500)
 
@@ -281,11 +278,9 @@ export function getWheelDebouncer(
     if (e.deltaMode !== 0) return cb(e)
 
     delta = direction === WheelDirection.Vertical ? e.deltaY : e.deltaX
-    if (!first && delta) deltaBuf += delta
-    else first = false
 
-    if (deltaBuf > threshold || deltaBuf < -threshold) {
-      deltaBuf = 0
+    if (delta > threshold || delta < -threshold) {
+      delta = 0
       cb(e)
     }
   }

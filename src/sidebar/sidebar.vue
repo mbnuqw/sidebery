@@ -294,7 +294,7 @@ let lastDir: number | undefined
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
-  if (Math.abs(e.deltaX) > Settings.state.panelSwitchThreshold)
+  if (e.deltaX !== 0)
     Mouse.blockWheel(WheelDirection.Vertical)
   else
     return

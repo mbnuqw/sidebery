@@ -3055,9 +3055,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '每次滚动仅切换一个面板',
     zh_TW: '每次捲動僅切換一個面板',
   },
-  'settings.panel_switch_threshold': {
-    en: 'Horizontal scroll threshold for panel switch',
-  },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',
     ru: 'Переключать вкладки с помощью колеса прокрутки',
