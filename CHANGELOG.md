@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 5.1.1 - 2024-02-02
+
+Empty release to fix incorrectly uploaded version on AMO.
+
+## 5.1.0 - 2024-02-01
+
 ### Added
 - Mouse setting: One panel switch per scroll setting (thanks [@ImTheSquid](https://github.com/ImTheSquid), [#1424](https://github.com/mbnuqw/sidebery/pull/1424))
 - Confirm popup by pressing the enter key (thanks [@into-the-v0id](https://github.com/into-the-v0id), [#1326](https://github.com/mbnuqw/sidebery/pull/1326))
