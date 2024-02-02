@@ -15,6 +15,10 @@ section(ref="el")
       v-model:value="Settings.state.onePanelSwitchPerScroll"
       :inactive="Settings.state.hScrollAction !== 'switch_panels'"
       @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.wheel_accumulation"
+    v-model:value="Settings.state.wheelAccumulation"
+    @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"
