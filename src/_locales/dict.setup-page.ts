@@ -3055,6 +3055,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '每次滚动仅切换一个面板',
     zh_TW: '每次捲動僅切換一個面板',
   },
+  'settings.wheel_accumulation': {
+    en: 'Scroll wheel accumulation',
+  },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',
     ru: 'Переключать вкладки с помощью колеса прокрутки',
