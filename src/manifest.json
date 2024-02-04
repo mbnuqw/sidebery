@@ -16,12 +16,10 @@
     "48": "./assets/logo.svg",
     "96": "./assets/logo.svg"
   },
-
   "options_ui": {
     "open_in_tab": true,
     "page": "page.setup/setup.html"
   },
-
   "permissions": [
     "activeTab",
     "tabs",
@@ -35,7 +33,6 @@
     "search",
     "theme"
   ],
-
   "optional_permissions": [
     "<all_urls>",
     "proxy",
@@ -47,20 +44,17 @@
     "history",
     "downloads"
   ],
-
   "sidebar_action": {
     "default_icon": "./assets/logo-native.svg",
     "default_title": "Sidebery",
     "default_panel": "./sidebar/sidebar.html"
   },
-
   "page_action": {
     "browser_style": false,
     "default_icon": "./assets/proxy-native.svg",
     "default_title": "Sidebery proxy off",
     "default_popup": "./popup.proxy/proxy.html"
   },
-
   "commands": {
     "_execute_sidebar_action": {
       "suggested_key": {
@@ -382,7 +376,6 @@
       "description": "__MSG_KbHideActPanel__"
     }
   },
-
   "browser_action": {
     "default_icon": "./assets/logo-native.svg",
     "default_title": "__MSG_ActionTitle__",
@@ -400,7 +393,6 @@
       }
     ]
   },
-
   "background": {
     "page": "bg/background.html"
   }

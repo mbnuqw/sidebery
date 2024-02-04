@@ -19,7 +19,10 @@
     "build": "node build/all.js",
     "clear.npm": "rm -rf node_modules package-lock.json",
     "clear": "rm -rf addon",
-    "lint": "eslint ./src && web-ext lint -s ./addon"
+    "lint": "eslint ./src && web-ext lint -s ./addon",
+    "changelog": "node build/changelog.mjs",
+    "release-notes": "node build/release-notes.mjs",
+    "addon": "node build/addon.mjs"
   },
   "author": "mbnuqw",
   "license": "MIT",
