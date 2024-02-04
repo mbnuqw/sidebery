@@ -226,7 +226,7 @@ function onMouseDown(e: MouseEvent): void {
     }
 
     if (Settings.state.multipleMiddleClose && Settings.state.tabMiddleClick === 'close') {
-      Mouse.startMultiSelection(e, tab.id)
+      Mouse.startMultiSelection(e, tab.id, selectedTabs)
     } else {
       if (Settings.state.tabMiddleClick === 'close') {
         Tabs.removeTabs(selectedTabs)
@@ -277,7 +277,7 @@ function onMouseUp(e: MouseEvent): void {
     }
     activating = false
   } else if (e.button === 1) {
-    Mouse.stopMultiSelection()
+    const preselectedTabs = Mouse.stopMultiSelection()
 
     if (
       (e.ctrlKey && Settings.state.tabMiddleClickCtrl !== 'none') ||
@@ -292,7 +292,9 @@ function onMouseUp(e: MouseEvent): void {
       sameTargetType
     ) {
       if (!Selection.isSet()) select()
-      Tabs.removeTabs(Selection.get())
+      let selectedTabs = Selection.get()
+      if (selectedTabs.length === 1 && preselectedTabs?.length) selectedTabs = preselectedTabs
+      Tabs.removeTabs(selectedTabs)
     }
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return

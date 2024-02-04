@@ -31,6 +31,7 @@ let startY = 0
 
 let multiSelectionStartId: ID | null = null
 let multiSelectionStartY = 0
+let multiSelectionPreselected: ID[] | undefined
 
 let targetType: TargetType | null = null
 let targetId: ID | undefined
@@ -211,16 +212,20 @@ export function resetClickLock(delay = 0): void {
   else clickLock = false
 }
 
-export function startMultiSelection(e: MouseEvent, id: ID): void {
+export function startMultiSelection(e: MouseEvent, id: ID, preselected?: ID[]): void {
   if (Settings.state.ctxMenuNative && e.button === 2) return
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY
+  multiSelectionPreselected = preselected
 }
 
-export function stopMultiSelection(): void {
+export function stopMultiSelection(): ID[] | undefined {
+  const preselected = multiSelectionPreselected
   multiSelectionStartId = null
   Mouse.multiSelectionMode = false
   multiSelectionStartY = 0
+  multiSelectionPreselected = undefined
+  return preselected
 }
 
 let resizingStart = -1
