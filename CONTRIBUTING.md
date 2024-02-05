@@ -57,22 +57,4 @@ All languages are optional and the fallback mechanism is (if user has the `pt_BR
 
 ## Donate
 
-You can also donate to this project, which will motivate me to spend more time on Sidebery.
-
-<details><summary><b> Bitcoin (BTC): </b></summary>
-
-```
-bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m
-```
-![btc-bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m](https://user-images.githubusercontent.com/6276694/215584021-b1eee3ab-ca62-4a81-acb4-cd69c27c734a.png)
-
-</details>
-
-<details><summary><b> Ethereum (ETH): </b></summary>
-
-```
-0x11667D20AB328194AEEc68F9385CCcf713607929
-```
-![eth-0x11667D20AB328194AEEc68F9385CCcf713607929](https://user-images.githubusercontent.com/6276694/215587549-39505f92-0f80-43ec-bec1-42bf8cd570c4.png)
-
-</details>
+You can also [donate to this project](./DONATE.md).

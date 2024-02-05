@@ -124,6 +124,16 @@ TJEdp1TnsN7Jfhfi9Db8yXKDK8NEUovCZb
 
 </details>
 
+<details><summary><b> Solana (SOL) </b></summary>
+
+```
+GdWipUmnhdDa7kqkF3SJm5jTYqp3UsTdbcGCC1xLbVJf
+```
+
+![GdWipUmnhdDa7kqkF3SJm5jTYqp3UsTdbcGCC1xLbVJf](https://github.com/mbnuqw/sidebery/assets/6276694/09adb5aa-3c68-48a0-9f21-0201011638d8)
+
+</details>
+
 ## License
 
 [MIT](./LICENSE)
