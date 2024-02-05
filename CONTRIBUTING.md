@@ -15,7 +15,7 @@ You can open an issue to report a bug or request a feature. Note that the more d
 
 ## Pull Requests
 
-You can open a PR to fix a bug, change/create translation or add a new feature. It may take some time to review changes, so thank you in advance for your patience.
+You can open a PR to fix a bug, change/create translation or add a new feature. A PR that address multiple bugs/feature requests at once will be closed. It may take some time to review changes, so thank you in advance for your patience.
 
 ### Translations
 
