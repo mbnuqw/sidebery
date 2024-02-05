@@ -258,19 +258,26 @@ export function getWheelDebouncer(
 ): (e: WheelEvent) => void {
   if (!Settings.state.wheelThreshold) return cb
 
-  let threshold = 0
-  if (direction === WheelDirection.Vertical) threshold = Settings.state.wheelThresholdY
-  else threshold = Settings.state.wheelThresholdX
-
   let stopTimeout: number | undefined
   let first = true
   let delta = 0
   let deltaBuf = 0
 
   return (e: WheelEvent) => {
+    // Keep values in the callback so they can update with settings on the fly
+    let threshold = 0
+    let accumulation = true
+    if (direction === WheelDirection.Vertical) {
+      threshold = Settings.state.wheelThresholdY
+      accumulation = Settings.state.wheelAccumulationY
+    } else {
+      threshold = Settings.state.wheelThresholdX
+      accumulation = Settings.state.wheelAccumulationX
+    }
+
     clearTimeout(stopTimeout)
     stopTimeout = setTimeout(() => {
-      if (Settings.state.wheelAccumulation) {
+      if (accumulation) {
         deltaBuf = 0
         first = true
       } else {
@@ -285,7 +292,7 @@ export function getWheelDebouncer(
     if (e.deltaMode !== 0) return cb(e)
 
     delta = direction === WheelDirection.Vertical ? e.deltaY : e.deltaX
-    if (Settings.state.wheelAccumulation) {
+    if (accumulation) {
       if (!first && delta) deltaBuf += delta
       else first = false
     } else {
@@ -293,7 +300,7 @@ export function getWheelDebouncer(
     }
 
     if (deltaBuf > threshold || deltaBuf < -threshold) {
-      if (Settings.state.wheelAccumulation) {
+      if (accumulation) {
         deltaBuf = 0
       } else {
         delta = 0

@@ -173,7 +173,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Mouse
   hScrollAction: 'none',
   onePanelSwitchPerScroll: false,
-  wheelAccumulation: true,
+  wheelAccumulationX: true,
+  wheelAccumulationY: true,
   navSwitchPanelsDelay: 128,
   scrollThroughTabs: 'none',
   scrollThroughVisibleTabs: true,
