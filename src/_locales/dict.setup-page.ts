@@ -2976,6 +2976,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     de: n => (n === 1 ? 'Tag' : 'Tage'),
     zh: '天',
   },
+  'settings.snap_limit_note': {
+    en: "Doesn't apply to auto-exported snapshots",
+    ru: 'Не применяется к автоматически экспортируемым снимкам',
+    de: 'Gilt nicht für automatisch exportierte Snapshots',
+    zh_CN: '不适用于自动导出的快照',
+    zh_TW: '不適用於自動匯出的快照',
+  },
   'settings.snapshots_view_label': {
     en: 'View snapshots',
     ru: 'Просмотреть снепшоты',

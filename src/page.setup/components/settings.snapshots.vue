@@ -57,6 +57,7 @@ section(ref="el")
     :or="'none'"
     :unitOpts="SETTINGS_OPTIONS.snapLimitUnit"
     :maxValue="Settings.state.snapLimitUnit === 'kb' ? MAX_SIZE_LIMIT : undefined"
+    :note="translate('settings.snap_limit_note')"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
   .ctrls
