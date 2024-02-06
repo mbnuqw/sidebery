@@ -3057,9 +3057,17 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.wheel_accumulation_x': {
     en: 'Horizontal scroll wheel accumulation',
+    de: 'Horizontale Scroll-Ansammlung',
+    ru: 'Режим накопления горизонтальной прокрутки',
+    zh_CN: '水平滚动累积',
+    zh_TW: '水平滾動累積',
   },
   'settings.wheel_accumulation_y': {
     en: 'Vertical scroll wheel accumulation',
+    de: 'Vertikale Scroll-Ansammlung',
+    ru: 'Режим накопления вертикальной прокрутки',
+    zh_CN: '垂直滚动累积',
+    zh_TW: '垂直滾動累積',
   },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',
@@ -3375,9 +3383,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '标签页面板操作',
     zh_TW: '分頁面板操作',
     de: 'Aktionen mit Tab-Panels',
-  },
-  'settings.accumulation_options_sub_title': {
-    en: 'Accumulation Options',
   },
   'settings.tabs_panel_left_click_action': {
     en: 'Left click on tabs panel',

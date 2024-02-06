@@ -74,22 +74,21 @@ section(ref="el")
       :inactive="!Settings.state.wheelThreshold"
       :or="60"
       @update:value="Settings.saveDebounced(500)")
+    ToggleField(
+      label="settings.wheel_accumulation_y"
+      v-model:value="Settings.state.wheelAccumulationY"
+      :inactive="!Settings.state.wheelThreshold"
+      @update:value="Settings.saveDebounced(150)")
     NumField.-inline(
       label="settings.wheel_threshold_x"
       v-model:value="Settings.state.wheelThresholdX"
       :inactive="!Settings.state.wheelThreshold"
       :or="10"
       @update:value="Settings.saveDebounced(500)")
-
-  .wrapper
-    .sub-title: .text {{translate('settings.accumulation_options_sub_title')}}
     ToggleField.-no-separator(
       label="settings.wheel_accumulation_x"
       v-model:value="Settings.state.wheelAccumulationX"
-      @update:value="Settings.saveDebounced(150)")
-    ToggleField(
-      label="settings.wheel_accumulation_y"
-      v-model:value="Settings.state.wheelAccumulationY"
+      :inactive="!Settings.state.wheelThreshold"
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper
