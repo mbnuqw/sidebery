@@ -128,11 +128,27 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
   const minIndex = Math.min(aTab.index, bTab.index)
   const maxIndex = Math.max(aTab.index, bTab.index)
 
-  for (let i = minIndex; i <= maxIndex; i++) {
-    const target = Tabs.list[i]
+  const panel = Sidebar.panelsById[aTab.panelId]
+  if (!Utils.isTabsPanel(panel)) return resetSelection()
 
-    target.reactive.sel = target.sel = true
-    Selection.selected.push(target.id)
+  // Select range in filtered list
+  if (panel.filteredTabs && !aTab.pinned) {
+    for (const tab of panel.filteredTabs) {
+      if (tab.index >= minIndex && tab.index <= maxIndex) {
+        tab.reactive.sel = tab.sel = true
+        Selection.selected.push(tab.id)
+      }
+    }
+  }
+
+  // Select range in global list
+  else {
+    for (let i = minIndex; i <= maxIndex; i++) {
+      const target = Tabs.list[i]
+
+      target.reactive.sel = target.sel = true
+      Selection.selected.push(target.id)
+    }
   }
 
   selType = SelectionType.Tabs
