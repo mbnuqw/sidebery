@@ -176,7 +176,9 @@ export interface SettingsState {
   // Mouse
   hScrollThroughPanels?: boolean // DEPR
   hScrollAction: (typeof SETTINGS_OPTIONS.hScrollAction)[number]
-  onePanelSwitchPerScroll: boolean
+  onePanelSwitchPerScroll: boolean,
+  wheelAccumulationX: boolean,
+  wheelAccumulationY: boolean,
   scrollThroughTabs: (typeof SETTINGS_OPTIONS.scrollThroughTabs)[number]
   scrollThroughVisibleTabs: boolean
   scrollThroughTabsSkipDiscarded: boolean

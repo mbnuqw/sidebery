@@ -296,8 +296,10 @@ let lastDir: number | undefined
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
-  if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
-  if (e.deltaX === 0) return
+  if (e.deltaX !== 0)
+    Mouse.blockWheel(WheelDirection.Vertical)
+  else
+    return
 
   if (Settings.state.hScrollAction === 'switch_panels') {
     const dir = e.deltaX > 0 ? 1 : -1

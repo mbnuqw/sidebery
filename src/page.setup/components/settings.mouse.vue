@@ -82,6 +82,17 @@ section(ref="el")
       @update:value="Settings.saveDebounced(500)")
 
   .wrapper
+    .sub-title: .text {{translate('settings.accumulation_options_sub_title')}}
+    ToggleField.-no-separator(
+      label="settings.wheel_accumulation_x"
+      v-model:value="Settings.state.wheelAccumulationX"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.wheel_accumulation_y"
+      v-model:value="Settings.state.wheelAccumulationY"
+      @update:value="Settings.saveDebounced(150)")
+
+  .wrapper
     .sub-title: .text {{translate('settings.nav_actions_sub_title')}}
     SelectField.-no-separator(
       label="settings.nav_act_tabs_panel_left_click"

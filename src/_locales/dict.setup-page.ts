@@ -3055,6 +3055,12 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '每次滚动仅切换一个面板',
     zh_TW: '每次捲動僅切換一個面板',
   },
+  'settings.wheel_accumulation_x': {
+    en: 'Horizontal scroll wheel accumulation',
+  },
+  'settings.wheel_accumulation_y': {
+    en: 'Vertical scroll wheel accumulation',
+  },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',
     ru: 'Переключать вкладки с помощью колеса прокрутки',
@@ -3369,6 +3375,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '标签页面板操作',
     zh_TW: '分頁面板操作',
     de: 'Aktionen mit Tab-Panels',
+  },
+  'settings.accumulation_options_sub_title': {
+    en: 'Accumulation Options',
   },
   'settings.tabs_panel_left_click_action': {
     en: 'Left click on tabs panel',
