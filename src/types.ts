@@ -196,6 +196,7 @@ export interface DragInfo {
   pinnedTabs?: boolean
   index?: number
   copy?: boolean
+  inheritContainer?: boolean
 }
 
 export interface SrcPlaceInfo {

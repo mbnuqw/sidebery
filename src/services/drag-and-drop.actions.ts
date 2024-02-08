@@ -52,6 +52,7 @@ export function start(info: DragInfo, dstType?: DropType): void {
   DnD.srcIndex = info.index ?? -1
   DnD.dropMode = info.copy ? 'copy' : 'auto'
   DnD.reactive.dstPanelId = info.panelId
+  DnD.inheritContainer = !!info.inheritContainer
 
   if (dstType) DnD.reactive.dstType = dstType
   updateTooltip(info)
@@ -118,6 +119,7 @@ export function reset(): void {
   DnD.srcPanelId = NOID
   DnD.srcIndex = -1
   DnD.dropMode = 'auto'
+  DnD.inheritContainer = false
 
   DnD.reactive.dstIndex = -1
   DnD.reactive.dstPanelId = ''
@@ -212,7 +214,7 @@ function getDestInfo(): DstPlaceInfo {
   if (Utils.isTabsPanel(dstPanel)) {
     const destContainer = Containers.reactive.byId[dstPanel.dropTabCtx ?? '']
     if (destContainer) info.containerId = dstPanel.dropTabCtx
-    else info.containerId = CONTAINER_ID
+    else if (!DnD.inheritContainer) info.containerId = CONTAINER_ID
   }
   if (info.index === -1) {
     info.inside = true

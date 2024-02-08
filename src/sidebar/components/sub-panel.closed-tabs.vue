@@ -140,6 +140,7 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     x: e.clientX,
     y: e.clientY,
     copy: true,
+    inheritContainer: true,
   }
 
   DnD.start(dragInfo, DropType.Tabs)
