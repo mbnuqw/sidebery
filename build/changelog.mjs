@@ -5,12 +5,12 @@ import { execSync } from 'child_process'
 
 const owner = 'mbnuqw'
 const repo = 'sidebery'
+const branch = 'v5'
 const githubToken = process.env.GITHUB_TOKEN
-const gitLogFlags = '--all --branches --remotes --date-order --abbrev-commit --decorate'
 const gitLogFormat =
   "--format=format:'::[commit:%H][date:%as][subject:%s]][body:%b]][author:%an][committer:%cn][email:%ae][info:%d]'"
-const changelogGitlogFlags =
-  "--all --branches --remotes --date-order --format=format:'%H' -n 1 -- ./CHANGELOG.md"
+const gitLogFlags = `--date-order --abbrev-commit --decorate ${gitLogFormat} ${branch}`
+const changelogGitlogFlags = `--date-order --format=format:'%H' -n 1 ${branch} -- ./CHANGELOG.md`
 const commitInfoRE =
   /\[commit:(?<commit>.+)\]\[date:(?<date>.+)\]\[subject:(?<subject>.+)\]\]\[body:(?<body>(.|\r?\n)*)\]\]\[author:(?<author>.+)\]\[committer:(?<committer>.+)\]\[email:(?<email>.*)\]\[info:(?<info>.*)\]/m
 const versionInCommitRE = /tag: (?<version>v?\d\d?\.\d\d?\.\d\d?)/
@@ -31,7 +31,7 @@ const replaceLoginRE = /@([a-zA-Z0-9-_]+)/g
 const contributors = new Map()
 
 const changelogLastCommit = await execSync(`git log ${changelogGitlogFlags}`, { encoding: 'utf-8' })
-const gitlogResult = await execSync(`git log ${gitLogFlags} ${gitLogFormat}`, { encoding: 'utf-8' })
+const gitlogResult = await execSync(`git log ${gitLogFlags}`, { encoding: 'utf-8' })
 const commits = parseGitLog(gitlogResult)
 const releases = await groupCommits(commits)
 const changelog = generateChangelog(releases)
@@ -239,7 +239,7 @@ function generateChangelog(releases) {
     for (const group of release.groups) {
       if (!group.commits.length) continue
 
-      changelog += `\n${group.name}`
+      changelog += `\n${group.name}\n`
 
       for (const commit of group.commits) {
         changelog += `\n- ${commit.name}`
