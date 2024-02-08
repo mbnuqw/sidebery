@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added
+
+- Note about snapshots limit: not applicable to exported snapshots
+
+### Fixed
+
+- Incorrect tabs range selection with shift+click in search result
+- Scroll thresholds not applying to mouse debouncer (by [@ImTheSquid](https://github.com/ImTheSquid): [#1440](https://github.com/mbnuqw/sidebery/issues/1440))
+- Preserve selection on mid-click when 'multipleMiddleClose' is on ([#1441](https://github.com/mbnuqw/sidebery/issues/1441))
+
 ## 5.1.1 - 2024-02-02
 
 Empty release to fix incorrectly uploaded version on AMO.
@@ -9,11 +19,13 @@ Empty release to fix incorrectly uploaded version on AMO.
 ## 5.1.0 - 2024-02-01
 
 ### Added
+
 - Mouse setting: One panel switch per scroll setting (thanks [@ImTheSquid](https://github.com/ImTheSquid), [#1424](https://github.com/mbnuqw/sidebery/pull/1424))
 - Confirm popup by pressing the enter key (thanks [@into-the-v0id](https://github.com/into-the-v0id), [#1326](https://github.com/mbnuqw/sidebery/pull/1326))
 - A "Toggle branch" keyboard shortcut setter (thanks [@paul-ohl](https://github.com/paul-ohl), [#1276](https://github.com/mbnuqw/sidebery/pull/1276))
 
 ### Fixed
+
 - Handle all selected tabs on middle click action (close/unload)
 - Preserve scroll position of active panel after settings change
 - New Tab Shortcuts: Allow to use any container
@@ -35,6 +47,7 @@ Empty release to fix incorrectly uploaded version on AMO.
 ## 5.0.0 - 2023-09-19
 
 ### Added
+
 - Proton theme and added support of Firefox colors (themes)
 - Sub-menus in custom context menu
 - History panel
@@ -75,6 +88,7 @@ Empty release to fix incorrectly uploaded version on AMO.
 - Keybindings: Duplicate selected/active tabs ([#1015](https://github.com/mbnuqw/sidebery/issues/1015))
 
 ### Fixed
+
 - DnD to the tab should put items at the end of branch ([#739](https://github.com/mbnuqw/sidebery/issues/739))
 - New tab in panel don't open in container (Opt-in workaround: "Detect externally opened tab and reopen it in the target container on the first web request (global setting)") ([#305](https://github.com/mbnuqw/sidebery/issues/305))
 - Add proper support for non-QWERTY layouts in keybindings ([#476](https://github.com/mbnuqw/sidebery/issues/476))
@@ -84,10 +98,10 @@ Empty release to fix incorrectly uploaded version on AMO.
 
 ### Special thanks
 
-__To contributors__: @emvaized, @loveqianool, @52fisher, @fsaresh, @zelch, @siddhpant, @alan-palacios, @jayeheffernan, @koppor, @gotjoshua, @sarchar, @HT43-bqxFqB, @SLin0218, @mateon1, @xdenial, @Qjo1, @br4nnigan.
+**To contributors**: @emvaized, @loveqianool, @52fisher, @fsaresh, @zelch, @siddhpant, @alan-palacios, @jayeheffernan, @koppor, @gotjoshua, @sarchar, @HT43-bqxFqB, @SLin0218, @mateon1, @xdenial, @Qjo1, @br4nnigan.
 
-__Community activity, feedback and bug reports__: @albino1, @emvaized, @megamorphg, @ongots, @drkhn1234, @jathek and everyone who made bug reports and feature requests, participated in discussions and helped other users.
+**Community activity, feedback and bug reports**: @albino1, @emvaized, @megamorphg, @ongots, @drkhn1234, @jathek and everyone who made bug reports and feature requests, participated in discussions and helped other users.
 
-__Donations__: Many thanks to all donors. You keep this project alive.
+**Donations**: Many thanks to all donors. You keep this project alive.
 
 <br>
