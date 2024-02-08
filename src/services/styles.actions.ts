@@ -5,6 +5,9 @@ import { Store } from 'src/services/storage'
 import { Info } from 'src/services/info'
 import * as Utils from 'src/utils'
 import { Sidebar } from './sidebar'
+import { Windows } from './windows'
+import { NOID } from 'src/defaults'
+import * as Logs from 'src/services/logs'
 
 const SRC_VARS: (keyof SrcVars)[] = [
   'frame_bg',
@@ -31,7 +34,21 @@ export async function initColorScheme(): Promise<void> {
   await updateColorScheme()
 
   setupAutoColorSchemeListener(() => updateColorScheme())
-  browser.theme.onUpdated.addListener(upd => updateColorScheme(upd?.theme))
+  browser.theme.onUpdated.addListener(upd => {
+    // Ignore update for different window
+    if (upd && upd.windowId !== undefined && Windows.id !== NOID && upd.windowId !== Windows.id) {
+      return
+    }
+
+    // Use fallback theme for Group and Url pages if an update
+    // comes for a specific window
+    if (Info.isBg && upd && upd.windowId !== undefined) {
+      updateColorScheme({})
+      return
+    }
+
+    updateColorScheme(upd?.theme)
+  })
 }
 
 export function getColorSchemeName(colorScheme?: ColorSchemeVariant): 'dark' | 'light' {
@@ -41,7 +58,9 @@ export function getColorSchemeName(colorScheme?: ColorSchemeVariant): 'dark' | '
 
 export async function updateColorScheme(theme?: browser.theme.Theme): Promise<void> {
   if (Settings.state.colorScheme === 'ff') {
-    if (!theme) theme = await browser.theme.getCurrent()
+    if (!theme) {
+      theme = await browser.theme.getCurrent(Windows.id !== NOID ? Windows.id : undefined)
+    }
 
     const result = parseFirefoxTheme(theme)
 
