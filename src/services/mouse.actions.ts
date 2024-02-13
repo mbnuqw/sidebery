@@ -1,5 +1,5 @@
 import { ItemBoundsType, SubPanelType, WheelDirection } from 'src/types'
-import { PRE_SCROLL } from 'src/defaults'
+import { NOID, PRE_SCROLL } from 'src/defaults'
 import { Mouse, ResizingMode } from 'src/services/mouse'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
@@ -7,6 +7,7 @@ import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { DnD } from 'src/services/drag-and-drop'
+import * as Preview from 'src/services/tabs.preview'
 
 type TargetType =
   | 'sidebar'
@@ -78,6 +79,15 @@ export function onMouseMove(e: MouseEvent): void {
       resizingDelta = e.clientY - resizingStart
     }
     if (resizingCallback) resizingCallback(resizingStart, resizingDelta)
+    return
+  }
+
+  if (
+    Settings.state.previewTabs &&
+    Settings.state.previewTabsFollowMouse &&
+    Preview.state.winId !== NOID
+  ) {
+    Preview.setPreviewPopupPosition(e.clientY)
     return
   }
 
@@ -160,6 +170,17 @@ export function startLongClick(
   id: ID,
   cb?: () => void
 ): void {
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.mouseLeaveTimeout)
+
+    if (Settings.state.previewTabsInline) {
+      Preview.closePreviewInline()
+    } else {
+      Preview.closePreviewPopup()
+    }
+  }
+
   clearTimeout(longClickTimeout)
   longClickTimeout = setTimeout(() => {
     if (DnD.reactive.isStarted) return
@@ -214,6 +235,18 @@ export function resetClickLock(delay = 0): void {
 
 export function startMultiSelection(e: MouseEvent, id: ID, preselected?: ID[]): void {
   if (Settings.state.ctxMenuNative && e.button === 2) return
+
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.mouseLeaveTimeout)
+
+    if (Settings.state.previewTabsInline) {
+      Preview.closePreviewInline()
+    } else {
+      Preview.closePreviewPopup()
+    }
+  }
+
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY
   multiSelectionPreselected = preselected

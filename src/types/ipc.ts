@@ -18,6 +18,7 @@ export const enum InstanceType {
   search = 4,
   url = 5,
   proxy = 6,
+  preview = 7,
 }
 
 export interface Message<T extends InstanceType, A extends ActionsKeys<T>> {
@@ -106,24 +107,37 @@ export type SearchPopupActions = {
   closePopup: () => void
 }
 
-export type Actions = BgActions | SettingsActions | SidebarActions | SearchPopupActions
+export type PreviewAction = {
+  updatePreview: (tabId: ID, title: string, url: string, unloaded: boolean) => void
+}
+
+export type Actions =
+  | BgActions
+  | SettingsActions
+  | SidebarActions
+  | SearchPopupActions
+  | PreviewAction
 
 export type ActionsKeys<T> = T extends InstanceType.bg
   ? keyof BgActions
   : T extends InstanceType.setup
-  ? keyof SettingsActions
-  : T extends InstanceType.sidebar
-  ? keyof SidebarActions
-  : T extends InstanceType.search
-  ? keyof SearchPopupActions
-  : never
+    ? keyof SettingsActions
+    : T extends InstanceType.sidebar
+      ? keyof SidebarActions
+      : T extends InstanceType.search
+        ? keyof SearchPopupActions
+        : T extends InstanceType.preview
+          ? keyof PreviewAction
+          : never
 
 export type ActionsType<T> = T extends InstanceType.bg
   ? BgActions
   : T extends InstanceType.setup
-  ? SettingsActions
-  : T extends InstanceType.sidebar
-  ? SidebarActions
-  : T extends InstanceType.search
-  ? SearchPopupActions
-  : any
+    ? SettingsActions
+    : T extends InstanceType.sidebar
+      ? SidebarActions
+      : T extends InstanceType.search
+        ? SearchPopupActions
+        : T extends InstanceType.preview
+          ? PreviewAction
+          : any

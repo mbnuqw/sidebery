@@ -11,10 +11,23 @@
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     AnimatedTabList(:panel="panel")
-      TabComponent(
+      .tab-preview(
+        v-if="Tabs.reactive.inlinePreviewPinnedImg"
+        :style="{ '--bgi': Tabs.reactive.inlinePreviewPinnedImg }"
+        @mouseenter="onPreviewMouseEnter"
+        @mouseleave="onPreviewMouseLeave")
+      template(
+        v-if="Settings.state.previewTabs && Settings.state.previewTabsInline"
         v-for="id in panel.reactive.visibleTabIds"
-        :key="id"
-        :tabId="id")
+        :key="id")
+        TabComponent(:tabId="id")
+        .tab-preview(
+          v-if="Tabs.reactive.inlinePreviewTabId === id"
+          :style="{ '--bgi': Tabs.byId[id]?.previewImg }"
+          @mouseenter="onPreviewMouseEnter"
+          @mouseleave="onPreviewMouseLeave")
+      template(v-else)
+        TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")
@@ -53,6 +66,7 @@ import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
 import DragAndDropPointer from './dnd-pointer.vue'
 import AnimatedTabList from './animated-tab-list.vue'
+import * as Preview from 'src/services/tabs.preview'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
@@ -231,5 +245,17 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
 
 function onMouseLeave() {
   if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
+}
+
+function onPreviewMouseEnter() {
+  clearTimeout(Preview.state.mouseEnterTimeout)
+  clearTimeout(Preview.state.mouseLeaveTimeout)
+}
+
+function onPreviewMouseLeave() {
+  clearTimeout(Preview.state.mouseLeaveTimeout)
+  Preview.state.mouseLeaveTimeout = setTimeout(() => {
+    Preview.closePreviewInline()
+  }, 32)
 }
 </script>

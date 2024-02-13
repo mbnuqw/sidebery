@@ -223,6 +223,11 @@ function onRemovedWebDataBg(): void {
     settingsSaveNeeded = true
   }
 
+  if (Settings.state.previewTabs) {
+    Settings.state.previewTabs = false
+    settingsSaveNeeded = true
+  }
+
   if (containersSaveNeeded) {
     Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
   }

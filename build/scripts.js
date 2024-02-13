@@ -14,6 +14,7 @@ const TS_CONFIG = getTSConfig()
 const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
+  'src/page.tab-preview/tab-preview.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
 
@@ -316,6 +317,20 @@ async function main() {
       bundle: true,
       format: 'esm',
       outdir: path.join(ADDON_PATH, 'injections'),
+      define: ESBUILD_DEFINE,
+    })
+    // Bundled script for preview
+    await esbuild.build({
+      entryPoints: ['src/page.tab-preview/tab-preview.ts'],
+      tsconfig: 'tsconfig.json',
+      charset: 'utf8',
+      splitting: false,
+      minifyWhitespace: true,
+      minifySyntax: true,
+      treeShaking: true,
+      bundle: true,
+      format: 'esm',
+      outdir: path.join(ADDON_PATH, 'page.tab-preview'),
       define: ESBUILD_DEFINE,
     })
     logOk('Scripts: Done')

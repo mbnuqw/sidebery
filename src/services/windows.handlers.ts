@@ -3,6 +3,8 @@ import { Windows } from 'src/services/windows'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.bg'
 import { Info } from 'src/services/info'
+import { NOID } from 'src/defaults'
+import * as Preview from 'src/services/tabs.preview'
 
 type WindowCreatedHandler = (w: browser.windows.Window) => void
 
@@ -59,6 +61,7 @@ function onWindowRemovedBg(windowId: ID): void {
 }
 
 function onWindowRemovedFg(windowId: ID): void {
+  if (Preview.state.winId === windowId) Preview.state.winId = NOID
   if (windowId === Windows.id || !Windows.otherWindows) return
   const index = Windows.otherWindows.findIndex(w => w.id === windowId)
   if (index >= 0) Windows.otherWindows.splice(index, 1)

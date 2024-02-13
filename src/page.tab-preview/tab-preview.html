@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @keyframes appearing {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    html {
+      position: relative;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      color-scheme: light dark;
+      background-color: light-dark(#eee, #333);
+      animation: appearing .2s;
+    }
+    body {
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: sans-serif;
+      transition: background 1s;
+    }
+    .header {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      background-color: var(--hbg);
+      color: var(--hfg);
+      overflow: hidden;
+    }
+    #title {
+      position: relative;
+      margin: 6px 8px;
+      padding: 0;
+      font-size: .875rem;
+      font-weight: 700;
+      /* line-height: 1.1rem;
+      max-height: 2.2rem;
+      overflow: clip; */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #url {
+      position: relative;
+      margin: 4px 8px 8px;
+      padding: 0;
+      font-size: .75rem;
+      font-weight: 400;
+      /* line-height: 1rem;
+      max-height: 2rem;
+      overflow: clip; */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: .75;
+    }
+    #preview_box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    #preview_1, #preview_2 {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background-color: var(--bg);
+      background-image: var(--preview);
+      background-repeat: no-repeat;
+      background-position: 50% 0%;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+  </style>
+</head>
+<body id="root">
+  <div class="header">
+    <p id="title"></p>
+    <p id="url"></p>
+  </div>
+  <div id="preview_box">
+    <div id="preview_1"></div>
+    <div id="preview_2"></div>
+  </div>
+  <script src="./tab-preview.js" async></script>
+</body>
+</html>

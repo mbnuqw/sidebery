@@ -81,6 +81,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       branchColor: null,
       color: null,
       isGroup: tab.isGroup,
+      preview: false,
     }
   }
 
@@ -121,6 +122,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     branchColor: null,
     color: null,
     isGroup: tab.isGroup,
+    preview: false,
   }
 
   if (reactFn) return reactFn(rProps)
@@ -2610,6 +2612,8 @@ export function updateTooltip(tabId: ID) {
   tab.reactive.tooltip = getTooltip(tab)
 }
 function getTooltip(tab: Tab): string {
+  if (Settings.state.previewTabs) return ''
+
   let decodedUrl
   try {
     decodedUrl = decodeURI(tab.url)

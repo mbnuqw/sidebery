@@ -55,6 +55,7 @@ export const state = {
   sidebarConnections: new Map<ID, ConnectionInfo>(),
   setupPageConnections: new Map<ID, ConnectionInfo>(),
   groupPageConnections: new Map<ID, ConnectionInfo>(),
+  previewConnection: undefined as ConnectionInfo | undefined,
 }
 
 export function setInstanceType(type: InstanceType): void {
@@ -79,6 +80,7 @@ export function isConnected(type: InstanceType, id = NOID): boolean {
   else if (type === InstanceType.setup) return state.setupPageConnections.has(id)
   else if (type === InstanceType.search) return state.searchPopupConnections.has(id)
   else if (type === InstanceType.group) return state.groupPageConnections.has(id)
+  else if (type === InstanceType.preview && state.previewConnection) return true
   return false
 }
 
@@ -88,6 +90,7 @@ export function getConnection(type: InstanceType, id: ID): ConnectionInfo | void
   else if (type === InstanceType.setup) return state.setupPageConnections.get(id)
   else if (type === InstanceType.search) return state.searchPopupConnections.get(id)
   else if (type === InstanceType.group) return state.groupPageConnections.get(id)
+  else if (type === InstanceType.preview) return state.previewConnection
 }
 
 function createConnection(type: InstanceType, id: ID): ConnectionInfo {
@@ -97,6 +100,7 @@ function createConnection(type: InstanceType, id: ID): ConnectionInfo {
   else if (type === InstanceType.setup) state.setupPageConnections.set(id, connection)
   else if (type === InstanceType.search) state.searchPopupConnections.set(id, connection)
   else if (type === InstanceType.group) state.groupPageConnections.set(id, connection)
+  else if (type === InstanceType.preview) state.previewConnection = connection
   return connection
 }
 
@@ -117,10 +121,11 @@ export function connectTo(
   const toSetup = dstType === InstanceType.setup
   const toSearch = dstType === InstanceType.search
   const toGroup = dstType === InstanceType.group
+  const toPreview = dstType === InstanceType.preview
 
   // Check destination id
   let id
-  if (toBg) id = NOID
+  if (toBg || toPreview) id = NOID
   else if ((toSidebar || toSearch) && dstWinId !== NOID) id = dstWinId
   else if ((toSetup || toGroup) && dstTabId !== NOID) id = dstTabId
   else {
@@ -173,6 +178,7 @@ export function connectTo(
       else if (toSetup) state.setupPageConnections.delete(dstTabId)
       else if (toSearch) state.searchPopupConnections.delete(dstWinId)
       else if (toGroup) state.groupPageConnections.delete(dstTabId)
+      else if (toPreview) state.previewConnection = undefined
     }
 
     // Run disconnection handlers
@@ -317,6 +323,22 @@ export function bg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.bg, action, args }
   return request(msg, AutoConnectMode.WithRetry)
+}
+export function sendToBg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+) {
+  send({ dstType: InstanceType.bg, action, args })
+}
+
+/**
+ * Sends message to preview.
+ */
+export function sendToPreview<T extends InstanceType.preview, A extends ActionsKeys<T>>(
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+) {
+  send({ dstType: InstanceType.preview, action, args })
 }
 
 export function send<T extends InstanceType, A extends ActionsKeys<T>>(msg: Message<T, A>): void {
@@ -466,6 +488,7 @@ function onConnect(port: browser.runtime.Port) {
   const fromSetup = srcType === InstanceType.setup
   const fromSearch = srcType === InstanceType.search
   const fromGroup = srcType === InstanceType.group
+  const fromPreview = srcType === InstanceType.preview
   if (fromSidebar && srcWinId === NOID) return Logs.err('IPC.onConnect: Sidebar: No srcWinId')
   if (fromSetup && srcTabId === NOID) return Logs.err('IPC.onConnect: Setup page: No srcTabId')
   if (fromSearch && srcWinId === NOID) return Logs.err('IPC.onConnect: Search popup: No srcWinId')
@@ -473,7 +496,7 @@ function onConnect(port: browser.runtime.Port) {
 
   // Check source id
   let id
-  if (fromBg) id = NOID
+  if (fromBg || fromPreview) id = NOID
   else if ((fromSidebar || fromSearch) && srcWinId !== NOID) id = srcWinId
   else if ((fromSetup || fromGroup) && srcTabId !== NOID) id = srcTabId
   else {
@@ -534,6 +557,7 @@ function onConnect(port: browser.runtime.Port) {
       else if (fromSetup) state.setupPageConnections.delete(srcTabId)
       else if (fromSearch) state.searchPopupConnections.delete(srcWinId)
       else if (fromGroup) state.groupPageConnections.delete(srcTabId)
+      else if (fromPreview) state.previewConnection = undefined
     }
 
     // Run disconnection handlers
@@ -555,6 +579,7 @@ export function onConnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
   if (type === InstanceType.setup) state.setupPageConnections.forEach(con => cb(con.id))
   if (type === InstanceType.search) state.searchPopupConnections.forEach(con => cb(con.id))
   if (type === InstanceType.group) state.groupPageConnections.forEach(con => cb(con.id))
+  if (type === InstanceType.preview && state.previewConnection) cb(NOID)
 
   const handlers = connectionHandlers.get(type) ?? []
   handlers.push(cb)

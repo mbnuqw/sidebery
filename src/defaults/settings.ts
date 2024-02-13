@@ -127,6 +127,17 @@ export const DEFAULT_SETTINGS: SettingsState = {
   colorizeTabsBranchesSrc: 'url',
   inheritCustomColor: true,
 
+  // Tabs preview
+  previewTabs: false,
+  previewTabsInline: true,
+  previewTabsInlineHeight: 70,
+  previewTabsPopupWidth: 280,
+  previewTabsSide: 'right',
+  previewTabsDelay: 500,
+  previewTabsFollowMouse: true,
+  previewTabsOffsetY: 36,
+  previewTabsOffsetX: 6,
+
   // Native tabs
   hideInact: false,
   hideFoldedTabs: false,
@@ -268,6 +279,7 @@ export const SETTINGS_OPTIONS = {
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'],
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
+  previewTabsSide: ['right', 'left'],
   hideFoldedParent: ['any', 'group', 'none'],
   rmChildTabs: ['all', 'folded', 'none'],
   fontSize: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],

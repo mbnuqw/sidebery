@@ -154,3 +154,30 @@
   position: relative
   flex-shrink: 0
   height: calc(var(--tabs-height) + var(--general-margin))
+
+.TabsPanel .tab-preview
+  position: relative
+  width: calc(100% - var(--tabs-margin) * 2)
+  height: var(--tabs-inline-preview-height)
+  margin: 0 var(--tabs-margin)
+  z-index: 100
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: calc(100% - var(--tabs-margin))
+    border-radius: var(--tabs-border-radius)
+    background-color: var(--frame-bg)
+    background-image: var(--bgi)
+    background-repeat: no-repeat
+    background-position: 50% 0%
+    background-size: cover
+    box-shadow: 0 1px 4px -1px #00000048
+
+.TabsPanel .tab-preview.-hidden
+  opacity: 0
+  transform: translateY(-8px)
+  z-index: -1

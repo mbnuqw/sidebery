@@ -308,6 +308,59 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper
+    .sub-title: .text {{translate('settings.tabs_preview_title')}}
+    ToggleField.-no-separator(
+      label="settings.tabs.preview"
+      :value="Settings.state.previewTabs"
+      @update:value="togglePreviewTabs")
+    ToggleField(
+      label="settings.tabs.preview_inline"
+      v-model:value="Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(150)")
+    NumField.-inline(
+      label="settings.tabs.preview_delay"
+      v-model:value="Settings.state.previewTabsDelay"
+      :or="0"
+      :inactive="!Settings.state.previewTabs"
+      @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_inline_height"
+      v-model:value="Settings.state.previewTabsInlineHeight"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || !Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_popup_width"
+      v-model:value="Settings.state.previewTabsPopupWidth"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(500)")
+    SelectField(
+      label="settings.tabs.preview_side"
+      optLabel="settings.tabs.preview_side_"
+      v-model:value="Settings.state.previewTabsSide"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :opts="Settings.getOpts('previewTabsSide')"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.tabs.preview_follow_mouse"
+      v-model:value="Settings.state.previewTabsFollowMouse"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(150)")
+    NumField.-inline(
+      label="settings.tabs.preview_offset_y"
+      v-model:value="Settings.state.previewTabsOffsetY"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_offset_x"
+      v-model:value="Settings.state.previewTabsOffsetX"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      @update:value="Settings.saveDebounced(500)")
+
+  .wrapper
     .sub-title: .text {{translate('settings.tabs_native_title')}}
     ToggleField.-no-separator(
       label="settings.hide_inactive_panel_tabs"
@@ -426,6 +479,17 @@ function toggleSwitchPanelAfterSwitchingTab() {
   if (notAlways && Settings.state.hideInact) {
     Settings.state.hideInact = false
   }
+
+  Settings.saveDebounced(150)
+}
+
+async function togglePreviewTabs() {
+  if (!Settings.state.previewTabs && !Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
+
+  Settings.state.previewTabs = !Settings.state.previewTabs
 
   Settings.saveDebounced(150)
 }

@@ -16,11 +16,18 @@ import * as TabsMedia from 'src/services/tabs.fg.media'
 export interface TabsReactiveState {
   pinnedIds: ID[]
   recentlyRemovedLen: number
+  inlinePreviewTabId: ID
+  inlinePreviewPinnedImg: string
 }
 
 export const Tabs = {
   ready: false,
-  reactive: { pinnedIds: [], recentlyRemovedLen: 0 } as TabsReactiveState,
+  reactive: {
+    pinnedIds: [],
+    recentlyRemovedLen: 0,
+    inlinePreviewTabId: NOID,
+    inlinePreviewPinnedImg: '',
+  } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
   pinned: [] as Tab[],

@@ -2388,6 +2388,44 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '新子分頁開啟時繼承當下父分頁的自訂顏色',
   },
 
+  // - Tabs Preview
+  'settings.tabs_preview_title': {
+    en: 'Tabs preview (experimental)',
+  },
+  'settings.tabs.preview': {
+    en: 'Show tab preview on mouse hover',
+  },
+  'settings.tabs.preview_inline': {
+    en: 'Show preview in sidebar after the tab',
+  },
+  'settings.tabs.preview_inline_height': {
+    en: 'Preview height (px)',
+  },
+  'settings.tabs.preview_popup_width': {
+    en: 'Preview width (px)',
+  },
+  'settings.tabs.preview_side': {
+    en: 'Sidebar side',
+  },
+  'settings.tabs.preview_side_right': {
+    en: 'left',
+  },
+  'settings.tabs.preview_side_left': {
+    en: 'right',
+  },
+  'settings.tabs.preview_delay': {
+    en: 'Delay before appearing (ms)',
+  },
+  'settings.tabs.preview_follow_mouse': {
+    en: 'Follow the mouse cursor',
+  },
+  'settings.tabs.preview_offset_y': {
+    en: 'Popup vertical offset (px)',
+  },
+  'settings.tabs.preview_offset_x': {
+    en: 'Popup horizontal offset (px)',
+  },
+
   // - Native tabs
   'settings.tabs_native_title': {
     en: 'Native (horizontal) tabs',

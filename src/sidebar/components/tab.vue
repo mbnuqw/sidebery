@@ -26,6 +26,7 @@
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @mouseenter.stop="onMouseEnter"
+  @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick")
   .dnd-layer(data-dnd-type="tab" :data-dnd-id="tab.id")
   .body
@@ -93,6 +94,7 @@ import * as Favicons from 'src/services/favicons.fg'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
+import * as Preview from 'src/services/tabs.preview'
 
 const props = defineProps<{ tabId: ID; iconOnly?: boolean }>()
 const tab = Tabs.byId[props.tabId] as Tab
@@ -157,6 +159,14 @@ function onMouseUpClose(e: MouseEvent): void {
 
 function onMouseDown(e: MouseEvent): void {
   Mouse.setTarget('tab', tab.id)
+
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+
+    if (!Settings.state.previewTabsInline && Preview.state.creation) {
+      Preview.closePreviewPopup()
+    }
+  }
 
   if (Menu.isOpen) {
     Menu.close()
@@ -374,6 +384,14 @@ function onDragStart(e: DragEvent): void {
   Mouse.stopLongClick()
   Sidebar.updateBounds()
 
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.mouseLeaveTimeout)
+
+    if (Settings.state.previewTabsInline) Preview.closePreviewInline()
+    else Preview.closePreviewPopup()
+  }
+
   // Check what to drag
   const toDrag = [tab.id]
   const dragItems: DragItem[] = []
@@ -445,6 +463,52 @@ function onMouseEnter(e: MouseEvent) {
         .catch(err => Logs.err('Tab.onMouseEnter: Warmup hovered tab', err))
     }
   }
+
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+    if (Settings.state.previewTabsFollowMouse) {
+      clearTimeout(Preview.state.mouseLeaveTimeout)
+    }
+
+    if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
+      // Inline mode
+      if (Settings.state.previewTabsInline) {
+        Preview.state.mouseEnterTimeout = setTimeout(() => {
+          Preview.showPreviewInline(props.tabId)
+        }, Settings.state.previewTabsDelay)
+      }
+
+      // Popup mode: Update popup content
+      else if (
+        Settings.state.previewTabsFollowMouse &&
+        (Preview.state.winId !== NOID || Preview.state.creation)
+      ) {
+        Preview.state.mouseEnterTimeout = setTimeout(() => {
+          Preview.updatePreviewPopup(props.tabId)
+        }, 50)
+      }
+
+      // Popup mode: Show popup
+      else if (Windows.focused || !Settings.state.previewTabsFollowMouse) {
+        Preview.state.mouseEnterTimeout = setTimeout(() => {
+          Preview.showPreviewPopup(props.tabId, e.clientY)
+        }, Settings.state.previewTabsDelay)
+      }
+    }
+  }
+}
+
+function onMouseLeave(): void {
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.mouseLeaveTimeout)
+
+    Preview.state.mouseLeaveTimeout = setTimeout(() => {
+      if (!Settings.state.previewTabsInline) {
+        Preview.closePreviewPopup()
+      }
+    }, 32)
+  }
 }
 
 function onAudioMouseDown(e: MouseEvent, tab: Tab): void {
@@ -497,6 +561,14 @@ function activate(): void {
 
 function onExpandMouseDown(): void {
   Mouse.setTarget('tab.expand', tab.id)
+
+  if (Settings.state.previewTabs) {
+    clearTimeout(Preview.state.mouseEnterTimeout)
+
+    if (!Settings.state.previewTabsInline && Preview.state.creation) {
+      Preview.closePreviewPopup()
+    }
+  }
 }
 
 function onExpandMouseUp(e: MouseEvent): void {

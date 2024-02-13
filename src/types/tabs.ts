@@ -33,6 +33,7 @@ export interface Tab extends NativeTab {
   reloadOnActivation?: boolean
   moving?: boolean
   preventAutoReopening?: boolean
+  previewImg?: string
 
   reactive: ReactiveTabProps
 }
@@ -71,6 +72,7 @@ export interface ReactiveTabProps {
   branchColor: string | null
   customColor: string | null
   isGroup: boolean
+  preview: boolean
 }
 
 export interface InlineTabData {

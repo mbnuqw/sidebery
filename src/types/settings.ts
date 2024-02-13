@@ -126,6 +126,17 @@ export interface SettingsState {
   colorizeTabsBranchesSrc: (typeof SETTINGS_OPTIONS.colorizeTabsBranchesSrc)[number]
   inheritCustomColor: boolean
 
+  // Tabs preview
+  previewTabs: boolean
+  previewTabsInline: boolean
+  previewTabsInlineHeight: number
+  previewTabsPopupWidth: number
+  previewTabsSide: (typeof SETTINGS_OPTIONS.previewTabsSide)[number]
+  previewTabsDelay: number
+  previewTabsFollowMouse: boolean
+  previewTabsOffsetY: number
+  previewTabsOffsetX: number
+
   // Native tabs
   hideInact: boolean
   hideFoldedTabs: boolean

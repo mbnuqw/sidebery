@@ -136,13 +136,14 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
   const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
+  const previewTabs = prev.previewTabs !== next.previewTabs
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
 
   if (Info.isSidebar && newTabCtxReopen) updateWebReqHandlers()
 
-  if (tabsUrlInTooltip) {
+  if (tabsUrlInTooltip || previewTabs) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
   }
 

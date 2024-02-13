@@ -106,6 +106,7 @@
 import { ref, computed, onMounted, Component, nextTick } from 'vue'
 import { PanelType, Panel, MenuType, WheelDirection, DropType } from 'src/types'
 import { SubPanelType } from 'src/types'
+import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
@@ -142,6 +143,7 @@ import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups'
 import * as Logs from 'src/services/logs'
+import * as Preview from 'src/services/tabs.preview'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -330,6 +332,16 @@ function onMouseEnter(): void {
 }
 
 function onMouseLeave(): void {
+  if (Settings.state.previewTabs) {
+    if (Settings.state.previewTabsInline && Preview.state.tabId !== NOID) {
+      Preview.closePreviewInline()
+    } else if (Preview.state.winId !== NOID) {
+      clearTimeout(Preview.state.mouseEnterTimeout)
+      clearTimeout(Preview.state.mouseLeaveTimeout)
+      Preview.closePreviewPopup()
+    }
+  }
+
   if (DnD.dragEndedRecently) return
 
   Mouse.mouseIn = false
