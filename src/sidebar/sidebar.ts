@@ -26,6 +26,10 @@ import { Snapshots } from 'src/services/snapshots'
 import { updateWebReqHandlers } from 'src/services/web-req.fg'
 import { initUpgrading, showUpgradingScreen } from 'src/services/upgrading'
 
+if (document.body.offsetHeight === 0 && document.body.offsetWidth === 0) {
+  throw 'Sidebar: Not enough space: 0px / 0px'
+}
+
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
   IPC.setInstanceType(InstanceType.sidebar)
