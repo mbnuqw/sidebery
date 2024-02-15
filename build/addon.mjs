@@ -7,10 +7,11 @@ const UPDATE_URL = 'https://raw.githubusercontent.com/mbnuqw/sidebery/v5/updates
 
 async function main() {
   // Parse arguments
-  const versionRE = /\d\d?\.\d\d?\.\d\d?\.?\d?\d?/
+  const versionRE = /^\d\d?\.\d\d?\.\d\d?\.?\d?\d?\d?$/
   const version = process.argv[process.argv.length - 1]
   const is4Digit = version.split('.').length === 4
   const preserveVersion = process.argv.some(arg => arg === '--preserve')
+  const sign = process.argv.some(arg => arg === '--sign')
   if (!versionRE.test(version)) {
     console.log('\nWrong target version (the last argument)')
     return
@@ -64,14 +65,7 @@ async function main() {
 
   // Build ('build')
   console.log('Preparing code...')
-  await execSync('node ./build/all.js', { encoding: 'utf-8', stdio: 'inherit' })
-
-  // Create './dist/sidebery-X.zip' ('build.ext')
-  console.log('Creating addon...')
-  await execSync('npx web-ext build --source-dir ./addon -a ./dist/ -i __tests__', {
-    encoding: 'utf-8',
-    stdio: 'inherit',
-  })
+  execSync('node ./build/all.js', { encoding: 'utf-8', stdio: 'inherit' })
 
   // Revert version in package.json, package-lock.json and manifest.json
   const revertVersion = !preserveVersion && prevVersion && version !== prevVersion
@@ -114,6 +108,31 @@ async function main() {
       return
     }
   }
+
+  // Create './dist/sidebery-X.zip' ('build.ext')
+  console.log('Creating addon archive...')
+  execSync('npx web-ext build --source-dir ./addon -a ./dist/ -i __tests__', {
+    encoding: 'utf-8',
+    stdio: 'inherit',
+  })
+
+  // Sign
+  if (is4Digit && sign) {
+    console.log('Signing addon...')
+
+    if (!process.env.WEB_EXT_API_KEY || !process.env.WEB_EXT_API_SECRET) {
+      console.log('\nNo API key or secret')
+      return
+    }
+
+    execSync(
+      'npx web-ext sign --use-submission-api --channel unlisted --source-dir ./addon -a ./dist/ -i __tests__',
+      {
+        encoding: 'utf-8',
+        stdio: 'inherit',
+      }
+    )
+  }
 }
 
-main()
+await main()
