@@ -250,8 +250,8 @@ async function updateFiles(updates, newVersion, newVersionLink) {
   // Update README.md
   let readmeContent = await fs.readFile('README.md', { encoding: 'utf-8' })
   readmeContent = readmeContent.replace(
-    /\*\*github\.com\*\* \(v\d\.\d\d?\.\d\d?\.\d\d?\d?\):/g,
-    `**github.com** (v${newVersion}):`
+    /\*\*Nightly\*\* \(v\d\.\d\d?\.\d\d?\.\d\d?\d?\):/g,
+    `**Nightly** (v${newVersion}):`
   )
   readmeContent = readmeContent.replace(
     /\[Install\]\(https:\/\/github\.com\/mbnuqw\/sidebery\/releases\/download.*\)/g,
