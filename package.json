@@ -21,8 +21,9 @@
     "clear": "rm -rf addon",
     "lint": "eslint ./src && web-ext lint -s ./addon",
     "changelog": "node build/changelog.mjs",
+    "addon": "node build/addon.mjs",
     "release-notes": "node build/release-notes.mjs",
-    "addon": "node build/addon.mjs"
+    "release.nightly": "node build/release-nightly.mjs"
   },
   "author": "mbnuqw",
   "license": "MIT",

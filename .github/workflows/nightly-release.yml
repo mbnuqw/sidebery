@@ -1,0 +1,30 @@
+name: nightly-release
+
+on:
+  workflow_dispatch
+
+jobs:
+  build-and-sign:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+      WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+        with:
+          ref: 'v5'
+          fetch-depth: 0
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Configure git
+        run: |
+          git config --global user.name 'GitHub Action Bot'
+          git config --global user.email 'mbnuqw@users.noreply.github.com'
+      - name: Build and sign
+        run: |
+          npm install
+          npm run release.nightly
