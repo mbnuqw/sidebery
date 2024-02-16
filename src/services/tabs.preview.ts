@@ -35,8 +35,6 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
   if (!tab || tab.invisible) return
 
-  if (IPC.state.previewConnection) return
-
   state.creation = true
 
   const currentWindow = await browser.windows.getCurrent({ populate: false })
