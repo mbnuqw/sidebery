@@ -74,6 +74,9 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   let scale = (window.devicePixelRatio / Math.min(w, h)) * 1.5
   if (scale > window.devicePixelRatio) scale = window.devicePixelRatio
 
+  // Append height of header to previewHeight
+  previewHeight += approxPopupHeaderHeight
+
   previewData.scale = String(scale)
 
   if (tab.discarded) previewData.off = 'y'
@@ -87,7 +90,7 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     top,
     left,
     width: previewWidth,
-    height: previewHeight + approxPopupHeaderHeight,
+    height: previewHeight,
     incognito: false,
     state: 'normal',
     type: 'popup',
@@ -106,7 +109,15 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     return
   }
 
-  // Detect differences between defined and actual position
+  let updPosition = false
+  let updSize = false
+
+  // Get differences between defined and actual size
+  const dw = (previewWindow.width ?? previewWidth) - previewWidth
+  const dh = (previewWindow.height ?? previewHeight) - previewHeight
+  if (dw !== 0 || dh !== 0) updSize = true
+
+  // Get differences between defined and actual position
   const dt = (previewWindow.top ?? top) - top
   const dl = (previewWindow.left ?? left) - left
 
@@ -117,7 +128,16 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   }
   // or try to update preview position
   else {
-    await browser.windows.update(previewWindow.id, { top, left })
+    updPosition = true
+  }
+
+  if (updPosition || updSize) {
+    await browser.windows.update(previewWindow.id, {
+      width: previewWidth,
+      height: previewHeight,
+      top,
+      left,
+    })
   }
 }
 
