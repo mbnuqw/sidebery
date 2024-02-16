@@ -33,7 +33,7 @@ let deadOnArrival = false
 
 export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
-  if (!tab) return
+  if (!tab || tab.invisible) return
 
   if (IPC.state.previewConnection) return
 
@@ -103,7 +103,7 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   state.winId = previewWindow.id
   state.creation = false
 
-  if (deadOnArrival) {
+  if (deadOnArrival || tab.invisible) {
     deadOnArrival = false
     closePreviewPopup()
     return
