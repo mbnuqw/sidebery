@@ -28,25 +28,25 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "6.19.0",
-    "@typescript-eslint/parser": "6.19.0",
-    "@vue/compiler-sfc": "3.4.15",
+    "@typescript-eslint/eslint-plugin": "7.0.1",
+    "@typescript-eslint/parser": "7.0.1",
+    "@vue/compiler-sfc": "3.4.19",
     "@vue/eslint-config-typescript": "12.0.0",
     "@vue/language-plugin-pug": "1.8.27",
     "csso": "5.0.5",
-    "esbuild": "0.19.11",
+    "esbuild": "0.20.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
-    "eslint-plugin-vue": "9.20.1",
-    "prettier": "3.2.4",
+    "eslint-plugin-vue": "9.21.1",
+    "prettier": "3.2.5",
     "pug": "3.0.2",
     "stylus": "0.62.0",
     "typescript": "5.3.3",
-    "web-ext": "7.10.0"
+    "web-ext": "7.11.0"
   },
   "dependencies": {
-    "vue": "3.4.15"
+    "vue": "3.4.19"
   },
   "prettier": {
     "arrowParens": "avoid",
