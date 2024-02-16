@@ -16,6 +16,7 @@ export const state = {
   mouseLeaveTimeout: undefined as number | undefined,
 }
 
+const approxPopupHeaderHeight = 40
 const inlinePreviewConf = {
   format: 'jpeg' as const,
   quality: 90,
@@ -86,7 +87,7 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     top,
     left,
     width: previewWidth,
-    height: previewHeight,
+    height: previewHeight + approxPopupHeaderHeight,
     incognito: false,
     state: 'normal',
     type: 'popup',
