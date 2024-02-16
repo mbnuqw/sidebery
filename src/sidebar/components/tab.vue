@@ -389,7 +389,15 @@ function onDragStart(e: DragEvent): void {
     clearTimeout(Preview.state.mouseLeaveTimeout)
 
     if (Settings.state.previewTabsInline) Preview.closePreviewInline()
-    else Preview.closePreviewPopup()
+    else {
+      if (Preview.state.creation) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      } else {
+        Preview.closePreviewPopup()
+      }
+    }
   }
 
   // Check what to drag
