@@ -4,10 +4,13 @@
 
 ### Added
 
+- Tab preview on hover ([#301](https://github.com/mbnuqw/sidebery/issues/301))
 - Note about snapshots limit: not applicable to exported snapshots
 
 ### Fixed
 
+- Preserve container after dropping the tab from "recently-closed" sub-panel to tab panel
+- Window-specific theme handling (resolves [#1134](https://github.com/mbnuqw/sidebery/issues/1134))  
 - Incorrect tabs range selection with shift+click in search result
 - Scroll thresholds not applying to mouse debouncer (by [@ImTheSquid](https://github.com/ImTheSquid): [#1440](https://github.com/mbnuqw/sidebery/issues/1440))
 - Preserve selection on mid-click when 'multipleMiddleClose' is on ([#1441](https://github.com/mbnuqw/sidebery/issues/1441))
