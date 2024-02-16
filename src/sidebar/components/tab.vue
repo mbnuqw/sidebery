@@ -511,11 +511,11 @@ function onMouseLeave(): void {
     clearTimeout(Preview.state.mouseEnterTimeout)
     clearTimeout(Preview.state.mouseLeaveTimeout)
 
-    Preview.state.mouseLeaveTimeout = setTimeout(() => {
-      if (!Settings.state.previewTabsInline) {
+    if (!Settings.state.previewTabsInline) {
+      Preview.state.mouseLeaveTimeout = setTimeout(() => {
         Preview.closePreviewPopup()
-      }
-    }, 32)
+      }, 32)
+    }
   }
 }
 
