@@ -91,7 +91,7 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     incognito: false,
     state: 'normal',
     type: 'popup',
-    url: `/page.tab-preview/tab-preview.html?${params}`,
+    url: `/popup.tab-preview/tab-preview.html?${params}`,
     // For userChrome modificatoins with `#main-window[titlepreface='Tab Preview‎']`
     titlePreface: 'Tab Preview‎',
   })

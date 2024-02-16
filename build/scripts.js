@@ -14,7 +14,7 @@ const TS_CONFIG = getTSConfig()
 const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
-  'src/page.tab-preview/tab-preview.ts': true,
+  'src/popup.tab-preview/tab-preview.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
 
@@ -321,7 +321,7 @@ async function main() {
     })
     // Bundled script for preview
     await esbuild.build({
-      entryPoints: ['src/page.tab-preview/tab-preview.ts'],
+      entryPoints: ['src/popup.tab-preview/tab-preview.ts'],
       tsconfig: 'tsconfig.json',
       charset: 'utf8',
       splitting: false,
@@ -330,7 +330,7 @@ async function main() {
       treeShaking: true,
       bundle: true,
       format: 'esm',
-      outdir: path.join(ADDON_PATH, 'page.tab-preview'),
+      outdir: path.join(ADDON_PATH, 'popup.tab-preview'),
       define: ESBUILD_DEFINE,
     })
     logOk('Scripts: Done')
