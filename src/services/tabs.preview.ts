@@ -1,4 +1,5 @@
-import { NOID } from 'src/defaults'
+import { ADDON_HOST, NOID } from 'src/defaults'
+import { InstanceType } from 'src/types'
 import { Sidebar } from './sidebar'
 import { Tabs } from './tabs.fg'
 import { Styles } from './styles'
@@ -30,6 +31,7 @@ let currentWinX = 0
 let currentWinOffsetY = 0
 let currentWinOffsetX = 0
 let deadOnArrival = false
+let listening = false
 
 export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
@@ -44,6 +46,8 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   currentWinX = currentWindow.left ?? 0
 
   if (currentWinWidth === 0 || currentWinHeight === 0) return
+
+  if (!listening) setupPopupDisconnectionListener()
 
   currentWinOffsetY = 0
   currentWinOffsetX = 0
@@ -157,8 +161,7 @@ export function updatePreviewPopup(tabId: ID) {
   if (IPC.state.previewConnection) {
     IPC.sendToPreview('updatePreview', tabId, tab.title, tab.url, !!tab.discarded)
   } else {
-    if (state.winId !== NOID) browser.windows.remove(state.winId)
-    state.winId = NOID
+    closePreviewPopup()
   }
 }
 
@@ -168,8 +171,10 @@ export function closePreviewPopup() {
     return
   }
 
-  if (state.winId !== NOID) browser.windows.remove(state.winId)
-  state.winId = NOID
+  if (state.winId !== NOID) {
+    browser.windows.remove(state.winId)
+    state.winId = NOID
+  }
 }
 
 function getPopupX() {
@@ -185,6 +190,24 @@ function getPopupX() {
       currentWinOffsetX
     )
   }
+}
+
+export function setupPopupDisconnectionListener() {
+  const checkPart = ADDON_HOST.slice(50, 52) + '/p'
+
+  IPC.onDisconnected(InstanceType.preview, async () => {
+    if (!Settings.state.previewTabs) return
+
+    const recentlyClosedItems = await browser.sessions.getRecentlyClosed({ maxResults: 3 })
+    for (const rc of recentlyClosedItems) {
+      if (!rc.window?.sessionId) continue
+      if (rc.window.tabs?.length === 1) {
+        const url = rc.window.tabs[0].url
+        if (url.startsWith(checkPart, 50)) browser.sessions.forgetClosedWindow(rc.window.sessionId)
+      }
+    }
+  })
+  listening = true
 }
 
 export async function showPreviewInline(tabId: ID) {

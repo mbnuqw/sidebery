@@ -451,6 +451,12 @@ declare namespace browser {
     function getWindowValue<T>(id: ID, key: string): Promise<T>
     function setTabValue<T>(tabId: ID, key: string, value: T): Promise<void>
     function getTabValue<T>(tabId: ID, key: string): Promise<T>
+    function forgetClosedWindow(sessionId: string): Promise<void>
+    function forgetClosedTab(windowId: number, sessionId: string): Promise<void>
+
+    type SessionChangeListener = () => void
+
+    const onChanged: EventTarget<SessionChangeListener>
   }
 
   /**
