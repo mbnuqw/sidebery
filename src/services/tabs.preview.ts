@@ -35,7 +35,7 @@ let listening = false
 
 export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible) return
+  if (!tab || tab.invisible || tab.discarded) return
 
   state.creation = true
 
