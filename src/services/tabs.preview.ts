@@ -133,10 +133,14 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     updPosition = true
   }
 
-  if (updPosition || updSize) {
+  if (updSize) {
     await browser.windows.update(previewWindow.id, {
       width: previewWidth,
       height: previewHeight,
+    })
+  }
+  if (updPosition) {
+    await browser.windows.update(previewWindow.id, {
       top,
       left,
     })
