@@ -61,7 +61,10 @@ function onWindowRemovedBg(windowId: ID): void {
 }
 
 function onWindowRemovedFg(windowId: ID): void {
-  if (Preview.state.winId === windowId) Preview.state.winId = NOID
+  if (Preview.state.popupWinId === windowId) {
+    Preview.state.popupWinId = NOID
+    Preview.state.status = Preview.Status.Closed
+  }
   if (windowId === Windows.id || !Windows.otherWindows) return
   const index = Windows.otherWindows.findIndex(w => w.id === windowId)
   if (index >= 0) Windows.otherWindows.splice(index, 1)

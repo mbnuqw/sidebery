@@ -82,11 +82,7 @@ export function onMouseMove(e: MouseEvent): void {
     return
   }
 
-  if (
-    Settings.state.previewTabs &&
-    Settings.state.previewTabsFollowMouse &&
-    Preview.state.winId !== NOID
-  ) {
+  if (Preview.state.status === Preview.Status.Open && Settings.state.previewTabsFollowMouse) {
     Preview.setPreviewPopupPosition(e.clientY)
     return
   }

@@ -332,10 +332,13 @@ function onMouseEnter(): void {
 }
 
 function onMouseLeave(): void {
-  if (Settings.state.previewTabs) {
-    if (Settings.state.previewTabsInline && Preview.state.tabId !== NOID) {
+  if (
+    Preview.state.status === Preview.Status.Open ||
+    Preview.state.status === Preview.Status.Opening
+  ) {
+    if (Settings.state.previewTabsInline) {
       Preview.closePreviewInline()
-    } else if (Preview.state.winId !== NOID) {
+    } else {
       clearTimeout(Preview.state.mouseEnterTimeout)
       clearTimeout(Preview.state.mouseLeaveTimeout)
       Preview.closePreviewPopup()

@@ -7,11 +7,22 @@ import { Windows } from './windows'
 import { Settings } from './settings'
 import * as Logs from './logs'
 import * as IPC from './ipc'
+import { Menu } from './menu'
+import { Mouse } from './mouse'
+import { Selection } from './selection'
+
+export const enum Status {
+  Closing = -1,
+  Closed = 0,
+  Opening = 1,
+  Open = 2,
+}
 
 export const state = {
-  creation: false,
-  winId: NOID,
-  tabId: NOID,
+  status: Status.Closed,
+
+  popupWinId: NOID,
+  targetTabId: NOID,
 
   mouseEnterTimeout: undefined as number | undefined,
   mouseLeaveTimeout: undefined as number | undefined,
@@ -33,11 +44,67 @@ let currentWinOffsetX = 0
 let deadOnArrival = false
 let listening = false
 
+export function setTargetTab(tabId: ID, y: number) {
+  clearTimeout(state.mouseEnterTimeout)
+  if (Settings.state.previewTabsFollowMouse) {
+    clearTimeout(state.mouseLeaveTimeout)
+  }
+
+  state.targetTabId = tabId
+
+  // Start timeout to...
+  if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
+    // Show preview in inline mode
+    if (Settings.state.previewTabsInline) {
+      state.mouseEnterTimeout = setTimeout(() => {
+        state.mouseEnterTimeout = undefined
+        showPreviewInline(state.targetTabId)
+      }, Settings.state.previewTabsDelay)
+      return
+    }
+
+    // Update popup
+    if (Settings.state.previewTabsFollowMouse && state.status === Status.Open) {
+      state.mouseEnterTimeout = setTimeout(() => {
+        state.mouseEnterTimeout = undefined
+        updatePreviewPopup(state.targetTabId)
+      }, 50)
+      return
+    }
+
+    // Show preview in popup mode
+    if (Windows.focused && state.status === Status.Closed) {
+      state.mouseEnterTimeout = setTimeout(() => {
+        state.mouseEnterTimeout = undefined
+        showPreviewPopup(state.targetTabId, y)
+      }, Settings.state.previewTabsDelay)
+      return
+    }
+  }
+}
+
+export function resetTargetTab(tabId: ID) {
+  clearTimeout(state.mouseEnterTimeout)
+  clearTimeout(state.mouseLeaveTimeout)
+
+  if (tabId === undefined || tabId === state.targetTabId) {
+    state.targetTabId = NOID
+  }
+
+  state.mouseEnterTimeout = undefined
+
+  if (!Settings.state.previewTabsInline) {
+    state.mouseLeaveTimeout = setTimeout(() => {
+      closePreviewPopup()
+    }, 36)
+  }
+}
+
 export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
   if (!tab || tab.invisible || tab.discarded) return
 
-  state.creation = true
+  state.status = Status.Opening
 
   const currentWindow = await browser.windows.getCurrent({ populate: false })
   currentWinWidth = currentWindow.width ?? 0
@@ -45,7 +112,10 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   currentWinY = currentWindow.top ?? 0
   currentWinX = currentWindow.left ?? 0
 
-  if (currentWinWidth === 0 || currentWinHeight === 0) return
+  if (currentWinWidth === 0 || currentWinHeight === 0) {
+    state.status = Status.Closed
+    return
+  }
 
   if (!listening) setupPopupDisconnectionListener()
 
@@ -100,10 +170,13 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
     // For userChrome modificatoins with `#main-window[titlepreface='Tab Preview‎']`
     titlePreface: 'Tab Preview‎',
   })
-  if (previewWindow.id === undefined) return
+  if (previewWindow.id === undefined) {
+    state.status = Status.Closed
+    return
+  }
 
-  state.winId = previewWindow.id
-  state.creation = false
+  state.popupWinId = previewWindow.id
+  state.status = Status.Open
 
   if (deadOnArrival || tab.invisible) {
     deadOnArrival = false
@@ -148,8 +221,8 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
 }
 
 export function setPreviewPopupPosition(y: number) {
-  if (state.winId !== NOID) {
-    browser.windows.update(state.winId, {
+  if (state.popupWinId !== NOID) {
+    browser.windows.update(state.popupWinId, {
       top: currentWinY + y + Settings.state.previewTabsOffsetY + currentWinOffsetY,
       left: getPopupX(),
     })
@@ -157,7 +230,7 @@ export function setPreviewPopupPosition(y: number) {
 }
 
 export function updatePreviewPopup(tabId: ID) {
-  if (state.creation) return
+  if (state.status !== Status.Open) return
 
   const tab = Tabs.byId[tabId]
   if (!tab) return
@@ -169,15 +242,17 @@ export function updatePreviewPopup(tabId: ID) {
   }
 }
 
-export function closePreviewPopup() {
-  if (state.creation) {
+export async function closePreviewPopup() {
+  if (state.status === Status.Opening) {
     deadOnArrival = true
     return
   }
 
-  if (state.winId !== NOID) {
-    browser.windows.remove(state.winId)
-    state.winId = NOID
+  if (state.popupWinId !== NOID) {
+    state.status = Status.Closing
+    await browser.windows.remove(state.popupWinId)
+    state.popupWinId = NOID
+    state.status = Status.Closed
   }
 }
 
@@ -215,12 +290,12 @@ export function setupPopupDisconnectionListener() {
 }
 
 export async function showPreviewInline(tabId: ID) {
-  if (state.tabId === tabId) return
+  if (state.targetTabId === tabId) return
 
   const tab = Tabs.byId[tabId]
   if (!tab || tab.discarded) return
 
-  state.creation = true
+  state.status = Status.Opening
 
   const currentWindow = await browser.windows.getCurrent({ populate: false })
   const pageWidth = (currentWindow.width ?? 0) - Sidebar.width
@@ -236,8 +311,10 @@ export async function showPreviewInline(tabId: ID) {
   }
 
   const preview = await browser.tabs.captureTab(tabId, inlinePreviewConf).catch(() => '')
+  const prevTabId = state.targetTabId
 
-  state.creation = false
+  state.targetTabId = tabId
+  state.status = Status.Open
 
   if (deadOnArrival) {
     deadOnArrival = false
@@ -249,32 +326,31 @@ export async function showPreviewInline(tabId: ID) {
   document.body.style.setProperty('--tabs-inline-preview-height', `${previewHeight}px`)
 
   if (tab.pinned) {
-    const prevTab = Tabs.byId[state.tabId]
+    const prevTab = Tabs.byId[prevTabId]
     if (prevTab && !prevTab.pinned) Tabs.reactive.inlinePreviewTabId = NOID
 
     Tabs.reactive.inlinePreviewPinnedImg = `url("${preview}")`
   } else {
-    const prevTab = Tabs.byId[state.tabId]
+    const prevTab = Tabs.byId[prevTabId]
     if (prevTab && prevTab.pinned) Tabs.reactive.inlinePreviewPinnedImg = ''
 
     tab.previewImg = `url("${preview}")`
     Tabs.reactive.inlinePreviewTabId = tabId
   }
-
-  state.tabId = tabId
 }
 
 export function closePreviewInline() {
-  if (state.creation) {
+  if (state.status === Status.Opening) {
     deadOnArrival = true
     return
   }
 
-  const tab = Tabs.byId[state.tabId]
+  const tab = Tabs.byId[state.targetTabId]
   if (!tab) {
     Tabs.reactive.inlinePreviewPinnedImg = ''
     Tabs.reactive.inlinePreviewTabId = NOID
-    state.tabId = NOID
+    state.targetTabId = NOID
+    state.status = Status.Closed
     return
   }
 
@@ -284,5 +360,6 @@ export function closePreviewInline() {
     Tabs.reactive.inlinePreviewTabId = NOID
   }
 
-  state.tabId = NOID
+  state.targetTabId = NOID
+  state.status = Status.Closed
 }

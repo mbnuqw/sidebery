@@ -163,7 +163,7 @@ function onMouseDown(e: MouseEvent): void {
   if (Settings.state.previewTabs) {
     clearTimeout(Preview.state.mouseEnterTimeout)
 
-    if (!Settings.state.previewTabsInline && Preview.state.creation) {
+    if (!Settings.state.previewTabsInline && Preview.state.status === Preview.Status.Opening) {
       Preview.closePreviewPopup()
     }
   }
@@ -390,7 +390,7 @@ function onDragStart(e: DragEvent): void {
 
     if (Settings.state.previewTabsInline) Preview.closePreviewInline()
     else {
-      if (Preview.state.creation) {
+      if (Preview.state.status === Preview.Status.Opening) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -473,49 +473,13 @@ function onMouseEnter(e: MouseEvent) {
   }
 
   if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
-    if (Settings.state.previewTabsFollowMouse) {
-      clearTimeout(Preview.state.mouseLeaveTimeout)
-    }
-
-    if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
-      // Inline mode
-      if (Settings.state.previewTabsInline) {
-        Preview.state.mouseEnterTimeout = setTimeout(() => {
-          Preview.showPreviewInline(props.tabId)
-        }, Settings.state.previewTabsDelay)
-      }
-
-      // Popup mode: Update popup content
-      else if (
-        Settings.state.previewTabsFollowMouse &&
-        (Preview.state.winId !== NOID || Preview.state.creation)
-      ) {
-        Preview.state.mouseEnterTimeout = setTimeout(() => {
-          Preview.updatePreviewPopup(props.tabId)
-        }, 50)
-      }
-
-      // Popup mode: Show popup
-      else if (Windows.focused || !Settings.state.previewTabsFollowMouse) {
-        Preview.state.mouseEnterTimeout = setTimeout(() => {
-          Preview.showPreviewPopup(props.tabId, e.clientY)
-        }, Settings.state.previewTabsDelay)
-      }
-    }
+    Preview.setTargetTab(props.tabId, e.clientY)
   }
 }
 
 function onMouseLeave(): void {
   if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
-    clearTimeout(Preview.state.mouseLeaveTimeout)
-
-    if (!Settings.state.previewTabsInline) {
-      Preview.state.mouseLeaveTimeout = setTimeout(() => {
-        Preview.closePreviewPopup()
-      }, 32)
-    }
+    Preview.resetTargetTab(props.tabId)
   }
 }
 
@@ -573,7 +537,7 @@ function onExpandMouseDown(): void {
   if (Settings.state.previewTabs) {
     clearTimeout(Preview.state.mouseEnterTimeout)
 
-    if (!Settings.state.previewTabsInline && Preview.state.creation) {
+    if (!Settings.state.previewTabsInline && Preview.state.status === Preview.Status.Opening) {
       Preview.closePreviewPopup()
     }
   }
