@@ -17,6 +17,7 @@ import { OTHER_PANELS_MENU } from 'src/defaults/menu'
 import { Snapshots } from './snapshots'
 import { translate, LANG } from 'src/dict'
 import { Search } from 'src/services/search'
+import * as Preview from 'src/services/tabs.preview'
 
 export type OpenCallback = (blocks: MenuBlock[], x?: number, y?: number) => void
 
@@ -170,6 +171,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
   if (type === MenuType.Tabs) {
     nodeType = 'tab'
     blocks = createMenuBlocks(Menu.tabsConf, customForced)
+    if (Settings.state.previewTabs) Preview.close()
   } else if (type === MenuType.Bookmarks) {
     nodeType = 'bookmark'
     blocks = createMenuBlocks(Menu.bookmarksConf, customForced)

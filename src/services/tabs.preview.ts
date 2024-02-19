@@ -100,6 +100,14 @@ export function resetTargetTab(tabId: ID) {
   }
 }
 
+export function close() {
+  clearTimeout(state.mouseEnterTimeout)
+  clearTimeout(state.mouseLeaveTimeout)
+
+  if (Settings.state.previewTabsInline) closePreviewInline()
+  else closePreviewPopup()
+}
+
 export async function showPreviewPopup(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
   if (!tab || tab.invisible || tab.discarded) return
@@ -289,8 +297,9 @@ export function setupPopupDisconnectionListener() {
   listening = true
 }
 
+let inlinePreviewTabId = NOID
 export async function showPreviewInline(tabId: ID) {
-  if (state.targetTabId === tabId) return
+  if (inlinePreviewTabId === tabId) return
 
   const tab = Tabs.byId[tabId]
   if (!tab || tab.discarded) return
@@ -311,9 +320,9 @@ export async function showPreviewInline(tabId: ID) {
   }
 
   const preview = await browser.tabs.captureTab(tabId, inlinePreviewConf).catch(() => '')
-  const prevTabId = state.targetTabId
+  const prevTabId = inlinePreviewTabId
 
-  state.targetTabId = tabId
+  inlinePreviewTabId = tabId
   state.status = Status.Open
 
   if (deadOnArrival) {
@@ -325,16 +334,20 @@ export async function showPreviewInline(tabId: ID) {
   const previewHeight = Settings.state.previewTabsInlineHeight
   document.body.style.setProperty('--tabs-inline-preview-height', `${previewHeight}px`)
 
+  const prevTab = Tabs.byId[prevTabId]
+  if (prevTab) prevTab.reactive.preview = false
+
   if (tab.pinned) {
-    const prevTab = Tabs.byId[prevTabId]
-    if (prevTab && !prevTab.pinned) Tabs.reactive.inlinePreviewTabId = NOID
+    if (prevTab && !prevTab.pinned) {
+      Tabs.reactive.inlinePreviewTabId = NOID
+    }
 
     Tabs.reactive.inlinePreviewPinnedImg = `url("${preview}")`
   } else {
-    const prevTab = Tabs.byId[prevTabId]
     if (prevTab && prevTab.pinned) Tabs.reactive.inlinePreviewPinnedImg = ''
 
     tab.previewImg = `url("${preview}")`
+    tab.reactive.preview = true
     Tabs.reactive.inlinePreviewTabId = tabId
   }
 }
@@ -345,11 +358,11 @@ export function closePreviewInline() {
     return
   }
 
-  const tab = Tabs.byId[state.targetTabId]
+  const tab = Tabs.byId[inlinePreviewTabId]
   if (!tab) {
     Tabs.reactive.inlinePreviewPinnedImg = ''
     Tabs.reactive.inlinePreviewTabId = NOID
-    state.targetTabId = NOID
+    inlinePreviewTabId = NOID
     state.status = Status.Closed
     return
   }
@@ -358,8 +371,9 @@ export function closePreviewInline() {
     Tabs.reactive.inlinePreviewPinnedImg = ''
   } else {
     Tabs.reactive.inlinePreviewTabId = NOID
+    tab.reactive.preview = false
   }
 
-  state.targetTabId = NOID
+  inlinePreviewTabId = NOID
   state.status = Status.Closed
 }

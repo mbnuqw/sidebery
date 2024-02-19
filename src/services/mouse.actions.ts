@@ -82,13 +82,19 @@ export function onMouseMove(e: MouseEvent): void {
     return
   }
 
-  if (Preview.state.status === Preview.Status.Open && Settings.state.previewTabsFollowMouse) {
+  // Update position of external preview popup
+  if (
+    Preview.state.status === Preview.Status.Open &&
+    !Settings.state.previewTabsInline &&
+    Settings.state.previewTabsFollowMouse
+  ) {
     Preview.setPreviewPopupPosition(e.clientY)
     return
   }
 
   if (multiSelectionStartId === null) return
 
+  // Setup multi-selection
   if (!Mouse.multiSelectionMode && Math.abs(e.clientY - multiSelectionStartY) > 5) {
     let activePanel
     if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
@@ -109,6 +115,9 @@ export function onMouseMove(e: MouseEvent): void {
 
     const scroll = activePanel.scrollEl?.scrollTop || 0
     startY = multiSelectionStartY - activePanel.topOffset + scroll
+
+    // Close tab preview
+    if (Settings.state.previewTabs) Preview.close()
 
     return
   }
@@ -166,19 +175,11 @@ export function startLongClick(
   id: ID,
   cb?: () => void
 ): void {
-  if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
-    clearTimeout(Preview.state.mouseLeaveTimeout)
-
-    if (Settings.state.previewTabsInline) {
-      Preview.closePreviewInline()
-    } else {
-      Preview.closePreviewPopup()
-    }
-  }
-
   clearTimeout(longClickTimeout)
   longClickTimeout = setTimeout(() => {
+    // Close tab preview
+    if (Settings.state.previewTabs) Preview.close()
+
     if (DnD.reactive.isStarted) return
     Mouse.longClickApplied = true
 
@@ -231,17 +232,6 @@ export function resetClickLock(delay = 0): void {
 
 export function startMultiSelection(e: MouseEvent, id: ID, preselected?: ID[]): void {
   if (Settings.state.ctxMenuNative && e.button === 2) return
-
-  if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
-    clearTimeout(Preview.state.mouseLeaveTimeout)
-
-    if (Settings.state.previewTabsInline) {
-      Preview.closePreviewInline()
-    } else {
-      Preview.closePreviewPopup()
-    }
-  }
 
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY

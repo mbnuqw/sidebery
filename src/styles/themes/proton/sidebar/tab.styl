@@ -131,6 +131,19 @@
   padding-left: 0
 
 // ---
+// -- Inline preview overlay
+// -
+.Tab[data-preview="true"]
+  z-index: 30
+  &:before
+    content: ''
+    position: absolute
+    top: 100%
+    left: 0
+    width: 100%
+    height: var(--tabs-inline-preview-height)
+
+// ---
 // -- Body
 // -
 .Tab .body

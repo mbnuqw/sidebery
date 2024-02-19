@@ -19,6 +19,7 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
+  :data-preview="tab.reactive.preview"
   :title="tab.reactive.tooltip"
   :draggable="!tab.reactive.customTitleEdit"
   @dragstart="onDragStart"
