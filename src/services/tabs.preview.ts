@@ -28,6 +28,7 @@ export const state = {
   mouseLeaveTimeout: undefined as number | undefined,
 }
 
+const approxFFToolbarsHeight = 70
 const approxPopupHeaderHeight = 40
 const inlinePreviewConf = {
   format: 'jpeg' as const,
@@ -308,6 +309,7 @@ export async function showPreviewInline(tabId: ID) {
 
   const currentWindow = await browser.windows.getCurrent({ populate: false })
   const pageWidth = (currentWindow.width ?? 0) - Sidebar.width
+  const pageHeight = (currentWindow.height ?? 0) - approxFFToolbarsHeight
 
   if (pageWidth <= 0) return
 
@@ -331,7 +333,11 @@ export async function showPreviewInline(tabId: ID) {
     return
   }
 
-  const previewHeight = Settings.state.previewTabsInlineHeight
+  let previewHeight = Settings.state.previewTabsInlineHeight
+  if (Settings.state.previewTabsInlineHeight === 0) {
+    previewHeight = Math.round((pageHeight / pageWidth) * Sidebar.width)
+    if (previewHeight > Sidebar.width) previewHeight = Sidebar.width
+  }
   document.body.style.setProperty('--tabs-inline-preview-height', `${previewHeight}px`)
 
   const prevTab = Tabs.byId[prevTabId]
