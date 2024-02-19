@@ -2395,8 +2395,14 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview': {
     en: 'Show tab preview on mouse hover',
   },
-  'settings.tabs.preview_inline': {
-    en: 'Show preview in sidebar after the tab',
+  'settings.tabs.preview_mode': {
+    en: 'Preview mode',
+  },
+  'settings.tabs.preview_mode_in': {
+    en: 'in sidebar after the tab',
+  },
+  'settings.tabs.preview_mode_piw': {
+    en: 'popup in window (experimental)',
   },
   'settings.tabs.preview_inline_height': {
     en: 'Preview height (px)',

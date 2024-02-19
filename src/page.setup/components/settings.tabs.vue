@@ -313,9 +313,13 @@ section(ref="el")
       label="settings.tabs.preview"
       :value="Settings.state.previewTabs"
       @update:value="togglePreviewTabs")
-    ToggleField(
-      label="settings.tabs.preview_inline"
-      v-model:value="Settings.state.previewTabsInline"
+    SelectField(
+      label="settings.tabs.preview_mode"
+      optLabel="settings.tabs.preview_mode_"
+      v-model:value="Settings.state.previewTabsMode"
+      :inactive="!Settings.state.previewTabs"
+      :opts="Settings.getOpts('previewTabsMode')"
+      :folded="true"
       @update:value="Settings.saveDebounced(150)")
     NumField.-inline(
       label="settings.tabs.preview_delay"
@@ -327,37 +331,37 @@ section(ref="el")
       label="settings.tabs.preview_inline_height"
       v-model:value="Settings.state.previewTabsInlineHeight"
       :or="0"
-      :inactive="!Settings.state.previewTabs || !Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'in'"
       @update:value="Settings.saveDebounced(500)")
     NumField.-inline(
       label="settings.tabs.preview_popup_width"
       v-model:value="Settings.state.previewTabsPopupWidth"
       :or="0"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'in'"
       @update:value="Settings.saveDebounced(500)")
     SelectField(
       label="settings.tabs.preview_side"
       optLabel="settings.tabs.preview_side_"
       v-model:value="Settings.state.previewTabsSide"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'in'"
       :opts="Settings.getOpts('previewTabsSide')"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.tabs.preview_follow_mouse"
       v-model:value="Settings.state.previewTabsFollowMouse"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'in'"
       @update:value="Settings.saveDebounced(150)")
     NumField.-inline(
       label="settings.tabs.preview_offset_y"
       v-model:value="Settings.state.previewTabsOffsetY"
       :or="0"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'in'"
       @update:value="Settings.saveDebounced(500)")
     NumField.-inline(
       label="settings.tabs.preview_offset_x"
       v-model:value="Settings.state.previewTabsOffsetX"
       :or="0"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsInline"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'in'"
       @update:value="Settings.saveDebounced(500)")
 
   .wrapper

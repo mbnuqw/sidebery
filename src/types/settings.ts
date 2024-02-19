@@ -128,7 +128,7 @@ export interface SettingsState {
 
   // Tabs preview
   previewTabs: boolean
-  previewTabsInline: boolean
+  previewTabsMode: (typeof SETTINGS_OPTIONS.previewTabsMode)[number]
   previewTabsInlineHeight: number
   previewTabsPopupWidth: number
   previewTabsSide: (typeof SETTINGS_OPTIONS.previewTabsSide)[number]

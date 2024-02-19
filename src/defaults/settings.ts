@@ -129,7 +129,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Tabs preview
   previewTabs: false,
-  previewTabsInline: true,
+  previewTabsMode: 'in',
   previewTabsInlineHeight: 70,
   previewTabsPopupWidth: 280,
   previewTabsSide: 'right',
@@ -279,6 +279,7 @@ export const SETTINGS_OPTIONS = {
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'],
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
+  previewTabsMode: ['in', 'piw'],
   previewTabsSide: ['right', 'left'],
   hideFoldedParent: ['any', 'group', 'none'],
   rmChildTabs: ['all', 'folded', 'none'],

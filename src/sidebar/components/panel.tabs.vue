@@ -17,7 +17,7 @@
         @mouseenter="onPreviewMouseEnter"
         @mouseleave="onPreviewMouseLeave")
       template(
-        v-if="Settings.state.previewTabs && Settings.state.previewTabsInline"
+        v-if="Settings.state.previewTabs && Settings.state.previewTabsMode === 'in'"
         v-for="id in panel.reactive.visibleTabIds"
         :key="id")
         TabComponent(:tabId="id")

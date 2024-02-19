@@ -85,7 +85,7 @@ export function onMouseMove(e: MouseEvent): void {
   // Update position of external preview popup
   if (
     Preview.state.status === Preview.Status.Open &&
-    !Settings.state.previewTabsInline &&
+    Settings.state.previewTabsMode !== 'in' &&
     Settings.state.previewTabsFollowMouse
   ) {
     Preview.setPreviewPopupPosition(e.clientY)

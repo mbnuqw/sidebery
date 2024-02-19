@@ -56,7 +56,7 @@ export function setTargetTab(tabId: ID, y: number) {
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
     // Show preview in inline mode
-    if (Settings.state.previewTabsInline) {
+    if (Settings.state.previewTabsMode === 'in') {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
         showPreviewInline(state.targetTabId)
@@ -94,7 +94,7 @@ export function resetTargetTab(tabId: ID) {
 
   state.mouseEnterTimeout = undefined
 
-  if (!Settings.state.previewTabsInline) {
+  if (Settings.state.previewTabsMode !== 'in') {
     state.mouseLeaveTimeout = setTimeout(() => {
       closePreviewPopup()
     }, 36)
@@ -105,7 +105,7 @@ export function close() {
   clearTimeout(state.mouseEnterTimeout)
   clearTimeout(state.mouseLeaveTimeout)
 
-  if (Settings.state.previewTabsInline) closePreviewInline()
+  if (Settings.state.previewTabsMode === 'in') closePreviewInline()
   else closePreviewPopup()
 }
 

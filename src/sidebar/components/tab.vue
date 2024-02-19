@@ -164,7 +164,10 @@ function onMouseDown(e: MouseEvent): void {
   if (Settings.state.previewTabs) {
     clearTimeout(Preview.state.mouseEnterTimeout)
 
-    if (!Settings.state.previewTabsInline && Preview.state.status === Preview.Status.Opening) {
+    if (
+      Settings.state.previewTabsMode !== 'in' &&
+      Preview.state.status === Preview.Status.Opening
+    ) {
       Preview.closePreviewPopup()
     }
   }
@@ -389,7 +392,7 @@ function onDragStart(e: DragEvent): void {
     clearTimeout(Preview.state.mouseEnterTimeout)
     clearTimeout(Preview.state.mouseLeaveTimeout)
 
-    if (Settings.state.previewTabsInline) Preview.closePreviewInline()
+    if (Settings.state.previewTabsMode === 'in') Preview.closePreviewInline()
     else {
       if (Preview.state.status === Preview.Status.Opening) {
         e.stopPropagation()
@@ -538,7 +541,10 @@ function onExpandMouseDown(): void {
   if (Settings.state.previewTabs) {
     clearTimeout(Preview.state.mouseEnterTimeout)
 
-    if (!Settings.state.previewTabsInline && Preview.state.status === Preview.Status.Opening) {
+    if (
+      Settings.state.previewTabsMode !== 'in' &&
+      Preview.state.status === Preview.Status.Opening
+    ) {
       Preview.closePreviewPopup()
     }
   }
