@@ -32,6 +32,8 @@ export interface ConnectionInfo {
    * Port from browser.runtime.onConnect event
    */
   remotePort?: browser.runtime.Port
+  disconnectListener?: (port: browser.runtime.Port) => void
+  postListener?: <T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>) => void
 }
 
 interface MsgWaitingForAnswer {
@@ -156,15 +158,17 @@ export function connectTo(
   connection.localPort = browser.runtime.connect({ name: portNameJson })
 
   // Handle messages
-  const postListener = <T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>) => {
+  connection.postListener = <T extends InstanceType, A extends keyof Actions>(
+    msg: Message<T, A>
+  ) => {
     onPostMsg(msg, connection.localPort)
   }
-  connection.localPort.onMessage.addListener(postListener)
+  connection.localPort.onMessage.addListener(connection.postListener)
 
   // Handle disconnect
-  const disconnectListener = (port: browser.runtime.Port) => {
-    port.onMessage.removeListener(postListener)
-    port.onDisconnect.removeListener(disconnectListener)
+  connection.disconnectListener = (port: browser.runtime.Port) => {
+    port.onMessage.removeListener(connection.postListener)
+    port.onDisconnect.removeListener(connection.disconnectListener)
 
     // Remove port
     connection.localPort = undefined
@@ -193,7 +197,7 @@ export function connectTo(
       connectingTimeout = setTimeout(() => connectTo(dstType, dstWinId), 120)
     }
   }
-  connection.localPort.onDisconnect.addListener(disconnectListener)
+  connection.localPort.onDisconnect.addListener(connection.disconnectListener)
 
   // Stop reconnection
   clearTimeout(connectingTimeout)
@@ -203,11 +207,12 @@ export function connectTo(
   }, 120)
 
   // Wait confirmation
+  const conConfirmId = toBg ? -1 : -2
   const timeout = setTimeout(() => {
     Logs.warn('IPC.connectTo: No confirmation:', getInstanceName(dstType))
-    msgsWaitingForAnswer.delete(-1)
+    msgsWaitingForAnswer.delete(conConfirmId)
   }, CONNECT_CONFIRMATION_MAX_DELAY)
-  msgsWaitingForAnswer.set(-1, {
+  msgsWaitingForAnswer.set(conConfirmId, {
     timeout,
     portName: '',
     ok: () => {
@@ -569,7 +574,8 @@ function onConnect(port: browser.runtime.Port) {
   port.onDisconnect.addListener(disconnectListener)
 
   // Send connection confirmation message
-  port.postMessage(-1)
+  const conConfirmId = _localType === InstanceType.bg ? -1 : -2
+  port.postMessage(conConfirmId)
 }
 
 const connectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
@@ -617,8 +623,8 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
   port?: browser.runtime.Port
 ): Promise<void> {
   // Handle confirmation of connection
-  if (msg === -1) {
-    const waiting = msgsWaitingForAnswer.get(-1)
+  if ((msg as number) < 0) {
+    const waiting = msgsWaitingForAnswer.get(msg as number)
     if (waiting) {
       clearTimeout(waiting.timeout)
       if (waiting.ok) waiting.ok()
@@ -703,4 +709,48 @@ export function setupConnectionListener(): void {
 
 export function setupGlobalMessageListener(): void {
   browser.runtime.onMessage.addListener(onSendMsg)
+}
+
+export function disconnectFrom(fromType: InstanceType, winOrTabId?: ID) {
+  if (winOrTabId === undefined) winOrTabId = NOID
+
+  // Check connection data
+  if (fromType !== InstanceType.bg && fromType !== InstanceType.preview && winOrTabId === NOID) {
+    return Logs.err('IPC.disconnectFrom: No winOrTabId')
+  }
+
+  const connection = getConnection(fromType, winOrTabId)
+  if (!connection) return
+  if (connection.localPort) {
+    connection.localPort.disconnect()
+    connection.localPort.onMessage.removeListener(connection.postListener)
+    connection.localPort.onDisconnect.removeListener(connection.disconnectListener)
+    connection.localPort = undefined
+  }
+  if (connection.remotePort) {
+    connection.remotePort.disconnect()
+    connection.remotePort.onMessage.removeListener(connection.postListener)
+    connection.remotePort.onDisconnect.removeListener(connection.disconnectListener)
+    connection.remotePort = undefined
+  }
+
+  clearTimeout(connectingTimeout)
+
+  // Remove connection
+  let connectionIsRemoved = false
+  if (!connection.remotePort && !connection.localPort) {
+    connectionIsRemoved = true
+    if (fromType === InstanceType.bg) state.bgConnection = undefined
+    else if (fromType === InstanceType.sidebar) state.sidebarConnections.delete(winOrTabId)
+    else if (fromType === InstanceType.setup) state.setupPageConnections.delete(winOrTabId)
+    else if (fromType === InstanceType.search) state.searchPopupConnections.delete(winOrTabId)
+    else if (fromType === InstanceType.group) state.groupPageConnections.delete(winOrTabId)
+    else if (fromType === InstanceType.preview) state.previewConnection = undefined
+  }
+
+  // Run disconnection handlers
+  if (connectionIsRemoved) {
+    const handlers = disconnectionHandlers.get(fromType)
+    if (handlers) handlers.forEach(cb => cb(connection.id))
+  }
 }
