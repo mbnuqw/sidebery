@@ -5,6 +5,7 @@ import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups'
 import * as Favicons from 'src/services/favicons.fg'
+import * as Preview from 'src/services/tabs.preview'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -154,6 +155,8 @@ async function main(): Promise<void> {
       Search, Styles, Menu, Snapshots,
     }
   }
+
+  if (Settings.state.previewTabs) Preview.resetMode()
 
   Logs.info(`Init end: ${performance.now() - ts}ms`)
 }

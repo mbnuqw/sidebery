@@ -129,14 +129,16 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Tabs preview
   previewTabs: false,
-  previewTabsMode: 'in',
+  previewTabsMode: 'i',
+  previewTabsPageModeFallback: 'w',
   previewTabsInlineHeight: 70,
   previewTabsPopupWidth: 280,
   previewTabsSide: 'right',
   previewTabsDelay: 500,
   previewTabsFollowMouse: true,
-  previewTabsOffsetY: 36,
-  previewTabsOffsetX: 6,
+  previewTabsWinOffsetY: 36,
+  previewTabsWinOffsetX: 6,
+  previewTabsInPageOffsetY: 0,
 
   // Native tabs
   hideInact: false,
@@ -279,7 +281,8 @@ export const SETTINGS_OPTIONS = {
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'],
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
-  previewTabsMode: ['in', 'piw'],
+  previewTabsMode: ['i', 'p', 'w'],
+  previewTabsPageModeFallback: ['i', 'w', 'n'],
   previewTabsSide: ['right', 'left'],
   hideFoldedParent: ['any', 'group', 'none'],
   rmChildTabs: ['all', 'folded', 'none'],

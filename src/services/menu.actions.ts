@@ -171,7 +171,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
   if (type === MenuType.Tabs) {
     nodeType = 'tab'
     blocks = createMenuBlocks(Menu.tabsConf, customForced)
-    if (Settings.state.previewTabs) Preview.close()
+    if (Settings.state.previewTabs) Preview.closePreview()
   } else if (type === MenuType.Bookmarks) {
     nodeType = 'bookmark'
     blocks = createMenuBlocks(Menu.bookmarksConf, customForced)

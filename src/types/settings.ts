@@ -129,13 +129,15 @@ export interface SettingsState {
   // Tabs preview
   previewTabs: boolean
   previewTabsMode: (typeof SETTINGS_OPTIONS.previewTabsMode)[number]
+  previewTabsPageModeFallback: (typeof SETTINGS_OPTIONS.previewTabsPageModeFallback)[number]
   previewTabsInlineHeight: number
   previewTabsPopupWidth: number
   previewTabsSide: (typeof SETTINGS_OPTIONS.previewTabsSide)[number]
   previewTabsDelay: number
   previewTabsFollowMouse: boolean
-  previewTabsOffsetY: number
-  previewTabsOffsetX: number
+  previewTabsWinOffsetY: number
+  previewTabsWinOffsetX: number
+  previewTabsInPageOffsetY: number
 
   // Native tabs
   hideInact: boolean

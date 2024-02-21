@@ -12,6 +12,7 @@ import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
 import * as IPC from './ipc'
+import * as Preview from 'src/services/tabs.preview'
 import { updateWebReqHandlers } from './web-req.fg'
 import { Search } from './search'
 
@@ -137,6 +138,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
+  const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
@@ -145,6 +147,10 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (tabsUrlInTooltip || previewTabs) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
+  }
+
+  if (previewTabsMode) {
+    Preview.resetMode()
   }
 
   if (navTabsPanelMidClickAction || navBookmarksPanelMidClickAction) {

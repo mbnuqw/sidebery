@@ -13,6 +13,7 @@ import * as Favicons from 'src/services/favicons.fg'
 import { DnD } from 'src/services/drag-and-drop'
 import { Tabs } from './tabs.fg'
 import * as IPC from './ipc'
+import * as Preview from 'src/services/tabs.preview'
 import { Search } from './search'
 import { Containers } from './containers'
 import { Mouse } from './mouse'
@@ -1419,4 +1420,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   // Update succession
   Tabs.updateSuccessionDebounced(10)
+
+  // Reset fallback preview mode
+  if (Settings.state.previewTabs && Preview.state.modeFallback) {
+    Preview.resetMode()
+  }
 }

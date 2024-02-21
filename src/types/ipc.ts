@@ -109,6 +109,8 @@ export type SearchPopupActions = {
 
 export type PreviewAction = {
   updatePreview: (tabId: ID, title: string, url: string, unloaded: boolean) => void
+  setY: (y: number) => void
+  close: () => void
 }
 
 export type Actions =

@@ -56,7 +56,7 @@ async function main() {
 
   IPC.setInstanceType(InstanceType.preview)
   IPC.connectTo(InstanceType.sidebar, state.winId)
-  IPC.registerActions({ updatePreview })
+  IPC.registerActions({ updatePreview, setY: () => {}, close: () => {} })
 }
 
 let previewElN = 0

@@ -336,13 +336,7 @@ function onMouseLeave(): void {
     Preview.state.status === Preview.Status.Open ||
     Preview.state.status === Preview.Status.Opening
   ) {
-    if (Settings.state.previewTabsMode === 'in') {
-      Preview.closePreviewInline()
-    } else {
-      clearTimeout(Preview.state.mouseEnterTimeout)
-      clearTimeout(Preview.state.mouseLeaveTimeout)
-      Preview.closePreviewPopup()
-    }
+    Preview.closePreview()
   }
 
   if (DnD.dragEndedRecently) return

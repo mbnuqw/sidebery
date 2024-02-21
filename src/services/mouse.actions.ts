@@ -85,7 +85,7 @@ export function onMouseMove(e: MouseEvent): void {
   // Update position of external preview popup
   if (
     Preview.state.status === Preview.Status.Open &&
-    Settings.state.previewTabsMode !== 'in' &&
+    Preview.state.mode !== Preview.Mode.Inline &&
     Settings.state.previewTabsFollowMouse
   ) {
     Preview.setPreviewPopupPosition(e.clientY)
@@ -117,7 +117,7 @@ export function onMouseMove(e: MouseEvent): void {
     startY = multiSelectionStartY - activePanel.topOffset + scroll
 
     // Close tab preview
-    if (Settings.state.previewTabs) Preview.close()
+    if (Settings.state.previewTabs) Preview.closePreview()
 
     return
   }
@@ -178,7 +178,7 @@ export function startLongClick(
   clearTimeout(longClickTimeout)
   longClickTimeout = setTimeout(() => {
     // Close tab preview
-    if (Settings.state.previewTabs) Preview.close()
+    if (Settings.state.previewTabs) Preview.closePreview()
 
     if (DnD.reactive.isStarted) return
     Mouse.longClickApplied = true

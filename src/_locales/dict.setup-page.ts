@@ -2398,11 +2398,20 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_mode': {
     en: 'Preview mode',
   },
-  'settings.tabs.preview_mode_in': {
+  'settings.tabs.preview_mode_i': {
     en: 'in sidebar after the tab',
   },
-  'settings.tabs.preview_mode_piw': {
-    en: 'popup in window (experimental)',
+  'settings.tabs.preview_mode_p': {
+    en: 'popup in page (experimental)',
+  },
+  'settings.tabs.preview_mode_w': {
+    en: 'window (experimental)',
+  },
+  'settings.tabs.preview_mode_n': {
+    en: "don't show preview",
+  },
+  'settings.tabs.preview_page_mode_fallback': {
+    en: "Fallback mode (if it's impossible to use the main mode)",
   },
   'settings.tabs.preview_inline_height': {
     en: 'Preview height (px)',
@@ -2425,11 +2434,14 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_follow_mouse': {
     en: 'Follow the mouse cursor',
   },
-  'settings.tabs.preview_offset_y': {
-    en: 'Popup vertical offset (px)',
+  'settings.tabs.preview_win_offset_y': {
+    en: 'Window vertical offset (px)',
   },
-  'settings.tabs.preview_offset_x': {
-    en: 'Popup horizontal offset (px)',
+  'settings.tabs.preview_win_offset_x': {
+    en: 'Window horizontal offset (px)',
+  },
+  'settings.tabs.preview_in_page_offset_y': {
+    en: 'Popup vertical offset in page (px)',
   },
 
   // - Native tabs

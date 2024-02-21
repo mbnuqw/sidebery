@@ -14,6 +14,7 @@ const TS_CONFIG = getTSConfig()
 const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
+  'src/injections/tab-preview.ts': true,
   'src/popup.tab-preview/tab-preview.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
@@ -307,6 +308,7 @@ async function main() {
         'src/injections/pauseMedia.ts',
         'src/injections/group.ts',
         'src/injections/url.ts',
+        'src/injections/tab-preview.ts',
       ],
       tsconfig: 'tsconfig.json',
       charset: 'utf8',

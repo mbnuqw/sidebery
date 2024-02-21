@@ -10,6 +10,7 @@ import * as IPC from './ipc'
 import { Menu } from './menu'
 import { Mouse } from './mouse'
 import { Selection } from './selection'
+import { TabPreviewInitData } from 'src/injections/tab-preview'
 
 export const enum Status {
   Closing = -1,
@@ -18,8 +19,17 @@ export const enum Status {
   Open = 2,
 }
 
+export const enum Mode {
+  Nope = 0,
+  Inline = 1,
+  Window = 2,
+  InPage = 3,
+}
+
 export const state = {
   status: Status.Closed,
+  mode: Mode.Nope,
+  modeFallback: false,
 
   popupWinId: NOID,
   targetTabId: NOID,
@@ -45,6 +55,18 @@ let currentWinOffsetX = 0
 let deadOnArrival = false
 let listening = false
 
+function dbgStr() {
+  let m = state.mode === Mode.Nope ? 'Nope' : 'Inline'
+  if (state.mode === Mode.Window) m = 'Window'
+  else if (state.mode === Mode.InPage) m = 'InPage'
+
+  let s = state.status === Status.Closed ? 'Closed' : 'Closing'
+  if (state.status === Status.Open) s = 'Open'
+  else if (state.status === Status.Opening) s = 'Opening'
+
+  return `mode: ${m}, status: ${s}`
+}
+
 export function setTargetTab(tabId: ID, y: number) {
   clearTimeout(state.mouseEnterTimeout)
   if (Settings.state.previewTabsFollowMouse) {
@@ -56,7 +78,7 @@ export function setTargetTab(tabId: ID, y: number) {
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
     // Show preview in inline mode
-    if (Settings.state.previewTabsMode === 'in') {
+    if (state.mode === Mode.Inline) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
         showPreviewInline(state.targetTabId)
@@ -73,11 +95,11 @@ export function setTargetTab(tabId: ID, y: number) {
       return
     }
 
-    // Show preview in popup mode
-    if (Windows.focused && state.status === Status.Closed) {
+    // Show preview
+    if (state.status === Status.Closed) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
-        showPreviewPopup(state.targetTabId, y)
+        showPreview(state.targetTabId, y)
       }, Settings.state.previewTabsDelay)
       return
     }
@@ -94,22 +116,130 @@ export function resetTargetTab(tabId: ID) {
 
   state.mouseEnterTimeout = undefined
 
-  if (Settings.state.previewTabsMode !== 'in') {
+  if (state.mode !== Mode.Inline) {
     state.mouseLeaveTimeout = setTimeout(() => {
       closePreviewPopup()
     }, 36)
   }
 }
 
-export function close() {
+async function injectTabPreview(tabId: ID, y?: number) {
+  const activeTab = Tabs.byId[Tabs.activeId]
+  if (!activeTab) return
+
+  const initData = getTabPreviewInitData(tabId, y)
+  const initDataJson = JSON.stringify(initData)
+  const injectingData = browser.tabs
+    .executeScript(activeTab.id, {
+      code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.();true;`,
+      runAt: 'document_start',
+      matchAboutBlank: true,
+    })
+    .catch(() => {
+      // Cannot inject init data
+    })
+  const injectingScript = browser.tabs
+    .executeScript(activeTab.id, {
+      file: '../injections/tab-preview.js',
+      runAt: 'document_start',
+      allFrames: false,
+      matchAboutBlank: true,
+    })
+    .catch(() => {
+      // Cannot exec script
+    })
+  const [result, _] = await Promise.all([injectingData, injectingScript])
+  return result
+}
+
+function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
+  const tab = Tabs.byId[tabId]
+
+  return {
+    bg: Styles.parsedTheme?.vars.frame_bg,
+    fg: Styles.parsedTheme?.vars.frame_fg,
+    hbg: Styles.parsedTheme?.vars.toolbar_bg,
+    hfg: Styles.parsedTheme?.vars.toolbar_fg,
+    tabId: tabId,
+    winId: Windows.id,
+    title: tab?.title ?? '---',
+    url: tab?.url ?? '---',
+    y: y ?? 0,
+    dpr: window.devicePixelRatio,
+    popupWidth: Settings.state.previewTabsPopupWidth,
+    offsetY: Settings.state.previewTabsInPageOffsetY,
+    atTheLeft: Settings.state.previewTabsSide === 'right',
+  }
+}
+
+async function showPreview(tabId: ID, y?: number) {
+  const tab = Tabs.byId[tabId]
+  if (!tab || tab.invisible || tab.discarded) return
+
+  // Inline
+  if (state.mode === Mode.Inline) {
+    return showPreviewInline(tabId)
+  }
+
+  // In page popup
+  else if (state.mode === Mode.InPage) {
+    state.status = Status.Opening
+    const result = await injectTabPreview(tabId, y)
+    if (result?.[0]) {
+      state.status = Status.Open
+
+      if (deadOnArrival || tab.invisible) {
+        deadOnArrival = false
+        closePreviewPopup()
+      }
+
+      return
+    }
+
+    state.status = Status.Closed
+    state.modeFallback = true
+
+    if (Settings.state.previewTabsPageModeFallback === 'n') {
+      state.mode = Mode.Nope
+      return
+    }
+
+    if (Settings.state.previewTabsPageModeFallback === 'i') {
+      state.mode = Mode.Inline
+      return showPreviewInline(tabId)
+    }
+
+    if (Windows.focused && Settings.state.previewTabsPageModeFallback === 'w') {
+      state.mode = Mode.Window
+      return showPreveiwPopupWindow(tabId, y)
+    }
+  }
+
+  // Popup window
+  else if (Windows.focused && state.mode === Mode.Window) {
+    return showPreveiwPopupWindow(tabId, y)
+  }
+}
+
+export function closePreview() {
   clearTimeout(state.mouseEnterTimeout)
   clearTimeout(state.mouseLeaveTimeout)
 
-  if (Settings.state.previewTabsMode === 'in') closePreviewInline()
-  else closePreviewPopup()
+  if (state.mode === Mode.Inline) return closePreviewInline()
+  else if (state.mode === Mode.InPage || state.mode === Mode.Window) return closePreviewPopup()
 }
 
-export async function showPreviewPopup(tabId: ID, y?: number) {
+export function resetMode() {
+  if (state.status !== Status.Closed) closePreview()
+
+  if (Settings.state.previewTabsMode === 'i') state.mode = Mode.Inline
+  else if (Settings.state.previewTabsMode === 'p') state.mode = Mode.InPage
+  else state.mode = Mode.Window
+
+  state.modeFallback = false
+}
+
+export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
   if (!tab || tab.invisible || tab.discarded) return
 
@@ -163,7 +293,7 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
   if (tab.discarded) previewData.off = 'y'
 
   const params = new URLSearchParams(previewData).toString()
-  const top = (currentWinY ?? 0) + (y ?? 0) + Settings.state.previewTabsOffsetY
+  const top = (currentWinY ?? 0) + (y ?? 0) + Settings.state.previewTabsWinOffsetY
   const left = getPopupX()
   const previewWindow = await browser.windows.create({
     allowScriptsToClose: true,
@@ -232,9 +362,11 @@ export async function showPreviewPopup(tabId: ID, y?: number) {
 export function setPreviewPopupPosition(y: number) {
   if (state.popupWinId !== NOID) {
     browser.windows.update(state.popupWinId, {
-      top: currentWinY + y + Settings.state.previewTabsOffsetY + currentWinOffsetY,
+      top: currentWinY + y + Settings.state.previewTabsWinOffsetY + currentWinOffsetY,
       left: getPopupX(),
     })
+  } else if (IPC.state.previewConnection) {
+    IPC.sendToPreview('setY', y)
   }
 }
 
@@ -257,9 +389,12 @@ export async function closePreviewPopup() {
     return
   }
 
-  if (state.popupWinId !== NOID) {
+  if (state.status === Status.Open) {
     state.status = Status.Closing
-    await browser.windows.remove(state.popupWinId)
+    if (state.popupWinId !== NOID) await browser.windows.remove(state.popupWinId)
+    else if (Settings.state.previewTabsMode === 'p' && IPC.state.previewConnection) {
+      IPC.sendToPreview('close')
+    }
     state.popupWinId = NOID
     state.status = Status.Closed
   }
@@ -267,14 +402,14 @@ export async function closePreviewPopup() {
 
 function getPopupX() {
   if (Settings.state.previewTabsSide === 'right') {
-    return currentWinX + Sidebar.width + Settings.state.previewTabsOffsetX + currentWinOffsetX
+    return currentWinX + Sidebar.width + Settings.state.previewTabsWinOffsetX + currentWinOffsetX
   } else {
     return (
       currentWinX +
       currentWinWidth -
       Sidebar.width -
       Settings.state.previewTabsPopupWidth -
-      Settings.state.previewTabsOffsetX +
+      Settings.state.previewTabsWinOffsetX +
       currentWinOffsetX
     )
   }
