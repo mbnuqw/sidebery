@@ -2443,6 +2443,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_in_page_offset_y': {
     en: 'Popup vertical offset in page (px)',
   },
+  'settings.tabs.preview_in_page_offset_x': {
+    en: 'Popup horizontal offset in page (px)',
+  },
 
   // - Native tabs
   'settings.tabs_native_title': {

@@ -381,6 +381,13 @@ section(ref="el")
       :or="0"
       :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'p'"
       @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_in_page_offset_x"
+      v-model:value="Settings.state.previewTabsInPageOffsetX"
+      :allowNegative="true"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'p'"
+      @update:value="Settings.saveDebounced(500)")
 
   .wrapper
     .sub-title: .text {{translate('settings.tabs_native_title')}}

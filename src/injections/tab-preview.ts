@@ -16,6 +16,7 @@ export interface TabPreviewInitData {
   dpr: number
   popupWidth: number
   offsetY: number
+  offsetX: number
   atTheLeft: boolean
 }
 
@@ -37,6 +38,7 @@ const state = {
   previewHeight: 250,
   popupHeight: 250,
   offsetY: 0,
+  offsetX: 0,
   pageWidth: window.innerWidth,
   pageHeight: window.innerHeight,
   compScale: 1,
@@ -177,6 +179,7 @@ async function main() {
   state.previewWidth = initData.popupWidth
   state.previewHeight = calcPreviewHeight(initData.popupWidth)
   state.offsetY = initData.offsetY
+  state.offsetX = initData.offsetX
 
   previewConf.scale = calcScale(
     state.previewWidth,
@@ -230,7 +233,7 @@ async function main() {
   state.popupEl.style.cssText = `
     position: absolute;
     width: ${state.previewWidth}px;
-    ${initData.atTheLeft ? 'left' : 'right'}: ${MARGIN}px;
+    ${initData.atTheLeft ? 'left' : 'right'}: ${MARGIN + state.offsetX}px;
     display: flex;
     justify-content: center;
     align-items: center;

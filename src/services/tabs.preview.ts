@@ -168,6 +168,7 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     dpr: window.devicePixelRatio,
     popupWidth: Settings.state.previewTabsPopupWidth,
     offsetY: Settings.state.previewTabsInPageOffsetY,
+    offsetX: Settings.state.previewTabsInPageOffsetX,
     atTheLeft: Settings.state.previewTabsSide === 'right',
   }
 }
