@@ -174,7 +174,7 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
 
 async function showPreview(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible || tab.discarded) return
+  if (!tab || tab.invisible || tab.discarded || tab.active) return
 
   // Inline
   if (state.mode === Mode.Inline) {
