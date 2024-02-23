@@ -54,6 +54,7 @@ let currentWinOffsetY = 0
 let currentWinOffsetX = 0
 let deadOnArrival = false
 let listening = false
+let tooltipUpdTimeout: number | undefined = undefined
 
 function dbgStr() {
   let m = state.mode === Mode.Nope ? 'Nope' : 'Inline'
@@ -77,6 +78,19 @@ export function setTargetTab(tabId: ID, y: number) {
 
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
+    // Update default tooltip
+    if (Settings.state.previewTabsMode === 'p') {
+      clearTimeout(tooltipUpdTimeout)
+      tooltipUpdTimeout = setTimeout(() => {
+        const tab = Tabs.byId[tabId]
+        if (state.mode === Mode.Nope) {
+          if (tab) tab.reactive.tooltip = Tabs.getTooltip(tab)
+        } else {
+          if (tab) tab.reactive.tooltip = ''
+        }
+      }, 50)
+    }
+
     // Show preview in inline mode
     if (state.mode === Mode.Inline) {
       state.mouseEnterTimeout = setTimeout(() => {
@@ -95,7 +109,7 @@ export function setTargetTab(tabId: ID, y: number) {
       return
     }
 
-    // Show preview
+    // Show preview popup
     if (state.status === Status.Closed) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
@@ -133,6 +147,7 @@ async function injectTabPreview(tabId: ID, y?: number) {
     .executeScript(activeTab.id, {
       code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.();true;`,
       runAt: 'document_start',
+      allFrames: false,
       matchAboutBlank: true,
     })
     .catch(() => {
@@ -202,6 +217,8 @@ async function showPreview(tabId: ID, y?: number) {
 
     if (Settings.state.previewTabsPageModeFallback === 'n') {
       state.mode = Mode.Nope
+      // Set default tooltip
+      tab.reactive.tooltip = Tabs.getTooltip(tab)
       return
     }
 

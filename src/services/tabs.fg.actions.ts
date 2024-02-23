@@ -66,7 +66,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       isParent: tab.isParent,
       folded: tab.folded,
       title: tab.title,
-      tooltip: getTooltip(tab),
+      tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
       customTitle: tab.customTitle ?? null,
       customTitleEdit: false,
       customColor: tab.customColor ?? null,
@@ -107,7 +107,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     isParent: tab.isParent,
     folded: tab.folded,
     title: tab.title,
-    tooltip: getTooltip(tab),
+    tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
     customTitle: tab.customTitle ?? null,
     customTitleEdit: false,
     customColor: tab.customColor ?? null,
@@ -2609,11 +2609,9 @@ export function updateTooltip(tabId: ID) {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
-  tab.reactive.tooltip = getTooltip(tab)
+  tab.reactive.tooltip = Settings.state.previewTabs ? '' : getTooltip(tab)
 }
-function getTooltip(tab: Tab): string {
-  if (Settings.state.previewTabs) return ''
-
+export function getTooltip(tab: Tab): string {
   let decodedUrl
   try {
     decodedUrl = decodeURI(tab.url)
