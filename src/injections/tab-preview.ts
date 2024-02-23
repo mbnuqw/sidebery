@@ -256,6 +256,7 @@ async function main() {
     flex-shrink: 0;
     width: 100%;
     background-color: var(--hbg);
+    font-size: 16px;
     color: var(--hfg);
     overflow: hidden;
 `
@@ -266,13 +267,14 @@ async function main() {
   headerEl.appendChild(state.titleEl)
   state.titleEl.style.cssText = `
     position: relative;
-    margin: 6px 8px;
+    margin: 6px 8px 4px;
     padding: 0;
-    font-size: .875rem;
+    font-size: .875em;
     font-weight: 700;
-    /* line-height: 1.1rem;
-    max-height: 2.2rem;
+    /* line-height: 1.2em;
+    max-height: 2.4em;
     overflow: clip; */
+    line-height: 1.2em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -284,13 +286,14 @@ async function main() {
   headerEl.appendChild(state.urlEl)
   state.urlEl.style.cssText = `
     position: relative;
-    margin: 4px 8px 8px;
+    margin: 0 8px 8px;
     padding: 0;
-    font-size: .75rem;
+    font-size: .8125em;
     font-weight: 400;
-    /* line-height: 1rem;
-    max-height: 2rem;
+    /* line-height: 1.2em;
+    max-height: 2.4em;
     overflow: clip; */
+    line-height: 1.2em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
