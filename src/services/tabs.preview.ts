@@ -79,17 +79,23 @@ export function setTargetTab(tabId: ID, y: number) {
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
     // Update default tooltip
-    if (Settings.state.previewTabsMode === 'p') {
-      clearTimeout(tooltipUpdTimeout)
-      tooltipUpdTimeout = setTimeout(() => {
-        const tab = Tabs.byId[tabId]
-        if (state.mode === Mode.Nope) {
-          if (tab) tab.reactive.tooltip = Tabs.getTooltip(tab)
+    clearTimeout(tooltipUpdTimeout)
+    tooltipUpdTimeout = setTimeout(() => {
+      const tab = Tabs.byId[tabId]
+      if (tab) {
+        const isClosed = state.status === Status.Closed
+        if (
+          (Settings.state.previewTabsMode === 'p' && state.mode === Mode.Nope) ||
+          (state.mode === Mode.InPage && isClosed && (tab.discarded || tab.active)) ||
+          (state.mode === Mode.Window && isClosed && (tab.discarded || tab.active)) ||
+          (state.mode === Mode.Inline && tab.discarded)
+        ) {
+          tab.reactive.tooltip = Tabs.getTooltip(tab)
         } else {
-          if (tab) tab.reactive.tooltip = ''
+          tab.reactive.tooltip = ''
         }
-      }, 50)
-    }
+      }
+    }, 50)
 
     // Show preview in inline mode
     if (state.mode === Mode.Inline) {
