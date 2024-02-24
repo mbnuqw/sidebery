@@ -13,9 +13,7 @@
     AnimatedTabList(:panel="panel")
       .tab-preview(
         v-if="Tabs.reactive.inlinePreviewPinnedImg"
-        :style="{ '--bgi': Tabs.reactive.inlinePreviewPinnedImg }"
-        @mouseenter="onPreviewMouseEnter"
-        @mouseleave="onPreviewMouseLeave")
+        :style="{ '--bgi': Tabs.reactive.inlinePreviewPinnedImg }")
       template(
         v-if="Settings.state.previewTabs && (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')"
         v-for="id in panel.reactive.visibleTabIds"
@@ -23,9 +21,7 @@
         TabComponent(:tabId="id")
         .tab-preview(
           v-if="Tabs.reactive.inlinePreviewTabId === id"
-          :style="{ '--bgi': Tabs.byId[id]?.previewImg }"
-          @mouseenter="onPreviewMouseEnter"
-          @mouseleave="onPreviewMouseLeave")
+          :style="{ '--bgi': Tabs.byId[id]?.previewImg }")
       template(v-else)
         TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
       NewTabBar(
@@ -245,17 +241,5 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
 
 function onMouseLeave() {
   if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
-}
-
-function onPreviewMouseEnter() {
-  clearTimeout(Preview.state.mouseEnterTimeout)
-  clearTimeout(Preview.state.mouseLeaveTimeout)
-}
-
-function onPreviewMouseLeave() {
-  clearTimeout(Preview.state.mouseLeaveTimeout)
-  Preview.state.mouseLeaveTimeout = setTimeout(() => {
-    Preview.closePreviewInline()
-  }, 32)
 }
 </script>
