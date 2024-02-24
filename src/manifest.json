@@ -383,6 +383,9 @@
     },
     "flatten_tabs": {
       "description": "__MSG_KbFlattenTabs__"
+    },
+    "sel_child_tabs": {
+      "description": "__MSG_KbSelChildTabs__"
     }
   },
   "browser_action": {

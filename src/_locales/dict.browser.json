@@ -298,6 +298,13 @@
     "zh_CN": "向下选择区间",
     "zh_TW": "向下選取區間"
   },
+  "KbSelChildTabs": {
+    "en": "Select child tabs",
+    "ru": "Выделить дочерние вкладки",
+    "de": "Untergeordnete Tabs auswählen",
+    "zh_CN": "选择子选项卡",
+    "zh_TW": "選擇子選項卡"
+  },
   "KbResetSelection": {
     "en": "Reset selection",
     "ru": "Сбросить выделение",

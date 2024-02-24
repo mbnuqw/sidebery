@@ -195,6 +195,7 @@ function onCmd(name: string): void {
   else if (name === 'group_tabs') onKeyGroupTabs(false)
   else if (name === 'group_tabs_act') onKeyGroupTabs(true)
   else if (name === 'flatten_tabs') onKeyFlattenTabs()
+  else if (name === 'sel_child_tabs') onKeySelChildTabs()
 }
 
 function onKeyScrollToTopBottom(dir: 1 | -1) {
@@ -1169,6 +1170,20 @@ function onKeyFlattenTabs() {
   if (!ids.length) return
 
   Tabs.flattenTabs(ids)
+}
+
+function onKeySelChildTabs() {
+  let tab
+  if (Selection.isTabs()) tab = Tabs.byId[Selection.getFirst()]
+  if (!tab) tab = Tabs.byId[Tabs.activeId]
+  if (!tab || !tab.isParent) return
+
+  Selection.resetSelection()
+
+  if (tab.folded) Tabs.expTabsBranch(tab.id)
+
+  const childTabs = Tabs.getBranch(tab, false)
+  Selection.selectTabs(childTabs.map(t => t.id))
 }
 
 /**

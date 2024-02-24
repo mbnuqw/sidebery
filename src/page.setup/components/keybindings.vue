@@ -75,6 +75,7 @@
           @update:value="Settings.saveDebounced(150)")
       KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.sel_child_tabs")
     KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
     .info {{translate('settings.kb_select_act_note')}}
