@@ -165,8 +165,6 @@ async function main() {
   state.rootEl.setAttribute('id', 'sdbr_preview_root')
   document.body.appendChild(state.rootEl)
 
-  if (!state.rootEl) return
-
   await waitInitData()
 
   const initData = window.sideberyInitData as TabPreviewInitData
@@ -271,9 +269,6 @@ async function main() {
     padding: 0;
     font-size: .875em;
     font-weight: 700;
-    /* line-height: 1.2em;
-    max-height: 2.4em;
-    overflow: clip; */
     line-height: 1.2em;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -290,9 +285,6 @@ async function main() {
     padding: 0;
     font-size: .8125em;
     font-weight: 400;
-    /* line-height: 1.2em;
-    max-height: 2.4em;
-    overflow: clip; */
     line-height: 1.2em;
     overflow: hidden;
     text-overflow: ellipsis;
