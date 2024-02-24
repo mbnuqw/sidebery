@@ -175,6 +175,27 @@
     "zh_CN": "固定/取消固定选定（或活动）标签页",
     "zh_TW": "釘選/取消釘選選定（或當前）分頁"
   },
+  "KbGroupTabs": {
+    "en": "Group selected (or active) tabs",
+    "ru": "Сгруппировать выбранные (или активные) вкладки",
+    "de": "Ausgewählte (oder aktive) Tabs gruppieren",
+    "zh_CN": "对选定（或活动）选项卡进行分组",
+    "zh_TW": "將選定（或活動）標籤進行分組"
+  },
+  "KbGroupTabsAct": {
+    "en": "Group selected (or active) tabs and switch to group page",
+    "ru": "Сгруппировать выбранные (или активные) вкладки и переключится на групповую страницу",
+    "de": "Ausgewählte (oder aktive) Tabs gruppieren und zur Gruppenseite wechseln",
+    "zh_CN": "对选定（或活动）选项卡进行分组并切换到组页面",
+    "zh_TW": "將選定（或活動）標籤進行分組並切換到群組頁面"
+  },
+  "KbFlattenTabs": {
+    "en": "Flatten selected tabs",
+    "ru": "Сбросить вложенность выделенных вкладок",
+    "de": "Ausgewählte Tabs zusammenziehen",
+    "zh_CN": "展平选定的选项卡",
+    "zh_TW": "展平選定的選項卡"
+  },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
     "ru": "Открыть вкладку в активной панели",

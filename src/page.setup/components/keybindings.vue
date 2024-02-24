@@ -37,6 +37,9 @@
     span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.duplicate_tabs")
     KeybindingField(:keybinding="Keybindings.reactive.byName.pin_tabs")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs_act")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.flatten_tabs")
 
   section
     h2 {{translate('settings.kb_tabs_open')}}

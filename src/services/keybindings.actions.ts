@@ -192,6 +192,9 @@ function onCmd(name: string): void {
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
   else if (name === 'hide_act_panel') onKeyHidePanel()
+  else if (name === 'group_tabs') onKeyGroupTabs(false)
+  else if (name === 'group_tabs_act') onKeyGroupTabs(true)
+  else if (name === 'flatten_tabs') onKeyFlattenTabs()
 }
 
 function onKeyScrollToTopBottom(dir: 1 | -1) {
@@ -1152,6 +1155,20 @@ function onKeyHidePanel() {
   if (!Sidebar.panelsById[panelId]) panelId = Sidebar.activePanelId
 
   Sidebar.hidePanel(panelId)
+}
+
+function onKeyGroupTabs(activate: boolean) {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  Tabs.groupTabs(ids, { active: activate })
+}
+
+function onKeyFlattenTabs() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  Tabs.flattenTabs(ids)
 }
 
 /**

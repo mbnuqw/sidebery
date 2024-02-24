@@ -374,6 +374,15 @@
     },
     "hide_act_panel": {
       "description": "__MSG_KbHideActPanel__"
+    },
+    "group_tabs": {
+      "description": "__MSG_KbGroupTabs__"
+    },
+    "group_tabs_act": {
+      "description": "__MSG_KbGroupTabsAct__"
+    },
+    "flatten_tabs": {
+      "description": "__MSG_KbFlattenTabs__"
     }
   },
   "browser_action": {
