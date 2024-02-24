@@ -95,7 +95,7 @@ export function setTargetTab(tabId: ID, y: number) {
           tab.reactive.tooltip = ''
         }
       }
-    }, 50)
+    }, 64)
 
     // Show preview in inline mode
     if (state.mode === Mode.Inline) {
@@ -111,7 +111,7 @@ export function setTargetTab(tabId: ID, y: number) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
         updatePreviewPopup(state.targetTabId)
-      }, 50)
+      }, 128)
       return
     }
 
