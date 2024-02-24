@@ -221,6 +221,9 @@ function onMouseDown(e: MouseEvent): void {
       } else if (Settings.state.tabMiddleClickCtrl === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
         return
+      } else if (Settings.state.tabMiddleClickCtrl === 'dup_child') {
+        Tabs.duplicateTabs([tab.id], true)
+        return
       } else if (Settings.state.tabMiddleClickCtrl === 'edit_title') {
         Tabs.editTabTitle([tab.id])
         return
@@ -233,6 +236,9 @@ function onMouseDown(e: MouseEvent): void {
         return
       } else if (Settings.state.tabMiddleClickShift === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
+        return
+      } else if (Settings.state.tabMiddleClickShift === 'dup_child') {
+        Tabs.duplicateTabs([tab.id], true)
         return
       } else if (Settings.state.tabMiddleClickShift === 'edit_title') {
         Tabs.editTabTitle([tab.id])
@@ -249,6 +255,8 @@ function onMouseDown(e: MouseEvent): void {
         Tabs.discardTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
+      } else if (Settings.state.tabMiddleClick === 'dup_child') {
+        Tabs.duplicateTabs([tab.id], true)
       }
     }
   }
@@ -367,6 +375,7 @@ function onDoubleClick(): void {
   const dc = Settings.state.tabDoubleClick
   if (dc === 'reload') Tabs.reloadTabs([tab.id])
   if (dc === 'duplicate') Tabs.duplicateTabs([tab.id])
+  if (dc === 'dup_child') Tabs.duplicateTabs([tab.id], true)
   if (dc === 'pin') Tabs.repinTabs([tab.id])
   if (dc === 'mute') Tabs.remuteTabs([tab.id])
   if (dc === 'clear_cookies') Tabs.clearTabsCookies([tab.id])

@@ -3374,6 +3374,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '复制',
     zh_TW: '複製',
   },
+  'settings.tab_action_dup_child': {
+    en: 'duplicate as a child',
+    ru: 'дублировать как дочернюю вкладку',
+    de: 'Als untergeordneten Tab duplizieren',
+    zh_CN: '复制为子选项卡',
+    zh_TW: '複製為子選項卡',
+  },
   'settings.tab_action_pin': {
     en: 'pin',
     ru: 'закрепить',
