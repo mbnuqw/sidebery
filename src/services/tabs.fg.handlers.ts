@@ -1094,6 +1094,10 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   if (groupTab && !groupTab.discarded) {
     IPC.groupPage(groupTab.id, { removedTab: tab.id })
   }
+
+  if (Preview.state.status === Preview.Status.Open && Preview.state.targetTabId === tabId) {
+    Preview.resetTargetTab(tabId)
+  }
 }
 
 /**
