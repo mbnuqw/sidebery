@@ -140,6 +140,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   previewTabsWinOffsetX: 6,
   previewTabsInPageOffsetY: 0,
   previewTabsInPageOffsetX: 0,
+  previewTabsCropRight: 0,
 
   // Native tabs
   hideInact: false,

@@ -2522,6 +2522,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '弹出窗口在页面中的水平偏移（px）',
     zh_TW: '彈出視窗在頁面中的水平偏移（px）',
   },
+  'settings.tabs.preview_crop_right': {
+    en: 'Crop preview from right side (px)',
+    ru: 'Обрезка предварительного просмотра с правой стороны (px)',
+    de: 'Vorschau von rechts zuschneiden (px)',
+    zh_CN: '从右侧裁剪预览 (px)',
+    zh_TW: '從右側裁切預覽 (px)',
+  },
 
   // - Native tabs
   'settings.tabs_native_title': {

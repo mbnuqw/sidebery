@@ -18,6 +18,7 @@ export interface TabPreviewInitData {
   offsetY: number
   offsetX: number
   atTheLeft: boolean
+  rCrop: number
 }
 
 const MARGIN = 2
@@ -298,7 +299,7 @@ async function main() {
   previewBoxEl.style.cssText = `
     position: relative;
     width: 100%;
-    height: ${state.previewHeight}px;
+    height: ${state.previewHeight + initData.rCrop}px;
 `
 
   // Create preview 1 element
@@ -306,7 +307,7 @@ async function main() {
   previewBoxEl.appendChild(state.previewEl1)
   state.previewEl1.style.cssText = `
     position: absolute;
-    width: 100%;
+    width: calc(100% + ${initData.rCrop}px);
     height: 100%;
     top: 0;
     left: 0;
@@ -323,7 +324,7 @@ async function main() {
   previewBoxEl.appendChild(state.previewEl2)
   state.previewEl2.style.cssText = `
     position: absolute;
-    width: 100%;
+    width: calc(100% + ${initData.rCrop}px);
     height: 100%;
     top: 0;
     left: 0;

@@ -191,6 +191,7 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     offsetY: Settings.state.previewTabsInPageOffsetY,
     offsetX: Settings.state.previewTabsInPageOffsetX,
     atTheLeft: Settings.state.previewTabsSide === 'right',
+    rCrop: Settings.state.previewTabsCropRight,
   }
 }
 

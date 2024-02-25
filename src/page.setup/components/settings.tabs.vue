@@ -388,6 +388,12 @@ section(ref="el")
       :or="0"
       :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'p'"
       @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_crop_right"
+      v-model:value="Settings.state.previewTabsCropRight"
+      :or="0"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'p'"
+      @update:value="Settings.saveDebounced(500)")
 
   .wrapper
     .sub-title: .text {{translate('settings.tabs_native_title')}}

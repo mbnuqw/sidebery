@@ -139,6 +139,7 @@ export interface SettingsState {
   previewTabsWinOffsetX: number
   previewTabsInPageOffsetY: number
   previewTabsInPageOffsetX: number
+  previewTabsCropRight: number
 
   // Native tabs
   hideInact: boolean
