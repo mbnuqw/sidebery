@@ -888,11 +888,19 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     Tabs.rememberRemoved([tab])
   }
 
+  const autoGroup =
+    !tab.isGroup &&
+    !tab.folded &&
+    hasChildren &&
+    Settings.state.autoGroupOnClose &&
+    !Settings.state.autoGroupOnCloseMouseOnly &&
+    (tab.lvl === 0 || !Settings.state.autoGroupOnClose0Lvl)
+
   // Handle child tabs
   let fullVisTabsRecalcNeeded = false
   handling_descendants: if (hasChildren) {
     const toRemove = []
-    const outdentOnlyFirstChild = Settings.state.treeRmOutdent === 'first_child'
+    const outdentOnlyFirstChild = !autoGroup && Settings.state.treeRmOutdent === 'first_child'
     const firstChild = nextTab
 
     // Handle reopening tab in different container
@@ -941,6 +949,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
           fullVisTabsRecalcNeeded = true
           if (t.hidden) toShow.push(t.id)
         }
+      }
+
+      // Auto grouping
+      if (autoGroup && t.parentId === tabId) {
+        Tabs.groupOnClosing(tab.id, tab.title, tab.active, t.id)
       }
 
       // Decrease indent level of tabs in branch

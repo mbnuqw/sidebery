@@ -118,6 +118,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   discardFoldedDelayUnit: 'sec',
   tabsTreeBookmarks: true,
   treeRmOutdent: 'branch',
+  autoGroupOnClose: false,
+  autoGroupOnClose0Lvl: false,
+  autoGroupOnCloseMouseOnly: false,
   ignoreFoldedParent: false,
 
   // Tabs colorization

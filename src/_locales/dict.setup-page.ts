@@ -2323,6 +2323,27 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '第一个子标签',
     zh_TW: '僅第一個',
   },
+  'settings.auto_group_on_close': {
+    en: 'Auto group child tabs after closing the parent tab',
+    ru: 'Автоматическая группировка дочерних вкладок после закрытия родительской вкладки',
+    de: 'Untergeordnete Tab automatisch gruppieren, nachdem der übergeordnete Tab geschlossen wurde',
+    zh_CN: '关闭父选项卡后自动对子选项卡进行分组',
+    zh_TW: '關閉父選項卡後自動對子選項卡進行分組',
+  },
+  'settings.auto_group_on_close_0_lvl': {
+    en: 'Only if the closed tab was on the root level',
+    ru: 'Только если закрытая вкладка находилась на корневом уровне',
+    de: 'Nur wenn sich der geschlossene Tab auf der Stammebene befand',
+    zh_CN: '仅当关闭的选项卡位于根级别时',
+    zh_TW: '僅當關閉的選項卡位於根級別時',
+  },
+  'settings.auto_group_on_close_mouse_only': {
+    en: 'Only if the tab was closed with the mouse',
+    ru: 'Только если вкладка была закрыта мышкой',
+    de: 'Nur wenn der Tab mit der Maus geschlossen wurde',
+    zh_CN: '仅当用鼠标关闭选项卡时',
+    zh_TW: '僅當用滑鼠關閉選項卡時',
+  },
 
   // - Tabs colorization
   'settings.tabs_colorization_title': {

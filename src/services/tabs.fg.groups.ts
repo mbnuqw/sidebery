@@ -228,6 +228,30 @@ export function getGroupTab(tab?: Tab): Tab | undefined {
   }
 }
 
+interface GroupOnClosingConf {
+  ids: ID[]
+  title: string
+  active: boolean
+}
+let grouppingTimeout: number | undefined
+const grouppingBuffers: Map<ID, GroupOnClosingConf> = new Map()
+export function groupOnClosing(id: ID, title: string, active: boolean, childTabId: ID) {
+  let conf = grouppingBuffers.get(id)
+  if (!conf) {
+    conf = { title, active, ids: [] }
+    grouppingBuffers.set(id, conf)
+  }
+  conf.ids.push(childTabId)
+
+  clearTimeout(grouppingTimeout)
+  grouppingTimeout = setTimeout(() => {
+    for (const [id, conf] of grouppingBuffers) {
+      groupTabs(conf.ids, { title: conf.title, active: conf.active })
+    }
+    grouppingBuffers.clear()
+  }, 250)
+}
+
 export function updateGroupTab(groupTab: Tab) {
   const tabsCount = Tabs.list.length
   const tabs: GroupedTabInfo[] = []

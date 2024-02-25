@@ -119,6 +119,20 @@ const favPlaceholder = computed((): string => {
   return Favicons.getFavPlaceholder(tab.reactive.url)
 })
 
+function shouldBeConvertedToGroup(): boolean {
+  return (
+    tab.isParent &&
+    !tab.folded &&
+    !tab.isGroup &&
+    Settings.state.autoGroupOnClose &&
+    (tab.lvl === 0 || !Settings.state.autoGroupOnClose0Lvl)
+  )
+}
+
+function convertToGroup() {
+  browser.tabs.update(tab.id, { url: Utils.createGroupUrl(tab.title) }).catch(() => {})
+}
+
 let closeLock = false
 let tempLockCloseBtnTimeout: number | undefined
 function tempLockCloseBtn(): void {
@@ -138,9 +152,11 @@ function onMouseDownClose(e: MouseEvent): void {
   if (Tabs.editableTabId === tab.id) {
     tab.reactive.customTitle = tab.title
   } else if (e.button === 0) {
+    if (shouldBeConvertedToGroup()) return convertToGroup()
     Tabs.removeTabs([tab.id])
   } else if (e.button === 1) {
     if (Settings.state.tabCloseMiddleClick === 'close') {
+      if (shouldBeConvertedToGroup()) return convertToGroup()
       Tabs.removeTabs([tab.id])
     } else if (Settings.state.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([tab.id])
@@ -250,7 +266,8 @@ function onMouseDown(e: MouseEvent): void {
       Mouse.startMultiSelection(e, tab.id, selectedTabs)
     } else {
       if (Settings.state.tabMiddleClick === 'close') {
-        Tabs.removeTabs(selectedTabs)
+        if (shouldBeConvertedToGroup()) convertToGroup()
+        else Tabs.removeTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'discard') {
         Tabs.discardTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'duplicate') {
@@ -374,16 +391,18 @@ function onDoubleClick(): void {
 
   const dc = Settings.state.tabDoubleClick
   if (dc === 'reload') Tabs.reloadTabs([tab.id])
-  if (dc === 'duplicate') Tabs.duplicateTabs([tab.id])
-  if (dc === 'dup_child') Tabs.duplicateTabs([tab.id], true)
-  if (dc === 'pin') Tabs.repinTabs([tab.id])
-  if (dc === 'mute') Tabs.remuteTabs([tab.id])
-  if (dc === 'clear_cookies') Tabs.clearTabsCookies([tab.id])
-  if (dc === 'exp' && tab.isParent) Tabs.toggleBranch(tab.id)
-  if (dc === 'new_after') Tabs.createTabAfter(tab.id)
-  if (dc === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
-  if (dc === 'close') Tabs.removeTabs([tab.id])
-  if (dc === 'edit_title') Tabs.editTabTitle([tab.id])
+  else if (dc === 'duplicate') Tabs.duplicateTabs([tab.id])
+  else if (dc === 'dup_child') Tabs.duplicateTabs([tab.id], true)
+  else if (dc === 'pin') Tabs.repinTabs([tab.id])
+  else if (dc === 'mute') Tabs.remuteTabs([tab.id])
+  else if (dc === 'clear_cookies') Tabs.clearTabsCookies([tab.id])
+  else if (dc === 'exp' && tab.isParent) Tabs.toggleBranch(tab.id)
+  else if (dc === 'new_after') Tabs.createTabAfter(tab.id)
+  else if (dc === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
+  else if (dc === 'close') {
+    if (shouldBeConvertedToGroup()) convertToGroup()
+    else Tabs.removeTabs([tab.id])
+  } else if (dc === 'edit_title') Tabs.editTabTitle([tab.id])
 }
 
 function onDragStart(e: DragEvent): void {

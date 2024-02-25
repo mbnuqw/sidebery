@@ -269,6 +269,22 @@ section(ref="el")
       :opts="Settings.getOpts('treeRmOutdent')"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
+      label="settings.auto_group_on_close"
+      :inactive="!Settings.state.tabsTree"
+      v-model:value="Settings.state.autoGroupOnClose"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      ToggleField(
+        label="settings.auto_group_on_close_0_lvl"
+        :inactive="!Settings.state.tabsTree || !Settings.state.autoGroupOnClose"
+        v-model:value="Settings.state.autoGroupOnClose0Lvl"
+        @update:value="Settings.saveDebounced(150)")
+      ToggleField(
+        label="settings.auto_group_on_close_mouse_only"
+        :inactive="!Settings.state.tabsTree || !Settings.state.autoGroupOnClose"
+        v-model:value="Settings.state.autoGroupOnCloseMouseOnly"
+        @update:value="Settings.saveDebounced(150)")
+    ToggleField(
       label="settings.ignore_folded_parent"
       :inactive="!Settings.state.tabsTree"
       v-model:value="Settings.state.ignoreFoldedParent"
