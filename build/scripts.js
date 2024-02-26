@@ -14,12 +14,21 @@ const TS_CONFIG = getTSConfig()
 const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
-  'src/injections/tab-preview.ts': true,
+  'src/injections/tab-preview.ts': { format: 'iife' },
   'src/popup.tab-preview/tab-preview.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
-
 const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
+const PROD_ESBUILD_BASE_CONF = {
+  tsconfig: 'tsconfig.json',
+  charset: 'utf8',
+  minifyWhitespace: true,
+  minifySyntax: true,
+  treeShaking: true,
+  bundle: true,
+  format: 'esm',
+  define: ESBUILD_DEFINE,
+}
 
 function fixModuleImports(data) {
   return data.replace(IMPORT_RE, (match, p1, p2, p3, p4, p5) => {
@@ -166,6 +175,7 @@ async function compileVueComponent(filePath, fileName) {
 async function compileTSFile(file) {
   let result
   if (BUNDLES[file.srcPath]) {
+    const conf = BUNDLES[file.srcPath]
     await esbuild.build({
       entryPoints: [file.srcPath],
       tsconfig: 'tsconfig.json',
@@ -173,7 +183,7 @@ async function compileTSFile(file) {
       minify: !IS_DEV,
       treeShaking: true,
       bundle: true,
-      format: 'esm',
+      format: conf.format ? conf.format : 'esm',
       outfile: file.outPath,
     })
     return
@@ -278,7 +288,8 @@ async function main() {
     logOk('Scripts: Watching')
   } else {
     // Splitting allowed code
-    await esbuild.build({
+    const buildingSplittedScripts = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
       entryPoints: [
         'src/bg/background.ts',
         'src/sidebar/sidebar.ts',
@@ -289,52 +300,43 @@ async function main() {
         'src/_locales/dict.sidebar.ts',
         'src/_locales/dict.setup-page.ts',
       ],
-      tsconfig: 'tsconfig.json',
-      charset: 'utf8',
       splitting: true,
-      minifyWhitespace: true,
-      minifySyntax: true,
-      treeShaking: true,
-      bundle: true,
-      format: 'esm',
       outdir: ADDON_PATH,
       plugins: [vueComponentsPlugin],
-      define: ESBUILD_DEFINE,
     })
     // Bundled scripts for injecting
-    await esbuild.build({
+    const buildingBundledScripts = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
       entryPoints: [
         'src/injections/playMedia.ts',
         'src/injections/pauseMedia.ts',
         'src/injections/group.ts',
         'src/injections/url.ts',
-        'src/injections/tab-preview.ts',
       ],
-      tsconfig: 'tsconfig.json',
-      charset: 'utf8',
       splitting: false,
-      minifyWhitespace: true,
-      minifySyntax: true,
-      treeShaking: true,
-      bundle: true,
-      format: 'esm',
       outdir: path.join(ADDON_PATH, 'injections'),
-      define: ESBUILD_DEFINE,
     })
     // Bundled script for preview
-    await esbuild.build({
-      entryPoints: ['src/popup.tab-preview/tab-preview.ts'],
-      tsconfig: 'tsconfig.json',
-      charset: 'utf8',
+    const buildingInjectionPreviewScript = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
+      entryPoints: ['src/injections/tab-preview.ts'],
       splitting: false,
-      minifyWhitespace: true,
-      minifySyntax: true,
-      treeShaking: true,
-      bundle: true,
-      format: 'esm',
-      outdir: path.join(ADDON_PATH, 'popup.tab-preview'),
-      define: ESBUILD_DEFINE,
+      format: 'iife',
+      outdir: path.join(ADDON_PATH, 'injections'),
     })
+    // Bundled script for preview
+    const buildingWindowPreviewScript = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
+      entryPoints: ['src/popup.tab-preview/tab-preview.ts'],
+      splitting: false,
+      outdir: path.join(ADDON_PATH, 'popup.tab-preview'),
+    })
+    await Promise.all([
+      buildingSplittedScripts,
+      buildingBundledScripts,
+      buildingInjectionPreviewScript,
+      buildingWindowPreviewScript,
+    ])
     logOk('Scripts: Done')
   }
 }
