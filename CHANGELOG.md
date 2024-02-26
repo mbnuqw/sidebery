@@ -4,13 +4,19 @@
 
 ### Added
 
+- Auto grouping after closing parent tab ([#779](https://github.com/mbnuqw/sidebery/issues/779))  
+- Keybinding: Select child tabs
+- Keybinding: Group/flatten selected/active tabs ([#1295](https://github.com/mbnuqw/sidebery/issues/1295))  
+- Mouse action: Duplicate tab as a child ([#1480](https://github.com/mbnuqw/sidebery/issues/1480))  
 - Tab preview on hover ([#301](https://github.com/mbnuqw/sidebery/issues/301))
 - Note about snapshots limit: not applicable to exported snapshots
 
 ### Fixed
 
+- L10n zh_TW correction (by [@llc0930](https://github.com/llc0930): [#1485](https://github.com/mbnuqw/sidebery/issues/1485))
+- Blinking that appears immediately after the “Tab Loaded” animation
 - Preserve container after dropping the tab from "recently-closed" sub-panel to tab panel
-- Window-specific theme handling (resolves [#1134](https://github.com/mbnuqw/sidebery/issues/1134))  
+- Window-specific theme handling ([#1134](https://github.com/mbnuqw/sidebery/issues/1134))  
 - Incorrect tabs range selection with shift+click in search result
 - Scroll thresholds not applying to mouse debouncer (by [@ImTheSquid](https://github.com/ImTheSquid): [#1440](https://github.com/mbnuqw/sidebery/issues/1440))
 - Preserve selection on mid-click when 'multipleMiddleClose' is on ([#1441](https://github.com/mbnuqw/sidebery/issues/1441))
