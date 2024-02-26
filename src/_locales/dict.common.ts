@@ -1050,8 +1050,8 @@ export const commonTranslations: Translations = {
     en: 'Group',
     ru: 'Сгруппировать',
     de: 'Gruppe',
-    zh_CN: '新分组',
-    zh_TW: '新群組',
+    zh_CN: '分配给组',
+    zh_TW: '分給群組',
   },
   'menu.tab.flatten': {
     en: 'Flatten',

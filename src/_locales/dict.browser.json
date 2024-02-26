@@ -179,22 +179,22 @@
     "en": "Group selected (or active) tabs",
     "ru": "Сгруппировать выбранные (или активные) вкладки",
     "de": "Ausgewählte (oder aktive) Tabs gruppieren",
-    "zh_CN": "对选定（或活动）选项卡进行分组",
-    "zh_TW": "將選定（或活動）標籤進行分組"
+    "zh_CN": "将选定（或活动）选项卡分配给组",
+    "zh_TW": "將選定（或當前）分頁分給群組"
   },
   "KbGroupTabsAct": {
     "en": "Group selected (or active) tabs and switch to group page",
     "ru": "Сгруппировать выбранные (или активные) вкладки и переключится на групповую страницу",
     "de": "Ausgewählte (oder aktive) Tabs gruppieren und zur Gruppenseite wechseln",
-    "zh_CN": "对选定（或活动）选项卡进行分组并切换到组页面",
-    "zh_TW": "將選定（或活動）標籤進行分組並切換到群組頁面"
+    "zh_CN": "将选定（或活动）选项卡分配给组并切换到分组页面",
+    "zh_TW": "將選定（或當前）分頁分給群組並切換到群組頁面"
   },
   "KbFlattenTabs": {
     "en": "Flatten selected tabs",
     "ru": "Сбросить вложенность выделенных вкладок",
     "de": "Ausgewählte Tabs zusammenziehen",
-    "zh_CN": "展平选定的选项卡",
-    "zh_TW": "展平選定的選項卡"
+    "zh_CN": "树序列化（压平选定选项卡所在的树）",
+    "zh_TW": "樹序列化（壓平選定分頁所在的樹）"
   },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
@@ -303,7 +303,7 @@
     "ru": "Выделить дочерние вкладки",
     "de": "Untergeordnete Tabs auswählen",
     "zh_CN": "选择子选项卡",
-    "zh_TW": "選擇子選項卡"
+    "zh_TW": "選取子分頁"
   },
   "KbResetSelection": {
     "en": "Reset selection",
