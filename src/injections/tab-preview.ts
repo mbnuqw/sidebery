@@ -157,6 +157,8 @@ function calcPositionRestraints() {
 }
 
 async function main() {
+  Logs.setInstanceType(InstanceType.preview)
+
   // Remove previous container
   state.rootEl = document.getElementById('sdbr_preview_root')
   if (state.rootEl) state.rootEl.remove()
