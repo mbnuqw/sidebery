@@ -170,6 +170,8 @@ export function connectTo(
     port.onMessage.removeListener(connection.postListener)
     port.onDisconnect.removeListener(connection.disconnectListener)
 
+    resolveUnfinishedCommunications(port)
+
     // Remove port
     connection.localPort = undefined
 
@@ -541,14 +543,7 @@ function onConnect(port: browser.runtime.Port) {
 
     if (!portNameData) return
 
-    // Handle unfinished communications
-    for (const [msgId, waiting] of msgsWaitingForAnswer.entries()) {
-      if (waiting.portName === port.name) {
-        clearTimeout(waiting.timeout)
-        if (waiting.err) waiting.err('IPC: Target disconnected')
-        msgsWaitingForAnswer.delete(msgId)
-      }
-    }
+    resolveUnfinishedCommunications(port)
 
     // Remove port
     connection.remotePort = undefined
@@ -614,6 +609,7 @@ function runActionFor<T extends InstanceType, A extends keyof Actions>(msg: Mess
   }
 }
 
+const runningAsyncActions = new Map<number, string>()
 /**
  * Handles message received from Port in background instance
  * and sends the answer message with the action result.
@@ -664,18 +660,41 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
   // Send the result
   if (msg.id && port) {
     if (result instanceof Promise) {
+      const msgId = msg.id
+
       // Send confirmation message
-      port.postMessage(msg.id)
+      try {
+        port.postMessage(msgId)
+      } catch (err) {
+        Logs.err(`IPC.onPostMsg: Error on sending "${String(msg.action)}" action confirm:`, err)
+        return
+      }
+
       // ...then wait for the final result and send it too
       let finalResult, error
       try {
+        runningAsyncActions.set(msgId, port.name)
         finalResult = await result
       } catch (err) {
         error = String(err)
       }
-      port.postMessage({ id: msg.id, result: finalResult, error })
+
+      // Check if result is not needed anymore
+      if (!runningAsyncActions.has(msgId)) return
+      else runningAsyncActions.delete(msgId)
+
+      try {
+        port.postMessage({ id: msgId, result: finalResult, error })
+      } catch (err) {
+        Logs.err(`IPC.onPostMsg: Error on sending "${String(msg.action)}" action result:`, err)
+        return
+      }
     } else {
-      port.postMessage({ id: msg.id, result, error })
+      try {
+        port.postMessage({ id: msg.id, result, error })
+      } catch (err) {
+        Logs.err(`IPC.onPostMsg: Error on sending "${String(msg.action)}" action result:`, err)
+      }
     }
   }
 }
@@ -711,6 +730,24 @@ export function setupGlobalMessageListener(): void {
   browser.runtime.onMessage.addListener(onSendMsg)
 }
 
+function resolveUnfinishedCommunications(port: browser.runtime.Port) {
+  // For initiator of the request
+  for (const [msgId, waiting] of msgsWaitingForAnswer) {
+    if (waiting.portName === port.name) {
+      clearTimeout(waiting.timeout)
+      if (waiting.err) waiting.err('IPC: Target disconnected')
+      msgsWaitingForAnswer.delete(msgId)
+    }
+  }
+
+  // For the request handler
+  for (const [msgId, portName] of runningAsyncActions) {
+    if (portName === port.name) {
+      runningAsyncActions.delete(msgId)
+    }
+  }
+}
+
 export function disconnectFrom(fromType: InstanceType, winOrTabId?: ID) {
   if (winOrTabId === undefined) winOrTabId = NOID
 
@@ -722,12 +759,14 @@ export function disconnectFrom(fromType: InstanceType, winOrTabId?: ID) {
   const connection = getConnection(fromType, winOrTabId)
   if (!connection) return
   if (connection.localPort) {
+    resolveUnfinishedCommunications(connection.localPort)
     connection.localPort.disconnect()
     connection.localPort.onMessage.removeListener(connection.postListener)
     connection.localPort.onDisconnect.removeListener(connection.disconnectListener)
     connection.localPort = undefined
   }
   if (connection.remotePort) {
+    resolveUnfinishedCommunications(connection.remotePort)
     connection.remotePort.disconnect()
     connection.remotePort.onMessage.removeListener(connection.postListener)
     connection.remotePort.onDisconnect.removeListener(connection.disconnectListener)
