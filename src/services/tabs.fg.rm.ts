@@ -245,7 +245,15 @@ export async function removeTabs(
     const post = translate('confirm.tabs_close_post', count)
     const ok = await Popups.confirm(pre + String(count) + post)
     if (!ok) {
+      let visTabsRecalcNeeded = false
+      tabs.forEach(t => {
+        if (t.invisible && !Tabs.byId[t.parentId]) {
+          if (!visTabsRecalcNeeded) visTabsRecalcNeeded = true
+          t.invisible = false
+        }
+      })
       Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
+      if (visTabsRecalcNeeded) Sidebar.recalcVisibleTabs(panelId)
       return
     }
   }
