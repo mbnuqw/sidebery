@@ -126,7 +126,7 @@ const RECENTLY_REMOVED_LIMIT_MIN = 100
 const RECENTLY_REMOVED_LIMIT_MAX = 150
 export function rememberRemoved(tabs: Tab[]) {
   let minLvl = 0
-  let parent
+  let parent: RecentlyClosedTabInfo | undefined
   let parentIndex = 0
 
   const timestamp = Date.now()
