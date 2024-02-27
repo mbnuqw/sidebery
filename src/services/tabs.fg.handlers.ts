@@ -526,9 +526,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== tab.url) {
     const isInternal = change.url.startsWith(ADDON_HOST)
-    if (isInternal !== tab.internal) {
-      tab.isGroup = isInternal && Utils.isGroupUrl(change.url)
-      tab.reactive.isGroup = tab.isGroup
+    const isGroup = isInternal && Utils.isGroupUrl(change.url)
+    if (tab.isGroup !== isGroup) {
+      tab.reactive.isGroup = tab.isGroup = isGroup
     }
     tab.internal = isInternal
     Tabs.cacheTabsData()
