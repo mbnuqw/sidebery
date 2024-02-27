@@ -43,7 +43,7 @@ async function main() {
 
   // Build and sign
   console.log('Building and signing...')
-  execSync(`node ./build/addon.mjs --sign ${newVersion}`)
+  execSync(`node ./build/addon.mjs --sign ${newVersion}`, { encoding: 'utf-8', stdio: 'inherit' })
 
   // Get the last github release
   console.log('Getting the last github release...')
