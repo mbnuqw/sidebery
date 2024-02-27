@@ -96,7 +96,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   }
 
   // Show config popup
-  if (noConfig) {
+  if (noConfig && Settings.state.showNewGroupConf) {
     const result = await Tabs.openGroupConfigPopup(conf)
     if (result === GroupConfigResult.Cancel) return
   }

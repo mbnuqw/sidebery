@@ -2008,6 +2008,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '如果父标签页已折叠，则在下一级打开新标签页',
     zh_TW: '如果父分頁已折疊，則在下一層開啟新分頁',
   },
+  'settings.show_new_group_conf': {
+    en: 'Show config popup when creating a group',
+    ru: 'Показывать всплывающее окно конфигурации при создании группы',
+    de: 'Konfigurations-Popup anzeigen, wenn eine Gruppe erstellt wird',
+    zh_CN: '创建组时显示配置弹出窗口',
+    zh_TW: '建立群組時顯示配置彈出視窗',
+  },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
     ru: 'Общее правило',

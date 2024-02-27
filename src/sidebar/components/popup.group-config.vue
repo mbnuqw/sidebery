@@ -11,7 +11,9 @@
         :tabindex="'-1'"
         :line="true"
         @keydown="onTitleKD")
-
+    ToggleField.-no-separator(
+      label="popup.group_config.do_not_show_again"
+      v-model:value="doNotShowAgain")
     .ctrls
       .btn(@click="onOk") {{translate('btn.create')}}
       .btn.-warn(@click="onCancel") {{translate('btn.cancel')}}
@@ -23,9 +25,12 @@ import { translate } from 'src/dict'
 import { GroupConfigResult } from 'src/services/sidebar'
 import * as Popups from 'src/services/popups'
 import TextInput from 'src/components/text-input.vue'
+import ToggleField from 'src/components/toggle-field.vue'
 import { TextInputComponent } from 'src/types'
+import { Settings } from 'src/services/settings'
 
 const titleInput = ref<TextInputComponent | null>(null)
+const doNotShowAgain = ref(!Settings.state.showNewGroupConf)
 
 onMounted(() => {
   titleInput.value?.focus()
@@ -41,6 +46,12 @@ function onTitleKD(e: KeyboardEvent): void {
 
 function onOk(): void {
   if (!Popups.reactive.groupConfigPopup) return
+
+  // Save settings
+  if (doNotShowAgain.value !== !Settings.state.showNewGroupConf) {
+    Settings.state.showNewGroupConf = !doNotShowAgain.value
+    Settings.saveDebounced(150)
+  }
 
   Popups.reactive.groupConfigPopup.done(GroupConfigResult.Ok)
   Popups.reactive.groupConfigPopup = null

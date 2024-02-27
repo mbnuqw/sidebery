@@ -273,6 +273,13 @@ export const sidebarTranslations: Translations = {
     zh_CN: '组标题',
     zh_TW: '組標題',
   },
+  'popup.group_config.do_not_show_again': {
+    en: "Don't show again",
+    ru: 'Больше не показывать',
+    de: 'Nicht mehr anzeigen',
+    zh_CN: '不再显示',
+    zh_TW: '不再顯示',
+  },
 
   // ---
   // -- Sub-panels

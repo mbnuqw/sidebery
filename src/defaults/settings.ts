@@ -122,6 +122,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   autoGroupOnClose0Lvl: false,
   autoGroupOnCloseMouseOnly: false,
   ignoreFoldedParent: false,
+  showNewGroupConf: true,
 
   // Tabs colorization
   colorizeTabs: false,
