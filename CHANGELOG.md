@@ -4,6 +4,8 @@
 
 ### Added
 
+- Option to skip config popup on group creation
+- Allow using active panel name in window preface (resolves [#445](https://github.com/mbnuqw/sidebery/issues/445))  
 - Auto grouping after closing parent tab ([#779](https://github.com/mbnuqw/sidebery/issues/779))  
 - Keybinding: Select child tabs
 - Keybinding: Group/flatten selected/active tabs ([#1295](https://github.com/mbnuqw/sidebery/issues/1295))  
