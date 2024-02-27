@@ -36,6 +36,8 @@ export async function loadSettings(): Promise<void> {
     Settings.state.tabsPanelSwitchActMove = true
   }
 
+  parsePrefaceTemplate()
+
   Search.parseShortcuts()
 }
 
@@ -85,15 +87,14 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
       } else if (IPC.isConnected(InstanceType.sidebar, win.id)) {
-        browser.windows.update(win.id, { titlePreface: Settings.state.markWindowPreface })
+        IPC.sendToSidebar(win.id, 'updWindowPreface')
       }
     }
   } else if (markWindowPrefaceChanged) {
-    const value = next.markWindowPreface
     for (const win of Object.values(Windows.byId)) {
       if (win.type !== 'normal' || win.id === undefined) continue
       if (Settings.state.markWindow && IPC.isConnected(InstanceType.sidebar, win.id)) {
-        browser.windows.update(win.id, { titlePreface: value })
+        IPC.sendToSidebar(win.id, 'updWindowPreface', Settings.state.markWindowPreface)
       }
     }
   }
@@ -139,6 +140,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
+  const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
@@ -227,6 +229,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     }
   }
 
+  if (markWindowPreface) parsePrefaceTemplate()
+
   Search.parseShortcuts()
 }
 
@@ -239,4 +243,9 @@ export function resetSettings(): void {
  */
 export function getOpts<K extends keyof Opts, V extends Opts[K]>(key: K): V {
   return SETTINGS_OPTIONS[key] as V
+}
+
+function parsePrefaceTemplate() {
+  const preface = Settings.state.markWindowPreface
+  Settings.updateWinPrefaceOnPanelSwitch = preface.includes('%PN')
 }

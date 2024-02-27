@@ -5,5 +5,7 @@ import * as SettingsActions from 'src/services/settings.actions'
 export const Settings = {
   state: Utils.cloneObject(DEFAULT_SETTINGS),
 
+  updateWinPrefaceOnPanelSwitch: false,
+
   ...SettingsActions,
 }

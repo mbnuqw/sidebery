@@ -34,6 +34,7 @@ section(ref="el")
       label="settings.mark_window_preface"
       or="---"
       v-model:value="Settings.state.markWindowPreface"
+      :note="translate('settings.mark_window_preface_note')"
       :inactive="!Settings.state.markWindow"
       @update:value="Settings.saveDebounced(500)")
   .ctrls

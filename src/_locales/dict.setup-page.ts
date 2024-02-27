@@ -690,6 +690,13 @@ export const setupPageTranslations: Translations = {
     zh_CN: '前言值设置',
     zh_TW: '序言值內容設定',
   },
+  'settings.mark_window_preface_note': {
+    en: 'Note: Available variables: %PN - active panel name',
+    ru: 'Примечание: Доступные переменные: %PN — имя активной панели',
+    de: 'Hinweis: Verfügbare Variablen: %PN – aktiver Panelname',
+    zh_CN: '注意：可用变量：%PN - 活动面板名称',
+    zh_TW: '注意：可用變數：%PN - 活動面板名稱',
+  },
   'settings.storage_btn': {
     en: "Sidebery's data:",
     ru: 'Данные Sidebery:',

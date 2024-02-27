@@ -94,7 +94,7 @@ void (async function main() {
     if (tabs) Tabs.initInternalPageScripts(tabs)
 
     if (Settings.state.markWindow && winId !== NOID) {
-      browser.windows.update(winId, { titlePreface: Settings.state.markWindowPreface })
+      IPC.sendToSidebar(winId, 'updWindowPreface')
     }
   })
   IPC.onDisconnected(InstanceType.sidebar, winId => {

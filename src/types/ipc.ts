@@ -101,6 +101,7 @@ export type SidebarActions = {
   connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void
 
   getSearchQuery: () => string
+  updWindowPreface: typeof Windows.updWindowPreface
 }
 
 export type SearchPopupActions = {

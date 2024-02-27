@@ -1140,6 +1140,8 @@ export function activatePanel(panelId: ID, loadPanels = true, keepSearching?: bo
   if (Sidebar.switchOnMouseLeave) Sidebar.switchOnMouseLeave = false
 
   if (panel.hidden && !Sidebar.reactive.hiddenPanelsPopup) Sidebar.showPanel(panelId)
+
+  if (Settings.updateWinPrefaceOnPanelSwitch) Windows.updWindowPreface()
 }
 
 let prevSavedActPanelId = NOID
@@ -1274,7 +1276,10 @@ export function switchPanel(
   if (!activePanel) {
     activePanel = Sidebar.panelsById[Sidebar.lastActivePanelId]
     if (!activePanel) activePanel = Sidebar.panels[0]
-    if (activePanel) Sidebar.reactive.activePanelId = Sidebar.activePanelId = activePanel.id
+    if (activePanel) {
+      Sidebar.reactive.activePanelId = Sidebar.activePanelId = activePanel.id
+      if (Settings.updateWinPrefaceOnPanelSwitch) Windows.updWindowPreface()
+    }
     return
   }
 
@@ -1857,6 +1862,8 @@ export function addPanel<T extends Panel>(index: number, panel: T, replace?: boo
       if (Sidebar.activePanelId === replaceableId) {
         Sidebar.reactive.activePanelId = Sidebar.activePanelId = panel.id
         Sidebar.lastActivePanelId = panel.id
+
+        if (Settings.updateWinPrefaceOnPanelSwitch) Windows.updWindowPreface()
       }
 
       delete Sidebar.panelsById[replaceableId]

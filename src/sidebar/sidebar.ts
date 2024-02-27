@@ -68,6 +68,7 @@ async function main(): Promise<void> {
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
     getSearchQuery: Search.getSearchQuery,
+    updWindowPreface: Windows.updWindowPreface,
   })
 
   await Promise.all([

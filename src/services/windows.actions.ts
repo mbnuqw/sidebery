@@ -8,6 +8,7 @@ import { Tabs } from 'src/services/tabs.bg'
 import { Settings } from 'src/services/settings'
 import * as IPC from './ipc'
 import { Containers } from './containers'
+import { Sidebar } from './sidebar'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })
@@ -256,4 +257,12 @@ export async function createWithTabs(
   }, 5000)
 
   return true
+}
+
+export function updWindowPreface(preface?: string) {
+  if (preface === undefined) preface = Settings.state.markWindowPreface
+
+  preface = preface.replace('%PN', Sidebar.panelsById[Sidebar.activePanelId]?.name ?? '')
+
+  browser.windows.update(Windows.id, { titlePreface: preface })
 }
