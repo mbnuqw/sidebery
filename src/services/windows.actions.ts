@@ -27,6 +27,11 @@ export async function loadWindowInfo(): Promise<void> {
   const currentWindow = winData[0]
   let uniqWinId = winData[1] as string | undefined
 
+  // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1660564
+  if (currentWindow.type !== 'normal') {
+    throw 'This code should not be launched in a window with a type other than "normal"'
+  }
+
   // Generate unique window id
   if (!uniqWinId) {
     uniqWinId = Utils.uid()
