@@ -1629,8 +1629,8 @@ export function foldTabsBranch(rootTabId: ID): void {
 /**
  * Show children of tab
  */
-export function expTabsBranch(rootTabId: ID): void {
-  const autoFoldTabs = Settings.state.autoFoldTabs
+export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?: boolean): void {
+  const autoFoldTabs = Settings.state.autoFoldTabs && !noAutoFold
   const hideFolded = Settings.state.hideFoldedTabs
   const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
   const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
@@ -1645,7 +1645,7 @@ export function expTabsBranch(rootTabId: ID): void {
   if (!Utils.isTabsPanel(panel)) return
 
   rootTab.lastAccessed = Date.now()
-  if (rootTab.invisible) expTabsBranch(rootTab.parentId)
+  if (rootTab.invisible && !noRecursive) expTabsBranch(rootTab.parentId)
 
   let count = 0
   for (const tab of Tabs.list) {
