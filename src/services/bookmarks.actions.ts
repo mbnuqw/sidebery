@@ -1041,7 +1041,8 @@ export async function saveToFolder(
   items: ItemInfo[],
   dst: DstPlaceInfo,
   removeOld: boolean,
-  progress?: Notification
+  progress?: Notification,
+  idsMap?: Partial<Record<ID, ID>>
 ): Promise<Bookmark[] | void> {
   if (!dst.parentId) return Logs.warn('Bookmarks.saveToFolder: No dst parentId')
 
@@ -1054,7 +1055,8 @@ export async function saveToFolder(
 
   // Tree
   if (Settings.state.tabsTreeBookmarks) {
-    const idsMap: Partial<Record<ID, ID>> = { [NOID]: panelFolderId }
+    if (!idsMap) idsMap = { [NOID]: panelFolderId }
+    else idsMap[NOID] = panelFolderId
     const indexes: Record<ID, number> = { [panelFolderId]: 0 }
 
     for (let i = 0; i < items.length; i++) {
