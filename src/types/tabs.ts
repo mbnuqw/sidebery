@@ -185,6 +185,7 @@ export interface ItemInfo {
   title?: string
   active?: boolean
   pinned?: boolean
+  folded?: boolean
   parentId?: ID
   panelId?: ID
   container?: string

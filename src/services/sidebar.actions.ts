@@ -2008,6 +2008,7 @@ export async function bookmarkTabsPanel(
   const panelFolderId = panelFolder.id
   const items: ItemInfo[] = []
   const dst: DstPlaceInfo = { parentId: panelFolderId }
+  const idsMap: Partial<Record<ID, ID>> = {}
 
   if (Settings.state.pinnedTabsPosition === 'panel' && panel.pinnedTabs.length) {
     for (const rTab of panel.pinnedTabs) {
@@ -2032,6 +2033,7 @@ export async function bookmarkTabsPanel(
       title: tab.customTitle ?? tab.title,
       url: tab.url,
       parentId: tab.parentId,
+      folded: tab.folded,
     }
     if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
     items.push(info)
@@ -2039,7 +2041,7 @@ export async function bookmarkTabsPanel(
 
   if (items.length) {
     try {
-      await Bookmarks.saveToFolder(items, dst, false, progress)
+      await Bookmarks.saveToFolder(items, dst, false, progress, idsMap)
     } catch (err) {
       if (!silent) {
         Logs.err('Tabs.bookmarkTabsPanel: Cannot save bookmarks', err)
@@ -2049,6 +2051,21 @@ export async function bookmarkTabsPanel(
       }
       throw err
     }
+  }
+
+  // Preserve tree state (folded/expanded folders)
+  for (const tabId of Object.keys(idsMap)) {
+    const tab = Tabs.byId[tabId]
+    if (!tab || !tab.isParent) continue
+
+    const bookmarkId = idsMap[tabId]
+    if (bookmarkId === undefined) continue
+
+    const bookmark = Bookmarks.reactive.byId[bookmarkId]
+    if (!bookmark) continue
+
+    if (tab.folded) Bookmarks.foldBookmark(bookmark.id, panel.id)
+    else Bookmarks.expandBookmark(bookmark.id, panel.id, true, true)
   }
 
   // Update and save tabs panel
@@ -2240,6 +2257,25 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     index++
   }
 
+  // Restore tree state (folded/expanded branches)
+  const expandedFoldersMap = Bookmarks.reactive.expanded[panel.srcPanelConfig?.id ?? panel.id]
+  if (expandedFoldersMap) {
+    for (const bookmarkId of Object.keys(idsMap)) {
+      const bookmark = Bookmarks.reactive.byId[bookmarkId]
+      if (!bookmark) continue
+
+      const tabId = idsMap[bookmarkId]
+      const tab = Tabs.byId[tabId]
+      if (!tab || !tab.isParent) continue
+
+      const isExpanded = !!expandedFoldersMap[bookmark.id]
+      if (isExpanded === tab.folded) {
+        if (tab.folded) Tabs.expTabsBranch(tab.id, true, true)
+        else Tabs.foldTabsBranch(tab.id)
+      }
+    }
+  }
+
   if (!silent) {
     Notifications.notify({ title: translate('notif.restore_from_bookmarks_ok') })
   }
@@ -2373,6 +2409,13 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<Bookmar
   let bookmarksPanel = Sidebar.createBookmarksPanel(bookmarksPanelConfig)
   if (panel.srcPanelConfig) bookmarksPanel.id = panel.srcPanelConfig.id
   bookmarksPanel = Sidebar.addPanel(index, bookmarksPanel, true)
+
+  // Preserve tree state (folded/expanded folders)
+  const srcTreeState = Bookmarks.reactive.expanded[panel.id]
+  if (srcTreeState) {
+    Bookmarks.reactive.expanded[bookmarksPanel.id] = Utils.cloneObject(srcTreeState)
+    Bookmarks.saveBookmarksTree()
+  }
 
   Sidebar.recalcPanels()
   Sidebar.recalcBookmarksPanels()
