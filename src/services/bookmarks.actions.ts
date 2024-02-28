@@ -150,27 +150,36 @@ export function saveBookmarksTree(delay = 128): void {
 /**
  * Expand bookmark folder
  */
-export function expandBookmark(nodeId: ID, panelId: ID): void {
+export function expandBookmark(
+  nodeId: ID,
+  panelId: ID,
+  noRecursive?: boolean,
+  noAutoClose?: boolean
+): void {
   const node = Bookmarks.reactive.byId[nodeId]
   if (!node) return
 
   const isEmpty = !node.children?.length
-  if (Settings.state.autoCloseBookmarks && !isEmpty && !Selection.isBookmarks()) {
+  if (Settings.state.autoCloseBookmarks && !noAutoClose && !isEmpty && !Selection.isBookmarks()) {
     Bookmarks.reactive.expanded[panelId] = {}
   }
 
   if (!Bookmarks.reactive.expanded[panelId]) Bookmarks.reactive.expanded[panelId] = {}
   const expandedInPanel = Bookmarks.reactive.expanded[panelId]
 
-  const expandPath: ID[] = [nodeId]
-  let parent = Bookmarks.reactive.byId[node.parentId]
-  while (parent) {
-    expandPath.push(parent.id)
-    parent = Bookmarks.reactive.byId[parent.parentId]
-  }
+  if (noRecursive) {
+    expandedInPanel[nodeId] = true
+  } else {
+    const expandPath: ID[] = [nodeId]
+    let parent = Bookmarks.reactive.byId[node.parentId]
+    while (parent) {
+      expandPath.push(parent.id)
+      parent = Bookmarks.reactive.byId[parent.parentId]
+    }
 
-  for (const id of expandPath) {
-    expandedInPanel[id] = true
+    for (const id of expandPath) {
+      expandedInPanel[id] = true
+    }
   }
 
   saveBookmarksTree()
