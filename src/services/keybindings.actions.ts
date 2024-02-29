@@ -708,6 +708,10 @@ function onKeyTabsIndent(): void {
     if (!parentTab) continue
     if (selected.includes(parentTab.id)) {
       align.push([tab, parentTab])
+      // Update custom color for tab
+      if (Settings.state.inheritCustomColor && parentTab.customColor) {
+        tab.reactive.customColor = tab.customColor = parentTab.customColor
+      }
       continue
     }
 
@@ -715,6 +719,17 @@ function onKeyTabsIndent(): void {
     if (parentTab.lvl === 0) toColorize.push(parentTab.id)
 
     tab.parentId = parentTab.id
+
+    // Update custom color for tab and its child tabs
+    if (Settings.state.inheritCustomColor && parentTab.customColor) {
+      tab.reactive.customColor = tab.customColor = parentTab.customColor
+      if (tab.isParent) {
+        const branch = Tabs.getBranch(tab, false)
+        for (const childTab of branch) {
+          childTab.reactive.customColor = childTab.customColor = tab.customColor
+        }
+      }
+    }
   }
 
   align.forEach(([a, b]) => (a.parentId = b.parentId))
@@ -742,6 +757,7 @@ function onKeyTabsOutdent(): void {
   })
 
   const toColorize: ID[] = []
+  const toUpdCustomColor: Tab[] = []
 
   for (const id of selected) {
     const tab = Tabs.byId[id]
@@ -758,11 +774,18 @@ function onKeyTabsOutdent(): void {
       }
     }
     if (!parentTab) continue
-    if (selected.includes(parentTab.id)) continue
+    if (selected.includes(parentTab.id)) {
+      // Update custom color for tab
+      if (Settings.state.inheritCustomColor) toUpdCustomColor.push(tab)
+      continue
+    }
 
     tab.parentId = parentTab.parentId
 
     if (tab.parentId === NOID) toColorize.push(tab.id)
+
+    // Update custom color for tab and its child tabs
+    if (Settings.state.inheritCustomColor) toUpdCustomColor.push(tab)
   }
 
   Tabs.updateTabsTree()
@@ -770,6 +793,23 @@ function onKeyTabsOutdent(): void {
   selected.forEach(id => Tabs.saveTabData(id))
 
   toColorize.forEach(id => Tabs.colorizeBranch(id))
+
+  // Update custom color for moved tabs and their child tabs
+  for (const tab of toUpdCustomColor) {
+    const parentTab = Tabs.byId[tab.parentId]
+    if (!parentTab) continue
+
+    if (parentTab.customColor) {
+      tab.reactive.customColor = tab.customColor = parentTab.customColor
+    }
+
+    if (tab.isParent && tab.customColor) {
+      const branch = Tabs.getBranch(tab, false)
+      for (const childTab of branch) {
+        childTab.reactive.customColor = childTab.customColor = tab.customColor
+      }
+    }
+  }
 }
 
 function onKeyMoveTabsToAct(): void {

@@ -1214,6 +1214,14 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) {
       Tabs.setBranchColor(tab.id)
     }
+
+    // Update custom color
+    if (Settings.state.inheritCustomColor && tab.lvl > 0) {
+      const parentTab = Tabs.byId[tab.parentId]
+      if (parentTab && parentTab.customColor && parentTab.customColor !== tab.customColor) {
+        tab.reactive.customColor = tab.customColor = parentTab.customColor
+      }
+    }
   }
 
   if (srcPanel) Sidebar.recalcVisibleTabs(srcPanel.id)

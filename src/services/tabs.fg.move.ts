@@ -245,6 +245,14 @@ export async function move(
     }
   }
 
+  // Update custom colors
+  if (Settings.state.inheritCustomColor && dstParent && dstParent.customColor) {
+    for (const tab of tabs) {
+      if (tab.customColor === dstParent.customColor) continue
+      tab.reactive.customColor = tab.customColor = dstParent.customColor
+    }
+  }
+
   // Activate folded parent tab
   if (isActive && dstParent && dstParent.folded) {
     browser.tabs.update(dstParent.id, { active: true }).catch(err => {
