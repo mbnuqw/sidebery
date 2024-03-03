@@ -1142,12 +1142,11 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Logs.info('Tabs.onTabMove', id, info.fromIndex, info.toIndex)
 
-  // Check if target tab already placed
+  // Check if tab moved by Sidebery so no additional handling is needed
   if (tab.moving !== undefined) {
     tab.dstPanelId = NOID
     Tabs.saveTabData(id)
     Tabs.cacheTabsData(640)
-    Sidebar.recalcTabsPanels()
     if (tab.active) Tabs.updateSuccessionDebounced(0)
     return
   }
