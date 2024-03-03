@@ -13,6 +13,7 @@ import { Containers } from 'src/services/containers'
 import { ItemInfo } from 'src/types/tabs'
 import * as Logs from './logs'
 import * as Popups from 'src/services/popups'
+import * as TabsSorting from 'src/services/tabs.fg.sorting'
 
 export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   undoRmTab: () => ({
@@ -503,6 +504,144 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return option
   },
 
+  sortTabsByTitleAscending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_title_asc'),
+      icon: 'icon_sort_name_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsByTitleDescending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_title_des'),
+      icon: 'icon_sort_name_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsByUrlAscending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_url_asc'),
+      icon: 'icon_sort_url_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsByUrlDescending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_url_des'),
+      icon: 'icon_sort_url_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsByAccessTimeAscending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_time_asc'),
+      icon: 'icon_sort_time_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsByAccessTimeDescending: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_by_time_des'),
+      icon: 'icon_sort_time_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByTitleAscending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_title_asc'),
+      icon: 'icon_sort_name_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, ids, 1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByTitleDescending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_title_des'),
+      icon: 'icon_sort_name_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, ids, -1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByUrlAscending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_url_asc'),
+      icon: 'icon_sort_url_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, ids, 1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByUrlDescending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_url_des'),
+      icon: 'icon_sort_url_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, ids, -1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByAccessTimeAscending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_time_asc'),
+      icon: 'icon_sort_time_asc',
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, ids, 1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortTabsTreeByAccessTimeDescending: () => {
+    const ids = Selection.get()
+    const option: MenuOption = {
+      label: translate('menu.tab.sort_tree_by_time_des'),
+      icon: 'icon_sort_time_des',
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, ids, -1, true),
+    }
+    if (ids.length === 1 && !Tabs.byId[ids[0]]?.isParent) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   // ---
   // -- Panel options
   // -
@@ -684,6 +823,90 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Sidebar.convertToBookmarksPanel(panel),
     }
 
+    return option
+  },
+
+  sortAllTabsByTitleAscending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_title_asc'),
+      icon: 'icon_sort_name_asc',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, ids, 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortAllTabsByTitleDescending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_title_des'),
+      icon: 'icon_sort_name_des',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, ids, -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortAllTabsByUrlAscending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_url_asc'),
+      icon: 'icon_sort_url_asc',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, ids, 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortAllTabsByUrlDescending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_url_des'),
+      icon: 'icon_sort_url_des',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, ids, -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortAllTabsByAccessTimeAscending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_time_asc'),
+      icon: 'icon_sort_time_asc',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, ids, 1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortAllTabsByAccessTimeDescending: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sort_all_by_time_des'),
+      icon: 'icon_sort_time_des',
+      inactive: ids.length < 2,
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, ids, -1, true),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 }

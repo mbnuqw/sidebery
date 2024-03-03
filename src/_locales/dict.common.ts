@@ -1114,6 +1114,96 @@ export const commonTranslations: Translations = {
     zh_CN: '关闭其他标签页',
     zh_TW: '關閉其他分頁',
   },
+  'menu.tab.sort_sub_menu_name': {
+    en: 'Sort',
+    ru: 'Сортировать',
+    de: 'Sortieren',
+    zh: '排序',
+  },
+  'menu.tab.sort_by_title_asc': {
+    en: 'Sort by title (A-z)',
+    ru: 'Сортировать по названию (А-я)',
+    de: 'Sortieren nach Titel (A-z)',
+    zh_CN: '按名称排序 (A-z)',
+    zh_TW: '依名稱排序 (A-z)',
+  },
+  'menu.tab.sort_by_title_des': {
+    en: 'Sort by title (z-A)',
+    ru: 'Сортировать по названию (я-А)',
+    de: 'Sortieren nach Titel (z-A)',
+    zh_CN: '按名称排序 (z-A)',
+    zh_TW: '依名稱排序 (z-A)',
+  },
+  'menu.tab.sort_by_url_asc': {
+    en: 'Sort by URL (A-z)',
+    ru: 'Сортировать по адресу (А-я)',
+    de: 'Sortieren nach URL (A-z)',
+    zh_CN: '按网址排序 (A-z)',
+    zh_TW: '依網址排序 (A-z)',
+  },
+  'menu.tab.sort_by_url_des': {
+    en: 'Sort by URL (z-A)',
+    ru: 'Сортировать по адресу (я-А)',
+    de: 'Sortieren nach URL (z-A)',
+    zh_CN: '按网址排序 (z-A)',
+    zh_TW: '依網址排序 (z-A)',
+  },
+  'menu.tab.sort_by_time_asc': {
+    en: 'Sort by access time (Old-Recent)',
+    ru: 'Сортировать по времени доступа (Старые-Новые)',
+    de: 'Sortieren nach Zugriffszeit (Alt-Neu)',
+    zh_CN: '按存取时间排序（旧-新）',
+    zh_TW: '按訪問時間排序（舊-新）',
+  },
+  'menu.tab.sort_by_time_des': {
+    en: 'Sort by access time (Recent-Old)',
+    ru: 'Сортировать по времени доступа (Новые-Старые)',
+    de: 'Sortieren nach Zugriffszeit (Neu-Alt)',
+    zh_CN: '按存取时间排序（新-旧）',
+    zh_TW: '按訪問時間排序（新-舊）',
+  },
+  'menu.tab.sort_tree_by_title_asc': {
+    en: 'Sort tree by title (A-z)',
+    ru: 'Сортировать дерево по названию (А-я)',
+    de: 'Baum nach Titel sortieren (A-z)',
+    zh_CN: '按标题对树进行排序 (A-z)',
+    zh_TW: '按標題對樹進行排序 (A-z)',
+  },
+  'menu.tab.sort_tree_by_title_des': {
+    en: 'Sort tree by title (z-A)',
+    ru: 'Сортировать дерево по названию (я-А)',
+    de: 'Baum nach Titel sortieren (z-A)',
+    zh_CN: '按标题对树进行排序 (z-A)',
+    zh_TW: '按標題對樹進行排序 (z-A)',
+  },
+  'menu.tab.sort_tree_by_url_asc': {
+    en: 'Sort tree by URL (A-z)',
+    ru: 'Сортировать дерево по адресу (А-я)',
+    de: 'Baum nach URL sortieren (A-z)',
+    zh_CN: '按 URL 对树排序 (A-z)',
+    zh_TW: '按 URL 對樹排序 (A-z)',
+  },
+  'menu.tab.sort_tree_by_url_des': {
+    en: 'Sort tree by URL (z-A)',
+    ru: 'Сортировать дерево по адресу (я-А)',
+    de: 'Baum nach URL sortieren (z-A)',
+    zh_CN: '按 URL 对树排序 (z-A)',
+    zh_TW: '按 URL 對樹排序 (z-A)',
+  },
+  'menu.tab.sort_tree_by_time_asc': {
+    en: 'Sort tree by access time (Old-Recent)',
+    ru: 'Сортировать дерево по времени доступа (Старые-Новые)',
+    de: 'Baum nach Zugriffszeit sortieren (Alt-Neu)',
+    zh_CN: '按访问时间排序树（旧-新）',
+    zh_TW: '按訪問時間對樹進行排序（舊-新）',
+  },
+  'menu.tab.sort_tree_by_time_des': {
+    en: 'Sort tree by access time (Recent-Old)',
+    ru: 'Сортировать дерево по времени доступа (Новые-Старые)',
+    de: 'Baum nach Zugriffszeit sortieren (Neu-Alt)',
+    zh_CN: '按访问时间排序树（新-旧）',
+    zh_TW: '按訪問時間對樹進行排序（新-舊）',
+  },
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute all audible tabs',
@@ -1190,6 +1280,27 @@ export const commonTranslations: Translations = {
     ru: 'Удалить панель',
     de: 'Panel entfernen',
     zh: '移除面板',
+  },
+  'menu.tabs_panel.sort_all_sub_menu_name': {
+    en: 'Sort all tabs',
+  },
+  'menu.tabs_panel.sort_all_by_title_asc': {
+    en: 'Sort all tabs by title (A-z)',
+  },
+  'menu.tabs_panel.sort_all_by_title_des': {
+    en: 'Sort all tabs by title (z-A)',
+  },
+  'menu.tabs_panel.sort_all_by_url_asc': {
+    en: 'Sort all tabs by URL (A-z)',
+  },
+  'menu.tabs_panel.sort_all_by_url_des': {
+    en: 'Sort all tabs by URL (z-A)',
+  },
+  'menu.tabs_panel.sort_all_by_time_asc': {
+    en: 'Sort all tabs by access time (Old-Recent)',
+  },
+  'menu.tabs_panel.sort_all_by_time_des': {
+    en: 'Sort all tabs by access time (Recent-Old)',
   },
   // - History
   'menu.history.open': {

@@ -386,6 +386,42 @@
     },
     "sel_child_tabs": {
       "description": "__MSG_KbSelChildTabs__"
+    },
+    "sort_tabs_by_title_asc": {
+      "description": "__MSG_KbSortTabsByTitleAsc__"
+    },
+    "sort_tabs_by_title_des": {
+      "description": "__MSG_KbSortTabsByTitleDes__"
+    },
+    "sort_tabs_by_url_asc": {
+      "description": "__MSG_KbSortTabsByTrlAsc__"
+    },
+    "sort_tabs_by_url_des": {
+      "description": "__MSG_KbSortTabsByTrlDes__"
+    },
+    "sort_tabs_by_time_asc": {
+      "description": "__MSG_KbSortTabsByTimeAsc__"
+    },
+    "sort_tabs_by_time_des": {
+      "description": "__MSG_KbSortTabsByTimeDes__"
+    },
+    "sort_panel_tabs_by_title_asc": {
+      "description": "__MSG_KbSortPanelTabsByTitleAsc__"
+    },
+    "sort_panel_tabs_by_title_des": {
+      "description": "__MSG_KbSortPanelTabsByTitleDes__"
+    },
+    "sort_panel_tabs_by_url_asc": {
+      "description": "__MSG_KbSortPanelTabsByTrlAsc__"
+    },
+    "sort_panel_tabs_by_url_des": {
+      "description": "__MSG_KbSortPanelTabsByTrlDes__"
+    },
+    "sort_panel_tabs_by_time_asc": {
+      "description": "__MSG_KbSortPanelTabsByTimeAsc__"
+    },
+    "sort_panel_tabs_by_time_des": {
+      "description": "__MSG_KbSortPanelTabsByTimeDes__"
     }
   },
   "browser_action": {

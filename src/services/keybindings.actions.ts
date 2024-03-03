@@ -16,6 +16,7 @@ import { Store } from 'src/services/storage'
 import { SwitchingTabScope } from './tabs.fg.actions'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import { By as SortBy, sort as sortTabs } from 'src/services/tabs.fg.sorting'
 import { SetupPage } from './setup-page'
 
 const VALID_SHORTCUT =
@@ -196,6 +197,34 @@ function onCmd(name: string): void {
   else if (name === 'group_tabs_act') onKeyGroupTabs(true)
   else if (name === 'flatten_tabs') onKeyFlattenTabs()
   else if (name === 'sel_child_tabs') onKeySelChildTabs()
+  else if (name === 'sort_tabs_by_title_asc') onKeySortTabs(SortBy.Title, 1)
+  else if (name === 'sort_tabs_by_title_des') onKeySortTabs(SortBy.Title, -1)
+  else if (name === 'sort_tabs_by_url_asc') onKeySortTabs(SortBy.Url, 1)
+  else if (name === 'sort_tabs_by_url_des') onKeySortTabs(SortBy.Url, -1)
+  else if (name === 'sort_tabs_by_time_asc') onKeySortTabs(SortBy.ATime, 1)
+  else if (name === 'sort_tabs_by_time_des') onKeySortTabs(SortBy.ATime, -1)
+  else if (name === 'sort_panel_tabs_by_title_asc') onKeySortTabs(SortBy.Title, 1, true, true)
+  else if (name === 'sort_panel_tabs_by_title_des') onKeySortTabs(SortBy.Title, -1, true, true)
+  else if (name === 'sort_panel_tabs_by_url_asc') onKeySortTabs(SortBy.Url, 1, true, true)
+  else if (name === 'sort_panel_tabs_by_url_des') onKeySortTabs(SortBy.Url, -1, true, true)
+  else if (name === 'sort_panel_tabs_by_time_asc') onKeySortTabs(SortBy.ATime, 1, true, true)
+  else if (name === 'sort_panel_tabs_by_time_des') onKeySortTabs(SortBy.ATime, -1, true, true)
+}
+
+function onKeySortTabs(type: SortBy, dir = 0, tree?: boolean, panel?: boolean) {
+  if (Tabs.sorting) return
+  let ids
+
+  if (panel) {
+    const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (!Utils.isTabsPanel(activePanel)) return
+    ids = activePanel.tabs.map(t => t.id)
+  } else {
+    ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  }
+  if (!ids.length) return
+
+  sortTabs(type, ids, dir, tree)
 }
 
 function onKeyScrollToTopBottom(dir: 1 | -1) {

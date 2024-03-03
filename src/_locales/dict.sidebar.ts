@@ -526,6 +526,13 @@ export const sidebarTranslations: Translations = {
     zh_CN: '书签排序',
     zh_TW: '書籤排序',
   },
+  'notif.tabs_sort': {
+    en: 'Sorting tabs...',
+    ru: 'Сортировка вкладок...',
+    de: 'Sortiere Tabs...',
+    zh_CN: '排序选项卡...',
+    zh_TW: '排序選項卡...',
+  },
   'notif.snapshot_created': {
     en: 'Snapshot created',
     ru: 'Снепшот создан',

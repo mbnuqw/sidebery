@@ -158,6 +158,22 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_9")
 
   section
+    h2 {{translate('settings.kb_sort_tabs')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.sort_tabs_by_title_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_tabs_by_title_des")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_tabs_by_url_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_tabs_by_url_des")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_tabs_by_time_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_tabs_by_time_des")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_title_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_title_des")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_url_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_url_des")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_time_asc")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sort_panel_tabs_by_time_des")
+
+  section
     .ctrls
       .btn(@click="Keybindings.resetKeybindings") {{translate('settings.reset_kb')}}
 </template>

@@ -15,6 +15,24 @@ export const TABS_MENU: MenuConf = [
     name: '%menu.tab.colorize_',
     opts: ['colorizeTab'],
   },
+  {
+    name: '%menu.tab.sort_sub_menu_name',
+    opts: [
+      'sortTabsByTitleAscending',
+      'sortTabsByTitleDescending',
+      'sortTabsByUrlAscending',
+      'sortTabsByUrlDescending',
+      'sortTabsByAccessTimeAscending',
+      'sortTabsByAccessTimeDescending',
+      'separator-45654',
+      'sortTabsTreeByTitleAscending',
+      'sortTabsTreeByTitleDescending',
+      'sortTabsTreeByUrlAscending',
+      'sortTabsTreeByUrlDescending',
+      'sortTabsTreeByAccessTimeAscending',
+      'sortTabsTreeByAccessTimeDescending',
+    ],
+  },
   'separator-2',
   'pin',
   'duplicate',
@@ -33,6 +51,18 @@ export const TABS_MENU: MenuConf = [
 
 export const TABS_PANEL_MENU: MenuConf = [
   { opts: ['undoRmTab', 'muteAllAudibleTabs', 'reloadTabs', 'discardTabs'] },
+  'separator-1224',
+  {
+    name: '%menu.tabs_panel.sort_all_sub_menu_name',
+    opts: [
+      'sortAllTabsByTitleAscending',
+      'sortAllTabsByTitleDescending',
+      'sortAllTabsByUrlAscending',
+      'sortAllTabsByUrlDescending',
+      'sortAllTabsByAccessTimeAscending',
+      'sortAllTabsByAccessTimeDescending',
+    ],
+  },
   'separator-7',
   'selectAllTabs',
   'collapseInactiveBranches',

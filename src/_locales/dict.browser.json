@@ -700,6 +700,42 @@
     "zh_CN": "将选定（或活动）标签页移动到第十个面板",
     "zh_TW": "將選定（或當前）分頁移動到第十個面板"
   },
+  "KbSortTabsByTitleAsc": {
+    "en": "Sort selected tabs or siblings of the active tab by title (A-z)"
+  },
+  "KbSortTabsByTitleDes": {
+    "en": "Sort selected tabs or siblings of the active tab by title (z-A)"
+  },
+  "KbSortTabsByTrlAsc": {
+    "en": "Sort selected tabs or siblings of the active tab by URL (A-z)"
+  },
+  "KbSortTabsByTrlDes": {
+    "en": "Sort selected tabs or siblings of the active tab by URL (z-A)"
+  },
+  "KbSortTabsByTimeAsc": {
+    "en": "Sort selected tabs or siblings of the active tab by access time (Old-Recent)"
+  },
+  "KbSortTabsByTimeDes": {
+    "en": "Sort selected tabs or siblings of the active tab by access time (Recent-Old)"
+  },
+  "KbSortPanelTabsByTitleAsc": {
+    "en": "Sort tabs of the active panel by title (A-z)"
+  },
+  "KbSortPanelTabsByTitleDes": {
+    "en": "Sort tabs of the active panel by title (z-A)"
+  },
+  "KbSortPanelTabsByTrlAsc": {
+    "en": "Sort tabs of the active panel by URL (A-z)"
+  },
+  "KbSortPanelTabsByTrlDes": {
+    "en": "Sort tabs of the active panel by URL (z-A)"
+  },
+  "KbSortPanelTabsByTimeAsc": {
+    "en": "Sort tabs of the active panel by access time (Old-Recent)"
+  },
+  "KbSortPanelTabsByTimeDes": {
+    "en": "Sort tabs of the active panel by access time (Recent-Old)"
+  },
 
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",

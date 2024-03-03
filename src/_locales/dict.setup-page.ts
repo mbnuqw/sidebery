@@ -4025,6 +4025,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '移动标签',
     zh_TW: '移動分頁',
   },
+  'settings.kb_sort_tabs': {
+    en: 'Sorting tabs',
+  },
   'settings.reset_kb': {
     en: 'Reset Keybindings',
     ru: 'Сбросить клав. настройки',
