@@ -560,10 +560,11 @@ function findCachedData(
  * Save tabs data
  */
 export function cacheTabsData(delay = 300): void {
-  // Logs.info('Tabs.cacheTabsData')
+  // Logs.info('Tabs.cacheTabsData', delay)
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsReinitializing) return
+    // Logs.info('Tabs.cacheTabsData: Caching...')
 
     const data = []
     for (const tab of Tabs.list) {
