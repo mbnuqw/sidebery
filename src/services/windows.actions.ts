@@ -130,11 +130,11 @@ export async function createWithTabs(
 ): Promise<boolean> {
   if (!conf) conf = {}
 
-  // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1882822
-  conf.url = 'about:blank'
-
   const moveTabs = conf.tabId === MOVEID
   if (moveTabs) delete conf.tabId
+
+  // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1882822
+  if (conf.url === undefined && conf.tabId === undefined) conf.url = 'about:blank'
 
   // Normalize urls
   if (!moveTabs) {
