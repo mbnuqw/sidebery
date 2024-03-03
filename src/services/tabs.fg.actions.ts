@@ -594,16 +594,38 @@ export function saveTabData(tabId: ID): void {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
-  const data: TabSessionData = {
-    id: tabId,
-    panelId: tab.panelId,
-    parentId: tab.parentId,
-    folded: tab.folded,
+  let data = tab.sessionData
+  if (data) {
+    if (
+      data.parentId === tab.parentId &&
+      data.folded === tab.folded &&
+      data.panelId === tab.panelId &&
+      data.customColor === tab.customColor &&
+      data.customTitle === tab.customTitle
+    ) {
+      return
+    }
+
+    data.id = tabId
+    data.panelId = tab.panelId
+    data.parentId = tab.parentId
+    data.folded = tab.folded
+  } else {
+    data = {
+      id: tabId,
+      panelId: tab.panelId,
+      parentId: tab.parentId,
+      folded: tab.folded,
+    }
+    tab.sessionData = data
   }
 
   if (tab.customTitle) data.customTitle = tab.customTitle
+  else delete data.customTitle
   if (tab.customColor) data.customColor = tab.customColor
+  else delete data.customColor
 
+  // Logs.info('Tabs.saveTabData: Saving...', tabId, { ...data })
   browser.sessions.setTabValue(tabId, 'data', data).catch(err => {
     Logs.err('Tabs.saveTabData: Cannot set value in session:', err)
   })
