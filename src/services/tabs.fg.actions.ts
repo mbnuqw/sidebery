@@ -1666,7 +1666,7 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
   const panel = Sidebar.panelsById[rootTab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  rootTab.lastAccessed = Date.now()
+  rootTab.lastExpanded = Date.now()
   if (rootTab.invisible && !noRecursive) expTabsBranch(rootTab.parentId)
 
   let count = 0
@@ -1708,7 +1708,9 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
       let aMax = a.lastAccessed
       let bMax = b.lastAccessed
       if (a.childLastAccessed) aMax = Math.max(a.lastAccessed, a.childLastAccessed)
+      if (a.lastExpanded) aMax = Math.max(aMax, a.lastExpanded)
       if (b.childLastAccessed) bMax = Math.max(b.lastAccessed, b.childLastAccessed)
+      if (b.lastExpanded) bMax = Math.max(bMax, b.lastExpanded)
       return aMax - bMax
     })
 
