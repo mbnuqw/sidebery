@@ -21,6 +21,7 @@ export interface Tab extends NativeTab {
   unpinning?: boolean
   moveTime?: number
   childLastAccessed?: number
+  lastExpanded?: number
   reloadingChecks?: number
   mediaPaused: boolean
   reopened?: boolean
@@ -36,6 +37,7 @@ export interface Tab extends NativeTab {
   previewImg?: string
 
   reactive: ReactiveTabProps
+  sessionData?: TabSessionData
 }
 
 export const enum TabStatus {
