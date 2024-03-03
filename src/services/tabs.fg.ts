@@ -56,6 +56,7 @@ export const Tabs = {
   activeId: NOID,
   blockedScrollPosition: false,
   activateSelectedOnMouseLeave: false,
+  sorting: false,
 
   ...TabsActions,
   ...TabsHandlers,

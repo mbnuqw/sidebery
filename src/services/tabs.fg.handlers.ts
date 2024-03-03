@@ -98,7 +98,7 @@ function releaseReopenedTabsBuffer(): void {
 
 function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   if (nativeTab.windowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
+  if (Tabs.list.length === 0 || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabCreated(nativeTab))
     return
   }
@@ -460,7 +460,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
  */
 function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: NativeTab): void {
   if (nativeTab.windowId !== Windows.id) return
-  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
+  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabUpdated(tabId, change, nativeTab))
     return
   }
@@ -823,7 +823,7 @@ function rememberChildTabs(childId: ID, parentId: ID): void {
  */
 function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boolean): void {
   if (info.windowId !== Windows.id) return
-  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
+  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabRemoved(tabId, info, detached))
     return
   }
@@ -1245,7 +1245,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
  */
 function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
   if (info.oldWindowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
+  if (Tabs.list.length === 0 || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabDetached(id, info))
     return
   }
@@ -1276,7 +1276,7 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
 const deferredActivationHandling = { id: NOID, cb: null as (() => void) | null }
 async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<void> {
   if (info.newWindowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
+  if (Tabs.list.length === 0 || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabAttached(id, info))
     return
   }
