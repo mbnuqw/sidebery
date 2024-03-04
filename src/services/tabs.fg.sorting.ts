@@ -82,14 +82,13 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
 
   // or Sort by URL
   else if (type === By.Url) {
+    const sortableUrls = new Map<ID, string>()
     await sortTabsInChunks(sortingChunks, (aId, bId) => {
       const aTab = Tabs.byId[aId]
       const bTab = Tabs.byId[bId]
       if (!aTab || !bTab) return 0
-      const aIndex = aTab.url.indexOf('://')
-      const bIndex = bTab.url.indexOf('://')
-      const aLink = aIndex === -1 ? aTab.url : aTab.url.slice(aIndex + 3)
-      const bLink = bIndex === -1 ? bTab.url : bTab.url.slice(bIndex + 3)
+      const aLink = getSortableLink(sortableUrls, aTab)
+      const bLink = getSortableLink(sortableUrls, bTab)
       if (dir > 0) return aLink.localeCompare(bLink)
       else return bLink.localeCompare(aLink)
     }).catch(() => {})
@@ -111,6 +110,22 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
   Tabs.sorting = false
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
+}
+
+function getSortableLink(sortableUrls: Map<ID, string>, tab: Tab): string {
+  let value = sortableUrls.get(tab.id)
+  if (!value) {
+    let parsedUrl
+    try {
+      parsedUrl = new URL(tab.url)
+    } catch {
+      return tab.url
+    }
+    parsedUrl.hostname = parsedUrl.hostname.split('.').reverse().join('.')
+    value = parsedUrl.href.slice(parsedUrl.protocol.length + 2)
+    sortableUrls.set(tab.id, value)
+  }
+  return value
 }
 
 function getNotifIcon(type: By, dir = 0): string | undefined {
