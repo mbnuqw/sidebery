@@ -54,13 +54,13 @@ declare namespace browser {
       name: string
       disconnect: () => void
       error?: Error
-      onDisconnect: EventTarget<DisconnectListener>
-      onMessage: EventTarget<PortMessageListener>
+      onDisconnect: PortEventTarget
+      onMessage: PortEventTarget
       postMessage: <T>(msg: T) => void
       sender?: Sender
     }
 
-    interface EventTarget<T> {
+    interface PortEventTarget {
       addListener: <T>(listener: T) => void
       removeListener: <T>(listener: T) => void
     }
@@ -88,6 +88,10 @@ declare namespace browser {
       buildID: string
     }
 
+    interface UpdateDetails {
+      version: string
+    }
+
     function sendMessage<T, R>(msg: T): Promise<R>
     function getURL(resource: string): string
     function openOptionsPage(): void
@@ -99,9 +103,11 @@ declare namespace browser {
 
     type MessageListener = <I, O>(msg: I) => Promise<O>
     type ConnectListener = (port: Port) => void
+    type UpdateAvailableListener = (details: UpdateDetails) => void
 
-    const onMessage: EventTarget<MessageListener>
-    const onConnect: EventTarget<ConnectListener>
+    const onMessage: PortEventTarget
+    const onConnect: PortEventTarget
+    const onUpdateAvailable: EventTarget<UpdateAvailableListener>
   }
 
   /**
