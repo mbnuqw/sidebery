@@ -380,7 +380,7 @@ export async function undoRemove(tabs: ItemInfo[], parents: Record<ID, ID>): Pro
       parentId = parent.id
     }
 
-    Tabs.setNewTabPosition(index, parentId, panel.id)
+    Tabs.setNewTabPosition(index, parentId, panel.id, false)
 
     const conf: browser.tabs.CreateProperties = {
       windowId: Windows.id,
