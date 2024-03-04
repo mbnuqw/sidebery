@@ -687,13 +687,6 @@ export const commonTranslations: Translations = {
     zh_CN: '按网址排序 (z-A)',
     zh_TW: '依網址排序 (z-A)',
   },
-  'menu.bookmark.sort_by_time': {
-    en: 'Sort by creation time',
-    ru: 'Сортировать по времени создания',
-    de: 'Sortieren nach Erstelldatum',
-    zh_CN: '按添加时间排序',
-    zh_TW: '依加入日期排序',
-  },
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
     ru: 'Сортировать по времени (Старые-Новые)',

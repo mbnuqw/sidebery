@@ -215,22 +215,6 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     return option
   },
 
-  sortByTime: () => {
-    const node = Bookmarks.reactive.byId[Selection.getFirst()]
-    if (!node) return
-    const option: MenuOption = {
-      label: translate('menu.bookmark.sort_by_time'),
-      icon: 'icon_sort_time',
-      onClick: () => Bookmarks.sortBookmarks('time', Selection.get()),
-    }
-    if (Selection.getLength() === 1 && node.type !== 'folder') {
-      option.inactive = true
-    }
-    if (Search.reactive.value) option.inactive = true
-    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
-    return option
-  },
-
   sortByTimeAscending: () => {
     const node = Bookmarks.reactive.byId[Selection.getFirst()]
     if (!node) return
