@@ -2022,6 +2022,7 @@ export async function bookmarkTabsPanel(
         parentId: tab.parentId,
       }
       if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
+      if (tab.customColor) info.customColor = tab.customColor
       items.push(info)
     }
     items.push({ id: 'separator' })
@@ -2036,6 +2037,7 @@ export async function bookmarkTabsPanel(
       folded: tab.folded,
     }
     if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
+    if (tab.customColor) info.customColor = tab.customColor
     items.push(info)
   }
 
@@ -2192,10 +2194,15 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         const containerId = Containers.getContainerFor(info.url)
         if (containerId) conf.cookieStoreId = containerId
       }
-      const newTab = await browser.tabs.create(conf)
-      idsMap[info.id] = newTab.id
+      const newNativeTab = await browser.tabs.create(conf)
+      idsMap[info.id] = newNativeTab.id
       indexPinned++
       index++
+
+      if (info.customColor) {
+        const newTab = Tabs.byId[newNativeTab.id]
+        if (newTab) newTab.reactive.customColor = newTab.customColor = info.customColor
+      }
 
       continue
     }
@@ -2250,8 +2257,13 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         conf.title = info.title
       }
       Tabs.setNewTabPosition(index, parentId, panel.id, false)
-      const newTab = await browser.tabs.create(conf)
-      idsMap[info.id] = newTab.id
+      const newNativeTab = await browser.tabs.create(conf)
+      idsMap[info.id] = newNativeTab.id
+
+      if (info.customColor) {
+        const newTab = Tabs.byId[newNativeTab.id]
+        if (newTab) newTab.reactive.customColor = newTab.customColor = info.customColor
+      }
     }
 
     index++

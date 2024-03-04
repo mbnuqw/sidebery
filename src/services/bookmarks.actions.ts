@@ -4,6 +4,8 @@ import { Bookmark, Panel, Notification, DialogConfig, DragInfo, SubPanelType } f
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
 import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
+import { TAB_BOOKMARK_COLOR, BOOKMARK_TAB_COLOR } from 'src/defaults'
+import { CONTAINER_IN_BOOKMARK_RE, COLOR_IN_BOOKMARK_RE } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
 import { BookmarksPopupState } from 'src/services/bookmarks'
 import * as Logs from 'src/services/logs'
@@ -945,6 +947,9 @@ export function attachTabInfoToTitle(item: ItemInfo) {
     const container = Containers.reactive.byId[item.container]
     if (container) item.title += ` [${Containers.getCUID(container)}]`
   }
+  if (item.customColor) {
+    item.title += ` [${TAB_BOOKMARK_COLOR[item.customColor]}]`
+  }
 }
 
 export function extractTabInfoFromTitle(item: ItemInfo, updateTitleOnly?: boolean) {
@@ -956,16 +961,21 @@ export function extractTabInfoFromTitle(item: ItemInfo, updateTitleOnly?: boolea
     if (!updateTitleOnly) item.pinned = true
   }
 
-  const nameExec = FOLDER_NAME_DATA_RE.exec(item.title)
-  if (nameExec) {
-    if (nameExec[2]) {
-      const container = Containers.findUnique(Containers.parseCUID(nameExec[2]))
-      if (container) {
-        item.title = nameExec[1]
-        if (!updateTitleOnly) item.container = container.id
-      }
-    }
-  }
+  item.title = item.title.replace(CONTAINER_IN_BOOKMARK_RE, (match, cuid) => {
+    if (typeof cuid !== 'string') return match
+    const info = Containers.parseCUID(cuid)
+    const container = Containers.findUnique(info)
+    if (!container) return match
+    if (!updateTitleOnly) item.container = container.id
+    return ''
+  })
+
+  item.title = item.title.replace(COLOR_IN_BOOKMARK_RE, (match, colorId) => {
+    const color = BOOKMARK_TAB_COLOR[colorId as string]
+    if (!color) return match
+    if (!updateTitleOnly) item.customColor = color
+    return ''
+  })
 }
 
 /**
@@ -1097,6 +1107,7 @@ export async function saveToFolder(
 
       // Folder
       if (nextItem?.parentId === item.id || !item.url) {
+        attachTabInfoToTitle(item)
         const folderIndex = bookmarksList.findIndex(n => {
           return n.type === 'folder' && n.title === item.title
         })
@@ -1122,7 +1133,6 @@ export async function saveToFolder(
 
         // Bookmark of the parent item
         if (item.url && !GROUP_RE.test(item.url)) {
-          attachTabInfoToTitle(item)
           const bookmarkIndex = bookmarksList.findIndex(n => {
             return n.type === 'bookmark' && n.title === item.title && n.url === item.url
           })

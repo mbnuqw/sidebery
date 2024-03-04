@@ -44,6 +44,8 @@ export const GROUP_RE = /\/sidebery\/group\.html/
 export const URL_PAGE_RE = /\/sidebery\/url\.html/
 export const SETTINGS_RE = /\/page\.setup\/setup\.html/
 export const FOLDER_NAME_DATA_RE = /^(.*) \[(.*)\]$/
+export const CONTAINER_IN_BOOKMARK_RE = / \[(".+","\w+","\w+"(,"\w+")?)\]/
+export const COLOR_IN_BOOKMARK_RE = / \[(c\d)\]/
 export const GROUP_INITIAL_TITLE = '...'
 export const INITIAL_TITLE_RE = /^[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})+\//
 export const SITE_URL_RE =
@@ -135,6 +137,26 @@ export const COLOR_OPTS = [
   { value: 'pink', color: 'pink' },
   { value: 'purple', color: 'purple' },
 ]
+export const TAB_BOOKMARK_COLOR: Record<string, string> = {
+  blue: 'c1',
+  turquoise: 'c2',
+  green: 'c3',
+  yellow: 'c4',
+  orange: 'c5',
+  red: 'c6',
+  pink: 'c7',
+  purple: 'c8',
+}
+export const BOOKMARK_TAB_COLOR: Record<string, string> = {
+  c1: 'blue',
+  c2: 'turquoise',
+  c3: 'green',
+  c4: 'yellow',
+  c5: 'orange',
+  c6: 'red',
+  c7: 'pink',
+  c8: 'purple',
+}
 export const PROXY_OPTS = ['http', 'https', 'socks4', 'socks', 'direct']
 
 export const BKM_ROOT_ID = 'root________'
