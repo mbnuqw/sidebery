@@ -15,6 +15,7 @@ import { Permissions } from 'src/services/permissions'
 import { Snapshots } from 'src/services/snapshots'
 import { Sidebar } from 'src/services/sidebar'
 import { Info } from 'src/services/info'
+import { versionToInt } from 'src/services/info.actions'
 import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { WebReq } from 'src/services/web-req'
@@ -114,6 +115,12 @@ void (async function main() {
   }
 
   initToolbarButton()
+
+  browser.runtime.onUpdateAvailable.addListener(details => {
+    const currentVersion = versionToInt(browser.runtime.getManifest().version)
+    const newVersion = versionToInt(details.version)
+    if (newVersion <= currentVersion) browser.runtime.reload()
+  })
 
   Logs.info(`Init end: ${performance.now() - ts}ms`)
 })()

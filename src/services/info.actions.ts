@@ -84,3 +84,12 @@ export async function loadCurrentTabInfo(): Promise<void> {
   const tab = await browser.tabs.getCurrent()
   Info.currentTabId = tab.id
 }
+
+export function versionToInt(version: string): number {
+  const parsed = version.split('.').map(n => parseInt(n))
+  const major = isNaN(parsed[0]) ? 0 : parsed[0]
+  const minor = isNaN(parsed[1]) ? 0 : parsed[1]
+  const patch = isNaN(parsed[2]) ? 0 : parsed[2]
+  const nightly = isNaN(parsed[3]) ? 0 : parsed[3]
+  return nightly + patch * 1_000 + minor * 1_000_000 + major * 1_000_000_000
+}
