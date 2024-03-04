@@ -294,6 +294,11 @@ section(ref="el")
       :inactive="!Settings.state.tabsTree"
       v-model:value="Settings.state.showNewGroupConf"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sort_groups_first"
+      :inactive="!Settings.state.tabsTree"
+      v-model:value="Settings.state.sortGroupsFirst"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper
     .sub-title: .text {{translate('settings.tabs_colorization_title')}}

@@ -122,6 +122,7 @@ export interface SettingsState {
   autoGroupOnCloseMouseOnly: boolean
   ignoreFoldedParent: boolean
   showNewGroupConf: boolean
+  sortGroupsFirst: boolean
 
   // Tabs colorization
   colorizeTabs: boolean

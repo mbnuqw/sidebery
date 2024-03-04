@@ -75,6 +75,9 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       if (!aTab || !bTab) return 0
       const aTitle = aTab.customTitle ?? aTab.title
       const bTitle = bTab.customTitle ?? bTab.title
+      if (Settings.state.sortGroupsFirst && aTab.isGroup !== bTab.isGroup) {
+        return aTab.isGroup ? -1 : 1
+      }
       if (dir > 0) return aTitle.localeCompare(bTitle)
       else return bTitle.localeCompare(aTitle)
     }).catch(() => {})
@@ -87,6 +90,9 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       const aTab = Tabs.byId[aId]
       const bTab = Tabs.byId[bId]
       if (!aTab || !bTab) return 0
+      if (Settings.state.sortGroupsFirst && aTab.isGroup !== bTab.isGroup) {
+        return aTab.isGroup ? -1 : 1
+      }
       const aLink = getSortableLink(sortableUrls, aTab)
       const bLink = getSortableLink(sortableUrls, bTab)
       if (dir > 0) return aLink.localeCompare(bLink)
@@ -100,6 +106,9 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       const aTab = Tabs.byId[aId]
       const bTab = Tabs.byId[bId]
       if (!aTab || !bTab) return 0
+      if (Settings.state.sortGroupsFirst && aTab.isGroup !== bTab.isGroup) {
+        return aTab.isGroup ? -1 : 1
+      }
       if (dir > 0) return aTab.lastAccessed - bTab.lastAccessed
       else return bTab.lastAccessed - aTab.lastAccessed
     }).catch(() => {})

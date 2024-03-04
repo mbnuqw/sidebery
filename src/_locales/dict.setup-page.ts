@@ -2015,6 +2015,9 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '创建组时显示配置弹出窗口',
     zh_TW: '建立群組時顯示配置彈出視窗',
   },
+  'settings.sort_groups_first': {
+    en: 'Sort groups before other tabs',
+  },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
     ru: 'Общее правило',
