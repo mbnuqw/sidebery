@@ -86,6 +86,7 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
 
   // or Sort by URL
   else if (type === By.Url) {
+    const collatorOptions = { numeric: true }
     const sortableUrls = new Map<ID, string>()
     await sortTabsInChunks(sortingChunks, (aId, bId) => {
       const aTab = Tabs.byId[aId]
@@ -96,8 +97,8 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       }
       const aLink = getSortableLink(sortableUrls, aTab)
       const bLink = getSortableLink(sortableUrls, bTab)
-      if (dir > 0) return aLink.localeCompare(bLink)
-      else return bLink.localeCompare(aLink)
+      if (dir > 0) return aLink.localeCompare(bLink, undefined, collatorOptions)
+      else return bLink.localeCompare(aLink, undefined, collatorOptions)
     }).catch(() => {})
   }
 
