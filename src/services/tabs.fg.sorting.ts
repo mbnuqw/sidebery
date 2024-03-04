@@ -69,6 +69,7 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
 
   // Sort by title
   if (type === By.Title) {
+    const collatorOptions = { numeric: true }
     await sortTabsInChunks(sortingChunks, (aId, bId) => {
       const aTab = Tabs.byId[aId]
       const bTab = Tabs.byId[bId]
@@ -78,8 +79,8 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       if (Settings.state.sortGroupsFirst && aTab.isGroup !== bTab.isGroup) {
         return aTab.isGroup ? -1 : 1
       }
-      if (dir > 0) return aTitle.localeCompare(bTitle)
-      else return bTitle.localeCompare(aTitle)
+      if (dir > 0) return aTitle.localeCompare(bTitle, undefined, collatorOptions)
+      else return bTitle.localeCompare(aTitle, undefined, collatorOptions)
     }).catch(() => {})
   }
 
