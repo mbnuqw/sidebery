@@ -86,12 +86,16 @@ function setPreview(preview: string) {
     previewElN = 0
     state.previewEl1.style.setProperty('opacity', '1')
     state.previewEl1.style.setProperty('background-image', preview ? `url("${preview}")` : 'none')
-    state.previewEl2.style.setProperty('opacity', '0')
+    setTimeout(() => {
+      if (state.previewEl2) state.previewEl2.style.setProperty('opacity', '0')
+    }, 100)
   } else {
     previewElN++
     state.previewEl2.style.setProperty('opacity', '1')
     state.previewEl2.style.setProperty('background-image', preview ? `url("${preview}")` : 'none')
-    state.previewEl1.style.setProperty('opacity', '0')
+    setTimeout(() => {
+      if (state.previewEl1) state.previewEl1.style.setProperty('opacity', '0')
+    }, 100)
   }
 }
 
