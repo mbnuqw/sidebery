@@ -1276,24 +1276,52 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_sub_menu_name': {
     en: 'Sort all tabs',
+    ru: 'Сортировать все вкладки',
+    de: 'Sortieren Sie alle Tabs',
+    zh_CN: '对所有选项卡进行排序',
+    zh_TW: '對所有選項卡進行排序',
   },
   'menu.tabs_panel.sort_all_by_title_asc': {
     en: 'Sort all tabs by title (A-z)',
+    ru: 'Сортировать все вкладки по названию (А-я)',
+    de: 'Sortieren Sie alle Tabs nach Titel (A-z)',
+    zh_CN: '按标题对所有选项卡进行排序 (A-z)',
+    zh_TW: '按標題對所有選項卡進行排序 (A-z)',
   },
   'menu.tabs_panel.sort_all_by_title_des': {
     en: 'Sort all tabs by title (z-A)',
+    ru: 'Сортировать все вкладки по названию (я-А)',
+    de: 'Sortieren Sie alle Tabs nach Titel (z-A)',
+    zh_CN: '按标题对所有选项卡进行排序 (z-A)',
+    zh_TW: '按標題對所有選項卡進行排序 (z-A)',
   },
   'menu.tabs_panel.sort_all_by_url_asc': {
     en: 'Sort all tabs by URL (A-z)',
+    ru: 'Сортировать все вкладки по URL (А-я)',
+    de: 'Sortieren Sie alle Tabs nach URL (A-z)',
+    zh_CN: '按 URL 对所有选项卡进行排序 (A-z)',
+    zh_TW: '按 URL 對所有選項卡進行排序 (A-z)',
   },
   'menu.tabs_panel.sort_all_by_url_des': {
     en: 'Sort all tabs by URL (z-A)',
+    ru: 'Сортировать все вкладки по URL (я-А)',
+    de: 'Sortieren Sie alle Tabs nach URL (z-A)',
+    zh_CN: '按 URL 对所有选项卡进行排序 (z-A)',
+    zh_TW: '按 URL 對所有選項卡進行排序 (z-A)',
   },
   'menu.tabs_panel.sort_all_by_time_asc': {
     en: 'Sort all tabs by access time (Old-Recent)',
+    ru: 'Сортировать все вкладки по времени доступа (Старые-Новые)',
+    de: 'Sortieren Sie alle Tabs nach Zugriffszeit (Alt-Neu)',
+    zh_CN: '按访问时间对所有选项卡进行排序（旧-新）',
+    zh_TW: '按訪問時間對所有選項卡進行排序（舊-新）',
   },
   'menu.tabs_panel.sort_all_by_time_des': {
     en: 'Sort all tabs by access time (Recent-Old)',
+    ru: 'Сортировать все вкладки по времени доступа (Новые-Старые)',
+    de: 'Sortieren Sie alle Tabs nach Zugriffszeit (Neu-Alt)',
+    zh_CN: '按访问时间对所有选项卡进行排序（新-旧）',
+    zh_TW: '按訪問時間對所有選項卡進行排序（新-舊）',
   },
   // - History
   'menu.history.open': {

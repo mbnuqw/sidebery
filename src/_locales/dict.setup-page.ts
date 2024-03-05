@@ -2017,6 +2017,10 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.sort_groups_first': {
     en: 'Sort groups before other tabs',
+    ru: 'Сортировать группы перед другими вкладками',
+    de: 'Sortieren Sie Gruppen vor anderen Tabs',
+    zh_CN: '将组排序在其他选项卡之前',
+    zh_TW: '將群組排序在其他選項卡之前',
   },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
@@ -4030,6 +4034,10 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.kb_sort_tabs': {
     en: 'Sorting tabs',
+    ru: 'Сортировка вкладок',
+    de: 'Tabs sortieren',
+    zh_CN: '排序选项卡',
+    zh_TW: '排序選項卡',
   },
   'settings.reset_kb': {
     en: 'Reset Keybindings',
