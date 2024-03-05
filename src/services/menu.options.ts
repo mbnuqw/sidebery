@@ -42,6 +42,23 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     return option
   },
 
+  openPanelConfigInSidebar: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!panel) return
+
+    const inSidebar = Utils.isTabsPanel(panel) || Utils.isBookmarksPanel(panel)
+    const option: MenuOption = {
+      label: translate('menu.common.conf_in_sidebar'),
+      icon: 'icon_panel_config',
+      onClick: () => {
+        if (inSidebar) Popups.openPanelPopup({ id: panel.id })
+        else SetupPage.open(`settings_nav.${panel.id}`)
+      },
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   unloadPanelType: () => {
     const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return

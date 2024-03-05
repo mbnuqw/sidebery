@@ -1388,6 +1388,13 @@ export const commonTranslations: Translations = {
     zh_CN: '配置面板\nAlt: 基本面板配置',
     zh_TW: '設定面板\nAlt: 基本面板設定',
   },
+  'menu.common.conf_in_sidebar': {
+    en: 'Configure panel in sidebar',
+    ru: 'Быстрые настройки панели',
+    de: 'Panel in der Seitenleiste konfigurieren',
+    zh_CN: '在侧边栏中配置面板',
+    zh_TW: '在側邊欄中配置面板',
+  },
   'menu.panels.unload': {
     en: 'Unload',
     ru: 'Выгрузить',
