@@ -4,6 +4,10 @@
 
 ### Added
 
+- Sort tabs by title, url, access time ([#170](https://github.com/mbnuqw/sidebery/issues/170), [#643](https://github.com/mbnuqw/sidebery/issues/643))  
+  - tab context menu options
+  - tab panel context menu options
+  - keybindings
 - Option to skip config popup on group creation
 - Allow using active panel name in window preface (resolves [#445](https://github.com/mbnuqw/sidebery/issues/445))  
 - Auto grouping after closing parent tab ([#779](https://github.com/mbnuqw/sidebery/issues/779))  
@@ -15,6 +19,14 @@
 
 ### Fixed
 
+- Preserve tab colors on TabsPanel <-> BookmarksPanel transformations
+- Require manual intervention or browser restart after auto update  
+  (workaround for [1881820](https://bugzilla.mozilla.org/show_bug.cgi?id=1881820))  
+  ([#1477](https://github.com/mbnuqw/sidebery/issues/1477), [#1470](https://github.com/mbnuqw/sidebery/issues/1470))
+- Do not show 'unread' mark if tabs were reopened from notification
+- Workaround for 1882822 sometimes causing drag-and-drop to new window to fail (by [@dsuedholt](https://github.com/dsuedholt): [#1493](https://github.com/mbnuqw/sidebery/issues/1493))
+- Inherit custom color of parent on moving tabs
+- Preserve tree state (folded/unfolded branches) on TabsPanel <-> BookmarksPanel transformations
 - L10n zh_TW correction (by [@llc0930](https://github.com/llc0930): [#1485](https://github.com/mbnuqw/sidebery/issues/1485))
 - Blinking that appears immediately after the “Tab Loaded” animation
 - Preserve container after dropping the tab from "recently-closed" sub-panel to tab panel
