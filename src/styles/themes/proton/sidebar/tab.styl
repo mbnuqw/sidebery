@@ -17,6 +17,8 @@
   --tabs-activated-bg: var(--active-el-bg)
   --tabs-activated-fg: var(--active-el-fg)
   --tabs-activated-shadow: var(--active-el-shadow)
+  --tabs-color-layer-opacity: .2
+  --tabs-activated-color-layer-opacity: .3
 #root[data-density="compact"]
   --tabs-pinned-height: 28px
   --tabs-pinned-width: 28px
@@ -241,15 +243,15 @@
   height: 100%
   border-radius: var(--tabs-border-radius)
   background-color: var(--tab-color)
-  opacity: .2
+  opacity: var(--tabs-color-layer-opacity)
 .Tab[data-active="true"] .color-layer
-  opacity: .3
+  opacity: var(--tabs-activated-color-layer-opacity)
 .Tab[data-active="false"] .color-layer
   box-shadow: 0 0 2px 0 #0007
 #root[data-frame-color-scheme="light"] .Tab .color-layer
-  opacity: .36
+  opacity: calc(var(--tabs-color-layer-opacity) + .16)
 #root[data-frame-color-scheme="light"] .Tab[data-active="true"] .color-layer
-  opacity: .5
+  opacity: calc(var(--tabs-activated-color-layer-opacity) + .2)
 #root[data-frame-color-scheme="light"] .Tab[data-active="false"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
 
