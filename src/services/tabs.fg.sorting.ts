@@ -87,7 +87,7 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
   // or Sort by URL
   else if (type === By.Url) {
     const collatorOptions = { numeric: true }
-    const sortableUrls = new Map<ID, string>()
+    const sortableLinks = new Map<ID, string>()
     await sortTabsInChunks(sortingChunks, (aId, bId) => {
       const aTab = Tabs.byId[aId]
       const bTab = Tabs.byId[bId]
@@ -95,8 +95,8 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
       if (Settings.state.sortGroupsFirst && aTab.isGroup !== bTab.isGroup) {
         return aTab.isGroup ? -1 : 1
       }
-      const aLink = getSortableLink(sortableUrls, aTab)
-      const bLink = getSortableLink(sortableUrls, bTab)
+      const aLink = getSortableLink(sortableLinks, aTab)
+      const bLink = getSortableLink(sortableLinks, bTab)
       if (dir > 0) return aLink.localeCompare(bLink, undefined, collatorOptions)
       else return bLink.localeCompare(aLink, undefined, collatorOptions)
     }).catch(() => {})
@@ -132,8 +132,11 @@ function getSortableLink(sortableUrls: Map<ID, string>, tab: Tab): string {
     } catch {
       return tab.url
     }
-    parsedUrl.hostname = parsedUrl.hostname.split('.').reverse().join('.')
-    value = parsedUrl.href.slice(parsedUrl.protocol.length + 2)
+    const reversedHostname = parsedUrl.hostname.split('.').reverse().join('.')
+    const hIndex = parsedUrl.protocol.length + 2
+    const pIndex = tab.url.indexOf('/', hIndex)
+    if (pIndex === -1) value = reversedHostname
+    else value = reversedHostname + tab.url.slice(pIndex)
     sortableUrls.set(tab.id, value)
   }
   return value
