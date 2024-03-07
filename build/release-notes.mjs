@@ -6,7 +6,7 @@ const changelogReleaseTitleRE = /(\n|^)## .+(\n|$)/g
 const issueRE =
   /\[(?<issueNumber>#\d\d?\d?\d?\d?)\]\(https:\/\/github\.com\/mbnuqw\/sidebery\/(issues|pull)\/\d\d?\d?\d?\d?\)/g
 const loginRE = /\[(?<login>@[a-zA-Z0-9-_]+)\]\(https:\/\/github\.com\/[a-zA-Z0-9-_]+\)/g
-const contribRE = /(?<login>@[a-zA-Z0-9-_]+), (?<prNumber>#\d\d?\d?\d?\d?)/g
+const contribRE = /(?<login>@[a-zA-Z0-9-_]+): (?<prNumber>#\d\d?\d?\d?\d?)/g
 
 const changelogContent = await fs.readFile('./CHANGELOG.md', { encoding: 'utf-8' })
 const releaseNotes = createReleaseNotes(changelogContent)
