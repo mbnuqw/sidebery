@@ -33,9 +33,9 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.1.1) |
 [Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
 [Install](https://addons.mozilla.org/firefox/downloads/file/4230615/sidebery-5.1.1.xpi) (reviewed by Mozilla)  
-**Nightly** (v5.1.1.11):
+**Nightly** (v5.2.0.1):
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.1.1) |
-[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.11.xpi)
+[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.1.xpi)
 
 ## About
 
