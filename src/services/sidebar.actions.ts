@@ -1102,9 +1102,12 @@ export function activatePanel(panelId: ID, loadPanels = true, keepSearching?: bo
   const panel = Sidebar.panelsById[panelId]
   if (!panel) return
 
+  const isTabsPanel = Utils.isTabsPanel(panel)
+  const isPrevTabsPanel = Utils.isTabsPanel(prevPanel)
+
   let loading: Promise<void> | undefined
   if (loadPanels && !panel.ready) {
-    if (panel.type === PanelType.tabs) loading = Tabs.load()
+    if (isTabsPanel) loading = Tabs.load()
     if (panel.type === PanelType.bookmarks) loading = Bookmarks.load()
     if (panel.type === PanelType.history) loading = History.load()
   }
@@ -1126,7 +1129,7 @@ export function activatePanel(panelId: ID, loadPanels = true, keepSearching?: bo
     }
   }
 
-  if (Utils.isTabsPanel(prevPanel)) Sidebar.lastTabsPanelId = prevPanel.id
+  if (isPrevTabsPanel) Sidebar.lastTabsPanelId = prevPanel.id
   if (Utils.isHistoryPanel(prevPanel)) History.unloadAfter(30_000)
 
   if (DnD.reactive.isStarted) DnD.reactive.dstPanelId = panelId
@@ -1142,6 +1145,18 @@ export function activatePanel(panelId: ID, loadPanels = true, keepSearching?: bo
   if (panel.hidden && !Sidebar.reactive.hiddenPanelsPopup) Sidebar.showPanel(panelId)
 
   if (Settings.updateWinPrefaceOnPanelSwitch) Windows.updWindowPreface()
+
+  // Recalc native tabs visibility if needed (if the active tab is
+  // a global pinned tab so it won't switch)
+  if (
+    Settings.state.hideInact &&
+    isTabsPanel &&
+    isPrevTabsPanel &&
+    Settings.state.pinnedTabsPosition !== 'panel' &&
+    Tabs.byId[Tabs.activeId]?.pinned
+  ) {
+    Tabs.updateNativeTabsVisibility()
+  }
 }
 
 let prevSavedActPanelId = NOID
