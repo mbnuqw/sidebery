@@ -2625,6 +2625,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '高亮原生标签页（在顶部水平栏中）跟随侧边栏中的标签页',
     zh_TW: '凸顯標示側邊欄中選中的分頁',
   },
+  'settings.native_highlight_note': {
+    en: "This will also highlight the active tab, since Firefox doesn't allow you to highlight only inactive tabs",
+    ru: 'Это также приведет к выделению активной вкладки, так как Firefox не позволяет выделять только неактивные вкладки',
+    de: 'Dadurch wird auch der aktive Tab hervorgehoben, da Firefox es nicht zulässt, nur inaktive Tabs hervorzuheben',
+    zh_CN: '这也将突出显示活动选项卡，因为 Firefox 不允许您仅突出显示非活动选项卡',
+    zh_TW: '這也將突出顯示活動選項卡，因為 Firefox 不允許您僅突出顯示非活動選項卡',
+  },
 
   // - Bookmarks
   'settings.bookmarks_title': {

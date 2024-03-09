@@ -442,6 +442,7 @@ section(ref="el")
         @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.native_highlight"
+      :note="translate('settings.native_highlight_note')"
       v-model:value="Settings.state.nativeHighlight"
       @update:value="Settings.saveDebounced(150)")
 </template>
