@@ -9,6 +9,7 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.create_snapshot")
     KeybindingField(:keybinding="Keybindings.reactive.byName.open_snap_viewer")
     KeybindingField(:keybinding="Keybindings.reactive.byName.menu")
+    .info(v-if="Settings.state.ctxMenuNative") {{translate('settings.kb_menu_note')}}
 
   section
     h2 {{translate('settings.kb_switching_panel')}}

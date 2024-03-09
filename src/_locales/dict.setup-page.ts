@@ -3935,6 +3935,13 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '通用',
     zh_TW: '一般',
   },
+  'settings.kb_menu_note': {
+    en: "Note: A non-native menu will open, since it's not possible to open the native menu programmatically.",
+    ru: 'Примечание: Откроется неродное меню, поскольку открыть нативное меню программно невозможно.',
+    de: 'Hinweis: Es wird ein nicht-natives Menü geöffnet, da es nicht möglich ist, das native Menü programmgesteuert zu öffnen.',
+    zh_CN: '注意：将打开非本机菜单，因为无法以编程方式打开本机菜单。',
+    zh_TW: '注意：將開啟非本機選單，因為無法以程式設計方式開啟本機選單。',
+  },
   'settings.kb_switching_panel': {
     en: 'Switching between panels',
     ru: 'Переключение панелей',
