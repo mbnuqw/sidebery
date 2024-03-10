@@ -125,7 +125,7 @@ section(ref="el")
     :or="0"
     @update:value="Settings.saveDebounced(500)")
 
-  .wrapper
+  .wrapper(ref="newTabPosEl")
     .sub-title: .text {{translate('settings.new_tab_position')}}
     SelectField.-no-separator(
       label="settings.move_new_tab_pin"
@@ -167,7 +167,7 @@ section(ref="el")
         :opts="Settings.getOpts('moveNewTabActivePin')"
         @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
+  .wrapper(ref="pinTabsEl")
     .sub-title: .text {{translate('settings.pinned_tabs_title')}}
     SelectField.-no-separator(
       v-model:value="Settings.state.pinnedTabsPosition"
@@ -187,7 +187,7 @@ section(ref="el")
       v-model:value="Settings.state.pinnedNoUnload"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
+  .wrapper(ref="tabsTreeEl")
     .sub-title: .text {{translate('settings.tabs_tree_title')}}
     ToggleField.-no-separator(
       label="settings.tabs_tree_layout"
@@ -300,7 +300,7 @@ section(ref="el")
       v-model:value="Settings.state.sortGroupsFirst"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
+  .wrapper(ref="tabsColorEl")
     .sub-title: .text {{translate('settings.tabs_colorization_title')}}
     ToggleField.-no-separator(
       label="settings.colorize_tabs"
@@ -333,7 +333,7 @@ section(ref="el")
       v-model:value="Settings.state.inheritCustomColor"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
+  .wrapper(ref="tabsPreviewEl")
     .sub-title: .text {{translate('settings.tabs_preview_title')}}
     ToggleField.-no-separator(
       label="settings.tabs.preview"
@@ -421,7 +421,7 @@ section(ref="el")
       :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode !== 'p'"
       @update:value="Settings.saveDebounced(500)")
 
-  .wrapper
+  .wrapper(ref="nativeTabsEl")
     .sub-title: .text {{translate('settings.tabs_native_title')}}
     ToggleField.-no-separator(
       label="settings.hide_inactive_panel_tabs"
@@ -460,6 +460,12 @@ import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
 
 const el = ref<HTMLElement | null>(null)
+const newTabPosEl = ref<HTMLElement | null>(null)
+const pinTabsEl = ref<HTMLElement | null>(null)
+const tabsTreeEl = ref<HTMLElement | null>(null)
+const tabsColorEl = ref<HTMLElement | null>(null)
+const tabsPreviewEl = ref<HTMLElement | null>(null)
+const nativeTabsEl = ref<HTMLElement | null>(null)
 
 const relativeToActiveTab = computed<boolean>(() => {
   return (
@@ -556,5 +562,13 @@ async function togglePreviewTabs() {
   Settings.saveDebounced(150)
 }
 
-onMounted(() => SetupPage.registerEl('settings_tabs', el.value))
+onMounted(() => {
+  SetupPage.registerEl('settings_tabs', el.value)
+  SetupPage.registerEl('settings_new_tab_position', newTabPosEl.value)
+  SetupPage.registerEl('settings_pinned_tabs', pinTabsEl.value)
+  SetupPage.registerEl('settings_tabs_tree', tabsTreeEl.value)
+  SetupPage.registerEl('settings_tabs_colorization', tabsColorEl.value)
+  SetupPage.registerEl('settings_tabs_preview', tabsPreviewEl.value)
+  SetupPage.registerEl('settings_tabs_native', nativeTabsEl.value)
+})
 </script>

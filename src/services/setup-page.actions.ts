@@ -75,10 +75,10 @@ export async function updateActiveView(): Promise<void> {
   const scrollSectionConf: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }
 
   if (navLockTimeout) clearTimeout(navLockTimeout)
-  SetupPage.reactive.navLock = true
+  SetupPage.navLock = true
   SetupPage.reactive.activeSection = hash
   navLockTimeout = setTimeout(() => {
-    SetupPage.reactive.navLock = false
+    SetupPage.navLock = false
   }, 1250)
 
   if (hash === 'all-urls') return goToPerm('all_urls')
@@ -189,13 +189,20 @@ export function setupListeners(): void {
 }
 
 export function updateActiveSection(scrollTop: number): void {
-  for (let name, el, i = SetupPage.reactive.nav.length; i--; ) {
-    name = SetupPage.reactive.nav[i]?.name
-    el = els[name]
-    if (!name || !el || !name.startsWith(SetupPage.reactive.activeView)) continue
+  const actView = SetupPage.reactive.activeView
+  for (let opt, el, i = SetupPage.reactive.nav.length; i--; ) {
+    opt = SetupPage.reactive.nav[i]
+    if (!opt) continue
 
-    if (scrollTop >= el.offsetTop - 8) {
-      SetupPage.reactive.activeSection = name
+    el = els[opt.name]
+    if (!el || !opt.name.startsWith(actView)) continue
+
+    let offsetTop = el.offsetTop - 8
+    if (opt.lvl === 2 && el.parentNode) {
+      offsetTop += (el.parentNode as HTMLElement).offsetTop
+    }
+    if (scrollTop >= offsetTop) {
+      SetupPage.reactive.activeSection = opt.name
       break
     }
   }

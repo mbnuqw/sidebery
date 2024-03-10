@@ -122,6 +122,7 @@ body
 
 .root > .nav .option
 .root > .nav .sub-option
+.root > .nav .sub-sub-option
   position: relative
   display: flex
   width: calc(100% + 32px)
@@ -166,7 +167,16 @@ body
 
 .root > .nav .sub-option .body
   font-size: rem(16)
-  margin: 0 8px 1px 16px
+  margin: 0 8px 1px 8px
+
+.root > .nav .sub-sub-option
+  opacity: .6
+
+.root > .nav .sub-sub-option .body
+  font-size: rem(16)
+  margin: 0 4px 1px 20px
+  white-space: pre-wrap
+  max-width: @css{min(24vw, 240px)}
 
 // --- Hidden elements ---
 .hidden

@@ -357,7 +357,7 @@ function parseMenuConf(conf: MenuConf): MenuEditorGroup[] {
  * Handle scroll event
  */
 function onScroll(e: Event): void {
-  if (SetupPage.reactive.navLock) return
+  if (SetupPage.navLock) return
   SetupPage.updateActiveSection((e.target as HTMLElement).scrollTop)
 }
 

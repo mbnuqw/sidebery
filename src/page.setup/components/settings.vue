@@ -59,7 +59,7 @@ onActivated(() => {
 
 function onScroll(e: Event): void {
   scrollY = (e.target as HTMLElement).scrollTop
-  if (SetupPage.reactive.navLock) return
+  if (SetupPage.navLock) return
   SetupPage.updateActiveSection((e.target as HTMLElement).scrollTop)
 }
 </script>

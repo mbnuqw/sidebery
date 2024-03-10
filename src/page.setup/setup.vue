@@ -6,7 +6,7 @@
   .nav
     div(
       v-for="opt in SetupPage.reactive.nav"
-      :class="opt.sub ? 'sub-option' : 'option'"
+      :class="'sub-'.repeat(opt.lvl) + 'option'"
       :data-active="opt.name === (opt.sub ? SetupPage.reactive.activeSection : SetupPage.reactive.activeView)"
       @click="navigateTo(opt.name)")
       .body {{translate(`settings.nav_${opt.name}`)}}

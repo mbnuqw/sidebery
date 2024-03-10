@@ -486,6 +486,13 @@ export const setupPageTranslations: Translations = {
     zh_CN: '新标签页的位置',
     zh_TW: '新分頁的位置',
   },
+  'settings.nav_settings_pinned_tabs': {
+    en: 'Pinned tabs',
+    ru: 'Закрепленные вкладки',
+    de: 'Angeheftete Tabs',
+    zh_CN: '已固定标签页',
+    zh_TW: '已釘選分頁',
+  },
   'settings.nav_settings_tabs_tree': {
     en: 'Tabs tree',
     ru: 'Дерево вкладок',
@@ -493,6 +500,27 @@ export const setupPageTranslations: Translations = {
     zh_CN: '树状标签页',
     zh_TW: '樹狀分頁',
   },
+  'settings.nav_settings_tabs_colorization': {
+    en: 'Tabs colorization',
+    ru: 'Расцветка вкладок',
+    zh_CN: '标签着色',
+    zh_TW: '自動上色',
+  },
+  'settings.nav_settings_tabs_preview': {
+    en: 'Tabs preview',
+    ru: 'Предварительный просмотр',
+    de: 'Tabs-Vorschau',
+    zh_CN: '选项卡预览',
+    zh_TW: '分頁預覽',
+  },
+  'settings.nav_settings_tabs_native': {
+    en: 'Native (horizontal) tabs',
+    ru: 'Нативные (горизонтальные) вкладки',
+    de: 'Native (horizontale) Tabs',
+    zh_CN: '原生（水平）标签页',
+    zh_TW: '原生（水平）分頁列',
+  },
+
   'settings.nav_settings_bookmarks': {
     en: 'Bookmarks',
     ru: 'Закладки',
