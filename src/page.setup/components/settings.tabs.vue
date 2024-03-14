@@ -126,7 +126,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(500)")
 
   .wrapper(ref="newTabPosEl")
-    .sub-title: .text {{translate('settings.new_tab_position')}}
+    .sub-title: .text {{translate('settings.nav_settings_new_tab_position')}}
     SelectField.-no-separator(
       label="settings.move_new_tab_pin"
       optLabel="settings.move_new_tab_pin_"
@@ -168,7 +168,7 @@ section(ref="el")
         @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="pinTabsEl")
-    .sub-title: .text {{translate('settings.pinned_tabs_title')}}
+    .sub-title: .text {{translate('settings.nav_settings_pinned_tabs')}}
     SelectField.-no-separator(
       v-model:value="Settings.state.pinnedTabsPosition"
       label="settings.pinned_tabs_position"
@@ -188,7 +188,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="tabsTreeEl")
-    .sub-title: .text {{translate('settings.tabs_tree_title')}}
+    .sub-title: .text {{translate('settings.nav_settings_tabs_tree')}}
     ToggleField.-no-separator(
       label="settings.tabs_tree_layout"
       v-model:value="Settings.state.tabsTree"
@@ -301,7 +301,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="tabsColorEl")
-    .sub-title: .text {{translate('settings.tabs_colorization_title')}}
+    .sub-title: .text {{translate('settings.nav_settings_tabs_colorization')}}
     ToggleField.-no-separator(
       label="settings.colorize_tabs"
       v-model:value="Settings.state.colorizeTabs"
@@ -334,7 +334,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="tabsPreviewEl")
-    .sub-title: .text {{translate('settings.tabs_preview_title')}}
+    .sub-title: .text {{translate('settings.nav_settings_tabs_preview')}}
     ToggleField.-no-separator(
       label="settings.tabs.preview"
       :value="Settings.state.previewTabs"
@@ -422,7 +422,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(500)")
 
   .wrapper(ref="nativeTabsEl")
-    .sub-title: .text {{translate('settings.tabs_native_title')}}
+    .sub-title: .text {{translate('settings.nav_settings_tabs_native')}}
     ToggleField.-no-separator(
       label="settings.hide_inactive_panel_tabs"
       :value="Settings.state.hideInact"

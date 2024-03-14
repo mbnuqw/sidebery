@@ -564,7 +564,7 @@ export const setupPageTranslations: Translations = {
     zh_TW: '分頁操作',
   },
   'settings.nav_settings_mouse_tabs_panel': {
-    en: 'Tabs panel actions',
+    en: 'Tab panel actions',
     ru: 'Действия над панелью c вкладками',
     zh_CN: '标签页面板操作',
     zh_TW: '分頁面板操作',
@@ -578,14 +578,14 @@ export const setupPageTranslations: Translations = {
     zh_TW: '新分頁按鈕操作',
   },
   'settings.nav_settings_mouse_bookmarks': {
-    en: 'Bookmarks actions',
+    en: 'Bookmark actions',
     ru: 'Действия над закладками',
     de: 'Aktionen mit Lesezeichen',
     zh_CN: '书签动作',
     zh_TW: '書籤動作',
   },
   'settings.nav_settings_mouse_history': {
-    en: 'History items actions',
+    en: 'History item actions',
     ru: 'Действия над элементами истории',
     de: 'Aktionen mit Chronik-Einträgen',
     zh_CN: '历史项目操作',
@@ -1971,13 +1971,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - New tab position
-  'settings.new_tab_position': {
-    en: 'Position of new tab',
-    ru: 'Позиция новых вкладок',
-    de: 'Position neuer Tabs',
-    zh_CN: '新标签页的位置',
-    zh_TW: '新分頁的位置',
-  },
   'settings.move_new_tab_pin': {
     en: 'Place new tab opened from pinned tab',
     ru: 'Открытые из закрепленных вкладок',
@@ -2156,13 +2149,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Pinned tabs
-  'settings.pinned_tabs_title': {
-    en: 'Pinned tabs',
-    ru: 'Закрепленные вкладки',
-    de: 'Angeheftete Tabs',
-    zh_CN: '已固定标签页',
-    zh_TW: '已釘選分頁',
-  },
   'settings.pinned_tabs_position': {
     en: 'Pinned tabs position',
     ru: 'Расположение закрепленных вкладок',
@@ -2221,13 +2207,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Tabs tree
-  'settings.tabs_tree_title': {
-    en: 'Tabs tree',
-    ru: 'Древовидное отображение вкладок',
-    de: 'Tab-Baum',
-    zh_CN: '树状标签页',
-    zh_TW: '樹狀分頁',
-  },
   'settings.tabs_tree_layout': {
     en: 'Tabs tree structure',
     ru: 'Древовидное отображение вкладок',
@@ -2438,12 +2417,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Tabs colorization
-  'settings.tabs_colorization_title': {
-    en: 'Tabs colorization',
-    ru: 'Раскрашивание вкладок',
-    zh_CN: '标签着色',
-    zh_TW: '自動上色',
-  },
   'settings.colorize_tabs': {
     en: 'Colorize tabs',
     ru: 'Раскрашивать вкладки',
@@ -2502,13 +2475,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Tabs Preview
-  'settings.tabs_preview_title': {
-    en: 'Tabs preview',
-    ru: 'Предварительный просмотр',
-    de: 'Tabs-Vorschau',
-    zh_CN: '选项卡预览',
-    zh_TW: '分頁預覽',
-  },
   'settings.tabs.preview': {
     en: 'Show tab preview on mouse hover',
     ru: 'Показывать предварительный просмотр вкладки при наведении курсора мыши',
@@ -2644,13 +2610,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   // - Native tabs
-  'settings.tabs_native_title': {
-    en: 'Native (horizontal) tabs',
-    ru: 'Нативные (горизонтальные) вкладки',
-    de: 'Native (horizontale) Tabs',
-    zh_CN: '原生（水平）标签页',
-    zh_TW: '原生（水平）分頁列',
-  },
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
     ru: 'Скрывать горизонтальные вкладки неактивных панелей',
