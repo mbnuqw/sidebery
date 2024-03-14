@@ -141,11 +141,16 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
   const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
+  const tabsUnreadMark = prev.tabsUnreadMark !== next.tabsUnreadMark
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
 
   if (Info.isSidebar && newTabCtxReopen) updateWebReqHandlers()
+
+  if (Info.isSidebar && tabsUnreadMark && !next.tabsUnreadMark) {
+    Tabs.list.forEach(t => (t.reactive.unread = t.unread = false))
+  }
 
   if (tabsUrlInTooltip || previewTabs) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
