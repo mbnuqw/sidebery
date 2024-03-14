@@ -246,7 +246,7 @@ section(ref="el")
     .sub-title: .text {{translate('settings.nav_settings_mouse_bookmarks')}}
     SelectField.-no-separator(
       label="settings.mouse.bookmarks.left_click_action"
-      optLabel="settings.mouse.bookmarks.left_click_action_"
+      optLabel="settings.mouse.bh.left_click_action_"
       v-model:value="Settings.state.bookmarksLeftClickAction"
       :opts="Settings.getOpts('bookmarksLeftClickAction')"
       :folded="false"
@@ -258,8 +258,8 @@ section(ref="el")
         :inactive="Settings.state.bookmarksLeftClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
       SelectField(
-        label="settings.mouse.bookmarks.new_tab_pos"
-        optLabel="settings.mouse.bookmarks.new_tab_pos_"
+        label="settings.mouse.bh.new_tab_pos"
+        optLabel="settings.mouse.bh.new_tab_pos_"
         v-model:value="Settings.state.bookmarksLeftClickPos"
         :inactive="Settings.state.bookmarksLeftClickAction !== 'open_in_new'"
         :opts="Settings.getOpts('bookmarksNewTabPos')"
@@ -284,8 +284,8 @@ section(ref="el")
         :inactive="Settings.state.bookmarksMidClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
       SelectField(
-        label="settings.mouse.bookmarks.new_tab_pos"
-        optLabel="settings.mouse.bookmarks.new_tab_pos_"
+        label="settings.mouse.bh.new_tab_pos"
+        optLabel="settings.mouse.bh.new_tab_pos_"
         v-model:value="Settings.state.bookmarksMidClickPos"
         :inactive="Settings.state.bookmarksMidClickAction !== 'open_in_new'"
         :opts="Settings.getOpts('bookmarksNewTabPos')"
@@ -296,7 +296,7 @@ section(ref="el")
     .sub-title: .text {{translate('settings.nav_settings_mouse_history')}}
     SelectField.-no-separator(
       label="settings.mouse.history.left_click_action"
-      optLabel="settings.mouse.history.left_click_action_"
+      optLabel="settings.mouse.bh.left_click_action_"
       v-model:value="Settings.state.historyLeftClickAction"
       :opts="Settings.getOpts('historyLeftClickAction')"
       :folded="false"
@@ -308,8 +308,8 @@ section(ref="el")
         :inactive="Settings.state.historyLeftClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
       SelectField(
-        label="settings.mouse.history.new_tab_pos"
-        optLabel="settings.mouse.history.new_tab_pos_"
+        label="settings.mouse.bh.new_tab_pos"
+        optLabel="settings.mouse.bh.new_tab_pos_"
         v-model:value="Settings.state.historyLeftClickPos"
         :inactive="Settings.state.historyLeftClickAction !== 'open_in_new'"
         :opts="Settings.getOpts('historyNewTabPos')"
@@ -329,8 +329,8 @@ section(ref="el")
         :inactive="Settings.state.historyMidClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
       SelectField(
-        label="settings.mouse.history.new_tab_pos"
-        optLabel="settings.mouse.history.new_tab_pos_"
+        label="settings.mouse.bh.new_tab_pos"
+        optLabel="settings.mouse.bh.new_tab_pos_"
         v-model:value="Settings.state.historyMidClickPos"
         :inactive="Settings.state.historyMidClickAction !== 'open_in_new'"
         :opts="Settings.getOpts('historyNewTabPos')"
