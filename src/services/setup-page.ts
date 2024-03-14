@@ -13,7 +13,6 @@ export interface SetupPageNavOption {
   active: boolean
   name: string
   lvl: number
-  sub?: boolean
 }
 
 export interface SetupPageState {
@@ -36,37 +35,43 @@ export interface SetupPageState {
   permissions: string | boolean
 }
 
-export const nav = [
+export const nav: SetupPageNavOption[] = [
   { active: false, name: 'settings', lvl: 0 },
-  { active: false, name: 'settings_general', sub: true, lvl: 1 },
-  { active: false, name: 'settings_menu', sub: true, lvl: 1 },
-  { active: false, name: 'settings_nav', sub: true, lvl: 1 },
-  { active: false, name: 'settings_group', sub: true, lvl: 1 },
-  { active: false, name: 'settings_containers', sub: true, lvl: 1 },
-  { active: false, name: 'settings_dnd', sub: true, lvl: 1 },
-  { active: false, name: 'settings_search', sub: true, lvl: 1 },
-  { active: false, name: 'settings_tabs', sub: true, lvl: 1 },
-  { active: false, name: 'settings_new_tab_position', sub: true, lvl: 2 },
-  { active: false, name: 'settings_pinned_tabs', sub: true, lvl: 2 },
-  { active: false, name: 'settings_tabs_tree', sub: true, lvl: 2 },
-  { active: false, name: 'settings_tabs_colorization', sub: true, lvl: 2 },
-  { active: false, name: 'settings_tabs_preview', sub: true, lvl: 2 },
-  { active: false, name: 'settings_tabs_native', sub: true, lvl: 2 },
-  { active: false, name: 'settings_bookmarks', sub: true, lvl: 1 },
-  { active: false, name: 'settings_history', sub: true, lvl: 1 },
-  { active: false, name: 'settings_appearance', sub: true, lvl: 1 },
-  { active: false, name: 'settings_mouse', sub: true, lvl: 1 },
-  { active: false, name: 'settings_snapshots', sub: true, lvl: 1 },
-  { active: false, name: 'settings_sync', sub: true, lvl: 1 },
-  { active: false, name: 'settings_help', sub: true, lvl: 1 },
-  { active: false, name: 'keybindings', class: 'option' },
-  { active: false, name: 'menu_editor', class: 'option' },
-  { active: false, name: 'menu_editor_tabs', sub: true, lvl: 1 },
-  { active: false, name: 'menu_editor_tabs_panel', sub: true, lvl: 1 },
-  { active: false, name: 'menu_editor_bookmarks', sub: true, lvl: 1 },
-  { active: false, name: 'menu_editor_bookmarks_panel', sub: true, lvl: 1 },
-  { active: false, name: 'styles_editor', class: 'option' },
-  { active: false, name: 'snapshots', class: 'option' },
+  { active: false, name: 'settings_general', lvl: 1 },
+  { active: false, name: 'settings_menu', lvl: 1 },
+  { active: false, name: 'settings_nav', lvl: 1 },
+  { active: false, name: 'settings_group', lvl: 1 },
+  { active: false, name: 'settings_containers', lvl: 1 },
+  { active: false, name: 'settings_dnd', lvl: 1 },
+  { active: false, name: 'settings_search', lvl: 1 },
+  { active: false, name: 'settings_tabs', lvl: 1 },
+  { active: false, name: 'settings_new_tab_position', lvl: 2 },
+  { active: false, name: 'settings_pinned_tabs', lvl: 2 },
+  { active: false, name: 'settings_tabs_tree', lvl: 2 },
+  { active: false, name: 'settings_tabs_colorization', lvl: 2 },
+  { active: false, name: 'settings_tabs_preview', lvl: 2 },
+  { active: false, name: 'settings_tabs_native', lvl: 2 },
+  { active: false, name: 'settings_bookmarks', lvl: 1 },
+  { active: false, name: 'settings_history', lvl: 1 },
+  { active: false, name: 'settings_appearance', lvl: 1 },
+  { active: false, name: 'settings_mouse', lvl: 1 },
+  { active: false, name: 'settings_mouse_nav', lvl: 2 },
+  { active: false, name: 'settings_mouse_tabs', lvl: 2 },
+  { active: false, name: 'settings_mouse_tabs_panel', lvl: 2 },
+  { active: false, name: 'settings_mouse_new_tab_button', lvl: 2 },
+  { active: false, name: 'settings_mouse_bookmarks', lvl: 2 },
+  { active: false, name: 'settings_mouse_history', lvl: 2 },
+  { active: false, name: 'settings_snapshots', lvl: 1 },
+  { active: false, name: 'settings_sync', lvl: 1 },
+  { active: false, name: 'settings_help', lvl: 1 },
+  { active: false, name: 'keybindings', lvl: 0 },
+  { active: false, name: 'menu_editor', lvl: 0 },
+  { active: false, name: 'menu_editor_tabs', lvl: 1 },
+  { active: false, name: 'menu_editor_tabs_panel', lvl: 1 },
+  { active: false, name: 'menu_editor_bookmarks', lvl: 1 },
+  { active: false, name: 'menu_editor_bookmarks_panel', lvl: 1 },
+  { active: false, name: 'styles_editor', lvl: 0 },
+  { active: false, name: 'snapshots', lvl: 0 },
 ]
 
 export const SetupPage = {

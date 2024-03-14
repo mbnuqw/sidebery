@@ -549,6 +549,49 @@ export const setupPageTranslations: Translations = {
     zh_CN: '鼠标',
     zh_TW: '滑鼠',
   },
+  'settings.nav_settings_mouse_nav': {
+    en: 'Navigation bar actions',
+    ru: 'Действия над навигацией',
+    zh_CN: '导航栏操作',
+    zh_TW: '導覽列操作',
+    de: 'Aktionen mit Navigationsleiste',
+  },
+  'settings.nav_settings_mouse_tabs': {
+    en: 'Tab actions',
+    ru: 'Действия над вкладками',
+    de: 'Aktionen mit Tabs',
+    zh_CN: '标签页操作',
+    zh_TW: '分頁操作',
+  },
+  'settings.nav_settings_mouse_tabs_panel': {
+    en: 'Tabs panel actions',
+    ru: 'Действия над панелью c вкладками',
+    zh_CN: '标签页面板操作',
+    zh_TW: '分頁面板操作',
+    de: 'Aktionen mit Tab-Panels',
+  },
+  'settings.nav_settings_mouse_new_tab_button': {
+    en: 'New Tab button actions',
+    de: 'Aktionen für neue Tab-Schaltflächen',
+    ru: 'Взаимодействия с кнопкой "Новая вкладка"',
+    zh_CN: '新选项卡按钮操作',
+    zh_TW: '新分頁按鈕操作',
+  },
+  'settings.nav_settings_mouse_bookmarks': {
+    en: 'Bookmarks actions',
+    ru: 'Действия над закладками',
+    de: 'Aktionen mit Lesezeichen',
+    zh_CN: '书签动作',
+    zh_TW: '書籤動作',
+  },
+  'settings.nav_settings_mouse_history': {
+    en: 'History items actions',
+    ru: 'Действия над элементами истории',
+    de: 'Aktionen mit Chronik-Einträgen',
+    zh_CN: '历史项目操作',
+    zh_TW: '歷史項目操作',
+  },
+
   'settings.nav_settings_snapshots': {
     en: 'Snapshots',
     ru: 'Снепшоты',
@@ -3442,21 +3485,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '水平捲動 (px)',
   },
 
-  'settings.nav_actions_sub_title': {
-    en: 'Navigation bar actions',
-    ru: 'Действия над навигацией',
-    zh_CN: '导航栏操作',
-    zh_TW: '導覽列操作',
-    de: 'Aktionen mit Navigationsleiste',
-  },
-
-  'settings.tab_actions_sub_title': {
-    en: 'Tab actions',
-    ru: 'Действия над вкладками',
-    de: 'Aktionen mit Tabs',
-    zh_CN: '标签页操作',
-    zh_TW: '分頁操作',
-  },
+  // Tab actions
   'settings.tab_double_click': {
     en: 'Double click on tab',
     ru: 'Двойной клик по вкладке',
@@ -3610,13 +3639,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     de: 'Nichts',
   },
 
-  'settings.tabs_panel_actions_sub_title': {
-    en: 'Tabs panel actions',
-    ru: 'Действия над панелью c вкладками',
-    zh_CN: '标签页面板操作',
-    zh_TW: '分頁面板操作',
-    de: 'Aktionen mit Tab-Panels',
-  },
+  // Tabs panel actions
   'settings.tabs_panel_left_click_action': {
     en: 'Left click on tabs panel',
     ru: 'Левый клик по панели с вкладками',
@@ -3715,13 +3738,8 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '无',
     zh_TW: '無',
   },
-  'settings.mouse.new_tab_button_title': {
-    en: 'New Tab button actions',
-    de: 'Aktionen für neue Tab-Schaltflächen',
-    ru: 'Взаимодействия с кнопкой "Новая вкладка"',
-    zh_CN: '新选项卡按钮操作',
-    zh_TW: '新分頁按鈕操作',
-  },
+
+  // New Tab button actions
   'settings.mouse.new_tab_middle_click_action': {
     en: 'Middle click on New Tab button',
     de: 'Mittlere Maustaste auf Schaltfläche "Neuer Tab"',
@@ -3744,13 +3762,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '應用容器或 URL',
   },
 
-  'settings.mouse.bookmarks_title': {
-    en: 'Bookmarks actions',
-    ru: 'Действия над закладками',
-    de: 'Aktionen mit Lesezeichen',
-    zh_CN: '书签动作',
-    zh_TW: '書籤動作',
-  },
+  // Bookmarks actions
   'settings.mouse.bookmarks.left_click_action': {
     en: 'Left-click on the bookmark',
     ru: 'Левый клик по закладке',
@@ -3835,13 +3847,7 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '刪除',
   },
 
-  'settings.mouse.history_title': {
-    en: 'History items actions',
-    ru: 'Действия над элементами истории',
-    de: 'Aktionen mit Chronik-Einträgen',
-    zh_CN: '历史项目操作',
-    zh_TW: '歷史項目操作',
-  },
+  // History items actions
   'settings.mouse.history.left_click_action': {
     en: 'Left-click on the history item',
     ru: 'Левый клик по элементу истории',

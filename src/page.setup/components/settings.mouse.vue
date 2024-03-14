@@ -91,8 +91,8 @@ section(ref="el")
       :inactive="!Settings.state.wheelThreshold"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.nav_actions_sub_title')}}
+  .wrapper(ref="navEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_nav')}}
     SelectField.-no-separator(
       label="settings.nav_act_tabs_panel_left_click"
       optLabel="settings.nav_act_tabs_panel_left_click_"
@@ -124,8 +124,8 @@ section(ref="el")
       v-model:value="Settings.state.navSwitchPanelsWheel"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.tab_actions_sub_title')}}
+  .wrapper(ref="tabsEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_tabs')}}
     SelectField.-no-separator(
       label="settings.tab_double_click"
       optLabel="settings.tab_action_"
@@ -200,8 +200,8 @@ section(ref="el")
       :opts="Settings.getOpts('tabCloseMiddleClick')"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.tabs_panel_actions_sub_title')}}
+  .wrapper(ref="tabsPanelEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_tabs_panel')}}
     SelectField.-no-separator(
       label="settings.tabs_panel_left_click_action"
       optLabel="settings.tabs_panel_action_"
@@ -232,8 +232,8 @@ section(ref="el")
       :folded="true"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.mouse.new_tab_button_title')}}
+  .wrapper(ref="ntbEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_new_tab_button')}}
     SelectField.-no-separator(
       label="settings.mouse.new_tab_middle_click_action"
       optLabel="settings.mouse.new_tab_action_"
@@ -242,8 +242,8 @@ section(ref="el")
       :folded="true"
       @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.mouse.bookmarks_title')}}
+  .wrapper(ref="bookmarksEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_bookmarks')}}
     SelectField.-no-separator(
       label="settings.mouse.bookmarks.left_click_action"
       optLabel="settings.mouse.bookmarks.left_click_action_"
@@ -292,8 +292,8 @@ section(ref="el")
         :folded="false"
         @update:value="Settings.saveDebounced(150)")
 
-  .wrapper
-    .sub-title: .text {{translate('settings.mouse.history_title')}}
+  .wrapper(ref="historyEl")
+    .sub-title: .text {{translate('settings.nav_settings_mouse_history')}}
     SelectField.-no-separator(
       label="settings.mouse.history.left_click_action"
       optLabel="settings.mouse.history.left_click_action_"
@@ -348,8 +348,22 @@ import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
 
 const el = ref<HTMLElement | null>(null)
+const navEl = ref<HTMLElement | null>(null)
+const tabsEl = ref<HTMLElement | null>(null)
+const tabsPanelEl = ref<HTMLElement | null>(null)
+const ntbEl = ref<HTMLElement | null>(null)
+const bookmarksEl = ref<HTMLElement | null>(null)
+const historyEl = ref<HTMLElement | null>(null)
 
-onMounted(() => SetupPage.registerEl('settings_mouse', el.value))
+onMounted(() => {
+  SetupPage.registerEl('settings_mouse', el.value)
+  SetupPage.registerEl('settings_mouse_nav', navEl.value)
+  SetupPage.registerEl('settings_mouse_tabs', tabsEl.value)
+  SetupPage.registerEl('settings_mouse_tabs_panel', tabsPanelEl.value)
+  SetupPage.registerEl('settings_mouse_new_tab_button', ntbEl.value)
+  SetupPage.registerEl('settings_mouse_bookmarks', bookmarksEl.value)
+  SetupPage.registerEl('settings_mouse_history', historyEl.value)
+})
 
 function onTabsSecondClickActPrevUpdate(value: boolean): void {
   if (value) Settings.state.tabDoubleClick = 'none'
