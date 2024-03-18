@@ -285,6 +285,9 @@ function onDocumentKeyup(e: KeyboardEvent): void {
 
     // Sub-panel
     if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
+
+    // Site config popup
+    if (Popups.reactive.siteConfigPopup) Popups.closeSiteConfigPopup()
   }
 
   // Confirm popups
