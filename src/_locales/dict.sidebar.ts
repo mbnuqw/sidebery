@@ -10,6 +10,7 @@ export const sidebarTranslations: Translations = {
     de: 'Suche...',
     zh_CN: '搜索...',
     zh_TW: '搜尋...',
+    hu: 'Keresés…',
   },
 
   // ---
@@ -20,6 +21,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Внимание',
     de: 'Warnung',
     zh: '警告',
+    hu: 'Figyelmeztetés',
   },
   'confirm.tabs_close_pre': {
     en: 'Are you sure you want to close ',
@@ -27,6 +29,7 @@ export const sidebarTranslations: Translations = {
     de: 'Möchten Sie diese ',
     zh_CN: '你确定要关闭 ',
     zh_TW: '你確定要關閉 ',
+    hu: 'Biztosan bezárható a lap: „',
   },
   'confirm.tabs_close_post': {
     en: ' tabs?',
@@ -34,6 +37,7 @@ export const sidebarTranslations: Translations = {
     de: ' Tabs wirklich schließen?',
     zh_CN: ' 标签页吗？',
     zh_TW: ' 分頁嗎？',
+    hu: '”?',
   },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',
@@ -41,6 +45,7 @@ export const sidebarTranslations: Translations = {
     de: 'Möchten Sie die gewählten Lesezeichen wirklich löschen?',
     zh_CN: '你确定要删除选定的书签吗？',
     zh_TW: '你確定要刪除選定的書籤嗎？',
+    hu: 'Biztosan törölhetők a kijelölt könyvjelzők?',
   },
 
   // ---
@@ -51,6 +56,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Ничего не найдено',
     de: 'Nichts gefunden',
     zh: '未找到',
+    hu: 'Nincs találat',
   },
   'panel.nothing': {
     en: 'Nothing...',
@@ -58,6 +64,7 @@ export const sidebarTranslations: Translations = {
     de: 'Nichts...',
     zh_CN: '无...',
     zh_TW: '無...',
+    hu: 'Nincs…',
   },
 
   // ---
@@ -68,12 +75,14 @@ export const sidebarTranslations: Translations = {
     ru: 'Показать историю этого сайта',
     zh_CN: '显示该站点的历史记录',
     zh_TW: '顯示此網站的歷史紀錄',
+    hu: 'Ennek az oldalnak az előzményei',
   },
   'panel.history.show_more': {
     en: '...hidden visits:',
     ru: '...скрытых записей:',
     zh_CN: '...隐藏的访问：',
     zh_TW: '...隱藏的紀錄：',
+    hu: '…rejtett látogatások:',
   },
 
   // ---
@@ -84,36 +93,42 @@ export const sidebarTranslations: Translations = {
     ru: 'Открыть новую вкладку',
     zh_CN: '打开一个新标签',
     zh_TW: '開啟一個新分頁',
+    hu: 'Új lap',
   },
   'newTabBar.in_default_container': {
     en: ' in default container',
     ru: ' в стандартном контейнере',
     zh_CN: ' 在默认容器中',
     zh_TW: ' 在預設容器中',
+    hu: ' az alapértelmezett konténerben',
   },
   'newTabBar.in_container_prefix': {
     en: ' in "',
     ru: ' в контейнере "',
     zh_CN: ' 在 "',
     zh_TW: ' 在「',
+    hu: ' ebben a konténerben: „',
   },
   'newTabBar.in_container_postfix': {
     en: '" container',
     ru: '"',
     zh_CN: '" 容器中',
     zh_TW: '」容器中',
+    hu: '”',
   },
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
     ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
     zh_CN: '中键单击：打开子选项卡',
     zh_TW: '中鍵點選：開啟子分頁',
+    hu: 'Középső kattintás: új utódlap',
   },
   'newTabBar.mid_reopen': {
     en: 'Middle click: Reopen active tab',
     ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
     zh_CN: '中键点击：重新打开活动标签',
     zh_TW: '中鍵點選：重新開啟當前分頁',
+    hu: 'Középső kattintás: az aktív lap újranyitása',
   },
 
   // ---
@@ -125,6 +140,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Удаление панели',
     de: 'Entferne Panel',
     zh: '移除面板',
+    hu: 'Panel törlése',
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
@@ -132,6 +148,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs an benachbartes Panel anheften',
     zh_CN: '将标签附加到相邻面板',
     zh_TW: '將分頁附加到相鄰面板',
+    hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
   },
   'popup.tabs_panel_removing.leave': {
     en: 'Leave tabs untouched',
@@ -139,6 +156,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs behalten',
     zh_CN: '保持标签页不变',
     zh_TW: '保持分頁不變',
+    hu: 'A lapok ne változzanak',
   },
   'popup.tabs_panel_removing.save': {
     en: 'Save panel to bookmarks and close tabs',
@@ -146,6 +164,7 @@ export const sidebarTranslations: Translations = {
     de: 'Panel in Lesezeichen speichern und Tabs schließen',
     zh_CN: '将面板保存到书签并关闭标签页',
     zh_TW: '將面板儲存到書籤並關閉分頁',
+    hu: 'A panel könyvjelzőzése és a lapok bezárása',
   },
   'popup.tabs_panel_removing.close': {
     en: 'Close tabs',
@@ -153,6 +172,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs schließen',
     zh_CN: '关闭标签页',
     zh_TW: '關閉分頁',
+    hu: 'Lapok bezárása',
   },
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
@@ -160,6 +180,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
     zh_CN: '注意：此面板在其他窗口中的标签页将移动到相邻面板或左侧',
     zh_TW: '注意：其他視窗中屬於此面板的分頁將附加到相鄰面板',
+    hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
   },
   // - What to do with old unused bookmarks on saving tabs panel
   'popup.wtdwOldBookmarks.title': {
@@ -168,6 +189,7 @@ export const sidebarTranslations: Translations = {
     de: folderName => `Tabs wurden im Ordner "${folderName}" gespeichert`,
     zh_CN: folderName => `标签页已保存在 "${folderName}" 文件夹中`,
     zh_TW: folderName => `分頁已儲存在「${folderName}」資料夾中`,
+    hu: folderName => `A lapok ebbe a mappába lesznek mentve: „${folderName}”`,
   },
   'popup.wtdwOldBookmarks.note': {
     en: 'Delete old bookmarks in that folder?',
@@ -175,12 +197,14 @@ export const sidebarTranslations: Translations = {
     de: 'Alte Lesezeichen in diesem Ordner löschen?',
     zh_CN: '删除该文件夹中的旧书签？',
     zh_TW: '刪除該資料夾中的舊書籤？',
+    hu: 'Törölhetők a régi könyvjelzők ebből a mappából?',
   },
   'popup.wtdwOldBookmarks.checkbox_label': {
     en: "Remember and don't ask again",
     ru: 'Запомнить и больше не спрашивать',
     zh_CN: '记住，不要再问',
     zh_TW: '記住，不再詢問',
+    hu: 'A válasz megjegyzése, ne kérdezze többször',
   },
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
@@ -188,12 +212,14 @@ export const sidebarTranslations: Translations = {
     de: 'Löschen',
     zh_CN: '删除',
     zh_TW: '刪除',
+    hu: 'Törlés',
   },
   'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
     ru: 'Оставить',
     de: 'Behalten',
     zh: '保留',
+    hu: 'Megtartás',
   },
   // - Container config popup
   'popup.container.title': {
@@ -201,12 +227,14 @@ export const sidebarTranslations: Translations = {
     ru: 'Контейнер',
     de: 'Umgebung',
     zh: '容器',
+    hu: 'Konténer',
   },
   'popup.container.name_placeholder': {
     en: 'Container name',
     ru: 'Название контейнера',
     zh_CN: '容器名称',
     zh_TW: '容器名稱',
+    hu: 'Konténernév',
   },
   // - Panel config popup
   'popup.tabs_panel.title': {
@@ -215,6 +243,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tab-Panel',
     zh_CN: '标签页面板',
     zh_TW: '分頁面板',
+    hu: 'Lappanel',
   },
   'popup.bookmarks_panel.title': {
     en: 'Bookmarks panel',
@@ -222,6 +251,7 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
     zh_TW: '書籤面板',
+    hu: 'Könyvjelzőpanel',
   },
   'popup.common.name_label': {
     en: 'Name',
@@ -229,6 +259,7 @@ export const sidebarTranslations: Translations = {
     de: 'Name',
     zh_CN: '名称',
     zh_TW: '名稱',
+    hu: 'Név',
   },
   'popup.common.icon_label': {
     en: 'Icon',
@@ -236,6 +267,7 @@ export const sidebarTranslations: Translations = {
     de: 'Symbol',
     zh_CN: '图标',
     zh_TW: '圖示',
+    hu: 'Ikon',
   },
   'popup.common.color_label': {
     en: 'Color',
@@ -243,6 +275,7 @@ export const sidebarTranslations: Translations = {
     de: 'Farbe',
     zh_CN: '颜色',
     zh_TW: '顏色',
+    hu: 'Szín',
   },
   'popup.common.btn_more': {
     en: 'More options...',
@@ -250,6 +283,7 @@ export const sidebarTranslations: Translations = {
     de: 'Weitere Optionen...',
     zh_CN: '更多选项...',
     zh_TW: '更多選項...',
+    hu: 'További beállítások…',
   },
   // - Group config popup
   'popup.group_config.popup_title': {
@@ -258,6 +292,7 @@ export const sidebarTranslations: Translations = {
     de: 'Gruppe',
     zh_CN: '组',
     zh_TW: '組',
+    hu: 'Csoportosítás',
   },
   'popup.group_config.title': {
     en: 'Title',
@@ -265,6 +300,7 @@ export const sidebarTranslations: Translations = {
     de: 'Name',
     zh_CN: '标题',
     zh_TW: '標題',
+    hu: 'Név',
   },
   'popup.group_config.title_placeholder': {
     en: 'Group title',
@@ -272,6 +308,7 @@ export const sidebarTranslations: Translations = {
     de: 'Gruppenname',
     zh_CN: '组标题',
     zh_TW: '組標題',
+    hu: 'Csoportnév',
   },
   'popup.group_config.do_not_show_again': {
     en: "Don't show again",
@@ -279,6 +316,7 @@ export const sidebarTranslations: Translations = {
     de: 'Nicht mehr anzeigen',
     zh_CN: '不再显示',
     zh_TW: '不再顯示',
+    hu: 'Ne mutassa újra',
   },
 
   // ---
@@ -289,24 +327,28 @@ export const sidebarTranslations: Translations = {
     ru: 'Закладки',
     zh_CN: '书签',
     zh_TW: '書籤',
+    hu: 'Könyvjelzők',
   },
   'sub_panel.bookmarks_panel.root_title': {
     en: 'All Bookmarks',
     ru: 'Все закладки',
     zh_CN: '全部书签',
     zh_TW: '全部書籤',
+    hu: 'Minden könyvjelző',
   },
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
     ru: 'Недавно закрытые вкладки',
     zh_CN: '最近关闭的标签页',
     zh_TW: '最近關閉的分頁',
+    hu: 'Legutóbb bezárt lapok',
   },
   'sub_panel.history_panel.title': {
     en: 'History',
     ru: 'История',
     zh_CN: '历史',
     zh_TW: '歷史',
+    hu: 'Előzmények',
   },
 
   // ---
@@ -318,12 +360,14 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
     zh_TW: '書籤面板',
+    hu: 'Könyvjelzőpanel',
   },
   'dnd.tooltip.tabs_panel': {
     en: 'panel',
     ru: 'панель',
     de: 'Panel',
     zh: '面板',
+    hu: 'panel',
   },
   'dnd.tooltip.tabs': {
     en: 'tabs',
@@ -335,6 +379,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs',
     zh_CN: '标签页',
     zh_TW: '分頁',
+    hu: 'lap',
   },
   'dnd.tooltip.bookmarks': {
     en: 'bookmarks',
@@ -346,6 +391,7 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen',
     zh_CN: '书签',
     zh_TW: '書籤',
+    hu: 'könyvjelző',
   },
   'dnd.tooltip.nav_item': {
     en: 'Navigation element',
@@ -353,12 +399,14 @@ export const sidebarTranslations: Translations = {
     de: 'Navigationselement',
     zh_CN: '导航元素',
     zh_TW: '導覽元件',
+    hu: 'Vezérlőelem',
   },
   'dnd.tooltip.new_tab': {
     en: 'New tab',
     ru: 'Новая вкладка',
     zh_CN: '新标签页',
     zh_TW: '新分頁',
+    hu: 'Új lap',
   },
 
   // ---
@@ -370,6 +418,7 @@ export const sidebarTranslations: Translations = {
     de: 'Versteckte Panels anzeigen',
     zh_CN: '显示隐藏的面板',
     zh_TW: '顯示隱藏的面板',
+    hu: 'Rejtett panelok megjelenítése',
   },
   'nav.btn_settings': {
     en: 'Settings',
@@ -377,6 +426,7 @@ export const sidebarTranslations: Translations = {
     de: 'Einstellungen',
     zh_CN: '设置',
     zh_TW: '設定',
+    hu: 'Beállítások',
   },
   'nav.btn_add_tp': {
     en: 'Create tabs panel',
@@ -384,6 +434,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tab-Panel erstellen',
     zh_CN: '创建标签页面板',
     zh_TW: '建立分頁面板',
+    hu: 'Új lappanel',
   },
   'nav.btn_search': {
     en: 'Search',
@@ -391,6 +442,7 @@ export const sidebarTranslations: Translations = {
     de: 'Suchen',
     zh_CN: '搜索',
     zh_TW: '搜尋',
+    hu: 'Keresés',
   },
   'nav.btn_create_snapshot': {
     en: 'Create snapshot',
@@ -398,6 +450,7 @@ export const sidebarTranslations: Translations = {
     de: 'Schnappschuss erstellen',
     zh_CN: '创建快照',
     zh_TW: '建立快照',
+    hu: 'Pillanatkép készítése',
   },
   'nav.btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
@@ -405,6 +458,7 @@ export const sidebarTranslations: Translations = {
     de: 'Stummschalten hörbarer Tabs an/aus',
     zh_CN: '静音/取消静音有声标签页',
     zh_TW: '靜音/取消靜音有聲分頁',
+    hu: 'Lapok némítása/visszahangosítása',
   },
   'nav.btn_collapse': {
     en: 'Collapse all',
@@ -412,66 +466,77 @@ export const sidebarTranslations: Translations = {
     de: 'Alle einklappen',
     zh_CN: '全部折叠',
     zh_TW: '全部折疊',
+    hu: 'Minden ág becsukása',
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
     ru: 'Средняя кнопка мыши: Закрыть влкадки',
     zh_CN: '中键点击：关闭全部标签',
     zh_TW: '中鍵點選：關閉全部分頁',
+    hu: 'Középső kattintás: lapok bezárása',
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
     zh_CN: '中键点击：关闭标签并移除面板',
     zh_TW: '中鍵點選：關閉分頁並移除面板',
+    hu: 'Középső kattintás: lapok bezárása és a panel törlése',
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
     zh_CN: '中键单击：关闭活动标签页',
     zh_TW: '中鍵點選：關閉當前分頁',
+    hu: 'Középső kattintás: az aktív lap bezárása',
   },
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
     zh_CN: '中键单击：卸载标签页',
     zh_TW: '中鍵點選：卸載分頁',
+    hu: 'Középső kattintás: lapok kisöprése',
   },
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
     ru: 'Средняя кнопка мыши: Скрыть панель',
     zh_CN: '中键单击：隐藏面板',
     zh_TW: '中鍵點選：隱藏面板',
+    hu: 'Középső kattintás: panel elrejtése',
   },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
     zh_CN: '中键点击：保存到书签',
     zh_TW: '中鍵點選：儲存到書籤',
+    hu: 'Középső kattintás: könyvjelzőzés',
   },
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
     zh_CN: '中键点击：保存到书签并移除面板',
     zh_TW: '中鍵點選：儲存到書籤並移除面板',
+    hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
   },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
     zh_CN: '中键单击：转换到书签面板',
     zh_TW: '中鍵點選：轉換到書籤面板',
+    hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
   },
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
     zh_CN: '中键单击：转换为书签并隐藏面板',
     zh_TW: '中鍵點選：轉換為書籤並隱藏面板',
+    hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
     zh_CN: '中键单击：转换为标签面板',
     zh_TW: '中鍵點選：轉換為分頁面板',
+    hu: 'Középső kattintás: átalakítás lappanellá',
   },
 
   // ---
@@ -483,6 +548,7 @@ export const sidebarTranslations: Translations = {
     de: 'Benachrichtigung verbergen',
     zh_CN: '隐藏通知',
     zh_TW: '隱藏通知',
+    hu: 'Értesítés elrejtése',
   },
   'notif.undo_ctrl': {
     en: 'Undo',
@@ -490,6 +556,7 @@ export const sidebarTranslations: Translations = {
     de: 'Rückgängig',
     zh_CN: '撤消',
     zh_TW: '復原',
+    hu: 'Visszavonás',
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
@@ -501,12 +568,14 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs geschlossen',
     zh_CN: ' 标签页已关闭',
     zh_TW: ' 分頁已關閉',
+    hu: ' lap be lett zárva',
   },
   'notif.bookmarks_create_err': {
     en: 'Cannot create bookmark',
     ru: 'Невозможно создать закладку',
     zh_CN: ' 无法创建书签',
     zh_TW: ' 無法建立書籤',
+    hu: 'Nem sikerült könyvjelzőzni',
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
@@ -518,6 +587,7 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen entfernt',
     zh_CN: ' 书签已删除',
     zh_TW: ' 書籤已刪除',
+    hu: ' könyvjelző törölve lett',
   },
   'notif.bookmarks_sort': {
     en: 'Sorting bookmarks...',
@@ -525,6 +595,7 @@ export const sidebarTranslations: Translations = {
     de: 'Sortiere Lesezeichen...',
     zh_CN: '书签排序',
     zh_TW: '書籤排序',
+    hu: 'Könyvjelzők rendezése…',
   },
   'notif.tabs_sort': {
     en: 'Sorting tabs...',
@@ -532,6 +603,7 @@ export const sidebarTranslations: Translations = {
     de: 'Sortiere Tabs...',
     zh_CN: '排序选项卡...',
     zh_TW: '排序選項卡...',
+    hu: 'Lapok rendezése…',
   },
   'notif.snapshot_created': {
     en: 'Snapshot created',
@@ -539,6 +611,7 @@ export const sidebarTranslations: Translations = {
     de: 'Schnappschuss erstellt',
     zh_CN: '快照已创建',
     zh_TW: '快照已建立',
+    hu: 'Pillanatkép készült',
   },
   'notif.view_snapshot': {
     en: 'View',
@@ -546,6 +619,7 @@ export const sidebarTranslations: Translations = {
     de: 'Ansehen',
     zh_CN: '查看',
     zh_TW: '檢視',
+    hu: 'Megtekintés',
   },
   'notif.tabs_err': {
     en: 'Wrong tabs position detected',
@@ -553,6 +627,7 @@ export const sidebarTranslations: Translations = {
     de: 'Falsche Tab-Position erkannt',
     zh_CN: '检测到错误的标签页位置',
     zh_TW: '偵測到錯誤的分頁位置',
+    hu: 'A program a lapok helytelen állapotát észlelte',
   },
   'notif.tabs_err_fix': {
     en: 'Update tabs',
@@ -560,6 +635,7 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs aktualisieren',
     zh_CN: '更新标签页',
     zh_TW: '更新分頁',
+    hu: 'Lapok frissítése',
   },
   'notif.tabs_reloading': {
     en: 'Reloading tabs',
@@ -567,12 +643,14 @@ export const sidebarTranslations: Translations = {
     de: 'Tabs neu laden',
     zh_CN: '重新加载标签页',
     zh_TW: '重新載入分頁',
+    hu: 'Lapok újratöltése',
   },
   'notif.tabs_reloading_stop': {
     en: 'Stop',
     ru: 'Остановить',
     de: 'Stopp',
     zh: '停止',
+    hu: 'Állj',
   },
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
@@ -580,6 +658,7 @@ export const sidebarTranslations: Translations = {
     de: 'Speichere in Lesezeichen...',
     zh_CN: '保存到书签...',
     zh_TW: '儲存到書籤...',
+    hu: 'Mentés könyvjelzőbe…',
   },
   'notif.tabs_panel_saved_bookmarks': {
     en: 'Panel saved',
@@ -587,6 +666,7 @@ export const sidebarTranslations: Translations = {
     de: 'Panel gespeichert',
     zh_CN: '面板已保存',
     zh_TW: '面板已儲存',
+    hu: 'A panel mentése kész',
   },
   'notif.tabs_panel_updated_bookmarks': {
     en: 'Bookmarks updated',
@@ -594,6 +674,7 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen aktualisiert',
     zh_CN: '书签已更新',
     zh_TW: '書籤已更新',
+    hu: 'A könyvjelzők frissítése kész',
   },
   'notif.converting': {
     en: 'Converting...',
@@ -601,6 +682,7 @@ export const sidebarTranslations: Translations = {
     de: 'Konvertiere...',
     zh_CN: '转换中...',
     zh_TW: '轉換中...',
+    hu: 'Átalakítás…',
   },
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
@@ -608,6 +690,7 @@ export const sidebarTranslations: Translations = {
     de: 'Kann Tab-Panel nicht in Lesezeichen speichern',
     zh_CN: '无法将标签页面板保存到书签',
     zh_TW: '無法將分頁面板儲存到書籤',
+    hu: 'Nem sikerült könyvjelzőzni a lappanelt',
   },
   'notif.tabs_panel_to_bookmarks_err.folder': {
     en: 'Cannot create destination folder',
@@ -615,6 +698,7 @@ export const sidebarTranslations: Translations = {
     de: 'Zielordner kann nicht erstellt werden',
     zh_CN: '无法创建目标文件夹',
     zh_TW: '無法建立目標資料夾',
+    hu: 'Nem sikerült létrehozni a célmappát',
   },
   'notif.tabs_panel_to_bookmarks_err.folder_upd': {
     en: 'Cannot update destination folder',
@@ -622,6 +706,7 @@ export const sidebarTranslations: Translations = {
     de: 'Kann Zielordner nicht aktualisieren',
     zh_CN: '无法更新目标文件夹',
     zh_TW: '無法更新目標資料夾',
+    hu: 'Nem sikerült frissíteni a célmappát',
   },
   'notif.tabs_panel_to_bookmarks_err.bookmarks': {
     en: 'Cannot create bookmarks',
@@ -629,6 +714,7 @@ export const sidebarTranslations: Translations = {
     de: 'Lesezeichen können nicht erstellt werden',
     zh_CN: '无法创建书签',
     zh_TW: '無法建立書籤',
+    hu: 'Nem sikerült létrehozni a könyvjelzőket',
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
@@ -636,6 +722,7 @@ export const sidebarTranslations: Translations = {
     de: 'Kann Panel aus Lesezeichen nicht wiederherstellen',
     zh_CN: '无法从书签恢复面板',
     zh_TW: '無法從書籤復原面板',
+    hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
@@ -643,6 +730,7 @@ export const sidebarTranslations: Translations = {
     de: 'Quellordner nicht gefunden',
     zh_CN: '未找到根文件夹',
     zh_TW: '未找到根資料夾',
+    hu: 'A kezdőmappa nem található',
   },
   'notif.restore_from_bookmarks_ok': {
     en: 'The tab panel has been successfully restored',
@@ -650,22 +738,26 @@ export const sidebarTranslations: Translations = {
     de: 'Tab-Panel wiederhergestellt',
     zh_CN: '标签页面板已恢复',
     zh_TW: '分頁面板已復原',
+    hu: 'A lappanel helyreállítása kész',
   },
   'notif.panel_conv': {
     en: 'The panel has been successfully converted',
     ru: 'Панель успешно преобразована',
     zh_TW: '面板已成功被轉換',
+    hu: 'A panel átalakítása kész',
   },
   'notif.panel_bkmrkd': {
     en: 'The panel has been successfully bookmarked',
     ru: 'Панель успешно добавлена в закладки',
     zh_TW: '面板已成功加入書籤',
+    hu: 'A panel könyvjelzőzése kész',
   },
   'notif.done': {
     en: 'Done',
     ru: 'Готово',
     de: 'Fertig',
     zh: '已完成',
+    hu: 'Rendben',
   },
   'notif.new_bookmark': {
     en: 'New bookmark added',
@@ -673,6 +765,7 @@ export const sidebarTranslations: Translations = {
     de: 'Neues Lesezeichen hinzugefügt',
     zh_CN: '书签已添加',
     zh_TW: '書籤已加入',
+    hu: 'Új könyvjelző készült',
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
@@ -680,6 +773,7 @@ export const sidebarTranslations: Translations = {
     de: 'Kann Quellordner nicht finden',
     zh_CN: '找不到根文件夹',
     zh_TW: '找不到根資料夾',
+    hu: 'A kezdőmappa nem található',
   },
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
@@ -687,6 +781,7 @@ export const sidebarTranslations: Translations = {
     de: 'Versuche Tab-Panel neu zu speichern',
     zh_CN: '尝试重新保存标签页面板',
     zh_TW: '嘗試重新儲存分頁面板',
+    hu: 'Meg kell próbálni újramenteni a lappanelt',
   },
   'notif.bookmarks_sub_panel.no_root.save': {
     en: 'Save',
@@ -694,6 +789,7 @@ export const sidebarTranslations: Translations = {
     de: 'Speichern',
     zh_CN: '保存',
     zh_TW: '儲存',
+    hu: 'Mentés',
   },
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
@@ -701,6 +797,7 @@ export const sidebarTranslations: Translations = {
     de: 'Proxy-Authentifizierungsfehler',
     zh_CN: '代理认证错误',
     zh_TW: '代理認證錯誤',
+    hu: 'Proxy-hitelesítési hiba',
   },
   'notif.proxy_auth_err_details': {
     en: 'Check the proxy settings to make sure that they are correct.',
@@ -708,6 +805,7 @@ export const sidebarTranslations: Translations = {
     de: 'Überprüfen Sie die Proxy-Einstellungen, um sicherzustellen, dass sie korrekt sind.',
     zh_CN: '检查代理设置以确保它们是正确的',
     zh_TW: '檢查代理設定以確保它們是正確的',
+    hu: 'Ellenőrizni kell, hogy a proxy beállításai biztosan helyesek-e.',
   },
   'notif.proxy_auth_err_ctrl': {
     en: 'Open settings',
@@ -715,6 +813,7 @@ export const sidebarTranslations: Translations = {
     de: 'Einstellungen öffnen',
     zh_CN: '打开设置',
     zh_TW: '開啟設定',
+    hu: 'Beállítások',
   },
   'notif.history_del_sites': {
     en: 'Clearing history',
@@ -722,6 +821,7 @@ export const sidebarTranslations: Translations = {
     de: 'Verlauf löschen',
     zh_CN: '清除历史记录',
     zh_TW: '清除歷史紀錄',
+    hu: 'Az előzmények törlése',
   },
   'notif.history_del_sites_nothing': {
     en: 'Nothing to clear',
@@ -729,6 +829,7 @@ export const sidebarTranslations: Translations = {
     de: 'Nichts zu löschen',
     zh_CN: '没有内容可清除',
     zh_TW: '沒有內容可清除',
+    hu: 'Semmi nem lett törölve',
   },
   'notif.cc.err': {
     en: 'Unable to clear cookies',
@@ -736,6 +837,7 @@ export const sidebarTranslations: Translations = {
     de: 'Cookies können nicht gelöscht werden',
     zh_CN: '无法清除 Cookie',
     zh_TW: '無法清除 Cookie',
+    hu: 'A sütik nem törölhetők',
   },
   'notif.cc.err_url': {
     en: 'Incorrect URL: ',
@@ -743,12 +845,14 @@ export const sidebarTranslations: Translations = {
     de: 'Falsche URL: ',
     zh_CN: '不正确的网址：',
     zh_TW: '不正確的網址：',
+    hu: 'Hibás URL: ',
   },
   'notif.cc.ok': {
     en: 'Cookies was cleared',
     ru: 'Cookies были очищены',
     de: 'Cookies wurden gelöscht',
     zh: 'Cookie 已清除',
+    hu: 'A sütik törlése kész',
   },
 
   // ---
@@ -760,6 +864,7 @@ export const sidebarTranslations: Translations = {
     de: 'Standard',
     zh_CN: '默认',
     zh_TW: '預設',
+    hu: 'alapértelmezett',
   },
   'colors.blue': {
     en: 'Blue',
@@ -767,6 +872,7 @@ export const sidebarTranslations: Translations = {
     de: 'Blau',
     zh_CN: '蓝色',
     zh_TW: '藍色',
+    hu: 'kék',
   },
   'colors.turquoise': {
     en: 'Turquoise',
@@ -774,6 +880,7 @@ export const sidebarTranslations: Translations = {
     de: 'Türkis',
     zh_CN: '青绿色',
     zh_TW: '青綠色',
+    hu: 'türkiz',
   },
   'colors.green': {
     en: 'Green',
@@ -781,6 +888,7 @@ export const sidebarTranslations: Translations = {
     de: 'Grün',
     zh_CN: '绿色',
     zh_TW: '綠色',
+    hu: 'zöld',
   },
   'colors.yellow': {
     en: 'Yellow',
@@ -788,12 +896,14 @@ export const sidebarTranslations: Translations = {
     de: 'Gelb',
     zh_CN: '黄色',
     zh_TW: '黃色',
+    hu: 'sárga',
   },
   'colors.orange': {
     en: 'Orange',
     ru: 'Оранжевый',
     de: 'Orange',
     zh: '橙色',
+    hu: 'narancssárga',
   },
   'colors.red': {
     en: 'Red',
@@ -801,18 +911,21 @@ export const sidebarTranslations: Translations = {
     de: 'Rot',
     zh_CN: '红色',
     zh_TW: '紅色',
+    hu: 'vörös',
   },
   'colors.pink': {
     en: 'Pink',
     ru: 'Розовый',
     de: 'Pink',
     zh: '粉色',
+    hu: 'rózsaszín',
   },
   'colors.purple': {
     en: 'Purple',
     ru: 'Фиолетовый',
     de: 'Lila',
     zh: '紫色',
+    hu: 'lila',
   },
 }
 
