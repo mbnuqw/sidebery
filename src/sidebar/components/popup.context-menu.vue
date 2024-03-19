@@ -323,7 +323,7 @@ function getY(menuH: number, y: number, isAbovePointer: boolean): number {
   const boxH = document.body.offsetHeight
   if (menuH >= boxH) return 0
   if (isAbovePointer && menuH > y) return boxH - 16
-  return y
+  return isAbovePointer ? y - 1 : y + 1
 }
 
 function btnWidth(opts: MenuOption[]): string {
