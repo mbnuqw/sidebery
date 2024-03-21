@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Hungarian translation (by [@cr04ch](https://github.com/cr04ch): [#1531](https://github.com/mbnuqw/sidebery/issues/1531))  
+- Sidebar: close site config popup with ESC ([#491](https://github.com/mbnuqw/sidebery/issues/491))  
+- SetupPage: sub-sections of tabs and mouse settings in navigation
+- Keybindings: a note for menu shortcut ([#1159](https://github.com/mbnuqw/sidebery/issues/1159))  
+- Settings: a note for highlighting native tabs ([#1177](https://github.com/mbnuqw/sidebery/issues/1177))  
+
+### Fixed
+
+- Broken active group page on restoring window from history menu
+- Context menu positioned under the cursor in some cases ([#522](https://github.com/mbnuqw/sidebery/issues/522))  
+- Tabs: reset unread mark after disabling the setting
+- Default settings: tabsSecondClickActPrev: false ([#1521](https://github.com/mbnuqw/sidebery/issues/1521))  
+- Recalc native tabs visibility when a globally pinned tab is active ([#700](https://github.com/mbnuqw/sidebery/issues/700))
+
 ## 5.2.0 - 2024.03.07
 
 ### Added
