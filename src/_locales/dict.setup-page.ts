@@ -1946,7 +1946,7 @@ Például: „*”, „ctrl+$”, „ctrl+alt+g”`,
     de: 'Vorherige Tab-Regel',
     zh_CN: '上一个标签页规则',
     zh_TW: '上一個分頁規則',
-    hu: 'Előző lap szabályai'
+    hu: 'Előző lap szabályai',
   },
   'settings.activate_after_closing_next_rule': {
     en: 'Next tab rule',
