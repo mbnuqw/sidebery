@@ -566,7 +566,14 @@ export function getUrlPageInitData(winId: ID, tabId: ID): UrlPageInitData {
   }
 }
 
+const injectingGroup = new Set<ID>()
+
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
+  if (injectingGroup.has(tabId)) return
+  if (!IPC.state.sidebarConnections.has(winId)) return
+
+  injectingGroup.add(tabId)
+
   try {
     browser.tabs
       .executeScript(tabId, {
@@ -600,6 +607,8 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
   } catch (err) {
     Logs.err('Injected group-page script', err)
   }
+
+  injectingGroup.delete(tabId)
 }
 
 export interface GroupPageInitData {
