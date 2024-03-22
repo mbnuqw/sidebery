@@ -1,0 +1,60 @@
+name: Bug Report
+description: File a bug report
+labels: []
+projects: []
+body:
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Include all steps needed to reproduce this bug, e.g.: Installing other addons, changing browser settings, changing `about:config` properties, changing Sidebery settings, etc...  
+        [How to open Firefox in a new profile](https://support.mozilla.org/en-US/kb/profile-manager-create-remove-switch-firefox-profiles)  
+      value: |
+        - Open Firefox in a new profile
+        - Install Sidebery
+        - 
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: System
+      description: "Name, version; e.g.: Windows 11, Manjaro Plasma 6.0 (Wayland) or macOS 14.4"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Firefox version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Sidebery version
+      description: "To find it, open `about:addons`, click on Sidebery and check `version` field"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        - Open DevTools (open this url in new tab: `about:devtools-toolbox?id=%7B3c078156-979c-498b-8990-85f7987dd929%7D&type=extension`).
+        - Navigate to `console` tab.
+        - Click on the trash bin icon (at the top-left) to clear console.
+        - Then try to reproduce the issue.
+        - If messages appear, copy and paste them here inside this codeblock, replacing this text.
+      render: code
+    validations:
+      required: false

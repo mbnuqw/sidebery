@@ -1,0 +1,13 @@
+name: Feature Request
+description: Request a feature
+labels: []
+projects: []
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description
+      description: |
+        Note: Issue containing two or more unrelated feature requests will be closed. If you have a question, use [discussions](https://github.com/mbnuqw/sidebery/discussions).
+    validations:
+      required: true
