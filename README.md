@@ -52,7 +52,7 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 
 ## Incompatibility with other addons
 
-Sidebery may conflict with addons that handle position of new tabs (e.g. Tree Style Tabs) or addons that move/sort tabs, which may result into unexpected behavior or broken tabs state at initialization. To avoid potential issues, please, disable such addons in Add-ons Manager page (about:addons).
+Sidebery may conflict with addons that handle position of new tabs (e.g. Tree Style Tabs) or addons that move/sort tabs, which may result in unexpected behavior or broken tabs state at initialization. To avoid potential issues, please, disable such addons in Add-ons Manager page (about:addons).
 
 ## How to hide native (horizontal) tabs?
 
