@@ -1,9 +1,14 @@
-Sidebery provides the list of tabs structured in a tree, bookmarks and history within the customizable panels. It aims to be fast and configurable. Some of the key features:
+Sidebery provides the list of tabs structured in a tree, bookmarks and history within the customizable panels. It aims to be fast and configurable.
+
+<strong>Notice: </strong>Sidebery may conflict with addons that handle position of new tabs (e.g. Tree Style Tabs) or addons that move/sort tabs, which may result into unexpected behavior or broken tabs state at initialization. To avoid potential issues, please, disable such addons in Add-ons Manager page (about:addons).
+
+<strong>Some of the key features:</strong>
 
 <strong>- Tabs</strong>
 - Simple flat list or tree with the option to set tree limit.
 - Group tabs (aka folders) with a custom name helps organize open pages.
 - Tabs colorization: Automatic per-domain/URL or manual.
+- Tabs sorting: by title, url or access time
 - Automatic unloading of tabs in a folded branch / inactive panel.
 - Customizable tab title.
 - ...
