@@ -291,7 +291,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Группа',
     de: 'Gruppe',
     zh_CN: '组',
-    zh_TW: '組',
+    zh_TW: '群組',
     hu: 'Csoportosítás',
   },
   'popup.group_config.title': {
@@ -307,7 +307,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Название группы',
     de: 'Gruppenname',
     zh_CN: '组标题',
-    zh_TW: '組標題',
+    zh_TW: '群組標題',
     hu: 'Csoportnév',
   },
   'popup.group_config.do_not_show_again': {
@@ -602,7 +602,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Сортировка вкладок...',
     de: 'Sortiere Tabs...',
     zh_CN: '排序选项卡...',
-    zh_TW: '排序選項卡...',
+    zh_TW: '排序分頁...',
     hu: 'Lapok rendezése…',
   },
   'notif.snapshot_created': {

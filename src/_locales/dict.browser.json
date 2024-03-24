@@ -803,51 +803,63 @@
   },
   "KbSortTabsByTitleAsc": {
     "en": "Sort selected tabs or siblings of the active tab by title (A-z)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (A–z)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (A–z)",
+    "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (A-z)"
   },
   "KbSortTabsByTitleDes": {
     "en": "Sort selected tabs or siblings of the active tab by title (z-A)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (z–A)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (z–A)",
+    "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (z-A)"
   },
   "KbSortTabsByTrlAsc": {
     "en": "Sort selected tabs or siblings of the active tab by URL (A-z)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (A–z)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (A–z)",
+    "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (A-z)"
   },
   "KbSortTabsByTrlDes": {
     "en": "Sort selected tabs or siblings of the active tab by URL (z-A)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (z–A)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (z–A)",
+    "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (z-A)"
   },
   "KbSortTabsByTimeAsc": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Old-Recent)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)",
+    "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（舊-新）"
   },
   "KbSortTabsByTimeDes": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Recent-Old)",
-    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)"
+    "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)",
+    "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（新-舊）"
   },
   "KbSortPanelTabsByTitleAsc": {
     "en": "Sort tabs of the active panel by title (A-z)",
-    "hu": "Az aktív panel lapjainak rendezése cím szerint (A–z)"
+    "hu": "Az aktív panel lapjainak rendezése cím szerint (A–z)",
+    "zh_TW": "依名稱排序當前面板的分頁 (A-z)"
   },
   "KbSortPanelTabsByTitleDes": {
     "en": "Sort tabs of the active panel by title (z-A)",
-    "hu": "Az aktív panel lapjainak rendezése cím szerint (z–A)"
+    "hu": "Az aktív panel lapjainak rendezése cím szerint (z–A)",
+    "zh_TW": "依名稱排序當前面板的分頁 (z-A)"
   },
   "KbSortPanelTabsByTrlAsc": {
     "en": "Sort tabs of the active panel by URL (A-z)",
-    "hu": "Az aktív panel lapjainak rendezése URL szerint (A–z)"
+    "hu": "Az aktív panel lapjainak rendezése URL szerint (A–z)",
+    "zh_TW": "依網址排序當前面板的分頁 (A-z)"
   },
   "KbSortPanelTabsByTrlDes": {
     "en": "Sort tabs of the active panel by URL (z-A)",
-    "hu": "Az aktív panel lapjainak rendezése URL szerint (z–A)"
+    "hu": "Az aktív panel lapjainak rendezése URL szerint (z–A)",
+    "zh_TW": "依網址排序當前面板的分頁 (z-A)"
   },
   "KbSortPanelTabsByTimeAsc": {
     "en": "Sort tabs of the active panel by access time (Old-Recent)",
-    "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)"
+    "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)",
+    "zh_TW": "依最近瀏覽時間排序當前面板的分頁（舊-新）"
   },
   "KbSortPanelTabsByTimeDes": {
     "en": "Sort tabs of the active panel by access time (Recent-Old)",
-    "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)"
+    "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)",
+    "zh_TW": "依最近瀏覽時間排序當前面板的分頁（新-舊）"
   },
 
   "proxy_popup_title_prefix": {
