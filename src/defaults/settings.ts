@@ -151,7 +151,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   hideInact: false,
   hideFoldedTabs: false,
   hideFoldedParent: 'none',
-  nativeHighlight: false,
+  nativeHighlight: true,
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',
