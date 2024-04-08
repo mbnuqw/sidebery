@@ -253,7 +253,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       ToggleField(
-        label="settings.mouse.bookmarks.new_tab_activate"
+        label="settings.mouse.bh.new_tab_activate"
         v-model:value="Settings.state.bookmarksLeftClickActivate"
         :inactive="Settings.state.bookmarksLeftClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
@@ -274,7 +274,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       ToggleField(
-        label="settings.mouse.bookmarks.new_tab_activate"
+        label="settings.mouse.bh.new_tab_activate"
         v-model:value="Settings.state.bookmarksMidClickActivate"
         :inactive="Settings.state.bookmarksMidClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
@@ -303,7 +303,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       ToggleField(
-        label="settings.mouse.history.new_tab_activate"
+        label="settings.mouse.bh.new_tab_activate"
         v-model:value="Settings.state.historyLeftClickActivate"
         :inactive="Settings.state.historyLeftClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")
@@ -324,7 +324,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       ToggleField(
-        label="settings.mouse.history.new_tab_activate"
+        label="settings.mouse.bh.new_tab_activate"
         v-model:value="Settings.state.historyMidClickActivate"
         :inactive="Settings.state.historyMidClickAction !== 'open_in_new'"
         @update:value="Settings.saveDebounced(150)")

@@ -900,7 +900,6 @@ export const sidebarTranslations: Translations = {
   },
   'colors.orange': {
     en: 'Orange',
-    de: 'Orange',
     hu: 'narancssárga',
     ru: 'Оранжевый',
     zh: '橙色',
@@ -915,7 +914,6 @@ export const sidebarTranslations: Translations = {
   },
   'colors.pink': {
     en: 'Pink',
-    de: 'Pink',
     hu: 'rózsaszín',
     ru: 'Розовый',
     zh: '粉色',
