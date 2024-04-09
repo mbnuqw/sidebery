@@ -7,14 +7,15 @@ section(ref="el")
     .btn(type="file")
       .label {{translate('settings.help_imp_data')}}
       input(type="file" accept="application/json" @input="importData")
+  .ctrls
     .btn(@click="showDbgDetails()") {{translate('settings.debug_info')}}
     a.btn(@click="SetupPage.copyDevtoolsUrl()") {{translate('settings.copy_devtools_url')}}
     a.btn(
       tabindex="-1"
-      href="https://github.com/mbnuqw/sidebery/issues/new?template=Bug_report.md") {{translate('settings.repo_bug')}}
+      href="https://github.com/mbnuqw/sidebery/issues/new?template=1-bug-report.yml") {{translate('settings.repo_bug')}}
     a.btn(
       tabindex="-1"
-      href="https://github.com/mbnuqw/sidebery/issues/new?template=Feature_request.md") {{translate('settings.repo_feature')}}
+      href="https://github.com/mbnuqw/sidebery/issues/new?template=2-feature-request.yml") {{translate('settings.repo_feature')}}
   .ctrls
     .btn.-warn(@click="reloadAddon") {{translate('settings.reload_addon')}}
     .btn.-warn(@click="resetSettings") {{translate('settings.reset_settings')}}
