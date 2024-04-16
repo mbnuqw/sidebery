@@ -501,5 +501,8 @@
   },
   "background": {
     "page": "bg/background.html"
+  },
+  "omnibox": {
+    "keyword": "="
   }
 }

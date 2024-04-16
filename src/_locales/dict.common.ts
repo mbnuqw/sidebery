@@ -2780,6 +2780,13 @@ export const commonTranslations: Translations = {
     zh_CN: '扩展没有在隐私窗口中运行的权限',
     zh_TW: '擴充套件沒有於隱私視窗中執行的權限',
   },
+
+  // ---
+  // -- Omnibox
+  // -
+  'omnibox.container_switch.prompt': {
+    en: 'Type the name of the container you want for this tab…',
+  },
 }
 
 if (!window.translations) window.translations = commonTranslations

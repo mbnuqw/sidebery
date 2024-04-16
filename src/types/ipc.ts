@@ -114,6 +114,7 @@ export type SidebarActions = {
 
   moveTabsToThisWin: (tabs: Tab[], dst?: DstPlaceInfo) => Promise<boolean>
   openTabs: (items: ItemInfo[], dst: DstPlaceInfo) => Promise<boolean>
+  reopenInContainer: (ids: ID[], containerId: string) => Promise<void>
 
   notify: (config: Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
