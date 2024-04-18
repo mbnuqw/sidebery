@@ -12,16 +12,19 @@ export function createSettingsMenu(): void {
     id: 'open_settings',
     title: translate('menu.browserAction.open_settings'),
     icons: { '16': 'assets/logo-native.svg' },
-    onclick: () => browser.runtime.openOptionsPage(),
-    contexts: ['browser_action'],
+    contexts: ['action'],
   })
   browser.menus.create({
     id: 'create_snapshot',
     title: translate('menu.browserAction.create_snapshot'),
     icons: { '16': 'assets/snapshot-native.svg' },
-    onclick: () => SnapshotsBg.createSnapshot(),
-    contexts: ['browser_action'],
+    contexts: ['action'],
   })
+}
+
+function onMenuClicked(info: browser.menus.OnClickData): void {
+  if (info.menuItemId === 'open_settings') browser.runtime.openOptionsPage()
+  else if (info.menuItemId === 'create_snapshot') SnapshotsBg.createSnapshot()
 }
 
 function onMenuHiddenBg(): void {
@@ -31,8 +34,10 @@ function onMenuHiddenBg(): void {
 
 export function setupListeners(): void {
   browser.menus.onHidden.addListener(onMenuHiddenBg)
+  browser.menus.onClicked.addListener(onMenuClicked)
 }
 
 export function resetListeners(): void {
   browser.menus.onHidden.removeListener(onMenuHiddenBg)
+  browser.menus.onClicked.removeListener(onMenuClicked)
 }

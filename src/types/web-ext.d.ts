@@ -530,7 +530,7 @@ declare namespace browser {
   /**
    * Browser action button
    */
-  namespace browserAction {
+  namespace action {
     type BrowserActionButton = 0 | 1
 
     interface PopupDetails {
@@ -595,7 +595,7 @@ declare namespace browser {
    */
   namespace menus {
     // prettier-ignore
-    type ContextType = 'all' | 'audio' | 'bookmark' | 'browser_action'
+    type ContextType = 'all' | 'audio' | 'bookmark' | 'action'
     | 'editable' | 'frame' | 'image' | 'link' | 'page' | 'page_action'
     | 'password' | 'selection' | 'tab' | 'tools_menu' | 'video'
 
@@ -639,6 +639,14 @@ declare namespace browser {
     function overrideContext(contextOptions: ContextOptions): void
 
     const onHidden: EventTarget<HiddenListener>
+
+    interface OnClickData {
+      button?: number
+      menuItemId: string
+    }
+    type ClickListener = (info: OnClickData, tab: tabs.Tab) => void
+
+    const onClicked: EventTarget<ClickListener>
   }
 
   /**
