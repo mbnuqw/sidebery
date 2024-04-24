@@ -37,6 +37,7 @@
     "storage",
     "unlimitedStorage",
     "sessions",
+    "scripting",
     "menus",
     "menus.overrideContext",
     "search",
