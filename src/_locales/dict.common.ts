@@ -333,7 +333,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_default_container': {
     en: 'Default container',
-    de: 'Standard-Umgebung',
+    de: 'Standardumgebung',
     hu: 'Alapértelmezett konténer',
     ru: 'Стандартный контейнер',
     zh_CN: '默认容器',
