@@ -520,7 +520,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.nav_settings_dnd': {
     en: 'Drag and Drop',
-    de: 'Ziehen-und-Loslassen',
+    de: 'Ziehen und Loslassen',
     hu: 'Húzd és ejtsd',
     ru: 'Перетаскивание',
     zh: '拖曳',
@@ -1496,7 +1496,7 @@ export const setupPageTranslations: Translations = {
   // - Drag and drop
   'settings.dnd_title': {
     en: 'Drag and Drop',
-    de: 'Ziehen-und-Loslassen',
+    de: 'Ziehen und Loslassen',
     hu: 'Húzd és ejtsd',
     ru: 'Перетаскивание',
     zh: '拖曳',
@@ -1593,7 +1593,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.dnd_outside': {
     en: 'Action on drag-and-drop to the outside of sidebar',
-    de: 'Aktion beim Ziehen-und-Loslassen aus der Seitenleiste heraus',
+    de: 'Aktion beim Ziehen und Loslassen aus der Seitenleiste heraus',
     hu: 'Az oldalsávon kívülre történő húzás művelete',
     ru: 'Действие при перетаскивании за пределы боковой панели',
     zh_CN: '拖放到侧边栏外部时执行操作',
