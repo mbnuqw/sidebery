@@ -1503,7 +1503,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.dnd_tab_act': {
     en: 'Activate tab on hover',
-    de: 'Tabs beim Drüberfahren mit der Maus aktivieren',
+    de: 'Tabs beim Darüberfahren mit der Maus aktivieren',
     hu: 'Lap aktiválása, ha fölé ér az egérmutató',
     ru: 'Активировать вкладку при наведении',
     zh_CN: '悬停时激活标签页',
@@ -1553,7 +1553,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.dnd_exp': {
     en: 'Expand/Fold the branch on hovering over the',
-    de: 'Zweig ein-/ausklappen beim Drüberfahren mit der Maus über',
+    de: 'Zweig ein-/ausklappen beim Darüberfahren mit der Maus über',
     hu: 'Ág nyitása/csukása, ha az egérmutató érinti',
     ru: 'Развернуть/свернуть ветвь при наведении на',
     zh_CN: '展开/折叠分支当悬停在',
@@ -1895,7 +1895,7 @@ Például: „*”, „ctrl+$”, „ctrl+alt+g”`,
   },
   'settings.tab_rm_btn_hover': {
     en: 'on mouse hover',
-    de: 'beim Drüberfahren mit der Maus',
+    de: 'beim Darüberfahren mit der Maus',
     hu: 'az egérmutató alatt',
     ru: 'при наведении курсора',
     zh_CN: '鼠标悬停',
@@ -2710,7 +2710,7 @@ Például: „*”, „ctrl+$”, „ctrl+alt+g”`,
   // - Tabs Preview
   'settings.tabs.preview': {
     en: 'Show tab preview on mouse hover',
-    de: 'Tab-Vorschau beim Drüberfahren mit der Maus anzeigen',
+    de: 'Tab-Vorschau beim Darüberfahren mit der Maus anzeigen',
     hu: 'Az egérmutató alatti lap előnézetének megjelenítése',
     ru: 'Показывать предварительный просмотр вкладки при наведении курсора мыши',
     zh_CN: '鼠标悬停时显示选项卡预览',
