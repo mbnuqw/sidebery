@@ -90,6 +90,7 @@ export const sidebarTranslations: Translations = {
   // -
   'newTabBar.new_tab': {
     en: 'Open a new tab',
+    de: 'Öffne einen neuen Tab',
     hu: 'Új lap',
     ru: 'Открыть новую вкладку',
     zh_CN: '打开一个新标签',
@@ -97,6 +98,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.in_default_container': {
     en: ' in default container',
+    de: ' in der Standardumgebung',
     hu: ' az alapértelmezett konténerben',
     ru: ' в стандартном контейнере',
     zh_CN: ' 在默认容器中',
@@ -104,6 +106,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.in_container_prefix': {
     en: ' in "',
+    de: ' in der "',
     hu: ' ebben a konténerben: „',
     ru: ' в контейнере "',
     zh_CN: ' 在 "',
@@ -111,6 +114,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.in_container_postfix': {
     en: '" container',
+    de: '" Umgebung',
     hu: '”',
     ru: '"',
     zh_CN: '" 容器中',
@@ -118,6 +122,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
+    de: 'Mittlere Maustaste: Öffne einen untergeordneten Tab',
     hu: 'Középső kattintás: új utódlap',
     ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
     zh_CN: '中键单击：打开子选项卡',
@@ -125,6 +130,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.mid_reopen': {
     en: 'Middle click: Reopen active tab',
+    de: 'Mittlere Maustaste: Aktiven Tab erneut öffnen',
     hu: 'Középső kattintás: az aktív lap újranyitása',
     ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
     zh_CN: '中键点击：重新打开活动标签',
@@ -201,6 +207,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.wtdwOldBookmarks.checkbox_label': {
     en: "Remember and don't ask again",
+    de: 'Merken und nicht erneut fragen',
     hu: 'A válasz megjegyzése, ne kérdezze többször',
     ru: 'Запомнить и больше не спрашивать',
     zh_CN: '记住，不要再问',
@@ -231,6 +238,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.container.name_placeholder': {
     en: 'Container name',
+    de: 'Umgebungsname',
     hu: 'Konténernév',
     ru: 'Название контейнера',
     zh_CN: '容器名称',
@@ -324,6 +332,7 @@ export const sidebarTranslations: Translations = {
   // -
   'sub_panel.bookmarks_panel.title': {
     en: 'Bookmarks',
+    de: 'Lesezeichen',
     hu: 'Könyvjelzők',
     ru: 'Закладки',
     zh_CN: '书签',
@@ -331,6 +340,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.bookmarks_panel.root_title': {
     en: 'All Bookmarks',
+    de: 'Alle Lesezeichen',
     hu: 'Minden könyvjelző',
     ru: 'Все закладки',
     zh_CN: '全部书签',
@@ -338,6 +348,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
+    de: 'Zuletzt geschlossene Tabs',
     hu: 'Legutóbb bezárt lapok',
     ru: 'Недавно закрытые вкладки',
     zh_CN: '最近关闭的标签页',
@@ -345,6 +356,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.history_panel.title': {
     en: 'History',
+    de: 'Chronik',
     hu: 'Előzmények',
     ru: 'История',
     zh_CN: '历史',
@@ -403,6 +415,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.new_tab': {
     en: 'New tab',
+    de: 'Neuer Tab',
     hu: 'Új lap',
     ru: 'Новая вкладка',
     zh_CN: '新标签页',
@@ -470,6 +483,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
+    de: 'Mittlere Maustaste: Schließe Tabs',
     hu: 'Középső kattintás: lapok bezárása',
     ru: 'Средняя кнопка мыши: Закрыть влкадки',
     zh_CN: '中键点击：关闭全部标签',
@@ -477,6 +491,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
+    de: 'Mittlere Maustaste: Schließe Tabs und entferne Panel',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
     zh_CN: '中键点击：关闭标签并移除面板',
@@ -484,6 +499,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
+    de: 'Mittlere Maustaste: Schließe aktiven Tab',
     hu: 'Középső kattintás: az aktív lap bezárása',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
     zh_CN: '中键单击：关闭活动标签页',
@@ -491,6 +507,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
+    de: 'Mittlere Maustaste: Entlade Tabs',
     hu: 'Középső kattintás: lapok kisöprése',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
     zh_CN: '中键单击：卸载标签页',
@@ -498,6 +515,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
+    de: 'Mittlere Maustaste: Verberge Panel',
     hu: 'Középső kattintás: panel elrejtése',
     ru: 'Средняя кнопка мыши: Скрыть панель',
     zh_CN: '中键单击：隐藏面板',
@@ -505,6 +523,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
+    de: 'Mittlere Maustaste: Als Lesezeichen speichern',
     hu: 'Középső kattintás: könyvjelzőzés',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
     zh_CN: '中键点击：保存到书签',
@@ -512,6 +531,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
+    de: 'Mittlere Maustaste: Als Lesezeichen speichern und Panel entfernen',
     hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
     zh_CN: '中键点击：保存到书签并移除面板',
@@ -519,6 +539,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
+    de: 'Mittlere Maustaste: In Lesezeichen-Panel umwandeln',
     hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
     zh_CN: '中键单击：转换到书签面板',
@@ -526,6 +547,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
+    de: 'Mittlere Maustaste: In Lesezeichen umwandeln und Panel verbergen',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
     zh_CN: '中键单击：转换为书签并隐藏面板',
@@ -533,6 +555,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
+    de: 'Mittlere Maustaste: In Tab-Panel umwandeln',
     hu: 'Középső kattintás: átalakítás lappanellá',
     ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
     zh_CN: '中键单击：转换为标签面板',
@@ -572,6 +595,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_create_err': {
     en: 'Cannot create bookmark',
+    de: 'Lesezeichen konnte nicht erstellt werden',
     hu: 'Nem sikerült könyvjelzőzni',
     ru: 'Невозможно создать закладку',
     zh_CN: ' 无法创建书签',
@@ -742,12 +766,14 @@ export const sidebarTranslations: Translations = {
   },
   'notif.panel_conv': {
     en: 'The panel has been successfully converted',
+    de: 'Das Panel wurde erfolgreich umgewandelt',
     hu: 'A panel átalakítása kész',
     ru: 'Панель успешно преобразована',
     zh_TW: '面板已成功被轉換',
   },
   'notif.panel_bkmrkd': {
     en: 'The panel has been successfully bookmarked',
+    de: 'Das Panel wurde erfolgreich als Lesezeichen gespeichert',
     hu: 'A panel könyvjelzőzése kész',
     ru: 'Панель успешно добавлена в закладки',
     zh_TW: '面板已成功加入書籤',
