@@ -86,6 +86,7 @@ export const sidebarTranslations: Translations = {
   // -
   'panel.history.fav_tooltip': {
     en: 'Show history of this site',
+    de: 'Zeige Chronik dieser Seite',
     hu: 'Ennek az oldalnak az előzményei',
     pl: 'Pokaż historię tej strony',
     ru: 'Показать историю этого сайта',
@@ -95,6 +96,7 @@ export const sidebarTranslations: Translations = {
   },
   'panel.history.show_more': {
     en: '...hidden visits:',
+    de: '...ausgeblendete Besuche:',
     hu: '…rejtett látogatások:',
     pl: '...ukryte wizyty:',
     ru: '...скрытых записей:',
@@ -128,7 +130,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.in_container_prefix': {
     en: ' in "',
-    de: ' in der "',
+    de: ' in der Umgebung "',
     hu: ' ebben a konténerben: „',
     pl: ' w kontenerze "',
     ru: ' в контейнере "',
@@ -138,7 +140,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.in_container_postfix': {
     en: '" container',
-    de: '" Umgebung',
+    de: '"',
     hu: '”',
     pl: '"',
     ru: '"',
@@ -148,7 +150,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
-    de: 'Mittlere Maustaste: Öffne einen untergeordneten Tab',
+    de: 'Mittelklick: Öffne einen untergeordneten Tab',
     hu: 'Középső kattintás: új utódlap',
     pl: 'Środkowy przycisk myszy: Otwórz potomną kartę',
     ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
@@ -158,7 +160,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.mid_reopen': {
     en: 'Middle click: Reopen active tab',
-    de: 'Mittlere Maustaste: Aktiven Tab erneut öffnen',
+    de: 'Mittelklick: Aktiven Tab erneut öffnen',
     hu: 'Középső kattintás: az aktív lap újranyitása',
     pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę',
     ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
@@ -601,7 +603,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
-    de: 'Mittlere Maustaste: Schließe Tabs',
+    de: 'Mittelklick: Schließe Tabs',
     hu: 'Középső kattintás: lapok bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij karty',
     ru: 'Средняя кнопка мыши: Закрыть влкадки',
@@ -611,7 +613,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
-    de: 'Mittlere Maustaste: Schließe Tabs und entferne Panel',
+    de: 'Mittelklick: Schließe Tabs und entferne Panel',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zamknij karty i usuń panel',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
@@ -621,7 +623,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
-    de: 'Mittlere Maustaste: Schließe aktiven Tab',
+    de: 'Mittelklick: Schließe aktiven Tab',
     hu: 'Középső kattintás: az aktív lap bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij aktywną kartę',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
@@ -631,7 +633,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
-    de: 'Mittlere Maustaste: Entlade Tabs',
+    de: 'Mittelklick: Entlade Tabs',
     hu: 'Középső kattintás: lapok kisöprése',
     pl: 'Środkowy przycisk myszy: Rozładuj karty',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
@@ -641,7 +643,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
-    de: 'Mittlere Maustaste: Verberge Panel',
+    de: 'Mittelklick: Verberge Panel',
     hu: 'Középső kattintás: panel elrejtése',
     pl: 'Środkowy przycisk myszy: Ukryj panel',
     ru: 'Средняя кнопка мыши: Скрыть панель',
@@ -651,7 +653,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
-    de: 'Mittlere Maustaste: Als Lesezeichen speichern',
+    de: 'Mittelklick: Als Lesezeichen speichern',
     hu: 'Középső kattintás: könyvjelzőzés',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
@@ -661,7 +663,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
-    de: 'Mittlere Maustaste: Als Lesezeichen speichern und Panel entfernen',
+    de: 'Mittelklick: Als Lesezeichen speichern und Panel entfernen',
     hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek i usuń panel',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
@@ -671,7 +673,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
-    de: 'Mittlere Maustaste: In Lesezeichen-Panel umwandeln',
+    de: 'Mittelklick: In Lesezeichen-Panel umwandeln',
     hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
@@ -681,7 +683,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
-    de: 'Mittlere Maustaste: In Lesezeichen umwandeln und Panel verbergen',
+    de: 'Mittelklick: In Lesezeichen umwandeln und Panel verbergen',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek i ukryj panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
@@ -691,7 +693,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
-    de: 'Mittlere Maustaste: In Tab-Panel umwandeln',
+    de: 'Mittelklick: In Tab-Panel umwandeln',
     hu: 'Középső kattintás: átalakítás lappanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu kart',
     ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
@@ -890,7 +892,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
-    de: 'Kann Tab-Panel nicht in Lesezeichen speichern',
+    de: 'Tab-Panel konnte nicht in Lesezeichen gespeichert werden',
     hu: 'Nem sikerült könyvjelzőzni a lappanelt',
     pl: 'Nie można zapisać panelu kart do zakładek',
     ru: 'Невозможно сохранить панель вкладок в закладки',
@@ -900,7 +902,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.folder': {
     en: 'Cannot create destination folder',
-    de: 'Zielordner kann nicht erstellt werden',
+    de: 'Zielordner konnte nicht erstellt werden',
     hu: 'Nem sikerült létrehozni a célmappát',
     pl: 'Nie można stworzyć docelowego folderu',
     ru: 'Невозможно создать папку для панели',
@@ -910,7 +912,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.folder_upd': {
     en: 'Cannot update destination folder',
-    de: 'Kann Zielordner nicht aktualisieren',
+    de: 'Zielordner konnte nicht aktualisiert werden',
     hu: 'Nem sikerült frissíteni a célmappát',
     pl: 'Nie można zaktualizować docelowego folderu',
     ru: 'Невозможно обновить папку для панели',
@@ -920,7 +922,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.bookmarks': {
     en: 'Cannot create bookmarks',
-    de: 'Lesezeichen können nicht erstellt werden',
+    de: 'Lesezeichen konnten nicht erstellt werden',
     hu: 'Nem sikerült létrehozni a könyvjelzőket',
     pl: 'Nie można stworzyć zakładki',
     ru: 'Невозможно создать закладки',
@@ -930,7 +932,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
-    de: 'Kann Panel aus Lesezeichen nicht wiederherstellen',
+    de: 'Panel konnte nicht aus Lesezeichen wiederherstellt werden',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
     pl: 'Nie można przywrócić panelu z zakładek',
     ru: 'Невозможно восстановить панель из закладок',
@@ -950,7 +952,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_ok': {
     en: 'The tab panel has been successfully restored',
-    de: 'Tab-Panel wiederhergestellt',
+    de: 'Tab-Panel erfolgreich wiederhergestellt',
     hu: 'A lappanel helyreállítása kész',
     pl: 'Panel kart został pomyślnie przywrócony',
     ru: 'Панель вкладок успешно восстановлена',
@@ -960,7 +962,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.panel_conv': {
     en: 'The panel has been successfully converted',
-    de: 'Das Panel wurde erfolgreich umgewandelt',
+    de: 'Panel erfolgreich umgewandelt',
     hu: 'A panel átalakítása kész',
     pl: 'Panel został pomyślnie przekonwertowany',
     ru: 'Панель успешно преобразована',
@@ -969,7 +971,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.panel_bkmrkd': {
     en: 'The panel has been successfully bookmarked',
-    de: 'Das Panel wurde erfolgreich als Lesezeichen gespeichert',
+    de: 'Panel erfolgreich als Lesezeichen gespeichert',
     hu: 'A panel könyvjelzőzése kész',
     pl: 'Panel został pomyślnie zapisany do zakładek',
     ru: 'Панель успешно добавлена в закладки',
@@ -997,7 +999,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
-    de: 'Kann Quellordner nicht finden',
+    de: 'Quellordner konnte nicht gefunden werden',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie można znaleźć nadrzędnego folderu',
     ru: 'Невозможно найти корневую папку',
@@ -1077,7 +1079,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.cc.err': {
     en: 'Unable to clear cookies',
-    de: 'Cookies können nicht gelöscht werden',
+    de: 'Cookies konnten nicht gelöscht werden',
     hu: 'A sütik nem törölhetők',
     pl: 'Nie można wyczyścić ciasteczek',
     ru: 'Не удалось очистить куки',
