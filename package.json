@@ -43,7 +43,7 @@
     "pug": "3.0.2",
     "stylus": "0.63.0",
     "typescript": "5.4.4",
-    "web-ext": "7.11.0"
+    "web-ext": "8.2.0"
   },
   "dependencies": {
     "vue": "3.4.21"
