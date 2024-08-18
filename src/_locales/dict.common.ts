@@ -32,7 +32,7 @@ export const commonTranslations: Translations = {
     pl: 'np. https://example.com',
     ru: 'Ссылка...',
     zh: '例如 https://example.com',
-    js: '例: https://example.com',
+    ja: '例: https://example.com',
   },
 
   // ---
@@ -89,7 +89,6 @@ export const commonTranslations: Translations = {
   },
   'btn.ok': {
     en: 'Ok',
-    pl: 'Ok',
     ru: 'Ок',
     zh: '是',
     ja: 'OK',
@@ -421,7 +420,6 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_url_label': {
     en: 'URL',
-    pl: 'URL',
     ru: 'URL-адрес',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
@@ -2332,31 +2330,6 @@ export const commonTranslations: Translations = {
       if (rh > 0) return `${d}n, ${rh}ó`
       else return `${d}d`
     },
-    pl: ms => {
-      if (ms === undefined || typeof ms === 'string') return '?'
-
-      const s = Math.trunc(ms / 1000)
-      if (s < 60) return `${s}s`
-
-      const rs = s % 60
-      const m = (s - rs) / 60
-      if (m < 60) {
-        if (rs > 0) return `${m}m, ${rs}s`
-        else return `${m}m`
-      }
-
-      const rm = m % 60
-      const h = (m - rm) / 60
-      if (h < 24) {
-        if (rm > 0) return `${h}h, ${rm}m`
-        else return `${h}h`
-      }
-
-      const rh = h % 24
-      const d = (h - rh) / 24
-      if (rh > 0) return `${d}d, ${rh}h`
-      else return `${d}d`
-    },
     ru: ms => {
       if (ms === undefined || typeof ms === 'string') return '?'
 
@@ -2592,7 +2565,6 @@ export const commonTranslations: Translations = {
     en: 'Favicons cache',
     de: 'Favicons Zwischenspeicher',
     hu: 'Webhelyikonok gyorsítótára',
-    pl: 'Favicons cache',
     ru: 'Кэш иконок',
     zh_CN: '网站图标缓存',
     zh_TW: '網站圖示快取',

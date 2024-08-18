@@ -15,8 +15,8 @@ export const setupPageTranslations: Translations = {
     ja: '名前...',
   },
   'container.icon_label': {
-    de: 'Symbol',
     en: 'Icon',
+    de: 'Symbol',
     hu: 'Ikon',
     pl: 'Symbol',
     ru: 'Иконка',
@@ -56,7 +56,6 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_label': {
     en: 'Proxy',
-    pl: 'Proxy',
     ru: 'Прокси',
     zh: '代理',
     ja: 'プロキシ',
@@ -360,7 +359,6 @@ export const setupPageTranslations: Translations = {
   'panel.custom_icon_url_btn': {
     en: 'URL',
     zh_TW: '網址',
-    ja: 'URL',
   },
   'panel.custom_icon_file_btn': {
     en: 'File',
@@ -424,7 +422,6 @@ export const setupPageTranslations: Translations = {
   'panel.url_label': {
     en: 'URL',
     zh_TW: '網址',
-    ja: 'URL',
   },
   'panel.root_id_label': {
     en: 'Root folder',
@@ -604,7 +601,6 @@ export const setupPageTranslations: Translations = {
     en: 'Menu',
     de: 'Menü',
     hu: 'Menü',
-    pl: 'Menu',
     ru: 'Меню',
     zh_CN: '菜单',
     zh_TW: '選單',
@@ -1902,7 +1898,6 @@ export const setupPageTranslations: Translations = {
     hu: 'Alt',
     pl: 'Alt',
     zh: 'Alt',
-    ja: 'alt',
   },
   'settings.dnd_mod_shift': {
     en: 'shift',
@@ -1910,7 +1905,6 @@ export const setupPageTranslations: Translations = {
     hu: 'Shift',
     pl: 'Shift',
     zh: 'Shift',
-    ja: 'shift',
   },
   'settings.dnd_mod_ctrl': {
     en: 'ctrl',
@@ -1918,7 +1912,6 @@ export const setupPageTranslations: Translations = {
     hu: 'Ctrl',
     pl: 'Ctrl',
     zh: 'Ctrl',
-    ja: 'ctrl',
   },
   'settings.dnd_mod_none': {
     en: 'none',
@@ -3026,7 +3019,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs branch on expanding another branch',
-    de: 'Zweig beim Öffnen eines anderen Zweiges automatisch einklappen', 
+    de: 'Zweig beim Öffnen eines anderen Zweiges automatisch einklappen',
     hu: 'Az ágak becsukása másik ág lenyitásakor',
     pl: 'Automatycznie zwijaj karty po rozwinięciu innej gałęzi',
     ru: 'Автоматическое сворачивание ветки вкладок при открытии другой ветки',
@@ -3353,7 +3346,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.colorize_branches_src_url': {
     en: 'URL',
     zh_TW: '網址',
-    ja: 'URL',
   },
   'settings.colorize_branches_src_domain': {
     en: 'domain',
@@ -3991,7 +3983,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.theme_proton': {
     en: 'proton',
     de: 'Proton',
-    pl: 'proton',
     ru: 'протон',
     zh_CN: '质子',
     zh_TW: '質子',
@@ -4700,6 +4691,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'With Ctrl key pressed',
     de: 'Mit gedrückter Strg-Taste',
     hu: 'Nyomva tartott Ctrl billentyűvel',
+    pl: 'Z klawiszem Ctrl naciśniętym',
     ru: 'С зажатой клавишей Ctrl',
     zh_CN: '按住 Ctrl 键',
     zh_TW: '按住 Ctrl 鍵',

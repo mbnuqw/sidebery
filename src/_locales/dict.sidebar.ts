@@ -463,8 +463,6 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.tabs_panel': {
     en: 'panel',
     de: 'Panel',
-    hu: 'panel',
-    pl: 'panel',
     ru: 'панель',
     zh: '面板',
     ja: 'パネル',
