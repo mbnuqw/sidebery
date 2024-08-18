@@ -163,7 +163,7 @@ export const commonTranslations: Translations = {
   },
   'panel.bookmarks.req_perm': {
     en: 'Bookmarks panel requires "Bookmarks" permission.',
-    de: 'Lesezeichen Panel erfordert "Lesezeichen" Berechtigung',
+    de: 'Lesezeichen-Panel erfordert "Lesezeichen"-Berechtigung',
     hu: 'A könyvjelzők eléréséhez engedély szükséges.',
     pl: 'Panel zakładek wymaga pozwolenia "Zakładki".',
     ru: 'Панель закладок требует разрешения "Закладки".',
@@ -197,7 +197,7 @@ export const commonTranslations: Translations = {
   },
   'panel.history.req_perm': {
     en: 'History panel requires "History" permission.',
-    de: 'Chronik-Panel erfordert "Chronik" Berechtigung',
+    de: 'Chronik-Panel erfordert "Chronik"-Berechtigung',
     hu: 'Az előzmények eléréséhez engedély szükséges.',
     pl: 'Panel historii wymaga pozwolenia "Historia".',
     ru: 'Панель истории требует разрешения "История".',
@@ -382,7 +382,7 @@ export const commonTranslations: Translations = {
 
   'popup.new_tab_shortcuts.title': {
     en: 'New Tab Shortcuts',
-    de: 'Neue Tab-Verknüpfungen',
+    de: '"Neuer Tab"-Verknüpfungen',
     hu: 'Új lap parancsikonjai',
     pl: 'Skróty nowej karty',
     ru: 'Ярлыки новой вкладки',
@@ -496,7 +496,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_container_label': {
     en: 'If tab is in a container',
-    de: 'Wenn Tab in einer Umgebung ist',
+    de: 'Wenn der Tab sich in folgender Umgebung befindet',
     hu: 'Ha a lap egy konténerben van',
     pl: 'Jeśli karta jest w kontenerze',
     ru: 'Если вкладка в контейнере',
@@ -506,7 +506,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
-    de: 'Wenn Tab URL hat ("Zeichenkette" oder "/RegExp/")',
+    de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     hu: 'Ha az URL illeszkedik ("szövegrészlet" vagy /RegExp/)',
     pl: 'Jeśli karta ma URL ("substring" or "/RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
@@ -515,7 +515,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
     en: 'If tab at the top level of tree',
-    de: 'Wenn Tab auf der obersten Ebene des Baums ist',
+    de: 'Wenn der Tab sich auf der obersten Ebene des Baumes befindet',
     hu: 'Ha a lap legfelső szintű',
     pl: 'Jeśli karta jest na najwyższym poziomie drzewa',
     ru: 'Если вкладка на верхнем уровне дерева',
@@ -555,7 +555,7 @@ export const commonTranslations: Translations = {
 
   'popup.tab_reopen_rules.title': {
     en: 'Tab reopening rules',
-    de: 'Regeln für die Wiedereröffnung von Tabs',
+    de: 'Regeln für das Neuöffnen von Tabs',
     hu: 'Lap újranyitásának szabályai',
     pl: 'Zasady ponownego otwarcia karty',
     ru: 'Правила',
@@ -634,7 +634,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
-    de: 'Wenn Tab URL hat ("Zeichenkette" oder "/RegExp/")',
+    de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     hu: 'Ha az URL illeszkedik ("szövegrészlet" vagy /RegExp/)',
     pl: 'Jeśli karta ma URL ("substring" or /"RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
@@ -644,7 +644,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_suffix_include': {
     en: n => `...reopen it in "${n}" container`,
-    de: n => `...in "${n}" Umgebung wieder öffnen`,
+    de: n => `...in Umgebung "${n}" neu öffnen`,
     hu: n => `…újranyitás ebben a konténerben: ${n}`,
     pl: n => `...otwórz ponownie w kontenrze "${n}"`,
     ru: n => `...открыть ee в контейнере "${n}"`,
@@ -654,7 +654,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_suffix_exclude': {
     en: n => `...and it is in "${n}" container, reopen it in default container.`,
-    de: n => `...und in "${n}" Umgebung ist, öffne in Standardumgebung.`,
+    de: n => `...und sich in der Umgebung "${n}" befindet, in Standardumgebung neu öffnen.`,
     hu: n => `…és a jelenlegi konténere „${n}”, akkor újranyitás az alapértelmezett konténerben.`,
     pl: n => `...i jest w kontenerze "${n}", otwórz w domyślnym kontenerze.`,
     ru: n => `...и она находится в контейнере "${n}", открыть ее в контейнере по умолчанию.`,
@@ -723,7 +723,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.reopen_label': {
     en: 'Reopen these tabs in container:',
-    de: 'Diese Tabs in Umgebung wieder öffnen:',
+    de: 'Diese Tabs in folgender Umgebung neu öffnen:',
     hu: 'Újranyitás konténerben:',
     pl: 'Otwórz ponownie te karty w kontenerze:',
     ru: 'Открывать эти вкладки в контейнере:',
@@ -733,7 +733,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.move_label': {
     en: 'Move these tabs to panel:',
-    de: 'Diese Tabs in Panel verschieben:',
+    de: 'Diese Tabs in folgendes Panel verschieben:',
     hu: 'Áthelyezés panelra:',
     pl: 'Przenieś te karty do panelu:',
     ru: 'Перемещать эти вкладки в панель:',
@@ -743,7 +743,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.move_top_lvl_label': {
     en: 'If tab at the top level of tree',
-    de: 'Wenn Tab auf der obersten Ebene des Baums ist',
+    de: 'Wenn sich der Tab auf der obersten Ebene des Baumes befindet',
     hu: 'Ha a lap legfelső szintű',
     pl: 'Jeśli karta jest na najwyższym poziomie drzewa',
     ru: 'Если вкладка на верхнем уровне дерева',
@@ -1258,7 +1258,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_norm_window': {
     en: 'Reopen in new normal window',
-    de: 'Neu öffnen in neuem normalem Fenster',
+    de: 'Neu öffnen in neuem normalen Fenster',
     hu: 'Újranyitás itt: új ablak',
     pl: 'Przywróć w nowym normalnym oknie',
     ru: 'Переоткрыть в новом стандартном окне',
@@ -1268,7 +1268,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_priv_window': {
     en: 'Reopen in new private window',
-    de: 'Neu öffnen in neuem privatem Fenster',
+    de: 'Neu öffnen in neuem privaten Fenster',
     hu: 'Újranyitás itt: új privát ablak',
     pl: 'Przywróć w nowym prywatnym oknie',
     ru: 'Переоткрыть в новом приватном окне',
@@ -1328,7 +1328,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_default_container': {
     en: 'Reopen in default container',
-    de: 'In Standardumgebung neu öffnen',
+    de: 'Neu öffnen in Standardumgebung',
     hu: 'Újranyitás itt: alapértelmezett konténer',
     pl: 'Przywróć w domyślnym kontenerze',
     ru: 'Переоткрыть в стандартном контейнере',
@@ -1999,7 +1999,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.create_separator': {
     en: 'Create separator',
-    de: 'Trennlinie einfügen',
+    de: 'Trennlinie hinzufügen',
     hu: 'Új elválasztó',
     pl: 'Stwórz separator',
     ru: 'Создать разделитель',
@@ -2088,7 +2088,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.inline_group_title': {
     en: 'Sub-menu label...',
-    de: 'Untermenü Bezeichnung...',
+    de: 'Untermenü-Bezeichnung...',
     hu: 'Az almenü neve…',
     pl: 'Nazwa pod-menu...',
     ru: 'Название подменю...',
@@ -2590,7 +2590,7 @@ export const commonTranslations: Translations = {
   },
   'upgrade.fav_cache': {
     en: 'Favicons cache',
-    de: 'Favicons Zwischenspeicher',
+    de: 'Favicon-Zwischenspeicher',
     hu: 'Webhelyikonok gyorsítótára',
     pl: 'Favicons cache',
     ru: 'Кэш иконок',
