@@ -1661,6 +1661,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.nav_bar_btn_sync': {
     en: 'Sync panel',
+    zh_TW: '同步面板',
   },
   'settings.nav_bar_btn_search': {
     en: 'Search',
@@ -1830,8 +1831,8 @@ export const setupPageTranslations: Translations = {
     hu: 'Biztos törölhető a konténer: „',
     pl: 'Jesteś pewny, że chcesz usunąć kontener "',
     ru: 'Вы действительно хотите удалить контейнер "',
-    zh_CN: '你确定要删除 "',
-    zh_TW: '你確定要刪除「',
+    zh_CN: '您确定要删除 "',
+    zh_TW: '您確定要刪除「',
     ja: '「',
   },
   'settings.contianer_remove_confirm_postfix': {
@@ -4643,6 +4644,13 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_second_click_act_prev_no_unload': {
     en: 'Skip unloaded tabs',
+    de: 'Überspringe entladene Tabs',
+    hu: 'A kisöpört lapok kihagyása',
+    pl: 'Pomiń niezaładowane karty',
+    ru: 'Пропускать выгруженые',
+    zh_CN: '跳过已卸载的标签',
+    zh_TW: '跳過已卸載的分頁',
+    ja: 'アンロードされたタブをスキップする',
   },
   'settings.activate_on_mouseup': {
     en: 'Activate tab on mouse button release',
@@ -4840,7 +4848,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     pl: 'zamknij kartę',
     ru: 'закрыть вкладку',
     zh_CN: '关闭标签页',
-    zh_TW: '關閉分頁',
+    zh_TW: '關閉',
     ja: 'タブを閉じる',
   },
   'settings.tab_action_discard': {
@@ -4859,7 +4867,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'lap kirakása vagy bezárása',
     ru: 'выгрузить или закрыть вкладку',
     zh_CN: '卸载或关闭选项卡',
-    zh_TW: '關閉分頁或卸載',
+    zh_TW: '卸載或關閉',
   },
   'settings.tab_action_edit_title': {
     en: 'edit title',
@@ -5623,8 +5631,8 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Biztosan alkalmazhatók szinkronizált adatok?',
     pl: 'Jesteś pewien, że chcesz zastosować zsynchronizowane dane?',
     ru: 'Вы действительно хотите применить синхронизированные данные?',
-    zh_CN: '你确定要应用同步数据吗？',
-    zh_TW: '你確定要應用同步資料嗎？',
+    zh_CN: '您确定要应用同步数据吗？',
+    zh_TW: '您確定要應用同步資料嗎？',
     ja: '同期データを適用しますか？',
   },
   'settings.sync.apply_err': {
@@ -5663,10 +5671,10 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: `Sidebery использует синхронизацию Firefox, поэтому:
 - Чтобы синхронизация работала, вам нужно зайти в Firefox аккаунт
 - Чтобы быть уверенным в том, что данные загрузились на сервер синхронизации Firefox, необходимо нажать на кнопку "Синхронизировать" в настройках или в вашем профиле в главном меню`,
-    zh_CN: `- Sidebery 使用 Firefox 同步，因此你需要登录到 Firefox 帐户才能运行
-- 要确保数据已上传到 Firefox 同步服务器，你需要在 Firefox 设置或主菜单的个人资料中按"立即同步"按钮（三行按钮）`,
-    zh_TW: `- 你需要登入 Mozilla 帳號方可運行，因為 Sidebery 使用 Firefox 同步來實作本功能
-- 要確保資料已上傳到 Firefox 同步伺服器，你需要在下列六處擇一按「立刻同步」按鈕：
+    zh_CN: `- Sidebery 使用 Firefox 同步，因此您需要登录到 Firefox 帐户才能运行
+- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按"立即同步"按钮（三行按钮）`,
+    zh_TW: `- 您需要登入 Mozilla 帳號方可運行，因為 Sidebery 使用 Firefox 同步來實作本功能
+- 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列六處擇一按「立刻同步」按鈕：
   -「工具列 > 應用程式選單 > Mozilla 帳號（設定 > 同步）」
   -「工具列 > Mozilla 帳號（設定 > 同步）」
   -「選單列 > 工具（編輯 > 設定 > 同步）」`,
@@ -5678,11 +5686,23 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     en: `Notes:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
+    zh_TW: `說明：
+- 您需要登入 Mozilla 帳號方可運行
+- 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列八處擇一按「立刻同步」按鈕：
+  -「工具列 > 應用程式選單 > Mozilla 帳號（ > 同步設定）」
+  -「工具列 > 應用程式選單 > 設定 > 同步」
+  -「工具列 > Mozilla 帳號（ > 同步設定）」
+  -「工具列 > 設定 > 同步」
+  -「選單列 > 編輯 > 設定 > 同步」
+  -「選單列 > 工具」`,
   },
   'settings.sync_gd_note': {
     en: `Notes:
 - Sidebery doesn't have access to your files on Google Drive
 - Sidebery files are stored in JSON, so Google can read their contents (encryption is planned)`,
+    zh_TW: `說明：
+- Sidebery 不會存取您在 Google 雲端硬碟上的檔案
+- Sidebery 以 JSON 格式儲存同步檔案，因此 Google 可以讀取其內容（計劃實做加密）`,
   },
   'settings.sync_update_btn': {
     en: 'Update synced data',
@@ -5802,8 +5822,8 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Biztosan alaphelyzetbe állíthatók a beállítások?',
     pl: 'Jesteś pewien, że chcesz zresetować ustawienia?',
     ru: 'Вы уверены, что хотите сбросить настройки?',
-    zh_CN: '你确定要重置设置吗？',
-    zh_TW: '你確定要重設設定嗎？',
+    zh_CN: '您确定要重置设置吗？',
+    zh_TW: '您確定要重設設定嗎？',
     ja: '設定をリセットしてもよろしいですか？',
   },
   'settings.export_title': {

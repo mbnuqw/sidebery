@@ -210,6 +210,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.sync.title': {
     en: 'Sync',
+    zh_TW: '同步',
   },
 
   // ---
@@ -1512,6 +1513,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sync': {
     en: 'Sync',
+    zh_TW: '同步',
   },
   'menu.tab.pin': {
     en: 'Pin',
@@ -2606,8 +2608,8 @@ export const commonTranslations: Translations = {
     hu: 'A folytatás előtt készíthető egy biztonsági mentés',
     pl: 'Możesz zapisać kopię zapasową i kontynuować',
     ru: 'Вы можете сохранить резервную копию и продолжить',
-    zh_CN: '你可以保存备份并继续',
-    zh_TW: '你可以儲存備份並繼續',
+    zh_CN: '您可以保存备份并继续',
+    zh_TW: '您可以儲存備份並繼續',
     ja: 'バックアップを保存して続行できます',
   },
   'upgrade.links': {

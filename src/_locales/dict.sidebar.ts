@@ -33,8 +33,8 @@ export const sidebarTranslations: Translations = {
     hu: 'Biztosan bezárható a lap: „',
     pl: 'jesteś pewnien, że chcesz zamknąć karty ',
     ru: 'Вы действительно хотите закрыть ',
-    zh_CN: '你确定要关闭 ',
-    zh_TW: '你確定要關閉 ',
+    zh_CN: '您确定要关闭 ',
+    zh_TW: '您確定要關閉 ',
     ja: '本当に閉じますか',
   },
   'confirm.tabs_close_post': {
@@ -53,8 +53,8 @@ export const sidebarTranslations: Translations = {
     hu: 'Biztosan törölhetők a kijelölt könyvjelzők?',
     pl: 'Jesteś pewien, że chcesz usunąć zaznaczone zakładki?',
     ru: 'Вы действительно хотите удалить выбранные закладки?',
-    zh_CN: '你确定要删除选定的书签吗？',
-    zh_TW: '你確定要刪除選定的書籤嗎？',
+    zh_CN: '您确定要删除选定的书签吗？',
+    zh_TW: '您確定要刪除選定的書籤嗎？',
     ja: '選択したブックマークを削除してもよろしいですか？',
   },
 
