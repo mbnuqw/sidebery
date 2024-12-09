@@ -4716,6 +4716,8 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_pinned_middle_click': {
     en: 'If tab is pinned',
+    de: 'Wenn die Registerkarte angeheftet ist',
+    pl: 'Jeśli karta jest przypięta',
     ru: 'Если вкладка закреплена',
   },
   'settings.multiple_middle_close': {
@@ -4790,6 +4792,8 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_action_unpin': {
     en: 'unpin',
+    de: 'Lösen',
+    pl: 'odepnij',
     ru: 'открепить',
   },
   'settings.tab_action_mute': {
