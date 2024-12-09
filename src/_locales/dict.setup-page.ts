@@ -4788,6 +4788,10 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '釘選',
     ja: 'ピン留め',
   },
+  'settings.tab_action_unpin': {
+    en: 'unpin',
+    ru: 'открепить',
+  },
   'settings.tab_action_mute': {
     en: 'mute',
     de: 'Stumm schalten',

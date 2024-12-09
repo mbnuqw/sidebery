@@ -284,6 +284,9 @@ function onMouseDown(e: MouseEvent): void {
       } else if (Settings.state.tabPinnedMiddleClick === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
         return
+      } else if (Settings.state.tabPinnedMiddleClick === 'unpin') {
+        Tabs.unpinTabs([tab.id])
+        return
       }
     }
 

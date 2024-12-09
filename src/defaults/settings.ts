@@ -276,7 +276,7 @@ export const SETTINGS_OPTIONS = {
   tabLongRightClick: ['reload', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
     'new_child', 'edit_title', 'none'],
   tabMiddleClick: ['close', 'discard', 'discard_or_close', 'duplicate', 'dup_child', 'none'],
-  tabPinnedMiddleClick: ['close', 'discard', 'discard_or_close', 'duplicate', 'none'],
+  tabPinnedMiddleClick: ['close', 'discard', 'discard_or_close', 'duplicate', 'unpin', 'none'],
   tabMiddleClickModifier: ['discard', 'discard_or_close', 'duplicate', 'dup_child', 'edit_title', 'none'],
   tabCloseMiddleClick: ['close', 'discard', 'discard_or_close'],
   tabsPanelLeftClickAction: ['prev', 'expand', 'parent', 'tab', 'none'],
