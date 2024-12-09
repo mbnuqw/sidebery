@@ -4714,6 +4714,10 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '按住 Shift 鍵',
     ja: 'Shift キーを押しながら',
   },
+  'settings.tab_pinned_middle_click': {
+    en: 'If tab is pinned',
+    ru: 'Если вкладка закреплена',
+  },
   'settings.multiple_middle_close': {
     en: 'Use multi-selection when closing tabs with middle-click',
     de: 'Gestatte Mehrfachauswahl beim Schließen von Tabs über Mittelklick',

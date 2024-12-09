@@ -192,6 +192,13 @@ section(ref="el")
         :opts="Settings.getOpts('tabMiddleClickModifier')"
         :folded="true"
         @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.tab_pinned_middle_click"
+        optLabel="settings.tab_action_"
+        v-model:value="Settings.state.tabPinnedMiddleClick"
+        :opts="Settings.getOpts('tabPinnedMiddleClick')"
+        :folded="true"
+        @update:value="Settings.saveDebounced(150)")
       ToggleField(
         label="settings.multiple_middle_close"
         v-model:value="Settings.state.multipleMiddleClose"

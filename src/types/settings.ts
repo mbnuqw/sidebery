@@ -222,6 +222,7 @@ export interface SettingsState {
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]
   tabLongRightClick: (typeof SETTINGS_OPTIONS.tabLongRightClick)[number]
   tabMiddleClick: (typeof SETTINGS_OPTIONS.tabMiddleClick)[number]
+  tabPinnedMiddleClick: (typeof SETTINGS_OPTIONS.tabPinnedMiddleClick)[number]
   tabMiddleClickCtrl: (typeof SETTINGS_OPTIONS.tabMiddleClickModifier)[number]
   tabMiddleClickShift: (typeof SETTINGS_OPTIONS.tabMiddleClickModifier)[number]
   tabCloseMiddleClick: (typeof SETTINGS_OPTIONS.tabCloseMiddleClick)[number]
