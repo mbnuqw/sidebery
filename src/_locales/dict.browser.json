@@ -8,7 +8,7 @@
     "hu": "Böngészőlapok fanézetben, könyvjelzők és előzmények egy nagymértékben személyre szabható oldalsávon.",
     "pl": "Drzewo kart, zakładki i historia w bogato konfiguralnym panelu bocznym.",
     "ru": "Древовидные вкладки, закладки и история на настраиваемой боковой панели.",
-    "zh_CN": "高度可配置的侧边栏中的选项卡、书签和历史记录的树结构。",
+    "zh_CN": "标签页树、书签和历史记录在高度可配置的侧边栏中。",
     "zh_TW": "具有分頁樹、書籤和歷史紀錄功能的高自訂性側邊欄。",
     "ja": "高度にカスタマイズ可能なサイドバー内のタブツリー、ブックマーク、履歴。"
   },
@@ -249,7 +249,7 @@
     "hu": "A kijelölt (vagy aktív) lapok csoportosítása",
     "pl": "Grupuj zaznaczone (lub aktywne) karty",
     "ru": "Сгруппировать выбранные (или активные) вкладки",
-    "zh_CN": "将选定（或活动）选项卡分配给组",
+    "zh_CN": "将选定（或活动）标签页分配给组",
     "zh_TW": "將選定（或當前）分頁分給群組",
     "ja": "選択した（またはアクティブな）タブをグループ化"
   },
@@ -259,7 +259,7 @@
     "hu": "A kijelölt (vagy aktív) lapok csoportosítása és ugrás a csoportoldalra",
     "pl": "Grupuj zaznaczone (lub aktywne) karty i przełącz na stronę grupy",
     "ru": "Сгруппировать выбранные (или активные) вкладки и переключится на групповую страницу",
-    "zh_CN": "将选定（或活动）选项卡分配给组并切换到分组页面",
+    "zh_CN": "将选定（或活动）标签页分配给组并切换到分组页面",
     "zh_TW": "將選定（或當前）分頁分給群組並切換到群組頁面",
     "ja": "選択した（またはアクティブな）タブをグループ化してグループページに切り替え"
   },
@@ -269,7 +269,7 @@
     "hu": "A kijelölt lapok szintcsökkentése",
     "pl": "Spłaszcz zaznaczone karty",
     "ru": "Сбросить вложенность выделенных вкладок",
-    "zh_CN": "树序列化（压平选定选项卡所在的树）",
+    "zh_CN": "树序列化（压平选定标签页所在的树）",
     "zh_TW": "樹序列化（壓平選定分頁所在的樹）",
     "ja": "選択したタブをフラット化"
   },
@@ -289,7 +289,7 @@
     "hu": "Új lap az aktív lap után",
     "pl": "Otwórz nową kartę za aktywną kartą",
     "ru": "Открыть вкладку после активной вкладки",
-    "zh_CN": "在活动标签后打开新标签",
+    "zh_CN": "在活动标签页后打开新标签页",
     "zh_TW": "在當前分頁後開啟新分頁",
     "ja": "アクティブなタブの後に新しいタブを開く"
   },
@@ -299,7 +299,7 @@
     "hu": "Új lap az aktív lap első utódlapjaként",
     "pl": "Otwórz nową kartę jako pierwsze dziecko aktywnej karty",
     "ru": "Открыть дочернюю вкладку (в начале ветви)",
-    "zh_CN": "打开新标签页作为活动标签的第一个子标签",
+    "zh_CN": "打开新标签页作为活动标签页的第一个子标签页",
     "zh_TW": "開啟新分頁作為當前分頁的第一個子分頁",
     "ja": "アクティブなタブの最初の子として新しいタブを開く"
   },
@@ -309,7 +309,7 @@
     "hu": "Új lap az aktív lap utolsó utódlapjaként",
     "pl": "Otwórz nową kartę jako ostatnie dziecko aktywnej karty",
     "ru": "Открыть дочернюю вкладку (в конце ветви)",
-    "zh_CN": "打开新标签页作为活动标签的最后一个子标签",
+    "zh_CN": "打开新标签页作为活动标签页的最后一个子标签页",
     "zh_TW": "開啟新分頁作為當前分頁的最後一個子分頁",
     "ja": "アクティブなタブの最後の子として新しいタブを開く"
   },
@@ -329,7 +329,7 @@
     "hu": "Az aktív lap feletti lapok bezárása",
     "pl": "Zamknij karty powyżej (w obecnym panelu)",
     "ru": "Закрыть вкладки выше (в текущей панели)",
-    "zh_CN": "关闭上面的选项卡（当前面板中）",
+    "zh_CN": "关闭上面的标签页（当前面板中）",
     "zh_TW": "關閉上方分頁（當前面板中）",
     "ja": "上のタブを閉じる（現在のパネル内）"
   },
@@ -339,7 +339,7 @@
     "hu": "Az aktív lap alatti lapok bezárása",
     "pl": "Zamknij karty poniżej (w obecnym panelu)",
     "ru": "Закрыть вкладки ниже (в текущей панели)",
-    "zh_CN": "关闭下面的选项卡（当前面板中）",
+    "zh_CN": "关闭下面的标签页（当前面板中）",
     "zh_TW": "關閉下方分頁（當前面板中）",
     "ja": "下のタブを閉じる（現在のパネル内）"
   },
@@ -349,7 +349,7 @@
     "hu": "A többi lap bezárása (az aktív panelon)",
     "pl": "Zamknij inne karty (w obecnym panelu)",
     "ru": "Закрыть другие вкладки (в текущей панели)",
-    "zh_CN": "关闭其他选项卡（当前面板中）",
+    "zh_CN": "关闭其他标签页（当前面板中）",
     "zh_TW": "關閉其他分頁（當前面板中）",
     "ja": "他のタブを閉じる（現在のパネル内）"
   },
@@ -429,7 +429,7 @@
     "hu": "Az utódlapok kijelölése",
     "pl": "Zaznacz potomne karty",
     "ru": "Выделить дочерние вкладки",
-    "zh_CN": "选择子选项卡",
+    "zh_CN": "选择子标签页",
     "zh_TW": "選取子分頁",
     "ja": "子タブを選択"
   },
@@ -558,7 +558,7 @@
     "hu": "Aktív lapok előzménye: vissza",
     "pl": "Aktywuj historię kart: Wstecz",
     "ru": "История активных вкладок: Назад",
-    "zh_CN": "前一活动标签",
+    "zh_CN": "前一活动标签页",
     "zh_TW": "前一分頁",
     "ja": "アクティブなタブの履歴: 戻る"
   },
@@ -568,7 +568,7 @@
     "hu": "Aktív lapok előzménye: előre",
     "pl": "Aktywuj historię kart: Naprzód",
     "ru": "История активных вкладок: Вперед",
-    "zh_CN": "后一活动标签",
+    "zh_CN": "后一活动标签页",
     "zh_TW": "後一分頁",
     "ja": "アクティブなタブの履歴: 進む"
   },
@@ -578,7 +578,7 @@
     "hu": "A panel aktív lapjainak előzménye: vissza",
     "pl": "Aktywuj historię kart w panelu: Wstecz",
     "ru": "История активных вкладок панели: Назад",
-    "zh_CN": "前一活动标签（活动面板）",
+    "zh_CN": "前一活动标签页（活动面板）",
     "zh_TW": "前一分頁（當前面板）",
     "ja": "パネルのアクティブなタブの履歴: 戻る"
   },
@@ -588,7 +588,7 @@
     "hu": "A panel aktív lapjainak előzménye: előre",
     "pl": "Aktywuj historię kart w panelu: Naprzód",
     "ru": "История активных вкладок панели: Вперед",
-    "zh_CN": "后一活动标签（活动面板）",
+    "zh_CN": "后一活动标签页（活动面板）",
     "zh_TW": "後一分頁（當前面板）",
     "ja": "パネルのアクティブなタブの履歴: 進む"
   },
