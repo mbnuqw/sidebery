@@ -1099,13 +1099,19 @@
     "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）"
   },
   "KbOpenPanelConfig": {
-    "en": "Open panel config"
+    "en": "Open panel config",
+    "zh_CN": "打开面板配置",
+    "zh_TW": "開啟面板設定"
   },
   "KbCopyTitle": {
-    "en": "Copy titles of selected tabs/bookmarks or active tab"
+    "en": "Copy titles of selected tabs/bookmarks or active tab",
+    "zh_CN": "复制选定标签页/书签或活动标签页的标题",
+    "zh_TW": "複製選定分頁/書籤或當前分頁的標題"
   },
   "KbCopyUrl": {
-    "en": "Copy URLs of selected tabs/bookmarks or active tab"
+    "en": "Copy URLs of selected tabs/bookmarks or active tab",
+    "zh_CN": "复制选定标签页/书签或活动标签页的网址",
+    "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
   },
 
   "proxy_popup_title_prefix": {
