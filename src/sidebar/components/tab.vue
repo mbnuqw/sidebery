@@ -20,6 +20,7 @@
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
   :data-preview="tab.reactive.preview"
+  :data-successor="tab.reactive.isSuccessor"
   :title="tab.reactive.tooltip"
   :draggable="!tab.reactive.customTitleEdit"
   @dragstart="onDragStart"

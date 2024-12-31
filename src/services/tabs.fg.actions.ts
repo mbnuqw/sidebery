@@ -82,6 +82,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       color: null,
       isGroup: tab.isGroup,
       preview: false,
+      isSuccessor: false
     }
   }
 
@@ -123,6 +124,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     color: null,
     isGroup: tab.isGroup,
     preview: false,
+    isSuccessor: false
   }
 
   if (reactFn) return reactFn(rProps)
@@ -2728,6 +2730,15 @@ function updateSuccession(exclude?: ID[]) {
         Logs.err('Tabs.updateSuccession: Cannot update succession:', err)
       })
       activeTab.successorTabId = target.id
+
+      // Mark the current successor tab
+      target.reactive.isSuccessor = true
+      const prevPrevActive = Tabs.byId[Tabs.successorId]
+      if (prevPrevActive) {
+        prevPrevActive.reactive.isSuccessor = false
+      }
+      Tabs.successorId = target.id
+
       return target
     }
   }

@@ -75,6 +75,7 @@ export interface ReactiveTabProps {
   customColor: string | null
   isGroup: boolean
   preview: boolean
+  isSuccessor: boolean
 }
 
 export interface InlineTabData {
