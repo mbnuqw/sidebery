@@ -5571,6 +5571,144 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh: '例如 Firefox Beta Home',
     ja: '例: Firefox Beta Home',
   },
+  'settings.sync_use_ff': {
+    en: 'Use Firefox Sync',
+    de: 'Firefox Sync verwenden',
+    hu: 'Használja a Firefox Sync alkalmazást',
+    pl: 'Użyj synchronizacji Firefox',
+    ru: 'Использовать синхронизацию Firefox',
+    zh: '使用 Firefox 同步',
+    ja: 'Firefox Syncを使用する',
+  },
+  'settings.sync_ff_note': {
+    en: `Notes:
+- You need to login to Firefox account to get it working
+- To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
+    de: `Hinweise:
+- Sie müssen sich bei Ihrem Firefox-Konto anmelden, damit es funktioniert.
+- Um sicherzustellen, dass die Daten auf den Firefox-Synchronisierungsserver hochgeladen werden, müssen Sie in den Firefox-Einstellungen oder in Ihrem Profil im Hauptmenü (die Schaltfläche mit den drei Strichen) auf die Schaltfläche „Jetzt synchronisieren“ klicken.`,
+    hu: `Megjegyzések:
+- A működéséhez be kell jelentkeznie a Firefox fiókba
+- Annak érdekében, hogy az adatok feltöltésre kerüljenek a Firefox szinkronizáló szerverére, meg kell nyomnia a "Szinkronizálás most" gombot a Firefox beállításainál vagy a profiljában a főmenüben (háromsoros gomb).`,
+    pl: `Uwagi:
+- Musisz zalogować się na konto Firefox, aby to działało
+- Aby mieć pewność, że dane zostaną przesłane na serwer synchronizacji Firefox, musisz nacisnąć przycisk „Synchronizuj teraz” w ustawieniach Firefox lub w swoim profilu w menu głównym (przycisk z trzema liniami)`,
+    ru: `Примечания:
+- Вам необходимо войти в учетную запись Firefox, чтобы все заработало
+- Чтобы убедиться, что данные загружены на сервер синхронизации Firefox, вам необходимо нажать кнопку «Синхронизировать сейчас» в настройках Firefox или в вашем профиле в главном меню (кнопка с тремя линиями)`,
+    zh_TW: `說明：
+- 您需要登入 Mozilla 帳號方可運行
+- 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列八處擇一按「立刻同步」按鈕：
+  -「工具列 > 應用程式選單 > Mozilla 帳號（ > 同步設定）」
+  -「工具列 > 應用程式選單 > 設定 > 同步」
+  -「工具列 > Mozilla 帳號（ > 同步設定）」
+  -「工具列 > 設定 > 同步」
+  -「選單列 > 編輯 > 設定 > 同步」
+  -「選單列 > 工具」`,
+    ja: `注意:
+- 動作させるには、Firefox アカウントにログインする必要があります
+- データが Firefox 同期サーバーにアップロードされていることを確認するには、Firefox 設定またはメイン メニューのプロファイルにある [今すぐ同期] ボタン (3 本の線のボタン) を押す必要があります`,
+  },
+  'settings.sync_use_gd': {
+    en: 'Use Google Drive (experimental)',
+    de: 'Google Drive verwenden (experimentell)',
+    hu: 'Használja a Google Drive-ot (kísérleti)',
+    pl: 'Użyj Dysku Google (eksperymentalne)',
+    ru: 'Использовать Google Диск (экспериментально)',
+    zh_CN: '使用 Google 云端硬盘（实验性）',
+    zh_TW: '使用 Google 雲端硬碟（實驗性）',
+    ja: 'Google ドライブを使用する (試験的)',
+  },
+  'settings.sync_gd_note': {
+    en: `Notes:
+- Sidebery doesn't have access to your files on Google Drive
+- Sidebery files are stored in JSON, so Google can read their contents (encryption is planned)`,
+    de: `Hinweise:
+- Sidebery hat keinen Zugriff auf Ihre Dateien auf Google Drive
+- Sidebery-Dateien werden in JSON gespeichert, sodass Google deren Inhalte lesen kann (Verschlüsselung ist geplant)`,
+    hu: `Megjegyzések:
+- A Sidebery nem fér hozzá az Ön Google Drive-on lévő fájljaihoz
+- A Sidebery fájlok JSON-ban vannak tárolva, így a Google el tudja olvasni a tartalmukat (titkosítást tervezünk)`,
+    pl: `Uwagi:
+- Sidebery nie ma dostępu do Twoich plików na Dysku Google
+- Pliki Sidebery są przechowywane w formacie JSON, więc Google może odczytać ich zawartość (planowane jest szyfrowanie)`,
+    ru: `Примечания:
+- Sidebery не имеет доступа к вашим файлам на Google Диске
+- Файлы Sidebery хранятся в формате JSON, поэтому Google может читать их содержимое (шифрование планируется)`,
+    zh_TW: `說明：
+- Sidebery 不會存取您在 Google 雲端硬碟上的檔案
+- Sidebery 以 JSON 格式儲存同步檔案，因此 Google 可以讀取其內容（計劃實做加密）`,
+    ja: `注:
+- Sidebery は Google ドライブのファイルにアクセスできません
+- Sidebery ファイルは JSON 形式で保存されるため、Google はファイルの内容を読み取ることができます (暗号化が予定されています)`,
+  },
+  'settings.sync_gd_api': {
+    en: 'Use your own API key',
+    de: 'Eigenen API-Schlüssel verwenden',
+    hu: 'Használja saját API-kulcsát',
+    pl: 'Użyj własnego klucza API',
+    ru: 'Использовать свой собственный API ключ',
+    zh_CN: '使用您自己的 API 密钥',
+    zh_TW: '使用您自己的 API 金鑰',
+    ja: '独自のAPIキーを使用する',
+  },
+  'settings.sync_gd_api_note': {
+    en: 'For advanced users. In case default key gets blocked due to exceeding the limits.',
+    de: 'Für fortgeschrittene Benutzer. Falls der Standardschlüssel aufgrund Überschreitung der Grenzwerte gesperrt wird.',
+    hu: 'Haladó felhasználóknak. Abban az esetben, ha az alapértelmezett kulcs a korlátok túllépése miatt blokkolva lesz.',
+    pl: 'Dla zaawansowanych użytkowników. W przypadku zablokowania domyślnego klucza z powodu przekroczenia limitów.',
+    ru: 'Для продвинутых пользователей. В случае блокировки ключа по умолчанию из-за превышения лимитов.',
+    zh_CN: '适用于高级用户。以防默认密钥因超出限制而被阻止。',
+    zh_TW: '供高級使用者。以防預設金鑰因超出限制而被阻止。',
+    ja: '上級ユーザー向け。制限を超えたためにデフォルト キーがブロックされた場合。',
+  },
+  'settings.sync_gd_api_link': {
+    en: 'Link',
+    zh_CN: '链接',
+    zh_TW: '鏈結',
+  },
+  'settings.sync_gd_api_proj': {
+    en: '1. Create a Google Cloud project:',
+    zh_TW: '1. 建立 Google Cloud 專案：',
+  },
+  'settings.sync_gd_api_drive': {
+    en: '2. Enable Drive API:',
+    zh_TW: '2. 啟用「Google Drive API」：',
+  },
+  'settings.sync_gd_api_cli': {
+    en: '3. Create a Client:',
+    zh_TW: '3. 建立用戶端：',
+  },
+  'settings.sync_gd_api_cli_sub': {
+    en: `- Type: Web application
+- Authorized redirect URIs:`,
+    zh_TW: `- 類型：網頁應用程式
+- 授權重新導向 URI：`,
+  },
+  'settings.sync_gd_api_id': {
+    en: '4. Open created client and get the Client ID:',
+    zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
+  },
+  'settings.sync_gd_api_ins': {
+    en: '5. Insert that Client ID here:',
+    zh_TW: '5. 在此貼上該用戶端編號：',
+  },
+  'settings.sync_gd_api_scope': {
+    en: '6. Add the following scopes in the Data Access section:',
+    zh_TW: '6. 在資料存取權新增以下範圍：',
+  },
+  'settings.sync_gd_api_reload': {
+    en: '7. Disconnect Sidebery from your Google Drive:',
+    zh_TW: '7. 取消 Sidebery 與 Google 雲端硬碟的連接：',
+  },
+  'settings.sync_gd_api_reload_sub': {
+    en: '(if you used the default API key)',
+    zh_TW: '（如果您使用預設 API 金鑰）',
+  },
+  'settings.sync_gd_api_done': {
+    en: '8. Done. On the next request to Google Drive you will see a consent screen.',
+    zh_TW: '8. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
+  },
   'settings.sync_save_settings': {
     en: 'Save settings to sync storage',
     de: 'Einstellungen im Synchronisationsspeicher sichern',
@@ -5610,6 +5748,11 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '保存按键绑定至同步存储',
     zh_TW: '同步儲存按鍵綁定',
     ja: 'キーバインディングを同期ストレージに保存',
+  },
+  'settings.sync_view_btn': {
+    en: 'View synced data',
+    zh_CN: '查看同步数据',
+    zh_TW: '檢視同步資料',
   },
   'settings.sync_settings_title': {
     en: 'Settings',
@@ -5728,58 +5871,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 - この機能を使用するには Firefox アカウントにログインする必要があります
 - データが Firefox 同期サーバーにアップロードされたことを確認するには、Firefox 設定またはメインメニュー（三行ボタン）内のプロファイルで「今すぐ同期」ボタンを押す必要があります`,
   },
-  'settings.sync_ff_note': {
-    en: `Notes:
-- You need to login to Firefox account to get it working
-- To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
-    de: `Hinweise:
-- Sie müssen sich bei Ihrem Firefox-Konto anmelden, damit es funktioniert.
-- Um sicherzustellen, dass die Daten auf den Firefox-Synchronisierungsserver hochgeladen werden, müssen Sie in den Firefox-Einstellungen oder in Ihrem Profil im Hauptmenü (die Schaltfläche mit den drei Strichen) auf die Schaltfläche „Jetzt synchronisieren“ klicken.`,
-    hu: `Megjegyzések:
-- A működéséhez be kell jelentkeznie a Firefox fiókba
-- Annak érdekében, hogy az adatok feltöltésre kerüljenek a Firefox szinkronizáló szerverére, meg kell nyomnia a "Szinkronizálás most" gombot a Firefox beállításainál vagy a profiljában a főmenüben (háromsoros gomb).`,
-    pl: `Uwagi:
-- Musisz zalogować się na konto Firefox, aby to działało
-- Aby mieć pewność, że dane zostaną przesłane na serwer synchronizacji Firefox, musisz nacisnąć przycisk „Synchronizuj teraz” w ustawieniach Firefox lub w swoim profilu w menu głównym (przycisk z trzema liniami)`,
-    ru: `Примечания:
-- Вам необходимо войти в учетную запись Firefox, чтобы все заработало
-- Чтобы убедиться, что данные загружены на сервер синхронизации Firefox, вам необходимо нажать кнопку «Синхронизировать сейчас» в настройках Firefox или в вашем профиле в главном меню (кнопка с тремя линиями)`,
-    zh_TW: `說明：
-- 您需要登入 Mozilla 帳號方可運行
-- 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列八處擇一按「立刻同步」按鈕：
-  -「工具列 > 應用程式選單 > Mozilla 帳號（ > 同步設定）」
-  -「工具列 > 應用程式選單 > 設定 > 同步」
-  -「工具列 > Mozilla 帳號（ > 同步設定）」
-  -「工具列 > 設定 > 同步」
-  -「選單列 > 編輯 > 設定 > 同步」
-  -「選單列 > 工具」`,
-    ja: `注意:
-- 動作させるには、Firefox アカウントにログインする必要があります
-- データが Firefox 同期サーバーにアップロードされていることを確認するには、Firefox 設定またはメイン メニューのプロファイルにある [今すぐ同期] ボタン (3 本の線のボタン) を押す必要があります`,
-  },
-  'settings.sync_gd_note': {
-    en: `Notes:
-- Sidebery doesn't have access to your files on Google Drive
-- Sidebery files are stored in JSON, so Google can read their contents (encryption is planned)`,
-    de: `Hinweise:
-- Sidebery hat keinen Zugriff auf Ihre Dateien auf Google Drive
-- Sidebery-Dateien werden in JSON gespeichert, sodass Google deren Inhalte lesen kann (Verschlüsselung ist geplant)`,
-    hu: `Megjegyzések:
-- A Sidebery nem fér hozzá az Ön Google Drive-on lévő fájljaihoz
-- A Sidebery fájlok JSON-ban vannak tárolva, így a Google el tudja olvasni a tartalmukat (titkosítást tervezünk)`,
-    pl: `Uwagi:
-- Sidebery nie ma dostępu do Twoich plików na Dysku Google
-- Pliki Sidebery są przechowywane w formacie JSON, więc Google może odczytać ich zawartość (planowane jest szyfrowanie)`,
-    ru: `Примечания:
-- Sidebery не имеет доступа к вашим файлам на Google Диске
-- Файлы Sidebery хранятся в формате JSON, поэтому Google может читать их содержимое (шифрование планируется)`,
-    zh_TW: `說明：
-- Sidebery 不會存取您在 Google 雲端硬碟上的檔案
-- Sidebery 以 JSON 格式儲存同步檔案，因此 Google 可以讀取其內容（計劃實做加密）`,
-    ja: `注:
-- Sidebery は Google ドライブのファイルにアクセスできません
-- Sidebery ファイルは JSON 形式で保存されるため、Google はファイルの内容を読み取ることができます (暗号化が予定されています)`,
-  },
   'settings.sync_update_btn': {
     en: 'Update synced data',
     de: 'Synchronisierte Daten aktualisieren',
@@ -5789,82 +5880,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '更新同步数据',
     zh_TW: '更新同步資料',
     ja: '同期データを更新',
-  },
-  'settings.sync_use_ff': {
-    en: 'Use Firefox Sync',
-    de: 'Firefox Sync verwenden',
-    hu: 'Használja a Firefox Sync alkalmazást',
-    pl: 'Użyj synchronizacji Firefox',
-    ru: 'Использовать синхронизацию Firefox',
-    zh: '使用 Firefox 同步',
-    ja: 'Firefox Syncを使用する',
-  },
-  'settings.sync_use_gd': {
-    en: 'Use Google Drive (experimental)',
-    de: 'Google Drive verwenden (experimentell)',
-    hu: 'Használja a Google Drive-ot (kísérleti)',
-    pl: 'Użyj Dysku Google (eksperymentalne)',
-    ru: 'Использовать Google Диск (экспериментально)',
-    zh_CN: '使用 Google Drive（实验性）',
-    zh_TW: '使用 Google Drive（實驗性）',
-    ja: 'Google ドライブを使用する (試験的)',
-  },
-  'settings.sync_gd_api': {
-    en: 'Use your own API key',
-    de: 'Eigenen API-Schlüssel verwenden',
-    hu: 'Használja saját API-kulcsát',
-    pl: 'Użyj własnego klucza API',
-    ru: 'Использовать свой собственный API ключ',
-    zh_CN: '使用您自己的 API 密钥',
-    zh_TW: '使用您自己的 API 金鑰',
-    ja: '独自のAPIキーを使用する',
-  },
-  'settings.sync_gd_api_note': {
-    en: 'For advanced users. In case default key gets blocked due to exceeding the limits.',
-    de: 'Für fortgeschrittene Benutzer. Falls der Standardschlüssel aufgrund Überschreitung der Grenzwerte gesperrt wird.',
-    hu: 'Haladó felhasználóknak. Abban az esetben, ha az alapértelmezett kulcs a korlátok túllépése miatt blokkolva lesz.',
-    pl: 'Dla zaawansowanych użytkowników. W przypadku zablokowania domyślnego klucza z powodu przekroczenia limitów.',
-    ru: 'Для продвинутых пользователей. В случае блокировки ключа по умолчанию из-за превышения лимитов.',
-    zh_CN: '适用于高级用户。以防默认密钥因超出限制而被阻止。',
-    zh_TW: '對於高級用戶。以防預設密鑰因超出限製而被阻止。',
-    ja: '上級ユーザー向け。制限を超えたためにデフォルト キーがブロックされた場合。',
-  },
-  'settings.sync_gd_api_link': {
-    en: 'Link',
-  },
-  'settings.sync_gd_api_proj': {
-    en: '1. Create a Google Cloud project:',
-  },
-  'settings.sync_gd_api_drive': {
-    en: '2. Enable Drive API:',
-  },
-  'settings.sync_gd_api_cli': {
-    en: '3. Create a Client:',
-  },
-  'settings.sync_gd_api_cli_sub': {
-    en: `- Type: Web application
-- Authorized redirect URIs:`,
-  },
-  'settings.sync_gd_api_id': {
-    en: '4. Open created client and get the Client ID:',
-  },
-  'settings.sync_gd_api_ins': {
-    en: '5. Insert that Client ID here:',
-  },
-  'settings.sync_gd_api_scope': {
-    en: '6. Add the following scopes in the Data Access section:',
-  },
-  'settings.sync_gd_api_reload': {
-    en: '7. Disconnect Sidebery from your Google Drive:',
-  },
-  'settings.sync_gd_api_reload_sub': {
-    en: '(if you used the default API key)',
-  },
-  'settings.sync_gd_api_done': {
-    en: '8. Done. On the next request to Google Drive you will see a consent screen.',
-  },
-  'settings.sync_view_btn': {
-    en: 'View synced data',
   },
 
   // - Help
