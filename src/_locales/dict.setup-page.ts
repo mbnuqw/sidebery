@@ -5669,50 +5669,65 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.sync_gd_api_proj': {
     en: '1. Create a Google Cloud project:',
+    zh_CN: '1. 创建 Google Cloud 项目：',
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
     en: '- Audience: External',
+    zh_CN: '- 受众群体：外部',
+    zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
     en: '2. Enable Drive API:',
+    zh_CN: '2. 启用“Google Drive API”：',
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
     en: '3. Create a Client:',
+    zh_CN: '3. 创建客户端：',
     zh_TW: '3. 建立用戶端：',
   },
   'settings.sync_gd_api_cli_sub': {
     en: `- Type: Web application
 - Authorized redirect URIs:`,
+    zh_CN: `- 类型：Web 应用
+- 授权重定向 URI：`,
     zh_TW: `- 類型：網頁應用程式
 - 授權重新導向 URI：`,
   },
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
+    zh_CN: '4. 复制创建的 OAuth 客户端 ID：',
     zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
+    zh_CN: '5. 在此粘贴该客户端 ID：',
     zh_TW: '5. 在此貼上該用戶端編號：',
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
+    zh_CN: '6. 在数据访问添加以下范围：',
     zh_TW: '6. 在資料存取權新增以下範圍：',
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
+    zh_CN: '7. 添加测试用户（您的电子邮件地址）：',
+    zh_TW: '7. 新增測試使用者（您的電子郵件地址）：',
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
+    zh_CN: '8. 取消 Sidebery 与 Google 云端硬盘的关联：',
     zh_TW: '8. 取消 Sidebery 與 Google 雲端硬碟的連接：',
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
+    zh_CN: '（如果您使用默认 API 密钥）',
     zh_TW: '（如果您使用預設 API 金鑰）',
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
+    zh_CN: '9. 完毕。下次向 Google 云端硬盘发出请求时，您将看到同意屏幕。',
     zh_TW: '9. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
   },
   'settings.sync_save_settings': {
