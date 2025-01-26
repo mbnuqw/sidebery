@@ -289,7 +289,12 @@ let query = ''
 let beforeSwitchingPanelId: ID | undefined
 export function search(value?: string, noSel?: boolean): void {
   if (value !== undefined) {
-    if (value.length < MIN_SEARCH_QUERY_LEN) value = ''
+    const regexCJK = /[\u4E00-\u9FFF,\u3400-\u4DBF,\u3040-\u312F,\uAC00-\uD7A3]/g
+    //CJK Unified Ideographs
+    //CJK Unified Ideographs Extension A
+    //Hiragana, Katakana, Bopomofo
+    //Hangul Syllables
+    if (value.length < MIN_SEARCH_QUERY_LEN) value = (value.match(regexCJK) === null) ? '' : value
     if (Search.reactive.value === value) return
 
     Search.prevValue = Search.reactive.value
