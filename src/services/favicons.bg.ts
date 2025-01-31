@@ -97,9 +97,9 @@ function getIndexToReplace(): number {
 }
 
 const saveFaviconTimeouts: Record<string, number | undefined> = {}
-export function saveFavicon(url: string, icon: string): void {
-  if (!url || !icon) return
-  if (icon.length > 234567) return
+export function saveFavicon(url: string, base64icon: string): void {
+  if (!url || !base64icon) return
+  if (base64icon.length > 234567) return
   if (url.startsWith('about')) return
 
   clearTimeout(saveFaviconTimeouts[url])
@@ -110,7 +110,7 @@ export function saveFavicon(url: string, icon: string): void {
     if (!domain) return
 
     const domainInfo: FavDomain | undefined = domainsInfo[domain]
-    const hash = Utils.strHash(icon)
+    const hash = Utils.strHash(base64icon)
 
     let index = hashes.indexOf(hash)
     const iconAlreadyExists = index > -1
@@ -145,7 +145,7 @@ export function saveFavicon(url: string, icon: string): void {
     // Resize icon
     if (!iconAlreadyExists) {
       try {
-        icon = await resizeFavicon(icon)
+        base64icon = await resizeFavicon(base64icon)
       } catch {
         return
       }
@@ -172,7 +172,7 @@ export function saveFavicon(url: string, icon: string): void {
     }
 
     // Set icon, index and hash
-    if (!iconAlreadyExists) favicons[index] = icon
+    if (!iconAlreadyExists) favicons[index] = base64icon
     hashes[index] = hash
 
     if (!iconAlreadyExists || saveAll) {
@@ -183,6 +183,6 @@ export function saveFavicon(url: string, icon: string): void {
 
     saveAll = false
 
-    IPC.sendToSidebars('setFavicon', domain, icon)
+    IPC.sendToSidebars('setFavicon', domain, base64icon)
   }, SAVE_DELAY)
 }

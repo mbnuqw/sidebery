@@ -606,17 +606,17 @@ function isTextFit(
   }
 }
 
-async function prepareCustomIcon(icon: string): Promise<string> {
-  state.customIconOriginal = icon
+async function prepareCustomIcon(base64icon: string): Promise<string> {
+  state.customIconOriginal = base64icon
   if (state.customIconColorize) {
     let color = RGB_COLORS[props.conf.color]
     if (props.conf.color === 'toolbar') {
       if (Styles.reactive.toolbarColorScheme === 'light') color = '#000000'
       if (Styles.reactive.toolbarColorScheme === 'dark') color = '#ffffff'
     }
-    icon = await Favicons.fillIcon(icon, color)
+    base64icon = await Favicons.fillIcon(base64icon, color)
   }
-  return await Favicons.resizeFavicon(icon)
+  return await Favicons.resizeFavicon(base64icon)
 }
 
 function openCustomIconFile(importEvent: Event) {
@@ -631,14 +631,14 @@ function openCustomIconFile(importEvent: Event) {
       return Logs.err('Cannot import data: No file content')
     }
 
-    let icon
+    let base64icon
     try {
-      icon = await prepareCustomIcon(fileEvent.target.result as string)
+      base64icon = await prepareCustomIcon(fileEvent.target.result as string)
     } catch {
       onCustomIconRm()
       return
     }
-    props.conf.iconIMG = icon
+    props.conf.iconIMG = base64icon
     props.conf.iconIMGSrc = ''
     state.customIconTextValue = ''
     state.customIconUrlValue = ''

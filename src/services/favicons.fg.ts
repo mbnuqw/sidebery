@@ -87,14 +87,14 @@ let iconFillCanvas: HTMLCanvasElement | undefined
 let iconFillCanvasCtx: CanvasRenderingContext2D | null = null
 let iconFillImg: HTMLImageElement | undefined
 
-export async function fillIcon(icon: string, color: string): Promise<string> {
+export async function fillIcon(base64icon: string, color: string): Promise<string> {
   const ds = SIZE * 2
 
   if (!iconFillCanvas || !iconFillCanvasCtx) {
     iconFillCanvas = Utils.createCanvas(ds, ds)
     iconFillCanvasCtx = iconFillCanvas.getContext('2d')
     if (iconFillCanvasCtx) iconFillCanvasCtx.save()
-    else return icon
+    else return base64icon
   }
 
   if (!iconFillImg) iconFillImg = new Image()
@@ -102,18 +102,18 @@ export async function fillIcon(icon: string, color: string): Promise<string> {
   iconFillCanvasCtx.clearRect(0, 0, ds, ds)
 
   try {
-    await Utils.setImageSrc(iconFillImg, icon)
+    await Utils.setImageSrc(iconFillImg, base64icon)
   } catch {
-    return icon
+    return base64icon
   }
 
   try {
     let sw = iconFillImg.naturalWidth
     let sh = iconFillImg.naturalHeight
     if (sw === 0 || sh === 0) {
-      const svgWithSize = Utils.setSvgImageSize(icon, ds, ds)
-      if (!svgWithSize) return icon
-      await Utils.setImageSrc(iconFillImg, svgWithSize)
+      const base64svgWithSize = Utils.setSvgImageSize(base64icon, ds, ds)
+      if (!base64svgWithSize) return base64icon
+      await Utils.setImageSrc(iconFillImg, base64svgWithSize)
       sw = iconFillImg.naturalWidth
       sh = iconFillImg.naturalHeight
     }
@@ -123,11 +123,11 @@ export async function fillIcon(icon: string, color: string): Promise<string> {
     iconFillCanvasCtx.drawImage(iconFillImg, 0, 0, sw, sh, 0, 0, ds, ds)
     iconFillCanvasCtx.globalCompositeOperation = 'source-over'
   } catch (err) {
-    return icon
+    return base64icon
   }
 
-  const filledIcon = iconFillCanvas.toDataURL('image/png')
+  const filledBase64Icon = iconFillCanvas.toDataURL('image/png')
   iconFillCanvasCtx.restore()
 
-  return filledIcon
+  return filledBase64Icon
 }
