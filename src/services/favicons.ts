@@ -52,6 +52,9 @@ let favPrescaleCanvasCtx: CanvasRenderingContext2D | null = null
 let favRescaleImg: HTMLImageElement | undefined
 
 export async function resizeFavicon(base64fav: string): Promise<string> {
+  // Skip resize if fav is a SVG containing CSS Media Queries
+  if (Utils.svgImageContainsCssMediaQueries(base64fav)) return base64fav
+
   // Prescale size
   const ds = SIZE * 2
 

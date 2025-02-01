@@ -732,6 +732,18 @@ export function setSvgImageSize(base64img: string, w: number, h: number): string
   return 'data:image/svg+xml;base64,' + base64
 }
 
+export function svgImageContainsCssMediaQueries(base64img: string): boolean {
+  if (!base64img.startsWith('data:image/svg+xml;base64,')) return false
+
+  let svgText
+  try {
+    svgText = atob(base64img.split(',')[1])
+  } catch {
+    return false
+  }
+  return /@media\s*\(/.test(svgText)
+}
+
 export function strHash(str: string): number {
   let hash = 0
   const len = str.length
