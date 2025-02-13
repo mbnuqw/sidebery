@@ -51,6 +51,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
   }
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
   if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
+  if (tab.fromNewTabButton === undefined) tab.fromNewTabButton = false
 
   if (tab.reactive === undefined) {
     tab.reactive = {

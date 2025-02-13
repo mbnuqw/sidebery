@@ -1,4 +1,13 @@
-import { DragInfo, DstPlaceInfo, ItemInfo, Panel, PanelType, Tab, TabsPanel } from 'src/types'
+import {
+  DragInfo,
+  DstPlaceInfo,
+  ItemInfo,
+  Panel,
+  PanelType,
+  SettingsState,
+  Tab,
+  TabsPanel,
+} from 'src/types'
 import { ASKID, CONTAINER_ID, GROUP_URL, INITIAL_TITLE_RE, NEWID, NOID } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -87,9 +96,9 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
     }
   }
 
-  const tabShell = {} as Tab
+  const tabShell = { fromNewTabButton: true } as Tab
   let index = Tabs.getIndexForNewTab(panel, tabShell)
-  const parentId = Tabs.getParentForNewTab(panel)
+  const parentId = Tabs.getParentForNewTab(panel, true)
   if (!Utils.isTabsPanel(panel)) return
   if (index === undefined && panel.nextTabIndex > -1) index = panel.nextTabIndex
 
@@ -617,15 +626,28 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
     }
   }
 
+  // Find panel for tab opened from New Tab button
+  if (tab.fromNewTabButton) {
+    return getPanelForNewTabOtherCases(tab, activePanel, Settings.state.moveNewTabButton)
+  }
+
   // Find panel in other cases
-  if (Settings.state.moveNewTab === 'start' || Settings.state.moveNewTab === 'end') {
+  return getPanelForNewTabOtherCases(tab, activePanel, Settings.state.moveNewTab)
+}
+
+function getPanelForNewTabOtherCases(
+  tab: Tab,
+  activePanel: TabsPanel | undefined,
+  moveNewTabSetting: SettingsState['moveNewTab']
+): TabsPanel | undefined {
+  if (moveNewTabSetting === 'start' || moveNewTabSetting === 'end') {
     return activePanel || findTabsPanelNearToTabIndex(tab.index)
   }
   if (
-    Settings.state.moveNewTab === 'before' ||
-    Settings.state.moveNewTab === 'after' ||
-    Settings.state.moveNewTab === 'first_child' ||
-    Settings.state.moveNewTab === 'last_child'
+    moveNewTabSetting === 'before' ||
+    moveNewTabSetting === 'after' ||
+    moveNewTabSetting === 'first_child' ||
+    moveNewTabSetting === 'last_child'
   ) {
     const activeTab = Tabs.byId[Tabs.activeId]
     const panelOfActiveTab = Sidebar.panelsById[activeTab?.panelId ?? NOID] as TabsPanel
@@ -641,6 +663,7 @@ interface IndexForNewTabConf {
   openerTabId?: ID
   autoGroupped?: boolean
   index: number
+  fromNewTabButton?: boolean
 }
 
 /**
@@ -653,6 +676,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   const activeTab = Tabs.byId[Tabs.activeId]
   const autoGroupped = conf ? conf.autoGroupped : false
   const fallbackIndex = conf ? conf.index : nextIndex
+  const fromNewTabButton = conf ? conf.fromNewTabButton : false
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
@@ -695,17 +719,47 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     if (Settings.state.moveNewTabParent === 'default' && !autoGroupped) return fallbackIndex
   }
 
+  // Place new tab from New Tab button
+  if (fromNewTabButton) {
+    return getIndexForNewTabOtherCases(
+      panel,
+      Settings.state.moveNewTabButton,
+      activeTab,
+      startIndex,
+      nextIndex,
+      fallbackIndex
+    )
+  }
+
   // Place new tab (for the other cases)
-  if (Settings.state.moveNewTab === 'start') return startIndex
-  if (Settings.state.moveNewTab === 'end') return nextIndex
-  if (Settings.state.moveNewTab === 'before') {
+  return getIndexForNewTabOtherCases(
+    panel,
+    Settings.state.moveNewTab,
+    activeTab,
+    startIndex,
+    nextIndex,
+    fallbackIndex
+  )
+}
+
+function getIndexForNewTabOtherCases(
+  panel: TabsPanel,
+  moveNewTabSetting: SettingsState['moveNewTab'],
+  activeTab: Tab | undefined,
+  startIndex: number,
+  nextIndex: number,
+  fallbackIndex: number
+): number {
+  if (moveNewTabSetting === 'start') return startIndex
+  if (moveNewTabSetting === 'end') return nextIndex
+  if (moveNewTabSetting === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
     else if (activeTab.pinned) {
       if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
       return startIndex
     } else return activeTab.index
   }
-  if (Settings.state.moveNewTab === 'after') {
+  if (moveNewTabSetting === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -720,7 +774,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return index
     }
   }
-  if (Settings.state.moveNewTab === 'first_child') {
+  if (moveNewTabSetting === 'first_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -730,7 +784,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return activeTab.index + 1
     }
   }
-  if (Settings.state.moveNewTab === 'last_child') {
+  if (moveNewTabSetting === 'last_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -752,7 +806,11 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
 /**
  * Find and return parent id
  */
-export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefined {
+export function getParentForNewTab(
+  panel: Panel,
+  fromNewTabButton: boolean,
+  openerTabId?: ID
+): ID | undefined {
   const activeTab = Tabs.byId[Tabs.activeId]
 
   let parent: Tab | undefined
@@ -773,15 +831,33 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
     if (Settings.state.moveNewTabParent === 'none') return openerTabId
   }
 
-  // Place new tab (for the other cases)
-  if (Settings.state.moveNewTab === 'start') return
-  if (Settings.state.moveNewTab === 'end') return
-  if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
-    if (Settings.state.moveNewTab === 'before') return activeTab.parentId
-    else if (Settings.state.moveNewTab === 'after') return activeTab.parentId
-    else if (Settings.state.moveNewTab === 'first_child') return activeTab.id
-    else if (Settings.state.moveNewTab === 'last_child') return activeTab.id
+  // Place new tab from New Tab button
+  if (fromNewTabButton) {
+    return getParentForNewTabOtherCases(
+      panel,
+      activeTab,
+      Settings.state.moveNewTabButton,
+      openerTabId
+    )
   }
 
+  // Place new tab (for the other cases)
+  return getParentForNewTabOtherCases(panel, activeTab, Settings.state.moveNewTab, openerTabId)
+}
+
+function getParentForNewTabOtherCases(
+  panel: Panel,
+  activeTab: Tab | undefined,
+  moveNewTabSetting: SettingsState['moveNewTab'],
+  openerTabId?: ID
+): ID | undefined {
+  if (moveNewTabSetting === 'start') return
+  if (moveNewTabSetting === 'end') return
+  if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
+    if (moveNewTabSetting === 'before') return activeTab.parentId
+    else if (moveNewTabSetting === 'after') return activeTab.parentId
+    else if (moveNewTabSetting === 'first_child') return activeTab.id
+    else if (moveNewTabSetting === 'last_child') return activeTab.id
+  }
   return openerTabId
 }

@@ -27,6 +27,7 @@ export interface Tab extends NativeTab {
   reopened?: boolean
   internal?: boolean
   isGroup: boolean
+  fromNewTabButton: boolean
   reopening?: { id: ID }
   reopenInContainer?: string
   customTitle?: string
