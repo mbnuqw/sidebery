@@ -1096,7 +1096,7 @@ export const sidebarTranslations: Translations = {
     ja: '不正な URL: ',
   },
   'notif.cc.ok': {
-    en: 'Cookies was cleared',
+    en: 'Cookies were cleared',
     de: 'Cookies wurden gelöscht',
     hu: 'A sütik törlése kész',
     pl: 'Ciasteczka zostały wyczyszczone',
