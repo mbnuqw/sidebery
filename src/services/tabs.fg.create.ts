@@ -98,7 +98,7 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
 
   const tabShell = { fromNewTabButton: true } as Tab
   let index = Tabs.getIndexForNewTab(panel, tabShell)
-  const parentId = Tabs.getParentForNewTab(panel, true)
+  const parentId = Tabs.getParentForNewTab(panel, tabShell)
   if (!Utils.isTabsPanel(panel)) return
   if (index === undefined && panel.nextTabIndex > -1) index = panel.nextTabIndex
 
@@ -803,18 +803,21 @@ function getIndexForNewTabOtherCases(
   return fallbackIndex
 }
 
+interface ParentForNewTabConf {
+  openerTabId?: ID
+  fromNewTabButton?: boolean
+}
+
 /**
  * Find and return parent id
  */
-export function getParentForNewTab(
-  panel: Panel,
-  fromNewTabButton: boolean,
-  openerTabId?: ID
-): ID | undefined {
+export function getParentForNewTab(panel: Panel, conf?: ParentForNewTabConf): ID | undefined {
   const activeTab = Tabs.byId[Tabs.activeId]
 
+  const openerTabId = conf && conf.openerTabId
   let parent: Tab | undefined
   if (openerTabId) parent = Tabs.byId[openerTabId]
+  const fromNewTabButton = conf ? conf.fromNewTabButton : false
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) return
