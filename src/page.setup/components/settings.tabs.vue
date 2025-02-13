@@ -151,6 +151,15 @@ section(ref="el")
         :inactive="Settings.state.moveNewTabParent === 'none'"
         v-model:value="Settings.state.moveNewTabParentActPanel"
         @update:value="Settings.saveDebounced(150)")
+    //- Place new tab (from New Tab button). options are reused from moveNewTab
+    SelectField(
+      label="settings.move_new_tab_button"
+      optLabel="settings.move_new_tab_"
+      v-model:value="Settings.state.moveNewTabButton"
+      :opts="Settings.getOpts('moveNewTab')"
+      :folded="true"
+      @update:value="Settings.saveDebounced(150)")
+    //- Place new tab (general rule)
     SelectField(
       label="settings.move_new_tab"
       optLabel="settings.move_new_tab_"
