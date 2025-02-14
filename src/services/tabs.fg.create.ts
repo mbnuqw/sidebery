@@ -715,12 +715,16 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     ? Settings.state.moveNewTabButton
     : Settings.state.moveNewTab
 
+  const moveNewTabActivePinSetting = fromNewTabButton
+    ? Settings.state.moveNewTabButtonActivePin
+    : Settings.state.moveNewTabActivePin
+
   if (moveNewTabSetting === 'start') return startIndex
   if (moveNewTabSetting === 'end') return nextIndex
   if (moveNewTabSetting === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
     else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else return activeTab.index
   }
@@ -728,7 +732,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1
@@ -743,7 +747,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       return activeTab.index + 1
@@ -753,7 +757,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1
