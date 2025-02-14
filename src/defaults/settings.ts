@@ -96,6 +96,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   moveNewTabParent: 'last_child',
   moveNewTabParentActPanel: false,
   moveNewTabButton: 'end',
+  moveNewTabButtonActivePin: 'start',
   moveNewTab: 'end',
   moveNewTabActivePin: 'start',
 

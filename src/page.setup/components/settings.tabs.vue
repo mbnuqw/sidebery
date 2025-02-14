@@ -159,6 +159,14 @@ section(ref="el")
       :opts="Settings.getOpts('moveNewTab')"
       :folded="true"
       @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      SelectField(
+        :inactive="!relativeToActiveTab(true).value"
+        label="settings.move_new_tab_active_pin"
+        optLabel="settings.move_new_tab_pin_"
+        v-model:value="Settings.state.moveNewTabButtonActivePin"
+        :opts="Settings.getOpts('moveNewTabActivePin')"
+        @update:value="Settings.saveDebounced(150)")
     //- Place new tab (general rule)
     SelectField(
       label="settings.move_new_tab"
@@ -169,7 +177,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       SelectField(
-        :inactive="!relativeToActiveTab"
+        :inactive="!relativeToActiveTab(false).value"
         label="settings.move_new_tab_active_pin"
         optLabel="settings.move_new_tab_pin_"
         v-model:value="Settings.state.moveNewTabActivePin"
@@ -492,14 +500,20 @@ const tabsColorEl = ref<HTMLElement | null>(null)
 const tabsPreviewEl = ref<HTMLElement | null>(null)
 const nativeTabsEl = ref<HTMLElement | null>(null)
 
-const relativeToActiveTab = computed<boolean>(() => {
-  return (
-    Settings.state.moveNewTab === 'after' ||
-    Settings.state.moveNewTab === 'before' ||
-    Settings.state.moveNewTab === 'first_child' ||
-    Settings.state.moveNewTab === 'last_child'
-  )
-})
+// used to see if current setting for moveNewTab or moveNewTabButton is relative to active tab or not (so the submenu can be activated/deactivated accordingly)
+const relativeToActiveTab = (fromNewTabButton: boolean) =>
+  computed<boolean>(() => {
+    const moveNewTabSetting = fromNewTabButton
+      ? Settings.state.moveNewTabButton
+      : Settings.state.moveNewTab
+
+    return (
+      moveNewTabSetting === 'after' ||
+      moveNewTabSetting === 'before' ||
+      moveNewTabSetting === 'first_child' ||
+      moveNewTabSetting === 'last_child'
+    )
+  })
 
 function toggleActivateLastTabOnPanelSwitching(): void {
   Settings.state.activateLastTabOnPanelSwitching = !Settings.state.activateLastTabOnPanelSwitching
