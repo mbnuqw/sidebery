@@ -70,7 +70,11 @@ export async function loadPanels(): Promise<void> {
 
   const gettingActiveId = browser.sessions.getWindowValue<ID>(Windows.id, 'activePanelId')
   const gettingHiddenPanels = browser.sessions.getWindowValue<ID[]>(Windows.id, 'hiddenPanels')
-  const gettingStorage = browser.storage.local.get<Stored>('sidebar')
+  const gettingStorage = browser.storage.managed
+    .get<Stored>('sidebar')
+    .catch(() => {})
+    .then(storage => (!storage?.sidebar ? browser.storage.local.get<Stored>('sidebar') : storage))
+
   const [activeId, storage, hiddenPanels] = await Promise.all([
     gettingActiveId,
     gettingStorage,
@@ -133,7 +137,11 @@ export async function loadPanels(): Promise<void> {
 }
 
 export async function loadNav(): Promise<void> {
-  const storage = await browser.storage.local.get<Stored>('sidebar')
+  let storage = await browser.storage.managed.get<Stored>('sidebar').catch(() => {})
+  if (!storage?.sidebar) {
+    storage = await browser.storage.local.get<Stored>('sidebar')
+  }
+
   let saveNeeded = false
   if (!storage.sidebar?.nav?.length) {
     Logs.warn('Sidebar.loadNav: Creating default sidebar config and saving it')

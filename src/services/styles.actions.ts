@@ -561,7 +561,11 @@ export function resetThemeSrcVars(): void {
 }
 
 export async function loadCustomSidebarCSS(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('sidebarCSS')
+  let stored = await browser.storage.managed.get<Stored>('sidebarCSS').catch(() => {})
+  if (!stored?.sidebarCSS) {
+    stored = await browser.storage.local.get<Stored>('sidebarCSS')
+  }
+
   applyCustomCSS(stored.sidebarCSS)
   // Recalculate sizes when custom CSS is changed
   Sidebar.recalcElementSizesDebounced()

@@ -33,7 +33,11 @@ let ctxMenuBlockTimeout: number | undefined
  */
 export async function loadCtxMenu(): Promise<void> {
   // prettier-ignore
-  const storage = await browser.storage.local.get<Stored>('contextMenu')
+  let storage = await browser.storage.managed.get<Stored>('contextMenu').catch(() => {})
+  if (!storage?.contextMenu) {
+    storage = await browser.storage.local.get<Stored>('contextMenu')
+  }
+
   setCtxMenu(storage.contextMenu)
 }
 

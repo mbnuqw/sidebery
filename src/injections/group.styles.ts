@@ -18,7 +18,11 @@ export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): vo
 }
 
 export async function loadCustomGroupCSS(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('groupCSS')
+  let stored = await browser.storage.managed.get<Stored>('groupCSS').catch(() => {})
+  if (!stored?.groupCSS) {
+    stored = await browser.storage.local.get<Stored>('groupCSS')
+  }
+
   applyCustomCSS(stored.groupCSS)
 }
 
