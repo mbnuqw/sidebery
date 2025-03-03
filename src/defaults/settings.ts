@@ -90,6 +90,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabWarmupOnHover: true,
   tabSwitchDelay: 0,
   forceDiscard: true,
+  showTabSubtitle: false,
 
   // New tab position
   moveNewTabPin: 'start',

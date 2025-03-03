@@ -119,6 +119,10 @@ section(ref="el")
   //-   label="settings.tab_warmup_on_hover"
   //-   v-model:value="Settings.state.tabWarmupOnHover"
   //-   @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.tabs_show_subtitle"
+    v-model:value="Settings.state.showTabSubtitle"
+    @update:value="Settings.saveDebounced(150)")
   NumField.-inline(
     label="settings.tabs_switch_delay"
     v-model:value="Settings.state.tabSwitchDelay"

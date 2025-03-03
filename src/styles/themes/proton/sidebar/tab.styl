@@ -7,6 +7,7 @@
   --tabs-margin: var(--general-margin)
   --tabs-indent: 10px
   --tabs-font: rem(15) sans-serif
+  --tabs-subtitle-font: rem(12) sans-serif
   --tabs-count-font: rem(9) sans-serif
   --tabs-border-radius: var(--general-border-radius)
   --tabs-inner-gap: 5px
@@ -575,6 +576,25 @@
 
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
+
+// ---
+// -- Subtitle
+// -
+.Tab .subtitle{
+	position: relative
+  color: var(--tabs-normal-fg)
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast)
+  font: var(--tabs-subtitle-font)
+  opacity: 0.7
+}
+
+.Tab[data-audible="true"] .t-box .subtitle,
+.Tab[data-muted="true"] .t-box .subtitle,
+.Tab[data-paused="true"] .t-box .subtitle{
+  transform: translateX(var(--audio-btn-offset));
+}
 
 // ---
 // -- Container highlight

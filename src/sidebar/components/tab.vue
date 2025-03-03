@@ -69,6 +69,9 @@
         @blur="onCustomTitleBlur"
         @keydown="onCustomTitlteKD")
       .title(v-else) {{tab.reactive.customTitle ?? tab.reactive.title}}
+      .subtitle(
+        v-if="tab.reactive.url && Settings.state.showTabSubtitle"
+      ) {{ tab.reactive.url.replace(/^https?:\/\//, '') }}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
       @mousedown.stop="onMouseDownClose"

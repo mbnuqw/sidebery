@@ -2671,6 +2671,10 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '分頁切換間的最小延遲（毫秒）',
     ja: 'タブ切り替え間の最小遅延（ミリ秒）',
   },
+  'settings.tabs_show_subtitle': {
+    en: 'Show tab subtitle with URL',
+    ru: 'Показывать подзаголовок вкладки с URL',
+  },
 
   // - New tab position
   'settings.move_new_tab_pin': {
