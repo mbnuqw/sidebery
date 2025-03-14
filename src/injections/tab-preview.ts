@@ -14,6 +14,7 @@ export interface TabPreviewInitData {
   url: string
   y: number
   dpr: number
+  sh: number
   popupWidth: number
   offsetY: number
   offsetX: number
@@ -23,7 +24,9 @@ export interface TabPreviewInitData {
   uMax: number
 }
 
+const Y_OFFSET = -24
 const MARGIN = 2
+
 const state = {
   tabId: NOID,
   winId: NOID,
@@ -103,7 +106,7 @@ function setPreview(preview: string) {
 
 function setPopupPosition(y: number) {
   if (!state.popupEl) return
-  let newY = y + state.offsetY
+  let newY = y + state.offsetY + Y_OFFSET
   if (newY > state.maxY) newY = state.maxY
   else if (newY < state.minY) newY = state.minY
   state.popupEl.style.transform = `translateY(${newY}px)`
@@ -181,11 +184,14 @@ async function main() {
   window.sideberyInitData = undefined
   window.onSideberyInitDataReady = undefined
 
+  const sidebarHeight = initData.sh || window.innerHeight
+  const heightDifBetweenSidebarAndPage = window.innerHeight - sidebarHeight
+
   state.winId = initData.winId
   state.referenceDevicePixelRatio = initData.dpr
   state.previewWidth = initData.popupWidth
   state.previewHeight = calcPreviewHeight(initData.popupWidth)
-  state.offsetY = initData.offsetY
+  state.offsetY = initData.offsetY + heightDifBetweenSidebarAndPage
   state.offsetX = initData.offsetX
 
   previewConf.scale = calcScale(
@@ -257,7 +263,7 @@ async function main() {
     background-color: var(--bg);
     overflow: hidden;
     color: var(--fg);
-    font-family: sans-serif;
+    font-family: system-ui;
     transition: background 1s;
 `
 

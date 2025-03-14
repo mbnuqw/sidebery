@@ -173,6 +173,8 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'copyMove'
   }
+
+  Sidebar.closeSubPanel()
 }
 
 function getBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {

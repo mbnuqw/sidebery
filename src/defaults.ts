@@ -72,6 +72,7 @@ export const LOCALHOST_RE = /^localhost(:\d+)?/
 export const DOMAIN_RE = /^[0-9A-Za-z-]{1,63}:\/\/(www\.)?(.*?)(\/|$)/
 export const LINUX_HOME_RE = /^\/home\/(.+?)\//
 export const PATH_SEP_RE = /\/|\\/
+export const RE_STR_RE = /^\/(?<re>.*)\/(?<flags>[dgimsuvy]{1,8})?$/
 
 export const NOID: ID = -1
 export const SAMEID: ID = -5

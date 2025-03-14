@@ -115,7 +115,7 @@ export function setTargetTab(tabId: ID, y: number) {
     if (state.status === Status.Closed) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
-        showPreview(state.targetTabId, y)
+        showPreview(state.targetTabId, Mouse.y)
       }, Settings.state.previewTabsDelay)
       return
     }
@@ -185,6 +185,7 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     url: tab?.url ?? '---',
     y: y ?? 0,
     dpr: window.devicePixelRatio,
+    sh: Sidebar.height,
     popupWidth: Settings.state.previewTabsPopupWidth,
     offsetY: Settings.state.previewTabsInPageOffsetY,
     offsetX: Settings.state.previewTabsInPageOffsetX,

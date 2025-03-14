@@ -1293,7 +1293,7 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
     }
     let consumed
     try {
-      consumed = await Utils.deadline(5000, [], Promise.all(requestingDropStatus))
+      consumed = await Utils.deadline(10000, [], Promise.all(requestingDropStatus))
     } catch (err) {
       Logs.err('DnD.onDragEnd: Cannot get drop status from other windows', err)
       return

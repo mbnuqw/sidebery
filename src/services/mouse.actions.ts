@@ -70,6 +70,9 @@ export function isCtxTarget(type: TargetType, id?: ID): boolean {
 }
 
 export function onMouseMove(e: MouseEvent): void {
+  Mouse.x = e.clientX
+  Mouse.y = e.clientY
+
   if (Mouse.resizing) {
     if (Mouse.resizing === 'x') {
       if (resizingStart === -1) resizingStart = e.clientX

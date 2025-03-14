@@ -5,6 +5,7 @@ import { Containers } from 'src/services/containers'
 import { Tabs } from 'src/services/tabs.bg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import { RE_STR_RE } from 'src/defaults'
 
 type optBlockingResponse = browser.webRequest.BlockingResponse | void
 
@@ -164,24 +165,15 @@ export function updateReqHandlers(): void {
       for (const rule of ctr.reopenRules) {
         if (!rule.active) continue
 
-        const urlMatchStr = rule.url.trim()
-        if (!urlMatchStr) continue
-
-        let urlMatchRe
-        if (urlMatchStr.startsWith('/') && urlMatchStr.endsWith('/')) {
-          try {
-            urlMatchRe = new RegExp(urlMatchStr.slice(1, -1))
-          } catch {
-            Logs.warn(`WebReq.updateReqHandlers: Cannot parse RegExp: ${urlMatchStr}`)
-          }
-        }
+        const subStrOrRE = Containers.parseReopenRule(rule.url)
+        if (!subStrOrRE) continue
 
         if (rule.type === TabReopenRuleType.Include) {
-          includeHostsRules.push({ ctx: ctr.id, value: urlMatchRe ?? urlMatchStr })
+          includeHostsRules.push({ ctx: ctr.id, value: subStrOrRE })
         } else {
-          if (ctrExclude) ctrExclude.push(urlMatchRe ?? urlMatchStr)
+          if (ctrExclude) ctrExclude.push(subStrOrRE)
           else {
-            ctrExclude = [urlMatchRe ?? urlMatchStr]
+            ctrExclude = [subStrOrRE]
             excludeHostsRules[ctr.id] = ctrExclude
           }
         }

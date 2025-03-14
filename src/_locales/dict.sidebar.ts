@@ -633,7 +633,7 @@ export const sidebarTranslations: Translations = {
     en: 'Middle click: Unload tabs',
     de: 'Mittelklick: Entlade Tabs',
     hu: 'Középső kattintás: lapok kisöprése',
-    pl: 'Środkowy przycisk myszy: Rozładuj karty',
+    pl: 'Środkowy przycisk myszy: Uśpij karty',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
     zh_CN: '中键单击：卸载标签页',
     zh_TW: '中鍵點選：卸載分頁',
@@ -1096,7 +1096,7 @@ export const sidebarTranslations: Translations = {
     ja: '不正な URL: ',
   },
   'notif.cc.ok': {
-    en: 'Cookies was cleared',
+    en: 'Cookies were cleared',
     de: 'Cookies wurden gelöscht',
     hu: 'A sütik törlése kész',
     pl: 'Ciasteczka zostały wyczyszczone',

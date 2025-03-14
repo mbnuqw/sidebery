@@ -2,7 +2,19 @@
 
 ## Unreleased
 
-...
+### Fixed
+
+- Recently closed tabs (sub-panel): close it right after dnd start
+- Tab preview: vertical positioning (in-page popup)  
+- Tabs: parentId is not specified when auto-reopening tab on request (resolves [#2009](https://github.com/mbnuqw/sidebery/issues/2009))  
+- SetupPage/navbar: rm non-panel element with "x" button (resolves [#2018](https://github.com/mbnuqw/sidebery/issues/2018))  
+- Panel config: custom icon: file (resolves [#2015](https://github.com/mbnuqw/sidebery/issues/2015))  
+
+### Localization
+
+- Grammar in cookie clearing message (by [@Sushisource](https://github.com/Sushisource): [#2006](https://github.com/mbnuqw/sidebery/issues/2006))
+- Corrections in Polish (by [@MStankiewiczOfficial](https://github.com/MStankiewiczOfficial): [#2017](https://github.com/mbnuqw/sidebery/issues/2017))  
+
 
 ## 5.3.2 - 2025.02.03
 

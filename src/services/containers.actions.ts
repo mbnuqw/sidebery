@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
 import { Stored, Container, TabReopenRuleType } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { DEFAULT_CONTAINER } from 'src/defaults'
+import { DEFAULT_CONTAINER, RE_STR_RE } from 'src/defaults'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import * as Logs from 'src/services/logs'
@@ -154,35 +154,47 @@ export function findUnique(
   return container
 }
 
+/**
+ * Parse match string for include/exclude rules. No error throwing.
+ */
+export function parseReopenRule(s: string): string | RegExp | undefined {
+  const urlMatchStr = s.trim()
+  if (!urlMatchStr) return
+
+  const isMatchStrRe = RE_STR_RE.exec(urlMatchStr)
+  if (isMatchStrRe?.groups?.re) {
+    try {
+      return new RegExp(isMatchStrRe?.groups?.re, isMatchStrRe?.groups?.flags)
+    } catch {
+      Logs.warn(`Containers.parseReopenRule: Cannot parse RegExp: ${urlMatchStr}`)
+    }
+  }
+  return urlMatchStr
+}
+
 export function getContainerFor(url: string): string | undefined {
   for (const ctr of Object.values(Containers.reactive.byId)) {
     if (ctr.reopenRulesActive) {
-      let matchedContiner = false
+      let matchedContainer = false
 
       for (const rule of ctr.reopenRules) {
         if (!rule.active) continue
 
-        const urlMatchStr = rule.url.trim()
-        if (!urlMatchStr) continue
+        const subStrOrRE = parseReopenRule(rule.url)
+        if (!subStrOrRE) continue
 
-        let urlMatchRe
-        if (urlMatchStr.startsWith('/') && urlMatchStr.endsWith('/')) {
-          try {
-            urlMatchRe = new RegExp(urlMatchStr.slice(1, -1))
-            if (urlMatchRe.test(url)) {
-              matchedContiner = true
-              break
-            }
-          } catch {
-            Logs.warn(`Containers.getContainerFor: Cannot parse RegExp: ${urlMatchStr}`)
+        if (subStrOrRE instanceof RegExp) {
+          if (subStrOrRE.test(url)) {
+            matchedContainer = true
+            break
           }
-        } else if (url.includes(urlMatchStr)) {
-          matchedContiner = true
+        } else if (url.includes(subStrOrRE)) {
+          matchedContainer = true
           break
         }
       }
 
-      if (matchedContiner) return ctr.id
+      if (matchedContainer) return ctr.id
     }
   }
 
