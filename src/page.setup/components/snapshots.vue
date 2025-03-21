@@ -228,6 +228,7 @@ async function openSelectedTabs(): Promise<void> {
         const item: ItemInfo = {
           id: tab.id,
           url: tab.url,
+          customTitle: tab.customTitle,
           title: tab.title,
           container: tab.containerId ?? CONTAINER_ID,
         }
