@@ -990,7 +990,7 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
       // Normal tabs
       if (normalTabs?.length) {
         for (const tab of normalTabs) {
-          const tabLink = `[${tab.title}](${tab.url})`
+          const tabLink = `[${tab.customTitle ?? tab.title}](${tab.url})`
           md.push(tabsIndent + indent.repeat(tab.lvl ?? 0) + tabBullet + tabLink)
         }
       }

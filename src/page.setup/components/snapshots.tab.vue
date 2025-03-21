@@ -1,7 +1,7 @@
 <template lang="pug">
 .tab(
   draggable="true"
-  :title="tab.title"
+  :title="tab.customTitle ?? tab.title"
   :id="String(tab.id)"
   :data-folded="tab.folded"
   :data-invisible="tab.invisible"
@@ -29,7 +29,7 @@
     svg(v-else): use(:xlink:href="tab.iconSVG")
     svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
   .title-url
-    .title {{tab.title}}
+    .title {{tab.customTitle ?? tab.title}}
     a.url(
       target="_blank"
       draggable="false"
@@ -156,6 +156,7 @@ async function openTab(tab: SnapTabState): Promise<void> {
     const item: ItemInfo = {
       id: tab.id ?? NOID,
       url: Snapshots.updateInternalUrl(tab.url),
+      customTitle: tab.customTitle,
       title: tab.title,
       container: tab.containerId ?? CONTAINER_ID,
     }
