@@ -201,6 +201,7 @@ export function startLongClick(
       if (!tab) return
 
       if (action === 'reload') Tabs.reloadTabs([tab.id])
+      if (action === 'discard') Tabs.discardTabs([tab.id])
       if (action === 'duplicate') Tabs.duplicateTabs([tab.id])
       if (action === 'pin') Tabs.repinTabs([tab.id])
       if (action === 'mute') Tabs.remuteTabs([tab.id])
