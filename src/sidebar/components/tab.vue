@@ -422,7 +422,6 @@ function onDoubleClick(): void {
 
   const dc = Settings.state.tabDoubleClick
   if (dc === 'reload') Tabs.reloadTabs([tab.id])
-  else if (dc === 'discard') Tabs.discardTabs([tab.id])
   else if (dc === 'duplicate') Tabs.duplicateTabs([tab.id])
   else if (dc === 'dup_child') Tabs.duplicateTabs([tab.id], true)
   else if (dc === 'pin') Tabs.repinTabs([tab.id])

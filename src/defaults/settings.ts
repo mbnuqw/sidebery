@@ -272,7 +272,7 @@ export const SETTINGS_OPTIONS = {
   hScrollAction: ['switch_panels', 'switch_act_tabs', 'none'],
   scrollThroughTabs: ['panel', 'global', 'psp', 'psg', 'none'],
   discardFoldedDelayUnit: ['sec', 'min'],
-  tabDoubleClick: ['reload', 'discard', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'exp',
+  tabDoubleClick: ['reload', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'exp',
     'new_after', 'new_child', 'close', 'edit_title', 'none'],
   tabLongLeftClick: ['reload', 'discard', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
     'new_child', 'edit_title', 'none'],
