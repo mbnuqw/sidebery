@@ -24,9 +24,9 @@ export async function loadSettings(): Promise<void> {
   Logs.info('Settings.loadSettings()')
 
   // The catch reason: https://bugzilla.mozilla.org/show_bug.cgi?id=1868153
-  const stored = (await browser.storage.managed.get<Stored>('settings').catch(() => {})) ?? {}
-  if (!stored.settings) {
-    stored.settings = {} as SettingsState
+  const storedManaged = (await browser.storage.managed.get<Stored>('settings').catch(() => {})) ?? {}
+  if (!storedManaged.settings) {
+    storedManaged.settings = {} as SettingsState
   }
 
   const storedLocal = await browser.storage.local.get<Stored>('settings')
@@ -39,9 +39,9 @@ export async function loadSettings(): Promise<void> {
     storedLocal.settings = {} as SettingsState
   }
 
-  Utils.normalizeObject(stored.settings, storedLocal.settings)
-  Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
-  Utils.updateObject(Settings.state, stored.settings, Settings.state)
+  Utils.normalizeObject(storedManaged.settings, storedLocal.settings)
+  Utils.normalizeObject(storedManaged.settings, DEFAULT_SETTINGS)
+  Utils.updateObject(Settings.state, storedManaged.settings, Settings.state)
 
   if (Settings.state.hideInact) {
     Settings.state.activateLastTabOnPanelSwitching = true
