@@ -104,6 +104,10 @@ section(ref="el")
     :opts="Settings.getOpts('tabsUrlInTooltip')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
+    label="settings.tabs_container_in_tooltip"
+    v-model:value="Settings.state.tabsContainerInTooltip"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
     label="settings.show_new_tab_btns"
     v-model:value="Settings.state.showNewTabBtns"
     @update:value="Settings.saveDebounced(150)")

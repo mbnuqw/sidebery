@@ -186,6 +186,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const navBookmarksPanelMidClickAction =
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
   const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
+  const tabsContainerInTooltip = prev.tabsContainerInTooltip !== next.tabsContainerInTooltip
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
@@ -203,7 +204,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     Tabs.list.forEach(t => (t.reactive.unread = t.unread = false))
   }
 
-  if (tabsUrlInTooltip || previewTabs) {
+  if (tabsUrlInTooltip || tabsContainerInTooltip || previewTabs) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
   }
 

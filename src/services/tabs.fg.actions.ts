@@ -2751,6 +2751,11 @@ export function getTooltip(tab: Tab): string {
     str += `\n---\n${decodedUrl.split('?')[0]}`
   }
 
+  const containerName = Containers.reactive.byId[tab.cookieStoreId]?.name || ''
+  if (containerName && Settings.state.tabsContainerInTooltip) {
+    str += `\n---\n${containerName}`
+  }
+
   return str
 }
 
