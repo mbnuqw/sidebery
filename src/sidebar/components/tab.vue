@@ -200,8 +200,13 @@ function onMouseDown(e: MouseEvent): void {
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!tab.sel) Selection.selectTab(tab.id)
-      else Selection.deselectTab(tab.id)
+      if (!tab.sel) {
+        // Select active tab on initial ctrl-click, if setting enabled
+        if (Settings.state.ctrlSelAct && !Selection.isSet()) {
+          Selection.selectTab(Tabs.activeId)
+        }
+        Selection.selectTab(tab.id)
+      } else Selection.deselectTab(tab.id)
       return
     }
 
