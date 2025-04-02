@@ -39,7 +39,7 @@ function fixModuleImports(data) {
 }
 
 /**
- * Replace Windows-style path separators with Unix-style paths
+ * Replace Windows-style path separators (\) with Unix-style (/)
  */
 function normalizePath(p) {;
   return p.replace(/\\/g, '/')
