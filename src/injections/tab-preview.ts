@@ -22,6 +22,7 @@ export interface TabPreviewInitData {
   rCrop: number
   tMax: number
   uMax: number
+  unloaded: boolean
 }
 
 const Y_OFFSET = -24
@@ -36,6 +37,7 @@ const state = {
   popupEl: null as HTMLElement | null,
   titleEl: null as HTMLElement | null,
   urlEl: null as HTMLElement | null,
+  previewBoxEl: null as HTMLElement | null,
   previewEl1: null as HTMLElement | null,
   previewEl2: null as HTMLElement | null,
 
@@ -102,6 +104,8 @@ function setPreview(preview: string) {
       if (state.previewEl1) state.previewEl1.style.setProperty('opacity', '0')
     }, 10)
   }
+
+  hidePreviewBoxWhenUnloaded()
 }
 
 function setPopupPosition(y: number) {
@@ -115,6 +119,23 @@ function setPopupPosition(y: number) {
 function show() {
   if (!state.rootEl || state.hidden) return
   state.rootEl.style.opacity = '1'
+
+  hidePreviewBoxWhenUnloaded()
+}
+
+function hidePreviewBoxWhenUnloaded() {
+  if (!state.popupEl) return
+  if (state.unloaded) {
+    state.previewBoxEl?.style.setProperty('display', 'none')
+    // Remove bottom border radii when hiding preview box
+    // (makes the top section look the same when moving mouse between unloaded and loaded tabs)
+    state.popupEl.style.borderBottomLeftRadius = '0px'
+    state.popupEl.style.borderBottomRightRadius = '0px'
+  } else {
+    state.previewBoxEl?.style.setProperty('display', 'block')
+    state.popupEl.style.borderBottomLeftRadius = '8px'
+    state.popupEl.style.borderBottomRightRadius = '8px'
+  }
 }
 
 function hide() {
@@ -194,6 +215,7 @@ async function main() {
   state.previewHeight = calcPreviewHeight(initData.popupWidth)
   state.offsetY = initData.offsetY + heightDifBetweenSidebarAndPage
   state.offsetX = initData.offsetX
+  state.unloaded = initData.unloaded
 
   previewConf.scale = calcScale(
     state.previewWidth,
@@ -337,9 +359,9 @@ async function main() {
   }
 
   // Create preview box element
-  const previewBoxEl = document.createElement('div')
-  state.popupEl.appendChild(previewBoxEl)
-  previewBoxEl.style.cssText = `
+  state.previewBoxEl = document.createElement('div')
+  state.popupEl.appendChild(state.previewBoxEl)
+  state.previewBoxEl.style.cssText = `
     position: relative;
     width: 100%;
     height: ${state.previewHeight + initData.rCrop}px;
@@ -347,7 +369,7 @@ async function main() {
 
   // Create preview 1 element
   state.previewEl1 = document.createElement('div')
-  previewBoxEl.appendChild(state.previewEl1)
+  state.previewBoxEl.appendChild(state.previewEl1)
   state.previewEl1.style.cssText = `
     position: absolute;
     width: calc(100% + ${initData.rCrop}px);
@@ -364,7 +386,7 @@ async function main() {
 
   // Create preview 2 element
   state.previewEl2 = document.createElement('div')
-  previewBoxEl.appendChild(state.previewEl2)
+  state.previewBoxEl.appendChild(state.previewEl2)
   state.previewEl2.style.cssText = `
     position: absolute;
     width: calc(100% + ${initData.rCrop}px);
@@ -380,7 +402,7 @@ async function main() {
 `
 
   compensateZoom()
-  updatePreview(initData.tabId, initData.title, initData.url, false)
+  updatePreview(initData.tabId, initData.title, initData.url, initData.unloaded)
   state.popupHeight = getPopupHeight()
   calcPositionRestraints()
   setPopupPosition(initData.y)

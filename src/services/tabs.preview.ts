@@ -199,6 +199,7 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     rCrop: Settings.state.previewTabsCropRight,
     tMax: Settings.state.previewTabsTitle,
     uMax: Settings.state.previewTabsUrl,
+    unloaded: tab?.discarded ?? false,
   }
 }
 
@@ -248,13 +249,13 @@ async function showPreview(tabId: ID, y?: number) {
 
     if (Windows.focused && Settings.state.previewTabsPageModeFallback === 'w') {
       state.mode = Mode.Window
-      return showPreveiwPopupWindow(tabId, y)
+      return showPreviewPopupWindow(tabId, y)
     }
   }
 
   // Popup window
   else if (Windows.focused && state.mode === Mode.Window) {
-    return showPreveiwPopupWindow(tabId, y)
+    return showPreviewPopupWindow(tabId, y)
   }
 }
 
@@ -276,7 +277,7 @@ export function resetMode() {
   state.modeFallback = false
 }
 
-export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
+export async function showPreviewPopupWindow(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
   if (!tab || tab.invisible) return
 
@@ -332,7 +333,10 @@ export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
 
   previewData.scale = String(scale)
 
-  if (tab.discarded) previewData.off = 'y'
+  if (tab.discarded) {
+    previewData.off = 'y'
+    previewHeight = 0
+  }
 
   const params = new URLSearchParams(previewData).toString()
   const top = (currentWinY ?? 0) + (y ?? 0) + Settings.state.previewTabsWinOffsetY

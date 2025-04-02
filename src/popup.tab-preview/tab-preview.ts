@@ -71,6 +71,7 @@ async function main() {
   updateWindowHeight()
 
   state.unloaded = !!params.get('off')
+  hidePreviewBoxWhenUnloaded()
   if (!state.unloaded) {
     const preview = await browser.tabs.captureTab(state.tabId, previewConf).catch(() => '')
     if (state.tabId === tabId) setPreview(preview)
@@ -105,6 +106,8 @@ const previewEl2 = document.getElementById('preview_2')
 function setPreview(preview: string) {
   if (!previewEl1 || !previewEl2) return
 
+  hidePreviewBoxWhenUnloaded()
+
   if (previewElN) {
     previewElN = 0
     previewEl1.style.setProperty('opacity', '1')
@@ -122,10 +125,10 @@ async function updatePreview(tabId: ID, title: string, url: string, unloaded: bo
   if (state.titleEl) state.titleEl.innerText = title
   if (state.urlEl) state.urlEl.innerText = url
 
-  updateWindowHeight()
-
   state.tabId = tabId
   state.unloaded = unloaded
+
+  updateWindowHeight()
 
   if (!state.unloaded) {
     const preview = await browser.tabs.captureTab(tabId, previewConf).catch(() => '')
@@ -140,10 +143,21 @@ function updateWindowHeight() {
 
   const tHeight = state.titleEl.offsetHeight
   const uHeight = state.urlEl.offsetHeight
+  const previewHeight = state.unloaded ? 0 : state.previewHeight
 
   browser.windows.update(browser.windows.WINDOW_ID_CURRENT, {
-    height: tHeight + uHeight + state.previewHeight,
+    height: tHeight + uHeight + previewHeight,
   })
+}
+
+function hidePreviewBoxWhenUnloaded() {
+  const previewBoxEl = document.getElementById('preview_box')
+  if (state.unloaded) {
+    previewBoxEl?.style.setProperty('display', 'none')
+  } else {
+    previewBoxEl?.style.setProperty('display', 'block')
+  }
+  updateWindowHeight()
 }
 
 main()
