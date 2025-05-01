@@ -74,6 +74,12 @@ export const enum RemovingSnapshotResult {
   Err = -1,
 }
 
+export const enum SnapOpenType {
+  CURRENT_PANEL = 1,
+  NEW_WINDOW,
+  NEW_PRIVATE_WINDOW,
+}
+
 export interface SnapExportTypes {
   JSON?: boolean
   Markdown?: boolean

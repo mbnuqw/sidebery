@@ -551,7 +551,11 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
 /**
  * Open windows (all or by index) of snapshot
  */
-export async function openWindows(snapshot: NormalizedSnapshot, winIndex?: number): Promise<void> {
+export async function openWindows(
+  snapshot: NormalizedSnapshot,
+  winIndex?: number,
+  incognito: boolean = false
+): Promise<void> {
   Logs.info('Snapshots.openWindows')
 
   // Adapt containers
@@ -563,17 +567,21 @@ export async function openWindows(snapshot: NormalizedSnapshot, winIndex?: numbe
   // Open windows
   if (winIndex === undefined) {
     for (let i = 0; i < snapshot.tabs.length; i++) {
-      await openWindow(snapshot, i)
+      await openWindow(snapshot, i, incognito)
     }
   } else {
-    await openWindow(snapshot, winIndex)
+    await openWindow(snapshot, winIndex, incognito)
   }
 }
 
 /**
  * Open window of snapshot
  */
-async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promise<void> {
+async function openWindow(
+  snapshot: NormalizedSnapshot,
+  winIndex: number,
+  incognito: boolean = false
+): Promise<void> {
   Logs.info('Snapshots.openWindow')
 
   const winTabs = snapshot.tabs[winIndex]
@@ -622,7 +630,7 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
   const firstItem = items[0]
   if (firstItem) firstItem.active = true
 
-  await Windows.createWithTabs(items, { incognito: false })
+  await Windows.createWithTabs(items, { incognito: incognito })
 }
 
 function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {

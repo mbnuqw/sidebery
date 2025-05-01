@@ -43,7 +43,8 @@
                 svg.exp-icon: use(xlink:href="#icon_expand")
               .win-name {{translate('snapshot.window_title') + ' ' + (i + 1)}}
               .win-len ({{win.tabsLen}} {{translate('snapshot.snap_tab', win.tabsLen)}})
-              .btn(@click="openWindow(state.activeSnapshot, i)") {{translate('snapshot.btn_open_win')}}
+              .btn(@click="openWindow(state.activeSnapshot, i, false)") {{translate('snapshot.btn_open_win')}}
+              .btn(@click="openWindow(state.activeSnapshot, i, true)") {{translate('snapshot.btn_open_private_win')}}
             .panels(v-show="!win.folded")
               .panel(v-for="panel in win.panels" :key="panel.id" :data-void="panel.id === -1")
                 .panel-bar(:data-color="panel.color" :data-folded="panel.folded")
@@ -65,7 +66,14 @@
                     :viewerState="state")
       .selection-bar(:data-active="!!selectedTabsLen")
         .info {{translate('snapshot.selected')}} {{selectedTabsLen}}
-        .btn(@click="openSelectedTabs()") {{translate('snapshot.sel.open_in_panel')}}
+        DropDownButton(
+          :label="translate('snapshot.sel.open_in')")
+          a(@click="openSelectedTabs(SnapOpenType.NEW_WINDOW)").snapshot-export-opt
+            .label {{translate('snapshot.sel.open_in_window')}}
+          a(@click="openSelectedTabs(SnapOpenType.NEW_PRIVATE_WINDOW)").snapshot-export-opt
+            .label {{translate('snapshot.sel.open_in_private_window')}}
+          a(@click="openSelectedTabs(SnapOpenType.CURRENT_PANEL)").snapshot-export-opt
+            .label {{translate('snapshot.sel.open_in_panel')}}
         .btn(@click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
 
     .placeholder(v-if="!state.snapshots.length")
@@ -76,10 +84,19 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, nextTick } from 'vue'
+import { computed, nextTick, reactive } from 'vue'
 import * as Utils from 'src/utils'
-import { Stored, Snapshot, SnapshotState, RemovingSnapshotResult } from 'src/types'
-import { SnapTabState, ItemInfo, NormalizedSnapshot, SnapExportInfo } from 'src/types'
+import {
+  ItemInfo,
+  NormalizedSnapshot,
+  RemovingSnapshotResult,
+  SnapExportInfo,
+  SnapOpenType,
+  Snapshot,
+  SnapshotState,
+  SnapTabState,
+  Stored,
+} from 'src/types'
 import { CONTAINER_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as IPC from 'src/services/ipc'
@@ -211,7 +228,7 @@ function onClick() {
   state.mouseUpShiftMode = true
 }
 
-async function openSelectedTabs(): Promise<void> {
+async function openSelectedTabs(how: SnapOpenType): Promise<void> {
   if (!state.activeSnapshot) return
 
   const items: ItemInfo[] = []
@@ -244,25 +261,29 @@ async function openSelectedTabs(): Promise<void> {
     }
   }
 
-  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
-  if (Utils.isTabsPanel(activePanel)) {
-    await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
-  } else {
-    for (const item of items) {
-      const conf: browser.tabs.CreateProperties = {
-        url: Utils.normalizeUrl(item.url, item.title),
-        windowId: Windows.id,
-        active: false,
-        cookieStoreId: item.container,
-      }
-      if (conf.url && !conf.url.startsWith('a') && item.title) {
-        conf.discarded = true
-        conf.title = item.title
-        conf.active = false
-      }
+  if (how == SnapOpenType.CURRENT_PANEL) {
+    const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
+    if (Utils.isTabsPanel(activePanel)) {
+      await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
+    } else {
+      for (const item of items) {
+        const conf: browser.tabs.CreateProperties = {
+          url: Utils.normalizeUrl(item.url, item.title),
+          windowId: Windows.id,
+          active: false,
+          cookieStoreId: item.container,
+        }
+        if (conf.url && !conf.url.startsWith('a') && item.title) {
+          conf.discarded = true
+          conf.title = item.title
+          conf.active = false
+        }
 
-      browser.tabs.create(conf)
+        await browser.tabs.create(conf)
+      }
     }
+  } else {
+    await Windows.createWithTabs(items, { incognito: how == SnapOpenType.NEW_PRIVATE_WINDOW })
   }
 }
 
@@ -282,13 +303,17 @@ async function openAllWindows(snapshot: SnapshotState | null): Promise<void> {
   }
 }
 
-async function openWindow(snapshot: SnapshotState | null, winIndex: number): Promise<void> {
+async function openWindow(
+  snapshot: SnapshotState | null,
+  winIndex: number,
+  incognito: boolean
+): Promise<void> {
   if (!snapshot) return
 
   const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
 
   try {
-    await IPC.bg('openSnapshotWindows', normSnapshot, winIndex)
+    await IPC.bg('openSnapshotWindows', normSnapshot, winIndex, incognito)
   } catch (err) {
     Logs.err('Snapshots: Cannot openWindow', err)
   }

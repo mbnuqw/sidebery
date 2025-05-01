@@ -6814,6 +6814,9 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '開啟視窗',
     ja: 'ウィンドウを開く',
   },
+  'snapshot.btn_open_private_win': {
+    en: 'Open private window',
+  },
   'snapshot.global_pin_title': {
     en: 'Pinned tabs',
     de: 'Angeheftete Tabs',
@@ -6834,15 +6837,17 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '已選中：',
     ja: '選択中：',
   },
+  'snapshot.sel.open_in': {
+    en: 'Open in...',
+  },
   'snapshot.sel.open_in_panel': {
-    en: 'Open in current panel',
-    de: 'Im aktuellen Panel öffnen',
-    hu: 'Megnyitás a jelenlegi panelon',
-    pl: 'Otwórz w obecnym panelu',
-    ru: 'Открыть в текущей панели',
-    zh_CN: '在当前面板中打开',
-    zh_TW: '在當前面板中開啟',
-    ja: '現在のパネルで開く',
+    en: 'Current panel',
+  },
+  'snapshot.sel.open_in_window': {
+    en: 'New window',
+  },
+  'snapshot.sel.open_in_private_window': {
+    en: 'New private window',
   },
   'snapshot.sel.reset_sel': {
     en: 'Reset selection',
