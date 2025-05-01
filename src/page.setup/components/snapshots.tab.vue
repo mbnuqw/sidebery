@@ -114,21 +114,26 @@ function onCheckboxMouseUp(e: MouseEvent, tab: SnapTabState): void {
   }
   mouseDownTabId = undefined
 
-  if (e.shiftKey && e.button === 0) {
-    if (props.viewerState.mouseUpShiftTabId === null) {
-      props.viewerState.mouseUpShiftTabId = tab.id ?? null
-      tab.sel = !tab.sel
-      props.viewerState.mouseUpShiftMode = tab.sel
-    } else {
-      selectRange(props.viewerState.mouseUpShiftTabId, tab.id, !props.viewerState.mouseUpShiftMode)
-      props.viewerState.mouseUpShiftTabId = null
-    }
-    return
-  }
-  props.viewerState.mouseUpShiftTabId = null
+  // Only handle left-click events.
+  if (e.button !== 0) return
 
-  if (e.button === 0) {
+  const viewerState = props.viewerState
+  // Helper to toggle the tab selection and update viewerState.
+  const toggleTab = (tab: SnapTabState): void => {
+    viewerState.mouseUpShiftTabId = tab.id ?? null
     tab.sel = !tab.sel
+    viewerState.mouseUpShiftMode = tab.sel
+  }
+
+  if (e.shiftKey) {
+    if (viewerState.mouseUpShiftTabId === null) {
+      toggleTab(tab)
+    } else {
+      selectRange(viewerState.mouseUpShiftTabId, tab.id, !viewerState.mouseUpShiftMode)
+      viewerState.mouseUpShiftTabId = null
+    }
+  } else {
+    toggleTab(tab)
   }
 }
 
