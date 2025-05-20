@@ -10,6 +10,7 @@ export interface Tab extends NativeTab {
   prevPanelId: ID
   lvl: number
   sel: boolean
+  selLock: boolean
   updated: boolean
   loading: boolean | 'ok' | 'err'
   warn: boolean
@@ -67,6 +68,7 @@ export interface ReactiveTabProps {
   lvl: number
   branchLen: number
   sel: boolean
+  selLock: boolean
   warn: boolean
   updated: boolean
   unread: boolean

@@ -86,7 +86,7 @@ import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/type
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -285,7 +285,7 @@ function selectPanel(dir: 1 | -1) {
 
   let selPanelId: ID | undefined
   if (Selection.isNavItem()) {
-    const firstSelId = Selection.get()[0]
+    const firstSelId = Selection.ids()[0]
     if (Sidebar.panelsById[firstSelId]) selPanelId = firstSelId
   }
   if (selPanelId === undefined || !Sidebar.panelsById[selPanelId]) {

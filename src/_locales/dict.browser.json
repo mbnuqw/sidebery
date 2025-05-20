@@ -101,6 +101,21 @@
     "zh_CN": "复制选定标签页/书签或活动标签页的网址",
     "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
   },
+  "KbCopyByTmplt0": {
+    "en": "Copy selected tabs/bookmarks or active tab by first template"
+  },
+  "KbCopyByTmplt1": {
+    "en": "Copy selected tabs/bookmarks or active tab by second template"
+  },
+  "KbCopyByTmplt2": {
+    "en": "Copy selected tabs/bookmarks or active tab by third template"
+  },
+  "KbCopyByTmplt3": {
+    "en": "Copy selected tabs/bookmarks or active tab by fourth template"
+  },
+  "KbCopyByTmplt4": {
+    "en": "Copy selected tabs/bookmarks or active tab by fifth template"
+  },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
     "de": "Öffne Lesezeichen Unter-Panel",
@@ -484,6 +499,16 @@
     "zh_CN": "重置选择",
     "zh_TW": "取消選取",
     "ja": "選択をリセット"
+  },
+  "KbLockSel": {
+    "en": "Lock/Unlock selection",
+    "de": "Auswahl sperren/entsperren",
+    "hu": "Kijelölés zárolása/feloldása",
+    "pl": "Zablokuj/odblokuj wybór",
+    "ru": "Заблокировать/разблокировать выбор",
+    "zh_CN": "锁定/解锁选择",
+    "zh_TW": "鎖定/解鎖選擇",
+    "ja": "選択のロック/ロック解除"
   },
   "KbActivate": {
     "en": "Activate selection",

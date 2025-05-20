@@ -9,6 +9,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
   updateSidebarTitle: true,
   markWindow: false,
   markWindowPreface: '[Sidebery] ',
+  copyTreeIndent: '',
+  copyMultiBullet: '',
+  copyTemplates: 'HTML:%B<a href="%U">%CT</a>\nMarkdown:%B[%CT](%U)',
+  updTooltipDelay: 100,
 
   // Context menu
   ctxMenuNative: false,
@@ -217,6 +221,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsSecondClickActPrevPanelOnly: false,
   tabsSecondClickActPrevNoUnload: false,
   shiftSelAct: true,
+  ctrlSelAct: true,
   activateOnMouseUp: false,
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',

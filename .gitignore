@@ -9,3 +9,4 @@ build/*
 !build/*.mjs
 /.devenv/
 /.direnv/
+.idea

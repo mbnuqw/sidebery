@@ -37,6 +37,23 @@ section(ref="el")
       :note="translate('settings.mark_window_preface_note')"
       :inactive="!Settings.state.markWindow"
       @update:value="Settings.saveDebounced(500)")
+  TextField.-inline(
+    label="settings.copy_title_url_indent"
+    v-model:value="Settings.state.copyTreeIndent"
+    :or="translate('settings.copy_title_url_indent_or')"
+    @update:value="Settings.saveDebounced(500)")
+  TextField.-inline(
+    label="settings.copy_multi_bullet"
+    v-model:value="Settings.state.copyMultiBullet"
+    :or="translate('settings.copy_multi_bullet_or')"
+    @update:value="Settings.saveDebounced(500)")
+  TextField.copyTemplatesTextField(
+    label="settings.copy_templates"
+    v-model:value="Settings.state.copyTemplates"
+    or="---"
+    input-width="66"
+    :note="translate('settings.copy_templates_note')"
+    @update:value="Settings.saveDebounced(500)")
   .ctrls
     .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
     .btn(@click="showPermissionsPopup") {{translate('settings.permissions_btn')}}

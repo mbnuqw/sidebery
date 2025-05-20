@@ -385,3 +385,12 @@ export const enum MediaState {
   Audible = 1,
   Paused = 2,
 }
+
+export interface CopyTemplate {
+  name?: string
+  str: string
+  hasCT?: boolean
+  hasT?: boolean
+  hasU?: boolean
+  hasB?: boolean
+}

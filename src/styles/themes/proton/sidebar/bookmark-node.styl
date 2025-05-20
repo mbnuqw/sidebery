@@ -104,6 +104,12 @@
 .BookmarkNode[data-selected="true"] > .body:before
   background-color: var(--frame-el-overlay-selected-bg)
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
+.BookmarkNode[data-locked-selection="true"] > .body:before
+  outline: 2px dashed var(--frame-el-overlay-selected-border)
+  outline-offset: -2px
+.BookmarkNode[data-selected="true"][data-locked-selection="true"] > .body:before
+  background-color: var(--frame-el-overlay-selected-bg)
+  box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
 
 .BookmarkNode[data-open="true"] > .body:after
   content: ''

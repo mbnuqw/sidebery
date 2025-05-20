@@ -4,7 +4,7 @@ import { MenuOption } from 'src/types'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
@@ -13,13 +13,13 @@ import { Search } from './search'
 
 export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   openInNewWin: () => {
-    const allSeparators = Selection.get().every(id => {
+    const allSeparators = Selection.ids().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
     const option: MenuOption = {
       label: translate('menu.bookmark.open_in_new_window'),
       icon: 'icon_new_win',
-      onClick: () => Bookmarks.openInNewWindow(Selection.get()),
+      onClick: () => Bookmarks.openInNewWindow(Selection.ids()),
     }
     if (allSeparators) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -27,13 +27,13 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   openInNewPrivWin: () => {
-    const allSeparators = Selection.get().every(id => {
+    const allSeparators = Selection.ids().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
     const option: MenuOption = {
       label: translate('menu.bookmark.open_in_new_priv_window'),
       icon: 'icon_new_priv_win',
-      onClick: () => Bookmarks.openInNewWindow(Selection.get(), true),
+      onClick: () => Bookmarks.openInNewWindow(Selection.ids(), true),
     }
     if (allSeparators) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -44,13 +44,13 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const node = Bookmarks.reactive.byId[Selection.getFirst()]
     if (!node) return
 
-    const allSeparators = Selection.get().every(id => {
+    const allSeparators = Selection.ids().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
     const option: MenuOption = {
       label: translate('menu.bookmark.open_in_new_panel'),
       icon: 'icon_add_tabs_panel',
-      onClick: () => Bookmarks.openInNewPanel(Selection.get()),
+      onClick: () => Bookmarks.openInNewPanel(Selection.ids()),
       onAltClick: () => Bookmarks.openAsTabsPanel(node, false),
     }
     if (allSeparators) option.inactive = true
@@ -61,7 +61,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   openInPanel: () => {
     const node = Bookmarks.reactive.byId[Selection.getFirst()]
     if (!node) return
-    const allSeparators = Selection.get().every(id => {
+    const allSeparators = Selection.ids().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
     if (allSeparators && !Settings.state.ctxMenuRenderInact) return
@@ -75,7 +75,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
         img: p.iconIMG,
         color: p.color,
         inactive: allSeparators,
-        onClick: () => Bookmarks.open(Selection.get(), { panelId: p.id }),
+        onClick: () => Bookmarks.open(Selection.ids(), { panelId: p.id }),
       })
     }
 
@@ -85,7 +85,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   openInCtr: () => {
     const node = Bookmarks.reactive.byId[Selection.getFirst()]
     if (!node) return
-    const allSeparators = Selection.get().every(id => {
+    const allSeparators = Selection.ids().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
     if (allSeparators && !Settings.state.ctxMenuRenderInact) return
@@ -96,7 +96,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
         label: translate('menu.bookmark.open_in_default_ctr'),
         icon: 'icon_ffm',
         inactive: allSeparators,
-        onClick: () => Bookmarks.open(Selection.get(), { containerId: CONTAINER_ID }),
+        onClick: () => Bookmarks.open(Selection.ids(), { containerId: CONTAINER_ID }),
       })
     }
 
@@ -109,7 +109,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
           icon: c.icon,
           color: c.color,
           inactive: allSeparators,
-          onClick: () => Bookmarks.open(Selection.get(), { containerId: c.id }),
+          onClick: () => Bookmarks.open(Selection.ids(), { containerId: c.id }),
         })
       }
     }
@@ -160,7 +160,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_name_asc'),
       icon: 'icon_sort_name_asc',
-      onClick: () => Bookmarks.sortBookmarks('name', Selection.get(), 1),
+      onClick: () => Bookmarks.sortBookmarks('name', Selection.ids(), 1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') option.inactive = true
     if (Search.reactive.value) option.inactive = true
@@ -175,7 +175,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_name_des'),
       icon: 'icon_sort_name_des',
-      onClick: () => Bookmarks.sortBookmarks('name', Selection.get(), -1),
+      onClick: () => Bookmarks.sortBookmarks('name', Selection.ids(), -1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') option.inactive = true
     if (Search.reactive.value) option.inactive = true
@@ -189,7 +189,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_link_asc'),
       icon: 'icon_sort_url_asc',
-      onClick: () => Bookmarks.sortBookmarks('link', Selection.get(), 1),
+      onClick: () => Bookmarks.sortBookmarks('link', Selection.ids(), 1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') {
       option.inactive = true
@@ -205,7 +205,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_link_des'),
       icon: 'icon_sort_url_des',
-      onClick: () => Bookmarks.sortBookmarks('link', Selection.get(), -1),
+      onClick: () => Bookmarks.sortBookmarks('link', Selection.ids(), -1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') {
       option.inactive = true
@@ -221,7 +221,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_time_asc'),
       icon: 'icon_sort_time_asc',
-      onClick: () => Bookmarks.sortBookmarks('time', Selection.get(), 1),
+      onClick: () => Bookmarks.sortBookmarks('time', Selection.ids(), 1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') {
       option.inactive = true
@@ -237,7 +237,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.sort_by_time_des'),
       icon: 'icon_sort_time_des',
-      onClick: () => Bookmarks.sortBookmarks('time', Selection.get(), -1),
+      onClick: () => Bookmarks.sortBookmarks('time', Selection.ids(), -1),
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') {
       option.inactive = true
@@ -268,7 +268,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.delete_bookmark'),
       icon: 'icon_close',
-      onClick: () => Bookmarks.removeBookmarks(Selection.get()),
+      onClick: () => Bookmarks.removeBookmarks(Selection.ids()),
     }
     if (node.parentId === 'root________') option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -306,7 +306,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   copyBookmarksUrls: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstNode = Bookmarks.reactive.byId[selected[0]]
     let len = selected.length
     if (firstNode.children?.length) len += firstNode.children.length
@@ -314,7 +314,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       label: translate('menu.copy_urls', len),
       icon: 'icon_link',
       badge: 'icon_copy_badge',
-      onClick: () => Bookmarks.copyUrls(selected),
+      onClick: () => Bookmarks.copy(selected, { str: '%B%U', hasU: true, hasB: true }),
     }
 
     if (selected.length === 1 && firstNode?.type === 'separator') option.inactive = true
@@ -323,7 +323,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   copyBookmarksTitles: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstNode = Bookmarks.reactive.byId[selected[0]]
     let len = selected.length
     if (firstNode.children?.length) len += firstNode.children.length
@@ -331,7 +331,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       label: translate('menu.copy_titles', len),
       icon: 'icon_title',
       badge: 'icon_copy_badge',
-      onClick: () => Bookmarks.copyTitles(selected),
+      onClick: () => Bookmarks.copy(selected, { str: '%B%CT', hasCT: true, hasB: true }),
     }
 
     if (selected.length === 1 && firstNode?.type === 'separator') option.inactive = true
@@ -339,8 +339,28 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     return option
   },
 
+  copyBookmarksByTemplates: () => {
+    const opts: MenuOption[] = []
+    const selected = Selection.ids()
+    const firstNode = Bookmarks.reactive.byId[selected[0]]
+    const inactive = selected.length === 1 && firstNode?.type === 'separator'
+    if (!Settings.state.ctxMenuRenderInact && inactive) return
+
+    for (const t of Settings.copyTemplates) {
+      opts.push({
+        label: translate('menu.copy_by_template', t.name),
+        icon: 'icon_code',
+        badge: 'icon_copy_badge',
+        inactive,
+        onClick: () => Bookmarks.copy(selected, t),
+      })
+    }
+
+    if (opts.length) return opts
+  },
+
   moveBookmarksTo: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.bookmark.move_to'),
       icon: 'icon_move',

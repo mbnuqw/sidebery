@@ -10,6 +10,10 @@ export interface SettingsState {
   updateSidebarTitle: boolean
   markWindow: boolean
   markWindowPreface: string
+  copyTreeIndent: string
+  copyMultiBullet: string
+  copyTemplates: string
+  updTooltipDelay: number
 
   // Context menu
   ctxMenuNative: boolean
@@ -220,6 +224,7 @@ export interface SettingsState {
   tabsSecondClickActPrevPanelOnly: boolean
   tabsSecondClickActPrevNoUnload: boolean
   shiftSelAct: boolean
+  ctrlSelAct: boolean
   activateOnMouseUp: boolean
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]
   tabLongRightClick: (typeof SETTINGS_OPTIONS.tabLongRightClick)[number]

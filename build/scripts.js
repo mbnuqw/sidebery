@@ -39,6 +39,13 @@ function fixModuleImports(data) {
 }
 
 /**
+ * Replace Windows-style path separators (\) with Unix-style (/)
+ */
+function normalizePath(p) {
+  return p.replace(/\\/g, '/')
+}
+
+/**
  * Get list of .ts files
  */
 async function getSrcFiles() {
@@ -51,11 +58,22 @@ async function getSrcFiles() {
     if (!isTS && !isVUE) continue
 
     const srcPath = path.join(f.dir, f.file)
+    const normalizedSrcPath = normalizePath(srcPath)
     const outDir = path.join(OUTPUT_DIR, f.dir.replace(NORM_SRC_DIR, ''))
     const outFile = isTS ? f.file.slice(0, -3) + '.js' : f.file + '.js'
     const outPath = path.join(outDir, outFile)
 
-    result.push({ srcDir: f.dir, srcFile: f.file, srcPath, outDir, outFile, outPath, isTS, isVUE })
+    result.push({
+      srcDir: f.dir,
+      srcFile: f.file,
+      srcPath,
+      normalizedSrcPath,
+      outDir,
+      outFile,
+      outPath,
+      isTS,
+      isVUE,
+    })
   }
 
   return result
@@ -174,8 +192,8 @@ async function compileVueComponent(filePath, fileName) {
 
 async function compileTSFile(file) {
   let result
-  if (BUNDLES[file.srcPath]) {
-    const conf = BUNDLES[file.srcPath]
+  if (BUNDLES[file.normalizedSrcPath]) {
+    const conf = BUNDLES[file.normalizedSrcPath]
     await esbuild.build({
       entryPoints: [file.srcPath],
       tsconfig: 'tsconfig.json',

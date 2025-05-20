@@ -6,6 +6,7 @@
   :data-expanded="expanded"
   :data-parent="!!children?.length"
   :data-selected="node.sel"
+  :data-locked-selection="node.selLock"
   :data-open="node.isOpen")
   .body(
     :title="tooltip"
@@ -37,7 +38,7 @@ import { computed, ref } from 'vue'
 import { Bookmark, DragInfo, DragItem, MenuType, DragType, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'

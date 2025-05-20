@@ -4,7 +4,7 @@ import { BKM_OTHER_ID, ADDON_HOST, BKM_ROOT_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTabProps } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, NativeTab } from 'src/types'
-import { ItemInfo, TabTreeData, TabStatus } from 'src/types'
+import { ItemInfo, TabTreeData, TabStatus, CopyTemplate } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -15,7 +15,7 @@ import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
-import { Selection } from './selection'
+import * as Selection from './selection'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -66,7 +66,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       isParent: tab.isParent,
       folded: tab.folded,
       title: tab.title,
-      tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
+      tooltip: '',
       customTitle: tab.customTitle ?? null,
       customTitleEdit: false,
       customColor: tab.customColor ?? null,
@@ -74,6 +74,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       lvl: tab.lvl,
       branchLen: 0,
       sel: tab.sel,
+      selLock: tab.selLock,
       warn: tab.warn,
       updated: tab.updated,
       unread: !!tab.unread,
@@ -107,7 +108,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     isParent: tab.isParent,
     folded: tab.folded,
     title: tab.title,
-    tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
+    tooltip: '',
     customTitle: tab.customTitle ?? null,
     customTitleEdit: false,
     customColor: tab.customColor ?? null,
@@ -115,6 +116,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     lvl: tab.lvl,
     branchLen: 0,
     sel: tab.sel,
+    selLock: tab.selLock,
     warn: tab.warn,
     updated: tab.updated,
     unread: !!tab.unread,
@@ -2585,35 +2587,47 @@ export function findAncestor(childTab: Tab, cb: (t: Tab) => any): Tab | undefine
   }
 }
 
-export async function copyUrls(ids: ID[]): Promise<void> {
+export async function copy(ids: ID[], template: CopyTemplate) {
   if (!Permissions.reactive.clipboardWrite) {
     const result = await Permissions.request('clipboardWrite')
     if (!result) return
   }
 
-  let urls = ''
+  Tabs.sortTabIds(ids)
+
+  const isDBG = template.str === '%DBG'
+  const lines: string[] = []
+  const bullet = ids.length > 1 ? Settings.state.copyMultiBullet : ''
+  const indent = Settings.state.copyTreeIndent
+  const indentLevelsById = new Map<ID, number>()
   for (const id of ids) {
     const tab = Tabs.byId[id]
-    if (tab) urls += '\n' + tab.url
+    if (!tab) continue
+
+    if (isDBG) {
+      lines.push(JSON.stringify(tab, null, 2))
+      continue
+    }
+
+    // Get indent lvl
+    let indentLvl = 0
+    if (tab.lvl > 0) {
+      const pTabId = Tabs.findAncestorId(id, pid => ids.includes(pid))
+      const pLvl = pTabId ? indentLevelsById.get(pTabId) : undefined
+      indentLvl = pLvl !== undefined ? pLvl + 1 : 0
+    }
+
+    indentLevelsById.set(tab.id, indentLvl)
+
+    let result = template.str
+    if (template.hasB) result = result.replaceAll('%B', bullet)
+    if (template.hasCT) result = result.replaceAll('%CT', tab.customTitle || tab.title)
+    if (template.hasT) result = result.replaceAll('%T', tab.title)
+    if (template.hasU) result = result.replaceAll('%U', tab.url)
+    lines.push(indent.repeat(indentLvl) + result)
   }
 
-  const resultString = urls.trim()
-  if (resultString) navigator.clipboard.writeText(resultString)
-}
-
-export async function copyTitles(ids: ID[]): Promise<void> {
-  if (!Permissions.reactive.clipboardWrite) {
-    const result = await Permissions.request('clipboardWrite')
-    if (!result) return
-  }
-
-  let titles = ''
-  for (const id of ids) {
-    const tab = Tabs.byId[id]
-    if (tab) titles += '\n' + tab.title
-  }
-
-  const resultString = titles.trim()
+  const resultString = lines.join('\n')
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
@@ -2723,14 +2737,7 @@ export function pringDbgInfo(reset = false): void {
   }
 }
 
-const updateTooltipBuf: Map<ID, number> = new Map()
-export function updateTooltipDebounced(tabId: ID, delay: number) {
-  clearTimeout(updateTooltipBuf.get(tabId))
-  updateTooltipBuf.set(tabId, setTimeout(updateTooltip, delay, tabId))
-}
 export function updateTooltip(tabId: ID) {
-  updateTooltipBuf.delete(tabId)
-
   const tab = Tabs.byId[tabId]
   if (!tab) return
 

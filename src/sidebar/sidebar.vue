@@ -114,7 +114,7 @@ import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -376,7 +376,7 @@ function onMouseLeave(): void {
   if (Tabs.activateSelectedOnMouseLeave && Selection.isTabs()) {
     Tabs.activateSelectedOnMouseLeave = false
 
-    const id = Selection.get()[0]
+    const id = Selection.ids()[0]
     const targetTab = Tabs.byId[id]
     if (!targetTab || targetTab.id === Tabs.activeId) return Selection.resetSelection()
 
@@ -416,7 +416,7 @@ function onMouseUp(e: MouseEvent): void {
       return
     }
 
-    Tabs.removeTabs(Selection.get())
+    Tabs.removeTabs(Selection.ids())
   } else if (e.button === 2) {
     let type: MenuType | undefined
     if (Selection.isBookmarks()) type = MenuType.Bookmarks

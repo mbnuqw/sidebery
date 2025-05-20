@@ -6,7 +6,7 @@ import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import * as Favicons from 'src/services/favicons.fg'
@@ -746,8 +746,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       Bookmarks.markOpenBookmarksDebounced(change.url)
     }
 
-    Tabs.updateTooltipDebounced(tabId, 1000)
-
     // Update filtered results
     if (Search.rawValue && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
       Search.searchDebounced(500, undefined, true)
@@ -771,31 +769,35 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
     // Mark tab with updated title
     if (
-      Settings.state.tabsUpdateMark === 'all' ||
-      (Settings.state.tabsUpdateMark === 'pin' && tab.pinned) ||
-      (Settings.state.tabsUpdateMark === 'norm' && !tab.pinned)
+      !tab.updated && // Tab is not updated
+      !nativeTab.active && // Tab is inactive
+      !tab.internal && //  Tab is not internal
+      !tab.discarded && // Tab is loaded
+      // Check settings
+      (Settings.tabsUpdateMarkAll ||
+        (Settings.tabsUpdateMarkPin && tab.pinned) ||
+        (Settings.tabsUpdateMarkNorm && !tab.pinned)) &&
+      // Tab is inactive for more than 5s
+      Date.now() - nativeTab.lastAccessed > 5000 &&
+      // Current url is the same as previous
+      tab.url === nativeTab.url
     ) {
-      if (!nativeTab.active && !tab.internal && Date.now() - nativeTab.lastAccessed > 5000) {
-        // If current url is the same as previous
-        if (tab.url === nativeTab.url) {
-          // Check if this title update is the first for current URL
-          const ok = Settings.state.tabsUpdateMarkFirst
-            ? !URL_HOST_PATH_RE.test(nativeTab.title)
-            : !URL_HOST_PATH_RE.test(tab.title) && !URL_HOST_PATH_RE.test(nativeTab.title)
-          if (ok && !tab.discarded) {
-            const panel = Sidebar.panelsById[tab.panelId]
-            tab.updated = true
-            tab.reactive.updated = true
-            if (
-              Utils.isTabsPanel(panel) &&
-              (!nativeTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-              panel.updatedTabs &&
-              !panel.updatedTabs.includes(tabId)
-            ) {
-              panel.updatedTabs.push(tabId)
-              panel.reactive.updated = panel.updatedTabs.length > 0
-            }
-          }
+      // Check if this title update is the first for current URL
+      const ok = Settings.state.tabsUpdateMarkFirst
+        ? !URL_HOST_PATH_RE.test(nativeTab.title)
+        : !URL_HOST_PATH_RE.test(tab.title) && !URL_HOST_PATH_RE.test(nativeTab.title)
+      if (ok) {
+        const panel = Sidebar.panelsById[tab.panelId]
+        tab.updated = true
+        tab.reactive.updated = true
+        if (
+          Utils.isTabsPanel(panel) &&
+          (!nativeTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+          panel.updatedTabs &&
+          !panel.updatedTabs.includes(tabId)
+        ) {
+          panel.updatedTabs.push(tabId)
+          panel.reactive.updated = true
         }
       }
     }
@@ -807,8 +809,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
         tab.reactive.customTitle = null
       }
     }
-
-    Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
     if (Search.rawValue && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {

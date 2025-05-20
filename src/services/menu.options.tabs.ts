@@ -5,7 +5,7 @@ import { MenuOption, Window, Tab } from 'src/types'
 import { translate } from 'src/dict'
 import { Tabs } from 'src/services/tabs.fg'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Menu } from 'src/services/menu'
@@ -97,7 +97,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tab.move_to_new_panel'),
       icon: 'icon_add_tabs_panel',
       badge: 'icon_move_badge',
-      onClick: () => Tabs.moveToNewPanel(Selection.get()),
+      onClick: () => Tabs.moveToNewPanel(Selection.ids()),
     }
 
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -171,7 +171,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         label: translate('menu.tab.reopen_in_default_container'),
         icon: 'icon_ff',
         badge: 'icon_reopen',
-        onClick: () => Tabs.reopenInContainer(Selection.get(), CONTAINER_ID),
+        onClick: () => Tabs.reopenInContainer(Selection.ids(), CONTAINER_ID),
       })
     }
 
@@ -183,7 +183,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         icon: c.icon,
         badge: 'icon_reopen',
         color: c.color,
-        onClick: () => Tabs.reopenInContainer(Selection.get(), c.id),
+        onClick: () => Tabs.reopenInContainer(Selection.ids(), c.id),
       })
     }
 
@@ -197,7 +197,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tab.reopen_in_new_container'),
       icon: 'icon_new_container',
       badge: 'icon_reopen',
-      onClick: () => Tabs.reopenTabsInNewContainer(Selection.get()),
+      onClick: () => Tabs.reopenTabsInNewContainer(Selection.ids()),
     }
 
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -205,7 +205,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   urlConf: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
     if (!firstTab) return
 
@@ -231,7 +231,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       opts.push({
         label: translate('menu.tab.open_in_default_container'),
         icon: 'icon_ff',
-        onClick: () => Tabs.openInContainer(Selection.get(), CONTAINER_ID),
+        onClick: () => Tabs.openInContainer(Selection.ids(), CONTAINER_ID),
       })
     }
 
@@ -242,7 +242,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         label: translate('menu.tab.open_in_') + c.name,
         icon: c.icon,
         color: c.color,
-        onClick: () => Tabs.openInContainer(Selection.get(), c.id),
+        onClick: () => Tabs.openInContainer(Selection.ids(), c.id),
       })
     }
 
@@ -250,7 +250,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   pin: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
     if (!firstTab) return
     return {
@@ -264,7 +264,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return {
       label: translate('menu.tab.reload'),
       icon: 'icon_reload',
-      onClick: () => Tabs.reloadTabs(Selection.get()),
+      onClick: () => Tabs.reloadTabs(Selection.ids()),
     }
   },
 
@@ -272,7 +272,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return {
       label: translate('menu.tab.duplicate'),
       icon: 'icon_duplicate',
-      onClick: () => Tabs.duplicateTabs(Selection.get()),
+      onClick: () => Tabs.duplicateTabs(Selection.ids()),
     }
   },
 
@@ -280,12 +280,12 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return {
       label: translate('menu.tab.bookmark'),
       icon: 'icon_star',
-      onClick: () => Tabs.bookmarkTabs(Selection.get()),
+      onClick: () => Tabs.bookmarkTabs(Selection.ids()),
     }
   },
 
   mute: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
     const isMuted = firstTab?.mutedInfo?.muted
     return {
@@ -299,7 +299,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.discard'),
       icon: 'icon_discard',
-      onClick: () => Tabs.discardTabs(Selection.get()),
+      onClick: () => Tabs.discardTabs(Selection.ids()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (Selection.getLength() === 1 && firstTab?.discarded) option.inactive = true
@@ -311,7 +311,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.group'),
       icon: 'icon_group_tabs',
-      onClick: () => Tabs.groupTabs(Selection.get()),
+      onClick: () => Tabs.groupTabs(Selection.ids()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!Settings.state.tabsTree || firstTab?.pinned) option.inactive = true
@@ -323,7 +323,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.flatten'),
       icon: 'icon_flatten',
-      onClick: () => Tabs.flattenTabs(Selection.get()),
+      onClick: () => Tabs.flattenTabs(Selection.ids()),
     }
     const selLen = Selection.getLength()
     if (selLen <= 0) option.inactive = true
@@ -331,7 +331,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
 
-    if (Selection.get().every(t => firstTab.lvl === Tabs.byId[t]?.lvl)) {
+    if (Selection.ids().every(t => firstTab.lvl === Tabs.byId[t]?.lvl)) {
       option.inactive = true
     }
     if (selLen === 1 && firstTab.isParent) option.inactive = false
@@ -345,7 +345,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return {
       label: translate('menu.tab.clear_cookies'),
       icon: 'icon_cookie',
-      onClick: () => Tabs.clearTabsCookies(Selection.get()),
+      onClick: () => Tabs.clearTabsCookies(Selection.ids()),
     }
   },
 
@@ -353,7 +353,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close'),
       icon: 'icon_close',
-      onClick: () => Tabs.removeTabs(Selection.get()),
+      onClick: () => Tabs.removeTabs(Selection.ids()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
@@ -365,7 +365,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close_branch'),
       icon: 'icon_rm_branch',
-      onClick: () => Tabs.removeBranches(Selection.get()),
+      onClick: () => Tabs.removeBranches(Selection.ids()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
@@ -378,9 +378,9 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close_descendants'),
       icon: 'icon_rm_descendants',
-      onClick: () => Tabs.removeTabsDescendants(Selection.get()),
+      onClick: () => Tabs.removeTabsDescendants(Selection.ids()),
     }
-    const hasDescendants = Selection.get().some(tabId => {
+    const hasDescendants = Selection.ids().some(tabId => {
       const tab = Tabs.byId[tabId]
       if (!tab) return false
       const nextTab = Tabs.list[tab.index + 1]
@@ -395,7 +395,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close_above'),
       icon: 'icon_close_tabs_above',
-      onClick: () => Tabs.removeTabsAbove(Selection.get()),
+      onClick: () => Tabs.removeTabsAbove(Selection.ids()),
     }
 
     const tabId = Selection.getFirst()
@@ -412,7 +412,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close_below'),
       icon: 'icon_close_tabs_below',
-      onClick: () => Tabs.removeTabsBelow(Selection.get()),
+      onClick: () => Tabs.removeTabsBelow(Selection.ids()),
     }
 
     const tabId = Selection.getFirst()
@@ -429,7 +429,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.close_other'),
       icon: 'icon_close_other_tabs',
-      onClick: () => Tabs.removeOtherTabs(Selection.get()),
+      onClick: () => Tabs.removeOtherTabs(Selection.ids()),
     }
 
     const tabId = Selection.getFirst()
@@ -444,28 +444,44 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   copyTabsUrls: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     return {
       label: translate('menu.copy_urls', selected.length),
       icon: 'icon_link',
       badge: 'icon_copy_badge',
-      onClick: () => Tabs.copyUrls(selected),
+      onClick: () => Tabs.copy(selected, { str: '%B%U', hasB: true, hasU: true }),
     }
   },
 
   copyTabsTitles: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     return {
       label: translate('menu.copy_titles', selected.length),
       icon: 'icon_title',
       badge: 'icon_copy_badge',
-      onClick: () => Tabs.copyTitles(selected),
+      onClick: () => Tabs.copy(selected, { str: '%B%CT', hasB: true, hasCT: true }),
     }
+  },
+
+  copyTabsByTemplates: () => {
+    const opts: MenuOption[] = []
+    const selected = Selection.ids()
+
+    for (const t of Settings.copyTemplates) {
+      opts.push({
+        label: translate('menu.copy_by_template', t.name),
+        icon: 'icon_code',
+        badge: 'icon_copy_badge',
+        onClick: () => Tabs.copy(selected, t),
+      })
+    }
+
+    if (opts.length) return opts
   },
 
   colorizeTab: () => {
     const opts: MenuOption[] = []
-    const selected = Selection.get()
+    const selected = Selection.ids()
     let usedColor
     if (selected.length === 1) usedColor = Tabs.byId[selected[0]]?.customColor ?? 'toolbar'
     for (const color of COLOR_OPTS) {
@@ -483,14 +499,14 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   editTabTitle: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
     if (!firstTab) return
 
     const option: MenuOption = {
       label: translate('menu.tab.edit_title'),
       icon: 'icon_edit',
-      onClick: () => Tabs.editTabTitle(Selection.get()),
+      onClick: () => Tabs.editTabTitle(Selection.ids()),
     }
 
     if (firstTab.pinned) {
@@ -508,8 +524,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_title_asc'),
       icon: 'icon_sort_name_asc',
-      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), 1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), 1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.ids(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.ids(), 1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -519,8 +535,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_title_des'),
       icon: 'icon_sort_name_des',
-      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), -1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.get(), -1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.ids(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Title, Selection.ids(), -1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -530,8 +546,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_url_asc'),
       icon: 'icon_sort_url_asc',
-      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), 1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), 1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.ids(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.ids(), 1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -541,8 +557,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_url_des'),
       icon: 'icon_sort_url_des',
-      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), -1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.get(), -1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.ids(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.Url, Selection.ids(), -1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -552,8 +568,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_time_asc'),
       icon: 'icon_sort_time_asc',
-      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), 1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), 1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.ids(), 1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.ids(), 1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -563,15 +579,15 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_time_des'),
       icon: 'icon_sort_time_des',
-      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), -1),
-      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.get(), -1, true),
+      onClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.ids(), -1),
+      onAltClick: () => TabsSorting.sort(TabsSorting.By.ATime, Selection.ids(), -1, true),
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
   sortTabsTreeByTitleAscending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_title_asc'),
       icon: 'icon_sort_name_asc',
@@ -583,7 +599,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   sortTabsTreeByTitleDescending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_title_des'),
       icon: 'icon_sort_name_des',
@@ -595,7 +611,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   sortTabsTreeByUrlAscending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_url_asc'),
       icon: 'icon_sort_url_asc',
@@ -607,7 +623,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   sortTabsTreeByUrlDescending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_url_des'),
       icon: 'icon_sort_url_des',
@@ -619,7 +635,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   sortTabsTreeByAccessTimeAscending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_time_asc'),
       icon: 'icon_sort_time_asc',
@@ -631,7 +647,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   sortTabsTreeByAccessTimeDescending: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sort_tree_by_time_des'),
       icon: 'icon_sort_time_des',
@@ -643,7 +659,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   syncTabs: () => {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     const option: MenuOption = {
       label: translate('menu.tab.sync'),
       icon: 'icon_sync',
