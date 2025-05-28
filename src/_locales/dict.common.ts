@@ -1823,6 +1823,16 @@ export const commonTranslations: Translations = {
     zh_TW: '關閉其他分頁',
     ja: '他のタブを閉じる',
   },
+  'menu.tab.duplicate_selection': {
+    en: 'Duplicate Selection',
+    de: 'Auswahl duplizieren',
+    hu: 'Kijelölés másolása',
+    pl: 'Powiel zaznaczenie',
+    ru: 'Дублировать выделенное',
+    zh_CN: '复制所选内容',
+    zh_TW: '複製所選內容',
+    ja: '選択を複製',
+  },
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute audible tabs',

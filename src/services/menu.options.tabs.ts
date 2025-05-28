@@ -528,7 +528,15 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-
+  dedupInSelectedTabs: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.duplicate_selection'),
+      icon: 'icon_dedup_tabs', 
+      onClick: () => Tabs.dedupTabs(Selection.ids()),
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
   sortTabsByTitleAscending: () => {
     const option: MenuOption = {
       label: translate('menu.tab.sort_by_title_asc'),
