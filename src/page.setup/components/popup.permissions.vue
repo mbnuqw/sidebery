@@ -38,6 +38,15 @@
       :note="translate('settings.clipboard_write_info')"
       @update:value="togglePermClipboardWrite")
   .permission(
+    ref="clipboard_read"
+    :data-highlight="SetupPage.reactive.permissions === 'clipboard_read'"
+    @click="onHighlighClick('clipboard_read')")
+    ToggleField(
+      label="settings.clipboard_read_label"
+      :value="Permissions.reactive.clipboardRead"
+      :note="translate('settings.clipboard_read_info')"
+      @update:value="togglePermClipboardRead")
+  .permission(
     ref="historyEl"
     :data-highlight="SetupPage.reactive.permissions === 'history'"
     @click="onHighlighClick('history')")
@@ -68,6 +77,7 @@ const rootEl = ref<HTMLElement | null>(null)
 const all_urls = ref<HTMLElement | null>(null)
 const tab_hide = ref<HTMLElement | null>(null)
 const clipboard_write = ref<HTMLElement | null>(null)
+const clipboard_read = ref<HTMLElement | null>(null)
 const historyEl = ref<HTMLElement | null>(null)
 const downloadsEl = ref<HTMLElement | null>(null)
 const bookmarksEl = ref<HTMLElement | null>(null)
@@ -76,6 +86,7 @@ onMounted(() => {
   SetupPage.registerEl('all_urls', all_urls.value)
   SetupPage.registerEl('tab_hide', tab_hide.value)
   SetupPage.registerEl('clipboard_write', clipboard_write.value)
+  SetupPage.registerEl('clipboard_read', clipboard_read.value)
   SetupPage.registerEl('history', historyEl.value)
   SetupPage.registerEl('downloads', downloadsEl.value)
   SetupPage.registerEl('bookmarks', bookmarksEl.value)
@@ -116,6 +127,12 @@ function togglePermTabHide(): void {
 function togglePermClipboardWrite(): void {
   const p = ['clipboardWrite']
   if (Permissions.reactive.clipboardWrite) browser.permissions.remove({ permissions: p })
+  else browser.permissions.request({ origins: [], permissions: p })
+}
+
+function togglePermClipboardRead(): void {
+  const p = ['clipboardRead']
+  if (Permissions.reactive.clipboardRead) browser.permissions.remove({ permissions: p })
   else browser.permissions.request({ origins: [], permissions: p })
 }
 

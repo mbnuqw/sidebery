@@ -2,6 +2,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Bookmark, Panel, Notification, DialogConfig, DragInfo, SubPanelType } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
+import { CopyTemplate } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
 import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
 import { TAB_BOOKMARK_COLOR, BOOKMARK_TAB_COLOR } from 'src/defaults'
@@ -13,7 +14,7 @@ import * as Popups from 'src/services/popups'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Tabs } from 'src/services/tabs.fg'
 import { Store } from 'src/services/storage'
 import { Notifications } from 'src/services/notifications'
@@ -1461,42 +1462,149 @@ export async function openAsTabsPanel(folder: Bookmark, showConfigPopup: boolean
   if (ids.length) await Bookmarks.open(ids, { panelId: tabsPanel.id })
 }
 
-export async function copyUrls(ids: ID[]): Promise<void> {
+export async function copy(ids: ID[], template: CopyTemplate) {
   if (!Permissions.reactive.clipboardWrite) {
     const result = await Permissions.request('clipboardWrite')
     if (!result) return
   }
 
-  let urls = ''
-  for (const node of Bookmarks.listBookmarks()) {
-    const includedItself = ids.includes(node.id)
-    if (includedItself || ids.includes(node.parentId)) {
-      if (!includedItself && node.children?.length) ids.push(node.id)
-      if (node.url) urls += '\n' + node.url
-    }
-  }
-
-  const resultString = urls.trim()
+  const nodes = getNodesWithChildren(ids, node => {
+    if (template.hasU && !node.url) return false
+    if ((template.hasT || template.hasCT) && !node.title) return false
+    return true
+  })
+  const strings = formatCopyTemplate(ids, nodes, template)
+  const resultString = strings.join('\n')
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export async function copyTitles(ids: ID[]): Promise<void> {
-  if (!Permissions.reactive.clipboardWrite) {
-    const result = await Permissions.request('clipboardWrite')
-    if (!result) return
-  }
-
-  let titles = ''
+function getNodesWithChildren(ids: ID[], pred: (node: Bookmark) => any): Bookmark[] {
+  const nodes: Bookmark[] = []
   for (const node of Bookmarks.listBookmarks()) {
     const includedItself = ids.includes(node.id)
     if (includedItself || ids.includes(node.parentId)) {
       if (!includedItself && node.children?.length) ids.push(node.id)
-      if (node.title) titles += '\n' + node.title
+      if (pred(node)) nodes.push(node)
+    }
+  }
+  return nodes
+}
+
+function formatCopyTemplate(ids: ID[], nodes: Bookmark[], template: CopyTemplate): string[] {
+  const isDBG = template.str === '%DBG'
+  const lines: string[] = []
+  const bullet = nodes.length > 1 ? Settings.state.copyMultiBullet : ''
+  const indent = Settings.state.copyTreeIndent
+  const indentLevelsById = new Map<ID, number>()
+  for (const node of nodes) {
+    if (isDBG) {
+      lines.push(JSON.stringify(node, null, 2))
+      continue
+    }
+
+    // Get indent lvl
+    const path = Bookmarks.getPath(node)
+    const pNodeId = path.findLast(id => ids.includes(id))
+    const pLvl = pNodeId ? indentLevelsById.get(pNodeId) : undefined
+    const indentLvl = pLvl !== undefined ? pLvl + 1 : 0
+
+    indentLevelsById.set(node.id, indentLvl)
+
+    let result = template.str
+    if (template.hasB) result = result.replaceAll('%B', bullet)
+    if (template.hasCT) result = result.replaceAll('%CT', node.title)
+    if (template.hasT) result = result.replaceAll('%T', node.title)
+    if (template.hasU) result = result.replaceAll('%U', node.url ?? '')
+    lines.push(indent.repeat(indentLvl) + result)
+  }
+  return lines
+}
+
+export async function pasteInOrAfter(id: ID) {
+  const panel = Sidebar.panelsById[id]
+  if (Utils.isBookmarksPanel(panel)) {
+    id = panel.rootId
+    if (id === BKM_ROOT_ID || id === NOID) {
+      id = BKM_OTHER_ID
     }
   }
 
-  const resultString = titles.trim()
-  if (resultString) navigator.clipboard.writeText(resultString)
+  await Bookmarks.prepareBookmarks()
+
+  const target = Bookmarks.reactive.byId[id]
+  if (!target) return Logs.warn('Bookmarks.pasteInOrAfter: No target')
+
+  if (target.type === 'folder') Bookmarks.pasteIn(id)
+  else Bookmarks.pasteAfter(id)
+}
+
+export async function pasteIn(id: ID) {
+  if (id === BKM_ROOT_ID || id === NOID) {
+    id = BKM_OTHER_ID
+  }
+
+  const bkmNode = Bookmarks.reactive.byId[id]
+  if (!bkmNode || bkmNode.type !== 'folder' || !bkmNode.children) {
+    return Logs.warn('Bookmarks.pasteIn: No target folder')
+  }
+
+  const dst: DstPlaceInfo = {
+    parentId: bkmNode.id,
+    index: bkmNode.children.length,
+  }
+
+  return paste(dst)
+}
+
+export async function pasteAfter(id: ID) {
+  const bkmNode = Bookmarks.reactive.byId[id]
+  if (!bkmNode) return Logs.warn('Bookmarks.pasteAfter: No target bookmark')
+
+  const parentNode = Bookmarks.reactive.byId[bkmNode.parentId]
+  if (!parentNode) return Logs.warn('Bookmarks.pasteAfter: No target folder')
+
+  const dst: DstPlaceInfo = {
+    parentId: parentNode.id,
+    index: bkmNode.index + 1,
+  }
+
+  return paste(dst)
+}
+
+export async function paste(dst: DstPlaceInfo) {
+  // Check permission
+  if (!Permissions.reactive.clipboardRead) {
+    const result = await Permissions.request('clipboardRead')
+    if (!result) return Logs.warn('Bookmarks.paste: No permission')
+  }
+
+  // Load bookmarks
+  await Bookmarks.prepareBookmarks()
+
+  // Get and parse text from clipboard
+  const rawText = await navigator.clipboard.readText()
+  const items = Utils.withoutEmptyFolders(Utils.parseTextForItems(rawText))
+  if (!items.length) return Logs.warn('Bookmarks.paste: No parsed items')
+
+  // Check/Normalize dst info
+  // - Parent tab
+  if (dst.parentId === undefined) {
+    dst.parentId = BKM_OTHER_ID
+    dst.index = undefined
+  }
+  const dstParent = Bookmarks.reactive.byId[dst.parentId]
+  if (!dstParent || !dstParent.children) return Logs.warn('Bookmarks.paste: No parent folder')
+  // - Index
+  if (dst.index === undefined) {
+    dst.index = dstParent.children.length
+  }
+
+  // Create bookmarks
+  await createFrom(items, dst)
+
+  // Scroll to the first node
+  const bkmNode = dstParent.children[dst.index]
+  if (bkmNode) Bookmarks.scrollToBookmark(bkmNode.id)
 }
 
 export function isFolderWithURL(folder: Bookmark): boolean {

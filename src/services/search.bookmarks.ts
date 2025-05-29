@@ -4,7 +4,7 @@ import { BKM_ROOT_ID, NOID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
-import { Selection } from './selection'
+import * as Selection from './selection'
 import { Tabs } from 'src/services/tabs.fg'
 
 function ancestorIsFiltered(node: Bookmark, folders: Record<ID, Bookmark>): boolean {

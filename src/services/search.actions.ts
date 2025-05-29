@@ -13,7 +13,7 @@ import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
 import { Bookmarks } from './bookmarks'
-import { Selection } from './selection'
+import * as Selection from './selection'
 
 export const INPUT_TIMEOUT = 300
 

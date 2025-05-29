@@ -170,6 +170,8 @@ async function main(): Promise<void> {
 
   if (Settings.state.previewTabs) Preview.resetMode()
 
+  Info.loadPlatformInfo()
+
   Logs.info(`Init end: ${performance.now() - ts}ms`)
 }
 main()

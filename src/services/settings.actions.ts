@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
-import { SettingsState, Stored, InstanceType } from 'src/types'
+import { SettingsState, Stored, InstanceType, CopyTemplate } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Store } from './storage'
 import { Info } from './info'
@@ -42,6 +42,10 @@ export async function loadSettings(): Promise<void> {
   }
 
   parsePrefaceTemplate()
+
+  if (Info.isSidebar) {
+    parseCopyTemplates()
+  }
 
   Search.parseShortcuts()
 
@@ -166,6 +170,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const resetTree = prev.tabsTree !== next.tabsTree && prev.tabsTree
   const updateTree = prev.tabsTreeLimit !== next.tabsTreeLimit
   const hideFoldedTabs = prev.hideFoldedTabs !== next.hideFoldedTabs
+  const hideUnloadedTabs = prev.hideUnloadedTabs !== next.hideUnloadedTabs
   const hideFoldedParent = prev.hideFoldedParent !== next.hideFoldedParent
   const theme = prev.theme !== next.theme
   const highlightOpenBookmarks = prev.highlightOpenBookmarks !== next.highlightOpenBookmarks
@@ -185,12 +190,12 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
   const navBookmarksPanelMidClickAction =
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
-  const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
   const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
   const tabsUnreadMark = prev.tabsUnreadMark !== next.tabsUnreadMark
+  const copyTemplates = prev.copyTemplates !== next.copyTemplates
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
@@ -201,10 +206,6 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (Info.isSidebar && tabsUnreadMark && !next.tabsUnreadMark) {
     Tabs.list.forEach(t => (t.reactive.unread = t.unread = false))
-  }
-
-  if (tabsUrlInTooltip || previewTabs) {
-    Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
   }
 
   if (previewTabs || previewTabsMode) {
@@ -235,7 +236,10 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     Sidebar.recalcVisibleTabs()
   }
 
-  if ((hideInactTabs || hideFoldedTabs || hideFoldedParent) && Sidebar.hasTabs) {
+  if (
+    (hideInactTabs || hideFoldedTabs || hideFoldedParent || hideUnloadedTabs) &&
+    Sidebar.hasTabs
+  ) {
     Tabs.updateNativeTabsVisibility()
   }
 
@@ -288,6 +292,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (markWindowPreface) parsePrefaceTemplate()
 
+  if (Info.isSidebar && copyTemplates) parseCopyTemplates()
+
   Search.parseShortcuts()
 }
 
@@ -300,6 +306,11 @@ function updPrecalcSettings() {
   Settings.activateAfterClosingNext = Settings.state.activateAfterClosing === 'next'
   Settings.activateAfterClosingPrev = Settings.state.activateAfterClosing === 'prev'
   Settings.activateAfterClosingPrevAct = Settings.state.activateAfterClosing === 'prev_act'
+
+  Settings.tabsUpdateMarkAll = Settings.state.tabsUpdateMark === 'all'
+  Settings.tabsUpdateMarkPin = Settings.state.tabsUpdateMark === 'pin'
+  Settings.tabsUpdateMarkNorm = Settings.state.tabsUpdateMark === 'norm'
+  Settings.tabsUpdateMarkNone = Settings.state.tabsUpdateMark === 'none'
 }
 
 export function resetSettings(): void {
@@ -317,4 +328,35 @@ export function getOpts<K extends keyof Opts, V extends Opts[K]>(key: K): V {
 function parsePrefaceTemplate() {
   const preface = Settings.state.markWindowPreface
   Settings.updateWinPrefaceOnPanelSwitch = preface.includes('%PN')
+}
+
+const COPY_TEMPLATE_RE = /^(?<name>.+):(?<template>.+)$/
+function parseCopyTemplates() {
+  const templates: CopyTemplate[] = []
+
+  if (Settings.state.copyTemplates) {
+    const rawLines = Settings.state.copyTemplates.split('\n')
+    for (const rawLine of rawLines) {
+      const line = rawLine.trim()
+      if (!line) continue
+
+      const result = COPY_TEMPLATE_RE.exec(line)
+      if (!result?.groups) continue
+
+      const name = result.groups['name']
+      const template = result.groups['template']
+      if (!name || !template) continue
+
+      templates.push({
+        name,
+        str: template,
+        hasCT: template.includes('%CT'),
+        hasT: template.includes('%T'),
+        hasU: template.includes('%U'),
+        hasB: template.includes('%B'),
+      })
+    }
+  }
+
+  Settings.copyTemplates = templates
 }

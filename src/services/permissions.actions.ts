@@ -20,6 +20,7 @@ export async function loadPermissions(): Promise<void> {
     browser.permissions.contains({ permissions: ['proxy'] }),
     browser.permissions.contains({ permissions: ['tabHide'] }),
     browser.permissions.contains({ permissions: ['clipboardWrite'] }),
+    browser.permissions.contains({ permissions: ['clipboardRead'] }),
     browser.permissions.contains({ permissions: ['history'] }),
     browser.permissions.contains({ permissions: ['bookmarks'] }),
     browser.permissions.contains({ permissions: ['downloads'] }),
@@ -30,9 +31,10 @@ export async function loadPermissions(): Promise<void> {
   Permissions.proxy = perms[3]
   Permissions.tabHide = perms[4]
   Permissions.clipboardWrite = perms[5]
-  Permissions.history = perms[6]
-  Permissions.bookmarks = perms[7]
-  Permissions.downloads = perms[8]
+  Permissions.clipboardRead = perms[6]
+  Permissions.history = perms[7]
+  Permissions.bookmarks = perms[8]
+  Permissions.downloads = perms[9]
 
   Permissions.reactive.webData =
     Permissions.allUrls &&
@@ -41,6 +43,7 @@ export async function loadPermissions(): Promise<void> {
     Permissions.proxy
   Permissions.reactive.tabHide = Permissions.tabHide
   Permissions.reactive.clipboardWrite = Permissions.clipboardWrite
+  Permissions.reactive.clipboardRead = Permissions.clipboardRead
   Permissions.reactive.history = Permissions.history
   Permissions.reactive.bookmarks = Permissions.bookmarks
   Permissions.reactive.downloads = Permissions.downloads
@@ -56,6 +59,7 @@ export type RequestablePermission =
   | '<all_urls>'
   | 'tabHide'
   | 'clipboardWrite'
+  | 'clipboardRead'
   | 'history'
   | 'bookmarks'
   | 'downloads'
@@ -79,6 +83,7 @@ export async function request(...perms: RequestablePermission[]): Promise<boolea
     else if (perms.includes('history')) SetupPage.open('history')
     else if (perms.includes('bookmarks')) SetupPage.open('bookmarks')
     else if (perms.includes('clipboardWrite')) SetupPage.open('clipboard-write')
+    else if (perms.includes('clipboardRead')) SetupPage.open('clipboard-read')
     else if (perms.includes('downloads')) SetupPage.open('downloads')
     return false
   }
@@ -102,6 +107,10 @@ function onAdded(info: browser.permissions.Permissions) {
   if (info.permissions?.includes('clipboardWrite')) {
     Permissions.clipboardWrite = true
     Permissions.reactive.clipboardWrite = true
+  }
+  if (info.permissions?.includes('clipboardRead')) {
+    Permissions.clipboardRead = true
+    Permissions.reactive.clipboardRead = true
   }
   if (info.permissions?.includes('history')) {
     Permissions.history = true
@@ -152,6 +161,11 @@ function onRemoved(info: browser.permissions.Permissions): void {
   if (info.permissions?.includes('clipboardWrite')) {
     Permissions.clipboardWrite = false
     Permissions.reactive.clipboardWrite = false
+  }
+
+  if (info.permissions?.includes('clipboardRead')) {
+    Permissions.clipboardRead = false
+    Permissions.reactive.clipboardRead = false
   }
 
   if (info.permissions?.includes('history')) {
@@ -273,6 +287,10 @@ function onRemovedTabHideBg(): void {
     Settings.state.hideFoldedTabs = false
     saveNeeded = true
   }
+  if (Settings.state.hideUnloadedTabs) {
+    Settings.state.hideUnloadedTabs = false
+    saveNeeded = true
+  }
 
   if (saveNeeded) {
     Settings.saveSettings()
@@ -283,6 +301,7 @@ function onRemovedTabHideFg(): void {
   if (Info.isSetup) {
     Settings.state.hideInact = false
     Settings.state.hideFoldedTabs = false
+    Settings.state.hideUnloadedTabs = false
   }
 }
 

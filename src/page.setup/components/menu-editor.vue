@@ -177,6 +177,8 @@ const TABS_MENU_OPTS: Record<string, string> = {
   discard: 'menu.tab.discard',
   copyTabsUrls: 'menu.copy_urls',
   copyTabsTitles: 'menu.copy_titles',
+  copyTabsByTemplates: 'menu.copy_by_templates',
+  pasteTabs: 'menu.paste',
   editTabTitle: 'menu.tab.edit_title',
   colorizeTab: 'menu.tab.colorize_colors',
   group: 'menu.tab.group',
@@ -226,6 +228,7 @@ const TABS_PANEL_MENU_OPTS: Record<string, string> = {
   sortAllTabsByUrlDescending: 'menu.tabs_panel.sort_all_by_url_des',
   sortAllTabsByAccessTimeAscending: 'menu.tabs_panel.sort_all_by_time_asc',
   sortAllTabsByAccessTimeDescending: 'menu.tabs_panel.sort_all_by_time_des',
+  pasteTabs: 'menu.paste',
 }
 
 const BOOKMARKS_MENU_OPTS: Record<string, string> = {
@@ -247,6 +250,8 @@ const BOOKMARKS_MENU_OPTS: Record<string, string> = {
   sortByTimeDescending: 'menu.bookmark.sort_by_time_des',
   copyBookmarksUrls: 'menu.copy_urls',
   copyBookmarksTitles: 'menu.copy_titles',
+  copyBookmarksByTemplates: 'menu.copy_by_templates',
+  pasteBookmarks: 'menu.paste',
   edit: 'menu.bookmark.edit_bookmark',
   delete: 'menu.bookmark.delete_bookmark',
   moveBookmarksTo: 'menu.bookmark.move_to',
@@ -259,6 +264,7 @@ const BOOKMARKS_PANEL_MENU_OPTS: Record<string, string> = {
   openPanelConfig: 'menu.common.conf',
   openPanelConfigInSidebar: 'menu.common.conf_in_sidebar',
   convertToTabsPanel: 'menu.bookmark.convert_to_tabs_panel',
+  pasteBookmarks: 'menu.paste',
   hidePanel: 'menu.panels.hide_panel',
   removePanel: 'menu.tabs_panel.remove_panel',
 }

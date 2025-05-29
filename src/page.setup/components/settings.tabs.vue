@@ -104,6 +104,10 @@ section(ref="el")
     :opts="Settings.getOpts('tabsUrlInTooltip')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
+    label="settings.tabs_container_in_tooltip"
+    v-model:value="Settings.state.tabsContainerInTooltip"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
     label="settings.show_new_tab_btns"
     v-model:value="Settings.state.showNewTabBtns"
     @update:value="Settings.saveDebounced(150)")
@@ -457,6 +461,11 @@ section(ref="el")
         :opts="Settings.getOpts('hideFoldedParent')"
         @update:value="Settings.saveDebounced(150)")
     ToggleField(
+      label="settings.hide_unloaded_tabs"
+      :inactive="!Settings.state.tabsTree"
+      :value="Settings.state.hideUnloadedTabs"
+      @update:value="toggleHideUnloadedTabs")
+    ToggleField(
       label="settings.native_highlight"
       :note="translate('settings.native_highlight_note')"
       v-model:value="Settings.state.nativeHighlight"
@@ -553,6 +562,17 @@ async function toggleHideFoldedTabs(): Promise<void> {
   }
 
   Settings.state.hideFoldedTabs = !Settings.state.hideFoldedTabs
+
+  Settings.saveDebounced(150)
+}
+
+async function toggleHideUnloadedTabs() {
+  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+    const result = await Permissions.request('tabHide')
+    if (!result) return
+  }
+
+  Settings.state.hideUnloadedTabs = !Settings.state.hideUnloadedTabs
 
   Settings.saveDebounced(150)
 }

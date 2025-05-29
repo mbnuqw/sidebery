@@ -3,6 +3,7 @@ export interface Bookmark extends browser.bookmarks.TreeNode {
   index: number
   children?: Bookmark[]
   sel?: boolean
+  selLock?: boolean
   isOpen?: boolean
   isParent?: boolean
   len?: number

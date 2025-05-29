@@ -9,7 +9,7 @@ import * as Logs from './logs'
 import * as IPC from './ipc'
 import { Menu } from './menu'
 import { Mouse } from './mouse'
-import { Selection } from './selection'
+import * as Selection from './selection'
 import { TabPreviewInitData } from 'src/injections/tab-preview'
 
 export const enum Status {

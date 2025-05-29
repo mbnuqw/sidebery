@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
 import { Panel, Tab, TabsPanel } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
 

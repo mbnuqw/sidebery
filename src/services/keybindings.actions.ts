@@ -6,7 +6,7 @@ import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
@@ -186,6 +186,7 @@ function onCmd(name: string): void {
   else if (name === 'down') onKeySelect(1)
   else if (name === 'up_shift') onKeySelectExpand(-1)
   else if (name === 'down_shift') onKeySelectExpand(1)
+  else if (name === 'lock_selection') onKeyLockSelection()
   else if (name === 'menu') onKeyMenu()
   else if (name === 'unload_tabs') onKeyUnloadTabs()
   else if (name === 'unload_all_tabs_in_panel') onKeyUnloadAllTabsInPanel()
@@ -224,7 +225,7 @@ function onCmd(name: string): void {
   else if (name === 'search') {
     Search.start()
   } else if (name === 'switch_to_parent_tab') {
-    Tabs.activateParent(Selection.get()[0])
+    Tabs.activateParent(Selection.ids()[0])
   } else if (name === 'switch_to_last_tab') {
     onKeySwitchToTab()
   } else if (name.startsWith('switch_to_tab_')) {
@@ -266,6 +267,7 @@ function onCmd(name: string): void {
   else if (name === 'open_panel_config') onKeyOpenPanelConfig()
   else if (name === 'copy_title') onKeyCopyTitle()
   else if (name === 'copy_url') onKeyCopyUrl()
+  else if (name.startsWith('copy_tmplt_')) onKeyCopyByTemplate(parseInt(name.slice(-1)))
   else if (name === 'open_bookmarks_sub_panel') onKeyOpenBookmarksSubPanel()
   else if (name === 'open_sync_popup') onKeyOpenSyncPopup()
 }
@@ -300,25 +302,42 @@ function onKeySwitchToPrevPanel() {
 
 function onKeyCopyUrl() {
   if (Selection.isTabs()) {
-    Tabs.copyUrls(Selection.get())
+    Tabs.copy(Selection.ids(), { str: '%B%U', hasB: true, hasU: true })
     Selection.resetSelection()
   } else if (Selection.isBookmarks()) {
-    Bookmarks.copyUrls(Selection.get())
+    Bookmarks.copy(Selection.ids(), { str: '%B%U', hasB: true, hasU: true })
     Selection.resetSelection()
   } else {
-    Tabs.copyUrls([Tabs.activeId])
+    Tabs.copy([Tabs.activeId], { str: '%B%U', hasB: true, hasU: true })
   }
 }
 
 function onKeyCopyTitle() {
   if (Selection.isTabs()) {
-    Tabs.copyTitles(Selection.get())
+    Tabs.copy(Selection.ids(), { str: '%B%CT', hasB: true, hasCT: true })
     Selection.resetSelection()
   } else if (Selection.isBookmarks()) {
-    Bookmarks.copyTitles(Selection.get())
+    Bookmarks.copy(Selection.ids(), { str: '%B%CT', hasB: true, hasCT: true })
     Selection.resetSelection()
   } else {
-    Tabs.copyTitles([Tabs.activeId])
+    Tabs.copy([Tabs.activeId], { str: '%B%CT', hasB: true, hasCT: true })
+  }
+}
+
+function onKeyCopyByTemplate(n: number) {
+  if (isNaN(n)) return
+
+  const template = Settings.copyTemplates[n]
+  if (!template) return
+
+  if (Selection.isTabs()) {
+    Tabs.copy(Selection.ids(), template)
+    Selection.resetSelection()
+  } else if (Selection.isBookmarks()) {
+    Bookmarks.copy(Selection.ids(), template)
+    Selection.resetSelection()
+  } else {
+    Tabs.copy([Tabs.activeId], template)
   }
 }
 
@@ -340,7 +359,7 @@ function onKeySortTabs(type: SortBy, dir = 0, tree?: boolean, panel?: boolean) {
     if (!Utils.isTabsPanel(activePanel)) return
     ids = activePanel.tabs.map(t => t.id)
   } else {
-    ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+    ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   }
   if (!ids.length) return
 
@@ -391,7 +410,7 @@ function onKeyMoveTabsToPanel(targetIndex: number): void {
   })
   if (!Utils.isTabsPanel(panel)) return
 
-  const targetTabIds = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const targetTabIds = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   Tabs.sortTabIds(targetTabIds)
   const probeTab = Tabs.byId[targetTabIds[0]]
   if (probeTab && probeTab.panelId !== panel.id) {
@@ -464,7 +483,7 @@ function onKeyActivate(): void {
 
   // Bookmarks
   else if (Selection.isBookmarks()) {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     if (ids.length === 1) {
       const target = Bookmarks.reactive.byId[ids[0]]
       if (!target) return
@@ -623,7 +642,7 @@ function onKeySelect(dir: number): void {
       if (!target) return
     }
 
-    Selection.resetSelection()
+    Selection.resetSelection(false, true)
     Selection.selectTab(target.id)
 
     Tabs.scrollToTab(target.id, true)
@@ -650,7 +669,7 @@ function onKeySelect(dir: number): void {
     }
 
     if (target) {
-      Selection.resetSelection()
+      Selection.resetSelection(false, true)
       if (target.type === ItemBoundsType.Header) Selection.select(target.id, SelectionType.Header)
       else Selection.select(target.id)
     }
@@ -741,10 +760,23 @@ function onKeySelectAll(): void {
   if (!activePanel) return
   if (!activePanel.bounds || !activePanel.bounds.length) return
 
-  Selection.resetSelection()
+  Selection.resetSelection(false, true)
   for (const s of activePanel.bounds) {
     Selection.select(s.id)
   }
+}
+
+function onKeyLockSelection() {
+  // Start with active tab if it's on the active panel
+  if (!Selection.isSet()) {
+    const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+    const activeTab = Tabs.byId[Tabs.activeId]
+    if (Utils.isTabsPanel(activePanel) && activeTab?.panelId === activePanel.id) {
+      Selection.selectTab(Tabs.activeId)
+    }
+  }
+
+  Selection.lockSelection()
 }
 
 /**
@@ -804,9 +836,9 @@ function onKeyMenu(): void {
 function onKeyRmSelectedItem(): void {
   if (Selection.isSet()) {
     if (Selection.isTabs()) {
-      Tabs.removeTabs(Selection.get())
+      Tabs.removeTabs(Selection.ids())
     } else if (Selection.isBookmarks()) {
-      Bookmarks.removeBookmarks(Selection.get())
+      Bookmarks.removeBookmarks(Selection.ids())
     }
     Selection.resetSelection()
   } else {
@@ -819,14 +851,14 @@ function onKeyFoldBranch(): void {
   if (!Selection.isSet()) {
     Tabs.foldTabsBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent || tab.folded) continue
       Tabs.foldTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
       if (!bookmark || !isExpanded) continue
@@ -839,14 +871,14 @@ function onKeyExpandBranch(): void {
   if (!Selection.isSet()) {
     Tabs.expTabsBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent || !tab.folded) continue
       Tabs.expTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
       if (!bookmark || isExpanded) continue
@@ -859,14 +891,14 @@ function onKeyToggleBranch(): void {
   if (!Selection.isSet()) {
     Tabs.toggleBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent) continue
       Tabs.toggleBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       if (!bookmark) continue
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
@@ -885,7 +917,7 @@ function onKeyFoldInactiveBranches(): void {
 
 function onKeyTabsIndent(): void {
   let selected: ID[]
-  if (Selection.isTabs()) selected = Selection.get()
+  if (Selection.isTabs()) selected = Selection.ids()
   else selected = [Tabs.activeId]
 
   if (!Tabs.byId[selected[0]]) return
@@ -954,7 +986,7 @@ function onKeyTabsIndent(): void {
 
 function onKeyTabsOutdent(): void {
   let selected: ID[]
-  if (Selection.isTabs()) selected = Selection.get()
+  if (Selection.isTabs()) selected = Selection.ids()
   else selected = [Tabs.activeId]
 
   if (!Tabs.byId[selected[0]]) return
@@ -1046,7 +1078,7 @@ async function onKeyMoveTabs(dir: 1 | -1) {
   if (tabsMoving) return
 
   let preSelected: ID[] | undefined
-  if (Selection.isTabs()) preSelected = Selection.get()
+  if (Selection.isTabs()) preSelected = Selection.ids()
   else preSelected = [Tabs.activeId]
 
   const toMove: Tab[] = []
@@ -1282,7 +1314,7 @@ function onKeyROIP() {
 }
 
 function onKeyUnloadTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (ids.length) Tabs.discardTabs(ids)
 }
 
@@ -1298,7 +1330,7 @@ function onKeyUnloadAllTabsInPanel() {
 }
 
 function onKeyUnloadOtherTabsInPanel() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1351,7 +1383,7 @@ async function onKeyUnloadAllTabsInInactPanels() {
 }
 
 function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.sortTabIds(ids)
@@ -1377,7 +1409,7 @@ function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
 }
 
 function onKeyDuplicateTabs(branch: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1391,7 +1423,7 @@ function onKeyDuplicateTabs(branch: boolean) {
 }
 
 function onKeyPinTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1409,21 +1441,21 @@ function onKeyHidePanel() {
 }
 
 function onKeyGroupTabs(activate: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.groupTabs(ids, { active: activate })
 }
 
 function onKeyFlattenTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.flattenTabs(ids)
 }
 
 function onKeyEditTitle() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   if (Selection.isTabs()) Selection.resetSelection()

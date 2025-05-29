@@ -1,7 +1,7 @@
 import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig, Tab } from './types'
-import { TabsPanel, BookmarksPanel, PanelType, HistoryPanel, SyncPanel } from './types'
+import { TabsPanel, BookmarksPanel, PanelType, HistoryPanel, SyncPanel, ItemInfo } from './types'
 import { NavItemClass, SubListTitleInfo, RGBA, RGB, AnyAsyncFunc } from './types'
-import { DOMAIN_RE, URL_PAGE_RE, URL_URL } from './defaults'
+import { DOMAIN_RE, GROUP_URL, NOID, URL_PAGE_RE, URL_URL } from './defaults'
 import { translate } from './dict'
 
 // prettier-ignore
@@ -510,6 +510,30 @@ export function createGroupUrl(name?: string, conf?: GroupConfig): string {
   if (!name) name = uid()
   if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
   return urlBase + `#${encodeURIComponent(name)}`
+}
+
+export function updateGroupUrlBase(url: string): string {
+  const index = url.indexOf('group.html') + 10
+  const newUrl = GROUP_URL + url.slice(index)
+  return newUrl
+}
+
+export function updatePlaceholderUrlBase(url: string): string {
+  const index = url.indexOf('url.html') + 8
+  const newUrl = URL_URL + url.slice(index)
+  return newUrl
+}
+
+export function getGroupName(url: string): string | undefined {
+  let urlInfo
+  try {
+    urlInfo = new URL(url)
+  } catch {
+    return
+  }
+  if (!urlInfo.hash) return
+
+  return decodeURIComponent(urlInfo.hash.slice(1))
 }
 
 /**
@@ -1125,4 +1149,165 @@ export class BenchAvrg {
       this._start = undefined
     }, this._delay)
   }
+}
+
+export function withoutEmptyFolders<T extends { id: ID; url?: string; parentId?: ID }>(
+  items: T[]
+): T[] {
+  const nonEmptyFolders = new Set<ID>()
+  const itemsById = new Map<ID, T>()
+  for (const item of items) {
+    if (
+      item.url &&
+      item.parentId !== undefined &&
+      item.parentId !== NOID &&
+      !nonEmptyFolders.has(item.parentId)
+    ) {
+      let parent = itemsById.get(item.parentId ?? NOID)
+      while (parent) {
+        nonEmptyFolders.add(parent.id)
+        parent = itemsById.get(parent.parentId ?? NOID)
+      }
+    }
+
+    itemsById.set(item.id, item)
+  }
+
+  return items.filter(item => item.url || nonEmptyFolders.has(item.id))
+}
+
+const INDENT_RE = /^(( |\t)*)(.*)/
+const SPACES_ONLY_RE = /^ +$/
+const LINK_RE =
+  /href="(?<htmlUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)"(.*?)>(?<htmlLabel>.+?)<\/a>|\[(?<mdLabel>.*?)\]\((?<mdUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)\)|(?<url>([0-9A-Za-z-]{1,63}:\/?\/?[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})*)(\/[0-9A-Za-z-._~]+)*\/?([#?][0-9A-Za-z-._~:?#@!%$&'()*+,;=]+)*)/g
+export function parseTextForItems(srcText: string): ItemInfo[] {
+  const items: ItemInfo[] = []
+  const parsedLines: { id: number; parentId: number; txt: string; indent: string }[] = []
+
+  // Split into lines
+  const lines = srcText.split(/\r\n|\n/)
+
+  // Split lines into indent and text
+  let hasSpaceIndents = false
+  let hasTabIndents = false
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const reResult = INDENT_RE.exec(line)
+    if (reResult !== null && reResult[3]) {
+      const lineData = { id: i * 10000, parentId: -1, indent: reResult[1] ?? '', txt: reResult[3] }
+      parsedLines.push(lineData)
+
+      if (!hasSpaceIndents && lineData.indent.includes(' ')) hasSpaceIndents = true
+      if (!hasTabIndents && lineData.indent.includes('\t')) hasTabIndents = true
+    }
+  }
+
+  // Handle mixed tab/space indents
+  if (hasSpaceIndents && hasTabIndents) {
+    let minSpaceIndentDeltaLen = 9999
+    let prevIndentLen = 0
+
+    for (const lineData of parsedLines) {
+      // Spaces-only
+      if (SPACES_ONLY_RE.test(lineData.indent)) {
+        const indentDelta = Math.abs(lineData.indent.length - prevIndentLen)
+        if (indentDelta > 0 && indentDelta < minSpaceIndentDeltaLen) {
+          minSpaceIndentDeltaLen = indentDelta
+        }
+        prevIndentLen = lineData.indent.length
+      }
+    }
+
+    // If minimal delta of space indents (indent size) is found
+    if (minSpaceIndentDeltaLen !== 9999) {
+      // Replace all Tabs with spaces
+      const sIndent = ' '.repeat(minSpaceIndentDeltaLen)
+      parsedLines.forEach(ld => (ld.indent = ld.indent.replaceAll('\t', sIndent)))
+    }
+    // Or do nothing and handle Tab as a 1-length char :/
+  }
+
+  // Parse tree structure
+  let prevIndentLen = 0
+  let prevLineId = -1
+  let prevLineParentId = -1
+  for (let i = 0; i < parsedLines.length; i++) {
+    const lineData = parsedLines[i]
+
+    // Skip empty lines
+    if (!lineData.txt) continue
+
+    // Handle indent
+    if (prevIndentLen < lineData.indent.length) {
+      lineData.parentId = prevLineId
+    }
+    // Handle same indent
+    else if (prevIndentLen === lineData.indent.length) {
+      lineData.parentId = prevLineParentId
+    }
+    // Handle outdent
+    else if (prevIndentLen > lineData.indent.length) {
+      // Find parent
+      for (let j = i - 1; j >= 0; j--) {
+        const rLineData = parsedLines[j]
+
+        // It should have smaller indent
+        if (rLineData.indent.length < lineData.indent.length) {
+          lineData.parentId = rLineData.id
+          break
+        }
+      }
+    }
+    prevIndentLen = lineData.indent.length
+    prevLineId = lineData.id
+    prevLineParentId = lineData.parentId
+  }
+
+  // Parse url / title and create ItemInfo objects
+  for (let i = 0; i < parsedLines.length; i++) {
+    const lineData = parsedLines[i]
+    if (!lineData) continue
+
+    const inlineLinks: ItemInfo[] = []
+
+    let reResult
+    while ((reResult = LINK_RE.exec(lineData.txt))) {
+      let label = reResult.groups?.htmlLabel ?? reResult.groups?.mdLabel ?? ''
+      let url = reResult.groups?.htmlUrl ?? reResult.groups?.mdUrl ?? reResult.groups?.url
+
+      if (!url || !URL.canParse(url)) continue
+
+      if (isGroupUrl(url)) {
+        url = updateGroupUrlBase(url)
+        label = getGroupName(url) ?? label
+      } else if (isUrlUrl(url)) {
+        url = updatePlaceholderUrlBase(url)
+      }
+
+      inlineLinks.push({
+        id: lineData.id,
+        parentId: lineData.parentId,
+        url,
+        title: label,
+      })
+    }
+    LINK_RE.lastIndex = 0
+
+    // Fix ids for more than 1 links in line (except the last one)
+    if (inlineLinks.length > 1) {
+      for (let j = 0; j < inlineLinks.length - 1; j++) {
+        const linkInfo = inlineLinks[j]
+        if (linkInfo) (linkInfo.id as number) += j + 1
+      }
+    }
+
+    // If links are not found create title-only item
+    if (!inlineLinks.length) {
+      items.push({ id: lineData.id, parentId: lineData.parentId, title: lineData.txt })
+    } else {
+      items.push(...inlineLinks)
+    }
+  }
+
+  return items
 }

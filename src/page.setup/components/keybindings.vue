@@ -13,6 +13,11 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.open_panel_config")
     KeybindingField(:keybinding="Keybindings.reactive.byName.copy_title")
     KeybindingField(:keybinding="Keybindings.reactive.byName.copy_url")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_4")
     KeybindingField(:keybinding="Keybindings.reactive.byName.open_bookmarks_sub_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.open_sync_popup")
 
@@ -88,6 +93,7 @@
       KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.sel_child_tabs")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.lock_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
     .info {{translate('settings.kb_select_act_note')}}

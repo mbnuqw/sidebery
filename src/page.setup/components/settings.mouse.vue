@@ -156,6 +156,10 @@ section(ref="el")
       label="settings.shift_selection_from_active"
       v-model:value="Settings.state.shiftSelAct"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.ctrl_selection_include_active"
+      v-model:value="Settings.state.ctrlSelAct"
+      @update:value="Settings.saveDebounced(150)")
     SelectField(
       label="settings.tab_long_left_click"
       optLabel="settings.tab_action_"

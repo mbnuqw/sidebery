@@ -10,6 +10,10 @@ export interface SettingsState {
   updateSidebarTitle: boolean
   markWindow: boolean
   markWindowPreface: string
+  copyTreeIndent: string
+  copyMultiBullet: string
+  copyTemplates: string
+  updTooltipDelay: number
 
   // Context menu
   ctxMenuNative: boolean
@@ -85,6 +89,7 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
+  tabsContainerInTooltip: boolean
   newTabCtxReopen: boolean
   tabWarmupOnHover: boolean
   tabSwitchDelay: number
@@ -154,6 +159,7 @@ export interface SettingsState {
   hideInact: boolean
   hideFoldedTabs: boolean
   hideFoldedParent: (typeof SETTINGS_OPTIONS.hideFoldedParent)[number]
+  hideUnloadedTabs: boolean
   nativeHighlight: boolean
 
   // Bookmarks
@@ -219,6 +225,7 @@ export interface SettingsState {
   tabsSecondClickActPrevPanelOnly: boolean
   tabsSecondClickActPrevNoUnload: boolean
   shiftSelAct: boolean
+  ctrlSelAct: boolean
   activateOnMouseUp: boolean
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]
   tabLongRightClick: (typeof SETTINGS_OPTIONS.tabLongRightClick)[number]

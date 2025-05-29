@@ -1,7 +1,7 @@
 import { History } from 'src/services/history'
 import { Sidebar } from 'src/services/sidebar'
 import { Search } from 'src/services/search'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Utils, Logs } from './_services'
 import { Visit } from 'src/types'
 
@@ -32,7 +32,6 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
     if (first && !noSel) {
       if (Search.reactive.barIsFocused) {
         Selection.resetSelection()
-        Selection.selectHistory(first.id)
       }
       History.scrollToHistoryItemDebounced(120, first.id)
     }

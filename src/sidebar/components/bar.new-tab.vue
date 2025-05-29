@@ -39,7 +39,7 @@ import { computed, PropType } from 'vue'
 import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -303,7 +303,7 @@ function onNewTabCtxMenu(e: MouseEvent): void {
 async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   let targetTabs: Tab[] = []
   if (Selection.isTabs()) {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     for (const tab of Tabs.list) {
       if (ids.includes(tab.id)) targetTabs.push(tab)
     }

@@ -67,7 +67,7 @@ function onTabMouseDown(e: MouseEvent, tab: SnapTabState): void {
 
   if (e.button === 0) {
     longClickTimeout = setTimeout(() => {
-      tab.sel = true
+      toggleTab(tab)
       mouseDownTabId = undefined
     }, LONG_CLICK_DELAY)
   }
@@ -83,9 +83,7 @@ function onTabMouseUp(e: MouseEvent, tab: SnapTabState): void {
 
   if (e.shiftKey && e.button === 0) {
     if (props.viewerState.mouseUpShiftTabId === null) {
-      props.viewerState.mouseUpShiftTabId = tab.id ?? null
-      tab.sel = !tab.sel
-      props.viewerState.mouseUpShiftMode = tab.sel
+      toggleTab(tab)
     } else {
       selectRange(props.viewerState.mouseUpShiftTabId, tab.id, !props.viewerState.mouseUpShiftMode)
       props.viewerState.mouseUpShiftTabId = null
@@ -114,21 +112,20 @@ function onCheckboxMouseUp(e: MouseEvent, tab: SnapTabState): void {
   }
   mouseDownTabId = undefined
 
-  if (e.shiftKey && e.button === 0) {
-    if (props.viewerState.mouseUpShiftTabId === null) {
-      props.viewerState.mouseUpShiftTabId = tab.id ?? null
-      tab.sel = !tab.sel
-      props.viewerState.mouseUpShiftMode = tab.sel
-    } else {
-      selectRange(props.viewerState.mouseUpShiftTabId, tab.id, !props.viewerState.mouseUpShiftMode)
-      props.viewerState.mouseUpShiftTabId = null
-    }
-    return
-  }
-  props.viewerState.mouseUpShiftTabId = null
+  // Only handle left-click events.
+  if (e.button !== 0) return
 
-  if (e.button === 0) {
-    tab.sel = !tab.sel
+  const viewerState = props.viewerState
+
+  if (e.shiftKey) {
+    if (viewerState.mouseUpShiftTabId === null) {
+      toggleTab(tab)
+    } else {
+      selectRange(viewerState.mouseUpShiftTabId, tab.id, !viewerState.mouseUpShiftMode)
+      viewerState.mouseUpShiftTabId = null
+    }
+  } else {
+    toggleTab(tab)
   }
 }
 
@@ -190,6 +187,22 @@ function selectRange(tabAId: ID, tabBId?: ID, deselectActually = false): void {
         }
       }
     }
+  }
+
+  // Toggle selection state for folded children
+  if (props.tab.isParent && props.tab.folded) {
+    Snapshots.selectBranchInViewer(props.index, props.panel.tabs, !!props.tab.sel)
+  }
+}
+
+function toggleTab(tab: SnapTabState): void {
+  props.viewerState.mouseUpShiftTabId = tab.id ?? null
+  tab.sel = !tab.sel
+  props.viewerState.mouseUpShiftMode = tab.sel
+
+  // Toggle selection state for folded children
+  if (tab.isParent && tab.folded) {
+    Snapshots.selectBranchInViewer(props.index, props.panel.tabs, tab.sel)
   }
 }
 </script>

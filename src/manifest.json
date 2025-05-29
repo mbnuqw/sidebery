@@ -42,6 +42,7 @@
     "bookmarks",
     "tabHide",
     "clipboardWrite",
+    "clipboardRead",
     "history",
     "downloads"
   ],
@@ -153,6 +154,9 @@
         "default": "Alt+R"
       },
       "description": "__MSG_KbResetSelection__"
+    },
+    "lock_selection": {
+      "description": "__MSG_KbLockSel__"
     },
     "menu": {
       "description": "__MSG_KbMenu__"
@@ -438,6 +442,21 @@
     },
     "copy_url": {
       "description": "__MSG_KbCopyUrl__"
+    },
+    "copy_tmplt_0": {
+      "description": "__MSG_KbCopyByTmplt0__"
+    },
+    "copy_tmplt_1": {
+      "description": "__MSG_KbCopyByTmplt1__"
+    },
+    "copy_tmplt_2": {
+      "description": "__MSG_KbCopyByTmplt2__"
+    },
+    "copy_tmplt_3": {
+      "description": "__MSG_KbCopyByTmplt3__"
+    },
+    "copy_tmplt_4": {
+      "description": "__MSG_KbCopyByTmplt4__"
     },
     "open_bookmarks_sub_panel": {
       "description": "__MSG_KbOpenBookmarksSubPanel__"

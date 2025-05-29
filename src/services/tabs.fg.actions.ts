@@ -1,10 +1,10 @@
 import * as Utils from 'src/utils'
-import { CONTAINER_ID, GROUP_URL, NOID, Err, SAMEID } from 'src/defaults'
+import { CONTAINER_ID, GROUP_URL, NOID, Err, SAMEID, URL_URL } from 'src/defaults'
 import { BKM_OTHER_ID, ADDON_HOST, BKM_ROOT_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTabProps } from 'src/types'
-import { Notification, TabSessionData, TabsTreeData, NativeTab } from 'src/types'
-import { ItemInfo, TabTreeData, TabStatus } from 'src/types'
+import { Notification, TabSessionData, TabsTreeData, NativeTab, DstPlaceInfo } from 'src/types'
+import { ItemInfo, TabTreeData, TabStatus, CopyTemplate } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -15,7 +15,7 @@ import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
-import { Selection } from './selection'
+import * as Selection from './selection'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -66,7 +66,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       isParent: tab.isParent,
       folded: tab.folded,
       title: tab.title,
-      tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
+      tooltip: '',
       customTitle: tab.customTitle ?? null,
       customTitleEdit: false,
       customColor: tab.customColor ?? null,
@@ -74,6 +74,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       lvl: tab.lvl,
       branchLen: 0,
       sel: tab.sel,
+      selLock: tab.selLock,
       warn: tab.warn,
       updated: tab.updated,
       unread: !!tab.unread,
@@ -107,7 +108,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     isParent: tab.isParent,
     folded: tab.folded,
     title: tab.title,
-    tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
+    tooltip: '',
     customTitle: tab.customTitle ?? null,
     customTitleEdit: false,
     customColor: tab.customColor ?? null,
@@ -115,6 +116,7 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     lvl: tab.lvl,
     branchLen: 0,
     sel: tab.sel,
+    selLock: tab.selLock,
     warn: tab.warn,
     updated: tab.updated,
     unread: !!tab.unread,
@@ -1212,6 +1214,10 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
       Logs.err('Tabs.discardTabs: Cannot discard (second try):', err)
     })
   }
+
+  if (Settings.state.hideUnloadedTabs) {
+    updateNativeTabsVisibility()
+  }
 }
 
 /**
@@ -1573,6 +1579,7 @@ export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.state.hideFoldedTabs
   const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
   const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
+  const hideUnloaded = Settings.state.hideUnloadedTabs
   const hideInact = Settings.state.hideInact
 
   if (!browser.tabs.hide) return
@@ -1599,6 +1606,11 @@ export function updateNativeTabsVisibility(): void {
     }
 
     if (Utils.isTabsPanel(actPanel) && hideInact && tab.panelId !== actPanel.id) {
+      if (!tab.hidden) toHide.push(tab.id)
+      continue
+    }
+
+    if (hideUnloaded && tab.discarded) {
       if (!tab.hidden) toHide.push(tab.id)
       continue
     }
@@ -2585,36 +2597,177 @@ export function findAncestor(childTab: Tab, cb: (t: Tab) => any): Tab | undefine
   }
 }
 
-export async function copyUrls(ids: ID[]): Promise<void> {
+export async function copy(ids: ID[], template: CopyTemplate) {
   if (!Permissions.reactive.clipboardWrite) {
     const result = await Permissions.request('clipboardWrite')
     if (!result) return
   }
 
-  let urls = ''
+  Tabs.sortTabIds(ids)
+
+  const isDBG = template.str === '%DBG'
+  const lines: string[] = []
+  const bullet = ids.length > 1 ? Settings.state.copyMultiBullet : ''
+  const indent = Settings.state.copyTreeIndent
+  const indentLevelsById = new Map<ID, number>()
   for (const id of ids) {
     const tab = Tabs.byId[id]
-    if (tab) urls += '\n' + tab.url
+    if (!tab) continue
+
+    if (isDBG) {
+      lines.push(JSON.stringify(tab, null, 2))
+      continue
+    }
+
+    // Get indent lvl
+    let indentLvl = 0
+    if (tab.lvl > 0) {
+      const pTabId = Tabs.findAncestorId(id, pid => ids.includes(pid))
+      const pLvl = pTabId ? indentLevelsById.get(pTabId) : undefined
+      indentLvl = pLvl !== undefined ? pLvl + 1 : 0
+    }
+
+    indentLevelsById.set(tab.id, indentLvl)
+
+    let result = template.str
+    if (template.hasB) result = result.replaceAll('%B', bullet)
+    if (template.hasCT) result = result.replaceAll('%CT', tab.customTitle || tab.title)
+    if (template.hasT) result = result.replaceAll('%T', tab.title)
+    if (template.hasU) result = result.replaceAll('%U', tab.url)
+    lines.push(indent.repeat(indentLvl) + result)
   }
 
-  const resultString = urls.trim()
+  const resultString = lines.join('\n')
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export async function copyTitles(ids: ID[]): Promise<void> {
-  if (!Permissions.reactive.clipboardWrite) {
-    const result = await Permissions.request('clipboardWrite')
-    if (!result) return
+export async function pasteInPanelOrAfterTabs(ids: ID[]) {
+  if (ids.length === 1 && Utils.isTabsPanel(Sidebar.panelsById[ids[0]])) {
+    return paste({ panelId: ids[0], discarded: true })
+  } else {
+    return pasteAfter(ids)
+  }
+}
+
+export async function pasteAfter(dstIds: ID[]) {
+  Tabs.sortTabIds(dstIds)
+
+  const lastSelTabId = dstIds[dstIds.length - 1]
+  const lastSelTab = Tabs.byId[lastSelTabId]
+  if (!lastSelTab) return Logs.warn('Tabs.pasteAfter: No dst tab')
+
+  const pinned = lastSelTab.pinned
+  const panelId = lastSelTab.panelId
+  const parentId = lastSelTab.parentId
+  let index = lastSelTab.index + 1
+  if (lastSelTab.isParent) {
+    index = lastSelTab.index + (Tabs.getBranchLen(lastSelTab.id) ?? 0) + 1
   }
 
-  let titles = ''
-  for (const id of ids) {
-    const tab = Tabs.byId[id]
-    if (tab) titles += '\n' + tab.title
+  const dst: DstPlaceInfo = {
+    index,
+    parentId,
+    discarded: true,
+    pinned,
+    panelId,
   }
 
-  const resultString = titles.trim()
-  if (resultString) navigator.clipboard.writeText(resultString)
+  return paste(dst)
+}
+
+export async function paste(dst: DstPlaceInfo) {
+  // Check permission
+  if (!Permissions.reactive.clipboardRead) {
+    const result = await Permissions.request('clipboardRead')
+    if (!result) return Logs.warn('Tabs.paste: No permission')
+  }
+
+  // Get and parse text from clipboard
+  const rawText = await navigator.clipboard.readText()
+  const items = Utils.parseTextForItems(rawText)
+  if (!items.length) return Logs.warn('Tabs.paste: No parsed items')
+
+  // Check/Normalize dst info
+  // - Panel
+  let dstPanel
+  if (dst.panelId === undefined && (!dst.pinned || Settings.state.pinnedTabsPosition === 'panel')) {
+    dst.parentId = undefined
+    dst.index = undefined
+    dstPanel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (Utils.isTabsPanel(dstPanel)) dst.panelId = Sidebar.activePanelId
+    else return Logs.warn('Tabs.paste: Unable to find dst panel')
+  } else if (dst.panelId) {
+    dstPanel = Sidebar.panelsById[dst.panelId]
+    if (!Utils.isTabsPanel(dstPanel)) return Logs.warn('Tabs.paste: Wrong dst panel')
+  } else {
+    dst.panelId = NOID
+  }
+  // - Parent tab
+  let dstParent
+  if (!dst.pinned) {
+    if (dst.parentId === undefined) {
+      dst.index = undefined
+      dst.parentId = NOID
+    } else if (dst.parentId !== NOID) {
+      dstParent = Tabs.byId[dst.parentId]
+      if (!dstParent || dstParent.panelId !== dst.panelId) {
+        return Logs.warn('Tabs.paste: Wrong dst parent tab')
+      }
+    }
+  } else {
+    dst.parentId = NOID
+  }
+  // - Index
+  if (dst.index === undefined) {
+    if (dstParent) {
+      const branchLen = Tabs.getBranchLen(dstParent.id) ?? 0
+      dst.index = dstParent.index + branchLen + 1
+    } else if (dstPanel) {
+      dst.index = dstPanel.nextTabIndex
+    } else if (dst.pinned) {
+      dst.index = Tabs.pinned.length
+    } else {
+      return Logs.warn('Tabs.paste: No dst index')
+    }
+  } else {
+    let indexIsOk = true
+    if (dst.pinned) {
+      indexIsOk = dst.index >= 0 && dst.index <= Tabs.pinned.length
+    } else {
+      indexIsOk = dst.index >= Tabs.pinned.length
+      if (indexIsOk && dstPanel) {
+        indexIsOk = dst.index >= dstPanel.startTabIndex && dst.index <= dstPanel.nextTabIndex
+      }
+      if (indexIsOk && dstParent) {
+        const branchLen = Tabs.getBranchLen(dstParent.id) ?? 0
+        indexIsOk = dst.index > dstParent.index && dst.index <= dstParent.index + branchLen + 1
+      }
+    }
+    if (!indexIsOk) return Logs.warn('Tabs.paste: Incorrect dst index')
+  }
+
+  // Search
+  if (items.length === 1 && items[0]?.title && !items[0]?.url) {
+    const query = items[0]?.title
+
+    if (dst.pinned) {
+      browser.search.search({ query, disposition: 'NEW_TAB' })
+    } else {
+      const conf: browser.tabs.CreateProperties = {
+        active: false,
+        index: dst.index,
+        windowId: Windows.id,
+      }
+      Tabs.setNewTabPosition(dst.index, dst.parentId, dst.panelId)
+      const tabWithSearch = await browser.tabs.create(conf)
+      browser.search.search({ query, tabId: tabWithSearch.id })
+    }
+  }
+
+  // or Create discarded tabs
+  else {
+    await Tabs.open(Utils.withoutEmptyFolders(items), dst)
+  }
 }
 
 let flashAnimationTimeout: number | undefined
@@ -2723,14 +2876,7 @@ export function pringDbgInfo(reset = false): void {
   }
 }
 
-const updateTooltipBuf: Map<ID, number> = new Map()
-export function updateTooltipDebounced(tabId: ID, delay: number) {
-  clearTimeout(updateTooltipBuf.get(tabId))
-  updateTooltipBuf.set(tabId, setTimeout(updateTooltip, delay, tabId))
-}
 export function updateTooltip(tabId: ID) {
-  updateTooltipBuf.delete(tabId)
-
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
@@ -2749,6 +2895,11 @@ export function getTooltip(tab: Tab): string {
     str += `\n---\n${decodedUrl}`
   } else if (Settings.state.tabsUrlInTooltip === 'stripped') {
     str += `\n---\n${decodedUrl.split('?')[0]}`
+  }
+
+  const containerName = Containers.reactive.byId[tab.cookieStoreId]?.name || ''
+  if (containerName && Settings.state.tabsContainerInTooltip) {
+    str += `\n---\n${containerName}`
   }
 
   return str

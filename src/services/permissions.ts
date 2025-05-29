@@ -5,6 +5,7 @@ export interface PermissionsState {
   bookmarks: boolean
   tabHide: boolean
   clipboardWrite: boolean
+  clipboardRead: boolean
   history: boolean
   downloads: boolean
 }
@@ -15,6 +16,7 @@ export const Permissions = {
     bookmarks: false,
     tabHide: false,
     clipboardWrite: false,
+    clipboardRead: false,
     history: false,
     downloads: false,
   } as PermissionsState,
@@ -27,6 +29,7 @@ export const Permissions = {
   bookmarks: false,
   tabHide: false,
   clipboardWrite: false,
+  clipboardRead: false,
   history: false,
   downloads: false,
 

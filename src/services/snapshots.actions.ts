@@ -850,6 +850,19 @@ export function foldBranchInViewer(index: number, tabs: SnapTabState[]) {
   }
 }
 
+export function selectBranchInViewer(index: number, tabs: SnapTabState[], sel: boolean) {
+  const rootTab = tabs[index]
+  if (!rootTab || !rootTab.isParent) return
+
+  const rootTabLvl = rootTab.lvl ?? 0
+  for (let t, i = index + 1; i < tabs.length; i++) {
+    t = tabs[i]
+    if (!t || (t.lvl ?? 0) <= rootTabLvl) break
+
+    t.sel = sel
+  }
+}
+
 function calcBranchLen(index: number, tabs: SnapTabState[]): number {
   let len = 0
 

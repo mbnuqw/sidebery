@@ -6,6 +6,7 @@
   :data-loading="tab.reactive.status === TabStatus.Loading"
   :data-pending="tab.reactive.status === TabStatus.Pending"
   :data-selected="tab.reactive.sel"
+  :data-locked-selection="tab.reactive.selLock"
   :data-audible="tab.reactive.mediaAudible"
   :data-muted="tab.reactive.mediaMuted"
   :data-paused="tab.reactive.mediaPaused"
@@ -84,7 +85,7 @@ import { DragInfo, DragItem, DragType, DropType, MenuType, Tab } from 'src/types
 import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -200,8 +201,13 @@ function onMouseDown(e: MouseEvent): void {
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!tab.sel) Selection.selectTab(tab.id)
-      else Selection.deselectTab(tab.id)
+      if (!(tab.sel || tab.selLock)) {
+        // Select active tab on initial ctrl-click, if setting enabled
+        if (Settings.state.ctrlSelAct && !Selection.isSet()) {
+          Selection.selectTab(Tabs.activeId)
+        }
+        Selection.selectTab(tab.id)
+      } else Selection.deselectTab(tab.id)
       return
     }
 
@@ -215,7 +221,7 @@ function onMouseDown(e: MouseEvent): void {
       return
     }
 
-    if (Selection.isSet() && !tab.sel) Selection.resetSelection()
+    if (Selection.isSet() && !(tab.sel || tab.selLock)) Selection.resetSelection()
 
     if (!Selection.isSet() && !Settings.state.activateOnMouseUp) activate()
 
@@ -227,7 +233,7 @@ function onMouseDown(e: MouseEvent): void {
     e.preventDefault()
     Mouse.blockWheel()
 
-    const selectedTabs = Selection.isTabs() ? Selection.get() : []
+    const selectedTabs = Selection.isTabs() ? Selection.ids() : []
     Selection.resetSelection()
 
     if (!selectedTabs.includes(tab.id)) selectedTabs.push(tab.id)
@@ -310,7 +316,7 @@ function onMouseDown(e: MouseEvent): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.state.ctxMenuNative && !tab.sel) {
+    if (!Settings.state.ctxMenuNative && !(tab.sel || tab.selLock)) {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, tab.id)
     }
@@ -363,7 +369,7 @@ function onMouseUp(e: MouseEvent): void {
       sameTargetType
     ) {
       if (!Selection.isSet()) select()
-      let selectedTabs = Selection.get()
+      let selectedTabs = Selection.ids()
       if (selectedTabs.length === 1 && preselectedTabs?.length) selectedTabs = preselectedTabs
       Tabs.removeTabs(selectedTabs)
     }
@@ -398,7 +404,7 @@ function onCtxMenu(e: MouseEvent): void {
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !tab.sel) {
+  if (!e.ctrlKey && !e.shiftKey && !(tab.sel || tab.selLock)) {
     Selection.resetSelection()
   }
 
@@ -533,12 +539,16 @@ function onMouseEnter(e: MouseEvent) {
 
   if (Settings.state.previewTabs) {
     Preview.setTargetTab(props.tabId, e.clientY)
+  } else {
+    updateTooltipDebounced()
   }
 }
 
 function onMouseLeave(): void {
   if (Settings.state.previewTabs) {
     Preview.resetTargetTab(props.tabId)
+  } else {
+    clearTimeout(updateTooltipDebouncedTimeout)
   }
 }
 
@@ -570,6 +580,14 @@ function onAudioMouseUp(e: MouseEvent, tab: Tab) {
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
     }
   }
+}
+
+let updateTooltipDebouncedTimeout: number | undefined
+function updateTooltipDebounced() {
+  clearTimeout(updateTooltipDebouncedTimeout)
+  updateTooltipDebouncedTimeout = setTimeout(() => {
+    Tabs.updateTooltip(props.tabId)
+  }, Settings.state.updTooltipDelay)
 }
 
 function discardOrCloseTabs(selectedTabs: ID[]): void {

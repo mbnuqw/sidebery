@@ -114,7 +114,7 @@ import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -124,6 +124,7 @@ import { Windows } from 'src/services/windows'
 import { Search } from 'src/services/search'
 import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 import { Sync } from 'src/services/_services'
+import { Info } from 'src/services/info'
 import ConfirmPopup from './components/popup.confirm.vue'
 import CtxMenuPopup from './components/popup.context-menu.vue'
 import DragAndDropTooltip from './components/dnd-tooltip.vue'
@@ -215,7 +216,7 @@ function updSidebarEls() {
 
 onMounted(() => {
   updSidebarEls()
-  document.addEventListener('keyup', onDocumentKeyup)
+  document.addEventListener('keydown', onDocumentKeydown)
 })
 
 function getPanelComponent(panel: Panel): Component | undefined {
@@ -237,7 +238,7 @@ function onFocusOut(e: FocusEvent): void {
   }
 }
 
-function onDocumentKeyup(e: KeyboardEvent): void {
+function onDocumentKeydown(e: KeyboardEvent): void {
   // Close popups
   if (e.code === 'Escape') {
     // Context menu
@@ -301,6 +302,30 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   if (e.code === 'Enter') {
     // Confirm popup
     if (Popups.reactive.confirm?.ok) Popups.reactive.confirm.ok()
+  }
+
+  // Paste
+  if (e.code === 'KeyV' && (Info.reactive.os === 'mac' ? e.metaKey : e.ctrlKey)) {
+    let actPanel
+    if (Sidebar.subPanelActive) actPanel = Sidebar.subPanels.bookmarks
+    else actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+
+    if (Utils.isTabsPanel(actPanel)) {
+      if (Selection.isTabs()) {
+        Tabs.pasteAfter(Selection.ids())
+      } else {
+        Tabs.paste({ panelId: Sidebar.activePanelId })
+      }
+    } else if (Utils.isBookmarksPanel(actPanel)) {
+      if (Selection.isBookmarks()) {
+        const target = Bookmarks.reactive.byId[Selection.getLast()]
+        if (!target) return Logs.warn('Sidebar.onDocumentKeyup: Paste bkm: No sel target')
+        if (target.type === 'folder') Bookmarks.pasteIn(target.id)
+        else Bookmarks.pasteAfter(target.id)
+      } else {
+        Bookmarks.pasteIn(actPanel.rootId)
+      }
+    }
   }
 }
 
@@ -376,7 +401,7 @@ function onMouseLeave(): void {
   if (Tabs.activateSelectedOnMouseLeave && Selection.isTabs()) {
     Tabs.activateSelectedOnMouseLeave = false
 
-    const id = Selection.get()[0]
+    const id = Selection.ids()[0]
     const targetTab = Tabs.byId[id]
     if (!targetTab || targetTab.id === Tabs.activeId) return Selection.resetSelection()
 
@@ -416,7 +441,7 @@ function onMouseUp(e: MouseEvent): void {
       return
     }
 
-    Tabs.removeTabs(Selection.get())
+    Tabs.removeTabs(Selection.ids())
   } else if (e.button === 2) {
     let type: MenuType | undefined
     if (Selection.isBookmarks()) type = MenuType.Bookmarks

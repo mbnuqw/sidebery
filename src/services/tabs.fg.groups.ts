@@ -325,30 +325,40 @@ export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
   }, delay)
 }
 
-export function getGroupConfig(groupTabId: ID): GroupConfig | undefined {
+function getGroupConfig(groupTabId: ID): GroupConfig | undefined {
   const groupTab = Tabs.byId[groupTabId]
   if (!groupTab) return
 
+  const config = parseGroupUrl(groupTab.url)
+  if (!config) return
+
+  config.active = groupTab.active
+
+  return config
+}
+
+function parseGroupUrl(url: string): GroupConfig | undefined {
   let urlInfo
   try {
-    urlInfo = new URL(groupTab.url)
+    urlInfo = new URL(url)
   } catch {
     return
   }
   if (!urlInfo.hash) urlInfo.hash = ''
 
-  const config: GroupConfig = { active: groupTab.active }
-
+  const config: GroupConfig = {}
   const title = decodeURIComponent(urlInfo.hash.slice(1))
-  config.title = title.split(':id:')[0] // Remove legacy "id"
+
+  // Remove legacy "id"
+  config.title = title.split(':id:')[0]
 
   const pin = urlInfo.searchParams.get('pin')
   if (pin) {
-    const [ctx, url] = pin.split('::')
+    const [container, url] = pin.split('::')
     let pinnedTab
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
-      if (url === tab.url && ctx === tab.cookieStoreId) {
+      if (url === tab.url && container === tab.cookieStoreId) {
         pinnedTab = tab
         break
       }
