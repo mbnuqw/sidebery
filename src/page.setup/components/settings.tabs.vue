@@ -170,6 +170,10 @@ section(ref="el")
         v-model:value="Settings.state.moveNewTabActivePin"
         :opts="Settings.getOpts('moveNewTabActivePin')"
         @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.auto_scroll_to_new_tab"
+      v-model:value="Settings.state.autoScrollToNewTab"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="pinTabsEl")
     .sub-title: .text {{translate('settings.nav_settings_pinned_tabs')}}
