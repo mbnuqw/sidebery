@@ -102,19 +102,29 @@
     "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
   },
   "KbCopyByTmplt0": {
-    "en": "Copy selected tabs/bookmarks or active tab by first template"
+    "en": "Copy selected tabs/bookmarks or active tab by first template",
+    "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
+    "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt1": {
-    "en": "Copy selected tabs/bookmarks or active tab by second template"
+    "en": "Copy selected tabs/bookmarks or active tab by second template",
+    "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
+    "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt2": {
-    "en": "Copy selected tabs/bookmarks or active tab by third template"
+    "en": "Copy selected tabs/bookmarks or active tab by third template",
+    "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
+    "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt3": {
-    "en": "Copy selected tabs/bookmarks or active tab by fourth template"
+    "en": "Copy selected tabs/bookmarks or active tab by fourth template",
+    "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
+    "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt4": {
-    "en": "Copy selected tabs/bookmarks or active tab by fifth template"
+    "en": "Copy selected tabs/bookmarks or active tab by fifth template",
+    "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
+    "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
   },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
@@ -490,6 +500,16 @@
     "zh_TW": "選取子分頁",
     "ja": "子タブを選択"
   },
+  "KbLockSel": {
+    "en": "Lock/Unlock selection",
+    "de": "Auswahl sperren/entsperren",
+    "hu": "Kijelölés zárolása/feloldása",
+    "pl": "Zablokuj/odblokuj wybór",
+    "ru": "Заблокировать/разблокировать выбор",
+    "zh_CN": "锁定/解锁选择",
+    "zh_TW": "鎖定/解鎖選取",
+    "ja": "選択のロック/ロック解除"
+  },
   "KbResetSelection": {
     "en": "Reset selection",
     "de": "Auswahl zurücksetzen",
@@ -499,16 +519,6 @@
     "zh_CN": "重置选择",
     "zh_TW": "取消選取",
     "ja": "選択をリセット"
-  },
-  "KbLockSel": {
-    "en": "Lock/Unlock selection",
-    "de": "Auswahl sperren/entsperren",
-    "hu": "Kijelölés zárolása/feloldása",
-    "pl": "Zablokuj/odblokuj wybór",
-    "ru": "Заблокировать/разблокировать выбор",
-    "zh_CN": "锁定/解锁选择",
-    "zh_TW": "鎖定/解鎖選擇",
-    "ja": "選択のロック/ロック解除"
   },
   "KbActivate": {
     "en": "Activate selection",

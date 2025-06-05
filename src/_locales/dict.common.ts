@@ -2041,9 +2041,9 @@ export const commonTranslations: Translations = {
     hu: 'Deduplikáció',
     pl: 'Deduplikuj',
     ru: 'Дедуплицировать',
-    zh_CN: '重复数据删除',
-    zh_TW: '重複資料刪除',
-    ja: '重複排除',
+    zh_CN: '已选标签页去重',
+    zh_TW: '已選分頁去重',
+    ja: '選択したタブの重複排除',
   },
   'menu.copy_urls': {
     en: n => (n === 1 || n === undefined ? 'Copy URL' : 'Copy URLs'),
@@ -2067,9 +2067,13 @@ export const commonTranslations: Translations = {
   },
   'menu.copy_by_templates': {
     en: 'Copy by templates...',
+    zh_CN: '通过模板复制...',
+    zh_TW: '透過範本複製...',
   },
   'menu.copy_by_template': {
     en: name => 'Copy ' + name,
+    zh_CN: name => '复制 ' + name,
+    zh_TW: name => '複製 ' + name,
   },
   'menu.paste': {
     en: 'Paste',
