@@ -426,7 +426,7 @@
   "KbRm": {
     "en": "Close selected or active tab / Delete selected bookmarks",
     "de": "Ausgewählte Elemente oder aktiven Tab entfernen",
-    "fr": "Fermer l’onglet fermé ou actif / Supprimer les marque-pages sélectionnés",
+    "fr": "Fermer l’onglet selectionné ou actif / Supprimer les marque-pages sélectionnés",
     "hu": "A kijelölt (vagy aktív) lap bezárása / A kijelölt könyvjelző törlése",
     "pl": "Zamknij zaznaczoną lub aktywną kartę / Usuń zaznczone zakładki",
     "ru": "Закрыть выбранную или активную вкладку / Удалить выбранные закладки",
