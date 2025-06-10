@@ -2460,6 +2460,7 @@ export const commonTranslations: Translations = {
   'menu.editor.bookmarks_title': {
     en: 'Bookmarks',
     de: 'Lesezeichen',
+    fr: 'Marque-pages',
     hu: 'Könyvjelzők',
     pl: 'Zakładki',
     ru: 'Закладки',

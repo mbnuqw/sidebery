@@ -2500,7 +2500,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
 Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     de: `Verfügbare Modifikatoren: ctrl, alt, cmd
 Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
-    fr: `Modificateur disponibles: ctrl, alt, cmd
+    fr: `Modificateurs disponibles: ctrl, alt, cmd
 Exemple: “*”, “ctrl+$”, “ctrl+alt+g”`,
     hu: `Lehetséges módosítók: ctrl, alt, cmd
 Például: „*”, „ctrl+$”, „ctrl+alt+g”`,
@@ -3296,6 +3296,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.auto_scroll_to_new_tab': {
     en: 'Auto scroll to position of new tab',
     de: 'Automatisch zur Position des neuen Tabs scrollen',
+    fr: 'Scroller automatiquement à la position du nouvel onglet',
     hu: 'Automatikus görgetés az új lap pozíciójához',
     pl: 'Automatyczne przewijanie do pozycji nowej karty',
     ru: 'Автоматически прокручивать к позиции новой вкладки',
@@ -5491,6 +5492,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tab_action_exp': {
     en: 'expand',
     de: 'Ausklappen',
+    fr: 'étendre',
     hu: 'lenyitás',
     pl: 'rozwiń',
     ru: 'развернуть',
@@ -6332,7 +6334,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 - Sidebery-Dateien werden in JSON gespeichert, sodass Google deren Inhalte lesen kann (Verschlüsselung ist geplant)`,
     fr: `Notes:
 – Sidebery n’a pas accès à vos fichiers sur Google Drive.
-– Les données de Sidebery sont stockées dans des fichiers JSON, et Google peut donc lire leur contenu (le chiffrement est planifié)`,
+– Les données de Sidebery sont stockées en JSON, et Google peut donc lire leur contenu (le chiffrement est planifié)`,
     hu: `Megjegyzések:
 - A Sidebery nem fér hozzá az Ön Google Drive-on lévő fájljaihoz
 - A Sidebery fájlok JSON-ban vannak tárolva, így a Google el tudja olvasni a tartalmukat (titkosítást tervezünk)`,
@@ -6611,9 +6613,9 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     de: `Sidebery nutzt die Synchronisation von Firefox, deshalb:
 - müssen Sie sich in Ihrem Firefox Konto einloggen, damit es funktioniert
 - um sicher zu gehen, dass die Daten auf die Firefox Synchronisations-Server hochgeladen werden, müssen Sie in den Firefox Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken `,
-    fr: `Sidebery utilise la synchronisation de Firefox donc
-– Vous devez être connecté à votre compte Firefox pour que ça fonctionne.
-– Pour vous assurer que les données sont bien envoyées aux serveurs de Firefox Sync, vous devez cliquer sur le bouton “Synchroniser maintenant” dans les paramètres de Firefox ou dans votre profil dans le menu principal (le bouton avec les trois traits).`,
+    fr: `Sidebery utilise la synchronisation de Firefox donc:
+– Vous devez être connecté·e à votre compte Firefox pour que ça fonctionne.
+– Pour vous assurer que les données sont bien envoyées aux serveurs de Firefox Sync, vous devez cliquer sur le bouton “Synchroniser maintenant” dans les paramètres de Firefox ou dans votre profil dans le menu principal (le bouton avec les trois lignes).`,
     hu: `A Sidebery a Firefox szinkronizáló szolgáltatását használja, ezért:
 – A használathoz be kell jelentkezni egy Firefox-fiókba.
 – A Firefox beállításaiban vagy főmenüjében (gomb három csíkkal) található „Szinkronizálás most” gomb használatával lehet meggyőződni arról, hogy az adatok feltöltése ténylegesen megtörtént.`,
@@ -7262,6 +7264,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'styles.vars_group.menu': {
     en: 'Context menu',
     de: 'Kontextmenü',
+    fr: 'Menu contextuel',
     hu: 'Környezeti menü',
     pl: 'Menu kontekstowe',
     ru: 'Контекстное меню',
@@ -7576,6 +7579,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'snapshot.btn_open_as_private_win': {
     en: 'Open as private window',
     de: 'Als privates Fenster öffnen',
+    fr: 'Ouvrir dans une fenêtre privée',
     hu: 'Megnyitás privát ablakként',
     pl: 'Otwórz jako okno prywatne',
     ru: 'Открыть как приватное окно',
@@ -7586,6 +7590,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'snapshot.btn_open_as_norm_win': {
     en: 'Open as normal window',
     de: 'Als normales Fenster öffnen',
+    fr: 'Ouvrir dans une fenêtre normale',
     hu: 'Nyissa meg normál ablakként',
     pl: 'Otwórz jako normalne okno',
     ru: 'Открыть как обычное окно',
@@ -7618,6 +7623,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'snapshot.sel.open_in': {
     en: 'Open in...',
     de: 'Öffnen in...',
+    fr: 'Ouvrir dans…',
     hu: 'Nyitott...',
     pl: 'Otwórz w...',
     ru: 'Открыть в...',
@@ -7628,6 +7634,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'snapshot.sel.open_in_window': {
     en: 'New window',
     de: 'Neues Fenster',
+    fr: 'Nouvelle fenêtre',
     hu: 'Új ablakban',
     pl: 'Nowym oknie',
     ru: 'Новом окне',
@@ -7638,6 +7645,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'snapshot.sel.open_in_private_window': {
     en: 'New private window',
     de: 'Neues privates Fenster',
+    fr: 'Nouvelle fenêtre privée',
     hu: 'Új privát ablakban',
     pl: 'Nowym prywatnym oknie',
     ru: 'Новом приватном окне',
