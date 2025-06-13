@@ -142,7 +142,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.in_container_prefix': {
     en: ' in "',
     de: ' in der Umgebung "',
-    fr: ' dans le container “',
+    fr: ' dans le conteneur “',
     hu: ' ebben a konténerben: „',
     pl: ' w kontenerze "',
     ru: ' в контейнере "',
@@ -164,7 +164,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
     de: 'Mittelklick: Öffne einen untergeordneten Tab',
-    fr: 'Clic du milieu: ouvrir un onglet enfant',
+    fr: 'Clic milieu: Ouvrir un onglet enfant',
     hu: 'Középső kattintás: új utódlap',
     pl: 'Środkowy przycisk myszy: Otwórz potomną kartę',
     ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
@@ -175,7 +175,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.mid_reopen': {
     en: 'Middle click: Reopen active tab',
     de: 'Mittelklick: Aktiven Tab erneut öffnen',
-    fr: "Clic du milieu: réouvrir l'onglet actif",
+    fr: "Clic milieu: rouvrir l'onglet actif",
     hu: 'Középső kattintás: az aktív lap újranyitása',
     pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę',
     ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
@@ -245,7 +245,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
     de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
-    fr: 'Les onglets de ce panneau dans d‘autres fenêtres seront déplacés dans le panneau voising',
+    fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
     pl: 'Info: Karty tego panelu w innych oknach zostaną przeniesione do sąsiednich paneli',
     ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель',
@@ -389,7 +389,7 @@ export const sidebarTranslations: Translations = {
   'popup.common.btn_more': {
     en: 'More options...',
     de: 'Weitere Optionen...',
-    fr: 'Plus d’options',
+    fr: 'Plus d’options…',
     hu: 'További beállítások…',
     pl: 'Więcej opcji...',
     ru: 'Больше опций...',
@@ -471,7 +471,7 @@ export const sidebarTranslations: Translations = {
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
     de: 'Zuletzt geschlossene Tabs',
-    fr: 'Onlgets récemment fermés',
+    fr: 'Onglets récemment fermés',
     hu: 'Legutóbb bezárt lapok',
     pl: 'Ostatnio zamknięte karty',
     ru: 'Недавно закрытые вкладки',
@@ -516,7 +516,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.tabs': {
     en: 'tabs',
     de: 'Tabs',
-    fr: 'onlgets',
+    fr: 'onglets',
     hu: 'lap',
     pl: (n = 0) => {
       if (NUM_1_RE.test(n.toString())) return 'karta'
@@ -591,6 +591,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_settings': {
     en: 'Settings',
     de: 'Einstellungen',
+    fr: 'Paramètres',
     hu: 'Beállítások',
     pl: 'Ustawienia',
     ru: 'Настройки',
@@ -634,7 +635,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
     de: 'Stummschalten hörbarer Tabs an/aus',
-    fr: 'Désactiver/réactiver le son de l’onglet',
+    fr: 'Couper/réactiver le son de l’onglet',
     hu: 'Lapok némítása/visszahangosítása',
     pl: 'Wycisz/Odcisz karty z dźwiękiem',
     ru: 'Приглушить/Включить вкладки со звуком',
@@ -644,7 +645,8 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_collapse': {
     en: 'Collapse all',
-    de: 'Replier tout',
+    de: 'Alle einklappen',
+    fr: 'Replier tout',
     hu: 'Minden ág becsukása',
     pl: 'Zwiń wszystko',
     ru: 'Свернуть все',
@@ -655,7 +657,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
     de: 'Mittelklick: Schließe Tabs',
-    fr: 'Clic du milieu: Fermer les onglets',
+    fr: 'Clic milieu: Fermer les onglets',
     hu: 'Középső kattintás: lapok bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij karty',
     ru: 'Средняя кнопка мыши: Закрыть влкадки',
@@ -666,7 +668,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
     de: 'Mittelklick: Schließe Tabs und entferne Panel',
-    fr: 'Clic du milieu: Fermer les onglets et supprimer le panneau',
+    fr: 'Clic milieu: Fermer les onglets et supprimer le panneau',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zamknij karty i usuń panel',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
@@ -677,7 +679,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
     de: 'Mittelklick: Schließe aktiven Tab',
-    fr: 'Clic du milieu: Fermer l’ onglet actif',
+    fr: 'Clic milieu: Fermer l’onglet actif',
     hu: 'Középső kattintás: az aktív lap bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij aktywną kartę',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
@@ -688,7 +690,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
     de: 'Mittelklick: Entlade Tabs',
-    fr: 'Clic du milieu: décharger les onglets',
+    fr: 'Clic milieu: décharger les onglets',
     hu: 'Középső kattintás: lapok kisöprése',
     pl: 'Środkowy przycisk myszy: Uśpij karty',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
@@ -699,7 +701,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
     de: 'Mittelklick: Verberge Panel',
-    fr: 'Clic du milieu: Caché le panneau',
+    fr: 'Clic milieu: Cacher le panneau',
     hu: 'Középső kattintás: panel elrejtése',
     pl: 'Środkowy przycisk myszy: Ukryj panel',
     ru: 'Средняя кнопка мыши: Скрыть панель',
@@ -710,7 +712,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
     de: 'Mittelklick: Als Lesezeichen speichern',
-    fr: 'Clic du milieu: Sauvegarder dans les marque-pages',
+    fr: 'Clic milieu: Sauvegarder dans les marque-pages',
     hu: 'Középső kattintás: könyvjelzőzés',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
@@ -721,7 +723,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
     de: 'Mittelklick: Als Lesezeichen speichern und Panel entfernen',
-    fr: 'Clic du milieu: Sauvegarder dans les marque-pages et supprimer le panneau',
+    fr: 'Clic milieu: Sauvegarder dans les marque-pages et supprimer le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek i usuń panel',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
@@ -732,7 +734,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
     de: 'Mittelklick: In Lesezeichen-Panel umwandeln',
-    fr: 'Clic du milieu: Convertir en panneau de marque pages',
+    fr: 'Clic milieu: Convertir en panneau de marque pages',
     hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
@@ -743,7 +745,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
     de: 'Mittelklick: In Lesezeichen umwandeln und Panel verbergen',
-    fr: 'Clic du milieu: Convertir en marque-pages et caché le panneau',
+    fr: 'Clic milieu: Convertir en marque-pages et cacher le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek i ukryj panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
@@ -754,7 +756,7 @@ export const sidebarTranslations: Translations = {
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
     de: 'Mittelklick: In Tab-Panel umwandeln',
-    fr: 'Clic du milieu: Convertir en panneau d’onglets',
+    fr: 'Clic milieu: Convertir en panneau d’onglets',
     hu: 'Középső kattintás: átalakítás lappanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu kart',
     ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
@@ -791,7 +793,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_rm_post': {
     en: ' tabs closed',
     de: 'Tabs geschlossen',
-    fr: ' onglets fermés',
+    fr: n => (n === 1 ? ' onglet fermé' : ' onglets fermés'),
     hu: ' lap be lett zárva',
     pl: (n = 0): string => {
       if (NUM_1_RE.test(n.toString())) return ' karta zamknięta'
@@ -895,7 +897,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_err_fix': {
     en: 'Update tabs',
     de: 'Tabs aktualisieren',
-    fr: 'Onglets mis à jour',
+    fr: 'Mettre à jour les onglets',
     hu: 'Lapok frissítése',
     pl: 'Zaaktualizuj karty',
     ru: 'Обновить вкладки',
@@ -906,7 +908,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_reloading': {
     en: 'Reloading tabs',
     de: 'Tabs neu laden',
-    fr: 'Recharger les onglets',
+    fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
     pl: 'Przeładowywanie kart',
     ru: 'Перезагрузка вкладок',
@@ -917,7 +919,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_reloading_stop': {
     en: 'Stop',
     de: 'Stopp',
-    fr: 'Stopper',
+    fr: 'Arrêter',
     hu: 'Állj',
     pl: 'Zatrzymaj',
     ru: 'Остановить',
@@ -938,7 +940,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_saved_bookmarks': {
     en: 'Panel saved',
     de: 'Panel gespeichert',
-    fr: 'Panneau sauvegarder',
+    fr: 'Panneau sauvegardé',
     hu: 'A panel mentése kész',
     pl: 'Panel zapisany',
     ru: 'панель сохранена в',
@@ -960,7 +962,7 @@ export const sidebarTranslations: Translations = {
   'notif.converting': {
     en: 'Converting...',
     de: 'Konvertiere...',
-    fr: 'Convertir',
+    fr: 'Conversion en cours…',
     hu: 'Átalakítás…',
     pl: 'Konwertowanie...',
     ru: 'Конвертация...',
@@ -971,7 +973,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
     de: 'Tab-Panel konnte nicht in Lesezeichen gespeichert werden',
-    fr: 'Impossible de sauvegarder le panneau des marque-pages',
+    fr: 'Impossible de sauvegarder le panneau d’onglets dans les marque-pages',
     hu: 'Nem sikerült könyvjelzőzni a lappanelt',
     pl: 'Nie można zapisać panelu kart do zakładek',
     ru: 'Невозможно сохранить панель вкладок в закладки',
@@ -1122,6 +1124,7 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
     de: 'Proxy-Authentifizierungsfehler',
+    fr: 'Erreur d’authentification du proxy',
     hu: 'Proxy-hitelesítési hiba',
     pl: 'Błąd autoryzacji proxy',
     ru: 'Ошибка аутентификации прокси',
@@ -1132,7 +1135,7 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err_details': {
     en: 'Check the proxy settings to make sure that they are correct.',
     de: 'Überprüfen Sie die Proxy-Einstellungen, um sicherzustellen, dass sie korrekt sind.',
-    fr: 'Vérifier que les paramètres de proxy sont corrects',
+    fr: 'Vérifiez que les paramètres du proxy sont corrects',
     hu: 'Ellenőrizni kell, hogy a proxy beállításai biztosan helyesek-e.',
     pl: 'Sprawdź ustawienia proxy i upewnij się, że są poprawne.',
     ru: 'Проверьте настройки прокси, чтобы убедиться, что они верны.',
@@ -1154,7 +1157,7 @@ export const sidebarTranslations: Translations = {
   'notif.history_del_sites': {
     en: 'Clearing history',
     de: 'Verlauf löschen',
-    fr: 'Supprimer l’historique',
+    fr: 'Effacer l’historique',
     hu: 'Az előzmények törlése',
     pl: 'Czyszczenie historii',
     ru: 'Очистка истории',
@@ -1165,7 +1168,7 @@ export const sidebarTranslations: Translations = {
   'notif.history_del_sites_nothing': {
     en: 'Nothing to clear',
     de: 'Nichts zu löschen',
-    fr: 'Rien à supprimer',
+    fr: 'Rien à effacer',
     hu: 'Semmi nem lett törölve',
     pl: 'Nic do wyczyszczenia',
     ru: 'Нечего очищать',
@@ -1176,7 +1179,7 @@ export const sidebarTranslations: Translations = {
   'notif.cc.err': {
     en: 'Unable to clear cookies',
     de: 'Cookies konnten nicht gelöscht werden',
-    fr: 'Impossible de supprimer les cookies',
+    fr: 'Impossible d’effacer les cookies',
     hu: 'A sütik nem törölhetők',
     pl: 'Nie można wyczyścić ciasteczek',
     ru: 'Не удалось очистить куки',
@@ -1198,7 +1201,7 @@ export const sidebarTranslations: Translations = {
   'notif.cc.ok': {
     en: 'Cookies were cleared',
     de: 'Cookies wurden gelöscht',
-    fr: 'Les cookies ont été supprimés',
+    fr: 'Les cookies ont été effacés',
     hu: 'A sütik törlése kész',
     pl: 'Ciasteczka zostały wyczyszczone',
     ru: 'Cookies были очищены',

@@ -1394,7 +1394,7 @@ export const commonTranslations: Translations = {
   'menu.tab.reload': {
     en: 'Reload',
     de: 'Neu laden',
-    fr: 'Recharger',
+    fr: 'Actualiser',
     hu: 'Újratöltés',
     pl: 'Przeładuj',
     ru: 'Перезагрузить',
@@ -1833,7 +1833,7 @@ export const commonTranslations: Translations = {
   'menu.tab.discard': {
     en: 'Unload',
     de: 'Entladen',
-    fr: 'Recharger',
+    fr: 'Actualiser',
     hu: 'Kisöprés',
     pl: 'Uśpij',
     ru: 'Выгрузить',
@@ -1942,7 +1942,7 @@ export const commonTranslations: Translations = {
   'menu.tab.clear_cookies': {
     en: 'Clear cookies',
     de: 'Cookies löschen',
-    fr: 'Supprimer les cookies',
+    fr: 'Effacer les cookies',
     hu: 'Sütik törlése',
     pl: 'Wyczyść ciasteczka',
     ru: 'Удалить cookies',
@@ -2019,7 +2019,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.reload': {
     en: 'Reload tabs',
     de: 'Tabs neu laden',
-    fr: 'Recharger les onglets',
+    fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
     pl: 'Przeładuj karty',
     ru: 'Перезагрузить вкладки',
