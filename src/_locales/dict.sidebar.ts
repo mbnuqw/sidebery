@@ -1279,6 +1279,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.pink': {
     en: 'Pink',
+    de: 'Rosa',
     fr: 'Rose',
     hu: 'rózsaszín',
     pl: 'Różowy',
