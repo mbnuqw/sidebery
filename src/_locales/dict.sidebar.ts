@@ -792,7 +792,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
-    de: 'Tabs geschlossen',
+    de: ' Tabs geschlossen',
     fr: n => (n === 1 ? ' onglet fermé' : ' onglets fermés'),
     hu: ' lap be lett zárva',
     pl: (n = 0): string => {
