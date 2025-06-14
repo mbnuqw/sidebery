@@ -130,7 +130,7 @@ export const setupPageTranslations: Translations = {
   'container.rules_include_tooltip': {
     en: 'Reopen tabs with matched URLs in this container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
-    fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
+    fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
     hu: 'Az illeszkedő URL-ek újranyitása ebben a konténerben.\nSoronként egy-egy "szövegrészlet" vagy /RegExp/:\n    pelda.hu\n    /^(szabályos)?kifejezés$/\n    …',
     pl: 'Otwórz ponownie karty z pasującymi URL w tym kontenerze.\nLista "substrings" lub "/regex/ oddzielona nowymi liniami:\n    example.com\n    /^(some)?regex$/\n    ...',
     ru: 'Переоткрывать вкладки с совпадающими url в этом контейнере.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
@@ -155,7 +155,7 @@ export const setupPageTranslations: Translations = {
     en: 'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: `Rouvrir les onglets dont l’URL correspond dans le conteneur par défaut.
-Liste de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:
+Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     example.com
     /^(une)?regex$/\n
     …`,
@@ -1950,49 +1950,34 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_TW: '設定',
     ja: '設定',
   },
-  'settings.nav_rm_tabs_panel_confirm_pre': {
-    en: 'Delete "',
-    de: 'Lösche "',
-    fr: 'Supprimer le panneau “',
-    hu: 'Törölhető a panel: „',
-    pl: 'Usunąć panel "',
-    ru: 'Удалить панель "',
-    zh_CN: '删除 "',
-    zh_TW: '刪除「',
-    ja: '「',
+  'settings.nav_rm_tabs_panel_confirm': {
+    en: name =>
+      `Delete "${name}" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.`,
+    de: name =>
+      `Lösche "${name}" Panel?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.`,
+    fr: name =>
+      `Supprimer le panneau “${name}”?\nTous les onglets de ce panneau seront assignés au panneau d’onglets le plus proche.`,
+    hu: name =>
+      `Törölhető a panel: „${name}”?\nA panel minden lapja átkerül a legközelebbi lappanelra.`,
+    pl: name =>
+      `Usunąć panel "${name}"?\nWszystkie karty z tego panelu zostaną przypisane do najbliższego panelu kart.`,
+    ru: name =>
+      `Удалить панель "${name}"?\n Все вкладки этой панели будут присоединены к соседней панели.`,
+    zh_CN: name => `删除 "${name}" 面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。`,
+    zh_TW: name => `刪除「${name}」面板嗎？\n該面板的全部分頁都將分配給最靠近的分頁面板。`,
+    ja: name =>
+      `「${name}」パネルを削除しますか？\nこのパネルのすべてのタブは、最も近いタブパネルに割り当てられます。`,
   },
-  'settings.nav_rm_tabs_panel_confirm_post': {
-    en: '" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.',
-    de: '" Panel?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.',
-    fr: '”?\nTous les onglets de ce panneau seront assignés au panneau d’onglets le plus proche.',
-    hu: '”?\nA panel minden lapja átkerül a legközelebbi lappanelra.',
-    pl: '"?\nWszystkie karty z tego panelu zostaną przypisane do najbliższego panelu kart.',
-    ru: '"?\n Все вкладки этой панели будут присоединены к соседней панели.',
-    zh_CN: '" 面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。',
-    zh_TW: '」面板嗎？\n該面板的全部分頁都將分配給最靠近的分頁面板。',
-    ja: '」パネルを削除しますか？\nこのパネルのすべてのタブは、最も近いタブパネルに割り当てられます。',
-  },
-  'settings.nav_rm_bookmarks_panel_confirm_pre': {
-    en: 'Delete "',
-    de: 'Lösche "',
-    fr: 'Supprimer le panneau “',
-    hu: 'Törölhető a panel: „',
-    pl: 'Usunąć panel ',
-    ru: 'Удалить панель "',
-    zh_CN: '删除 "',
-    zh_TW: '刪除「',
-    ja: '「',
-  },
-  'settings.nav_rm_bookmarks_panel_confirm_post': {
-    en: '" panel?',
-    de: '" Panel?',
-    fr: '”?',
-    hu: '”?',
-    pl: '"?',
-    ru: '"?',
-    zh_CN: '" 面板吗？',
-    zh_TW: '」面板嗎？',
-    ja: '」パネルを削除しますか？',
+  'settings.nav_rm_bookmarks_panel_confirm': {
+    en: name => `Delete "${name}" panel?`,
+    de: name => `Lösche "${name}" Panel?`,
+    fr: name => `Supprimer le panneau “${name}”?`,
+    hu: name => `Törölhető a panel: „${name}”?`,
+    pl: name => `Usunąć panel ${name}"?`,
+    ru: name => `Удалить панель "${name}"?`,
+    zh_CN: name => `删除 "${name}" 面板吗？`,
+    zh_TW: name => `刪除「${name}」面板嗎？`,
+    ja: name => `「${name}」パネルを削除しますか？`,
   },
 
   // - Group page
@@ -2062,27 +2047,16 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_TW: '依名稱排序容器',
     ja: '名前でコンテナをソート',
   },
-  'settings.contianer_remove_confirm_prefix': {
-    en: 'Are you sure you want to delete "',
-    de: 'Möchten Sie die Umgebung "',
-    fr: 'Voulez-vous vraiment supprimer le conteneur “',
-    hu: 'Biztos törölhető a konténer: „',
-    pl: 'Jesteś pewny, że chcesz usunąć kontener "',
-    ru: 'Вы действительно хотите удалить контейнер "',
-    zh_CN: '您确定要删除 "',
-    zh_TW: '您確定要刪除「',
-    ja: '「',
-  },
-  'settings.contianer_remove_confirm_postfix': {
-    en: '" container?',
-    de: '" wirklich löschen?',
-    fr: '”?',
-    hu: '”?',
-    pl: '"?',
-    ru: '"?',
-    zh_CN: '" 容器吗？',
-    zh_TW: '」容器嗎？',
-    ja: '」コンテナを削除しますか？',
+  'settings.container_remove_confirm': {
+    en: name => `Are you sure you want to delete "${name}" container?`,
+    de: name => `Möchten Sie die Umgebung "${name}" wirklich löschen?`,
+    fr: name => `Voulez-vous vraiment supprimer le conteneur “${name}”?`,
+    hu: name => `Biztos törölhető a konténer: „${name}”?`,
+    pl: name => `Jesteś pewny, że chcesz usunąć kontener "${name}"?`,
+    ru: name => `Вы действительно хотите удалить контейнер "${name}"?`,
+    zh_CN: name => `您确定要删除 "${name}" 容器吗？`,
+    zh_TW: name => `您確定要刪除「${name}」容器嗎？`,
+    ja: name => `「${name}」コンテナを削除しますか？`,
   },
   'settings.containers_create_btn': {
     en: 'Create container',

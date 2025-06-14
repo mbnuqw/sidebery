@@ -148,28 +148,46 @@ const btns = computed<NewTabBtn[]>(() => {
 })
 
 function createTooltip(btn: NewTabBtn): string {
-  let tooltip = translate('newTabBar.new_tab')
-  if (btn.containrtName) {
-    tooltip +=
-      translate('newTabBar.in_container_prefix') +
-      btn.containrtName +
-      translate('newTabBar.in_container_postfix')
-  }
-  if (btn.url) tooltip += ': ' + btn.url
+  const newTabMiddleClickOpenNewChild = Settings.state.newTabMiddleClickAction === 'new_child'
+  let tooltip = null
 
-  if (Settings.state.newTabMiddleClickAction === 'new_child') {
-    tooltip += '\n' + translate('newTabBar.mid_child')
-  } else {
-    tooltip += '\n' + translate('newTabBar.mid_reopen')
-    if (btn.containrtName) {
-      tooltip +=
-        translate('newTabBar.in_container_prefix') +
-        btn.containrtName +
-        translate('newTabBar.in_container_postfix')
-    } else if (!btn.url) {
-      tooltip += translate('newTabBar.in_default_container')
+  if (btn.containrtName) {
+    if (btn.url) {
+      tooltip =
+        translate('newTabBar.new_tab_in_container_with_url', btn.url, btn.containrtName) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_container_with_url'
+          : 'newTabBar.middle_click_reopen_active_tab_in_container_with_url',
+        btn.url,
+        btn.containrtName
+      )
+    } else {
+      tooltip = translate('newTabBar.new_tab_in_container', btn.containrtName) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_container'
+          : 'newTabBar.middle_click_reopen_active_tab_in_container',
+        btn.containrtName
+      )
     }
-    if (btn.url) tooltip += ': ' + btn.url
+  } else {
+    if (btn.url) {
+      tooltip = translate('newTabBar.new_tab_in_default_container_with_url', btn.url) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_default_container_with_url'
+          : 'newTabBar.middle_click_reopen_active_tab_in_default_container_with_url',
+        btn.url
+      )
+    } else {
+      tooltip = translate('newTabBar.new_tab') + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_default_container'
+          : 'newTabBar.middle_click_reopen_active_tab_in_default_container'
+      )
+    }
   }
 
   return tooltip

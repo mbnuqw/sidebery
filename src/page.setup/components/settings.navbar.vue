@@ -321,13 +321,9 @@ function disableBtn(index: number): void {
 function getRmConfirmMsg(panel: PanelConfig): string | undefined {
   if (!panel.name) return
   if (Utils.isTabsPanel(panel)) {
-    let preMsg = translate('settings.nav_rm_tabs_panel_confirm_pre')
-    let postMsg = translate('settings.nav_rm_tabs_panel_confirm_post')
-    return preMsg + panel.name + postMsg
+    return translate('settings.nav_rm_tabs_panel_confirm', panel.name)
   } else if (Utils.isBookmarksPanel(panel)) {
-    let preMsg = translate('settings.nav_rm_bookmarks_panel_confirm_pre')
-    let postMsg = translate('settings.nav_rm_bookmarks_panel_confirm_post')
-    return preMsg + panel.name + postMsg
+    return translate('settings.nav_rm_bookmarks_panel_confirm', panel.name)
   }
 }
 

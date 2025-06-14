@@ -29,27 +29,22 @@ export const sidebarTranslations: Translations = {
     zh: '警告',
     ja: '警告',
   },
-  'confirm.tabs_close_pre': {
-    en: 'Are you sure you want to close ',
-    de: 'Möchten Sie diese ',
-    fr: 'Voulez-vous vraiment fermer ',
-    hu: 'Biztosan bezárható a lap: „',
-    pl: 'jesteś pewnien, że chcesz zamknąć karty ',
-    ru: 'Вы действительно хотите закрыть ',
-    zh_CN: '您确定要关闭 ',
-    zh_TW: '您確定要關閉 ',
-    ja: '本当に閉じますか',
-  },
-  'confirm.tabs_close_post': {
-    en: ' tabs?',
-    de: ' Tabs wirklich schließen?',
-    fr: ' onglets?',
-    hu: '”?',
-    pl: '?',
-    ru: (n = 0) => (NUM_234_RE.test(n.toString()) ? ' вкладки?' : ' вкладок?'),
-    zh_CN: ' 标签页吗？',
-    zh_TW: ' 分頁嗎？',
-    ja: 'のタブを閉じますか？',
+  'confirm.tabs_close': {
+    en: n => `Are you sure you want to close ${n} tabs?`,
+    de: n => `Möchten Sie diese ${n} Tabs wirklich schließen?`,
+    fr: n =>
+      n === 1
+        ? `Voulez-vous vraiment fermer un onglet?`
+        : `Voulez-vous vraiment fermer ${n} onglets?`,
+    hu: n => `Biztosan bezárható a lap: „${n}”?`,
+    pl: n => `jesteś pewnien, że chcesz zamknąć karty ${n}?`,
+    ru: n =>
+      NUM_234_RE.test(n.toString())
+        ? `Вы действительно хотите закрыть ${n} вкладки?`
+        : `Вы действительно хотите закрыть ${n} вкладок?`,
+    zh_CN: n => `您确定要关闭 ${n} 标签页吗？`,
+    zh_TW: n => `您確定要關閉 ${n} 分頁嗎？`,
+    ja: n => `本当に閉じますか${n}のタブを閉じますか？`,
   },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',
@@ -128,40 +123,23 @@ export const sidebarTranslations: Translations = {
     zh_TW: '開啟一個新分頁',
     ja: '新しいタブを開く',
   },
-  'newTabBar.in_default_container': {
-    en: ' in default container',
-    de: ' in der Standardumgebung',
-    fr: ' dans le conteneur par défaut',
-    hu: ' az alapértelmezett konténerben',
-    pl: ' w domyślnym kontenerze',
-    ru: ' в стандартном контейнере',
-    zh_CN: ' 在默认容器中',
-    zh_TW: ' 在預設容器中',
-    ja: 'デフォルトのコンテナで',
+  'newTabBar.new_tab_in_container': {
+    en: name => `Open a new tab in "${name}" container`,
+    de: name => `Öffne einen neuen Tab in der Umgebung "${name}"`,
+    fr: name => `Ouvrir un nouvel onglet dans le conteneur “${name}”`,
+    hu: name => `Új lap ebben a konténerben: „${name}”`,
+    pl: name => `Otwórz nową kartę w kontenerze "${name}"`,
+    ru: name => `Открыть новую вкладку в контейнере "${name}"`,
   },
-  'newTabBar.in_container_prefix': {
-    en: ' in "',
-    de: ' in der Umgebung "',
-    fr: ' dans le conteneur “',
-    hu: ' ebben a konténerben: „',
-    pl: ' w kontenerze "',
-    ru: ' в контейнере "',
-    zh_CN: ' 在 "',
-    zh_TW: ' 在「',
-    ja: '「',
+  'newTabBar.new_tab_in_default_container_with_url': {
+    en: url => `Open "${url}" in a new tab`,
+    fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
   },
-  'newTabBar.in_container_postfix': {
-    en: '" container',
-    de: '"',
-    fr: '”',
-    hu: '”',
-    pl: '"',
-    ru: '"',
-    zh_CN: '" 容器中',
-    zh_TW: '」容器中',
-    ja: '」コンテナ',
+  'newTabBar.new_tab_in_container_with_url': {
+    en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
+    fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
   },
-  'newTabBar.mid_child': {
+  'newTabBar.open_child_tab_in_default_container': {
     en: 'Middle click: Open a child tab',
     de: 'Mittelklick: Öffne einen untergeordneten Tab',
     fr: 'Clic milieu: Ouvrir un onglet enfant',
@@ -172,8 +150,21 @@ export const sidebarTranslations: Translations = {
     zh_TW: '中鍵點選：開啟子分頁',
     ja: '中クリック：子タブを開く',
   },
-  'newTabBar.mid_reopen': {
-    en: 'Middle click: Reopen active tab',
+  'newTabBar.open_child_tab_in_default_container_with_url': {
+    en: url => `Middle click: Open "${url}" in a child tab`,
+    fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
+  },
+  'newTabBar.open_child_tab_in_container': {
+    en: name => `Middle click: Open a child tab in "${name}" container`,
+    fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
+  },
+  'newTabBar.open_child_tab_in_container_with_url': {
+    en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
+    fr: (url, name) =>
+      `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_default_container': {
+    en: 'Middle click: Reopen active tab in default container',
     de: 'Mittelklick: Aktiven Tab erneut öffnen',
     fr: "Clic milieu: rouvrir l'onglet actif",
     hu: 'Középső kattintás: az aktív lap újranyitása',
@@ -182,6 +173,19 @@ export const sidebarTranslations: Translations = {
     zh_CN: '中键点击：重新打开活动标签页',
     zh_TW: '中鍵點選：重新開啟當前分頁',
     ja: '中クリック：アクティブタブを再度開く',
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_default_container_with_url': {
+    en: url => `Middle click: Load "${url}" in active tab`,
+    fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_container': {
+    en: name => `Middle click: Reopen active tab in "${name}" container`,
+    fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
+    en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
+    fr: (url, name) =>
+      `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
   },
 
   // ---

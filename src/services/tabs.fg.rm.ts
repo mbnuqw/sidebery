@@ -241,9 +241,7 @@ export async function removeTabs(
     Settings.state.warnOnMultiTabClose === 'any' ||
     (hasInvisibleTab && Settings.state.warnOnMultiTabClose === 'collapsed')
   if (!silent && warn && count > 1) {
-    const pre = translate('confirm.tabs_close_pre', count)
-    const post = translate('confirm.tabs_close_post', count)
-    const ok = await Popups.confirm(pre + String(count) + post)
+    const ok = await Popups.confirm(translate('confirm.tabs_close', count))
     if (!ok) {
       let visTabsRecalcNeeded = false
       tabs.forEach(t => {

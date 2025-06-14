@@ -80,9 +80,7 @@ async function createContainer(): Promise<void> {
  * Remove container
  */
 async function removeContainer(container: Container): Promise<void> {
-  let preMsg = translate('settings.contianer_remove_confirm_prefix')
-  let postMsg = translate('settings.contianer_remove_confirm_postfix')
-  if (window.confirm(preMsg + container.name + postMsg)) {
+  if (window.confirm(translate('settings.container_remove_confirm', container.name))) {
     let navSaveNeeded = false
     try {
       await browser.contextualIdentities.remove(container.id)
