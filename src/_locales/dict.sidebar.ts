@@ -1067,16 +1067,6 @@ export const sidebarTranslations: Translations = {
     zh_TW: '面板已成功加入書籤',
     ja: 'パネルが正常にブックマークされました',
   },
-  'notif.done': {
-    en: 'Done',
-    de: 'Fertig',
-    fr: 'Terminé',
-    hu: 'Rendben',
-    pl: 'Gotowe',
-    ru: 'Готово',
-    zh: '已完成',
-    ja: '完了',
-  },
   'notif.new_bookmark': {
     en: 'New bookmark added',
     de: 'Neues Lesezeichen hinzugefügt',
