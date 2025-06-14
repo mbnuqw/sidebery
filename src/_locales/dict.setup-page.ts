@@ -6558,6 +6558,34 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '群組頁面',
     ja: 'グループページ',
   },
+  'styles.vars_group.general': {
+    en: 'General',
+    fr: 'Général',
+  },
+  'styles.vars_group.history': {
+    en: 'History',
+    fr: 'Historique',
+  },
+  'styles.vars_group.popup': {
+    en: 'Popup',
+    fr: 'Popup',
+  },
+  'styles.vars_group.sub-list_title': {
+    en: 'Sub-list title',
+    fr: 'Titre de sous-liste',
+  },
+  'styles.vars_group.search_bar': {
+    en: 'Search bar',
+    fr: 'Barre de recherche',
+  },
+  'styles.vars_group.new-tab_bar': {
+    en: 'New-tab bar',
+    fr: 'Barre de nouvel onglet',
+  },
+  'styles.vars_group.notification': {
+    en: 'Notification',
+    fr: 'Notification',
+  },
   'styles.vars_group.nav': {
     en: 'Navigation bar',
     de: 'Navigationsleiste',
