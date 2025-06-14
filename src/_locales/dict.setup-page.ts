@@ -275,7 +275,7 @@ Liste de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.drop_tab_ctx': {
     en: 'Reopen tab that was dropped to this panel in container:',
-    de: 'Tabs, welche in dieses Panel verschoben wurden, in folgender Umgebung neu öffnen',
+    de: 'Tabs, welche in dieses Panel verschoben wurden, in folgender Umgebung neu öffnen:',
     fr: 'Rouvrir les onglets déplacés dans ce panneau dans le conteneur:',
     hu: 'A panelba dobott lap újranyitása ebben a konténerben:',
     pl: 'Otwórz ponownie kartę kiedy zostanie upuszczona na ten panel w kontenerze',
@@ -286,13 +286,13 @@ Liste de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.move_tab_ctx': {
     en: 'Move tab to this panel if it is opened in container:',
-    de: 'Verschiebe Tabs in dieses Panel, wenn sie in folgender Umgebung geöffnet wurden',
+    de: 'Verschiebe Tabs in dieses Panel, wenn sie in folgender Umgebung geöffnet wurden:',
     fr: 'Déplacer les onglets vers ce panneau s’ils ont été ouverts dans le conteneur:',
     hu: 'Lap áthelyezése erre a panelra, ha a lap konténere:',
-    pl: 'Przenieś kartę do tego panelu jeśli została otworzona w kontenerze',
-    ru: 'Перемещать вкладки выбранного контейнера в эту панель',
     zh_CN: '如果在容器中打开标签页，则将标签页移动到此面板',
     zh_TW: '如果在容器中開啟分頁，則將分頁移動到此面板',
+    pl: 'Przenieś kartę do tego panelu jeśli została otworzona w kontenerze:',
+    ru: 'Перемещать вкладки выбранного контейнера в эту панель:',
     ja: 'コンテナでタブが開かれている場合、タブをこのパネルに移動する：',
   },
   'panel.move_tab_ctx_nochild': {
@@ -1250,10 +1250,10 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.storage_btn': {
     en: "Sidebery's data:",
-    de: 'Sidebery-Daten',
+    de: 'Sidebery-Daten:',
     fr: 'Données de Sidebery:',
     hu: 'Sidebery-adatok:',
-    pl: 'Dane Sidebery',
+    pl: 'Dane Sidebery:',
     ru: 'Данные Sidebery:',
     zh_CN: 'Sidebery 的已用数据：',
     zh_TW: 'Sidebery 的已用資料：',
