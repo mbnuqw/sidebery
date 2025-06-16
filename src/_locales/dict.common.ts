@@ -2609,8 +2609,8 @@ export const commonTranslations: Translations = {
   },
   'time.month_9': {
     en: 'October',
-    fr: 'Octobre',
     de: 'Oktober',
+    fr: 'Octobre',
     hu: 'október',
     pl: 'Październik',
     ru: 'Октябрь',
@@ -2628,8 +2628,8 @@ export const commonTranslations: Translations = {
   },
   'time.month_11': {
     en: 'December',
-    fr: 'Décembre',
     de: 'Dezember',
+    fr: 'Décembre',
     hu: 'december',
     pl: 'Grudzień',
     ru: 'Декабрь',
