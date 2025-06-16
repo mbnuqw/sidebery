@@ -408,7 +408,7 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.recent_locations_label': {
     en: 'Recent locations',
     de: 'Zuletzt besucht',
-    fr: 'Emplacement récent',
+    fr: 'Emplacements récents',
     hu: 'Legutóbbi helyek',
     pl: 'Ostatnie miejsca',
     ru: 'Недавние расположения',
@@ -441,7 +441,7 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.edit_bookmark': {
     en: 'Edit bookmark',
     de: 'Lesezeichen bearbeiten',
-    fr: 'Éditer le marque-page',
+    fr: 'Modifier le marque-page',
     hu: 'Könyvjelző szerkesztése',
     pl: 'Edytuj zakładkę',
     ru: 'Редактировать закладку',
@@ -452,7 +452,7 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.edit_folder': {
     en: 'Edit folder',
     de: 'Ordner bearbeiten',
-    fr: 'Éditer le dossier',
+    fr: 'Modifier le dossier',
     hu: 'Mappa szerkesztése',
     pl: 'Edytuj folder',
     ru: 'Редактировать папку',
@@ -667,7 +667,7 @@ export const commonTranslations: Translations = {
   'popup.tab_move_rules.editor_title.edit': {
     en: 'Edit auto-move rule',
     de: 'Regel bearbeiten',
-    fr: 'Éditer une règle de déplacement automatique',
+    fr: 'Modifier la règle de déplacement automatique',
     hu: 'Automatikus áthelyezési szabály szerkesztése',
     pl: 'Edytuj zasadę automatycznych przesunięć',
     ru: 'Редактировать правило',
@@ -720,7 +720,7 @@ export const commonTranslations: Translations = {
   'popup.tab_move_rules.add_rule_btn': {
     en: 'Add rule',
     de: 'Regel hinzufügen',
-    fr: 'Ajouter une règle',
+    fr: 'Ajouter la règle',
     hu: 'Hozzáadás',
     pl: 'Dodaj zasadę',
     ru: 'Добавить правило',
@@ -786,7 +786,7 @@ export const commonTranslations: Translations = {
   'popup.tab_reopen_rules.editor_title.edit': {
     en: 'Edit rule',
     de: 'Regel bearbeiten',
-    fr: 'Éditer la règle',
+    fr: 'Modifier la règle',
     hu: 'Szabály szerkesztése',
     pl: 'Edytuj zasadę',
     ru: 'Редактировать правило',
@@ -851,7 +851,7 @@ export const commonTranslations: Translations = {
   'popup.tab_reopen_rules.rule_suffix_include': {
     en: n => `...reopen it in "${n}" container`,
     de: n => `...in Umgebung "${n}" neu öffnen`,
-    fr: n => `…le rouvrir dans un nouveau onglet conteneur “${n}”`,
+    fr: n => `…le rouvrir dans le conteneur “${n}”`,
     hu: n => `…újranyitás ebben a konténerben: ${n}`,
     pl: n => `...otwórz ponownie w kontenrze "${n}"`,
     ru: n => `...открыть ee в контейнере "${n}"`,
@@ -938,7 +938,7 @@ export const commonTranslations: Translations = {
   'popup.url_rules.reopen_label': {
     en: 'Reopen these tabs in container:',
     de: 'Diese Tabs in folgender Umgebung neu öffnen:',
-    fr: 'Rouvrir ces onglets dans un conteneur',
+    fr: 'Rouvrir ces onglets dans le conteneur',
     hu: 'Újranyitás konténerben:',
     pl: 'Otwórz ponownie te karty w kontenerze:',
     ru: 'Открывать эти вкладки в контейнере:',
@@ -1097,7 +1097,7 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_in_ctr_': {
     en: 'Open in container...',
     de: 'Öffnen in Umgebung...',
-    fr: 'Ouvrir dans un conteneur',
+    fr: 'Ouvrir dans un conteneur…',
     hu: 'Megnyitás itt: konténer…',
     pl: 'Otwórz w kontenerze...',
     ru: 'Открыть в контейнере...',
@@ -1184,7 +1184,7 @@ export const commonTranslations: Translations = {
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
     de: 'Sortieren nach Zeit (Alt-Neu)',
-    fr: 'Trier par date (nouveau-ancien)',
+    fr: 'Trier par date (ancien-récent)',
     hu: 'Rendezés: idő szerint (régi–új)',
     pl: 'Sortuj po czasie (Stare-Nowe)',
     ru: 'Сортировать по времени (Старые-Новые)',
@@ -1195,7 +1195,7 @@ export const commonTranslations: Translations = {
   'menu.bookmark.sort_by_time_des': {
     en: 'Sort by time (New-Old)',
     de: 'Sortieren nach Zeit (Neu-Alt)',
-    fr: 'Trier par date (ancien-nouveau)',
+    fr: 'Trier par date (récent-ancien)',
     hu: 'Rendezés: idő szerint (új–régi)',
     pl: 'Sortuj po czasie (Nowe-Stare)',
     ru: 'Сортировать по времени (Новые-Старые)',
@@ -1272,7 +1272,7 @@ export const commonTranslations: Translations = {
   'menu.bookmark.edit_bookmark': {
     en: 'Edit',
     de: 'Bearbeiten',
-    fr: 'Éditer',
+    fr: 'Modifier',
     hu: 'Szerkesztés',
     pl: 'Edytuj',
     ru: 'Редактировать',
@@ -1844,7 +1844,7 @@ export const commonTranslations: Translations = {
   'menu.tab.edit_title': {
     en: 'Edit title',
     de: 'Titel bearbeiten',
-    fr: 'Éditer le titre',
+    fr: 'Modifier le titre',
     hu: 'Cím szerkesztése',
     pl: 'Edytuj tytuł',
     ru: 'Редактировать заголовок',
@@ -1855,7 +1855,7 @@ export const commonTranslations: Translations = {
   'menu.tab.group': {
     en: 'Group',
     de: 'Gruppe',
-    fr: 'Groupe',
+    fr: 'Grouper',
     hu: 'Csoportosítás',
     pl: 'Grupuj',
     ru: 'Сгруппировать',
@@ -2052,7 +2052,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_title_asc': {
     en: 'Sort tabs by title (A-z)',
     de: 'Sortiere Tabs nach Titel (A-z)',
-    fr: 'Trier par titre (A-z)',
+    fr: 'Trier les onglets par titre (A-z)',
     hu: 'Minden lap rendezése: cím szerint (A–z)',
     pl: 'Sortuj wszystkie karty po tytule (A-z)',
     ru: 'Сортировать вкладки по названию (А-я)',
@@ -2063,7 +2063,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_title_des': {
     en: 'Sort tabs by title (z-A)',
     de: 'Sortiere Tabs nach Titel (z-A)',
-    fr: 'Trier par titre (z-A)',
+    fr: 'Trier les onglets  par titre (z-A)',
     hu: 'Minden lap rendezése: cím szerint (z–A)',
     pl: 'Sortuj wszystkie karty po tytule (z-A)',
     ru: 'Сортировать вкладки по названию (я-А)',
@@ -2074,7 +2074,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_url_asc': {
     en: 'Sort tabs by URL (A-z)',
     de: 'Sortiere Tabs nach URL (A-z)',
-    fr: 'Trier par URL (A-z)',
+    fr: 'Trier les onglets par URL (A-z)',
     hu: 'Minden lap rendezése: URL szerint (A–z)',
     pl: 'Sortuj wszystkie karty po URL (A-z)',
     ru: 'Сортировать вкладки по URL (А-я)',
@@ -2085,7 +2085,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_url_des': {
     en: 'Sort tabs by URL (z-A)',
     de: 'Sortiere Tabs nach URL (z-A)',
-    fr: 'Trier par URL (z-A)',
+    fr: 'Trier les onglets par URL (z-A)',
     hu: 'Minden lap rendezése: URL szerint (z–A)',
     pl: 'Sortuj wszystkie karty po URL (z-A)',
     ru: 'Сортировать вкладки по URL (я-А)',
@@ -2096,7 +2096,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_time_asc': {
     en: 'Sort tabs by access time (Old-Recent)',
     de: 'Sortiere Tabs nach Zugriffszeit (Alt-Neu)',
-    fr: 'Trier les onglets par date (nouveau-ancien)',
+    fr: 'Trier les onglets par date (ancien-récent)',
     hu: 'Minden lap rendezése: idő szerint (régi–új)',
     pl: 'Sortuj wszystkie karty po dacie (Stare-Nowe)',
     ru: 'Сортировать вкладки по времени доступа (Старые-Новые)',
@@ -2107,7 +2107,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sort_all_by_time_des': {
     en: 'Sort tabs by access time (Recent-Old)',
     de: 'Sortiere Tabs nach Zugriffszeit (Neu-Alt)',
-    fr: 'Trier les onglets par date (ancien-nouveau)',
+    fr: 'Trier les onglets par date (récent-ancien)',
     hu: 'Minden lap rendezése: idő szerint (új–régi)',
     pl: 'Sortuj wszystkie karty po dacie (Nowe-Stare)',
     ru: 'Сортировать вкладки по времени доступа (Новые-Старые)',
@@ -2482,7 +2482,7 @@ export const commonTranslations: Translations = {
   'menu.editor.inline_group_title': {
     en: 'Sub-menu label...',
     de: 'Untermenü-Bezeichnung...',
-    fr: 'Label du sous-menu…',
+    fr: 'Libellé du sous-menu…',
     hu: 'Az almenü neve…',
     pl: 'Nazwa pod-menu...',
     ru: 'Название подменю...',

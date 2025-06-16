@@ -72,7 +72,7 @@
   "KbOpenSnapViewer": {
     "en": "Open snapshots viewer",
     "de": "Schnappschuss-Betrachter öffnen",
-    "fr": "Ouvrir le visualiseur d’instantané",
+    "fr": "Ouvrir la visionneuse d’instantané",
     "hu": "A pillanatképek megtekintése",
     "pl": "Otwórz widok migawek",
     "ru": "Открыть средство просмотра снепшотов",
@@ -331,7 +331,7 @@
   "KbPinTabs": {
     "en": "Pin/Unpin selected (or active) tabs",
     "de": "Ausgewählte (oder aktiven) Tab(s) anheften/lösen",
-    "fr": "Dupliquer les onglets sélectionnés (ou actifs)",
+    "fr": "Épingler/Désépingler les onglets sélectionnés (ou actifs)",
     "hu": "A kijelölt (vagy aktív) lapok rögzítése/feloldása",
     "pl": "Przypnij/Odepnij zaznaczone (lub aktywne) karty",
     "ru": "Закрепить/Открепить выбранные (или активные) вкладки",
@@ -375,7 +375,7 @@
   "KbEditTitle": {
     "en": "Edit title",
     "de": "Titel bearbeiten",
-    "fr": "Éditer le titre",
+    "fr": "Modifier le titre",
     "zh_CN": "编辑标题",
     "zh_TW": "編輯標題"
   },
@@ -558,7 +558,7 @@
   "KbLockSel": {
     "en": "Lock/Unlock selection",
     "de": "Auswahl sperren/entsperren",
-    "fr": "Sélectionner les onglets enfants",
+    "fr": "Vérouiller/Dévérouiller la selection",
     "hu": "Kijelölés zárolása/feloldása",
     "pl": "Zablokuj/odblokuj wybór",
     "ru": "Заблокировать/разблокировать выбор",
@@ -602,7 +602,7 @@
   "KbUnloadATIP": {
     "en": "Unload all tabs in panel",
     "de": "Alle Tabs im Panel entladen",
-    "fr": "Décharger tous les onglets dans un panneau",
+    "fr": "Décharger tous les onglets du panneau",
     "hu": "A panel összes lapjának kisöprése",
     "pl": "Uśpij wszystkie karty w panelu",
     "ru": "Выгрузить все вкладки в панели",
@@ -678,7 +678,7 @@
   "KbFoldInactBranches": {
     "en": "Fold inactive branches",
     "de": "Inaktive Zweige einklappen",
-    "fr": "Replier la branche sélectionnée",
+    "fr": "Replier les branches inactives",
     "hu": "Az inaktív ágak becsukása",
     "pl": "Złóż niekatywne gałęzie",
     "ru": "Свернуть неактивные ветви вкладок",
@@ -700,7 +700,7 @@
   "KbActPrevActTab": {
     "en": "Active tabs history: Back",
     "de": "Tab-Aktivierungschronik: Zurück",
-    "fr": "Historique de l’onglet actif: Reculer",
+    "fr": "Historique des onglets actifs: Reculer",
     "hu": "Aktív lapok előzménye: vissza",
     "pl": "Aktywuj historię kart: Wstecz",
     "ru": "История активных вкладок: Назад",
@@ -711,7 +711,7 @@
   "KbActNextActTab": {
     "en": "Active tabs history: Forward",
     "de": "Tab-Aktivierungschronik: Vor",
-    "fr": "Historique de l’onglet actif: Avancer",
+    "fr": "Historique des onglets actifs: Avancer",
     "hu": "Aktív lapok előzménye: előre",
     "pl": "Aktywuj historię kart: Naprzód",
     "ru": "История активных вкладок: Вперед",
@@ -1231,7 +1231,7 @@
   "KbSortTabsByTimeAsc": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Old-Recent)",
     "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit (Alt-Neu)",
-    "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (ancien-nouveau)",
+    "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (ancien-récent)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Stare-Nowe)",
     "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（舊-新）",
@@ -1240,7 +1240,7 @@
   "KbSortTabsByTimeDes": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Recent-Old)",
     "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit (Neu-Alt)",
-    "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (nouveau-ancien)",
+    "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (récent-ancien)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Nowe-Stare)",
     "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（新-舊）",
@@ -1285,7 +1285,7 @@
   "KbSortPanelTabsByTimeAsc": {
     "en": "Sort tabs of the active panel by access time (Old-Recent)",
     "de": "Sortiere Tabs des aktiven Panels nach Zugriffszeit (Alt-Neu)",
-    "fr": "Trier les onglets du panneau actif par date d’accès (ancien-nouveau)",
+    "fr": "Trier les onglets du panneau actif par date d’accès (ancien-récent)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Stare-Nowe)",
     "zh_TW": "依最近瀏覽時間排序當前面板的分頁（舊-新）",
@@ -1294,7 +1294,7 @@
   "KbSortPanelTabsByTimeDes": {
     "en": "Sort tabs of the active panel by access time (Recent-Old)",
     "de": "Sortiere Tabs des aktiven Panels nach Zugriffszeit (Neu-Alt)",
-    "fr": "Trier les onglets du panneau actif par date d’accès (nouveau-ancien)",
+    "fr": "Trier les onglets du panneau actif par date d’accès (récent-ancien)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Nowe-Stare)",
     "zh_TW": "依最近瀏覽時間排序當前面板的分頁（新-舊）",

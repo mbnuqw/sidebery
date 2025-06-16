@@ -1142,7 +1142,7 @@ Liste de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:
   'settings.update_sidebar_title': {
     en: "Use active panel's name as sidebar title",
     de: 'Name des aktiven Panels als Seitenleistenname verwenden',
-    fr: 'Utiliser le nom du panneau actif comme titre de la barre latérale',
+    fr: 'Utiliser le nom du panneau actif comme titre du panneau latéral',
     hu: 'Az oldalsáv neve mindig egyezzen meg az aktív panel nevével',
     pl: 'Używaj nazwy aktywnego panelu jako tytuł panelu bocznego',
     ru: 'Использовать имя активной панели в качестве заголовка боковой панели',
@@ -1153,7 +1153,7 @@ Liste de “sous-chaine” ou “/RegExp/” avec une entrée par ligne:
   'settings.mark_window': {
     en: "Add preface to the browser window's title if Sidebery sidebar is active",
     de: 'Präfix dem Fensternamen des Browsers voranstellen, wenn die Sidebery-Seitenleiste geöffnet ist',
-    fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand la barre latérale Sidebery est active',
+    fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand le panneau latéral Sidebery est actif',
     hu: 'Az ablak címében előtag jelzi, ha a Sidebery oldalsáv aktív',
     pl: 'Dodaj przedrostek do tytułu okna przeglądarki jeśli panel boczny Sidebery jest aktywny',
     ru: 'Добавлять префикс к заголовку окна, если боковая панель Sidebery активна',
@@ -2271,7 +2271,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   'settings.dnd_outside': {
     en: 'Action on drag-and-drop to the outside of sidebar',
     de: 'Aktion beim Ziehen und Ablegen aus der Seitenleiste heraus',
-    fr: 'Action lors d’un glisser-déposer hors de la barre latérale',
+    fr: 'Action lors d’un glisser-déposer hors de le panneau latéral',
     hu: 'Az oldalsávon kívülre történő húzás művelete',
     pl: 'Akcja po przeniesieniu i opuszczeniu na zewnątrz panelu bocznego',
     ru: 'Действие при перетаскивании за пределы боковой панели',
@@ -2643,7 +2643,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.switch_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
     de: 'Wenn der Mauszeiger die Seitenleiste verließ',
-    fr: 'si la souris sort de la barre latérale',
+    fr: 'si la souris sort du panneau latéral',
     hu: 'ha az egér elhagyja az oldalsávot',
     pl: 'jeśli myszka została na panelu bocznym',
     ru: 'если мышь покинула боковую панель',
@@ -3846,7 +3846,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_mode_i': {
     en: 'in sidebar after the tab',
     de: 'In der Seitenleiste nach dem Tab',
-    fr: 'dans la barre latérale, après l’onglet',
+    fr: 'dans le panneau latéral, après l’onglet',
     hu: 'az oldalsávon, a lap után',
     pl: 'w panelu bocznym po karcie',
     ru: 'в боковой панели после вкладки',
@@ -3956,7 +3956,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_side': {
     en: 'Sidebar side (needed to correctly calculate position of the popup)',
     de: 'Position der Seitenleiste (Wird benötigt, um die Position des Popups korrekt zu berechnen)',
-    fr: 'Position de la barre latérale (requis pour calculer correctement la position de la popup)',
+    fr: 'Position du panneau latéral (requis pour calculer correctement la position de la popup)',
     hu: 'Az oldalsáv oldala (a felbukkanó ablakok elhelyezése miatt szükséges)',
     pl: 'Strona panelu bocznego (potrzebna aby poprawnie obliczyć pozycję wyskakującego okienka)',
     ru: 'Сторона боковой панели (необходимо для правильного расчета положения всплывающего окна)',
@@ -4134,7 +4134,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.native_highlight': {
     en: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar',
     de: 'Hebe native Tabs (in horizontaler Leiste oben) ebenso hervor, wie Tabs in Seitenleiste',
-    fr: 'Indiquer la sélection dans la barre d’onglets native, en plus de la barre latérale',
+    fr: 'Indiquer la sélection dans la barre d’onglets native, en plus du panneau latéral',
     hu: 'A natív lapok (a felső, vízszintes sávon) kiemelése az oldalsáv lapjaival összhangban',
     pl: 'Podświetl natywne karty (w górnym poziomym pasku) razem z kartami w panelu bocznym',
     ru: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели',
@@ -6396,7 +6396,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     en: `- Type: Web application
 - Authorized redirect URIs:`,
     fr: `– Type: Application Web
-– URI de redirections authorisées:`,
+– URI de redirections autorisées:`,
     zh_CN: `- 类型：Web 应用
 - 授权重定向 URI：`,
     zh_TW: `- 類型：網頁應用程式
@@ -7198,7 +7198,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'styles.css_sidebar': {
     en: 'Sidebar',
     de: 'Seitenleiste',
-    fr: 'Barre latérale',
+    fr: 'Panneau latéral',
     hu: 'Oldalsáv',
     pl: 'Panel boczny',
     ru: 'Боковая панель',
@@ -7346,7 +7346,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   – Cliquer sur le bouton “Copier l’URL des outils de développement” dans la barre en bas de la page
   – Sélectionner une iframe à inspecter
     – Cliquer sur l’icone rectangulaire avec les trois sections dans le coin en haut à droite de la page du debuggeur
-    – Sélectionner “/sidebar/sidebar.html” pour l’iframe de la barre latérale
+    – Sélectionner “/sidebar/sidebar.html” pour l’iframe du panneau latéral
     – Sélectionner “/sidebery/group.html” pour l’iframe de la page de groupe
   – Explorer l’onglet “Inspecteur”`,
     hu: `MEGJEGYZÉS: A rendelkezésre álló CSS-kiválasztókat a hibakeresővel lehet megtudni:
