@@ -747,8 +747,8 @@ export const sidebarTranslations: Translations = {
     hu: 'Nem sikerült könyvjelzőzni',
     pl: 'Nie można stworzyć zakładki',
     ru: 'Невозможно создать закладку',
-    zh_CN: ' 无法创建书签',
-    zh_TW: ' 無法建立書籤',
+    zh_CN: '无法创建书签',
+    zh_TW: '無法建立書籤',
     ja: ' ブックマークを作成できません',
   },
   'notif.bookmarks_rm_post': {
