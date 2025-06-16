@@ -98,7 +98,7 @@ export async function importSyncedSettings(entry: Sync.SyncedEntry) {
 
   Notifications.notify({
     icon: '#icon_sync',
-    title: 'Settings have been successfully imported',
+    title: translate('sync.success.import_settings_success'),
     ctrl: translate('notif.undo_ctrl'),
     callback: () => importSettings(prevSettings),
   })

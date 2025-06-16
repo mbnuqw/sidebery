@@ -667,7 +667,7 @@ export async function importSyncedStyles(entry: Sync.SyncedEntry) {
 
   Notifications.notify({
     icon: '#icon_sync',
-    title: 'Styles have been successfully imported',
+    title: translate('sync.success.import_styles_success'),
     ctrl: translate('notif.undo_ctrl'),
     callback: () => importStyles(prevStyles),
   })

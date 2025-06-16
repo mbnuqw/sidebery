@@ -10,6 +10,7 @@ import * as IPC from './ipc'
 import { Containers } from './containers'
 import { Sidebar } from './sidebar'
 import { Info } from './info'
+import { translate } from 'src/dict'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })
@@ -170,8 +171,8 @@ export async function createWithTabs(
     if (String(err) === 'Error: Extension does not have permission for incognito mode') {
       if (Windows.lastFocusedWinId !== undefined) {
         const notification: Notification = {
-          title: 'Cannot open window',
-          details: String(err),
+          title: translate('notif.open_private_windows_err'),
+          details: translate('notif.open_private_windows_err_details'),
           lvl: 'err',
         }
         IPC.sendToSidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)

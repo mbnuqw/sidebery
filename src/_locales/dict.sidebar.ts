@@ -1104,6 +1104,14 @@ export const sidebarTranslations: Translations = {
     zh: 'Cookie 已清除',
     ja: 'Cookie がクリアされました',
   },
+  'notif.open_private_windows_err': {
+    en: 'Cannot open window',
+    fr: 'Impossible d’ouvrir la fenêtre',
+  },
+  'notif.open_private_windows_err_details': {
+    en: 'Extension does not have permission for incognito mode',
+    fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
+  },
 
   // ---
   // -- Colors
