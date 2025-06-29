@@ -399,6 +399,7 @@ function onMouseLeave(): void {
   }
 
   if (Sidebar.switchOnMouseLeave) Sidebar.switchPanelOnMouseLeave()
+  if (Sidebar.scrollOnMouseLeave) Sidebar.scrollPanelOnMouseLeave()
 
   if (Tabs.activateSelectedOnMouseLeave && Selection.isTabs()) {
     Tabs.activateSelectedOnMouseLeave = false

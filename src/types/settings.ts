@@ -72,6 +72,7 @@ export interface SettingsState {
   activateLastTabOnPanelSwitching: boolean
   activateLastTabOnPanelSwitchingLoadedOnly: boolean
   switchPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.switchPanelAfterSwitchingTab)[number]
+  scrollPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.scrollPanelAfterSwitchingTab)[number]
   tabRmBtn: (typeof SETTINGS_OPTIONS.tabRmBtn)[number]
   activateAfterClosing: (typeof SETTINGS_OPTIONS.activateAfterClosing)[number]
   activateAfterClosingStayInPanel: boolean

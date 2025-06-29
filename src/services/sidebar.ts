@@ -84,6 +84,7 @@ export const Sidebar = {
   bookmarkMargin: 0,
   switchingLock: false,
   switchOnMouseLeave: false,
+  scrollOnMouseLeave: false,
 
   reMountSidebar: null as null | (() => void),
   selectPanel: null as null | ((dir: 1 | -1) => void),

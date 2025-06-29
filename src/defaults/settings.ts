@@ -72,6 +72,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateLastTabOnPanelSwitching: true,
   activateLastTabOnPanelSwitchingLoadedOnly: true,
   switchPanelAfterSwitchingTab: 'always',
+  scrollPanelAfterSwitchingTab: 'always',
   tabRmBtn: 'hover',
   activateAfterClosing: 'next',
   activateAfterClosingStayInPanel: false,
@@ -346,4 +347,5 @@ export const SETTINGS_OPTIONS = {
   newTabBarPosition: ['after_tabs', 'bottom'],
   oldBookmarksAfterSave: ['ask', 'del', 'keep'],
   switchPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
+  scrollPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
 } as const

@@ -1609,7 +1609,11 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
-  if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id, true)
+  if (Settings.state.scrollPanelAfterSwitchingTab !== 'no' && !tab.pinned) {
+    if (Settings.state.scrollPanelAfterSwitchingTab === 'mouseleave' && Mouse.mouseIn) {
+      Sidebar.scrollOnMouseLeave = true
+    } else Tabs.scrollToTabDebounced(3, tab.id, true)
+  }
 
   // Reset fallback preview mode
   if (Settings.state.previewTabs && Preview.state.modeFallback) {

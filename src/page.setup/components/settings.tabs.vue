@@ -29,6 +29,13 @@ section(ref="el")
     :opts="Settings.getOpts('switchPanelAfterSwitchingTab')"
     @update:value="toggleSwitchPanelAfterSwitchingTab")
   SelectField(
+    label="settings.scroll_panel_after_switching_tab"
+    optLabel="settings.scroll_panel_after_switching_tab_"
+    v-model:value="Settings.state.scrollPanelAfterSwitchingTab"
+    :folded="true"
+    :opts="Settings.getOpts('scrollPanelAfterSwitchingTab')"
+    @update:value="Settings.saveDebounced(150)")
+  SelectField(
     label="settings.tab_rm_btn"
     optLabel="settings.tab_rm_btn_"
     v-model:value="Settings.state.tabRmBtn"

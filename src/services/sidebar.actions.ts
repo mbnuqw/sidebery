@@ -2580,6 +2580,11 @@ export function switchPanelOnMouseLeave() {
   Sidebar.activatePanel(activeTab.panelId)
 }
 
+export function scrollPanelOnMouseLeave() {
+  Sidebar.scrollOnMouseLeave = false
+  Tabs.scrollToTabDebounced(3, Tabs.activeId, true)
+}
+
 const updateMediaStateOfPanelTimeouts: Record<ID, number> = {}
 export function updateMediaStateOfPanelDebounced(delay: number, panelId: ID, tab?: Tab) {
   if (updateMediaStateOfPanelTimeouts[panelId] !== undefined) tab = undefined
