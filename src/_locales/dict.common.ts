@@ -240,26 +240,37 @@ export const commonTranslations: Translations = {
   'sync.tabs_title': {
     en: 'Tabs',
     fr: 'Onglets',
-  },
-  'sync.settings_title': {
-    en: 'Settings',
-    fr: 'Paramètres',
-  },
-  'sync.style_title': {
-    en: 'Styles',
-    fr: 'Styles',
-  },
-  'sync.keybindings_title': {
-    en: 'Keybindings',
-    fr: 'Raccourcis',
+    zh_CN: '标签页',
+    zh_TW: '分頁',
   },
   'sync.ctx_menu_title': {
     en: 'Context menu',
     fr: 'Menu contextuel',
+    zh_CN: '上下文菜单',
+    zh_TW: '快捷選單',
+  },
+  'sync.settings_title': {
+    en: 'Settings',
+    fr: 'Paramètres',
+    zh_CN: '设置',
+    zh_TW: '設定',
+  },
+  'sync.style_title': {
+    en: 'Styles',
+    fr: 'Styles',
+    zh_CN: '样式',
+    zh_TW: '樣式',
+  },
+  'sync.keybindings_title': {
+    en: 'Keybindings',
+    fr: 'Raccourcis',
+    zh_CN: '按键绑定',
+    zh_TW: '按鍵綁定',
   },
   'sync.unknown_title': {
     en: 'Unknown',
     fr: 'Inconnu',
+    zh: '未知',
   },
   'sync.err.google_entries': {
     en: 'Unable to load entries from Google Drive',
@@ -341,18 +352,26 @@ export const commonTranslations: Translations = {
   'sync.success.import_keyboard': {
     en: 'Keybindings have been successfully imported',
     fr: 'Les raccourcis ont été importés avec succès',
+    zh_CN: '按键绑定已成功导入',
+    zh_TW: '按鍵綁定已成功匯入',
   },
   'sync.success.import_menu': {
     en: 'Context menu has been successfully imported',
     fr: 'Le menu contextuel a été importé avec succès',
+    zh_CN: '上下文菜单已成功导入',
+    zh_TW: '快捷選單已成功匯入',
   },
   'sync.success.import_settings': {
     en: 'Settings have been successfully imported',
     fr: 'Les paramètres ont été importés avec succès',
+    zh_CN: '设置已成功导入',
+    zh_TW: '設定已成功匯入',
   },
   'sync.success.import_styles': {
     en: 'Styles have been successfully imported',
     fr: 'Les styles ont été importés avec succès',
+    zh_CN: '样式已成功导入',
+    zh_TW: '樣式已成功匯入',
   },
   'sync.unknown_profile': {
     en: 'Unknown profile',
@@ -1051,9 +1070,13 @@ export const commonTranslations: Translations = {
       if (tabsCount === 1) return `Reopen cached window (${tabsCount} tab)`
       return `Reopen cached window (${tabsCount} tabs)`
     },
+    zh_CN: tabsCount => `重开已缓存窗口（${tabsCount} 个标签页）`,
+    zh_TW: tabsCount => `重開已快取視窗（${tabsCount} 個分頁）`,
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Reopen cached window',
+    zh_CN: '重开已缓存窗口',
+    zh_TW: '重開已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
     en: (tabsCount, panelsCount) => {
@@ -1061,6 +1084,8 @@ export const commonTranslations: Translations = {
       const p = panelsCount === 1 ? 'panel' : 'panels'
       return `${tabsCount} ${t} in ${panelsCount} ${p}`
     },
+    zh_CN: (tabsCount, panelsCount) => `${tabsCount} 个标签页在 ${panelsCount} 个面板中`,
+    zh_TW: (tabsCount, panelsCount) => `${tabsCount} 個分頁在 ${panelsCount} 個面板中`,
   },
   // - New tab bar
   'menu.new_tab_bar.no_container': {
@@ -2730,10 +2755,14 @@ export const commonTranslations: Translations = {
   'notif.open_private_windows_err': {
     en: 'Cannot open window',
     fr: 'Impossible d’ouvrir la fenêtre',
+    zh_CN: '无法打开窗口',
+    zh_TW: '無法開啟視窗',
   },
   'notif.open_private_windows_err_details': {
     en: 'Extension does not have permission for incognito mode',
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
+    zh_CN: '扩展没有在隐私窗口中运行的权限',
+    zh_TW: '擴充套件沒有於隱私視窗中執行的權限',
   },
 }
 

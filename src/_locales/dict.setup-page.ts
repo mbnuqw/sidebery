@@ -1337,12 +1337,6 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_TW: '刪除全部資料',
     ja: 'すべて削除',
   },
-  'settings.clear_favicons_cache': {
-    en: 'Delete favicons cache',
-  },
-  'settings.clear_favicons_cache_confirm': {
-    en: 'Are you sure you want to delete favicons cache?',
-  },
   'settings.clear_storage_confirm': {
     en: 'Are you sure you want to delete all Sidebery data?',
     de: 'Wirklich alle Sidebery-Daten löschen?',
@@ -1364,6 +1358,16 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_CN: '已缓存的图标',
     zh_TW: '已快取的圖示',
     ja: 'キャッシュされたサイトアイコン',
+  },
+  'settings.clear_favicons_cache': {
+    en: 'Delete favicons cache',
+    zh_CN: '删除图标缓存',
+    zh_TW: '刪除圖示快取',
+  },
+  'settings.clear_favicons_cache_confirm': {
+    en: 'Are you sure you want to delete favicons cache?',
+    zh_CN: '确定要删除图标缓存吗？',
+    zh_TW: '確定要刪除圖示快取嗎？',
   },
 
   // - Permissions
@@ -1477,7 +1481,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     ru: 'Чтение из буфера обмена:',
     zh_CN: '读取剪贴板：',
     zh_TW: '讀取剪貼簿：',
-    ja: 'クリップボードから読み取る:',
+    ja: 'クリップボードから読み取る：',
   },
   'settings.clipboard_read_info': {
     en: 'Required for:\n- Paste function',
@@ -2669,7 +2673,9 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'しない',
   },
   'settings.scroll_panel_after_switching_tab': {
-    en: 'Automatically scroll panel on activating tab of another panel',
+    en: 'Automatically scroll panel to activated tab',
+    zh_CN: '自动滚动面板到激活的标签页',
+    zh_TW: '自動捲動面板到啟動的分頁',
   },
   'settings.scroll_panel_after_switching_tab_always': {
     en: 'always',
@@ -2698,7 +2704,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     pl: 'nie',
     ru: 'нет',
     zh_CN: '不',
-    zh_TW: '不切換',
+    zh_TW: '不捲動',
     ja: 'しない',
   },
   'settings.tab_rm_btn': {
@@ -6771,7 +6777,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Kiegészítő újratöltése',
     pl: 'Przeładuj rozszerzenie',
     ru: 'Перезагрузить расширение',
-    zh_CN: '重新加载插件',
+    zh_CN: '重新加载扩展',
     zh_TW: '重新載入擴充套件',
     ja: 'アドオンをリロード',
   },
