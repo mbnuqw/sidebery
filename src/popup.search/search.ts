@@ -10,7 +10,7 @@ const el = document.getElementById('textInput') as HTMLInputElement
 
 el?.focus()
 
-for (let i = 0; i <= 500; i += 100) {
+for (let i = 0; i <= 1000; i += 100) {
   setTimeout(() => {
     el?.focus()
   }, i)
