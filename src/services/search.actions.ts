@@ -14,24 +14,17 @@ import { Windows } from './windows'
 import { History } from './history'
 import { Bookmarks } from './bookmarks'
 import * as Selection from './selection'
-
-export const INPUT_TIMEOUT = 300
-
 export function init(): void {
   if (Settings.state.searchBarMode === 'static') Search.reactive.barIsShowed = true
 }
 
-let inputTimeout: number | undefined
 export function onOutsideSearchInput(value: string): void {
   if (!Windows.focused) return
   if (!Search.reactive.barIsShowed && Search.rawValue) Search.toggleBar()
 
   Search.reactive.rawValue = Search.rawValue = value
 
-  clearTimeout(inputTimeout)
-  inputTimeout = setTimeout(() => {
-    Search.search(Search.rawValue)
-  }, INPUT_TIMEOUT)
+  Search.search(Search.rawValue)
 }
 
 export function onOutsideSearchExit(): void {
@@ -441,8 +434,9 @@ export function start(): void {
     // Reset browser action
     setTimeout(() => browser.browserAction.setPopup({ popup: null }), 500)
   }
-
-  showBar()
+  else {
+    showBar()
+  }
 }
 
 export function close(): void {

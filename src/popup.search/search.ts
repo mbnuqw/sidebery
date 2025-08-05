@@ -10,6 +10,12 @@ const el = document.getElementById('textInput') as HTMLInputElement
 
 el?.focus()
 
+for (let i = 0; i <= 500; i += 100) {
+  setTimeout(() => {
+    el?.focus()
+  }, i)
+}
+
 el?.addEventListener('blur', () => {
   if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchExit')
 })
@@ -92,6 +98,7 @@ void (async () => {
   IPC.setInstanceType(InstanceType.search)
   IPC.setupGlobalMessageListener()
   IPC.registerActions({ closePopup })
+  
   const [win] = await Promise.all([
     browser.windows.getCurrent({ populate: false }),
     Settings.loadSettings(),
