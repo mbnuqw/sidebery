@@ -169,4 +169,8 @@ ln -fs chrome/firefox-gnome-theme/configuration/user.js user.js
 }
 ```
 
-7. Restart Firefox.
+7. If desired, hide sidebar revamp (the part with Firefox tools)
+
+Set `sidebar.revamp` to `false` in about:config.
+
+8. Restart Firefox.
