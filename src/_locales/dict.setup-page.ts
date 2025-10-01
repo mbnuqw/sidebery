@@ -458,7 +458,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     hu: 'További „Új lap” parancsikonok',
     pl: 'Dodatkowe skróty "Nowa karta"',
     ru: 'Дополнительные кнопки для создания новой вкладки',
-    zh_CN: '额外的"新建标签页"快捷方式',
+    zh_CN: '额外的"新标签页"快捷方式',
     zh_TW: '額外的「新分頁」捷徑',
     ja: '追加の「新しいタブ」ショートカット',
   },
