@@ -55,7 +55,7 @@ export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab
 /**
  * Group tabs
  */
-export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void> {
+export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<ID | undefined> {
   const noConfig = !conf
   if (!conf) conf = {}
 
@@ -133,6 +133,8 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   }
   const dst = { index: groupTab.index + 1, panelId: panel.id, parentId: groupTab.id }
   await Tabs.move(tabs, {}, dst)
+
+  return groupTab.id
 }
 
 export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupConfigResult> {

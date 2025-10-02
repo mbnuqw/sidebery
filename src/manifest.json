@@ -23,6 +23,7 @@
   "permissions": [
     "activeTab",
     "tabs",
+    "tabGroups",
     "contextualIdentities",
     "cookies",
     "storage",
@@ -32,7 +33,8 @@
     "menus.overrideContext",
     "search",
     "theme",
-    "identity"
+    "identity",
+    "tabHide"
   ],
   "optional_permissions": [
     "<all_urls>",
@@ -40,7 +42,6 @@
     "webRequest",
     "webRequestBlocking",
     "bookmarks",
-    "tabHide",
     "clipboardWrite",
     "clipboardRead",
     "history",

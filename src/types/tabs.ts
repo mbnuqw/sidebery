@@ -20,6 +20,7 @@ export interface Tab extends NativeTab {
   dstPanelId: ID
   autoGroupped?: boolean
   unpinning?: boolean
+  nativeGroupId?: ID
   moveTime?: number
   childLastAccessed?: number
   lastExpanded?: number
@@ -104,6 +105,7 @@ export interface TabCache {
   privWin?: boolean /* only for the first tab of private window */
   customTitle?: string
   customColor?: string
+  nativeGroupId?: ID
 
   index?: number
   isMissedGroup?: boolean
@@ -116,6 +118,7 @@ export interface TabSessionData {
   folded: boolean
   customTitle?: string
   customColor?: string
+  nativeGroupId?: ID
 }
 
 export interface ActiveTabsHistory {

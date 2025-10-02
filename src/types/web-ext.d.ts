@@ -461,6 +461,29 @@ declare namespace browser {
   }
 
   /**
+   * TabGroups
+   *
+   * Use the tabGroups API to interact with the browser's tab grouping system.
+   */
+  namespace tabGroups {
+    interface TabGroup {
+      id: ID
+      collapsed: boolean
+      color: string
+      title?: string
+      windowId: ID
+    }
+
+    function get(groupId: ID): Promise<TabGroup>
+
+    type GroupListener = (group: TabGroup) => void
+
+    const onRemoved: EventTarget<GroupListener>
+    const onUpdated: EventTarget<GroupListener>
+    const onMoved: EventTarget<GroupListener>
+  }
+
+  /**
    * Sessions
    *
    * Use the sessions API to list, and restore, tabs and windows that have been

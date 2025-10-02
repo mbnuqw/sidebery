@@ -33,6 +33,7 @@ export function setupTabsListeners(): void {
     properties: [
       'audible', 'discarded', 'favIconUrl', 'hidden',
       'mutedInfo', 'pinned', 'status', 'title', 'url',
+      'groupId',
     ],
   })
   browser.tabs.onRemoved.addListener(onTabRemoved)
@@ -40,6 +41,8 @@ export function setupTabsListeners(): void {
   browser.tabs.onDetached.addListener(onTabDetached)
   browser.tabs.onAttached.addListener(onTabAttached)
   browser.tabs.onActivated.addListener(onTabActivated)
+
+  Tabs.setupNativeGroupListeners()
 }
 
 export function resetTabsListeners(): void {
@@ -50,6 +53,8 @@ export function resetTabsListeners(): void {
   browser.tabs.onDetached.removeListener(onTabDetached)
   browser.tabs.onAttached.removeListener(onTabAttached)
   browser.tabs.onActivated.removeListener(onTabActivated)
+
+  Tabs.resetNativeGroupListeners()
 }
 
 let waitForOtherReopenedTabsTimeout: number | undefined
@@ -446,6 +451,8 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   if (!tab.invisible) Sidebar.addToVisibleTabs(panel.id, tab)
   Tabs.updateUrlCounter(tab.url, 1)
 
+  Tabs.handleTabGroupChanged(tab.id, nativeTab.groupId)
+
   // Update tree
   if (Settings.state.tabsTree && !tab.pinned && panel) {
     let treeHasChanged = false
@@ -830,6 +837,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Update tab object
   Object.assign(tab, change)
+
+  // Handle native group membership change
+  Tabs.handleTabGroupChanged(tabId, change.groupId)
 
   // Handle media state change
   if (change.audible !== undefined || change.mutedInfo?.muted !== undefined) {
@@ -1544,6 +1554,12 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     if (prevActive?.folded && (hideFoldedParent || (hideFoldedGroup && prevActive.isGroup))) {
       browser.tabs.hide?.(prevActive.id).catch(err => {
         Logs.err('Tabs.onTabActivated: Cannot hide prev active tab', err)
+      })
+    }
+
+    if (prevActive.nativeGroupId) {
+      browser.tabs.hide?.(prevActive.id).catch(err => {
+        Logs.err('Tabs.onTabActivated: Cannot hide prev active tab for native group', err)
       })
     }
   }
