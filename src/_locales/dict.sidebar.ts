@@ -206,8 +206,8 @@ export const sidebarTranslations: Translations = {
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
-    zh_CN: url => `中键点击：中加载 "${url}" 于活动标签页`,
-    zh_TW: url => `中鍵點選：中載入「${url}」於當前分頁`,
+    zh_CN: url => `中键点击：加载 "${url}" 于活动标签页`,
+    zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
     ja: url => `中クリック: アクティブなタブに「${url}」を読み込む`,
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
@@ -493,7 +493,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Przywrócenie sesji',
     ru: 'Восстановление сеанса',
     zh_CN: '会话恢复',
-    zh_TW: '會話還原',
+    zh_TW: '回復瀏覽階段',
     ja: 'セッション復元',
   },
   'popup.ses_res.desc': {
@@ -503,8 +503,8 @@ export const sidebarTranslations: Translations = {
     hu: 'Sidebery újraindítja a visszaállított munkamenet lapjait, kérjük, várjon...',
     pl: 'Sidebery ponownie inicjuje karty dla przywróconej sesji, proszę czekać...',
     ru: 'Sidebery инициализирует вкладки для восстановленной сессии, пожалуйста, подождите...',
-    zh_CN: 'Sidebery正在为恢复的会话重新初始化标签页，请稍候...',
-    zh_TW: 'Sidebery 正為還原的會話重新初始化分頁，請稍候...',
+    zh_CN: 'Sidebery 正在为恢复的会话重新初始化标签页，请稍候...',
+    zh_TW: 'Sidebery 正為回復的瀏覽階段重新初始化分頁，請稍候...',
     ja: 'Sideberyは復元されたセッションのタブを再初期化中です。お待ちください...',
   },
 
@@ -1087,7 +1087,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Nie można przywrócić panelu z zakładek',
     ru: 'Невозможно восстановить панель из закладок',
     zh_CN: '无法从书签恢复面板',
-    zh_TW: '無法從書籤復原面板',
+    zh_TW: '無法從書籤回復面板',
     ja: 'ブックマークからパネルを復元できません',
   },
   'notif.restore_from_bookmarks_err.root': {
@@ -1109,7 +1109,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Panel kart został pomyślnie przywrócony',
     ru: 'Панель вкладок успешно восстановлена',
     zh_CN: '标签页面板已恢复',
-    zh_TW: '分頁面板已復原',
+    zh_TW: '分頁面板已回復',
     ja: 'タブパネルが正常に復元されました',
   },
   'notif.panel_conv': {

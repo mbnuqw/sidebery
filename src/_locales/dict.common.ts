@@ -71,7 +71,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróc',
     ru: 'Восстановить',
     zh_CN: '恢复',
-    zh_TW: '復原',
+    zh_TW: '回復',
     ja: '復元',
   },
   'btn.update': {
@@ -593,7 +593,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróć z folderu zakładek',
     ru: 'Восстановить из папки закладок',
     zh_CN: '从书签文件夹恢复',
-    zh_TW: '從書籤資料夾復原',
+    zh_TW: '從書籤資料夾回復',
     ja: 'ブックマークフォルダから復元',
   },
   'popup.bookmarks.convert_title': {
@@ -1081,13 +1081,13 @@ export const commonTranslations: Translations = {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
     },
-    zh_CN: tabsCount => `打开缓存窗口（${tabsCount} 个标签页）`,
-    zh_TW: tabsCount => `開啟快取視窗（${tabsCount} 個分頁）`,
+    zh_CN: tabsCount => `打开已缓存窗口（${tabsCount} 个标签页）`,
+    zh_TW: tabsCount => `開啟已快取視窗（${tabsCount} 個分頁）`,
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Open cached window',
-    zh_CN: '打开缓存窗口',
-    zh_TW: '開啟快取視窗',
+    zh_CN: '打开已缓存窗口',
+    zh_TW: '開啟已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
     en: (tabsCount, panelsCount) => {
@@ -2281,7 +2281,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróć z zakładek',
     ru: 'Восстановить из закладок',
     zh_CN: '从书签中恢复',
-    zh_TW: '從書籤中復原',
+    zh_TW: '從書籤中回復',
     ja: 'ブックマークから復元',
   },
   'menu.tabs_panel.convert_to_bookmarks_panel': {
