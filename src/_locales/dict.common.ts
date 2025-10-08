@@ -2247,7 +2247,7 @@ export const commonTranslations: Translations = {
     hu: 'Másodpéldányok bezárása',
     pl: 'Zamknij zduplikowane karty',
     ru: 'Закрыть дубликаты',
-    zh_CN: '关闭复制标签页',
+    zh_CN: '关闭重复的标签页',
     zh_TW: '關閉重複分頁',
     ja: '重複タブを閉じる',
   },
