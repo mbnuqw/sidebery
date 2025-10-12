@@ -192,6 +192,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const colorizeTabsBranchesChanged = prev.colorizeTabsBranches !== next.colorizeTabsBranches
   const colorizeTabsBranchesSrcChanged =
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
+  const tabsNotificationBadgeScopeChanged = prev.tabsNotificationBadgeScope !== next.tabsNotificationBadgeScope
+  const tabsNotificationBadgeRegExpPatternChanged = prev.tabsNotificationBadgeRegExpPattern !== next.tabsNotificationBadgeRegExpPattern
   const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
   const navTabsPanelMidClickAction =
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
@@ -291,6 +293,10 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if ((colorizeTabsChanged || colorizeTabsSrcChanged) && Settings.state.colorizeTabs) {
     Tabs.colorizeTabs()
+  }
+
+  if (tabsNotificationBadgeScopeChanged || tabsNotificationBadgeRegExpPatternChanged) {
+    Tabs.updateNotificationBadgeCountTabs()
   }
 
   if (tabsUpdateMarkChanged && next.tabsUpdateMark === 'none') {

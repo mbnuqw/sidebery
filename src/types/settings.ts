@@ -83,6 +83,9 @@ export interface SettingsState {
   tabsUnreadMark: boolean
   tabsUpdateMark: (typeof SETTINGS_OPTIONS.tabsUpdateMark)[number]
   tabsUpdateMarkFirst: boolean
+  tabsNotificationBadgeScope: (typeof SETTINGS_OPTIONS.tabsNotificationBadgeScope)[number]
+  tabsNotificationBadgeStyle: (typeof SETTINGS_OPTIONS.tabsNotificationBadgeStyle)[number]
+  tabsNotificationBadgeRegExpPattern: string
   tabsReloadLimit: number
   tabsReloadLimitNotif: boolean
   showNewTabBtns: boolean

@@ -14,6 +14,7 @@
       :valid="props.valid"
       :width="props.inputWidth"
       @update:value="emit('update:value', $event)"
+      @blur="onBlur"
       @keydown="emit('keydown', $event)")
   .note(v-if="props.note") {{props.note}}
 </template>
@@ -39,13 +40,17 @@ interface TextFieldProps {
   inputWidth?: string
 }
 
-const emit = defineEmits(['update:value', 'keydown'])
+const emit = defineEmits(['update:value', 'blur', 'keydown'])
 const props = withDefaults(defineProps<TextFieldProps>(), { padding: 0, tabindex: '0' })
 
 const inputEl = ref<TextInputComponent | null>(null)
 
 function focus(): void {
   inputEl.value?.focus()
+}
+
+function onBlur(): void {
+  if (inputEl.value) emit('blur', inputEl.value)
 }
 
 function error() {

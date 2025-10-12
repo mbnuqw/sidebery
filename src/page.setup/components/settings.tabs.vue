@@ -85,6 +85,33 @@ section(ref="el")
       label="settings.tabs_update_mark_first"
       v-model:value="Settings.state.tabsUpdateMarkFirst"
       @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.tabs_notification_badge_scope"
+    optLabel="settings.tabs_notification_badge_scope_"
+    v-model:value="Settings.state.tabsNotificationBadgeScope"
+    :opts="Settings.getOpts('tabsNotificationBadgeScope')"
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
+  .sub-fields
+    SelectField(
+      label="settings.tabs_notification_badge_style"
+      optLabel="settings.tabs_notification_badge_style_"
+      v-model:value="Settings.state.tabsNotificationBadgeStyle"
+      :opts="Settings.getOpts('tabsNotificationBadgeStyle')"
+      :folded="false"
+      :inactive="Settings.state.tabsNotificationBadgeScope === 'none'"
+      @update:value="Settings.saveDebounced(150)")
+    TextField(
+      ref="tabsNotificationBadgeRegExpPatternEl"
+      label="settings.tabs_notification_badge_regexp_pattern"
+      :note="translate('settings.tabs_notification_badge_regexp_pattern_info')"
+      :line="true"
+      :valid="tabsNotificationBadgeRegExpPatternValid"
+      input-width="50"
+      v-model:value="tabsNotificationBadgeRegExpPatternInput"
+      :inactive="Settings.state.tabsNotificationBadgeScope === 'none'"
+      @update:value="onTabsNotificationBadgeRegExpPatternUpdate"
+      @blur="onTabsNotificationBadgeRegExpPatternBlur")
   CountField.-inline(
     label="settings.tabs_reload_limit"
     v-model:value="Settings.state.tabsReloadLimit"
@@ -497,15 +524,18 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Permissions } from 'src/services/permissions'
 import { SetupPage } from 'src/services/_services'
+import { Tabs } from 'src/services/tabs.fg'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
+import TextField from '../../components/text-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 const newTabPosEl = ref<HTMLElement | null>(null)
@@ -628,6 +658,32 @@ async function togglePreviewTabs() {
   Settings.state.previewTabs = !Settings.state.previewTabs
 
   Settings.saveDebounced(150)
+}
+
+const tabsNotificationBadgeRegExpPatternEl = ref<TextInputComponent | null>(null)
+const tabsNotificationBadgeRegExpPatternValid = ref('')
+const tabsNotificationBadgeRegExpPatternInput = ref(Settings.state.tabsNotificationBadgeRegExpPattern)
+const tabsNotificationBadgeRegExpPatternValidate = Utils.debounce((value: string): void => {
+  if (!value) {
+    tabsNotificationBadgeRegExpPatternValid.value = ''
+  } else {
+    try {
+      new RegExp(value)
+      tabsNotificationBadgeRegExpPatternValid.value = 'valid'
+      Settings.state.tabsNotificationBadgeRegExpPattern = value
+    } catch (e) {
+      tabsNotificationBadgeRegExpPatternValid.value = 'invalid'
+    }
+  }
+})
+
+function onTabsNotificationBadgeRegExpPatternUpdate(value: string): void {
+  tabsNotificationBadgeRegExpPatternValidate(321, value)
+  Settings.saveDebounced(500)
+}
+
+function onTabsNotificationBadgeRegExpPatternBlur(): void {
+  if (tabsNotificationBadgeRegExpPatternValid.value === 'invalid') tabsNotificationBadgeRegExpPatternEl.value.error()
 }
 
 onMounted(() => {

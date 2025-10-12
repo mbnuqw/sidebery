@@ -8,6 +8,9 @@
   --tabs-indent: 10px
   --tabs-font: rem(15) var(--general-font-family)
   --tabs-count-font: rem(9) var(--general-font-family)
+  --tabs-notification-badge-dot-size: 6px
+  --tabs-notification-badge-count-padding: 0px 3px
+  --tabs-notification-badge-count-font: rem(8) var(--general-font-family)
   --tabs-border-radius: var(--general-border-radius)
   --tabs-inner-gap: 5px
   --tabs-close-btn-margin: 2px
@@ -39,9 +42,15 @@
 #root[data-frame-color-scheme="dark"]
   --tabs-progress-bg: #ffffff16
   --tabs-lvl-opacity: .16
+  --tabs-notification-badge-dot-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-fg: #ffffff
 #root[data-frame-color-scheme="light"]
   --tabs-progress-bg: #00000016
   --tabs-lvl-opacity: .3
+  --tabs-notification-badge-dot-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-fg: #ffffff
 
 .Tab
   position: relative
@@ -447,6 +456,36 @@
 .Tab[data-loading="true"] .progress-spinner
   visibility: visible
   animation: rotating-animation .5s infinite linear
+
+// ---
+// -- Notification badge
+// -
+.Tab .notification-badge-count
+  position: absolute
+  right: -6px
+  top: -7px
+  font: var(--tabs-notification-badge-count-font)
+  line-height: 1.6
+  color: var(--tabs-notification-badge-count-fg)
+  background: var(--tabs-notification-badge-count-bg)
+  padding: var(--tabs-notification-badge-count-padding)
+  border-radius: 9999px
+
+.Tab .notification-badge-dot
+  position: absolute
+  width: var(--tabs-notification-badge-dot-size)
+  height: var(--tabs-notification-badge-dot-size)
+  right: calc(2px - var(--tabs-notification-badge-dot-size)/2)
+  top: calc(2px - var(--tabs-notification-badge-dot-size)/2)
+  border-radius: 50%
+  background: var(--tabs-notification-badge-dot-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm), background-color var(--d-norm)
+
+.Tab[data-notification-count] .notification-badge-dot
+  opacity: 1
+  transform: scale(1, 1)
 
 // ---
 // -- Update / highlight badge

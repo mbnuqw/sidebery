@@ -73,6 +73,7 @@ export interface ReactiveTabProps {
   sel: boolean
   selLock: boolean
   warn: boolean
+  notificationBadgeCount: string | null
   updated: boolean
   unread: boolean
   flash: boolean
