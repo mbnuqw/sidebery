@@ -319,7 +319,7 @@ function onKeySwitchToPrevPanel() {
   const prevPanel = Sidebar.panelsById[Sidebar.prevActivePanelId]
   if (!prevPanel) return
 
-  Sidebar.activatePanel(Sidebar.prevActivePanelId)
+  Sidebar.switchToPanel(Sidebar.prevActivePanelId, false, true)
 }
 
 function onKeyCopyUrl() {
