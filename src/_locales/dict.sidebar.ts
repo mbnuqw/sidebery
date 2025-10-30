@@ -493,7 +493,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Przetwarzanie karty...',
     ru: 'Обработка вкладок...',
     zh_CN: '正在处理标签页...',
-    zh_TW: '處理標籤中...',
+    zh_TW: '正在處理分頁...',
     ja: 'タブを処理しています...',
   },
 
