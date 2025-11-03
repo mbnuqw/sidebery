@@ -693,8 +693,8 @@
     "hu": "Korábban aktív lap aktiválása (lapváltogatás)",
     "pl": "Aktywuj poprzednio aktywną kartę (Zamiana kart)",
     "ru": "Активировать ранее активную вкладку",
-    "zh_CN": "激活先前活动的标签页（标签页切换）",
-    "zh_TW": "重新啟用先前活躍的標籤頁（標籤頁切換）",
+    "zh_CN": "在当前和先前活动的标签页间交替",
+    "zh_TW": "在當前和先前分頁間交替",
     "ja": "以前にアクティブだったタブをアクティブにする（タブ切り替え）"
   },
   "KbActPrevActTab": {

@@ -458,7 +458,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     hu: 'További „Új lap” parancsikonok',
     pl: 'Dodatkowe skróty "Nowa karta"',
     ru: 'Дополнительные кнопки для создания новой вкладки',
-    zh_CN: '额外的"新标签页"快捷方式',
+    zh_CN: '额外的“新标签页”快捷方式',
     zh_TW: '額外的「新分頁」捷徑',
     ja: '追加の「新しいタブ」ショートカット',
   },
@@ -1797,8 +1797,8 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     hu: 'Megjegyzés: Az „Egy sorban” mód engedélyezve van, így a navigációs sáv elemei két csoportra lesznek felosztva: panelek (bal oldalon) és gombok (jobb oldalon)',
     pl: 'Uwaga: Tryb „W jednej linii” jest włączony, więc elementy paska nawigacyjnego zostaną podzielone na dwie grupy: panele (po lewej stronie) i przyciski (po prawej stronie)',
     ru: 'Примечание: включен режим «В одной строке», поэтому элементы панели навигации будут разделены на две группы: панели (слева) и кнопки (справа)',
-    zh_CN: '注：“单行”模式已启用，因此导航栏元素将分为两组：面板（左侧）和按钮（右侧）',
-    zh_TW: '註：已啟用「單行模式」，因此導覽列元素將分為兩組：面板（左側）與按鈕（右側）',
+    zh_CN: '注意：“单行模式”已启用，故导航栏元素将优先分为面板和按钮左右两组',
+    zh_TW: '注意：「單行模式」已啟用，故導覽列元件將優先分為面板和按鈕左右兩組',
     ja: '注：「1行表示」モードが有効なため、ナビゲーションバーの要素は2つのグループに分けられます：パネル（左側）とボタン（右側）',
   },
   'settings.nav_bar.no_elements': {
@@ -1989,7 +1989,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
       `Usunąć panel "${name}"?\nWszystkie karty z tego panelu zostaną przypisane do najbliższego panelu kart.`,
     ru: name =>
       `Удалить панель "${name}"?\n Все вкладки этой панели будут присоединены к соседней панели.`,
-    zh_CN: name => `删除 "${name}" 面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。`,
+    zh_CN: name => `删除“${name}”面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。`,
     zh_TW: name => `刪除「${name}」面板嗎？\n該面板的全部分頁都將分配給最靠近的分頁面板。`,
     ja: name =>
       `「${name}」パネルを削除しますか？\nこのパネルのすべてのタブは、最も近いタブパネルに割り当てられます。`,
@@ -2001,7 +2001,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     hu: name => `Törölhető a panel: „${name}”?`,
     pl: name => `Usunąć panel ${name}"?`,
     ru: name => `Удалить панель "${name}"?`,
-    zh_CN: name => `删除 "${name}" 面板吗？`,
+    zh_CN: name => `删除“${name}”面板吗？`,
     zh_TW: name => `刪除「${name}」面板嗎？`,
     ja: name => `「${name}」パネルを削除しますか？`,
   },
@@ -2080,7 +2080,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     hu: name => `Biztos törölhető a konténer: „${name}”?`,
     pl: name => `Jesteś pewny, że chcesz usunąć kontener "${name}"?`,
     ru: name => `Вы действительно хотите удалить контейнер "${name}"?`,
-    zh_CN: name => `您确定要删除 "${name}" 容器吗？`,
+    zh_CN: name => `您确定要删除“${name}”容器吗？`,
     zh_TW: name => `您確定要刪除「${name}」容器嗎？`,
     ja: name => `「${name}」コンテナを削除しますか？`,
   },
@@ -4269,7 +4269,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Az „Egyéb könyvjelzők” mappából megnyitott könyvjelző automatikus törlése',
     pl: 'Automatyczne usuwanie otwartch zakłądek z folderu "Inne Zakładki"',
     ru: 'Удалять открываемые закладки из папки "Другие закладки"',
-    zh_CN: '从"其他书签"文件夹中打开书签时自动删除',
+    zh_CN: '从“其他书签”文件夹中打开书签时自动删除',
     zh_TW: '從「其他書籤」資料夾中開啟書籤時自動刪除',
     ja: '「その他のブックマーク」フォルダからブックマークを開くと自動的に削除する',
   },
@@ -6633,7 +6633,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 - Чтобы синхронизация работала, вам нужно зайти в Firefox аккаунт
 - Чтобы быть уверенным в том, что данные загрузились на сервер синхронизации Firefox, необходимо нажать на кнопку "Синхронизировать" в настройках или в вашем профиле в главном меню`,
     zh_CN: `- Sidebery 使用 Firefox 同步，因此您需要登录到 Firefox 帐户才能运行
-- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按"立即同步"按钮（三行按钮）`,
+- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按“立即同步”按钮（三行按钮）`,
     zh_TW: `- 您需要登入 Mozilla 帳號方可運行，因為 Sidebery 使用 Firefox 同步來實作本功能
 - 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列六處擇一按「立刻同步」按鈕：
   -「工具列 > 應用程式選單 > Mozilla 帳號（設定 > 同步）」
@@ -6971,7 +6971,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: usedIn => `Jelenlegi parancs: „${usedIn}”`,
     pl: usedIn => `Użyte w: "${usedIn}"`,
     ru: usedIn => `Используется в: "${usedIn}"`,
-    zh_CN: usedIn => `已用于：\n  "${usedIn}"`,
+    zh_CN: usedIn => `已用于：\n  “${usedIn}”`,
     zh_TW: usedIn => `已用於：\n  「${usedIn}」`,
     ja: usedIn => `使用箇所: "${usedIn}"`,
   },
@@ -7441,13 +7441,13 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
       - Wybierz "/sidebery/group.html" dla frame strony grup
     - Przejrzyj kartę "Inspektor"`,
     zh_CN: `注意事项：要获取当前可用的 CSS 选择器，请使用调试器：
-  - 点击底部的 "复制开发工具 URL" 按钮
+  - 点击底部的“复制开发工具 URL”按钮
   - 用一个新标签页打开这个 URL
   - 选择要检查的框架
     - 点击调试页面右上方的矩形图标（由三个小矩形组成）
-    - 选择 "/sidebar/sidebar.html" 侧边栏框架
-    - 选择 "/sidebery/group.html" 分组页面框架
-  - 浏览 "检查" 标签页`,
+    - 选择“/sidebar/sidebar.html”侧边栏框架
+    - 选择“/sidebery/group.html”分组页面框架
+  - 浏览“检查”标签页`,
     zh_TW: `注意：要取得當前可用的 CSS 選擇器，請使用開發者工具：
   - 點選底部的「複製開發者工具 URL」按鈕
   - 使用該 URL 開啟新分頁
