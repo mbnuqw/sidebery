@@ -1138,7 +1138,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.copy_title_url_indent': {
     en: 'Append an indent for child tabs/bookmarks on copying',
     de: 'Beim Kopieren einen Einzug für untergeordnete Tabs/Lesezeichen anfügen',
-    fr: 'Ajouter une identation pour les onglets ou marque-pages enfants lors de la copie',
+    fr: 'Ajouter une indentation pour les onglets ou marque-pages enfants lors de la copie',
     hu: 'Behúzás hozzáfűzése a gyermek tabulátorokhoz/könyvjelzőkhöz másolásakor',
     pl: 'Dołącz wcięcie dla kart/zakładek podrzędnych podczas kopiowania',
     ru: 'Добавлять отступ для дочерних вкладок/закладок при копировании',
