@@ -1936,7 +1936,7 @@ export const commonTranslations: Translations = {
   'menu.tab.discard': {
     en: 'Unload',
     de: 'Entladen',
-    fr: 'Actualiser',
+    fr: 'Décharger',
     hu: 'Kisöprés',
     pl: 'Uśpij',
     ru: 'Выгрузить',
