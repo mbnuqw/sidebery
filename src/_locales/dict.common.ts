@@ -84,6 +84,10 @@ export const commonTranslations: Translations = {
     zh: '更新',
     ja: '更新',
   },
+  'btn.grant_permissions': {
+    en: 'Grant permissions',
+    fr: 'Accorder les permissions',
+  },
   'btn.yes': {
     en: 'Yes',
     de: 'Ja',

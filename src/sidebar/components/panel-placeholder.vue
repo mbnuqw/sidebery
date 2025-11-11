@@ -3,12 +3,14 @@ Transition(name="panel-placeholder")
   .PanelPlaceholder(v-if="props.isLoading || isMsg || isNotPerm" :data-loading="isLoading")
     .perm-warn(v-if="isNotPerm && perm")
       .perm-warn-msg {{permMsg}}
-      .btn.perm-warn-btn(@click="requestPermission") Grant permissions
+      .btn.perm-warn-btn(@click="requestPermission") {{translate('btn.grant_permissions')}}
     LoadingDots(v-else-if="props.isLoading")
     .msg(v-else-if="props.isMsg") {{props.msg}}
 </template>
 
 <script lang="ts" setup>
+import { translate } from 'src/dict'
+
 import LoadingDots from 'src/components/loading-dots.vue'
 import { Permissions } from 'src/services/permissions'
 import { RequestablePermission } from 'src/services/permissions.actions'
