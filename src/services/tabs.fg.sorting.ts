@@ -266,7 +266,7 @@ async function sortTabsInChunks(sortingGroups: ID[][], sortFn: (a: ID, b: ID) =>
     try {
       await browser.tabs.move(toPasteIds, { index: startIndex, windowId: Windows.id })
     } catch (err) {
-      Logs.err('Tabs.sortNativeTabs: Cannot move tabs', err)
+      Logs.err('Tabs.sortTabsInChunks: Cannot move tabs', err)
       return Tabs.reinitTabs()
     }
     toPaste.forEach(t => (t.moving = undefined))

@@ -38,7 +38,7 @@
   color: var(--toolbar-fg)
   padding: 3px 12px
   -moz-user-select: none
-  cursor: pointer
+  cursor: default
   &:before
     content: ''
     position: absolute
@@ -276,3 +276,7 @@
   margin: 0 0 0 8px
   border-radius: 3px
   background-color: var(--color)
+
+.StylesEditor .color-sample:hover .example
+  box-shadow: 0 0 1px 0 var(--toolbar-fg)
+  opacity: .7

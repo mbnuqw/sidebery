@@ -79,6 +79,36 @@
     &:after
       display: none
 
+.ToggleField
+.SelectField
+  .focus-el
+    position: absolute
+    width: 0
+    height: 0
+    border: none
+    outline: none
+  .focus-fx
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    border-radius: 4px
+  &:has(:focus) .focus-fx
+    box-shadow: inset 0 0 0 2px var(--toolbar-fg-active)
+
+.ToggleField .LoadingDots
+  position: relative
+  width: auto
+  margin: auto 0 auto auto
+  padding-left: 16px
+.ToggleField[data-loading="true"]
+  cursor: progress
+.ToggleField[data-loading="true"] .body .label
+.ToggleField[data-loading="true"] .body .ToggleInput
+.ToggleField[data-loading="true"] .note
+  opacity: .3
+
 .Sidebar .ToggleField
 .ToggleField.-compact
   padding: 4px
@@ -167,7 +197,7 @@
   padding: 0 0 12px 0px
   white-space: pre-wrap
   color: var(--toolbar-fg)
-  -moz-user-select: text
+  user-select: none
   opacity: .7
 
 // ---
@@ -183,7 +213,7 @@
   padding: 8px 0 8px 16px
   flex-wrap: wrap
   grid-gap: 0 1px
-  cursor: pointer
+  cursor: default
   transform: translateZ(0)
 
 .ToggleInput
@@ -214,6 +244,8 @@
   max-width: none
   width: 100%
   padding: 0
+.Settings .TextField .TextInput
+  margin-left: 8px
 
 // ---
 // -- Options
@@ -233,7 +265,7 @@
   flex-shrink: 0
   line-height: 20px
   opacity: .7
-  cursor: pointer
+  cursor: default
   &:before
     content: ''
     position: absolute
@@ -387,6 +419,11 @@
 #root[data-native-scrollbars-thin="true"] .select-input-drop-down-content
   scrollbar-width: thin
 
+.select-input-drop-down-content:not(:hover) .opt[data-active="true"]:before
+.select-input-drop-down-content:not(:hover) .opt[data-active="true"]:after
+  opacity: .2
+  background-color: var(--color, var(--toolbar-fg-active))
+
 .SelectInput .opt[data-none="true"]:after
 .ToggleInput .opt.-false:after
   content: ''
@@ -483,6 +520,20 @@
       animation: err-blink-animation 1s
   &[data-width="50"]
     width: 50%
+  &[data-width="66"]
+    width: 66%
+
+.TextInput .focus-fx
+  position: absolute
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  border-radius: 3px
+  opacity: 0
+  box-shadow: 0 0 0 1px var(--toolbar-fg-active), inset 0 0 0 1px var(--toolbar-fg-active)
+.TextInput:has(:focus) .focus-fx
+  opacity: 1
 
 .Sidebar .TextInput
 .TextField.-compact .TextInput
@@ -691,18 +742,18 @@
 
 .StyleField .color-wrapper
   position: relative
-  width: 16px
-  height: 16px
+  width: 22px
+  height: 22px
   flex-shrink: 0
-  border-radius: 42%
+  border-radius: 3px
   overflow: hidden
-  margin: 0 8px 0 0
+  margin: 0 4px 0 0
   padding: 0
   cursor: pointer
   transform: translateZ(0)
-  box-shadow: 0 0 0 1px #cecece,
-              0 0 0 2px #323232,
-              0 1px 3px 0 #00000024
+  box-shadow: 0 0 1px 0 #fffa, 0 0 1px 0 #000a
+  &:hover
+    box-shadow: 0 0 1px 0 #ffff, 0 0 1px 0 #000f
 
 .StyleField .color
   position: relative
@@ -717,7 +768,7 @@
   padding: 0
   background-color: transparent
   z-index: 0
-  cursor: pointer
+  cursor: default
 
 
 // ---
@@ -785,7 +836,7 @@
   text-overflow: ellipsis
   font-weight: 600
   overflow: hidden
-  cursor: pointer
+  cursor: default
   text-align: center
   border-radius: var(--btn-border-radius)
   -moz-user-select: none

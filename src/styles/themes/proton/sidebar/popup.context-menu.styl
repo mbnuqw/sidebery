@@ -3,18 +3,16 @@
 #root
   --ctx-menu-min-width: 160px
   --ctx-menu-max-width: 200px
-  --ctx-menu-font: rem(14) sans-serif
+  --ctx-menu-font: rem(14) var(--general-font-family)
   --ctx-menu-bg: var(--popup-bg)
   --ctx-menu-fg: var(--popup-fg)
   --ctx-menu-border-radius: calc(var(--general-border-radius) + 1px)
   --ctx-menu-opt-border-radius: calc(var(--general-border-radius) - var(--general-margin) + 1px)
   --ctx-menu-padding: var(--general-margin)
-  --ctx-menu-opt-padding: 4px
   --ctx-menu-text-opt-inner-gap: 4px
   --ctx-menu-text-opt-height: 26px
   --ctx-menu-icon-opt-height: 30px
 #root[data-density="compact"]
-  --ctx-menu-opt-padding: 3px
   --ctx-menu-text-opt-inner-gap: 4px
   --ctx-menu-text-opt-height: 24px
   --ctx-menu-icon-opt-height: 28px
@@ -267,19 +265,18 @@
 
 // Separator
 .CtxMenu .opt[data-separator="true"]
-  padding: calc(var(--ctx-menu-opt-padding) - 2px) 0
-  height: auto
-  width: calc(100% + var(--ctx-menu-opt-padding))
-  left: -2px
-#root[data-theme="plain"] .CtxMenu .opt[data-separator="true"]
   padding: 0
-  width: calc(100% + var(--ctx-menu-opt-padding) - var(--ctx-menu-text-opt-inner-gap))
-  left: 0
+  height: calc(var(--ctx-menu-padding) * 2 + 1px)
+  min-height: 1px
+  width: 100%
 .CtxMenu .opt[data-separator="true"]:after
   content: ''
-  position: relative
-  width: 100%
+  position: absolute
+  width: calc(100% + var(--ctx-menu-padding) * 2)
+  min-width: 100%
   height: 1px
+  top: var(--ctx-menu-padding)
+  left: calc(var(--ctx-menu-padding) * -1)
   background-color: var(--ctx-menu-separator)
 .CtxMenu .opt[data-separator="true"]:before
 .CtxMenu .opt[data-separator="true"] .icon-box
@@ -347,6 +344,7 @@
 
 .sub-menu-enter-active
 .sub-menu-leave-active
+  pointer-events: none
   transition: opacity var(--d-fast)
   .sub-menu
     transition: transform var(--d-fast)

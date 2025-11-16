@@ -1,5 +1,5 @@
 import { Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc, DstPlaceInfo } from 'src/types'
-import { InstanceType, TabTreeData, ItemInfo } from 'src/types'
+import { InstanceType, TabTreeData, ItemInfo, Stored } from 'src/types'
 import * as Utils from 'src/utils'
 import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SAMEID } from 'src/defaults'
 import { URL_URL, SETTINGS_OPTIONS } from 'src/defaults'
@@ -14,12 +14,22 @@ import { Settings } from './settings'
 import * as Logs from './logs'
 import { ParsedTheme, Styles } from './styles'
 import { DetachedTabsInfo } from './tabs.fg.move'
+import { translate } from 'src/dict'
+
+let _tabsDataCache: TabCache[][] | undefined
 
 /**
  * Load tabs
  */
 export async function loadTabs(): Promise<void> {
-  const tabs = await browser.tabs.query({})
+  const [tabs, storage] = await Promise.all([
+    browser.tabs.query({}).catch(() => []),
+    _tabsDataCache
+      ? undefined
+      : browser.storage.local.get<Stored>('tabsDataCache').catch(() => ({}) as Stored),
+  ])
+  if (!_tabsDataCache) _tabsDataCache = storage?.tabsDataCache
+
   for (const tab of tabs as Tab[]) {
     const tabWindow = Windows.byId[tab.windowId]
     if (!tabWindow) continue
@@ -35,6 +45,7 @@ export async function loadTabs(): Promise<void> {
     }
 
     tab.internal = tab.url.startsWith(ADDON_HOST)
+    if (tab.internal) tab.isGroup = Utils.isGroupUrl(tab.url)
 
     // Forcefully discard pinned tab for the case of
     // browser.sessionstore.restore_pinned_tabs_on_demand = true
@@ -57,7 +68,12 @@ export async function loadTabs(): Promise<void> {
 }
 
 export async function reinitTabs(msg: string) {
+  if (!Tabs.ready) {
+    Logs.warn('Tabs.reinitTabs: Tabs are not ready:', msg)
+    return
+  }
   Logs.warn('Tabs.reinitTabs:', msg)
+
   Tabs.ready = false
   Tabs.byId = {}
   Tabs.cacheByWin = {}
@@ -65,6 +81,73 @@ export async function reinitTabs(msg: string) {
     win.tabs = []
   }
   await loadTabs()
+}
+
+export function createOpenFromCacheMenu() {
+  // No cache
+  if (!_tabsDataCache) return
+
+  // One window
+  if (_tabsDataCache.length === 1) {
+    const winCache = _tabsDataCache[0]
+    if (!winCache) return
+
+    browser.menus.create({
+      id: 'reopen_cached_win',
+      title: translate('menu.browserAction.reopen_cached_win_first', winCache.length),
+      icons: { '16': 'assets/window-native.svg' },
+      onclick: () => openCachedWindow(winCache),
+      contexts: ['browser_action'],
+    })
+  }
+
+  // Multiple windows
+  else {
+    const parentId = browser.menus.create({
+      id: 'reopen_cached_wins',
+      title: translate('menu.browserAction.reopen_cached_wins'),
+      icons: { '16': 'assets/window-native.svg' },
+      contexts: ['browser_action'],
+    })
+
+    for (let i = 0; i < _tabsDataCache.length; i++) {
+      const winCache = _tabsDataCache[i]
+      if (!winCache) continue
+
+      const panelIds = new Set()
+      for (const tab of winCache) {
+        panelIds.add(tab.panelId)
+      }
+
+      browser.menus.create({
+        id: `reopen_cached_win_${i}`,
+        parentId,
+        title: translate('menu.browserAction.reopen_cached_win', winCache.length, panelIds.size),
+        icons: { '16': 'assets/window-native.svg' },
+        onclick: () => openCachedWindow(winCache),
+        contexts: ['browser_action'],
+      })
+    }
+  }
+}
+
+function openCachedWindow(cache: TabCache[]) {
+  const items: ItemInfo[] = []
+  for (const cachedTab of cache) {
+    items.push({
+      id: cachedTab.id,
+      url: Utils.denormalizeUrl(cachedTab.url),
+      title: cachedTab.customTitle ?? cachedTab.url.replace(/^https?:\/\//, ''),
+      parentId: cachedTab.parentId ?? NOID,
+      panelId: cachedTab.panelId ?? NOID,
+      pinned: !!cachedTab.pin,
+      customColor: cachedTab.customColor,
+      customTitle: cachedTab.customTitle,
+      folded: !!cachedTab.folded,
+    })
+  }
+  items[0].active = true
+  Windows.createWithTabs(items)
 }
 
 /**
@@ -178,36 +261,36 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   }
 
   const tab = Tabs.byId[tabId]
-  if (!tab) return
+  if (!tab) {
+    Logs.warn('Tabs.onTabUpdated: No tab with id:', tabId, change)
+    return
+  }
 
   if (change.url) {
     const isInternal = change.url.startsWith(ADDON_HOST)
     tab.internal = isInternal
+    tab.isGroup = false
     if (isInternal) {
+      tab.isGroup = Utils.isGroupUrl(change.url)
       if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tab.windowId, tabId)
     }
   }
 
-  if (change.status !== undefined) {
-    if (change.status === 'complete' && tab.url[0] !== 'a' && !tab.internal) {
-      reloadTabFaviconDebounced(tab)
-    }
-  }
-
-  // Inject group page script if internal page has initial title
-  if (change.title && tab.internal && !tab.discarded && change.title === GROUP_INITIAL_TITLE) {
-    injectGroupPageScript(tab.windowId, tabId)
-  }
-
-  if (
-    change.favIconUrl?.startsWith('data:') &&
-    reloadTabFaviconTimeout[tab.id] === undefined &&
-    !tab.internal
-  ) {
+  if (!tab.internal && change.favIconUrl?.startsWith('data:')) {
     Favicons.saveFavicon(tab.url, change.favIconUrl)
   }
 
   Object.assign(tab, change)
+
+  // Inject group page script
+  if (
+    tab.isGroup &&
+    !tab.discarded &&
+    (change.title !== undefined || change.url || change.status === 'complete') &&
+    tab.title === GROUP_INITIAL_TITLE
+  ) {
+    injectGroupPageScript(tab.windowId, tabId)
+  }
 
   if (WebReq.containersProxies[tab.cookieStoreId]) {
     tab.proxified = true
@@ -217,28 +300,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
     tab.proxified = false
     hideProxyBadge(tabId)
   }
-}
-
-const reloadTabFaviconTimeout: Record<ID, number> = {}
-function reloadTabFaviconDebounced(targetTab: Tab, delay = 500): void {
-  clearTimeout(reloadTabFaviconTimeout[targetTab.id])
-  reloadTabFaviconTimeout[targetTab.id] = setTimeout(() => {
-    delete reloadTabFaviconTimeout[targetTab.id]
-    if (!Tabs.byId[targetTab.id]) return
-    browser.tabs
-      .get(targetTab.id)
-      .then(tabInfo => {
-        if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
-          targetTab.favIconUrl = tabInfo.favIconUrl
-        } else {
-          targetTab.favIconUrl = ''
-        }
-        Favicons.saveFavicon(targetTab.url, targetTab.favIconUrl)
-      })
-      .catch(err => {
-        Logs.err('Tabs.reloadTabFaviconDebounced: Cannot get tab:', err)
-      })
-  }, delay)
 }
 
 /**
@@ -257,7 +318,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (prevTab) prevTab.active = false
 
   // Update tab's url
-  if (tab.reloadOnActivation) {
+  if (tab?.reloadOnActivation) {
     tab.reloadOnActivation = undefined
     browser.tabs.reload(tab.id)
   }
@@ -312,7 +373,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   const tab = Tabs.byId[id]
   if (!tab) {
-    Logs.warn('onTabMoved: No tab')
+    Logs.warn(`onTabMoved: No tab: id:${id}, ${info.fromIndex} > ${info.toIndex}`)
     return
   }
 
@@ -429,6 +490,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
     if (sidebarConnection) {
       receivingSidebarTrees.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     } else {
+      Logs.warn('Tabs.updateBgTabsTreeData: No connected sidebar:', window.id)
       receivingSidebarTrees.push(Promise.resolve([]))
     }
   }
@@ -437,20 +499,29 @@ export async function updateBgTabsTreeData(): Promise<void> {
   try {
     trees = await Promise.all(receivingSidebarTrees)
   } catch (err) {
+    Logs.err('Tabs.updateBgTabsTreeData: Error on receivingSidebarTrees:', err)
     trees = []
   }
 
   for (let tree, window, i = 0; i < windowsList.length; i++) {
     tree = trees[i]
     window = windowsList[i]
-    if (!window?.tabs) continue
+    if (!window?.tabs) {
+      Logs.warn('Tabs.updateBgTabsTreeData: No window tabs, i:', i)
+      continue
+    }
 
     const treeDataById: Record<ID, TabTreeData> = {}
     let prevPanelId = NOID
-    for (const data of tree) {
-      if (data.pid === SAMEID) data.pid = prevPanelId
-      prevPanelId = data.pid ?? NOID
-      treeDataById[data.id] = data
+    if (tree) {
+      for (const data of tree) {
+        if (data.pid === SAMEID) data.pid = prevPanelId
+        prevPanelId = data.pid ?? NOID
+        treeDataById[data.id] = data
+      }
+      Logs.info('Tabs.updateBgTabsTreeData: win/sdb tabs len:', window.tabs.length, tree.length)
+    } else {
+      Logs.warn('Tabs.updateBgTabsTreeData: No sidebar tree, i:', i)
     }
 
     for (const tab of window.tabs) {
@@ -460,8 +531,6 @@ export async function updateBgTabsTreeData(): Promise<void> {
       tab.customTitle = undefined
       tab.customColor = undefined
 
-      if (!tree) continue
-
       const tabInfo = treeDataById[tab.id]
       if (!tabInfo) continue
 
@@ -469,6 +538,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
       if (tabInfo.tid !== undefined) tab.parentId = tabInfo.tid
       if (tabInfo.ct) tab.customTitle = tabInfo.ct
       if (tabInfo.cc) tab.customColor = tabInfo.cc
+      if (tabInfo.f) tab.folded = true
       const parent = Tabs.byId[tab.parentId]
       if (parent) tab.lvl = parent.lvl + 1
     }
@@ -476,10 +546,6 @@ export async function updateBgTabsTreeData(): Promise<void> {
 }
 
 export async function initInternalPageScripts(tabs: Tab[]) {
-  if (!Styles.theme) {
-    await Styles.initColorScheme()
-  }
-
   for (const tab of tabs) {
     if (!Windows.byId[tab.windowId]) continue
 
@@ -567,16 +633,19 @@ export function getUrlPageInitData(winId: ID, tabId: ID): UrlPageInitData {
   }
 }
 
-const injectingGroup = new Set<ID>()
+const injectingGroups = new Set<ID>()
 
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
-  if (injectingGroup.has(tabId)) return
-  if (!IPC.state.sidebarConnections.has(winId)) return
+  // Already injecting
+  if (injectingGroups.has(tabId)) return
+  // Already connected, therefore group is initialized
+  if (IPC.state.groupPageConnections.has(tabId)) return
 
-  injectingGroup.add(tabId)
+  injectingGroups.add(tabId)
 
+  const injecting = []
   try {
-    browser.tabs
+    const injectingScript = browser.tabs
       .executeScript(tabId, {
         file: '/injections/group.js',
         runAt: 'document_start',
@@ -585,9 +654,10 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
       .catch(err => {
         Logs.warn('Tabs.injectGroupPageScript: Cannot inject script, tabId:', tabId, err)
       })
+    injecting.push(injectingScript)
     const initData = await getGroupPageInitData(winId, tabId)
     const initDataJson = JSON.stringify(initData)
-    browser.tabs
+    const injectingData = browser.tabs
       .executeScript(tabId, {
         code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
         runAt: 'document_start',
@@ -605,11 +675,14 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
           tab.reloadOnActivation = true
         }
       })
+    injecting.push(injectingData)
   } catch (err) {
     Logs.err('Injected group-page script', err)
   }
 
-  injectingGroup.delete(tabId)
+  await Promise.all(injecting)
+
+  injectingGroups.delete(tabId)
 }
 
 export interface GroupPageInitData {
@@ -620,14 +693,18 @@ export interface GroupPageInitData {
   groupLayout?: (typeof SETTINGS_OPTIONS.groupLayout)[number]
   animations?: boolean
   groupInfo?: GroupInfo | null
+  newTabPos?: 'first_child' | 'last_child'
   winId?: ID
   tabId?: ID
 }
 export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupPageInitData> {
-  const groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
-    Logs.err('Tabs: Cannot get tabs info for group page', err)
-    return null
-  })
+  let groupInfo = null
+  if (IPC.isConnected(InstanceType.sidebar, winId)) {
+    groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
+      Logs.err('Tabs: Cannot get tabs info for group page', err)
+      return null
+    })
+  }
 
   return {
     theme: Settings.state.theme,
@@ -637,6 +714,7 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
     groupLayout: Settings.state.groupLayout,
     animations: Settings.state.animations,
     groupInfo,
+    newTabPos: Settings.state.moveNewTabParent === 'first_child' ? 'first_child' : 'last_child',
     winId,
     tabId,
   }

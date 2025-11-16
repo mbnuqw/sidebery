@@ -3,12 +3,20 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{3c078156-979c-498b-8990-85f7987dd929}",
-      "strict_min_version": "115.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ],
+        "optional": [
+          "browsingActivity"
+        ]
+      }
     }
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "5.2.0",
+  "version": "5.4.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -31,7 +39,8 @@
     "menus",
     "menus.overrideContext",
     "search",
-    "theme"
+    "theme",
+    "identity"
   ],
   "optional_permissions": [
     "<all_urls>",
@@ -41,6 +50,7 @@
     "bookmarks",
     "tabHide",
     "clipboardWrite",
+    "clipboardRead",
     "history",
     "downloads"
   ],
@@ -167,6 +177,9 @@
       },
       "description": "__MSG_KbResetSelection__"
     },
+    "lock_selection": {
+      "description": "__MSG_KbLockSel__"
+    },
     "menu": {
       "description": "__MSG_KbMenu__"
     },
@@ -262,6 +275,9 @@
     },
     "switch_to_panel_9": {
       "description": "__MSG_KbSwitchToPanel9__"
+    },
+    "switch_to_prev_panel": {
+      "description": "__MSG_KbSwitchToPrevPanel__"
     },
     "move_tabs_to_panel_0": {
       "description": "__MSG_KbMoveTabsToPanel0__"
@@ -398,6 +414,9 @@
     "flatten_tabs": {
       "description": "__MSG_KbFlattenTabs__"
     },
+    "edit_title": {
+      "description": "__MSG_KbEditTitle__"
+    },
     "sel_child_tabs": {
       "description": "__MSG_KbSelChildTabs__"
     },
@@ -436,6 +455,36 @@
     },
     "sort_panel_tabs_by_time_des": {
       "description": "__MSG_KbSortPanelTabsByTimeDes__"
+    },
+    "open_panel_config": {
+      "description": "__MSG_KbOpenPanelConfig__"
+    },
+    "copy_title": {
+      "description": "__MSG_KbCopyTitle__"
+    },
+    "copy_url": {
+      "description": "__MSG_KbCopyUrl__"
+    },
+    "copy_tmplt_0": {
+      "description": "__MSG_KbCopyByTmplt0__"
+    },
+    "copy_tmplt_1": {
+      "description": "__MSG_KbCopyByTmplt1__"
+    },
+    "copy_tmplt_2": {
+      "description": "__MSG_KbCopyByTmplt2__"
+    },
+    "copy_tmplt_3": {
+      "description": "__MSG_KbCopyByTmplt3__"
+    },
+    "copy_tmplt_4": {
+      "description": "__MSG_KbCopyByTmplt4__"
+    },
+    "open_bookmarks_sub_panel": {
+      "description": "__MSG_KbOpenBookmarksSubPanel__"
+    },
+    "open_sync_popup": {
+      "description": "__MSG_KbOpenSyncPopup__"
     }
   },
   "browser_action": {

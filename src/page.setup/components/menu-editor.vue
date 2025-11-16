@@ -139,14 +139,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onActivated } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { TABS_MENU, BOOKMARKS_MENU } from 'src/defaults'
 import { TABS_PANEL_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults'
 import { MenuConf } from 'src/types'
 import { Menu } from 'src/services/menu'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import TextInput from '../../components/text-input.vue'
 import FooterSection from './footer-section.vue'
 import Option from './menu-editor.option.vue'
@@ -175,13 +175,17 @@ const TABS_MENU_OPTS: Record<string, string> = {
   mute: 'menu.tab.mute',
   duplicate: 'menu.tab.duplicate',
   discard: 'menu.tab.discard',
+  dedupeTabs: 'menu.dedupe',
   copyTabsUrls: 'menu.copy_urls',
   copyTabsTitles: 'menu.copy_titles',
+  copyTabsByTemplates: 'menu.copy_by_templates',
+  pasteTabs: 'menu.paste',
   editTabTitle: 'menu.tab.edit_title',
   colorizeTab: 'menu.tab.colorize_colors',
   group: 'menu.tab.group',
   flatten: 'menu.tab.flatten',
   urlConf: 'menu.tab.url_conf',
+  syncTabs: 'menu.tab.sync',
   sortTabsByTitleAscending: 'menu.tab.sort_by_title_asc',
   sortTabsByTitleDescending: 'menu.tab.sort_by_title_des',
   sortTabsByUrlAscending: 'menu.tab.sort_by_url_asc',
@@ -225,6 +229,7 @@ const TABS_PANEL_MENU_OPTS: Record<string, string> = {
   sortAllTabsByUrlDescending: 'menu.tabs_panel.sort_all_by_url_des',
   sortAllTabsByAccessTimeAscending: 'menu.tabs_panel.sort_all_by_time_asc',
   sortAllTabsByAccessTimeDescending: 'menu.tabs_panel.sort_all_by_time_des',
+  pasteTabs: 'menu.paste',
 }
 
 const BOOKMARKS_MENU_OPTS: Record<string, string> = {
@@ -246,6 +251,8 @@ const BOOKMARKS_MENU_OPTS: Record<string, string> = {
   sortByTimeDescending: 'menu.bookmark.sort_by_time_des',
   copyBookmarksUrls: 'menu.copy_urls',
   copyBookmarksTitles: 'menu.copy_titles',
+  copyBookmarksByTemplates: 'menu.copy_by_templates',
+  pasteBookmarks: 'menu.paste',
   edit: 'menu.bookmark.edit_bookmark',
   delete: 'menu.bookmark.delete_bookmark',
   moveBookmarksTo: 'menu.bookmark.move_to',
@@ -258,6 +265,7 @@ const BOOKMARKS_PANEL_MENU_OPTS: Record<string, string> = {
   openPanelConfig: 'menu.common.conf',
   openPanelConfigInSidebar: 'menu.common.conf_in_sidebar',
   convertToTabsPanel: 'menu.bookmark.convert_to_tabs_panel',
+  pasteBookmarks: 'menu.paste',
   hidePanel: 'menu.panels.hide_panel',
   removePanel: 'menu.tabs_panel.remove_panel',
 }
@@ -314,17 +322,17 @@ const disabledBookmarksPanelMenu = computed<string[]>(() => {
   return all.filter(option => !active.includes(option))
 })
 
-void (async () => {
-  // TODO: Show loading animation
+Menu.setupListeners()
 
+onActivated(async () => {
+  // TODO: Show loading animation
   await Menu.loadCtxMenu()
-  Menu.setupListeners()
 
   state.tabsConf = Menu.tabsConf
   state.bookmarksConf = Menu.bookmarksConf
   state.tabsPanelConf = Menu.tabsPanelConf
   state.bookmarksPanelConf = Menu.bookmarksPanelConf
-})()
+})
 
 onMounted(() => {
   SetupPage.registerEl('menu_editor_tabs', menuEditorTabsEl.value)
@@ -332,6 +340,8 @@ onMounted(() => {
   SetupPage.registerEl('menu_editor_bookmarks', menuEditorBookmarksEl.value)
   SetupPage.registerEl('menu_editor_bookmarks_panel', menuEditorBookmarksPanelEl.value)
 })
+
+const saveDebounced = Utils.debounce(Menu.saveCtxMenu)
 
 function parseMenuConf(conf: MenuConf): MenuEditorGroup[] {
   let out: MenuEditorGroup[] = []
@@ -357,7 +367,7 @@ function parseMenuConf(conf: MenuConf): MenuEditorGroup[] {
  * Handle scroll event
  */
 function onScroll(e: Event): void {
-  if (SetupPage.navLock) return
+  if (SetupPage.state.navLock) return
   SetupPage.updateActiveSection((e.target as HTMLElement).scrollTop)
 }
 
@@ -392,11 +402,11 @@ function moveSelected(e: WheelEvent, type: string): void {
 function resetTabsMenu(): void {
   Menu.tabsConf = Utils.cloneArray(TABS_MENU)
   state.tabsConf = Menu.tabsConf
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 function resetTabsPanelMenu(): void {
   Menu.tabsPanelConf = Utils.cloneArray(TABS_PANEL_MENU)
-  Menu.saveCtxMenu()
+  saveDebounced(250)
   state.tabsPanelConf = Menu.tabsPanelConf
 }
 
@@ -406,12 +416,12 @@ function resetTabsPanelMenu(): void {
 function resetBookmarksMenu(): void {
   Menu.bookmarksConf = Utils.cloneArray(BOOKMARKS_MENU)
   state.bookmarksConf = Menu.bookmarksConf
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 function resetBookmarksPanelMenu(): void {
   Menu.bookmarksPanelConf = Utils.cloneArray(BOOKMARKS_PANEL_MENU)
   state.bookmarksPanelConf = Menu.bookmarksPanelConf
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 
 /**
@@ -422,7 +432,7 @@ function restoreOption(type: string, opt: string): void {
   if (!menuConfig) return
 
   menuConfig.push(opt)
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 
 /**
@@ -449,7 +459,7 @@ function disableOpt(type: string, opt: string): void {
 
   normalizeMenu(menuConfig)
 
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 
 /**
@@ -466,7 +476,7 @@ function createSubMenu(type: string, opt: string): void {
     }
   }
 
-  Menu.saveCtxMenu()
+  saveDebounced(250)
 }
 
 /**
@@ -481,10 +491,7 @@ function onSubMenuNameInput(type: string, i: number, value: string): void {
 
   optConf.name = value
 
-  clearTimeout(menuNameTimeout)
-  menuNameTimeout = setTimeout(() => {
-    Menu.saveCtxMenu()
-  }, 500)
+  saveDebounced(1000)
 }
 
 /**
@@ -521,7 +528,7 @@ function downOpt(type: string, opt: string): void {
   }
 
   normalizeMenu(menuConfig)
-  Menu.saveCtxMenu(500)
+  saveDebounced(640)
 }
 
 /**
@@ -558,7 +565,7 @@ function upOpt(type: string, opt: string): void {
   }
 
   normalizeMenu(menuConfig)
-  Menu.saveCtxMenu(500)
+  saveDebounced(640)
 }
 
 /**

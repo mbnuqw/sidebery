@@ -5,7 +5,7 @@
     :data-active="opt === value"
     :data-color="fill"
     @click="select(opt)")
-    svg: use(:xlink:href="'#' + opt")
+    svg: use(:href="'#' + opt")
 </template>
 
 <script lang="ts" setup>

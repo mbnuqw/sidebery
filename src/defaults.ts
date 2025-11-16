@@ -4,16 +4,20 @@ export * from './defaults/panels'
 export * from './defaults/settings'
 
 export const PRE_SCROLL = 64
-export const ADDON_HOST = browser.runtime.getURL('')
-export const SIDEBAR_URL = browser.runtime.getURL('/sidebar/sidebar.html')
-export const GROUP_URL = browser.runtime.getURL('/sidebery/group.html')
+export const ADDON_HOST = /* @__PURE__ */ browser.runtime.getURL('')
+export const SIDEBAR_URL = /* @__PURE__ */ browser.runtime.getURL('/sidebar/sidebar.html')
+export const GROUP_PATH = '/sidebery/group.html'
+export const GROUP_URL = /* @__PURE__ */ browser.runtime.getURL(GROUP_PATH)
 export const GROUP_URL_LEN = GROUP_URL.length
-export const URL_URL = browser.runtime.getURL('/sidebery/url.html')
+export const URL_PATH = '/sidebery/url.html'
+export const URL_URL = /* @__PURE__ */ browser.runtime.getURL(URL_PATH)
 export const URL_URL_LEN = URL_URL.length
-export const SETUP_URL = browser.runtime.getURL('/page.setup/setup.html')
-export const SEARCH_URL = browser.runtime.getURL('/popup.search/search.html')
-export const V4_GROUP_URL_LEN = 69
-export const V4_URL_URL_LEN = 65
+export const SETUP_PATH = '/page.setup/setup.html'
+export const SETUP_URL = /* @__PURE__ */ browser.runtime.getURL(SETUP_PATH)
+export const SEARCH_URL = /* @__PURE__ */ browser.runtime.getURL('/popup.search/search.html')
+export const EDITING_POPUP_URL = /* @__PURE__ */ browser.runtime.getURL(
+  '/popup.editing/editing.html'
+)
 export const RGB_COLORS: Record<browser.ColorName, string> = {
   blue: '#37adff',
   turquoise: '#00c79a',
@@ -46,6 +50,7 @@ export const SETTINGS_RE = /\/page\.setup\/setup\.html/
 export const FOLDER_NAME_DATA_RE = /^(.*) \[(.*)\]$/
 export const CONTAINER_IN_BOOKMARK_RE = / \[(".+","\w+","\w+"(,"\w+")?)\]/
 export const COLOR_IN_BOOKMARK_RE = / \[(c\d)\]/
+export const TITLE_IN_BOOKMARK_RE = / \[\*\]/
 export const GROUP_INITIAL_TITLE = '...'
 export const INITIAL_TITLE_RE = /^[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})+\//
 export const SITE_URL_RE =
@@ -55,6 +60,7 @@ export const BTN_ICONS: Record<string, string> = {
   bookmarks_panel: 'icon_bookmarks',
   settings: 'icon_settings',
   history: 'icon_clock',
+  sync: 'icon_sync',
   sp: 'icon_ellipsis',
   sd: 'icon_ellipsis',
   hdn: 'icon_hide',
@@ -66,9 +72,10 @@ export const BTN_ICONS: Record<string, string> = {
 }
 
 export const LOCALHOST_RE = /^localhost(:\d+)?/
-export const DOMAIN_RE = /^[0-9A-Za-z-]{1,63}:\/\/(www\.)?(.*?)(\/|$)/
+export const DOMAIN_RE = /^[0-9A-Za-z-]{1,63}:\/\/(?:www\.)?(.*?)(\/|$)/
 export const LINUX_HOME_RE = /^\/home\/(.+?)\//
 export const PATH_SEP_RE = /\/|\\/
+export const RE_STR_RE = /^\/(?<re>.*)\/(?<flags>[dgimsuvy]{1,8})?$/
 
 export const NOID: ID = -1
 export const SAMEID: ID = -5

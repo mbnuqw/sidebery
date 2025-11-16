@@ -1,0 +1,255 @@
+#root.Sync
+  --tabs-height: 30px
+  --tabs-margin: var(--general-margin)
+  --tabs-indent: 10px
+  --tabs-font: rem(15) var(--general-font-family)
+  --tabs-count-font: rem(9) var(--general-font-family)
+  --tabs-border-radius: var(--general-border-radius)
+  --tabs-inner-gap: 5px
+  --tabs-normal-bg: var(--frame-el-bg)
+  --tabs-normal-fg: var(--frame-fg)
+  --tabs-color-layer-opacity: .2
+#root.Sync[data-density="compact"]
+  --tabs-height: 28px
+  --tabs-indent: 8px
+  --tabs-inner-gap: 4px
+#root.Sync[data-density="loose"]
+  --tabs-height: 32px
+  --tabs-indent: 12px
+  --tabs-inner-gap: 5px
+#root.Sync[data-frame-color-scheme="dark"]
+  --tabs-lvl-opacity: .16
+#root.Sync[data-frame-color-scheme="light"]
+  --tabs-lvl-opacity: .3
+
+.SyncEntry
+  --btn-fg: var(--frame-fg)
+
+  position: relative
+.SyncEntry[data-loading="true"]
+.SyncEntry[data-loading="true"] .btn
+  cursor: progress
+.SyncEntry[data-loading="true"] .sync-header
+.SyncEntry[data-loading="true"] .sync-content
+  opacity: .5
+  pointer-events: none
+
+.SyncEntry:not(:nth-child(1))
+  margin-top: 28px
+
+.SyncEntry:last-child
+  margin-bottom: 16px
+
+.SyncEntry .sync-header
+  position: relative
+  transition: opacity var(--d-fast)
+
+.SyncEntry .sync-header .info
+  position: relative
+  display: flex
+  flex-direction: column
+  align-items: start
+  overflow: hidden
+
+.SyncEntry .sync-header .type
+  position: relative
+  margin: 8px 6px 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  font-size: rem(18)
+  font-weight: 700
+  color: var(--frame-fg)
+
+.SyncEntry .sync-header .profile
+  position: relative
+  max-width: calc(100% - 6px)
+  margin: 6px 0 0 6px
+  flex-grow: 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  font-size: rem(12)
+  font-weight: 400
+  color: var(--frame-fg)
+
+.SyncEntry .date-time
+  position: relative
+  margin: 6px 6px
+  font-size: rem(12)
+  font-weight: 400
+  white-space: nowrap
+  color: var(--frame-fg)
+  opacity: .7
+
+.SyncEntry .sync-content
+  position: relative
+  transition: opacity var(--d-fast)
+
+.SyncEntry .ctrls
+  position: relative
+  display: flex
+  flex-wrap: wrap
+  grid-gap: 6px
+  padding: 2px 6px 0
+
+.SyncEntry .sync-content .btn
+  flex-grow: 1
+
+.SyncEntry .sync-tab
+  position: relative
+  width: calc(100% - var(--tabs-margin) * 2)
+  height: calc(var(--tabs-height) + var(--tabs-margin))
+  margin: 0 var(--tabs-margin)
+  padding-bottom: var(--tabs-margin)
+  z-index: 10
+  transform: translateZ(0)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
+  padding-left: calc(var(--tabs-indent) * 16)
+  &[data-lvl="0"]
+    padding-left: 0
+  &[data-lvl="1"]
+    padding-left: var(--tabs-indent)
+  &[data-lvl="2"]
+    padding-left: calc(var(--tabs-indent) * 2)
+  &[data-lvl="3"]
+    padding-left: calc(var(--tabs-indent) * 3)
+  &[data-lvl="4"]
+    padding-left: calc(var(--tabs-indent) * 4)
+  &[data-lvl="5"]
+    padding-left: calc(var(--tabs-indent) * 5)
+  &[data-lvl="6"]
+    padding-left: calc(var(--tabs-indent) * 6)
+  &[data-lvl="7"]
+    padding-left: calc(var(--tabs-indent) * 7)
+  &[data-lvl="8"]
+    padding-left: calc(var(--tabs-indent) * 8)
+  &[data-lvl="9"]
+    padding-left: calc(var(--tabs-indent) * 9)
+  &[data-lvl="10"]
+    padding-left: calc(var(--tabs-indent) * 10)
+  &[data-lvl="11"]
+    padding-left: calc(var(--tabs-indent) * 11)
+  &[data-lvl="12"]
+    padding-left: calc(var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    padding-left: calc(var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    padding-left: calc(var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    padding-left: calc(var(--tabs-indent) * 15)
+
+.SyncEntry .sync-tab .body
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  align-items: center
+  transition: opacity var(--d-fast), transform var(--d-fast)
+  border-radius: var(--tabs-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
+  &:after
+    content: ''
+    position: absolute
+    display: none
+    top: calc(-20% - var(--tabs-margin))
+    left: calc(var(--tabs-indent) / -2)
+    width: 1px
+    height: calc(var(--tabs-height) + var(--tabs-margin))
+    opacity: var(--tabs-lvl-opacity)
+    background-color: var(--frame-fg)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--tabs-border-radius)
+    z-index: 1
+
+.SyncEntry .sync-tab:hover .body:before
+  background-color: var(--frame-el-overlay-hover-bg)
+
+.SyncEntry .sync-tab:active .body:before
+  background-color: var(--frame-el-overlay-clicked-bg)
+
+.SyncEntry .sync-tab.-middle-click .body
+  animation: middle-click-animation .2s
+
+#root[data-tabs-tree-lvl-marks="true"] .SyncEntry .sync-tab:not([data-lvl="0"]) .body:after
+  display: block
+  box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -2) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -3) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -4) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -5) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -6) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -7) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -8) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -9) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -10) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -11) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -16) 0 0 0 var(--frame-fg)
+.SyncEntry .sync-tab[data-parent="true"] + .sync-tab .body:after
+  background-color: transparent
+  background-image: linear-gradient(0deg, var(--frame-fg) 0, var(--frame-fg) 80%, transparent 80%, transparent)
+
+.SyncEntry .sync-tab .fav
+  position: relative
+  width: 16px
+  height: 16px
+  flex-shrink: 0
+  opacity: 1
+  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
+  z-index: 20
+  > svg
+    opacity: .7
+
+.SyncEntry .sync-tab .fav-icon
+  position: absolute
+  top: 0
+  left: 0
+  width: 16px
+  height: 16px
+  fill: var(--frame-fg)
+  transition: opacity var(--d-fast)
+
+.SyncEntry .sync-tab .title
+  position: relative
+  font-size: rem(15)
+  color: var(--frame-fg)
+  padding: 0 8px 0 1px
+  white-space: nowrap
+  overflow: hidden
+  mask: linear-gradient(-90deg, transparent, #000000 8px, #000000)
+
+.SyncEntry .sync-tab .containerMark
+  position: absolute
+  z-index: 15
+  top: 1px
+  right: 0
+  width: 2px
+  height: calc(100% - 2px)
+  background-color: var(--color)
+  border-top-right-radius: var(--general-border-radius);
+  border-bottom-right-radius: var(--general-border-radius);
+
+.SyncEntry .sync-tab .color-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--general-border-radius)
+  background-color: var(--tab-color)
+  opacity: var(--tabs-color-layer-opacity)
+#root[data-frame-color-scheme="light"] .SyncEntry .sync-tab .color-layer
+  opacity: calc(var(--tabs-color-layer-opacity) + .16)
+#root[data-frame-color-scheme="light"] .SyncEntry .sync-tab .color-layer
+  box-shadow: inset 0 0 0 1px #0003

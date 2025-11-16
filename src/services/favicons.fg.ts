@@ -1,4 +1,4 @@
-import { Stored } from 'src/types'
+import { DataUriImage } from 'src/types'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
 import { Tabs } from './tabs.fg'
@@ -51,7 +51,10 @@ export async function loadFavicons(): Promise<void> {
       if (tab?.favIconUrl) continue
       const domain = Utils.getDomainOf(tab.url)
       const favicon = reactive.byDomains[domain]
-      if (favicon) tab.reactive.favIconUrl = tab.favIconUrl = favicon
+      if (favicon) {
+        tab.favIconUrl = favicon
+        Tabs.renderFavicon(tab)
+      }
     }
   }
 
@@ -87,14 +90,14 @@ let iconFillCanvas: HTMLCanvasElement | undefined
 let iconFillCanvasCtx: CanvasRenderingContext2D | null = null
 let iconFillImg: HTMLImageElement | undefined
 
-export async function fillIcon(icon: string, color: string): Promise<string> {
+export async function fillIcon(img: DataUriImage, color: string): Promise<string> {
   const ds = SIZE * 2
 
   if (!iconFillCanvas || !iconFillCanvasCtx) {
     iconFillCanvas = Utils.createCanvas(ds, ds)
     iconFillCanvasCtx = iconFillCanvas.getContext('2d')
     if (iconFillCanvasCtx) iconFillCanvasCtx.save()
-    else return icon
+    else return img
   }
 
   if (!iconFillImg) iconFillImg = new Image()
@@ -102,18 +105,19 @@ export async function fillIcon(icon: string, color: string): Promise<string> {
   iconFillCanvasCtx.clearRect(0, 0, ds, ds)
 
   try {
-    await Utils.setImageSrc(iconFillImg, icon)
+    await Utils.setImageSrc(iconFillImg, img)
   } catch {
-    return icon
+    return img
   }
 
   try {
     let sw = iconFillImg.naturalWidth
     let sh = iconFillImg.naturalHeight
-    if (sw === 0 || sh === 0) {
-      const svgWithSize = Utils.setSvgImageSize(icon, ds, ds)
-      if (!svgWithSize) return icon
-      await Utils.setImageSrc(iconFillImg, svgWithSize)
+    const imgIsSVG = Utils.isSvg(img)
+    if (imgIsSVG && (sw === 0 || sh === 0)) {
+      const base64svgWithSize = Utils.setSvgImageSize(img, ds, ds)
+      if (!base64svgWithSize) return img
+      await Utils.setImageSrc(iconFillImg, base64svgWithSize)
       sw = iconFillImg.naturalWidth
       sh = iconFillImg.naturalHeight
     }
@@ -123,11 +127,11 @@ export async function fillIcon(icon: string, color: string): Promise<string> {
     iconFillCanvasCtx.drawImage(iconFillImg, 0, 0, sw, sh, 0, 0, ds, ds)
     iconFillCanvasCtx.globalCompositeOperation = 'source-over'
   } catch (err) {
-    return icon
+    return img
   }
 
-  const filledIcon = iconFillCanvas.toDataURL('image/png')
+  const filledBase64Icon = iconFillCanvas.toDataURL('image/png')
   iconFillCanvasCtx.restore()
 
-  return filledIcon
+  return filledBase64Icon
 }

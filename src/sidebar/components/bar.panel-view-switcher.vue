@@ -5,7 +5,7 @@
     .view-btn(
       :data-active="props.panel.viewMode === btn.id"
       @click="switchViewMode(btn.id)")
-      svg: use(:xlink:href="btn.icon")
+      svg: use(:href="btn.icon")
 </template>
 
 <script lang="ts" setup>

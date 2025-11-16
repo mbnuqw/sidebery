@@ -13,10 +13,14 @@
     @drop="onDrop")
   .sub-panel
     .header
+      .header-btn(v-if="isSync" @click="Sync.reload")
+        svg.icon.-sync(): use(href="#icon_sync")
       .title {{titles[Sidebar.reactive.subPanelType]}}
+      .space-filler(v-if="isSync")
     ClosedTabsSubPanel(v-if="isRecentlyClosedTabs")
     BookmarksSubPanel(v-else-if="isBookmarks && Sidebar.subPanels.bookmarks" :bookmarksPanel="Sidebar.subPanels.bookmarks")
     HistoryPanel(v-else-if="isHistory" :isSubPanel="true")
+    SyncPanel(v-else-if="isSync" :isSubPanel="true")
 </template>
 
 <script lang="ts" setup>
@@ -24,20 +28,23 @@ import { MenuType, SubPanelType, DropType } from 'src/types'
 import { computed } from 'vue'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
+import { Sync } from 'src/services/_services'
 import ClosedTabsSubPanel from './sub-panel.closed-tabs.vue'
 import BookmarksSubPanel from './sub-panel.bookmarks.vue'
 import HistoryPanel from './panel.history.vue'
+import SyncPanel from './panel.sync.vue'
 
 const titles: Record<SubPanelType, string> = {
   [SubPanelType.Null]: '',
   [SubPanelType.RecentlyClosedTabs]: translate('sub_panel.rct_panel.title'),
   [SubPanelType.Bookmarks]: translate('sub_panel.bookmarks_panel.title'),
   [SubPanelType.History]: translate('sub_panel.history_panel.title'),
+  [SubPanelType.Sync]: 'Sync',
 }
 
 const isRecentlyClosedTabs = computed<boolean>(() => {
@@ -47,6 +54,7 @@ const isBookmarks = computed<boolean>(() => {
   return Sidebar.reactive.subPanelType === SubPanelType.Bookmarks
 })
 const isHistory = computed<boolean>(() => Sidebar.reactive.subPanelType === SubPanelType.History)
+const isSync = computed<boolean>(() => Sidebar.reactive.subPanelType === SubPanelType.Sync)
 
 function onDrop(): void {
   DnD.reactive.dstType = DropType.Tabs

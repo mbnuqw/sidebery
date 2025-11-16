@@ -74,7 +74,7 @@ const isHidden = computed(() => {
   )
 })
 
-const isFiltering = computed<boolean>(() => !!Search.reactive.value)
+const isFiltering = computed<boolean>(() => !!Search.reactive.value && !History.reactive.loading)
 
 function toggleHistoryGroup(e: MouseEvent, index: number): void {
   if (e.altKey) {
@@ -88,14 +88,32 @@ function toggleHistoryGroup(e: MouseEvent, index: number): void {
 }
 
 async function onScrollBottom(): Promise<void> {
-  if (state.historyLoading || History.allLoaded) return
-  if (isFiltering.value) return
+  if (state.historyLoading) return
+  if (History.allLoaded) {
+    state.allLoaded = true
+    return
+  }
   if (!History.ready) return
+
+  const contentBoxEl = scrollBox.value?.getScrollableBox()
+  const contentHeight = contentBoxEl?.offsetHeight
 
   state.historyLoading = true
   await Utils.sleep(250)
   await History.loadMore()
   state.historyLoading = false
+
+  // If the scroll height has not changed, scroll up a little bit
+  // to trigger the next "onScrollBottom" event.
+  if (contentHeight) {
+    const newContentHeight = contentBoxEl?.offsetHeight
+    if (newContentHeight === contentHeight) {
+      const scrollBoxEl = scrollBox.value?.getScrollBox()
+      if (scrollBoxEl) {
+        scrollBoxEl.scrollTop = scrollBoxEl.scrollTop - 1
+      }
+    }
+  }
 
   if (History.allLoaded) state.allLoaded = true
 }

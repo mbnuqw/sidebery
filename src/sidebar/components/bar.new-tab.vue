@@ -12,9 +12,9 @@
     @contextmenu="onNewTabCtxMenu")
     .dnd-layer(draggable="true")
     svg(:class="{ '-icon': !!defaultBtn.containerId }")
-      use(:xlink:href="defaultBtn.icon")
+      use(:href="defaultBtn.icon")
     svg.-badge(v-if="defaultBtn.containerId")
-      use(xlink:href="#icon_plus_badge")
+      use(href="#icon_plus_badge")
   .new-tab-btn.-custom(
     v-for="btn of btns"
     :title="btn.tooltip"
@@ -27,11 +27,11 @@
     @contextmenu="onNewTabCtxMenu")
     .dnd-layer(draggable="true")
     svg.-icon(v-if="!btn.domain && btn.containerId")
-      use(:xlink:href="btn.icon")
+      use(:href="btn.icon")
     svg.-icon(v-else-if="btn.icon && btn.icon[0] === '#'")
-      use(:xlink:href="btn.icon")
+      use(:href="btn.icon")
     img.-icon(v-else-if="btn.icon" :src="btn.icon")
-    svg.-badge: use(xlink:href="#icon_plus_badge")
+    svg.-badge: use(href="#icon_plus_badge")
 </template>
 
 <script lang="ts" setup>
@@ -39,12 +39,13 @@ import { computed, PropType } from 'vue'
 import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
-import { CONTAINER_ID, DOMAIN_RE, NEWID } from 'src/defaults'
+import { CONTAINER_ID, DOMAIN_RE, INITIAL_TITLE_RE, NEWID } from 'src/defaults'
+import { DEFAULT_CONTAINER_ID } from 'src/defaults'
 import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
@@ -60,7 +61,7 @@ interface NewTabBtn {
   title?: string
   icon?: string
   containerId?: string
-  containrtName?: string
+  containerName?: string
   url?: string
   domain?: string
   children?: NewTabBtn[]
@@ -75,9 +76,9 @@ const defaultBtn = computed<NewTabBtn>(() => {
   const btn: NewTabBtn = { id: 'default' }
 
   const contianer = Containers.reactive.byId[props.panel.reactive.newTabCtx]
-  if (contianer) {
+  if (contianer && !Windows.incognito) {
     btn.containerId = contianer.id
-    btn.containrtName = contianer.name
+    btn.containerName = contianer.name
     btn.icon = '#' + contianer.icon
   } else {
     btn.icon = '#icon_plus'
@@ -115,7 +116,7 @@ const btns = computed<NewTabBtn[]>(() => {
       part = part.trim()
 
       // Url?
-      const domain = DOMAIN_RE.exec(part)?.[2]
+      const domain = DOMAIN_RE.exec(part)?.[1]
       if (domain) {
         btn.url = part
         btn.domain = domain
@@ -125,12 +126,18 @@ const btns = computed<NewTabBtn[]>(() => {
 
       // Container?
       if (!container) {
-        container = Object.values(Containers.reactive.byId).find(c => c.name === part)
-        if (container && !Windows.incognito) {
-          btn.containerId = container.id
-          btn.containrtName = container.name
-          if (!btn.title) btn.title = container.name
-          continue
+        if (part === DEFAULT_CONTAINER_ID) {
+          btn.containerId = CONTAINER_ID
+          btn.containerName = translate('newTabBar.default_container_name')
+          if (!btn.title) btn.title = btn.containerName
+        } else {
+          container = Object.values(Containers.reactive.byId).find(c => c.name === part)
+          if (container && !Windows.incognito) {
+            btn.containerId = container.id
+            btn.containerName = container.name
+            if (!btn.title) btn.title = container.name
+            continue
+          }
         }
       }
     }
@@ -138,6 +145,7 @@ const btns = computed<NewTabBtn[]>(() => {
     if (btn.domain) btn.icon = Favicons.reactive.byDomains[btn.domain]
     if (!btn.icon && btn.url) btn.icon = Favicons.getFavPlaceholder(btn.url)
     if (!btn.icon && container) btn.icon = '#' + container.icon
+    if (!btn.icon && btn.containerId === CONTAINER_ID) btn.icon = '#icon_ff'
 
     btn.tooltip = createTooltip(btn)
 
@@ -148,28 +156,46 @@ const btns = computed<NewTabBtn[]>(() => {
 })
 
 function createTooltip(btn: NewTabBtn): string {
-  let tooltip = translate('newTabBar.new_tab')
-  if (btn.containrtName) {
-    tooltip +=
-      translate('newTabBar.in_container_prefix') +
-      btn.containrtName +
-      translate('newTabBar.in_container_postfix')
-  }
-  if (btn.url) tooltip += ': ' + btn.url
+  const newTabMiddleClickOpenNewChild = Settings.state.newTabMiddleClickAction === 'new_child'
+  let tooltip = null
 
-  if (Settings.state.newTabMiddleClickAction === 'new_child') {
-    tooltip += '\n' + translate('newTabBar.mid_child')
-  } else {
-    tooltip += '\n' + translate('newTabBar.mid_reopen')
-    if (btn.containrtName) {
-      tooltip +=
-        translate('newTabBar.in_container_prefix') +
-        btn.containrtName +
-        translate('newTabBar.in_container_postfix')
-    } else if (!btn.url) {
-      tooltip += translate('newTabBar.in_default_container')
+  if (btn.containerName) {
+    if (btn.url) {
+      tooltip =
+        translate('newTabBar.new_tab_in_container_with_url', btn.url, btn.containerName) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_container_with_url'
+          : 'newTabBar.middle_click_reopen_active_tab_in_container_with_url',
+        btn.url,
+        btn.containerName
+      )
+    } else {
+      tooltip = translate('newTabBar.new_tab_in_container', btn.containerName) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_in_container'
+          : 'newTabBar.middle_click_reopen_active_tab_in_container',
+        btn.containerName
+      )
     }
-    if (btn.url) tooltip += ': ' + btn.url
+  } else {
+    if (btn.url) {
+      tooltip = translate('newTabBar.new_tab_in_default_container_with_url', btn.url) + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab_with_url'
+          : 'newTabBar.middle_click_reload_active_tab_with_url',
+        btn.url
+      )
+    } else {
+      tooltip = translate('newTabBar.new_tab') + '\n'
+      tooltip += translate(
+        newTabMiddleClickOpenNewChild
+          ? 'newTabBar.open_child_tab'
+          : 'newTabBar.middle_click_reopen_active_tab_in_default_container'
+      )
+    }
   }
 
   return tooltip
@@ -208,6 +234,8 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
     return
   }
 
+  const newTabConf = { url: btn?.url, cookieStoreId: btn?.containerId, fromNewTabButton: true }
+
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
@@ -216,7 +244,7 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
       if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
         Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
       } else {
-        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+        Tabs.createTabInPanel(props.panel, newTabConf)
       }
       return
     }
@@ -228,7 +256,7 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
 
     if (Selection.isSet() && !props.panel.selNewTab) Selection.resetSelection()
 
-    Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+    Tabs.createTabInPanel(props.panel, newTabConf)
   }
 
   // Middle
@@ -238,7 +266,7 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
       if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
         Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
       } else {
-        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+        Tabs.createTabInPanel(props.panel, newTabConf)
       }
     } else if (Settings.state.newTabMiddleClickAction === 'reopen') {
       applyBtnRules(btn)
@@ -303,7 +331,7 @@ function onNewTabCtxMenu(e: MouseEvent): void {
 async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   let targetTabs: Tab[] = []
   if (Selection.isTabs()) {
-    const ids = Selection.get()
+    const ids = Selection.ids()
     for (const tab of Tabs.list) {
       if (ids.includes(tab.id)) targetTabs.push(tab)
     }
@@ -317,23 +345,27 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   if (!targetTabs.length) return
   if (targetTabs.some(t => t.panelId !== props.panel.id)) return
 
-  const targetContainerId = btn?.containerId ?? CONTAINER_ID
+  const targetContainerId =
+    btn?.id === 'default' ? (btn?.containerId ?? CONTAINER_ID) : btn?.containerId
   const toReopen: ItemInfo[] = []
   for (const tab of targetTabs) {
-    // Updating url of exited tab
-    if (tab.cookieStoreId === targetContainerId && btn?.url) {
+    // Updating url
+    if ((!targetContainerId || tab.cookieStoreId === targetContainerId) && btn?.url) {
       await browser.tabs.update(tab.id, { url: btn.url })
     }
     // Reopening tab
-    else if (tab.cookieStoreId !== targetContainerId) {
+    else if (targetContainerId && tab.cookieStoreId !== targetContainerId) {
       const info: ItemInfo = Utils.cloneObject(tab)
       if (btn?.url) info.url = btn.url
+      else if (info.url === 'about:blank' && tab.title && INITIAL_TITLE_RE.test(tab.title)) {
+        info.url = 'https://' + tab.title
+      }
       if (info.url === 'about:blank') info.url = 'about:newtab'
       toReopen.push(info)
     }
   }
 
-  if (toReopen.length > 0) {
+  if (targetContainerId && toReopen.length > 0) {
     const dst: DstPlaceInfo = {
       containerId: targetContainerId,
       panelId: props.panel.id,
@@ -367,6 +399,7 @@ function onDragStart(e: DragEvent, btn: NewTabBtn): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info

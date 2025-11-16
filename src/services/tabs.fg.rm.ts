@@ -1,4 +1,4 @@
-import { ItemInfo, RecentlyClosedTabInfo, Tab } from 'src/types'
+import { ConfirmationType, ItemInfo, RecentlyClosedTabInfo, Tab } from 'src/types'
 import { NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Sidebar } from 'src/services/sidebar'
@@ -6,7 +6,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Containers } from 'src/services/containers'
 import { Settings } from 'src/services/settings'
 import { Notifications } from 'src/services/notifications'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Windows } from 'src/services/windows'
 import * as Popups from 'src/services/popups'
 import * as Favicons from 'src/services/favicons.fg'
@@ -241,17 +241,38 @@ export async function removeTabs(
     Settings.state.warnOnMultiTabClose === 'any' ||
     (hasInvisibleTab && Settings.state.warnOnMultiTabClose === 'collapsed')
   if (!silent && warn && count > 1) {
-    const pre = translate('confirm.tabs_close_pre', count)
-    const post = translate('confirm.tabs_close_post', count)
-    const ok = await Popups.confirm(pre + String(count) + post)
+    const ok = await Popups.confirm(translate('confirm.tabs_close', count), ConfirmationType.RmTab)
+    // Cancel
     if (!ok) {
+      // Parent tab was closed which is the cause of removing its children
+      if (removedParent !== undefined) {
+        // Outdent child tabs
+        for (const tab of tabs) {
+          if (tab.parentId === removedParent.id) {
+            tab.parentId = removedParent.parentId
+          }
+        }
+
+        // Try to restore closed parent
+        browser.sessions.getRecentlyClosed({ maxResults: 1 }).then(sessions => {
+          const maybeRemovedTab = sessions[0]
+          if (!maybeRemovedTab || !maybeRemovedTab.tab?.sessionId) return
+          if (maybeRemovedTab.tab.url !== removedParent.url) return
+          if (maybeRemovedTab.tab.index !== removedParent.index) return
+
+          browser.sessions.restore(maybeRemovedTab.tab.sessionId)
+        })
+      }
+
+      // Show previously folded child tabs
       let visTabsRecalcNeeded = false
       tabs.forEach(t => {
-        if (t.invisible && !Tabs.byId[t.parentId]) {
+        if (t.invisible && !Tabs.byId[t.parentId]?.folded) {
           if (!visTabsRecalcNeeded) visTabsRecalcNeeded = true
           t.invisible = false
         }
       })
+
       Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
       if (visTabsRecalcNeeded) Sidebar.recalcVisibleTabs(panelId)
       return
@@ -268,6 +289,7 @@ export async function removeTabs(
     parents[t.id] = t.parentId
     if (!t.invisible) visibleLen++
     t.invisible = true
+    t.removing = true
     if (t.active) activeTab = t
   })
 
@@ -291,7 +313,14 @@ export async function removeTabs(
   }
 
   // Update successorTabId if there is an active tab
-  if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
+  if (activeTab) {
+    const successor = Tabs.updateSuccessionDebounced(0)
+    // Activate tab, since Firefox ignores the succession if there are
+    // highlighted tabs
+    if (Settings.state.nativeHighlight && successor) {
+      await browser.tabs.update(successor.id, { active: true })
+    }
+  }
 
   if (!silent && count > 1 && Settings.state.tabsRmUndoNote && !warn) {
     if (removedParent) {
@@ -368,33 +397,67 @@ export async function undoRemove(tabs: ItemInfo[], parents: Record<ID, ID>): Pro
   const panel = Sidebar.panelsById[firstTab.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return
 
-  const nextTabIndex = panel.nextTabIndex
-  const oldNewIds: Record<ID, ID> = {}
-  for (let i = 0; i < tabs.length; i++) {
-    const tab = tabs[i]
-    const index = nextTabIndex + i
+  if (Sidebar.prevActivePanelId === panel.id) {
+    Sidebar.activatePanel(panel.id)
+  }
 
-    let parentId = oldNewIds[parents[tab.id]]
-    const parent = Tabs.byId[parents[tab.id]]
-    if (parentId === undefined && parent && parent.index < index) {
-      parentId = parent.id
-    }
+  const dstParentId = firstTab.parentId ?? NOID
+  const dstParent = Tabs.byId[dstParentId]
+  const dstParentValid = dstParentId === NOID || !!dstParent
 
-    Tabs.setNewTabPosition(index, parentId, panel.id, false)
+  // Check if it's possible to restore original position
+  const isSequence = tabs.every((t, i, a) => {
+    if (i === 0) return true
+    const pt = a[i - 1]
+    return t.index !== undefined && pt?.index !== undefined && t.index - pt.index === 1
+  })
+  const isBranchesOrList =
+    isSequence &&
+    dstParentValid &&
+    tabs.every(t => t.parentId === dstParentId || tabs.find(tt => tt.id === t.parentId))
 
-    const conf: browser.tabs.CreateProperties = {
-      windowId: Windows.id,
-      index,
-      url: Utils.normalizeUrl(tab.url, tab.title),
-      cookieStoreId: tab.container,
-      active: false,
+  let dstIndex = firstTab.index
+  const dstParentBranchLen = (dstParent && Tabs.getBranchLen(dstParentId)) ?? 0
+  const dstParentBranchEnd = (dstParent && dstParent.index + dstParentBranchLen + 1) ?? 0
+  let indexIsOk =
+    dstIndex !== undefined &&
+    dstIndex <= Tabs.list.length &&
+    (!dstParent || (dstParentBranchEnd >= dstIndex && dstParent.index < dstIndex))
+
+  // If index is not ok (e.g. other tabs were closed/created and branch was shrinked/shifted)
+  // set index to end of the branch
+  if (!indexIsOk && dstIndex !== undefined && dstParent) {
+    dstIndex = dstParentBranchEnd
+    indexIsOk =
+      dstIndex !== undefined &&
+      dstIndex <= Tabs.list.length &&
+      dstParentBranchEnd >= dstIndex &&
+      dstParent.index < dstIndex
+  }
+
+  const nextTab = indexIsOk && dstIndex !== undefined ? Tabs.list[dstIndex] : undefined
+  const nextTabIsDirectChild = nextTab && dstParentValid && nextTab.parentId === dstParentId
+  const nextTabIsNotDescendant =
+    nextTab &&
+    dstParentValid &&
+    !nextTabIsDirectChild &&
+    !Tabs.findAncestor(nextTab, t => t.id === dstParentId)
+
+  const noTreeInterruption = !nextTab || nextTabIsDirectChild || nextTabIsNotDescendant
+  const posCanBeRestored = isBranchesOrList && indexIsOk && noTreeInterruption
+
+  if (posCanBeRestored) {
+    // Restore parent and index
+    Tabs.open(tabs, { panelId: panel.id, index: dstIndex, parentId: dstParentId })
+  } else {
+    if (dstParent && isBranchesOrList) {
+      // Restore parent and put tabs to the end of branch
+      const index = dstParent.index + dstParentBranchLen + 1
+      Tabs.open(tabs, { panelId: panel.id, index, parentId: dstParentId })
+    } else {
+      // Put tabs to the end of panel
+      Tabs.open(tabs, { panelId: panel.id, index: panel.nextTabIndex, parentId: NOID })
     }
-    if (conf.url) {
-      conf.discarded = true
-      conf.title = tab.title
-    }
-    const newTab = await browser.tabs.create(conf)
-    oldNewIds[tab.id] = newTab.id
   }
 }
 
@@ -423,6 +486,7 @@ export function checkRemovedTabs(delay = 750): void {
 
             tab.reactive.lvl = tab.lvl = parent ? parent.lvl + 1 : 0
             tab.invisible = false
+            tab.removing = false
 
             const rmIndex = Tabs.removingTabs.indexOf(tab.id)
             if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)

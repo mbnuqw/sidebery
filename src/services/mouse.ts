@@ -8,5 +8,8 @@ export const Mouse = {
   longClickApplied: false,
   mouseIn: false,
 
+  x: 0,
+  y: 0,
+
   ...MouseActions,
 }

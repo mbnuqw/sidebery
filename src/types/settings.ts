@@ -2,7 +2,6 @@ import { SETTINGS_OPTIONS } from '../defaults'
 
 export interface SettingsState {
   // General
-  version?: string // DEPR
   nativeScrollbars: boolean
   nativeScrollbarsThin: boolean
   nativeScrollbarsLeft: boolean
@@ -10,6 +9,10 @@ export interface SettingsState {
   updateSidebarTitle: boolean
   markWindow: boolean
   markWindowPreface: string
+  copyTreeIndent: string
+  copyMultiBullet: string
+  copyTemplates: string
+  updTooltipDelay: number
 
   // Context menu
   ctxMenuNative: boolean
@@ -21,8 +24,6 @@ export interface SettingsState {
   navBarLayout: (typeof SETTINGS_OPTIONS.navBarLayout)[number]
   navBarInline: boolean
   navBarSide: (typeof SETTINGS_OPTIONS.navBarSide)[number]
-  hideAddBtn: boolean // DEPR
-  hideSettingsBtn: boolean // DEPR
   navBtnCount: boolean
   skipEmptyPanels: boolean
   hideEmptyPanels: boolean
@@ -36,6 +37,7 @@ export interface SettingsState {
   subPanelRecentlyClosedBar: boolean
   subPanelBookmarks: boolean
   subPanelHistory: boolean
+  subPanelSync: boolean
 
   // Group page
   groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]
@@ -67,6 +69,7 @@ export interface SettingsState {
   activateLastTabOnPanelSwitching: boolean
   activateLastTabOnPanelSwitchingLoadedOnly: boolean
   switchPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.switchPanelAfterSwitchingTab)[number]
+  scrollPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.scrollPanelAfterSwitchingTab)[number]
   tabRmBtn: (typeof SETTINGS_OPTIONS.tabRmBtn)[number]
   activateAfterClosing: (typeof SETTINGS_OPTIONS.activateAfterClosing)[number]
   activateAfterClosingStayInPanel: boolean
@@ -84,17 +87,24 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
+  tabsContainerInTooltip: boolean
   newTabCtxReopen: boolean
   tabWarmupOnHover: boolean
   tabSwitchDelay: number
   forceDiscard: boolean
+  tabUpdDelay: number
+  forceUpdTooltip: boolean
 
   // New tab position
   moveNewTabPin: (typeof SETTINGS_OPTIONS.moveNewTabPin)[number]
   moveNewTabParent: (typeof SETTINGS_OPTIONS.moveNewTabParent)[number]
+  moveNewTabParentIndent: boolean
   moveNewTabParentActPanel: boolean
+  moveNewTabButton: (typeof SETTINGS_OPTIONS.moveNewTab)[number]
+  moveNewTabButtonActivePin: (typeof SETTINGS_OPTIONS.moveNewTabActivePin)[number]
   moveNewTab: (typeof SETTINGS_OPTIONS.moveNewTab)[number]
   moveNewTabActivePin: (typeof SETTINGS_OPTIONS.moveNewTabActivePin)[number]
+  autoScrollToNewTab: boolean
 
   // Pinned tabs
   pinnedTabsPosition: (typeof SETTINGS_OPTIONS.pinnedTabsPosition)[number]
@@ -105,7 +115,7 @@ export interface SettingsState {
 
   // Tabs tree
   tabsTree: boolean
-  groupOnOpen: boolean
+  groupOnOpen?: boolean // DEPR
   tabsTreeLimit: (typeof SETTINGS_OPTIONS.tabsTreeLimit)[number]
   autoFoldTabs: boolean
   autoFoldTabsExcept: (typeof SETTINGS_OPTIONS.autoFoldTabsExcept)[number]
@@ -138,6 +148,8 @@ export interface SettingsState {
   previewTabsPageModeFallback: (typeof SETTINGS_OPTIONS.previewTabsPageModeFallback)[number]
   previewTabsInlineHeight: number
   previewTabsPopupWidth: number
+  previewTabsTitle: number
+  previewTabsUrl: number
   previewTabsSide: (typeof SETTINGS_OPTIONS.previewTabsSide)[number]
   previewTabsDelay: number
   previewTabsFollowMouse: boolean
@@ -151,10 +163,10 @@ export interface SettingsState {
   hideInact: boolean
   hideFoldedTabs: boolean
   hideFoldedParent: (typeof SETTINGS_OPTIONS.hideFoldedParent)[number]
+  hideUnloadedTabs: boolean
   nativeHighlight: boolean
 
   // Bookmarks
-  bookmarksPanel?: boolean // DEPR
   warnOnMultiBookmarkDelete: (typeof SETTINGS_OPTIONS.warnOnMultiBookmarkDelete)[number]
   askNewBookmarkPlace: boolean
   autoCloseBookmarks: boolean
@@ -172,15 +184,12 @@ export interface SettingsState {
 
   // Appearance
   fontSize: (typeof SETTINGS_OPTIONS.fontSize)[number]
-  bgNoise?: boolean // DEPR
+  fontFamily: string
   animations: boolean
   animationSpeed: (typeof SETTINGS_OPTIONS.animationSpeed)[number]
   theme: (typeof SETTINGS_OPTIONS.theme)[number]
   density: (typeof SETTINGS_OPTIONS.density)[number]
   colorScheme: (typeof SETTINGS_OPTIONS.colorScheme)[number]
-  style?: string // DEPR
-  sidebarCSS: boolean
-  groupCSS: boolean
 
   // Snapshots
   snapNotify: boolean
@@ -195,7 +204,6 @@ export interface SettingsState {
   snapMdFullTree: boolean
 
   // Mouse
-  hScrollThroughPanels?: boolean // DEPR
   hScrollAction: (typeof SETTINGS_OPTIONS.hScrollAction)[number]
   onePanelSwitchPerScroll: boolean
   wheelAccumulationX: boolean
@@ -206,6 +214,8 @@ export interface SettingsState {
   scrollThroughTabsExceptOverflow: boolean
   scrollThroughTabsCyclic: boolean
   scrollThroughTabsScrollArea: number
+  scrollThroughTabsPreselAct: boolean
+  scrollThroughTabsPreselDelay: number
   autoMenuMultiSel: boolean
   multipleMiddleClose: boolean
   longClickDelay: number
@@ -215,11 +225,15 @@ export interface SettingsState {
   tabDoubleClick: (typeof SETTINGS_OPTIONS.tabDoubleClick)[number]
   tabsSecondClickActPrev: boolean
   tabsSecondClickActPrevPanelOnly: boolean
+  tabsSecondClickActPrevNoUnload: boolean
   shiftSelAct: boolean
+  ctrlSelAct: boolean
   activateOnMouseUp: boolean
+  tabCloseOnMouseUp: boolean
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]
   tabLongRightClick: (typeof SETTINGS_OPTIONS.tabLongRightClick)[number]
   tabMiddleClick: (typeof SETTINGS_OPTIONS.tabMiddleClick)[number]
+  tabPinnedMiddleClick: (typeof SETTINGS_OPTIONS.tabPinnedMiddleClick)[number]
   tabMiddleClickCtrl: (typeof SETTINGS_OPTIONS.tabMiddleClickModifier)[number]
   tabMiddleClickShift: (typeof SETTINGS_OPTIONS.tabMiddleClickModifier)[number]
   tabCloseMiddleClick: (typeof SETTINGS_OPTIONS.tabCloseMiddleClick)[number]
@@ -244,6 +258,10 @@ export interface SettingsState {
 
   // Sync
   syncName: string
+  syncUseFirefox: boolean
+  syncUseGoogleDrive: boolean
+  syncUseGoogleDriveApi: boolean
+  syncUseGoogleDriveApiClientId: string
   syncSaveSettings: boolean
   syncSaveCtxMenu: boolean
   syncSaveStyles: boolean
@@ -251,5 +269,6 @@ export interface SettingsState {
 
   // Keybindings
   selectActiveTabFirst: boolean
+  selectCyclic: boolean
   ignoreHiddenPanelsSwitching: boolean
 }

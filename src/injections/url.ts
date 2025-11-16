@@ -15,7 +15,10 @@ function waitInitData(): Promise<void> {
   return new Promise((ok, err) => {
     if (window.sideberyInitData) return ok()
     window.onSideberyInitDataReady = ok
-    setTimeout(() => err('UrlPage: No initial data (sideberyInitData)'), 2000)
+    setTimeout(() => {
+      if (window.sideberyInitData) return
+      err('UrlPage: No initial data (sideberyInitData)')
+    }, 60_000)
   })
 }
 
@@ -106,5 +109,16 @@ void (async () => {
   // Setup copy button
   copyBtnEl.addEventListener('click', () => {
     if (url) navigator.clipboard.writeText(encodeURI(url))
+  })
+  copyBtnEl.addEventListener('keydown', e => {
+    if (e.code === 'Enter' && url) {
+      copyBtnEl.style.opacity = '.6'
+    }
+  })
+  copyBtnEl.addEventListener('keyup', e => {
+    if (e.code === 'Enter' && url) {
+      navigator.clipboard.writeText(encodeURI(url))
+      copyBtnEl.style.opacity = '1'
+    }
   })
 })()

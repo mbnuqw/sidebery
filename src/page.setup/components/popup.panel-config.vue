@@ -1,5 +1,5 @@
 <template lang="pug">
-.ConfigPopup(ref="rootEl" @wheel="onWheel")
+.ConfigPopup(ref="rootEl" tabindex="-1" @wheel="onWheel")
   h2(v-if="isTabsOrBookmarks") {{conf.name}}
   TextInput.title(
     v-if="!isTabsOrBookmarks"
@@ -37,17 +37,39 @@
   .TextField.custom-icon(v-if="Utils.isTabsPanel(conf) || Utils.isBookmarksPanel(conf)")
     .body
       .label {{translate('panel.custom_icon')}}
-      .btn(:data-active="state.customIconType === 'text'" @click="setCustomIconType('text')").
-        {{translate('panel.custom_icon_text_btn')}}
-      .btn(:data-active="state.customIconType === 'url'" @click="setCustomIconType('url')").
-        {{translate('panel.custom_icon_url_btn')}}
-      .btn(:data-active="state.customIconType === 'file'" @click="setCustomIconType('file')")
+      .btn(
+        tabindex="-1"
+        :data-active="state.customIconType === 'text'"
+        @click="setCustomIconType('text')"
+        @keydown.enter.space.prevent="setCustomIconType('text')") {{translate('panel.custom_icon_text_btn')}}
+        .focus-fx
+      .btn(
+        tabindex="-1"
+        :data-active="state.customIconType === 'url'"
+        @click="setCustomIconType('url')"
+        @keydown.enter.space.prevent="setCustomIconType('url')") {{translate('panel.custom_icon_url_btn')}}
+        .focus-fx
+      .btn(
+        :data-active="state.customIconType === 'file'"
+        @click="setCustomIconType('file')")
         .btn-label {{translate('panel.custom_icon_file_btn')}}
-        input(type="file" accept="image/*" @input="openCustomIconFile" @keyup="onFileInputKeyup")
+        .focus-fx
+        input(
+          tabindex="-1"
+          type="file"
+          accept="image/*"
+          @input="openCustomIconFile"
+          @keydown.enter.space="setCustomIconType('file')"
+          @keyup="onFileInputKeyup")
       .img-box(v-if="state.customIconUrl")
         img(:src="state.customIconUrl" @load="onCustomIconLoad" @error="onCustomIconError")
-      .img-rm(v-if="state.customIconUrl" @click="onCustomIconRm")
-        svg: use(xlink:href="#icon_remove")
+      .img-rm(
+        v-if="state.customIconUrl"
+        tabindex="-1"
+        @click="onCustomIconRm"
+        @keydown.enter.space.prevent="onCustomIconRm")
+        svg: use(href="#icon_remove")
+        .focus-fx
     .body.-sub(v-if="state.customIconType === 'text'")
       TextInput(
         :value="state.customIconTextValue"
@@ -60,7 +82,11 @@
         v-model:value="state.customIconUrlValue"
         :line="true"
         :or="translate('panel.custom_icon_url_placeholder')")
-      .btn(@click="loadCustomIcon") {{translate('panel.custom_icon_load')}}
+      .btn(
+        tabindex="-1"
+        @click="loadCustomIcon"
+        @keydown.enter.space.prevent="loadCustomIcon") {{translate('panel.custom_icon_load')}}
+        .focus-fx
 
   .sub-fields(v-if="Utils.isTabsPanel(conf) || Utils.isBookmarksPanel(conf)")
     ToggleField(
@@ -133,12 +159,24 @@
     .label {{translate('panel.root_id_label')}}
     .value {{rootPath}}
     .ctrls
-      .btn(@click="setBookmarksRootId") {{translate('panel.root_id.choose')}}
-      .btn(@click="resetBookmarksRootId") {{translate('panel.root_id.reset')}}
+      .btn(
+        tabindex="-1"
+        @click="setBookmarksRootId"
+        @keydown.enter.space="setBookmarksRootId") {{translate('panel.root_id.choose')}}
+        .focus-fx
+      .btn(
+        tabindex="-1"
+        @click="resetBookmarksRootId"
+        @keydown.enter.space="resetBookmarksRootId") {{translate('panel.root_id.reset')}}
+        .focus-fx
 
   .InfoField(v-if="Utils.isTabsPanel(conf)")
     .label {{translate('panel.tab_move_rules')}}
-    .btn(@click="openRulesPopup") {{getManageRulesBtnLabel(conf)}}
+    .btn(
+      tabindex="-1"
+      @click="openRulesPopup"
+      @keydown.enter.space="openRulesPopup") {{getManageRulesBtnLabel(conf)}}
+      .focus-fx
   .sub-fields(v-if="Utils.isTabsPanel(conf)")
     SelectField(
       label="panel.move_excluded_to"
@@ -150,7 +188,11 @@
 
   .InfoField(v-if="Utils.isTabsPanel(conf)")
     .label {{translate('panel.new_tab_shortcuts')}}
-    .btn(@click="openShortcutsPopup") {{getManageShortcutsBtnLabel(conf)}}
+    .btn(
+      tabindex="-1"
+      @click="openShortcutsPopup"
+      @keydown.enter.space="openShortcutsPopup") {{getManageShortcutsBtnLabel(conf)}}
+      .focus-fx
 </template>
 
 <script lang="ts" setup>
@@ -332,6 +374,8 @@ onMounted(() => {
   init()
 
   if (!Bookmarks.reactive.tree.length) Bookmarks.load()
+
+  rootEl.value?.addEventListener('keydown', onDocumentKeydown)
 })
 
 async function init(): Promise<void> {
@@ -344,11 +388,42 @@ async function init(): Promise<void> {
       else if (state.customIconType === 'url') state.customIconUrlValue = props.conf.iconIMGSrc
     }
   }
-  if (nameInput.value) nameInput.value.recalcTextHeight()
+  if (nameInput.value) {
+    nameInput.value.recalcTextHeight()
+    nameInput.value.focus()
+  }
 }
 
 function isNotTabsPanel(conf: PanelConfig): conf is BookmarksPanelConfig | HistoryPanelConfig {
   return !!conf && !Utils.isTabsPanel(conf)
+}
+
+function onDocumentKeydown(e: KeyboardEvent) {
+  if (e.code === 'ArrowDown' || (!e.shiftKey && e.code === 'Tab')) {
+    e.preventDefault()
+    e.stopPropagation()
+    focusField(1)
+  } else if (e.code === 'ArrowUp' || (e.shiftKey && e.code === 'Tab')) {
+    e.preventDefault()
+    e.stopPropagation()
+    focusField(-1)
+  }
+}
+
+function focusField(dir: -1 | 1) {
+  if (!document.activeElement || !rootEl.value) return
+
+  const selectors = `[data-inactive="false"] .focus-el[tabindex="-1"],
+.TextInput input,
+.img-rm[tabindex="-1"],
+.btn input,
+.btn[tabindex="-1"]`
+  const focusable = Array.from(rootEl.value.querySelectorAll(selectors))
+
+  let focusIndex = focusable.findIndex(el => el === document.activeElement)
+  if (focusIndex === -1 && dir === -1) focusIndex = focusable.length
+  const nextFocusEl = focusable[focusIndex + dir]
+  if (nextFocusEl instanceof HTMLElement) nextFocusEl.focus()
 }
 
 function onWheel(e: WheelEvent): void {
@@ -366,13 +441,13 @@ function onNameInput(value: string): void {
 
 function setIcon(value: string): void {
   props.conf.iconSVG = value
-  saveSidebarConfig()
+  saveSidebarConfig(250)
 }
 
 function setColor(value: browser.ColorName): void {
   props.conf.color = value
   if (props.conf.iconIMG) recolorCustomIcon()
-  saveSidebarConfig()
+  saveSidebarConfig(250)
 }
 
 // ---
@@ -481,14 +556,14 @@ async function drawTextIcon() {
   // let offset: number | null = 0
   // while (fontSize <= maxFontSize) {
   //   fontSize++
-  //   font = `${fontSize}px sans-serif`
+  //   font = `${fontSize}px system-ui`
   //   const offsetProbe = isTextFit(ctx, txt, font, 30, 30)
   //   if (offsetProbe !== null) offset = offsetProbe
   //   else break
   // }
 
   // Default font
-  if (!font) font = '32px sans-serif'
+  if (!font) font = '32px system-ui'
 
   // Vertically center the icon
   let offset = 0
@@ -531,17 +606,17 @@ function isTextFit(
   }
 }
 
-async function prepareCustomIcon(icon: string): Promise<string> {
-  state.customIconOriginal = icon
+async function prepareCustomIcon(base64icon: string): Promise<string> {
+  state.customIconOriginal = base64icon
   if (state.customIconColorize) {
     let color = RGB_COLORS[props.conf.color]
     if (props.conf.color === 'toolbar') {
       if (Styles.reactive.toolbarColorScheme === 'light') color = '#000000'
       if (Styles.reactive.toolbarColorScheme === 'dark') color = '#ffffff'
     }
-    icon = await Favicons.fillIcon(icon, color)
+    base64icon = await Favicons.fillIcon(base64icon, color)
   }
-  return await Favicons.resizeFavicon(icon)
+  return await Favicons.resizeFavicon(base64icon)
 }
 
 function openCustomIconFile(importEvent: Event) {
@@ -556,14 +631,14 @@ function openCustomIconFile(importEvent: Event) {
       return Logs.err('Cannot import data: No file content')
     }
 
-    let icon
+    let base64icon
     try {
-      icon = await prepareCustomIcon(fileEvent.target.result as string)
+      base64icon = await prepareCustomIcon(fileEvent.target.result as string)
     } catch {
       onCustomIconRm()
       return
     }
-    props.conf.iconIMG = icon
+    props.conf.iconIMG = base64icon
     props.conf.iconIMGSrc = ''
     state.customIconTextValue = ''
     state.customIconUrlValue = ''

@@ -50,28 +50,72 @@ Use https://github.com/MrOtherGuy/firefox-csshacks (https://mrotherguy.github.io
 
 <br>
 
-### Dynamic native tabs
+### Dynamic native tabs (for hiding native horizontal tabs)
 
-![Dynamic native tabs](./assets/dynamic-native-tabs.gif)  
+https://github.com/user-attachments/assets/a8c588df-9346-4af9-9b22-78f8f3fec692
+
+Tested on Firefox v134
 
 - Set window preface value:  
 `Sidebery settings` > `Help` > `Preface value`  
 note: in this example: XXX  
 note: value can be an ["empty" unicode sign](https://unicode-explorer.com/c/200B)  
-- Example css:
+- userChrome css (with animations):
 ```css
-#main-window #titlebar {
+/**
+ * Dynamic Horizontal Tabs Toolbar (with animations)
+ * sidebar.verticalTabs: false (with native horizontal tabs)
+ */
+#main-window #TabsToolbar > .toolbar-items {
   overflow: hidden;
   transition: height 0.3s 0.3s !important;
 }
 /* Default state: Set initial height to enable animation */
-#main-window #titlebar { height: 3em !important; }
-#main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
-#main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
+#main-window #TabsToolbar > .toolbar-items { height: 3em !important; }
+#main-window[uidensity="touch"] #TabsToolbar > .toolbar-items { height: 3.35em !important; }
+#main-window[uidensity="compact"] #TabsToolbar > .toolbar-items { height: 2.7em !important; }
 /* Hidden state: Hide native tabs strip */
-#main-window[titlepreface*="XXX"] #titlebar { height: 0 !important; }
+#main-window[titlepreface*="XXX"] #TabsToolbar > .toolbar-items { height: 0 !important; }
 /* Hidden state: Fix z-index of active pinned tabs */
 #main-window[titlepreface*="XXX"] #tabbrowser-tabs { z-index: 0 !important; }
+/* Hidden state: Hide window buttons in tabs-toolbar */
+#main-window[titlepreface*="XXX"] #TabsToolbar .titlebar-spacer,
+#main-window[titlepreface*="XXX"] #TabsToolbar .titlebar-buttonbox-container {
+  display: none !important;
+}
+/* [Optional] Uncomment block below to show window buttons in nav-bar (maybe, I didn't test it on non-linux-i3wm env) */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-buttonbox-container,
+#main-window[titlepreface*="XXX"] #nav-bar > .titlebar-buttonbox-container > .titlebar-buttonbox {
+  display: flex !important;
+} */
+/* [Optional] Uncomment one of the line below if you need space near window buttons */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-spacer[type="pre-tabs"] { display: flex !important; } */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-spacer[type="post-tabs"] { display: flex !important; } */
+```
+- userChrome css (without animations):
+```css
+/**
+ * Dynamic Horizontal Tabs Toolbar (without animations)
+ * sidebar.verticalTabs: false (with native horizontal tabs)
+ */
+#main-window #TabsToolbar > .toolbar-items { overflow: hidden; }
+ /* Hidden state: Hide native tabs strip */
+#main-window[titlepreface*="XXX"] #TabsToolbar > .toolbar-items { height: 0 !important; }
+/* Hidden state: Fix z-index of active pinned tabs */
+#main-window[titlepreface*="XXX"] #tabbrowser-tabs { z-index: 0 !important; }
+/* Hidden state: Hide window buttons in tabs-toolbar */
+#main-window[titlepreface*="XXX"] #TabsToolbar .titlebar-spacer,
+#main-window[titlepreface*="XXX"] #TabsToolbar .titlebar-buttonbox-container {
+  display: none !important;
+}
+/* [Optional] Uncomment block below to show window buttons in nav-bar (maybe, I didn't test it on non-linux-i3wm env) */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-buttonbox-container,
+#main-window[titlepreface*="XXX"] #nav-bar > .titlebar-buttonbox-container > .titlebar-buttonbox {
+  display: flex !important;
+} */
+/* [Optional] Uncomment one of the line below if you need space near window buttons */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-spacer[type="pre-tabs"] { display: flex !important; } */
+/* #main-window[titlepreface*="XXX"] #nav-bar > .titlebar-spacer[type="post-tabs"] { display: flex !important; } */
 ```
 
 <br>
@@ -125,4 +169,8 @@ ln -fs chrome/firefox-gnome-theme/configuration/user.js user.js
 }
 ```
 
-7. Restart Firefox.
+7. If desired, hide sidebar revamp (the part with Firefox tools)
+
+Set `sidebar.revamp` to `false` in about:config.
+
+8. Restart Firefox.

@@ -3,7 +3,6 @@ import { Info } from 'src/services/info'
 import { Settings } from 'src/services/settings'
 import { Styles } from 'src/services/styles'
 import * as IPC from 'src/services/ipc'
-import { SetupPage } from 'src/services/setup-page'
 import { SETUP_URL } from 'src/defaults'
 
 void (async function () {

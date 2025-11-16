@@ -2,6 +2,7 @@
 
 import fs from 'fs/promises'
 import { execSync } from 'child_process'
+import { logOk, logErr } from './utils.js'
 
 const owner = 'mbnuqw'
 const repo = 'sidebery'
@@ -18,6 +19,7 @@ const ignoreCommitPrefixRE = /^chore/i
 const commitGroups = [
   { re: /^feat\(?(?<subGroup>[a-zA-Z0-9-_ ]*)\)?:(?<msg>.+)/, name: '### Added' },
   { re: /^fix\(?(?<subGroup>[a-zA-Z0-9-_ ]*)\)?:(?<msg>.+)/, name: '### Fixed' },
+  { re: /^l10n\(?(?<subGroup>[a-zA-Z0-9-_ ]*)\)?:(?<msg>.+)/, name: '### Localization' },
   {
     re: /^perf\(?(?<subGroup>[a-zA-Z0-9-_ ]*)\)?:(?<msg>.+)/,
     name: '### Performance Improvements',
@@ -199,10 +201,16 @@ async function getAuthorGithubLogin(commit) {
   try {
     responseJSON = await response.json()
   } catch {
-    // ...
+    logErr("Can't parse answer from Github: author login")
   }
 
-  return responseJSON?.author?.login
+  const login = responseJSON?.author?.login
+
+  if (!login) {
+    logErr('Unable to get author login:', responseJSON.message)
+  }
+
+  return login
 }
 
 async function getPullRequestNumber(commit) {
@@ -220,7 +228,7 @@ async function getPullRequestNumber(commit) {
   try {
     responseJSON = await response.json()
   } catch {
-    // ...
+    logErr("Can't parse answer from Github: PR number")
   }
 
   const number = responseJSON[0]?.number
@@ -260,5 +268,5 @@ function generateChangelog(releases) {
 async function writeToFiles(changelog) {
   const path = `./build/tmp.${Date.now()}.changelog.md`
   await fs.writeFile(path, changelog, { encoding: 'utf-8' })
-  console.log('Changelog created:', path)
+  logOk('Changelog created:', path)
 }

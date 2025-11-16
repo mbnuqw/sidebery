@@ -1,25 +1,26 @@
-const fs = require('fs')
-const path = require('path')
-const ts = require('typescript')
+/* eslint no-console: off */
+import fs from 'fs'
+import path from 'path'
+import ts from 'typescript'
 
-const IS_DEV = process.argv.includes('--dev')
-const ADDON_PATH = (IS_DEV && process.env.SIDEBERY_DEV_DIR) || path.resolve('./addon')
-const VUE_DIST = IS_DEV ? 'vue.runtime.esm-browser.js' : 'vue.runtime.esm-browser.prod.js'
-const FMT_HOST = {
+export const IS_DEV = process.argv.includes('--dev')
+export const ADDON_PATH = (IS_DEV && process.env.SIDEBERY_DEV_DIR) || path.resolve('./addon')
+export const VUE_DIST = IS_DEV ? 'vue.runtime.esm-browser.js' : 'vue.runtime.esm-browser.prod.js'
+export const FMT_HOST = {
   getCanonicalFileName: path => path,
   getCurrentDirectory: ts.sys.getCurrentDirectory,
   getNewLine: () => ts.sys.newLine,
 }
 const WATCH_DEBOUNCE_DELAY = 640
 
-function getTime() {
+export function getTime() {
   const t = new Date()
   return `\x1b[90m${[t.getHours(), t.getMinutes(), t.getSeconds()]
     .map(t => `${t}`.padStart(2, '0'))
     .join(':')}\x1b[0m`
 }
 
-async function treeToList(dir, list = []) {
+export async function treeToList(dir, list = []) {
   list.push({ dir })
   for await (const d of await fs.promises.opendir(dir)) {
     if (d.isDirectory()) await treeToList(path.join(dir, d.name), list)
@@ -36,7 +37,7 @@ async function treeToList(dir, list = []) {
  * - onChange: (affectedTasks) => void
  * - onRename: (affectedTask, renamedFileOldPath) => void
  */
-function watch(tasks, onChange, onRename) {
+export function watch(tasks, onChange, onRename) {
   const ctx = {}
   ctx.timeout = null
   ctx.changed = {}
@@ -65,7 +66,7 @@ function watch(tasks, onChange, onRename) {
   return ctx
 }
 
-function colorize(str) {
+export function colorize(str) {
   str = str.replace(/\|x\|/g, '\x1b[0m')
   str = str.replace(/\|w>/g, '\x1b[37m')
   str = str.replace(/\|_>/g, '\x1b[90m')
@@ -81,7 +82,7 @@ function colorize(str) {
   return str
 }
 
-function getTSConfig() {
+export function getTSConfig() {
   const path = ts.findConfigFile('./', ts.sys.fileExists, 'tsconfig.json')
   const readResult = ts.readConfigFile(path, ts.sys.readFile)
   if (readResult.error) throw new Error(ts.formatDiagnostic(readResult.error, FMT_HOST))
@@ -93,30 +94,14 @@ function getTSConfig() {
   return convertResult.options
 }
 
-function log(msg) {
-  console.log(`${getTime()} ${msg}`)
+export function log(...args) {
+  console.log(`${getTime()}`, ...args)
 }
 
-function logOk(msg) {
-  console.log(`${getTime()} ${`\x1b[32m${msg}\x1b[0m`}`)
+export function logOk(msg, ...args) {
+  console.log(`${getTime()} ${`\x1b[32m${msg}\x1b[0m`}`, ...args)
 }
 
-function logErr(msg) {
-  console.log(`${getTime()} ${`\x1b[31m${msg}\x1b[0m`}`)
-}
-
-module.exports = {
-  IS_DEV,
-  ADDON_PATH,
-  VUE_DIST,
-  FMT_HOST,
-
-  getTime,
-  treeToList,
-  watch,
-  colorize,
-  getTSConfig,
-  log,
-  logOk,
-  logErr,
+export function logErr(msg, ...args) {
+  console.log(`${getTime()} ${`\x1b[31m${msg}\x1b[0m`}`, ...args)
 }

@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { ref, onActivated } from 'vue'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Info } from 'src/services/info'
 import GeneralSection from './settings.general.vue'
 import MenuSection from './settings.menu.vue'
@@ -59,7 +59,7 @@ onActivated(() => {
 
 function onScroll(e: Event): void {
   scrollY = (e.target as HTMLElement).scrollTop
-  if (SetupPage.navLock) return
+  if (SetupPage.state.navLock) return
   SetupPage.updateActiveSection((e.target as HTMLElement).scrollTop)
 }
 </script>

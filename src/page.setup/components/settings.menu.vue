@@ -33,7 +33,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Menu } from 'src/services/menu'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import TextField from '../../components/text-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 

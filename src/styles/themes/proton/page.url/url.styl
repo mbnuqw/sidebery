@@ -13,7 +13,7 @@ body
   display: flex
   width: calc(100% - 16px)
   min-height: 100%
-  font-family: sans-serif
+  font-family: system-ui
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   margin: 0
@@ -73,6 +73,17 @@ main
   font-size: rem(16)
   padding: 8px 18px
   margin-top: 12px
+  overflow: visible
+.btn:after
+  content: ''
+  position: absolute
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  border-radius: 4px
+.btn:focus:after
+  box-shadow: 0 0 0 2px var(--toolbar-fg)
 
 .note
   position: relative

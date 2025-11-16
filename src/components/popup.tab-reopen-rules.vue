@@ -13,12 +13,12 @@
         @click="editRule(rule)")
         .url-box
           .icon-box
-            svg.icon: use(:xlink:href="rule.type === 'include' ? '#icon_ctr_include' : '#icon_ctr_exclude'")
+            svg.icon: use(:href="rule.type === 'include' ? '#icon_ctr_include' : '#icon_ctr_exclude'")
           .url {{rule.name || rule.url}}
           .controls-box(v-if="!editing")
-            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-rm(@click.stop="removeRule(rule)"): svg: use(xlink:href="#icon_remove")
+            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(href="#icon_expand")
+            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(href="#icon_expand")
+            .btn-rm(@click.stop="removeRule(rule)"): svg: use(href="#icon_remove")
     ToggleField.-compact(
       v-if="rules.length"
       label="popup.tab_reopen_rules.enable_label"
@@ -36,13 +36,13 @@
         data-color="green"
         :data-active="newRuleType === 'include'"
         @click="newRuleType = 'include'")
-        svg.icon: use(xlink:href="#icon_ctr_include")
+        svg.icon: use(href="#icon_ctr_include")
         .label {{translate('popup.tab_reopen_rules.rule_type_include')}}
       .type-opt(
         data-color="red"
         :data-active="newRuleType === 'exclude'"
         @click="newRuleType = 'exclude'")
-        svg.icon: use(xlink:href="#icon_ctr_exclude")
+        svg.icon: use(href="#icon_ctr_exclude")
         .label {{translate('popup.tab_reopen_rules.rule_type_exclude')}}
     TextField.-no-separator.-compact(
       label="popup.tab_reopen_rules.rule_url_label"

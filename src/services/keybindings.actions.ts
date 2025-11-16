@@ -1,23 +1,24 @@
 import * as Utils from 'src/utils'
 import { NOID } from 'src/defaults'
-import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
-import { InstanceType, ItemInfo, SelectionType, ItemBoundsType, TabsPanel } from 'src/types'
+import { Command, CommandUpdateDetails, MenuType, SubPanelType, BookmarksPanel } from 'src/types'
+import { InstanceType, SelectionType, ItemBoundsType, Tab, TabsPanel } from 'src/types'
 import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Search } from 'src/services/search'
-import { Store } from 'src/services/storage'
 import { SwitchingTabScope } from './tabs.fg.actions'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { By as SortBy, sort as sortTabs } from 'src/services/tabs.fg.sorting'
-import { SetupPage } from './setup-page'
+import { SetupPage, SidebarConfig, Sync } from './_services'
+import { Notifications } from './notifications'
+import { translate } from 'src/dict'
 
 const VALID_SHORTCUT =
   /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt|Ctrl|Command|MacCtrl)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt|Ctrl|Command|MacCtrl)\+)?(F\d\d?)$/
@@ -46,9 +47,58 @@ export async function saveKeybindingsToSync(): Promise<void> {
     if (cmd.name && cmd.shortcut) keybindings[cmd.name] = cmd.shortcut
   })
 
-  await Store.sync('kb', { keybindings })
+  await Sync.save(Sync.SyncedEntryType.Keybindings, keybindings)
 }
 export const saveKeybindingsToSyncDebounced = Utils.debounce(saveKeybindingsToSync)
+
+export async function importSyncedKeybindings(entry: Sync.SyncedEntry) {
+  Logs.info('Keybindings.importSyncedKeybindings(): entry:', entry)
+
+  const prevKeybindings: Record<string, string> = {}
+  const commands = await browser.commands.getAll()
+  for (const k of commands as Command[]) {
+    if (k.name && k.shortcut) prevKeybindings[k.name] = k.shortcut
+  }
+
+  const keybindings = await Sync.getData<Record<string, string>>(entry)
+  if (!keybindings) {
+    Logs.err('Keybindings.importSyncedKeybindings(): No data')
+    return
+  }
+
+  await importKeybindings(keybindings)
+
+  Notifications.notify({
+    icon: '#icon_sync',
+    title: translate('sync.success.import_keyboard'),
+    ctrl: translate('notif.undo_ctrl'),
+    callback: () => importKeybindings(prevKeybindings),
+  })
+}
+
+export async function importKeybindings(keybindings: Record<string, string>) {
+  // Logs.info('Keybindings.importKeybindings(): keybindings:', keybindings)
+
+  const waiting = []
+  const commands = await browser.commands.getAll()
+  for (const k of commands as Command[]) {
+    if (!k.name) continue
+
+    const name = k.name
+    const shortcut = keybindings[k.name]
+
+    // Find conflicting shortcuts
+    const toReset = commands.find(k => k.shortcut === shortcut && k.name !== name)
+    if (toReset?.name) await browser.commands.update({ name: toReset.name, shortcut: '' })
+
+    // Set or remove shortcut
+    if (shortcut) waiting.push(browser.commands.update({ name, shortcut }))
+    else waiting.push(browser.commands.update({ name, shortcut: '' }))
+  }
+
+  await Promise.allSettled(waiting)
+  Keybindings.loadKeybindings()
+}
 
 /**
  * Reset addon's keybindings
@@ -125,11 +175,12 @@ function onCmd(name: string): void {
   else if (name === 'rm_tabs_above_in_panel') onKeyRAIP()
   else if (name === 'rm_tabs_below_in_panel') onKeyRBIP()
   else if (name === 'rm_tabs_other_in_panel') onKeyROIP()
-  else if (name === 'sel_next_panel') Sidebar.selectPanel(1)
-  else if (name === 'sel_prev_panel') Sidebar.selectPanel(-1)
+  else if (name === 'sel_next_panel') Sidebar.selectPanel?.(1)
+  else if (name === 'sel_prev_panel') Sidebar.selectPanel?.(-1)
   else if (name === 'activate') onKeyActivate()
   else if (name === 'reset_selection') {
     if (Windows.reactive.choosing) Windows.closeWindowsPopup()
+    if (!Selection.isSet() && Sidebar.subPanelActive) Sidebar.closeSubPanel()
     Selection.resetSelection()
     Menu.close()
     if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
@@ -138,6 +189,7 @@ function onCmd(name: string): void {
   else if (name === 'down') onKeySelect(1)
   else if (name === 'up_shift') onKeySelectExpand(-1)
   else if (name === 'down_shift') onKeySelectExpand(1)
+  else if (name === 'lock_selection') onKeyLockSelection()
   else if (name === 'menu') onKeyMenu()
   else if (name === 'unload_tabs') onKeyUnloadTabs()
   else if (name === 'unload_all_tabs_in_panel') onKeyUnloadAllTabsInPanel()
@@ -169,13 +221,14 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_panel_')) {
     const panel = Sidebar.panels[parseInt(name.slice(-1))]
     if (panel) Sidebar.switchToPanel(panel.id)
-  } else if (name === 'move_tabs_to_panel_start') onKeyMoveTabsInPanel('start', true)
+  } else if (name === 'switch_to_prev_panel') onKeySwitchToPrevPanel()
+  else if (name === 'move_tabs_to_panel_start') onKeyMoveTabsInPanel('start', true)
   else if (name === 'move_tabs_to_panel_end') onKeyMoveTabsInPanel('end', true)
   else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
   else if (name === 'search') {
     Search.start()
   } else if (name === 'switch_to_parent_tab') {
-    Tabs.activateParent(Selection.get()[0])
+    Tabs.activateParent(Selection.ids()[0])
   } else if (name === 'switch_to_last_tab') {
     onKeySwitchToTab()
   } else if (name.startsWith('switch_to_tab_')) {
@@ -200,6 +253,7 @@ function onCmd(name: string): void {
   else if (name === 'group_tabs') onKeyGroupTabs(false)
   else if (name === 'group_tabs_act') onKeyGroupTabs(true)
   else if (name === 'flatten_tabs') onKeyFlattenTabs()
+  else if (name === 'edit_title') onKeyEditTitle()
   else if (name === 'sel_child_tabs') onKeySelChildTabs()
   else if (name === 'sort_tabs_by_title_asc') onKeySortTabs(SortBy.Title, 1)
   else if (name === 'sort_tabs_by_title_des') onKeySortTabs(SortBy.Title, -1)
@@ -213,6 +267,90 @@ function onCmd(name: string): void {
   else if (name === 'sort_panel_tabs_by_url_des') onKeySortTabs(SortBy.Url, -1, true, true)
   else if (name === 'sort_panel_tabs_by_time_asc') onKeySortTabs(SortBy.ATime, 1, true, true)
   else if (name === 'sort_panel_tabs_by_time_des') onKeySortTabs(SortBy.ATime, -1, true, true)
+  else if (name === 'open_panel_config') onKeyOpenPanelConfig()
+  else if (name === 'copy_title') onKeyCopyTitle()
+  else if (name === 'copy_url') onKeyCopyUrl()
+  else if (name.startsWith('copy_tmplt_')) onKeyCopyByTemplate(parseInt(name.slice(-1)))
+  else if (name === 'open_bookmarks_sub_panel') onKeyOpenBookmarksSubPanel()
+  else if (name === 'open_sync_popup') onKeyOpenSyncPopup()
+}
+
+function onKeyOpenSyncPopup() {
+  Sync.openSyncPopup()
+}
+
+function onKeyOpenBookmarksSubPanel() {
+  if (!Settings.state.subPanelBookmarks) return
+
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (!Utils.isTabsPanel(actPanel)) return
+
+  if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.Bookmarks) {
+    const bookmarksPanel = Sidebar.subPanels.bookmarks
+    let rootPathChanged = false
+    if (bookmarksPanel && bookmarksPanel.pathUp) rootPathChanged = bookmarksPanel.pathUp()
+    if (!rootPathChanged) Sidebar.closeSubPanel()
+  } else {
+    Sidebar.openSubPanel(SubPanelType.Bookmarks, actPanel)
+  }
+}
+
+function onKeySwitchToPrevPanel() {
+  if (Sidebar.prevActivePanelId === Sidebar.activePanelId) return
+  const prevPanel = Sidebar.panelsById[Sidebar.prevActivePanelId]
+  if (!prevPanel) return
+
+  Sidebar.activatePanel(Sidebar.prevActivePanelId)
+}
+
+function onKeyCopyUrl() {
+  if (Selection.isTabs()) {
+    Tabs.copy(Selection.ids(), { str: '%B%U', hasB: true, hasU: true })
+    Selection.resetSelection()
+  } else if (Selection.isBookmarks()) {
+    Bookmarks.copy(Selection.ids(), { str: '%B%U', hasB: true, hasU: true })
+    Selection.resetSelection()
+  } else {
+    Tabs.copy([Tabs.activeId], { str: '%B%U', hasB: true, hasU: true })
+  }
+}
+
+function onKeyCopyTitle() {
+  if (Selection.isTabs()) {
+    Tabs.copy(Selection.ids(), { str: '%B%CT', hasB: true, hasCT: true })
+    Selection.resetSelection()
+  } else if (Selection.isBookmarks()) {
+    Bookmarks.copy(Selection.ids(), { str: '%B%CT', hasB: true, hasCT: true })
+    Selection.resetSelection()
+  } else {
+    Tabs.copy([Tabs.activeId], { str: '%B%CT', hasB: true, hasCT: true })
+  }
+}
+
+function onKeyCopyByTemplate(n: number) {
+  if (isNaN(n)) return
+
+  const template = Settings.copyTemplates[n]
+  if (!template) return
+
+  if (Selection.isTabs()) {
+    Tabs.copy(Selection.ids(), template)
+    Selection.resetSelection()
+  } else if (Selection.isBookmarks()) {
+    Bookmarks.copy(Selection.ids(), template)
+    Selection.resetSelection()
+  } else {
+    Tabs.copy([Tabs.activeId], template)
+  }
+}
+
+function onKeyOpenPanelConfig() {
+  let targetId
+  if (Selection.isNavItem()) {
+    targetId = Selection.getFirst()
+    Selection.resetSelection()
+  }
+  SidebarConfig.openPanelConfigWindow(targetId ?? Sidebar.activePanelId)
 }
 
 function onKeySortTabs(type: SortBy, dir = 0, tree?: boolean, panel?: boolean) {
@@ -224,7 +362,7 @@ function onKeySortTabs(type: SortBy, dir = 0, tree?: boolean, panel?: boolean) {
     if (!Utils.isTabsPanel(activePanel)) return
     ids = activePanel.tabs.map(t => t.id)
   } else {
-    ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+    ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   }
   if (!ids.length) return
 
@@ -275,7 +413,7 @@ function onKeyMoveTabsToPanel(targetIndex: number): void {
   })
   if (!Utils.isTabsPanel(panel)) return
 
-  const targetTabIds = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const targetTabIds = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   Tabs.sortTabIds(targetTabIds)
   const probeTab = Tabs.byId[targetTabIds[0]]
   if (probeTab && probeTab.panelId !== panel.id) {
@@ -348,28 +486,54 @@ function onKeyActivate(): void {
 
   // Bookmarks
   else if (Selection.isBookmarks()) {
-    const targetId = Selection.getFirst()
-    const target = Bookmarks.reactive.byId[targetId]
-    if (!target) return
+    const ids = Selection.ids()
+    if (ids.length === 1) {
+      const target = Bookmarks.reactive.byId[ids[0]]
+      if (!target) return
 
-    if (target.type === 'folder') {
-      const isExpanded = Bookmarks.reactive.expanded[Sidebar.activePanelId]?.[target.id]
-      if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.activePanelId)
-      else Bookmarks.expandBookmark(target.id, Sidebar.activePanelId)
-    }
-
-    if (target.type === 'bookmark') {
-      if (Settings.state.activateOpenBookmarkTab && target.isOpen) {
-        const tab = Tabs.list.find(t => t.url === target.url)
-        if (tab) {
-          browser.tabs.update(tab.id, { active: true })
-          return
-        }
+      if (target.type === 'folder') {
+        const isExpanded = Bookmarks.reactive.expanded[Sidebar.activePanelId]?.[target.id]
+        if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.activePanelId)
+        else Bookmarks.expandBookmark(target.id, Sidebar.activePanelId)
+        return
       }
 
-      const { dst, useActiveTab, activateFirstTab } = Bookmarks.getMouseOpeningConf(0)
-      Bookmarks.open([targetId], dst, useActiveTab, activateFirstTab)
+      if (target.type === 'bookmark') {
+        const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+        if (!actPanel) return
+
+        if (Settings.state.activateOpenBookmarkTab && target.isOpen) {
+          const tab = Tabs.list.find(t => t.url === target.url)
+          if (tab) {
+            browser.tabs.update(tab.id, { active: true })
+            return
+          }
+        }
+
+        // Check if new tab is needed
+        let newTabNeededInActPanel = false
+        if (Utils.isTabsPanel(actPanel) && !newTabNeededInActPanel) {
+          const actTab = Tabs.byId[Tabs.activeId]
+          if (actTab) {
+            const inPanel = Settings.state.pinnedTabsPosition === 'panel'
+            newTabNeededInActPanel = actTab.panelId !== actPanel.id || (actTab.pinned && !inPanel)
+          }
+        }
+
+        const conf = Bookmarks.getMouseOpeningConf(0)
+        const useActiveTab = !newTabNeededInActPanel && conf.useActiveTab
+        const activateFirstTab = newTabNeededInActPanel || conf.activateFirstTab
+        Bookmarks.open(ids, conf.dst, useActiveTab, activateFirstTab)
+      }
+    } else {
+      const panelId = Sidebar.getRecentTabsPanelId()
+      const panel = Sidebar.panelsById[panelId]
+      if (!Utils.isTabsPanel(panel)) return
+      const dst = { panelId, index: Tabs.getIndexForNewTab(panel) }
+      Bookmarks.open(ids, dst, false, false)
     }
+
+    ids.forEach(id => Bookmarks.triggerFlashAnimation(Sidebar.activePanelId, id))
   }
 }
 
@@ -378,7 +542,7 @@ function onKeyActivate(): void {
  */
 function onKeyNewTabInPanel(): void {
   let panel = Sidebar.panelsById[Sidebar.activePanelId]
-  if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
+  if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.prevTabsPanelId]
   if (!Utils.isTabsPanel(panel)) return
   Tabs.createTabInPanel(panel)
 }
@@ -432,7 +596,14 @@ function onKeySelect(dir: number): void {
     return
   }
 
-  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  let activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (
+    Sidebar.subPanelActive &&
+    Sidebar.subPanelType === SubPanelType.Bookmarks &&
+    Sidebar.subPanels.bookmarks
+  ) {
+    activePanel = Sidebar.subPanels.bookmarks
+  }
 
   if (Utils.isTabsPanel(activePanel)) {
     let tabs
@@ -467,11 +638,18 @@ function onKeySelect(dir: number): void {
     }
 
     if (!target) {
-      target = dir > 0 ? tabs[0] : tabs.findLast(t => !t.invisible)
+      // Cyclically
+      if (Settings.state.selectCyclic || !selIsSet) {
+        target = dir > 0 ? tabs[0] : tabs.findLast(t => !t.invisible)
+      }
       if (!target) return
     }
 
-    Selection.resetSelection()
+    // Check if there is a selection lock and if it has the same pinned state.
+    const lockSelPinned = Selection.hasLockedPinnedTabs()
+    if (lockSelPinned !== undefined && target.pinned !== lockSelPinned) return
+
+    Selection.resetSelection(false, true)
     Selection.selectTab(target.id)
 
     Tabs.scrollToTab(target.id, true)
@@ -479,16 +657,26 @@ function onKeySelect(dir: number): void {
     Sidebar.updateBounds()
     if (!activePanel?.bounds?.length) return
 
+    const boundsLen = activePanel.bounds.length
     const selIsSet = Selection.isSet()
     const selId = Selection.getFirst()
 
     let selIndex = -1
     if (selIsSet) selIndex = activePanel.bounds.findIndex(s => s.id === selId)
-    if (selIndex === -1 && dir < 0) selIndex = activePanel.bounds.length
+    if (selIndex === -1 && dir < 0) selIndex = boundsLen
 
-    const target = activePanel.bounds[selIndex + dir]
+    let target = activePanel.bounds[selIndex + dir]
+
+    if (!target) {
+      // Cyclically
+      if (Settings.state.selectCyclic) {
+        target = dir > 0 ? activePanel.bounds[0] : activePanel.bounds[boundsLen - 1]
+      }
+      if (!target) return
+    }
+
     if (target) {
-      Selection.resetSelection()
+      Selection.resetSelection(false, true)
       if (target.type === ItemBoundsType.Header) Selection.select(target.id, SelectionType.Header)
       else Selection.select(target.id)
     }
@@ -509,28 +697,50 @@ function onKeySelect(dir: number): void {
 function onKeySelectExpand(dir: number): void {
   if (!dir) return
   Sidebar.updateBounds()
-  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  let activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (
+    Sidebar.subPanelActive &&
+    Sidebar.subPanelType === SubPanelType.Bookmarks &&
+    Sidebar.subPanels.bookmarks
+  ) {
+    activePanel = Sidebar.subPanels.bookmarks
+  }
   if (!activePanel) return
   if (!activePanel.bounds?.length) return
 
-  let target: ItemBounds | undefined
+  // Get targets
+  type SelTarget = { id: ID; start?: number; end?: number }
+  let targets: SelTarget[] = activePanel.bounds
+  // Check if I should select pinned tabs
+  if (Utils.isTabsPanel(activePanel)) {
+    const selPinned = Selection.hasPinnedTabs()
+    const actTab = Tabs.byId[Tabs.activeId]
+    // Use pinned tabs as targets if there are pinned tabs selected or
+    // if there is no selection and active tab is pinned
+    if (selPinned || (selPinned === undefined && actTab?.pinned)) {
+      if (Settings.state.pinnedTabsPosition === 'panel') targets = activePanel.pinnedTabs
+      else targets = Tabs.pinned
+    }
+  }
+
+  let target: SelTarget | undefined
 
   // No selected items: Find selection start
   if (!Selection.isSet()) {
     const actTab = Tabs.byId[Tabs.activeId]
     // Active tab
     if (actTab && actTab.panelId === Sidebar.activePanelId && Utils.isTabsPanel(activePanel)) {
-      target = activePanel.bounds.find(b => b.id === Tabs.activeId)
+      target = targets.find(b => b.id === Tabs.activeId)
       if (target) Selection.selectTab(target.id)
     }
 
     // or first / last element
     if (!target) {
       if (dir > 0) {
-        target = activePanel.bounds[0]
+        target = targets[0]
         Selection.select(target.id)
       } else {
-        target = activePanel.bounds[activePanel.bounds.length - 1]
+        target = targets[targets.length - 1]
         Selection.select(target.id)
       }
     }
@@ -539,8 +749,8 @@ function onKeySelectExpand(dir: number): void {
   // Change current selection
   if (Selection.isSet()) {
     const lastId = Selection.getLast()
-    const index = activePanel.bounds.findIndex(b => b.id === lastId)
-    target = activePanel.bounds[index + dir]
+    const index = targets.findIndex(b => b.id === lastId)
+    target = targets[index + dir]
 
     if (target) {
       if (Selection.isTabs()) {
@@ -554,7 +764,7 @@ function onKeySelectExpand(dir: number): void {
   }
 
   // Update scroll position
-  if (target && activePanel.scrollEl) {
+  if (target && activePanel.scrollEl && target.start !== undefined && target.end !== undefined) {
     activePanel.scrollEl
     const h = activePanel.scrollEl.offsetHeight
     const s = activePanel.scrollEl.scrollTop
@@ -564,18 +774,47 @@ function onKeySelectExpand(dir: number): void {
 }
 
 /**
- * Select all items on current panel
+ * Select all items on current panel (tabs/bookmarks)
  */
 function onKeySelectAll(): void {
   Sidebar.updateBounds()
   const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
-  if (!activePanel.bounds || !activePanel.bounds.length) return
 
-  Selection.resetSelection()
-  for (const s of activePanel.bounds) {
-    Selection.select(s.id)
+  Selection.resetSelection(false, true)
+  if (Utils.isTabsPanel(activePanel)) {
+    if (
+      Sidebar.subPanelActive &&
+      Sidebar.subPanelType === SubPanelType.Bookmarks &&
+      Sidebar.subPanels.bookmarks
+    ) {
+      selectAllBookmarks(Sidebar.subPanels.bookmarks)
+    } else {
+      const ids = [...activePanel.reactive.pinnedTabIds, ...activePanel.tabs.map(t => t.id)]
+      Selection.selectTabs(ids)
+    }
+  } else if (Utils.isBookmarksPanel(activePanel)) {
+    selectAllBookmarks(activePanel)
   }
+}
+function selectAllBookmarks(activePanel: BookmarksPanel) {
+  if (!Bookmarks.reactive.tree.length) return
+  const rootFolder = Bookmarks.reactive.byId[activePanel.rootId]
+  const nodes = rootFolder?.children ? rootFolder.children : undefined
+  Selection.selectBookmarks(Array.from(Bookmarks.listBookmarks(nodes)).map(b => b.id))
+}
+
+function onKeyLockSelection() {
+  // Start with active tab if it's on the active panel
+  if (!Selection.isSet()) {
+    const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+    const activeTab = Tabs.byId[Tabs.activeId]
+    if (Utils.isTabsPanel(activePanel) && activeTab?.panelId === activePanel.id) {
+      Selection.selectTab(Tabs.activeId)
+    }
+  }
+
+  Selection.toggleLocked()
 }
 
 /**
@@ -635,9 +874,9 @@ function onKeyMenu(): void {
 function onKeyRmSelectedItem(): void {
   if (Selection.isSet()) {
     if (Selection.isTabs()) {
-      Tabs.removeTabs(Selection.get())
+      Tabs.removeTabs(Selection.ids())
     } else if (Selection.isBookmarks()) {
-      Bookmarks.removeBookmarks(Selection.get())
+      Bookmarks.removeBookmarks(Selection.ids())
     }
     Selection.resetSelection()
   } else {
@@ -650,14 +889,14 @@ function onKeyFoldBranch(): void {
   if (!Selection.isSet()) {
     Tabs.foldTabsBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent || tab.folded) continue
       Tabs.foldTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
       if (!bookmark || !isExpanded) continue
@@ -670,14 +909,14 @@ function onKeyExpandBranch(): void {
   if (!Selection.isSet()) {
     Tabs.expTabsBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent || !tab.folded) continue
       Tabs.expTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
       if (!bookmark || isExpanded) continue
@@ -690,14 +929,14 @@ function onKeyToggleBranch(): void {
   if (!Selection.isSet()) {
     Tabs.toggleBranch(Tabs.activeId)
   } else if (Selection.isTabs()) {
-    for (const tabId of Selection) {
+    for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
       if (!tab || !tab.isParent) continue
       Tabs.toggleBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
     const activePanelId = Sidebar.activePanelId
-    for (const bookmarkId of Selection) {
+    for (const bookmarkId of Selection.selected) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       if (!bookmark) continue
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
@@ -716,7 +955,7 @@ function onKeyFoldInactiveBranches(): void {
 
 function onKeyTabsIndent(): void {
   let selected: ID[]
-  if (Selection.isTabs()) selected = Selection.get()
+  if (Selection.isTabs()) selected = Selection.ids()
   else selected = [Tabs.activeId]
 
   if (!Tabs.byId[selected[0]]) return
@@ -785,7 +1024,7 @@ function onKeyTabsIndent(): void {
 
 function onKeyTabsOutdent(): void {
   let selected: ID[]
-  if (Selection.isTabs()) selected = Selection.get()
+  if (Selection.isTabs()) selected = Selection.ids()
   else selected = [Tabs.activeId]
 
   if (!Tabs.byId[selected[0]]) return
@@ -877,7 +1116,7 @@ async function onKeyMoveTabs(dir: 1 | -1) {
   if (tabsMoving) return
 
   let preSelected: ID[] | undefined
-  if (Selection.isTabs()) preSelected = Selection.get()
+  if (Selection.isTabs()) preSelected = Selection.ids()
   else preSelected = [Tabs.activeId]
 
   const toMove: Tab[] = []
@@ -909,11 +1148,14 @@ async function onKeyMoveTabs(dir: 1 | -1) {
   toMove.sort((a, b) => a.index - b.index)
   const toMoveIds = toMove.map(t => t.id)
 
-  // Update selection
-  Selection.resetSelection(true)
-  Selection.selectTabs(toMoveIds)
-  Selection.preserveSelection()
-  Selection.allowSelectionReset(300)
+  // Update selection and lock it for the next 300ms
+  // except there's no selection and it's only one active tab to move
+  if (Selection.isSet() || toMoveIds.length > 1) {
+    Selection.resetSelection(true)
+    Selection.selectTabs(toMoveIds)
+    Selection.preserveSelection()
+    Selection.allowSelectionReset(300)
+  }
 
   const firstTab = toMove[0]
   if (!firstTab) return
@@ -1113,7 +1355,7 @@ function onKeyROIP() {
 }
 
 function onKeyUnloadTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (ids.length) Tabs.discardTabs(ids)
 }
 
@@ -1129,7 +1371,7 @@ function onKeyUnloadAllTabsInPanel() {
 }
 
 function onKeyUnloadOtherTabsInPanel() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1182,7 +1424,7 @@ async function onKeyUnloadAllTabsInInactPanels() {
 }
 
 function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.sortTabIds(ids)
@@ -1208,7 +1450,7 @@ function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
 }
 
 function onKeyDuplicateTabs(branch: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1222,7 +1464,7 @@ function onKeyDuplicateTabs(branch: boolean) {
 }
 
 function onKeyPinTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   const firstTab = Tabs.byId[ids[0]]
@@ -1240,17 +1482,27 @@ function onKeyHidePanel() {
 }
 
 function onKeyGroupTabs(activate: boolean) {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.groupTabs(ids, { active: activate })
 }
 
 function onKeyFlattenTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
 
   Tabs.flattenTabs(ids)
+}
+
+function onKeyEditTitle() {
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
+  if (!ids.length) return
+
+  if (Selection.isTabs()) Selection.resetSelection()
+
+  if (Tabs.byId[Tabs.editableTabId]) Tabs.onOutsideEditingExit()
+  else Tabs.editTabTitle(ids)
 }
 
 function onKeySelChildTabs() {

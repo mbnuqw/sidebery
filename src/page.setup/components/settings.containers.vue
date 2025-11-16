@@ -12,7 +12,7 @@ section(ref="el")
       :key="container.id"
       :data-color="container.color")
       .card-body(@click="SetupPage.reactive.selectedContainer = container")
-        .card-icon: svg: use(:xlink:href="'#' + container.icon")
+        .card-icon: svg: use(:href="'#' + container.icon")
         .card-name {{container.name}}
       .card-badges
         .card-badge(
@@ -20,12 +20,12 @@ section(ref="el")
           :title="translate('container.manage_reopen_rules_label')"
           :data-inactive="!container.reopenRulesActive"
           @click="Popups.openTabReopenRulesPopup(container.id)")
-          svg: use(xlink:href="#icon_reload")
+          svg: use(href="#icon_reload")
           .len {{container.reopenRules.length}}
       .card-ctrls
         .card-ctrl.-rm(
           @click="removeContainer(container)")
-          svg: use(xlink:href="#icon_remove")
+          svg: use(href="#icon_remove")
     .card-placeholder(v-if="!Object.keys(Containers.reactive.byId).length")
   .ctrls: .btn(@click="createContainer") {{translate('settings.containers_create_btn')}}
   Transition(name="popup")
@@ -42,7 +42,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Container } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import ContainerConfig from './popup.container-config.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import * as Logs from 'src/services/logs'
@@ -80,9 +80,7 @@ async function createContainer(): Promise<void> {
  * Remove container
  */
 async function removeContainer(container: Container): Promise<void> {
-  let preMsg = translate('settings.contianer_remove_confirm_prefix')
-  let postMsg = translate('settings.contianer_remove_confirm_postfix')
-  if (window.confirm(preMsg + container.name + postMsg)) {
+  if (window.confirm(translate('settings.container_remove_confirm', container.name))) {
     let navSaveNeeded = false
     try {
       await browser.contextualIdentities.remove(container.id)

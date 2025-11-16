@@ -100,7 +100,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
 
   browser.tabs
     .executeScript(tab.id, {
-      file: '../injections/pauseMedia.js',
+      file: '../injections/pause-media.js',
       runAt: 'document_start',
       allFrames: true,
     })
@@ -115,6 +115,28 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
     })
 
   recheckPausedTabs()
+}
+
+const checkingPausedMedia = new Set<ID>()
+
+export async function checkPausedMedia(tabId: ID): Promise<boolean | null> {
+  if (checkingPausedMedia.has(tabId)) return null
+  checkingPausedMedia.add(tabId)
+
+  let results
+  try {
+    results = await browser.tabs.executeScript(tabId, {
+      file: '../injections/check-paused-media.js',
+      runAt: 'document_start',
+      allFrames: true,
+    })
+  } catch {
+    checkingPausedMedia.delete(tabId)
+    return false
+  }
+
+  checkingPausedMedia.delete(tabId)
+  return results.some(r => r)
 }
 
 export async function playTabMedia(id?: ID): Promise<void> {
@@ -133,7 +155,7 @@ export async function playTabMedia(id?: ID): Promise<void> {
 
   browser.tabs
     .executeScript(tab.id, {
-      file: '../injections/playMedia.js',
+      file: '../injections/play-media.js',
       runAt: 'document_start',
       allFrames: true,
     })
@@ -164,7 +186,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
-    file: '../injections/pauseMedia.js',
+    file: '../injections/pause-media.js',
     runAt: 'document_start',
     allFrames: true,
   }
@@ -223,7 +245,7 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
-    file: '../injections/playMedia.js',
+    file: '../injections/play-media.js',
     runAt: 'document_start',
     allFrames: true,
   }
@@ -272,7 +294,7 @@ export async function pauseAllAudibleTabsMedia(): Promise<void> {
   }
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
-    file: '../injections/pauseMedia.js',
+    file: '../injections/pause-media.js',
     runAt: 'document_start',
     allFrames: true,
   }
@@ -305,7 +327,7 @@ export async function playAllPausedTabsMedia(): Promise<void> {
   }
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
-    file: '../injections/playMedia.js',
+    file: '../injections/play-media.js',
     runAt: 'document_start',
     allFrames: true,
   }

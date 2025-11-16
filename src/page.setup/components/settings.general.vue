@@ -37,8 +37,25 @@ section(ref="el")
       :note="translate('settings.mark_window_preface_note')"
       :inactive="!Settings.state.markWindow"
       @update:value="Settings.saveDebounced(500)")
+  TextField.-inline(
+    label="settings.copy_title_url_indent"
+    v-model:value="Settings.state.copyTreeIndent"
+    :or="translate('settings.copy_title_url_indent_or')"
+    @update:value="Settings.saveDebounced(500)")
+  TextField.-inline(
+    label="settings.copy_multi_bullet"
+    v-model:value="Settings.state.copyMultiBullet"
+    :or="translate('settings.copy_multi_bullet_or')"
+    @update:value="Settings.saveDebounced(500)")
+  TextField.copyTemplatesTextField(
+    label="settings.copy_templates"
+    v-model:value="Settings.state.copyTemplates"
+    or="---"
+    input-width="66"
+    :note="translate('settings.copy_templates_note')"
+    @update:value="Settings.saveDebounced(500)")
   .ctrls
-    .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
+    .btn(@click="showStorageView") {{translate('settings.storage_btn')}} ~{{SetupPage.reactive.storageOveral}}
     .btn(@click="showPermissionsPopup") {{translate('settings.permissions_btn')}}
 </template>
 
@@ -46,11 +63,9 @@ section(ref="el")
 import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import ToggleField from '../../components/toggle-field.vue'
 import TextField from '../../components/text-field.vue'
-import { Stored } from 'src/types'
-import * as Utils from 'src/utils'
 import { Permissions } from 'src/services/permissions'
 
 const el = ref<HTMLElement | null>(null)
@@ -60,22 +75,10 @@ const state = reactive({
 
 onMounted(() => {
   SetupPage.registerEl('settings_general', el.value)
-  calcStorageInfo()
 })
 
 function showStorageView(): void {
   location.hash = 'storage'
-}
-
-async function calcStorageInfo(): Promise<void> {
-  let stored: Stored
-  try {
-    stored = await browser.storage.local.get<Stored>()
-  } catch (err) {
-    return
-  }
-
-  state.storageOveral = Utils.strSize(JSON.stringify(stored))
 }
 
 async function toggleSelWinScreenshots(): Promise<void> {

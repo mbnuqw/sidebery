@@ -7,6 +7,7 @@ export const sidebarTranslations: Translations = {
   'bar.search.placeholder': {
     en: 'Search...',
     de: 'Suche...',
+    fr: 'Rechercher…',
     hu: 'Keresés…',
     pl: 'Szukaj...',
     ru: 'Поиск...',
@@ -21,40 +22,39 @@ export const sidebarTranslations: Translations = {
   'confirm.warn_title': {
     en: 'Warning',
     de: 'Warnung',
+    fr: 'Attention',
     hu: 'Figyelmeztetés',
     pl: 'Ostrzeżenie',
     ru: 'Внимание',
     zh: '警告',
     ja: '警告',
   },
-  'confirm.tabs_close_pre': {
-    en: 'Are you sure you want to close ',
-    de: 'Möchten Sie diese ',
-    hu: 'Biztosan bezárható a lap: „',
-    pl: 'jesteś pewnien, że chcesz zamknąć karty ',
-    ru: 'Вы действительно хотите закрыть ',
-    zh_CN: '你确定要关闭 ',
-    zh_TW: '你確定要關閉 ',
-    ja: '本当に閉じますか',
-  },
-  'confirm.tabs_close_post': {
-    en: ' tabs?',
-    de: ' Tabs wirklich schließen?',
-    hu: '”?',
-    pl: '?',
-    ru: (n = 0) => (NUM_234_RE.test(n.toString()) ? ' вкладки?' : ' вкладок?'),
-    zh_CN: ' 标签页吗？',
-    zh_TW: ' 分頁嗎？',
-    ja: 'のタブを閉じますか？',
+  'confirm.tabs_close': {
+    en: n => `Are you sure you want to close ${n} tabs?`,
+    de: n => `Möchten Sie diese ${n} Tabs wirklich schließen?`,
+    fr: n =>
+      n === 1
+        ? 'Voulez-vous vraiment fermer un onglet?'
+        : `Voulez-vous vraiment fermer ${n} onglets?`,
+    hu: n => `Biztosan bezárható a lap: „${n}”?`,
+    pl: n => `jesteś pewnien, że chcesz zamknąć karty ${n}?`,
+    ru: n =>
+      NUM_234_RE.test(n.toString())
+        ? `Вы действительно хотите закрыть ${n} вкладки?`
+        : `Вы действительно хотите закрыть ${n} вкладок?`,
+    zh_CN: n => `您确定要关闭 ${n} 个标签页吗？`,
+    zh_TW: n => `您確定要關閉 ${n} 個分頁嗎？`,
+    ja: n => `本当に${n}個のタブを閉じますか？`,
   },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',
     de: 'Möchten Sie die gewählten Lesezeichen wirklich löschen?',
+    fr: 'Voulez-vous vraiment supprimer les marques-pages sélectionnés?',
     hu: 'Biztosan törölhetők a kijelölt könyvjelzők?',
     pl: 'Jesteś pewien, że chcesz usunąć zaznaczone zakładki?',
     ru: 'Вы действительно хотите удалить выбранные закладки?',
-    zh_CN: '你确定要删除选定的书签吗？',
-    zh_TW: '你確定要刪除選定的書籤嗎？',
+    zh_CN: '您确定要删除选定的书签吗？',
+    zh_TW: '您確定要刪除選定的書籤嗎？',
     ja: '選択したブックマークを削除してもよろしいですか？',
   },
 
@@ -64,6 +64,7 @@ export const sidebarTranslations: Translations = {
   'panel.nothing_found': {
     en: 'Nothing found',
     de: 'Nichts gefunden',
+    fr: 'Aucun résultat',
     hu: 'Nincs találat',
     pl: 'Nic nie znaleziono',
     ru: 'Ничего не найдено',
@@ -73,6 +74,7 @@ export const sidebarTranslations: Translations = {
   'panel.nothing': {
     en: 'Nothing...',
     de: 'Nichts...',
+    fr: 'Rien…',
     hu: 'Nincs…',
     pl: 'Nic...',
     ru: 'Ничего...',
@@ -87,6 +89,7 @@ export const sidebarTranslations: Translations = {
   'panel.history.fav_tooltip': {
     en: 'Show history of this site',
     de: 'Zeige Chronik dieser Seite',
+    fr: 'Voir l’historique pour ce site',
     hu: 'Ennek az oldalnak az előzményei',
     pl: 'Pokaż historię tej strony',
     ru: 'Показать историю этого сайта',
@@ -97,6 +100,7 @@ export const sidebarTranslations: Translations = {
   'panel.history.show_more': {
     en: '...hidden visits:',
     de: '...ausgeblendete Besuche:',
+    fr: '…visites cachées:',
     hu: '…rejtett látogatások:',
     pl: '...ukryte wizyty:',
     ru: '...скрытых записей:',
@@ -111,62 +115,115 @@ export const sidebarTranslations: Translations = {
   'newTabBar.new_tab': {
     en: 'Open a new tab',
     de: 'Öffne einen neuen Tab',
+    fr: 'Ouvrir un nouvel onglet',
     hu: 'Új lap',
     pl: 'Otwórz nową kartę',
     ru: 'Открыть новую вкладку',
-    zh_CN: '打开一个新标签',
-    zh_TW: '開啟一個新分頁',
+    zh_CN: '打开新标签页',
+    zh_TW: '開啟新分頁',
     ja: '新しいタブを開く',
   },
-  'newTabBar.in_default_container': {
-    en: ' in default container',
-    de: ' in der Standardumgebung',
-    hu: ' az alapértelmezett konténerben',
-    pl: ' w domyślnym kontenerze',
-    ru: ' в стандартном контейнере',
-    zh_CN: ' 在默认容器中',
-    zh_TW: ' 在預設容器中',
-    ja: 'デフォルトのコンテナで',
+  'newTabBar.new_tab_in_default_container_with_url': {
+    en: url => `Open "${url}" in a new tab`,
+    fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
+    zh_CN: url => `打开新标签页“${url}”`,
+    zh_TW: url => `開啟新分頁「${url}」`,
+    ja: url => `新しいタブで「${url}」を開く`,
   },
-  'newTabBar.in_container_prefix': {
-    en: ' in "',
-    de: ' in der Umgebung "',
-    hu: ' ebben a konténerben: „',
-    pl: ' w kontenerze "',
-    ru: ' в контейнере "',
-    zh_CN: ' 在 "',
-    zh_TW: ' 在「',
-    ja: '「',
+  'newTabBar.default_container_name': {
+    en: 'Default',
+    de: 'Standard',
+    fr: 'Défaut',
+    hu: 'Alapértelmezett',
+    pl: 'Domyślny',
+    ru: 'Стандартный',
+    zh_CN: '默认',
+    zh_TW: '預設',
+    ja: 'デフォルト',
   },
-  'newTabBar.in_container_postfix': {
-    en: '" container',
-    de: '"',
-    hu: '”',
-    pl: '"',
-    ru: '"',
-    zh_CN: '" 容器中',
-    zh_TW: '」容器中',
-    ja: '」コンテナ',
+  'newTabBar.new_tab_in_container': {
+    en: name => `Open a new tab in "${name}" container`,
+    de: name => `Öffne einen neuen Tab in der Umgebung "${name}"`,
+    fr: name => `Ouvrir un nouvel onglet dans le conteneur “${name}”`,
+    hu: name => `Új lap ebben a konténerben: „${name}”`,
+    pl: name => `Otwórz nową kartę w kontenerze "${name}"`,
+    ru: name => `Открыть новую вкладку в контейнере "${name}"`,
+    zh_CN: name => `在“${name}”容器中打开新标签页`,
+    zh_TW: name => `在「${name}」容器中開啟新分頁`,
+    ja: name => `「${name}」コンテナで新しいタブを開く`,
   },
-  'newTabBar.mid_child': {
+  'newTabBar.new_tab_in_container_with_url': {
+    en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
+    fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
+    zh_CN: (url, name) => `在“${name}”容器中打开新标签页“${url}”`,
+    zh_TW: (url, name) => `在「${name}」容器中開啟新分頁「${url}」`,
+    ja: (url, name) => `「${name}」コンテナの新しいタブで「${url}」を開く`,
+  },
+  'newTabBar.open_child_tab': {
     en: 'Middle click: Open a child tab',
     de: 'Mittelklick: Öffne einen untergeordneten Tab',
+    fr: 'Clic milieu: Ouvrir un onglet enfant',
     hu: 'Középső kattintás: új utódlap',
     pl: 'Środkowy przycisk myszy: Otwórz potomną kartę',
     ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
-    zh_CN: '中键单击：打开子选项卡',
+    zh_CN: '中键单击：打开子标签页',
     zh_TW: '中鍵點選：開啟子分頁',
     ja: '中クリック：子タブを開く',
   },
-  'newTabBar.mid_reopen': {
-    en: 'Middle click: Reopen active tab',
-    de: 'Mittelklick: Aktiven Tab erneut öffnen',
-    hu: 'Középső kattintás: az aktív lap újranyitása',
-    pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę',
-    ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
-    zh_CN: '中键点击：重新打开活动标签',
-    zh_TW: '中鍵點選：重新開啟當前分頁',
-    ja: '中クリック：アクティブタブを再度開く',
+  'newTabBar.open_child_tab_with_url': {
+    en: url => `Middle click: Open "${url}" in a child tab`,
+    fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
+    zh_CN: url => `中键单击：打开子标签页“${url}”`,
+    zh_TW: url => `中鍵點選：開啟子分頁「${url}」`,
+    ja: url => `中クリック：子タブで「${url}」を開く`,
+  },
+  'newTabBar.open_child_tab_in_container': {
+    en: name => `Middle click: Open a child tab in "${name}" container`,
+    fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
+    zh_CN: name => `中键单击：在“${name}”容器中打开子标签页`,
+    zh_TW: name => `中鍵點選：在「${name}」容器中開啟子分頁`,
+    ja: name => `中クリック：「${name}」コンテナで子タブを開く`,
+  },
+  'newTabBar.open_child_tab_in_container_with_url': {
+    en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
+    fr: (url, name) =>
+      `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
+    zh_CN: (url, name) => `中键单击：在“${name}”容器中打开子标签页“${url}”`,
+    zh_TW: (url, name) => `中鍵點選：在「${name}」容器中開啟子分頁「${url}」`,
+    ja: (url, name) => `中クリック：「${name}」コンテナの子タブで「${url}」を開く`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_default_container': {
+    en: 'Middle click: Reopen active tab in default container',
+    de: 'Mittelklick: Aktiven Tab erneut öffnen in der Standardumgebung',
+    fr: "Clic milieu: rouvrir l'onglet actif dans le conteneur par défaut",
+    hu: 'Középső kattintás: az aktív lap újranyitása az alapértelmezett konténerben',
+    pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę w domyślnym kontenerze',
+    ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку в стандартном контейнере',
+    zh_CN: '中键点击：在默认容器中重新打开活动标签页',
+    zh_TW: '中鍵點選：在預設容器中重新開啟當前分頁',
+    ja: '中クリック：デフォルトのコンテナでアクティブタブを再度開く',
+  },
+  'newTabBar.middle_click_reload_active_tab_with_url': {
+    en: url => `Middle click: Load "${url}" in active tab`,
+    fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
+    zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
+    zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
+    ja: url => `中クリック: アクティブなタブに「${url}」を読み込む`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_container': {
+    en: name => `Middle click: Reopen active tab in "${name}" container`,
+    fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
+    zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
+    zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟當前分頁`,
+    ja: name => `中クリック: 「${name}」コンテナでアクティブタブを再度開く`,
+  },
+  'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
+    en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
+    fr: (url, name) =>
+      `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
+    zh_CN: (url, name) => `中键点击：在“${name}”容器中加载“${url}”于活动标签页`,
+    zh_TW: (url, name) => `中鍵點選：在「${name}」容器中載入「${url}」於當前分頁`,
+    ja: (url, name) => `中クリック: 「${name}」コンテナでアクティブタブに「${url}」を読み込みます`,
   },
 
   // ---
@@ -176,6 +233,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.title': {
     en: 'Removing panel',
     de: 'Entferne Panel',
+    fr: 'Supprimer le panneau',
     hu: 'Panel törlése',
     pl: 'Usuwanie panelu',
     ru: 'Удаление панели',
@@ -185,16 +243,18 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
     de: 'Tabs an benachbartes Panel anheften',
+    fr: 'Attacher les onglets au panneau voisin',
     hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
     pl: 'Załącz karty do sąsiednego panelu',
     ru: 'Присоединить вкладки к соседней панели',
-    zh_CN: '将标签附加到相邻面板',
+    zh_CN: '将标签页附加到相邻面板',
     zh_TW: '將分頁附加到相鄰面板',
     ja: 'タブを隣接するパネルにアタッチする',
   },
   'popup.tabs_panel_removing.leave': {
     en: 'Leave tabs untouched',
     de: 'Tabs behalten',
+    fr: 'Ne pas toucher les onglets',
     hu: 'A lapok ne változzanak',
     pl: 'Zostaw karty nienaruszone',
     ru: 'Оставить вкладки',
@@ -205,6 +265,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.save': {
     en: 'Save panel to bookmarks and close tabs',
     de: 'Panel in Lesezeichen speichern und Tabs schließen',
+    fr: 'Sauvegarder le panneau dans les marque-pages et fermer les onglets',
     hu: 'A panel könyvjelzőzése és a lapok bezárása',
     pl: 'Zapisz panel do zakładek i zamknij karty',
     ru: 'Сохранить панель в закладки и закрыть вкладки',
@@ -215,6 +276,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.close': {
     en: 'Close tabs',
     de: 'Tabs schließen',
+    fr: 'Fermer les onglets',
     hu: 'Lapok bezárása',
     pl: 'Zamknij karty',
     ru: 'Закрыть вкладки',
@@ -225,6 +287,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
     de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
+    fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
     pl: 'Info: Karty tego panelu w innych oknach zostaną przeniesione do sąsiednich paneli',
     ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель',
@@ -236,16 +299,18 @@ export const sidebarTranslations: Translations = {
   'popup.wtdwOldBookmarks.title': {
     en: folderName => `Tabs have been saved in "${folderName}" folder`,
     de: folderName => `Tabs wurden im Ordner "${folderName}" gespeichert`,
+    fr: folderName => `Les onglets ont été sauvegardés dans le dossier “${folderName}”`,
     hu: folderName => `A lapok ebbe a mappába lesznek mentve: „${folderName}”`,
     pl: folderName => `Karty zostaną zapisane w folderze "${folderName}"`,
     ru: folderName => `Вкладки были сохранены в папке "${folderName}"`,
-    zh_CN: folderName => `标签页已保存在 "${folderName}" 文件夹中`,
+    zh_CN: folderName => `标签页已保存在“${folderName}”文件夹中`,
     zh_TW: folderName => `分頁已儲存在「${folderName}」資料夾中`,
     ja: folderName => `タブは「${folderName}」フォルダに保存されました`,
   },
   'popup.wtdwOldBookmarks.note': {
     en: 'Delete old bookmarks in that folder?',
     de: 'Alte Lesezeichen in diesem Ordner löschen?',
+    fr: 'Voulez-vous supprimer les anciens marque-pages de ce dossier?',
     hu: 'Törölhetők a régi könyvjelzők ebből a mappából?',
     pl: 'Usunąć stare zakładki w tym folderze?',
     ru: 'Удалить старые закладки в этой папке?',
@@ -256,6 +321,7 @@ export const sidebarTranslations: Translations = {
   'popup.wtdwOldBookmarks.checkbox_label': {
     en: "Remember and don't ask again",
     de: 'Merken und nicht erneut fragen',
+    fr: 'Mémoriser et ne plus demander',
     hu: 'A válasz megjegyzése, ne kérdezze többször',
     pl: 'Zapamiętaj i nie pytaj ponownie',
     ru: 'Запомнить и больше не спрашивать',
@@ -266,6 +332,7 @@ export const sidebarTranslations: Translations = {
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
     de: 'Löschen',
+    fr: 'Supprimer',
     hu: 'Törlés',
     pl: 'Usuń',
     ru: 'Удалить',
@@ -276,6 +343,7 @@ export const sidebarTranslations: Translations = {
   'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
     de: 'Behalten',
+    fr: 'Garder',
     hu: 'Megtartás',
     pl: 'Zostaw',
     ru: 'Оставить',
@@ -286,6 +354,7 @@ export const sidebarTranslations: Translations = {
   'popup.container.title': {
     en: 'Container',
     de: 'Umgebung',
+    fr: 'Conteneur',
     hu: 'Konténer',
     pl: 'Kontener',
     ru: 'Контейнер',
@@ -295,6 +364,7 @@ export const sidebarTranslations: Translations = {
   'popup.container.name_placeholder': {
     en: 'Container name',
     de: 'Umgebungsname',
+    fr: 'Nom du conteneur',
     hu: 'Konténernév',
     pl: 'Nazwa kontenera',
     ru: 'Название контейнера',
@@ -306,6 +376,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel.title': {
     en: 'Tabs panel',
     de: 'Tab-Panel',
+    fr: 'Panneau d’onglets',
     hu: 'Lappanel',
     pl: 'Panel kart',
     ru: 'Панель вкладок',
@@ -316,6 +387,7 @@ export const sidebarTranslations: Translations = {
   'popup.bookmarks_panel.title': {
     en: 'Bookmarks panel',
     de: 'Lesezeichen-Panel',
+    fr: 'Panneau de marque-pages',
     hu: 'Könyvjelzőpanel',
     pl: 'Panel zakładek',
     ru: 'Панель закладок',
@@ -326,6 +398,7 @@ export const sidebarTranslations: Translations = {
   'popup.common.name_label': {
     en: 'Name',
     de: 'Name',
+    fr: 'Nom',
     hu: 'Név',
     pl: 'Nazwa',
     ru: 'Имя',
@@ -336,6 +409,7 @@ export const sidebarTranslations: Translations = {
   'popup.common.icon_label': {
     en: 'Icon',
     de: 'Symbol',
+    fr: 'Icone',
     hu: 'Ikon',
     pl: 'Symbol',
     ru: 'Иконка',
@@ -346,6 +420,7 @@ export const sidebarTranslations: Translations = {
   'popup.common.color_label': {
     en: 'Color',
     de: 'Farbe',
+    fr: 'Couleur',
     hu: 'Szín',
     pl: 'Kolor',
     ru: 'Цвет',
@@ -356,6 +431,7 @@ export const sidebarTranslations: Translations = {
   'popup.common.btn_more': {
     en: 'More options...',
     de: 'Weitere Optionen...',
+    fr: 'Plus d’options…',
     hu: 'További beállítások…',
     pl: 'Więcej opcji...',
     ru: 'Больше опций...',
@@ -367,6 +443,7 @@ export const sidebarTranslations: Translations = {
   'popup.group_config.popup_title': {
     en: 'Group',
     de: 'Gruppe',
+    fr: 'Groupe',
     hu: 'Csoportosítás',
     pl: 'Grupa',
     ru: 'Группа',
@@ -377,6 +454,7 @@ export const sidebarTranslations: Translations = {
   'popup.group_config.title': {
     en: 'Title',
     de: 'Name',
+    fr: 'Titre',
     hu: 'Név',
     pl: 'Tytuł',
     ru: 'Название',
@@ -387,6 +465,7 @@ export const sidebarTranslations: Translations = {
   'popup.group_config.title_placeholder': {
     en: 'Group title',
     de: 'Gruppenname',
+    fr: 'Titre du groupe',
     hu: 'Csoportnév',
     pl: 'Tytuł grupy',
     ru: 'Название группы',
@@ -397,12 +476,25 @@ export const sidebarTranslations: Translations = {
   'popup.group_config.do_not_show_again': {
     en: "Don't show again",
     de: 'Nicht mehr anzeigen',
+    fr: 'Ne plus me demander',
     hu: 'Ne mutassa újra',
     pl: 'Nie pokazuj ponownie',
     ru: 'Больше не показывать',
     zh_CN: '不再显示',
     zh_TW: '不再顯示',
     ja: '再表示しない',
+  },
+  // - Processing tabs
+  'popup.proc_tabs.title': {
+    en: 'Processing tabs...',
+    de: 'Verarbeitung der Tabs...',
+    fr: 'Traitement des onglets...',
+    hu: 'Feldolgozás lapok...',
+    pl: 'Przetwarzanie karty...',
+    ru: 'Обработка вкладок...',
+    zh_CN: '正在处理标签页...',
+    zh_TW: '正在處理分頁...',
+    ja: 'タブを処理しています...',
   },
 
   // ---
@@ -411,6 +503,7 @@ export const sidebarTranslations: Translations = {
   'sub_panel.bookmarks_panel.title': {
     en: 'Bookmarks',
     de: 'Lesezeichen',
+    fr: 'Marque-pages',
     hu: 'Könyvjelzők',
     pl: 'Zakładki',
     ru: 'Закладки',
@@ -421,6 +514,7 @@ export const sidebarTranslations: Translations = {
   'sub_panel.bookmarks_panel.root_title': {
     en: 'All Bookmarks',
     de: 'Alle Lesezeichen',
+    fr: 'Tous les marque-pages',
     hu: 'Minden könyvjelző',
     pl: 'Wszystkie zakładki',
     ru: 'Все закладки',
@@ -431,6 +525,7 @@ export const sidebarTranslations: Translations = {
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
     de: 'Zuletzt geschlossene Tabs',
+    fr: 'Onglets récemment fermés',
     hu: 'Legutóbb bezárt lapok',
     pl: 'Ostatnio zamknięte karty',
     ru: 'Недавно закрытые вкладки',
@@ -441,6 +536,7 @@ export const sidebarTranslations: Translations = {
   'sub_panel.history_panel.title': {
     en: 'History',
     de: 'Chronik',
+    fr: 'Historique',
     hu: 'Előzmények',
     pl: 'Historia',
     ru: 'История',
@@ -455,6 +551,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.bookmarks_panel': {
     en: 'Bookmarks panel',
     de: 'Lesezeichen-Panel',
+    fr: 'Panneau des marque-pages',
     hu: 'Könyvjelzőpanel',
     pl: 'Panel zakładek',
     ru: 'Панель закладок',
@@ -465,6 +562,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.tabs_panel': {
     en: 'panel',
     de: 'Panel',
+    fr: 'Panneau',
     ru: 'панель',
     zh: '面板',
     ja: 'パネル',
@@ -472,6 +570,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.tabs': {
     en: 'tabs',
     de: 'Tabs',
+    fr: 'onglets',
     hu: 'lap',
     pl: (n = 0) => {
       if (NUM_1_RE.test(n.toString())) return 'karta'
@@ -490,6 +589,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.bookmarks': {
     en: 'bookmarks',
     de: 'Lesezeichen',
+    fr: 'marque-pages',
     hu: 'könyvjelző',
     pl: (n = 0) => {
       if (NUM_1_RE.test(n.toString())) return 'zakładka'
@@ -508,6 +608,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.nav_item': {
     en: 'Navigation element',
     de: 'Navigationselement',
+    fr: 'Élément de navigation',
     hu: 'Vezérlőelem',
     pl: 'Element nawigacyjny',
     ru: 'Элемент навигации',
@@ -518,6 +619,7 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.new_tab': {
     en: 'New tab',
     de: 'Neuer Tab',
+    fr: 'Nouvel onglet',
     hu: 'Új lap',
     pl: 'Nowa karta',
     ru: 'Новая вкладка',
@@ -532,6 +634,7 @@ export const sidebarTranslations: Translations = {
   'nav.show_hidden_tooltip': {
     en: 'Show hidden panels',
     de: 'Versteckte Panels anzeigen',
+    fr: 'Montrer les panneaux cachés',
     hu: 'Rejtett panelok megjelenítése',
     pl: 'Pokaż ukryte panele',
     ru: 'Показать скрытые панели',
@@ -542,6 +645,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_settings': {
     en: 'Settings',
     de: 'Einstellungen',
+    fr: 'Paramètres',
     hu: 'Beállítások',
     pl: 'Ustawienia',
     ru: 'Настройки',
@@ -552,6 +656,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_add_tp': {
     en: 'Create tabs panel',
     de: 'Tab-Panel erstellen',
+    fr: 'Créer un panneau d’onglets',
     hu: 'Új lappanel',
     pl: 'Stwórz panel kart',
     ru: 'Создать панель вкладок',
@@ -562,6 +667,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_search': {
     en: 'Search',
     de: 'Suchen',
+    fr: 'Rechercher',
     hu: 'Keresés',
     pl: 'Szukaj',
     ru: 'Поиск',
@@ -572,6 +678,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_create_snapshot': {
     en: 'Create snapshot',
     de: 'Schnappschuss erstellen',
+    fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
     pl: 'Stwórz migawkę',
     ru: 'Создать снепшот',
@@ -582,6 +689,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
     de: 'Stummschalten hörbarer Tabs an/aus',
+    fr: 'Couper/réactiver le son de l’onglet',
     hu: 'Lapok némítása/visszahangosítása',
     pl: 'Wycisz/Odcisz karty z dźwiękiem',
     ru: 'Приглушить/Включить вкладки со звуком',
@@ -592,6 +700,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_collapse': {
     en: 'Collapse all',
     de: 'Alle einklappen',
+    fr: 'Replier tout',
     hu: 'Minden ág becsukása',
     pl: 'Zwiń wszystko',
     ru: 'Свернуть все',
@@ -602,26 +711,29 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
     de: 'Mittelklick: Schließe Tabs',
+    fr: 'Clic milieu: Fermer les onglets',
     hu: 'Középső kattintás: lapok bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij karty',
     ru: 'Средняя кнопка мыши: Закрыть влкадки',
-    zh_CN: '中键点击：关闭全部标签',
+    zh_CN: '中键点击：关闭全部标签页',
     zh_TW: '中鍵點選：關閉全部分頁',
     ja: '中クリック：タブを閉じる',
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
     de: 'Mittelklick: Schließe Tabs und entferne Panel',
+    fr: 'Clic milieu: Fermer les onglets et supprimer le panneau',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zamknij karty i usuń panel',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
-    zh_CN: '中键点击：关闭标签并移除面板',
+    zh_CN: '中键点击：关闭标签页并移除面板',
     zh_TW: '中鍵點選：關閉分頁並移除面板',
     ja: '中クリック：タブを閉じてパネルを削除',
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
     de: 'Mittelklick: Schließe aktiven Tab',
+    fr: 'Clic milieu: Fermer l’onglet actif',
     hu: 'Középső kattintás: az aktív lap bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij aktywną kartę',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
@@ -632,8 +744,9 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
     de: 'Mittelklick: Entlade Tabs',
+    fr: 'Clic milieu: décharger les onglets',
     hu: 'Középső kattintás: lapok kisöprése',
-    pl: 'Środkowy przycisk myszy: Rozładuj karty',
+    pl: 'Środkowy przycisk myszy: Uśpij karty',
     ru: 'Средняя кнопка мыши: Выгрузить вкладки',
     zh_CN: '中键单击：卸载标签页',
     zh_TW: '中鍵點選：卸載分頁',
@@ -642,6 +755,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
     de: 'Mittelklick: Verberge Panel',
+    fr: 'Clic milieu: Cacher le panneau',
     hu: 'Középső kattintás: panel elrejtése',
     pl: 'Środkowy przycisk myszy: Ukryj panel',
     ru: 'Средняя кнопка мыши: Скрыть панель',
@@ -652,6 +766,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
     de: 'Mittelklick: Als Lesezeichen speichern',
+    fr: 'Clic milieu: Sauvegarder dans les marque-pages',
     hu: 'Középső kattintás: könyvjelzőzés',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
@@ -662,6 +777,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
     de: 'Mittelklick: Als Lesezeichen speichern und Panel entfernen',
+    fr: 'Clic milieu: Sauvegarder dans les marque-pages et supprimer le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zapisz do zakładek i usuń panel',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
@@ -672,6 +788,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
     de: 'Mittelklick: In Lesezeichen-Panel umwandeln',
+    fr: 'Clic milieu: Convertir en panneau de marque pages',
     hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
@@ -682,6 +799,7 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
     de: 'Mittelklick: In Lesezeichen umwandeln und Panel verbergen',
+    fr: 'Clic milieu: Convertir en marque-pages et cacher le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek i ukryj panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
@@ -692,10 +810,11 @@ export const sidebarTranslations: Translations = {
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
     de: 'Mittelklick: In Tab-Panel umwandeln',
+    fr: 'Clic milieu: Convertir en panneau d’onglets',
     hu: 'Középső kattintás: átalakítás lappanellá',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu kart',
     ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
-    zh_CN: '中键单击：转换为标签面板',
+    zh_CN: '中键单击：转换为标签页面板',
     zh_TW: '中鍵點選：轉換為分頁面板',
     ja: '中クリック：タブパネルに変換',
   },
@@ -706,6 +825,7 @@ export const sidebarTranslations: Translations = {
   'notif.hide_tooltip': {
     en: 'Hide notification',
     de: 'Benachrichtigung verbergen',
+    fr: 'Cacher la notification',
     hu: 'Értesítés elrejtése',
     pl: 'Ukryj powiadomienie',
     ru: 'Скрыть уведомление',
@@ -716,6 +836,7 @@ export const sidebarTranslations: Translations = {
   'notif.undo_ctrl': {
     en: 'Undo',
     de: 'Rückgängig',
+    fr: 'Annuler',
     hu: 'Visszavonás',
     pl: 'Cofnij',
     ru: 'Восстановить',
@@ -725,7 +846,8 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
-    de: 'Tabs geschlossen',
+    de: ' Tabs geschlossen',
+    fr: n => (n === 1 ? ' onglet fermé' : ' onglets fermés'),
     hu: ' lap be lett zárva',
     pl: (n = 0): string => {
       if (NUM_1_RE.test(n.toString())) return ' karta zamknięta'
@@ -744,16 +866,18 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_create_err': {
     en: 'Cannot create bookmark',
     de: 'Lesezeichen konnte nicht erstellt werden',
+    fr: 'Impossible de créer le marque-page',
     hu: 'Nem sikerült könyvjelzőzni',
     pl: 'Nie można stworzyć zakładki',
     ru: 'Невозможно создать закладку',
-    zh_CN: ' 无法创建书签',
-    zh_TW: ' 無法建立書籤',
+    zh_CN: '无法创建书签',
+    zh_TW: '無法建立書籤',
     ja: ' ブックマークを作成できません',
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
     de: 'Lesezeichen entfernt',
+    fr: n => (n === 1 ? ' marque-page supprimé' : ' marque-pages supprimés'),
     hu: ' könyvjelző törölve lett',
     pl: (n = 0): string => {
       if (NUM_1_RE.test(n.toString())) return ' zakładka usunięta'
@@ -772,6 +896,7 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_sort': {
     en: 'Sorting bookmarks...',
     de: 'Sortiere Lesezeichen...',
+    fr: 'Trier les marque-pages…',
     hu: 'Könyvjelzők rendezése…',
     pl: 'Sortowanie zakładek...',
     ru: 'Сортировка закладок...',
@@ -782,16 +907,18 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_sort': {
     en: 'Sorting tabs...',
     de: 'Sortiere Tabs...',
+    fr: 'Trier les onglets…',
     hu: 'Lapok rendezése…',
     pl: 'Sortowanie kart...',
     ru: 'Сортировка вкладок...',
-    zh_CN: '排序选项卡...',
+    zh_CN: '排序标签页...',
     zh_TW: '排序分頁...',
     ja: 'タブをソートしています...',
   },
   'notif.snapshot_created': {
     en: 'Snapshot created',
     de: 'Schnappschuss erstellt',
+    fr: 'Instantané créé',
     hu: 'Pillanatkép készült',
     pl: 'Migawka utworzona',
     ru: 'Снепшот создан',
@@ -802,6 +929,7 @@ export const sidebarTranslations: Translations = {
   'notif.view_snapshot': {
     en: 'View',
     de: 'Ansehen',
+    fr: 'Voir',
     hu: 'Megtekintés',
     pl: 'Widok',
     ru: 'Посмотреть',
@@ -812,6 +940,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_err': {
     en: 'Wrong tabs position detected',
     de: 'Falsche Tab-Position erkannt',
+    fr: 'Mauvaise position des onglets détectée',
     hu: 'A program a lapok helytelen állapotát észlelte',
     pl: 'Wykryto niepoprawne położenie karty',
     ru: 'Обнаружено неправильное положение вкладок',
@@ -822,6 +951,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_err_fix': {
     en: 'Update tabs',
     de: 'Tabs aktualisieren',
+    fr: 'Mettre à jour les onglets',
     hu: 'Lapok frissítése',
     pl: 'Zaaktualizuj karty',
     ru: 'Обновить вкладки',
@@ -832,6 +962,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_reloading': {
     en: 'Reloading tabs',
     de: 'Tabs neu laden',
+    fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
     pl: 'Przeładowywanie kart',
     ru: 'Перезагрузка вкладок',
@@ -842,6 +973,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_reloading_stop': {
     en: 'Stop',
     de: 'Stopp',
+    fr: 'Arrêter',
     hu: 'Állj',
     pl: 'Zatrzymaj',
     ru: 'Остановить',
@@ -851,6 +983,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
     de: 'Speichere in Lesezeichen...',
+    fr: 'Sauvegarder les marque-pages…',
     hu: 'Mentés könyvjelzőbe…',
     pl: 'Zapisywanie do zakładek...',
     ru: 'Сохранение в закладки...',
@@ -861,6 +994,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_saved_bookmarks': {
     en: 'Panel saved',
     de: 'Panel gespeichert',
+    fr: 'Panneau sauvegardé',
     hu: 'A panel mentése kész',
     pl: 'Panel zapisany',
     ru: 'панель сохранена в',
@@ -871,6 +1005,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_updated_bookmarks': {
     en: 'Bookmarks updated',
     de: 'Lesezeichen aktualisiert',
+    fr: 'Marque-pages mis à jour',
     hu: 'A könyvjelzők frissítése kész',
     pl: 'Zakładki zaktualizowane',
     ru: 'закладки обновлены в',
@@ -881,6 +1016,7 @@ export const sidebarTranslations: Translations = {
   'notif.converting': {
     en: 'Converting...',
     de: 'Konvertiere...',
+    fr: 'Conversion en cours…',
     hu: 'Átalakítás…',
     pl: 'Konwertowanie...',
     ru: 'Конвертация...',
@@ -891,6 +1027,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
     de: 'Tab-Panel konnte nicht in Lesezeichen gespeichert werden',
+    fr: 'Impossible de sauvegarder le panneau d’onglets dans les marque-pages',
     hu: 'Nem sikerült könyvjelzőzni a lappanelt',
     pl: 'Nie można zapisać panelu kart do zakładek',
     ru: 'Невозможно сохранить панель вкладок в закладки',
@@ -901,6 +1038,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err.folder': {
     en: 'Cannot create destination folder',
     de: 'Zielordner konnte nicht erstellt werden',
+    fr: 'Impossible de créer le dossier de destination',
     hu: 'Nem sikerült létrehozni a célmappát',
     pl: 'Nie można stworzyć docelowego folderu',
     ru: 'Невозможно создать папку для панели',
@@ -911,6 +1049,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err.folder_upd': {
     en: 'Cannot update destination folder',
     de: 'Zielordner konnte nicht aktualisiert werden',
+    fr: 'Impossible de mettre à jour le dossier de destination',
     hu: 'Nem sikerült frissíteni a célmappát',
     pl: 'Nie można zaktualizować docelowego folderu',
     ru: 'Невозможно обновить папку для панели',
@@ -921,6 +1060,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err.bookmarks': {
     en: 'Cannot create bookmarks',
     de: 'Lesezeichen konnten nicht erstellt werden',
+    fr: 'Impossible de créer les marque-pages',
     hu: 'Nem sikerült létrehozni a könyvjelzőket',
     pl: 'Nie można stworzyć zakładki',
     ru: 'Невозможно создать закладки',
@@ -931,16 +1071,18 @@ export const sidebarTranslations: Translations = {
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
     de: 'Panel konnte nicht aus Lesezeichen wiederherstellt werden',
+    fr: 'Impossible de restaurer le panneau depuis les marque-pages',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
     pl: 'Nie można przywrócić panelu z zakładek',
     ru: 'Невозможно восстановить панель из закладок',
     zh_CN: '无法从书签恢复面板',
-    zh_TW: '無法從書籤復原面板',
+    zh_TW: '無法從書籤回復面板',
     ja: 'ブックマークからパネルを復元できません',
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
     de: 'Quellordner nicht gefunden',
+    fr: 'Dossier racine non trouvé',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie znaleziono nadrzędnego folderu',
     ru: 'Корневая папка не найдена',
@@ -951,16 +1093,18 @@ export const sidebarTranslations: Translations = {
   'notif.restore_from_bookmarks_ok': {
     en: 'The tab panel has been successfully restored',
     de: 'Tab-Panel erfolgreich wiederhergestellt',
+    fr: 'Le panneau d’onglets a été restauré avec succès',
     hu: 'A lappanel helyreállítása kész',
     pl: 'Panel kart został pomyślnie przywrócony',
     ru: 'Панель вкладок успешно восстановлена',
     zh_CN: '标签页面板已恢复',
-    zh_TW: '分頁面板已復原',
+    zh_TW: '分頁面板已回復',
     ja: 'タブパネルが正常に復元されました',
   },
   'notif.panel_conv': {
     en: 'The panel has been successfully converted',
     de: 'Panel erfolgreich umgewandelt',
+    fr: 'Le panneau a été converti avec succès',
     hu: 'A panel átalakítása kész',
     pl: 'Panel został pomyślnie przekonwertowany',
     ru: 'Панель успешно преобразована',
@@ -970,24 +1114,17 @@ export const sidebarTranslations: Translations = {
   'notif.panel_bkmrkd': {
     en: 'The panel has been successfully bookmarked',
     de: 'Panel erfolgreich als Lesezeichen gespeichert',
+    fr: 'Le panneau a été enregistré dans les marque-pages avec succès',
     hu: 'A panel könyvjelzőzése kész',
     pl: 'Panel został pomyślnie zapisany do zakładek',
     ru: 'Панель успешно добавлена в закладки',
     zh_TW: '面板已成功加入書籤',
     ja: 'パネルが正常にブックマークされました',
   },
-  'notif.done': {
-    en: 'Done',
-    de: 'Fertig',
-    hu: 'Rendben',
-    pl: 'Gotowe',
-    ru: 'Готово',
-    zh: '已完成',
-    ja: '完了',
-  },
   'notif.new_bookmark': {
     en: 'New bookmark added',
     de: 'Neues Lesezeichen hinzugefügt',
+    fr: 'Nouveau marque-page ajouté',
     hu: 'Új könyvjelző készült',
     pl: 'Dodano nową zakładkę',
     ru: 'Новая закладка добавлена',
@@ -998,6 +1135,7 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
     de: 'Quellordner konnte nicht gefunden werden',
+    fr: 'Impossible de trouver le dossier racine',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie można znaleźć nadrzędnego folderu',
     ru: 'Невозможно найти корневую папку',
@@ -1008,6 +1146,7 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
     de: 'Versuche Tab-Panel neu zu speichern',
+    fr: 'Essayez de réenregistrer le panneau d’onglets',
     hu: 'Meg kell próbálni újramenteni a lappanelt',
     pl: 'Spróbuj zapisać ponowanie panel kart',
     ru: 'Попробуйте пересохранить панель вкладок',
@@ -1018,6 +1157,7 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_sub_panel.no_root.save': {
     en: 'Save',
     de: 'Speichern',
+    fr: 'Enregistrer',
     hu: 'Mentés',
     pl: 'Zapisz',
     ru: 'Сохранить',
@@ -1028,6 +1168,7 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
     de: 'Proxy-Authentifizierungsfehler',
+    fr: 'Erreur d’authentification du proxy',
     hu: 'Proxy-hitelesítési hiba',
     pl: 'Błąd autoryzacji proxy',
     ru: 'Ошибка аутентификации прокси',
@@ -1038,6 +1179,7 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err_details': {
     en: 'Check the proxy settings to make sure that they are correct.',
     de: 'Überprüfen Sie die Proxy-Einstellungen, um sicherzustellen, dass sie korrekt sind.',
+    fr: 'Vérifiez que les paramètres du proxy sont corrects',
     hu: 'Ellenőrizni kell, hogy a proxy beállításai biztosan helyesek-e.',
     pl: 'Sprawdź ustawienia proxy i upewnij się, że są poprawne.',
     ru: 'Проверьте настройки прокси, чтобы убедиться, что они верны.',
@@ -1048,6 +1190,7 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err_ctrl': {
     en: 'Open settings',
     de: 'Einstellungen öffnen',
+    fr: 'Ouvrir les paramètres',
     hu: 'Beállítások',
     pl: 'Otwórz ustawienia',
     ru: 'Открыть настройки',
@@ -1058,6 +1201,7 @@ export const sidebarTranslations: Translations = {
   'notif.history_del_sites': {
     en: 'Clearing history',
     de: 'Verlauf löschen',
+    fr: 'Effacer l’historique',
     hu: 'Az előzmények törlése',
     pl: 'Czyszczenie historii',
     ru: 'Очистка истории',
@@ -1068,6 +1212,7 @@ export const sidebarTranslations: Translations = {
   'notif.history_del_sites_nothing': {
     en: 'Nothing to clear',
     de: 'Nichts zu löschen',
+    fr: 'Rien à effacer',
     hu: 'Semmi nem lett törölve',
     pl: 'Nic do wyczyszczenia',
     ru: 'Нечего очищать',
@@ -1078,6 +1223,7 @@ export const sidebarTranslations: Translations = {
   'notif.cc.err': {
     en: 'Unable to clear cookies',
     de: 'Cookies konnten nicht gelöscht werden',
+    fr: 'Impossible d’effacer les cookies',
     hu: 'A sütik nem törölhetők',
     pl: 'Nie można wyczyścić ciasteczek',
     ru: 'Не удалось очистить куки',
@@ -1088,6 +1234,7 @@ export const sidebarTranslations: Translations = {
   'notif.cc.err_url': {
     en: 'Incorrect URL: ',
     de: 'Falsche URL: ',
+    fr: 'URL incorrecte: ',
     hu: 'Hibás URL: ',
     pl: 'Niepoprawny URL: ',
     ru: 'Неверный URL: ',
@@ -1096,8 +1243,9 @@ export const sidebarTranslations: Translations = {
     ja: '不正な URL: ',
   },
   'notif.cc.ok': {
-    en: 'Cookies was cleared',
+    en: 'Cookies were cleared',
     de: 'Cookies wurden gelöscht',
+    fr: 'Les cookies ont été effacés',
     hu: 'A sütik törlése kész',
     pl: 'Ciasteczka zostały wyczyszczone',
     ru: 'Cookies были очищены',
@@ -1111,6 +1259,7 @@ export const sidebarTranslations: Translations = {
   'colors.toolbar': {
     en: 'Default',
     de: 'Standard',
+    fr: 'Par défaut',
     hu: 'alapértelmezett',
     pl: 'Domyślny',
     ru: 'Стандартный',
@@ -1121,6 +1270,7 @@ export const sidebarTranslations: Translations = {
   'colors.blue': {
     en: 'Blue',
     de: 'Blau',
+    fr: 'Bleu',
     hu: 'kék',
     pl: 'Niebieski',
     ru: 'Синий',
@@ -1131,6 +1281,7 @@ export const sidebarTranslations: Translations = {
   'colors.turquoise': {
     en: 'Turquoise',
     de: 'Türkis',
+    fr: 'Turquoise',
     hu: 'türkiz',
     pl: 'Turkusowy',
     ru: 'Бирюзовый',
@@ -1141,6 +1292,7 @@ export const sidebarTranslations: Translations = {
   'colors.green': {
     en: 'Green',
     de: 'Grün',
+    fr: 'Vert',
     hu: 'zöld',
     pl: 'Zielony',
     ru: 'Зеленый',
@@ -1151,6 +1303,7 @@ export const sidebarTranslations: Translations = {
   'colors.yellow': {
     en: 'Yellow',
     de: 'Gelb',
+    fr: 'Jaune',
     hu: 'sárga',
     pl: 'Żółty',
     ru: 'Желтый',
@@ -1161,6 +1314,7 @@ export const sidebarTranslations: Translations = {
   'colors.orange': {
     en: 'Orange',
     hu: 'narancssárga',
+    fr: 'Orange',
     pl: 'Pomarańczowy',
     ru: 'Оранжевый',
     zh: '橙色',
@@ -1169,6 +1323,7 @@ export const sidebarTranslations: Translations = {
   'colors.red': {
     en: 'Red',
     de: 'Rot',
+    fr: 'Rouge',
     hu: 'vörös',
     pl: 'Czerwony',
     ru: 'Красный',
@@ -1178,6 +1333,8 @@ export const sidebarTranslations: Translations = {
   },
   'colors.pink': {
     en: 'Pink',
+    de: 'Rosa',
+    fr: 'Rose',
     hu: 'rózsaszín',
     pl: 'Różowy',
     ru: 'Розовый',
@@ -1187,6 +1344,7 @@ export const sidebarTranslations: Translations = {
   'colors.purple': {
     en: 'Purple',
     de: 'Lila',
+    fr: 'Violet',
     hu: 'lila',
     pl: 'Fioletowy',
     ru: 'Фиолетовый',

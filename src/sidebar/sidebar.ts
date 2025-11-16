@@ -25,7 +25,7 @@ import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
 import { updateWebReqHandlers } from 'src/services/web-req.fg'
-import { initUpgrading, showUpgradingScreen } from 'src/services/upgrading'
+import { Sync } from 'src/services/_services'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
@@ -45,9 +45,11 @@ async function main(): Promise<void> {
     openTabs: Tabs.open,
     handleReopening: Tabs.handleReopening,
     getActivePanelConfig: Sidebar.getActivePanelConfig,
-    stopDrag: DnD.reset,
+    stopDrag: DnD.onExternalStop,
+    setDragInfo: DnD.setDragInfo,
     getGroupInfo: Tabs.getGroupInfo,
     loadFavicons: Favicons.loadFavicons,
+    reloadFavicons: Favicons.loadFavicons,
     setFavicon: Favicons.set,
     onOutsideSearchInput: Search.onOutsideSearchInput,
     onOutsideSearchNext: Search.next,
@@ -58,13 +60,16 @@ async function main(): Promise<void> {
     onOutsideSearchExit: Search.onOutsideSearchExit,
     onOutsideSearchBookmarks: Search.bookmarks,
     onOutsideSearchHistory: Search.history,
+    onOutsideEditingInput: Tabs.setEditingValue,
+    onOutsideEditingEnter: Tabs.onOutsideEditingEnter,
+    onOutsideEditingExit: Tabs.onOutsideEditingExit,
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
     notifyAboutWrongProxyAuthData: Notifications.notifyAboutWrongProxyAuthData,
     notify: Notifications.notify,
-    isDropEventConsumed: DnD.isDropEventConsumed,
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
     getSearchQuery: Search.getSearchQuery,
+    getEditingValue: Tabs.getEditingValue,
     updWindowPreface: Windows.updWindowPreface,
   })
 
@@ -96,31 +101,29 @@ async function main(): Promise<void> {
   History.initHistory(reactive)
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
-  initUpgrading(reactive)
+  Sync.initSync(reactive)
 
-  Sidebar.updateFontSize()
+  Styles.updateGlobalFontSize()
+  Styles.udpateGlobalFontFamily()
 
   const app = createApp(SidebarRoot)
   app.mount('#root_container')
-
-  if (Info.isMajorUpgrade()) {
-    return showUpgradingScreen()
-  }
 
   Settings.setupSettingsChangeListener()
   Permissions.setupListeners()
   Windows.setupWindowsListeners()
   Containers.setupContainersListeners()
-  Sidebar.setupListeners()
 
-  if (Settings.state.sidebarCSS) Styles.loadCustomSidebarCSS()
+  Styles.loadCustomSidebarCSS()
   Styles.initColorScheme()
 
   await Sidebar.loadPanels()
+  Sidebar.setupListeners()
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
+  const initSync = Utils.isSyncPanel(actPanel)
 
   IPC.connectTo(InstanceType.bg)
 
@@ -128,6 +131,7 @@ async function main(): Promise<void> {
   else await Tabs.loadInShadowMode()
   if (Sidebar.hasBookmarks && initBookmarks) Bookmarks.load()
   if (Sidebar.hasHistory && initHistory) History.load()
+  if (Sidebar.hasSync && initSync) Sync.load()
 
   updateWebReqHandlers()
 
@@ -143,6 +147,17 @@ async function main(): Promise<void> {
 
   Search.init()
 
+  IPC.onDisconnected(InstanceType.editing, (id: ID) => {
+    if (Windows.id !== id) return
+    if (Tabs.byId[Tabs.editableTabId]) Tabs.onOutsideEditingExit()
+  })
+
+  IPC.onConnected(InstanceType.preview, () => {
+    if (Preview.state.status === Preview.Status.Closed) {
+      IPC.sendToPreview('close')
+    }
+  })
+
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 
   window.getSideberyState = () => {
@@ -150,11 +165,13 @@ async function main(): Promise<void> {
     return {
       IPC, Info, Settings, Containers, Sidebar, Windows, Favicons,
       Bookmarks, Tabs, DnD, Permissions, Notifications, History,
-      Search, Styles, Menu, Snapshots,
+      Sync, Search, Styles, Menu, Snapshots,
     }
   }
 
   if (Settings.state.previewTabs) Preview.resetMode()
+
+  Info.loadPlatformInfo()
 
   Logs.info(`Init end: ${performance.now() - ts}ms`)
 }

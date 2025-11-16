@@ -9,6 +9,8 @@ import { Settings } from 'src/services/settings'
 import * as IPC from './ipc'
 import { Containers } from './containers'
 import { Sidebar } from './sidebar'
+import { Info } from './info'
+import { translate } from 'src/dict'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })
@@ -28,8 +30,9 @@ export async function loadWindowInfo(): Promise<void> {
   let uniqWinId = winData[1] as string | undefined
 
   // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1660564
-  if (currentWindow.type !== 'normal') {
-    throw 'This code should not be launched in a window with a type other than "normal"'
+  if (Info.isSidebar && currentWindow.type !== 'normal') {
+    throw `This code should not be launched in a window with a type other than "normal".
+See https://bugzilla.mozilla.org/show_bug.cgi?id=1660564`
   }
 
   // Generate unique window id
@@ -120,14 +123,26 @@ export function closeWindowsPopup(): void {
 
 const lockedWindowsTabs: Record<ID, boolean | { move: boolean; cache: TabCache[] }> = {}
 export function isWindowTabsLocked(id: ID): boolean | { move: boolean; cache: TabCache[] } {
-  Logs.info('Windows.isWindowTabsLocked', id)
-  return lockedWindowsTabs[id] ?? false
+  const locked = lockedWindowsTabs[id]
+  Logs.info('Windows.isWindowTabsLocked', id, typeof locked, globalTabsLockCounter)
+  if (locked && locked !== true) {
+    delete lockedWindowsTabs[id]
+  }
+  return locked ?? globalTabsLockCounter > 0
 }
+
+let globalTabsLockCounter = 0
 
 export async function createWithTabs(
   tabsInfo: ItemInfo[],
   conf?: browser.windows.CreateData
 ): Promise<boolean> {
+  Logs.info('Windows.createWithTabs', tabsInfo.length)
+
+  if (!Info.isBg) throw 'Windows.createWithTabs: Should be called in bg'
+
+  globalTabsLockCounter++
+
   if (!conf) conf = {}
 
   const moveTabs = conf.tabId === MOVEID
@@ -144,10 +159,11 @@ export async function createWithTabs(
   }
 
   const idsMap: Record<ID, ID> = {}
-  const createdTabs: browser.tabs.Tab[] = []
+  const processedTabs: (browser.tabs.Tab | null)[] = []
 
   // Create window
   const defaultContainerId = conf.incognito ? PRIVATE_CONTAINER_ID : DEFAULT_CONTAINER_ID
+  const isPrivate = conf.incognito
   let window: browser.windows.Window
   try {
     window = await browser.windows.create(conf)
@@ -155,16 +171,18 @@ export async function createWithTabs(
     if (String(err) === 'Error: Extension does not have permission for incognito mode') {
       if (Windows.lastFocusedWinId !== undefined) {
         const notification: Notification = {
-          title: 'Cannot open window',
-          details: String(err),
+          title: translate('notif.open_private_windows_err'),
+          details: translate('notif.open_private_windows_err_details'),
           lvl: 'err',
         }
         IPC.sendToSidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)
       }
     }
     Logs.err('Windows: Cannot create window with tabs', err)
+    globalTabsLockCounter--
     return false
   }
+  globalTabsLockCounter--
   if (!window.id || !window.tabs?.length) return true
   lockedWindowsTabs[window.id] = true
 
@@ -173,18 +191,15 @@ export async function createWithTabs(
 
   // Process the tabs
   const processingTabs: Promise<browser.tabs.Tab | browser.tabs.Tab[]>[] = []
-  let index = 0
-  for (const info of tabsInfo) {
+  if (moveTabs) {
     // Move
-    if (moveTabs) {
-      // TODO: Try to call it once with array of ids
-      processingTabs.push(browser.tabs.move(info.id, { index: index++, windowId: window.id }))
-
-      if (info.active) activeTabId = info.id
-    }
-
+    activeTabId = tabsInfo.find(t => t.active)?.id ?? NOID
+    const ids = tabsInfo.map(t => t.id)
+    processingTabs.push(browser.tabs.move(ids, { index: 0, windowId: window.id }))
+  } else {
     // Create
-    else {
+    let index = 0
+    for (const info of tabsInfo) {
       type CreateProps = browser.tabs.CreateProperties
       const conf: CreateProps = { url: info.url, windowId: window.id, index: index++ }
       if (info.pinned) conf.pinned = true
@@ -193,7 +208,7 @@ export async function createWithTabs(
 
       if (info.url && !info.pinned && !info.active) conf.discarded = true
       if (info.title && conf.discarded) conf.title = info.title
-      if (info.container !== undefined && Containers.reactive.byId[info.container]) {
+      if (!isPrivate && info.container !== undefined && Containers.reactive.byId[info.container]) {
         conf.cookieStoreId = info.container
       }
 
@@ -201,22 +216,23 @@ export async function createWithTabs(
     }
   }
 
-  // Normalize processed tabs
+  // Gather processed tabs
   try {
-    const processed = await Promise.all(processingTabs)
-    for (const tabOrTabs of processed) {
-      if (Array.isArray(tabOrTabs)) createdTabs.push(...tabOrTabs)
-      else createdTabs.push(tabOrTabs)
+    const processed = await Promise.allSettled(processingTabs)
+    for (const processingResult of processed) {
+      const tabOrTabs = Utils.settledOr(processingResult, null)
+      if (Array.isArray(tabOrTabs)) processedTabs.push(...tabOrTabs)
+      else processedTabs.push(tabOrTabs)
     }
   } catch (err) {
     Logs.err('Windows.createWithTabs: Cannot process tabs:', err)
     return false
   }
 
-  // Go through src/new tabs
+  // Go through moved/new tabs and restore their state from srcInfo
   const cache: TabCache[] = []
-  for (let i = 0; i < createdTabs.length; i++) {
-    const tab = createdTabs[i] as Tab
+  for (let i = 0; i < processedTabs.length; i++) {
+    const tab = processedTabs[i] as Tab | null
     const srcInfo = tabsInfo[i]
     if (!srcInfo || !tab) continue
 
@@ -258,7 +274,7 @@ export async function createWithTabs(
   Tabs.cacheTabsData(window.id, cache, 0)
 
   // Update succession for the initial tab
-  const firstTab = createdTabs[0]
+  const firstTab = processedTabs[0]
   if (firstTab && moveTabs) {
     if (activeTabId === NOID) activeTabId = firstTab.id
     await browser.tabs.moveInSuccession([initialTabId], activeTabId).catch(err => {
@@ -274,9 +290,7 @@ export async function createWithTabs(
 
   lockedWindowsTabs[window.id] = { move: moveTabs, cache }
 
-  setTimeout(() => {
-    if (window.id !== undefined) delete lockedWindowsTabs[window.id]
-  }, 5000)
+  Logs.info('Windows.createWithTabs: Done')
 
   return true
 }

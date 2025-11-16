@@ -61,7 +61,7 @@ function createReleaseNotes(changelogContent) {
 
   // Create "Contributions" part
   if (contributions.size > 0) {
-    releaseNotes += '\n\n## Contributions'
+    releaseNotes += '\n\n## Contributions\n'
     for (const [login, prs] of contributions) {
       releaseNotes += `\n- ${login}: ${Array.from(prs).join(', ')}`
     }

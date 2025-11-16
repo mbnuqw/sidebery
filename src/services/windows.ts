@@ -14,7 +14,7 @@ export const Windows = {
   reactive: { choosing: null, choosingTitle: '' } as WindowsState,
   id: NOID,
   uniqWinId: NOID,
-  incognito: false,
+  incognito: browser.extension.inIncognitoContext,
   lastFocusedId: NOID,
   focused: false,
   lastFocused: false,

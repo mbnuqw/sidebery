@@ -39,7 +39,7 @@
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--setup-bg)
-  box-shadow: 0 1px 0 0 var(--border-color)
+  box-shadow: inset 0 -1px 0 0 var(--border-color)
   &[data-empty="true"]
     height: 100%
     &:after
@@ -136,7 +136,7 @@
 // -
 .Snapshots .snapshot-list-section
   height: 100%
-  max-width: 250px
+  max-width: 260px
   flex: 1 0 auto
   z-index: 1
   overflow: hidden
@@ -170,7 +170,6 @@
 .Snapshots .snapshot
   position: relative
   display: flex
-  min-width: max-content
   align-items: center
   padding: 8px 0 8px 8px
   cursor: default
@@ -206,7 +205,7 @@
   width: 16px
   height: 16px
   padding: 8px
-  cursor: pointer
+  cursor: default
   opacity: 0
   > svg
     position: absolute
@@ -230,7 +229,7 @@
   height: 14px
   border-radius: 3px
   margin: 9px
-  cursor: pointer
+  cursor: default
   box-shadow: inset 0 0 0 2px var(--toolbar-fg)
 
 .Snapshots .snapshot .date-time
@@ -245,12 +244,19 @@
 
 .Snapshots .snapshot .info
   position: relative
+  overflow: hidden
   font-size: rem(12)
   color: var(--toolbar-fg)
 
 .Snapshots .snapshot[data-type="layer"] .info
   font-size: rem(12)
   color: var(--toolbar-fg)
+
+.Snapshots .snapshot .date-time
+.Snapshots .snapshot .content-info
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
 .Snapshots .snapshot .window
   position: relative
@@ -308,14 +314,52 @@
 .Snapshots .window:last-of-type
   padding-bottom: 64px
 
-.Snapshots .window-bar
+.Snapshots .drop-down-btn
   position: relative
+  width: 24px
+  height: 24px
+  &:hover:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    background-color: var(--toolbar-fg)
+    opacity: .05
+    border-radius: 4px
+  &:active
+    opacity: .7
+
+.Snapshots .exp-icon
+  position: absolute
+  top: 4px
+  left: 4px
+  width: 16px
+  height: 16px
+  fill: var(--toolbar-fg)
+  transition: transform var(--d-fast)
+
+.Snapshots [data-folded="true"] > .drop-down-btn > .exp-icon
+  transform: rotateZ(-90deg)
+
+.Snapshots .window-bar
+  position: sticky
+  top: 0
+  height: 32px
   display: flex
-  align-items: baseline
+  align-items: center
+  z-index: 3
+  background-color: var(--frame-bg)
+
+  .drop-down-btn
+    margin-right: 4px
 
   .btn
     font-size: rem(14)
     padding: 3px 8px
+  .btn:not(:last-of-type)
+    margin: 0 8px 0 0
 
 .Snapshots .win-icon
   position: relative
@@ -330,15 +374,29 @@
     opacity: .5
 
 .Snapshots .win-name
+  position: relative
   font-size: rem(21)
   margin: 0 8px 0 0
   text-align: center
+  white-space: nowrap
   color: var(--toolbar-fg)
+
+.Snapshots .win-private
+  --private-fg: #aa30fc
+
+  position: relative
+  width: 24px
+  height: 24px
+  fill: var(--private-fg)
+  margin: 0 8px 0 0
+  padding: 0 3px 0
 
 .Snapshots .win-len
   position: relative
   margin: 0 auto 0 0
+  padding-right: 8px
   font-size: rem(14)
+  white-space: nowrap
   color: var(--toolbar-fg)
   opacity: .7
 
@@ -355,13 +413,16 @@
   padding: 3px 0
 
 .Snapshots .panel-bar
-  position: relative
+  position: sticky
+  top: 32px
+  z-index: 2
   display: flex
   height: 32px
   align-items: center
-  padding: 0 8px
+  padding: 0 8px 0 4px
   margin: 4px 0 2px 0
   border-radius: 5px
+  background-color: var(--frame-bg)
   &:before
   &:after
     content: ''
@@ -376,8 +437,9 @@
     background-color: var(--toolbar-fg)
   &:after
     box-shadow: inset 0 0 0 1px var(--toolbar-fg)
-.Snapshots .panel[data-void="true"] .panel-bar
-  display: none
+  .drop-down-btn
+    z-index: 1
+    margin-right: 4px
 
 .Snapshots .panel-bar .icon
   position: relative
@@ -407,8 +469,6 @@
   display: flex
   flex-flow: column
   padding: 0 0 0 12px
-.Snapshots .panel[data-void="true"] .tabs
-  padding: 0
 
 // --- Tab ---
 .Snapshots .tab
@@ -417,7 +477,7 @@
   justify-content: flex-start
   align-items: center
   margin: 1px 0 2px
-  padding: 5px 0
+  padding: 3px 0
   cursor: default
   border-radius: 3px
   &:before
@@ -433,7 +493,7 @@
     opacity: 0
   &:hover:before
     opacity: .07
-  &:active:before
+  &:active:has(.drop-down-btn:not(:hover)):before
     opacity: .05
   &:not(:first-of-type):after
     content: ''
@@ -448,6 +508,37 @@
 for i in 1..12
   .Snapshots .tab[data-lvl=\"{i}\"]
     margin-left: (12px * i)
+
+.Snapshots .tab .color-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: calc(100% - 30px)
+  height: 100%
+  border-radius: 5px
+  background-color: var(--tab-color)
+  opacity: .2
+
+.Snapshots .tab .drop-down-btn
+  position: absolute
+  margin: 0 4px
+  z-index: 1
+  transition: opacity var(--d-fast)
+.Snapshots .tab[data-folded="false"] .drop-down-btn
+  opacity: 0
+.Snapshots .tab .drop-down-btn:hover
+  opacity: 1
+.Snapshots .tab .exp-icon
+  filter: drop-shadow(0 0 1px var(--toolbar-bg))
+.Snapshots .tab .drop-down-btn:active
+  opacity: .7
+
+.Snapshots .tab .branch-len
+  position: absolute
+  right: 0
+  bottom: -2px
+  font-size: rem(9)
+  color: var(--toolbar-fg)
 
 .Snapshots .tab .link
   position: absolute
@@ -471,6 +562,7 @@ for i in 1..12
   align-items: center
   flex-shrink: 0
   transform: translateZ(0)
+  transition: opacity var(--d-fast)
   > img
   > svg
     position: absolute
@@ -486,6 +578,9 @@ for i in 1..12
     height: 12px
     fill: var(--toolbar-fg)
     filter: drop-shadow(0 0 1px var(--frame-bg))
+.Snapshots .tab[data-folded="true"] .icon
+.Snapshots .tab .drop-down-btn:hover + .icon
+  opacity: .24
 
 .Snapshots .tab .title-url
   position: relative
@@ -615,7 +710,7 @@ for i in 1..12
   width: 24px
   height: 100%
   margin: 0 8px 0 0
-  cursor: pointer
+  cursor: default
   > svg
     position: absolute
     width: 12px
@@ -636,6 +731,13 @@ for i in 1..12
 
 .Snapshots .selection-bar .btn
   margin: 0 8px 0 0
+  padding: 3px 8px
+  font-size: rem(14)
+
+.Snapshots .selection-bar .DropDownButton
+  margin: 0 8px 0 0
+
+.Snapshots .selection-bar .DropDownButton .body
   padding: 3px 8px
   font-size: rem(14)
 

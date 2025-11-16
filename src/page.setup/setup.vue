@@ -27,14 +27,15 @@
   Transition(name="popup" type="transition"): DialogPopup(v-if="Popups.reactive.dialog" :dialog="Popups.reactive.dialog")
   Details
 
-  UpgradeScreen(v-if="reactiveUpgrading.status")
+  .notifications-container
+    NotificationsPopup
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Styles } from 'src/services/styles'
 import SettingsView from './components/settings.vue'
@@ -48,10 +49,9 @@ import NewTabShortcutsPopup from 'src/components/popup.new-tab-shortcuts.vue'
 import TabMoveRulesPopup from 'src/components/popup.tab-move-rules.vue'
 import TabReopenRulesPopup from 'src/components/popup.tab-reopen-rules.vue'
 import DialogPopup from 'src/components/popup.dialog.vue'
-import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
+import NotificationsPopup from '../sidebar/components/popup.notifications.vue'
 import * as Popups from 'src/services/popups'
-import { reactiveUpgrading } from 'src/services/upgrading'
 
 const animations = computed(() => (Settings.state.animations ? 'fast' : 'none'))
 

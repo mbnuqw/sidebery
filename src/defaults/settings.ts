@@ -9,6 +9,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
   updateSidebarTitle: true,
   markWindow: false,
   markWindowPreface: '[Sidebery] ',
+  copyTreeIndent: '',
+  copyMultiBullet: '',
+  copyTemplates: 'HTML:%B<a href="%U">%CT</a>\nMarkdown:%B[%CT](%U)',
+  updTooltipDelay: 100,
 
   // Context menu
   ctxMenuNative: false,
@@ -20,8 +24,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   navBarLayout: 'horizontal',
   navBarInline: true,
   navBarSide: 'left',
-  hideAddBtn: false,
-  hideSettingsBtn: false,
   navBtnCount: true,
   hideEmptyPanels: true,
   hideDiscardedTabPanels: false,
@@ -29,10 +31,11 @@ export const DEFAULT_SETTINGS: SettingsState = {
   navActBookmarksPanelLeftClickAction: 'none',
   navTabsPanelMidClickAction: 'discard',
   navBookmarksPanelMidClickAction: 'none',
-  navSwitchPanelsWheel: true,
+  navSwitchPanelsWheel: false,
   subPanelRecentlyClosedBar: true,
   subPanelBookmarks: true,
   subPanelHistory: true,
+  subPanelSync: false,
 
   // Group page
   groupLayout: 'grid',
@@ -67,6 +70,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateLastTabOnPanelSwitching: true,
   activateLastTabOnPanelSwitchingLoadedOnly: true,
   switchPanelAfterSwitchingTab: 'always',
+  scrollPanelAfterSwitchingTab: 'always',
   tabRmBtn: 'hover',
   activateAfterClosing: 'next',
   activateAfterClosingStayInPanel: false,
@@ -85,17 +89,24 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMove: false,
   tabsPanelSwitchActMoveAuto: true,
   tabsUrlInTooltip: 'full',
+  tabsContainerInTooltip: true,
   newTabCtxReopen: false,
   tabWarmupOnHover: true,
   tabSwitchDelay: 0,
   forceDiscard: true,
+  tabUpdDelay: 150,
+  forceUpdTooltip: false,
 
   // New tab position
   moveNewTabPin: 'start',
   moveNewTabParent: 'last_child',
+  moveNewTabParentIndent: false,
   moveNewTabParentActPanel: false,
+  moveNewTabButton: 'end',
+  moveNewTabButtonActivePin: 'start',
   moveNewTab: 'end',
   moveNewTabActivePin: 'start',
+  autoScrollToNewTab: true,
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
@@ -106,7 +117,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Tabs tree
   tabsTree: true,
-  groupOnOpen: true,
   tabsTreeLimit: 'none',
   autoFoldTabs: false,
   autoFoldTabsExcept: 'none',
@@ -135,10 +145,12 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Tabs preview
   previewTabs: false,
-  previewTabsMode: 'i',
-  previewTabsPageModeFallback: 'w',
+  previewTabsMode: 'p',
+  previewTabsPageModeFallback: 'n',
   previewTabsInlineHeight: 70,
   previewTabsPopupWidth: 280,
+  previewTabsTitle: 2,
+  previewTabsUrl: 1,
   previewTabsSide: 'right',
   previewTabsDelay: 500,
   previewTabsFollowMouse: true,
@@ -152,6 +164,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   hideInact: false,
   hideFoldedTabs: false,
   hideFoldedParent: 'none',
+  hideUnloadedTabs: false,
   nativeHighlight: true,
 
   // Bookmarks
@@ -171,17 +184,16 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Appearance
   fontSize: 'm',
+  fontFamily: '',
   animations: true,
   animationSpeed: 'norm',
   theme: 'proton',
   density: 'default',
   colorScheme: 'ff',
-  sidebarCSS: false,
-  groupCSS: false,
 
   // Snapshots
   snapNotify: true,
-  snapExcludePrivate: false,
+  snapExcludePrivate: true,
   snapInterval: 0,
   snapIntervalUnit: 'min',
   snapLimit: 0,
@@ -203,6 +215,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   scrollThroughTabsExceptOverflow: true,
   scrollThroughTabsCyclic: false,
   scrollThroughTabsScrollArea: 0,
+  scrollThroughTabsPreselAct: false,
+  scrollThroughTabsPreselDelay: 0,
   autoMenuMultiSel: true,
   multipleMiddleClose: false,
   longClickDelay: 500,
@@ -212,11 +226,15 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabDoubleClick: 'none',
   tabsSecondClickActPrev: false,
   tabsSecondClickActPrevPanelOnly: false,
+  tabsSecondClickActPrevNoUnload: true,
   shiftSelAct: true,
-  activateOnMouseUp: false,
+  ctrlSelAct: true,
+  activateOnMouseUp: true,
+  tabCloseOnMouseUp: true,
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   tabMiddleClick: 'close',
+  tabPinnedMiddleClick: 'discard',
   tabMiddleClickCtrl: 'discard',
   tabMiddleClickShift: 'duplicate',
   tabCloseMiddleClick: 'close',
@@ -241,6 +259,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Sync
   syncName: '',
+  syncUseFirefox: true,
+  syncUseGoogleDrive: false,
+  syncUseGoogleDriveApi: false,
+  syncUseGoogleDriveApiClientId: '',
   syncSaveSettings: false,
   syncSaveCtxMenu: false,
   syncSaveStyles: false,
@@ -248,6 +270,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Keybindings
   selectActiveTabFirst: true,
+  selectCyclic: false,
   ignoreHiddenPanelsSwitching: false,
 }
 
@@ -267,11 +290,12 @@ export const SETTINGS_OPTIONS = {
   discardFoldedDelayUnit: ['sec', 'min'],
   tabDoubleClick: ['reload', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'exp',
     'new_after', 'new_child', 'close', 'edit_title', 'none'],
-  tabLongLeftClick: ['reload', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
+  tabLongLeftClick: ['reload', 'discard', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
     'new_child', 'edit_title', 'none'],
-  tabLongRightClick: ['reload', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
+  tabLongRightClick: ['reload', 'discard', 'duplicate', 'dup_child', 'pin', 'mute', 'clear_cookies', 'new_after',
     'new_child', 'edit_title', 'none'],
   tabMiddleClick: ['close', 'discard', 'discard_or_close', 'duplicate', 'dup_child', 'none'],
+  tabPinnedMiddleClick: ['close', 'discard', 'discard_or_close', 'duplicate', 'unpin', 'none'],
   tabMiddleClickModifier: ['discard', 'discard_or_close', 'duplicate', 'dup_child', 'edit_title', 'none'],
   tabCloseMiddleClick: ['close', 'discard', 'discard_or_close'],
   tabsPanelLeftClickAction: ['prev', 'expand', 'parent', 'tab', 'none'],
@@ -328,4 +352,5 @@ export const SETTINGS_OPTIONS = {
   newTabBarPosition: ['after_tabs', 'bottom'],
   oldBookmarksAfterSave: ['ask', 'del', 'keep'],
   switchPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
+  scrollPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
 } as const

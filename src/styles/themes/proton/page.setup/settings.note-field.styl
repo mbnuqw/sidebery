@@ -24,12 +24,11 @@
     position: relative
     font-size: rem(16)
     line-height: 26px
-    padding: 8px 0 4px
+    padding: 8px 8px 4px 0
     align-self: flex-start
     color: var(--toolbar-fg)
     transition: color var(--d-fast)
-    opacity: .7
-  
+
   .note
     position: relative
     font-size: rem(14)
@@ -38,3 +37,24 @@
     white-space: pre-wrap
     color: var(--toolbar-fg)
     opacity: .7
+    &.-wide
+      width: 100%
+  code.note
+    font-size: rem(12)
+    word-break: break-all
+    opacity: .9
+
+  .link
+    position: relative
+    align-self: flex-start
+    font-size: rem(16)
+    line-height: 26px
+    padding: 8px 0 4px
+    white-space: pre-wrap
+    color: var(--status-notice)
+    text-decoration: underline
+
+  .inline-box
+    width: 100%
+    display: flex
+    justify-content: space-between

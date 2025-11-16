@@ -12,12 +12,14 @@ export interface Visit {
   time: number
   timeStr: string
   tooltip: string
+  hiddenUnderParentId?: string
 
   reactive: {
     title: string
     tooltip: string
     sel: boolean
     moreVisits?: ID[]
+    moreActive?: boolean
   }
 }
 

@@ -1,28 +1,34 @@
 <template lang="pug">
 .BookmarkNode(
+  ref="rootEl"
   :id="'bookmark' + panelId + node.id"
   :data-type="node.type"
   :data-expanded="expanded"
   :data-parent="!!children?.length"
   :data-selected="node.sel"
+  :data-locked-selection="node.selLock"
   :data-open="node.isOpen")
   .body(
     :title="tooltip"
+    :data-color="node.containerColor"
     @mousedown.stop="onMouseDown"
     @mouseup.stop="onMouseUp"
     @contextmenu.stop="onCtxMenu")
     .dnd-layer(draggable="true" data-dnd-type="bookmark" :data-dnd-id="node.id" @dragstart="onDragStart")
+    .color-layer(v-if="node.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as browser.ColorName] }")
     .fav(v-if="node.url")
       svg(v-if="!favicon")
-        use(xlink:href="#icon_ff")
+        use(href="#icon_ff")
       img(v-else :src="favicon")
     .fav(v-else-if="node.type === 'folder'" @mousedown="onFolderFavMouseDown")
       svg(v-if="expanded")
-        use(xlink:href="#icon_folder_open")
+        use(href="#icon_folder_open")
       svg(v-else)
-        use(xlink:href="#icon_folder")
-    .title(v-if="node.title || node.url") {{node.title || node.url}}
+        use(href="#icon_folder")
+    .title(v-if="node.children || node.url") {{node.parsedTitle || node.title || node.url}}
     .len(v-if="Settings.state.showBookmarkLen && node.len") {{node.len}}
+    .container-mark(v-if="node.containerColor")
+  
   .children(v-if="(expanded) && children?.length" :title="node.title")
     BookmarkNode(v-for="node in children" :key="node.id" :node="node" :filter="props.filter" :panelId="panelId")
 </template>
@@ -32,11 +38,11 @@ export default { name: 'BookmarkNode' }
 </script>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Bookmark, DragInfo, DragItem, MenuType, DragType, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
@@ -44,7 +50,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
-import { NOID } from 'src/defaults'
+import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
@@ -55,14 +61,17 @@ const props = defineProps<{
   filter?: (n: Bookmark) => boolean
 }>()
 
+const rootEl = ref<HTMLElement | null>(null)
+
 const favicon = computed((): string => {
   if (!props.node.url) return ''
   return Favicons.getFavicon(props.node.url)
 })
 const tooltip = computed((): string => {
-  if (props.node.title && props.node.url) return `${props.node.title}\n---\n${props.node.url}`
+  const title = props.node.parsedTitle || props.node.title
+  if (title && props.node.url) return `${title}\n---\n${props.node.url}`
   else if (props.node.url) return props.node.url
-  else if (props.node.title) return props.node.title
+  else if (title) return title
   else return ''
 })
 const children = computed<Bookmark[] | undefined>(() => {
@@ -75,6 +84,8 @@ const expanded = computed<boolean>(() => {
   if (!props.panelId) return false
   return !!Bookmarks.reactive.expanded[props.panelId]?.[props.node.id]
 })
+
+let middleClickReactionTimeout: number | undefined
 
 async function onMouseDown(e: MouseEvent): Promise<void> {
   Mouse.setTarget('bookmark', props.node.id)
@@ -122,6 +133,15 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     if (Selection.isBookmarks()) {
       Selection.resetSelection()
       if (!Search.rawValue) return
+    }
+
+    // Visualize clicking
+    if (rootEl.value) {
+      rootEl.value.classList.add('-middle-click')
+      clearTimeout(middleClickReactionTimeout)
+      middleClickReactionTimeout = setTimeout(() => {
+        rootEl.value?.classList.remove('-middle-click')
+      }, 300)
     }
 
     // Bookmark
@@ -311,25 +331,7 @@ function onDragStart(e: DragEvent): void {
   Sidebar.updateBounds()
 
   // Check what to drag
-  const toDrag = [props.node.id]
-  const dragItems: DragItem[] = []
-  const walker = (nodes: Bookmark[]) => {
-    for (let node of nodes) {
-      const incl = node.parentId && toDrag.includes(node.parentId)
-      if (incl || Selection.includes(node.id)) {
-        toDrag.push(node.id)
-        dragItems.push({
-          id: node.id,
-          url: node.url,
-          title: node.title,
-          parentId: node.parentId,
-        })
-      }
-      if (node.children) walker(node.children)
-    }
-  }
-  walker(Bookmarks.reactive.tree)
-
+  const dragItems = Bookmarks.convertTreeToDragItems(props.node.id)
   const dragInfo: DragInfo = {
     type: DragType.Bookmarks,
     items: dragItems,
@@ -340,6 +342,7 @@ function onDragStart(e: DragEvent): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Bookmarks)
 
   // Set native drag info

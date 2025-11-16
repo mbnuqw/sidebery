@@ -29,6 +29,13 @@ section(ref="el")
     :opts="Settings.getOpts('switchPanelAfterSwitchingTab')"
     @update:value="toggleSwitchPanelAfterSwitchingTab")
   SelectField(
+    label="settings.scroll_panel_after_switching_tab"
+    optLabel="settings.scroll_panel_after_switching_tab_"
+    v-model:value="Settings.state.scrollPanelAfterSwitchingTab"
+    :folded="true"
+    :opts="Settings.getOpts('scrollPanelAfterSwitchingTab')"
+    @update:value="Settings.saveDebounced(150)")
+  SelectField(
     label="settings.tab_rm_btn"
     optLabel="settings.tab_rm_btn_"
     v-model:value="Settings.state.tabRmBtn"
@@ -104,6 +111,10 @@ section(ref="el")
     :opts="Settings.getOpts('tabsUrlInTooltip')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
+    label="settings.tabs_container_in_tooltip"
+    v-model:value="Settings.state.tabsContainerInTooltip"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
     label="settings.show_new_tab_btns"
     v-model:value="Settings.state.showNewTabBtns"
     @update:value="Settings.saveDebounced(150)")
@@ -147,10 +158,37 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       ToggleField(
+        v-if="Settings.state.moveNewTabParent === 'default' && Settings.state.tabsTree"
+        label="settings.move_new_tab_parent_indent"
+        v-model:value="Settings.state.moveNewTabParentIndent"
+        @update:value="Settings.saveDebounced(150)")
+      ToggleField(
+        v-else
+        label="settings.move_new_tab_parent_indent"
+        :inactive="true"
+        v-bind:value="Settings.state.tabsTree && (Settings.state.moveNewTabParent === 'first_child' || Settings.state.moveNewTabParent === 'last_child')")
+      ToggleField(
         label="settings.move_new_tab_parent_act_panel"
         :inactive="Settings.state.moveNewTabParent === 'none'"
         v-model:value="Settings.state.moveNewTabParentActPanel"
         @update:value="Settings.saveDebounced(150)")
+    //- Place new tab (from New Tab button). options are reused from moveNewTab
+    SelectField(
+      label="settings.move_new_tab_button"
+      optLabel="settings.move_new_tab_"
+      v-model:value="Settings.state.moveNewTabButton"
+      :opts="Settings.getOpts('moveNewTab')"
+      :folded="true"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      SelectField(
+        :inactive="!newTabBtnPosRelativeToActiveTab"
+        label="settings.move_new_tab_active_pin"
+        optLabel="settings.move_new_tab_pin_"
+        v-model:value="Settings.state.moveNewTabButtonActivePin"
+        :opts="Settings.getOpts('moveNewTabActivePin')"
+        @update:value="Settings.saveDebounced(150)")
+    //- Place new tab (general rule)
     SelectField(
       label="settings.move_new_tab"
       optLabel="settings.move_new_tab_"
@@ -160,12 +198,16 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       SelectField(
-        :inactive="!relativeToActiveTab"
+        :inactive="!newTabPosRelativeToActiveTab"
         label="settings.move_new_tab_active_pin"
         optLabel="settings.move_new_tab_pin_"
         v-model:value="Settings.state.moveNewTabActivePin"
         :opts="Settings.getOpts('moveNewTabActivePin')"
         @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.auto_scroll_to_new_tab"
+      v-model:value="Settings.state.autoScrollToNewTab"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="pinTabsEl")
     .sub-title: .text {{translate('settings.nav_settings_pinned_tabs')}}
@@ -192,11 +234,6 @@ section(ref="el")
     ToggleField.-no-separator(
       label="settings.tabs_tree_layout"
       v-model:value="Settings.state.tabsTree"
-      @update:value="Settings.saveDebounced(150)")
-    ToggleField(
-      label="settings.group_on_open_layout"
-      v-model:value="Settings.state.groupOnOpen"
-      :inactive="!Settings.state.tabsTree"
       @update:value="Settings.saveDebounced(150)")
     SelectField(
       label="settings.tabs_tree_limit"
@@ -374,6 +411,22 @@ section(ref="el")
       :or="0"
       :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'i'"
       @update:value="Settings.saveDebounced(500)")
+
+    NumField.-inline(
+      label="settings.tabs.preview_title"
+      v-model:value="Settings.state.previewTabsTitle"
+      :or="0"
+      :allowNegative="false"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'i'"
+      @update:value="Settings.saveDebounced(500)")
+    NumField.-inline(
+      label="settings.tabs.preview_url"
+      v-model:value="Settings.state.previewTabsUrl"
+      :or="0"
+      :allowNegative="false"
+      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'i'"
+      @update:value="Settings.saveDebounced(500)")
+
     SelectField(
       label="settings.tabs.preview_side"
       optLabel="settings.tabs.preview_side_"
@@ -441,6 +494,11 @@ section(ref="el")
         :opts="Settings.getOpts('hideFoldedParent')"
         @update:value="Settings.saveDebounced(150)")
     ToggleField(
+      label="settings.hide_unloaded_tabs"
+      :inactive="!Settings.state.tabsTree"
+      :value="Settings.state.hideUnloadedTabs"
+      @update:value="toggleHideUnloadedTabs")
+    ToggleField(
       label="settings.native_highlight"
       :note="translate('settings.native_highlight_note')"
       v-model:value="Settings.state.nativeHighlight"
@@ -453,7 +511,7 @@ import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Permissions } from 'src/services/permissions'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
@@ -467,12 +525,21 @@ const tabsColorEl = ref<HTMLElement | null>(null)
 const tabsPreviewEl = ref<HTMLElement | null>(null)
 const nativeTabsEl = ref<HTMLElement | null>(null)
 
-const relativeToActiveTab = computed<boolean>(() => {
+const newTabPosRelativeToActiveTab = computed<boolean>(() => {
   return (
     Settings.state.moveNewTab === 'after' ||
     Settings.state.moveNewTab === 'before' ||
     Settings.state.moveNewTab === 'first_child' ||
     Settings.state.moveNewTab === 'last_child'
+  )
+})
+
+const newTabBtnPosRelativeToActiveTab = computed<boolean>(() => {
+  return (
+    Settings.state.moveNewTabButton === 'after' ||
+    Settings.state.moveNewTabButton === 'before' ||
+    Settings.state.moveNewTabButton === 'first_child' ||
+    Settings.state.moveNewTabButton === 'last_child'
   )
 })
 
@@ -537,6 +604,17 @@ async function toggleHideFoldedTabs(): Promise<void> {
   }
 
   Settings.state.hideFoldedTabs = !Settings.state.hideFoldedTabs
+
+  Settings.saveDebounced(150)
+}
+
+async function toggleHideUnloadedTabs() {
+  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+    const result = await Permissions.request('tabHide')
+    if (!result) return
+  }
+
+  Settings.state.hideUnloadedTabs = !Settings.state.hideUnloadedTabs
 
   Settings.saveDebounced(150)
 }

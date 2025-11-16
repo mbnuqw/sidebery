@@ -52,8 +52,3 @@ export interface MenuInvokeDetails {
   blocks: MenuBlock[]
   off?: () => void
 }
-
-// v4 config
-export type SubOptionID_v4 = string | { name: string }
-export type OptionsGroup_v4 = SubOptionID_v4[]
-export type ContextMenuConfig_v4 = (string | OptionsGroup_v4)[]

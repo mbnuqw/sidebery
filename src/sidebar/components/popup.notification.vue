@@ -9,7 +9,7 @@
   .header(@mousedown.middle="onHideMouseDown()")
     .icon(v-if="notification.icon")
       svg(v-if="notification.icon[0] === '#'")
-        use(:xlink:href="notification.icon")
+        use(:href="notification.icon")
       img(v-else :src="notification.icon")
     .title {{notification.title}}
   .details(v-if="notification.details" @mousedown.middle="onHideMouseDown()") {{notification.details}}
@@ -31,7 +31,7 @@
         :title="ctrl.label"
         @click="onCtrlMouseDown($event, index, ctrl.callback)")
         svg(v-if="ctrl.icon")
-          use(:xlink:href="ctrl.icon")
+          use(:href="ctrl.icon")
         .label(v-else-if="ctrl.label") {{ctrl.label}}
       .separator
     .ctrl(
@@ -40,7 +40,7 @@
       :title="translate('notif.hide_tooltip')"
       @click="onHideMouseDown()")
       svg.-close
-        use(xlink:href="#icon_close")
+        use(href="#icon_close")
 </template>
 
 <script lang="ts" setup>

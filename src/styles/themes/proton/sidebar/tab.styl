@@ -6,8 +6,8 @@
   --tabs-height: 30px
   --tabs-margin: var(--general-margin)
   --tabs-indent: 10px
-  --tabs-font: rem(15) sans-serif
-  --tabs-count-font: rem(9) sans-serif
+  --tabs-font: rem(15) var(--general-font-family)
+  --tabs-count-font: rem(9) var(--general-font-family)
   --tabs-border-radius: var(--general-border-radius)
   --tabs-inner-gap: 5px
   --tabs-close-btn-margin: 2px
@@ -45,6 +45,7 @@
 
 .Tab
   position: relative
+  contain: size layout style
   width: calc(100% - var(--tabs-margin) * 2)
   height: calc(var(--tabs-height) + var(--tabs-margin))
   margin: 0 var(--tabs-margin)
@@ -199,6 +200,15 @@
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
 .Tab[data-selected="true"][data-active="true"] .body:before
   box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
+.Tab[data-locked-selection="true"] .body:before
+.Tab[data-locked-selection="true"]:hover .body:before
+.Tab[data-locked-selection="true"]:active .body:before
+  outline: 2px dashed var(--frame-el-overlay-selected-border)
+  outline-offset: -2px
+.Tab[data-locked-selection="true"][data-selected="true"] .body:before
+  box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
+.Tab[data-selected="true"][data-locked-selection="true"][data-active="true"] .body:before
+  box-shadow: inset 0 0 0 3px var(--frame-el-overlay-selected-border)
 
 .Tab[data-edit="true"] .body:before
   background-color: var(--frame-el-overlay-selected-bg)
@@ -338,6 +348,8 @@
   height: 16px
   fill: var(--tabs-normal-fg)
   transition: opacity var(--d-fast)
+.Tab img.fav-icon
+  display: none
 
 .Tab .fav svg
   opacity: .7
@@ -411,6 +423,7 @@
 // -
 .Tab .progress-spinner
   position: absolute
+  visibility: hidden
   box-sizing: border-box
   width: 12px
   height: 12px
@@ -421,7 +434,6 @@
   border-left: 2px solid var(--tabs-progress-bg)
   border-right: 2px solid var(--tabs-progress-bg)
   border-bottom: 2px solid var(--tabs-progress-bg)
-  animation: rotating-animation .5s infinite linear
 .Tab[data-active="true"] .progress-spinner
   border-top: 2px solid var(--tabs-activated-fg)
 
@@ -431,6 +443,10 @@
     border: none
     animation: none
     fill: var(--tabs-normal-fg)
+
+.Tab[data-loading="true"] .progress-spinner
+  visibility: visible
+  animation: rotating-animation .5s infinite linear
 
 // ---
 // -- Update / highlight badge
@@ -494,7 +510,6 @@
   border-radius: var(--tabs-border-radius)
   overflow: hidden
   opacity: 0
-  animation: flash-box-animation .4s
   &:before
     content: ''
     position: absolute
@@ -504,9 +519,12 @@
     left: 0
     background-image: linear-gradient(90deg, #00000000, var(--tabs-normal-fg))
     transform: translateX(-100%)
-    animation: flash-progress-animation .4s
 .Tab[data-active="true"] .flash-fx:before
   background-image: linear-gradient(90deg, #00000000, var(--tabs-activated-fg))
+.Tab .flash-fx[data-run="true"]
+  animation: flash-box-animation .4s
+  &:before
+    animation: flash-progress-animation .4s
 
 // ---
 // -- Title box
@@ -575,6 +593,9 @@
 
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
+
+.Tab[data-edit="true"] .title
+  display: none
 
 // ---
 // -- Container highlight

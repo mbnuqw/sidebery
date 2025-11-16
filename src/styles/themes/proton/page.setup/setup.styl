@@ -6,7 +6,6 @@ vendors = official
 @import '../btn'
 @import '../animations'
 @import '../inputs'
-@import '../upgrade-screen'
 
 @import './settings'
 @import './settings.sync'
@@ -29,6 +28,7 @@ vendors = official
 @import '../sidebar/bookmark-node'
 @import '../sidebar/scroll-box'
 @import '../sidebar/loading-dots'
+@import '../sidebar/popup.notifications'
 
 #root[data-toolbar-color-scheme="dark"]
   --frame-bg: #1C1B22
@@ -78,7 +78,7 @@ body
   position: relative
   width: 100%
   height: 100%
-  font-family: sans-serif
+  font-family: system-ui
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   overflow: hidden
@@ -129,7 +129,7 @@ body
   font-size: rem(19)
   color: var(--toolbar-fg)
   white-space: pre
-  cursor: pointer
+  cursor: default
   -moz-user-select: none
   opacity: .7
   overflow: hidden
@@ -255,3 +255,13 @@ footer
   opacity: 1
 .view-leave-to
   opacity: 0
+
+.Setup .notifications-container
+  position: absolute
+  width: 100%
+  max-width: 300px
+  height: 0
+  bottom: 0
+  left: 0
+.Setup .notifications-container .indicators
+  box-sizing: border-box

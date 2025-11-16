@@ -12,7 +12,7 @@ Transition(name="panel-placeholder")
 import LoadingDots from 'src/components/loading-dots.vue'
 import { Permissions } from 'src/services/permissions'
 import { RequestablePermission } from 'src/services/permissions.actions'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 
 const props = defineProps<{
   isLoading?: boolean

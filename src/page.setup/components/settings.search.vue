@@ -32,7 +32,7 @@ section(ref="el")
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Settings } from 'src/services/settings'
 import SelectField from '../../components/select-field.vue'
 import TextField from 'src/components/text-field.vue'

@@ -3,21 +3,24 @@
   :id="'bookmark' + panelId + node.id"
   :data-selected="node.sel"
   :data-open="node.isOpen"
+  :data-color="node.containerColor"
   :title="tooltip"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .dnd-layer(draggable="true" data-dnd-type="panel" data-dnd-id="bookmarks" @dragstart="onDragStart")
   .body
+    .color-layer(v-if="node.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as browser.ColorName] }")
     .line
       .fav
         svg(v-if="!favicon")
-          use(xlink:href="#icon_ff")
+          use(href="#icon_ff")
         img(v-else :src="favicon")
-      .title {{node.title}}
+      .title {{node.parsedTitle || node.title}}
     .line
       .info {{getFolder(node)}}
       .info.-end {{getDate(node)}}
+    .container-mark(v-if="node.containerColor")
 </template>
 
 <script lang="ts" setup>
@@ -27,7 +30,7 @@ import { Bookmark, DragInfo, DragType, DropType, DstPlaceInfo } from 'src/types'
 import { MenuType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import * as Favicons from 'src/services/favicons.fg'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
@@ -35,7 +38,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
-import { FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { FOLDER_NAME_DATA_RE, RGB_COLORS } from 'src/defaults'
 import { Search } from 'src/services/search'
 
 const props = defineProps<{ node: Bookmark; panelId: ID }>()
@@ -45,17 +48,13 @@ const favicon = computed((): string => {
   return Favicons.getFavicon(props.node.url)
 })
 const tooltip = computed((): string => {
-  if (props.node.url) return `${props.node.title}\n---\n${props.node.url}`
+  if (props.node.url) return `${props.node.parsedTitle || props.node.title}\n---\n${props.node.url}`
   else return ''
 })
 
 function getFolder(node: Bookmark): string {
-  const folderName = Bookmarks.reactive.byId[node.parentId]?.title ?? '???'
-  if (folderName.length > 36) {
-    const folderNameExec = FOLDER_NAME_DATA_RE.exec(folderName)
-    if (folderNameExec) return folderNameExec[1]
-  }
-  return folderName
+  const folder = Bookmarks.reactive.byId[node.parentId]
+  return folder?.parsedTitle ?? folder?.title ?? '???'
 }
 
 function getDate(node: Bookmark): string {
@@ -183,6 +182,7 @@ function onDragStart(e: DragEvent): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Bookmarks)
 
   // Set native drag info

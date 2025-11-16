@@ -14,14 +14,20 @@ export interface TabPreviewInitData {
   url: string
   y: number
   dpr: number
+  sh: number
   popupWidth: number
   offsetY: number
   offsetX: number
   atTheLeft: boolean
   rCrop: number
+  tMax: number
+  uMax: number
+  unloaded: boolean
 }
 
+const Y_OFFSET = -24
 const MARGIN = 2
+
 const state = {
   tabId: NOID,
   winId: NOID,
@@ -31,6 +37,7 @@ const state = {
   popupEl: null as HTMLElement | null,
   titleEl: null as HTMLElement | null,
   urlEl: null as HTMLElement | null,
+  previewBoxEl: null as HTMLElement | null,
   previewEl1: null as HTMLElement | null,
   previewEl2: null as HTMLElement | null,
 
@@ -63,7 +70,7 @@ function waitInitData(): Promise<void> {
 
 async function updatePreview(tabId: ID, title: string, url: string, unloaded: boolean) {
   if (state.titleEl) state.titleEl.innerText = title
-  if (state.urlEl) state.urlEl.innerText = url
+  if (state.urlEl) state.urlEl.innerText = decodeURL(url)
 
   state.tabId = tabId
   state.unloaded = unloaded
@@ -78,6 +85,14 @@ async function updatePreview(tabId: ID, title: string, url: string, unloaded: bo
   }
 }
 
+function decodeURL(url: string): string {
+  try {
+    return decodeURI(url)
+  } catch (err) {
+    return url
+  }
+}
+
 let previewElN = 0
 function setPreview(preview: string) {
   if (!state.previewEl1 || !state.previewEl2) return
@@ -88,20 +103,22 @@ function setPreview(preview: string) {
     state.previewEl1.style.setProperty('background-image', preview ? `url("${preview}")` : 'none')
     setTimeout(() => {
       if (state.previewEl2) state.previewEl2.style.setProperty('opacity', '0')
-    }, 100)
+    }, 10)
   } else {
     previewElN++
     state.previewEl2.style.setProperty('opacity', '1')
     state.previewEl2.style.setProperty('background-image', preview ? `url("${preview}")` : 'none')
     setTimeout(() => {
       if (state.previewEl1) state.previewEl1.style.setProperty('opacity', '0')
-    }, 100)
+    }, 10)
   }
+
+  hidePreviewBoxWhenUnloaded()
 }
 
 function setPopupPosition(y: number) {
   if (!state.popupEl) return
-  let newY = y + state.offsetY
+  let newY = y + state.offsetY + Y_OFFSET
   if (newY > state.maxY) newY = state.maxY
   else if (newY < state.minY) newY = state.minY
   state.popupEl.style.transform = `translateY(${newY}px)`
@@ -110,6 +127,17 @@ function setPopupPosition(y: number) {
 function show() {
   if (!state.rootEl || state.hidden) return
   state.rootEl.style.opacity = '1'
+
+  hidePreviewBoxWhenUnloaded()
+}
+
+function hidePreviewBoxWhenUnloaded() {
+  if (!state.popupEl) return
+  if (state.unloaded) {
+    state.previewBoxEl?.style.setProperty('display', 'none')
+  } else {
+    state.previewBoxEl?.style.setProperty('display', 'block')
+  }
 }
 
 function hide() {
@@ -123,8 +151,6 @@ function hide() {
 
 function compensateZoom() {
   if (!state.rootEl) return
-  if (state.referenceDevicePixelRatio === window.devicePixelRatio) return
-  state.compScale = state.referenceDevicePixelRatio / window.devicePixelRatio
   state.rootEl.style.transform = `scale(${state.compScale})`
 }
 
@@ -147,7 +173,7 @@ function calcScale(previewWidth: number, previewHeight: number, devicePixelRatio
   let scale = (devicePixelRatio / Math.min(w, h)) * 1.5
   if (scale > devicePixelRatio) scale = devicePixelRatio
 
-  return scale
+  return scale * state.compScale
 }
 
 function getPopupHeight() {
@@ -156,8 +182,7 @@ function getPopupHeight() {
 }
 
 function calcPositionRestraints() {
-  state.minY = MARGIN / state.compScale
-  state.maxY = (state.pageHeight - MARGIN) / state.compScale - state.popupHeight
+  state.maxY = state.pageHeight / state.compScale - MARGIN - state.popupHeight
 }
 
 async function main() {
@@ -179,12 +204,20 @@ async function main() {
   window.sideberyInitData = undefined
   window.onSideberyInitDataReady = undefined
 
+  if (state.referenceDevicePixelRatio !== window.devicePixelRatio) {
+    state.compScale = state.referenceDevicePixelRatio / window.devicePixelRatio
+  }
+  const pageHeight = Math.trunc(window.innerHeight / state.compScale)
+  const sidebarHeight = initData.sh || pageHeight
+  const heightDifBetweenSidebarAndPage = pageHeight - sidebarHeight
+
   state.winId = initData.winId
   state.referenceDevicePixelRatio = initData.dpr
   state.previewWidth = initData.popupWidth
   state.previewHeight = calcPreviewHeight(initData.popupWidth)
-  state.offsetY = initData.offsetY
+  state.offsetY = initData.offsetY + heightDifBetweenSidebarAndPage
   state.offsetX = initData.offsetX
+  state.unloaded = initData.unloaded
 
   previewConf.scale = calcScale(
     state.previewWidth,
@@ -197,6 +230,7 @@ async function main() {
   IPC.connectTo(InstanceType.bg)
   IPC.connectTo(InstanceType.sidebar, initData.winId)
   IPC.registerActions({ updatePreview, setY: setPopupPosition, close: hide })
+  IPC.onDisconnected(InstanceType.sidebar, hide)
 
   // Create shadow DOM
   const shadow = state.rootEl.attachShadow({ mode: 'closed' })
@@ -229,6 +263,13 @@ async function main() {
     opacity: 0;
     transition: opacity .1s;
     transform-origin: 50% 0%;
+    text-align: start;
+    direction: ltr;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    visibility: visible;
+    white-space: normal;
 `
 
   // Create popup element
@@ -248,7 +289,7 @@ async function main() {
     background-color: var(--bg);
     overflow: hidden;
     color: var(--fg);
-    font-family: sans-serif;
+    font-family: system-ui;
     transition: background 1s;
 `
 
@@ -267,42 +308,62 @@ async function main() {
 `
 
   // Create title element
-  state.titleEl = document.createElement('div')
-  state.titleEl.classList.add('title')
-  headerEl.appendChild(state.titleEl)
-  state.titleEl.style.cssText = `
+  const maxTitleLines = initData.tMax
+  if (maxTitleLines > 0) {
+    state.titleEl = document.createElement('div')
+    state.titleEl.classList.add('title')
+    headerEl.appendChild(state.titleEl)
+    state.titleEl.style.cssText = `
     position: relative;
     margin: 6px 8px 4px;
     padding: 0;
     font-size: .875em;
     font-weight: 700;
     line-height: 1.2em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-`
+    overflow: hidden;`
+    if (maxTitleLines === 1) {
+      state.titleEl.style.cssText += `
+      text-overflow: ellipsis;
+      white-space: nowrap;`
+    } else {
+      state.titleEl.style.cssText += `
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: ${maxTitleLines};`
+    }
+  }
 
   // Create url element
-  state.urlEl = document.createElement('div')
-  state.urlEl.classList.add('url')
-  headerEl.appendChild(state.urlEl)
-  state.urlEl.style.cssText = `
-    position: relative;
-    margin: 0 8px 8px;
-    padding: 0;
-    font-size: .8125em;
-    font-weight: 400;
-    line-height: 1.2em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    opacity: .75;
-`
+  const maxUrlLines = initData.uMax
+  if (maxUrlLines > 0) {
+    state.urlEl = document.createElement('div')
+    state.urlEl.classList.add('url')
+    headerEl.appendChild(state.urlEl)
+    state.urlEl.style.cssText = `
+      position: relative;
+      margin: ${maxTitleLines > 0 ? '0' : '8px'} 8px 8px;
+      padding: 0;
+      font-size: .8125em;
+      font-weight: 400;
+      line-height: 1.2em;
+      overflow: hidden;
+      opacity: ${maxTitleLines ? '.75' : '1'};`
+    if (maxUrlLines === 1) {
+      state.urlEl.style.cssText += `
+      text-overflow: ellipsis;
+      white-space: nowrap;`
+    } else {
+      state.urlEl.style.cssText += `
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: ${maxUrlLines};`
+    }
+  }
 
   // Create preview box element
-  const previewBoxEl = document.createElement('div')
-  state.popupEl.appendChild(previewBoxEl)
-  previewBoxEl.style.cssText = `
+  state.previewBoxEl = document.createElement('div')
+  state.popupEl.appendChild(state.previewBoxEl)
+  state.previewBoxEl.style.cssText = `
     position: relative;
     width: 100%;
     height: ${state.previewHeight + initData.rCrop}px;
@@ -310,7 +371,7 @@ async function main() {
 
   // Create preview 1 element
   state.previewEl1 = document.createElement('div')
-  previewBoxEl.appendChild(state.previewEl1)
+  state.previewBoxEl.appendChild(state.previewEl1)
   state.previewEl1.style.cssText = `
     position: absolute;
     width: calc(100% + ${initData.rCrop}px);
@@ -322,12 +383,12 @@ async function main() {
     background-position: 50% 0%;
     background-size: cover;
     opacity: 0;
-    transition: opacity .2s;
+    transition: opacity .12s;
 `
 
   // Create preview 2 element
   state.previewEl2 = document.createElement('div')
-  previewBoxEl.appendChild(state.previewEl2)
+  state.previewBoxEl.appendChild(state.previewEl2)
   state.previewEl2.style.cssText = `
     position: absolute;
     width: calc(100% + ${initData.rCrop}px);
@@ -339,11 +400,11 @@ async function main() {
     background-position: 50% 0%;
     background-size: cover;
     opacity: 0;
-    transition: opacity .2s;
+    transition: opacity .12s;
 `
 
   compensateZoom()
-  updatePreview(initData.tabId, initData.title, initData.url, false)
+  updatePreview(initData.tabId, initData.title, initData.url, initData.unloaded)
   state.popupHeight = getPopupHeight()
   calcPositionRestraints()
   setPopupPosition(initData.y)

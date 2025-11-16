@@ -1,9 +1,10 @@
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Bookmark, Panel, Notification, DialogConfig, DragInfo, SubPanelType } from 'src/types'
-import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
+import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel, DragItem } from 'src/types'
+import { CopyTemplate } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
-import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
+import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK, TITLE_IN_BOOKMARK_RE } from 'src/defaults'
 import { TAB_BOOKMARK_COLOR, BOOKMARK_TAB_COLOR } from 'src/defaults'
 import { CONTAINER_IN_BOOKMARK_RE, COLOR_IN_BOOKMARK_RE } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
@@ -13,7 +14,7 @@ import * as Popups from 'src/services/popups'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Tabs } from 'src/services/tabs.fg'
 import { Store } from 'src/services/storage'
 import { Notifications } from 'src/services/notifications'
@@ -30,9 +31,31 @@ export async function load(): Promise<void> {
   if (!Info.isBg) return loadInFg()
 }
 
+let loading = false
+let onLoaded: (() => void)[] = []
+function finishLoading() {
+  loading = false
+  onLoaded.forEach(fn => fn())
+  onLoaded = []
+}
+
 async function loadInFg(): Promise<void> {
-  const bookmarks = (await browser.bookmarks.getTree()) as Bookmark[]
-  if (!bookmarks[0].children) return
+  // Check if the process is already started
+  if (loading) return new Promise(ok => onLoaded.push(ok))
+
+  loading = true
+
+  let bookmarks
+  try {
+    bookmarks = (await browser.bookmarks.getTree()) as Bookmark[]
+  } catch {
+    finishLoading()
+    return
+  }
+  if (!bookmarks[0].children) {
+    finishLoading()
+    return
+  }
 
   // Normalize objects before vue
   Bookmarks.reactive.byId = {}
@@ -43,6 +66,7 @@ async function loadInFg(): Promise<void> {
       Bookmarks.reactive.byId[n.id] = n
       n.sel = false
       n.isOpen = false
+      parseTitle(n)
       if (n.type === 'separator') n.url = undefined
       else if (n.url) {
         count++
@@ -77,6 +101,8 @@ async function loadInFg(): Promise<void> {
   if (DnD.reactive.isStarted && Utils.isBookmarksPanel(activePanel)) {
     Sidebar.updateBounds()
   }
+
+  finishLoading()
 }
 
 export async function restoreTree(): Promise<void> {
@@ -361,8 +387,6 @@ export async function open(
       dst.index = dstPanel.nextTabIndex ?? Tabs.list.length
     }
     dst.panelId = dstPanel.id
-  } else {
-    return
   }
 
   const toOpen: ItemInfo[] = []
@@ -378,9 +402,7 @@ export async function open(
         const info: ItemInfo = { id: node.id, title: node.title }
         if (node.url) info.url = node.url
         if (isIndirectTarget) info.parentId = node.parentId
-        if (!info.url && info.title && info.title.length > 20) {
-          Bookmarks.extractTabInfoFromTitle(info, true)
-        }
+        Bookmarks.extractTabInfoFromTitle(info)
 
         // Set url for parent node
         const prev = toOpen[toOpen.length - 1]
@@ -407,8 +429,19 @@ export async function open(
   }
 
   if (ids.length === 1 && firstBookmark?.type === 'bookmark') {
+    const info: ItemInfo = {
+      id: firstBookmark.id,
+      url: firstBookmark.url,
+      title: firstBookmark.title,
+    }
+    Bookmarks.extractTabInfoFromTitle(info)
+
     if (useActiveTab) {
-      browser.tabs.update({ url: Utils.normalizeUrl(firstBookmark.url, firstBookmark.title) })
+      // TODO: undo
+      browser.tabs.update({ url: Utils.normalizeUrl(info.url, info.title) })
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (info.customColor) Tabs.setCustomColor([Tabs.activeId], info.customColor)
+      else if (activeTab && activeTab.customColor) Tabs.setCustomColor([Tabs.activeId], 'toolbar')
       if (Settings.state.autoRemoveOther && firstBookmark.parentId === BKM_OTHER_ID) {
         Bookmarks.removeBookmarks([firstBookmark.id])
       }
@@ -419,7 +452,7 @@ export async function open(
       toRemove.push(firstBookmark.id)
     }
 
-    toOpen.push({ id: firstBookmark.id, url: firstBookmark.url, title: firstBookmark.title })
+    toOpen.push(info)
   } else {
     walker(Bookmarks.reactive.tree)
   }
@@ -439,14 +472,27 @@ export async function createBookmarkNode(
   type: browser.bookmarks.TreeNodeType,
   target: Bookmark
 ): Promise<void> {
+  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.activePanelId]
   let parentId: ID | undefined
   let index = 0
 
-  if (target.type === 'bookmark' || target.type === 'separator') {
+  // Create bookmark node inside the target folder only if it's open
+  if (target.type === 'folder' && (!expandedBookmarks || expandedBookmarks[target.id])) {
+    parentId = target.id
+    if (type === 'folder') {
+      // New folder - after the last one or at the start of the list
+      const lastFolderIndex = (target.children ?? []).findLastIndex(n => n.type === 'folder')
+      if (lastFolderIndex !== -1) index = lastFolderIndex + 1
+      else index = 0
+    } else {
+      // Other types - append to the end
+      index = target.children?.length ?? 0
+    }
+  }
+  // Otherwise, create bookmark node after the target
+  else {
     parentId = target.parentId
     index = target.index + 1
-  } else if (target.type === 'folder') {
-    parentId = target.id
   }
 
   if (!parentId) parentId = BKM_OTHER_ID
@@ -881,10 +927,16 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
     } catch (err) {
       return
     }
-    if (info.items) {
+
+    if (info?.items) {
       const groupUrlStartRe = /^moz-extension:\/\/.{36}\/(page.)?group\/group\.html(.+)$/
-      // Update sidebery internal urls
       for (const item of info.items) {
+        // Remove containers info b/c it's a different profile, hence containerId
+        // refers to a different container.
+        // TODO: tell user about this
+        delete item.container
+
+        // Update sidebery internal urls
         if (item.url && groupUrlStartRe.test(item.url)) {
           item.url = item.url.replace(groupUrlStartRe, (_, _1, $2: string) => GROUP_URL + $2)
         }
@@ -929,7 +981,7 @@ export async function move(ids: ID[], dst: DstPlaceInfo): Promise<void> {
   }
 
   let dstIndex = dst.index
-  if (dstIndex === undefined) {
+  if (dstIndex === undefined || dstIndex < 0) {
     const parent = Bookmarks.reactive.byId[dst.parentId]
     dstIndex = parent?.children?.length ?? 0
   }
@@ -952,6 +1004,42 @@ export function attachTabInfoToTitle(item: ItemInfo) {
   if (item.customColor) {
     item.title += ` [${TAB_BOOKMARK_COLOR[item.customColor]}]`
   }
+  if (item.customTitle) {
+    item.title += ' [*]'
+  }
+}
+
+export function parseTitle(node: Bookmark) {
+  if (!node.title) return
+
+  let parsedTitle = node.title
+
+  const pinIndex = parsedTitle.indexOf(' ' + PIN_MARK)
+  if (pinIndex !== -1) {
+    parsedTitle = parsedTitle.slice(0, pinIndex) + parsedTitle.slice(pinIndex + 1 + PIN_MARK.length)
+  }
+
+  delete node.containerColor
+  parsedTitle = parsedTitle.replace(CONTAINER_IN_BOOKMARK_RE, (match, cuid) => {
+    if (typeof cuid !== 'string') return match
+    const info = Containers.parseCUID(cuid)
+    const container = Containers.findUnique(info)
+    if (!container) return match
+    node.containerColor = container.color
+    return ''
+  })
+
+  delete node.customColor
+  parsedTitle = parsedTitle.replace(COLOR_IN_BOOKMARK_RE, (match, colorId) => {
+    const color = BOOKMARK_TAB_COLOR[colorId as string]
+    if (!color) return match
+    node.customColor = color
+    return ''
+  })
+
+  parsedTitle = parsedTitle.replace(TITLE_IN_BOOKMARK_RE, '')
+
+  node.parsedTitle = parsedTitle
 }
 
 export function extractTabInfoFromTitle(item: ItemInfo, updateTitleOnly?: boolean) {
@@ -978,6 +1066,13 @@ export function extractTabInfoFromTitle(item: ItemInfo, updateTitleOnly?: boolea
     if (!updateTitleOnly) item.customColor = color
     return ''
   })
+
+  let isCustomTitle = false
+  item.title = item.title.replace(TITLE_IN_BOOKMARK_RE, () => {
+    isCustomTitle = true
+    return ''
+  })
+  if (isCustomTitle && !updateTitleOnly) item.customTitle = item.title
 }
 
 /**
@@ -992,7 +1087,7 @@ export async function createFrom(
   let dstIndex = dst.index
   let n = 0
 
-  if (dstIndex === undefined) {
+  if (dstIndex === undefined || dstIndex < 0) {
     const parent = Bookmarks.reactive.byId[dst.parentId]
     dstIndex = parent?.children?.length ?? 0
   }
@@ -1006,6 +1101,8 @@ export async function createFrom(
       const parentId = idsMap[item.parentId ?? NOID] ?? dst.parentId
       const index = !parent ? dstIndex++ : undefined
 
+      attachTabInfoToTitle(item)
+
       // Create folder
       if (children.length) {
         const folderConf = { title: item.title, parentId, index }
@@ -1016,7 +1113,6 @@ export async function createFrom(
 
         // Create bookmark of parent item
         if (item.url && !GROUP_RE.test(item.url)) {
-          attachTabInfoToTitle(item)
           const url = Utils.denormalizeUrl(item.url)
           await browser.bookmarks.create({ title: item.title, url, parentId: folder.id })
         }
@@ -1024,7 +1120,6 @@ export async function createFrom(
         continue
       }
 
-      attachTabInfoToTitle(item)
       const url = Utils.denormalizeUrl(item.url)
       await browser.bookmarks.create({ title: item.title, url, parentId, index })
 
@@ -1424,42 +1519,149 @@ export async function openAsTabsPanel(folder: Bookmark, showConfigPopup: boolean
   if (ids.length) await Bookmarks.open(ids, { panelId: tabsPanel.id })
 }
 
-export async function copyUrls(ids: ID[]): Promise<void> {
+export async function copy(ids: ID[], template: CopyTemplate) {
   if (!Permissions.reactive.clipboardWrite) {
     const result = await Permissions.request('clipboardWrite')
     if (!result) return
   }
 
-  let urls = ''
-  for (const node of Bookmarks.listBookmarks()) {
-    const includedItself = ids.includes(node.id)
-    if (includedItself || ids.includes(node.parentId)) {
-      if (!includedItself && node.children?.length) ids.push(node.id)
-      if (node.url) urls += '\n' + node.url
-    }
-  }
-
-  const resultString = urls.trim()
+  const nodes = getNodesWithChildren(ids, node => {
+    if (template.hasU && !node.url) return false
+    if ((template.hasT || template.hasCT) && !node.title) return false
+    return true
+  })
+  const strings = formatCopyTemplate(ids, nodes, template)
+  const resultString = strings.join('\n')
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export async function copyTitles(ids: ID[]): Promise<void> {
-  if (!Permissions.reactive.clipboardWrite) {
-    const result = await Permissions.request('clipboardWrite')
-    if (!result) return
-  }
-
-  let titles = ''
+function getNodesWithChildren(ids: ID[], pred: (node: Bookmark) => any): Bookmark[] {
+  const nodes: Bookmark[] = []
   for (const node of Bookmarks.listBookmarks()) {
     const includedItself = ids.includes(node.id)
     if (includedItself || ids.includes(node.parentId)) {
       if (!includedItself && node.children?.length) ids.push(node.id)
-      if (node.title) titles += '\n' + node.title
+      if (pred(node)) nodes.push(node)
+    }
+  }
+  return nodes
+}
+
+function formatCopyTemplate(ids: ID[], nodes: Bookmark[], template: CopyTemplate): string[] {
+  const isDBG = template.str === '%DBG'
+  const lines: string[] = []
+  const bullet = nodes.length > 1 ? Settings.state.copyMultiBullet : ''
+  const indent = Settings.state.copyTreeIndent
+  const indentLevelsById = new Map<ID, number>()
+  for (const node of nodes) {
+    if (isDBG) {
+      lines.push(JSON.stringify(node, null, 2))
+      continue
+    }
+
+    // Get indent lvl
+    const path = Bookmarks.getPath(node)
+    const pNodeId = path.findLast(id => ids.includes(id))
+    const pLvl = pNodeId ? indentLevelsById.get(pNodeId) : undefined
+    const indentLvl = pLvl !== undefined ? pLvl + 1 : 0
+
+    indentLevelsById.set(node.id, indentLvl)
+
+    let result = template.str
+    if (template.hasB) result = result.replaceAll('%B', bullet)
+    if (template.hasCT) result = result.replaceAll('%CT', node.title)
+    if (template.hasT) result = result.replaceAll('%T', node.title)
+    if (template.hasU) result = result.replaceAll('%U', node.url ?? '')
+    lines.push(indent.repeat(indentLvl) + result)
+  }
+  return lines
+}
+
+export async function pasteInOrAfter(id: ID) {
+  const panel = Sidebar.panelsById[id]
+  if (Utils.isBookmarksPanel(panel)) {
+    id = panel.rootId
+    if (id === BKM_ROOT_ID || id === NOID) {
+      id = BKM_OTHER_ID
     }
   }
 
-  const resultString = titles.trim()
-  if (resultString) navigator.clipboard.writeText(resultString)
+  await Bookmarks.prepareBookmarks()
+
+  const target = Bookmarks.reactive.byId[id]
+  if (!target) return Logs.warn('Bookmarks.pasteInOrAfter: No target')
+
+  if (target.type === 'folder') Bookmarks.pasteIn(id)
+  else Bookmarks.pasteAfter(id)
+}
+
+export async function pasteIn(id: ID) {
+  if (id === BKM_ROOT_ID || id === NOID) {
+    id = BKM_OTHER_ID
+  }
+
+  const bkmNode = Bookmarks.reactive.byId[id]
+  if (!bkmNode || bkmNode.type !== 'folder' || !bkmNode.children) {
+    return Logs.warn('Bookmarks.pasteIn: No target folder')
+  }
+
+  const dst: DstPlaceInfo = {
+    parentId: bkmNode.id,
+    index: bkmNode.children.length,
+  }
+
+  return paste(dst)
+}
+
+export async function pasteAfter(id: ID) {
+  const bkmNode = Bookmarks.reactive.byId[id]
+  if (!bkmNode) return Logs.warn('Bookmarks.pasteAfter: No target bookmark')
+
+  const parentNode = Bookmarks.reactive.byId[bkmNode.parentId]
+  if (!parentNode) return Logs.warn('Bookmarks.pasteAfter: No target folder')
+
+  const dst: DstPlaceInfo = {
+    parentId: parentNode.id,
+    index: bkmNode.index + 1,
+  }
+
+  return paste(dst)
+}
+
+export async function paste(dst: DstPlaceInfo) {
+  // Check permission
+  if (!Permissions.reactive.clipboardRead) {
+    const result = await Permissions.request('clipboardRead')
+    if (!result) return Logs.warn('Bookmarks.paste: No permission')
+  }
+
+  // Load bookmarks
+  await Bookmarks.prepareBookmarks()
+
+  // Get and parse text from clipboard
+  const rawText = await navigator.clipboard.readText()
+  const items = Utils.withoutEmptyFolders(Utils.parseTextForItems(rawText))
+  if (!items.length) return Logs.warn('Bookmarks.paste: No parsed items')
+
+  // Check/Normalize dst info
+  // - Parent tab
+  if (dst.parentId === undefined) {
+    dst.parentId = BKM_OTHER_ID
+    dst.index = undefined
+  }
+  const dstParent = Bookmarks.reactive.byId[dst.parentId]
+  if (!dstParent || !dstParent.children) return Logs.warn('Bookmarks.paste: No parent folder')
+  // - Index
+  if (dst.index === undefined) {
+    dst.index = dstParent.children.length
+  }
+
+  // Create bookmarks
+  await createFrom(items, dst)
+
+  // Scroll to the first node
+  const bkmNode = dstParent.children[dst.index]
+  if (bkmNode) Bookmarks.scrollToBookmark(bkmNode.id)
 }
 
 export function isFolderWithURL(folder: Bookmark): boolean {
@@ -1496,4 +1698,45 @@ export async function prepareBookmarks() {
   }
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
   return true
+}
+
+const flashAnimationTimeouts = new Map<ID, number>()
+
+export function triggerFlashAnimation(panelId: ID, bookmarkId: ID) {
+  const elId = 'bookmark' + panelId + bookmarkId
+  const el = document.getElementById(elId)
+  if (!el) return
+
+  el.classList.add('-middle-click')
+  clearTimeout(flashAnimationTimeouts.get(bookmarkId))
+  flashAnimationTimeouts.set(
+    bookmarkId,
+    setTimeout(() => {
+      el?.classList.remove('-middle-click')
+      flashAnimationTimeouts.delete(bookmarkId)
+    }, 300)
+  )
+}
+
+export function convertTreeToDragItems(rootId: ID): DragItem[] {
+  const targetIds = [rootId]
+  const dragItems: DragItem[] = []
+  const walker = (nodes: Bookmark[]) => {
+    for (const node of nodes) {
+      const incl = node.parentId && targetIds.includes(node.parentId)
+      if (incl || Selection.includes(node.id)) {
+        targetIds.push(node.id)
+        dragItems.push({
+          id: node.id,
+          url: node.url,
+          title: node.title,
+          parentId: node.parentId,
+        })
+      }
+      if (node.children) walker(node.children)
+    }
+  }
+  walker(Bookmarks.reactive.tree)
+
+  return dragItems
 }

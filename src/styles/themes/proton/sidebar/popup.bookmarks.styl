@@ -150,6 +150,12 @@
   .scrollable
     padding-top: var(--bookmarks-margin)
 
+// Make the inner scrollbox flex so that the height
+// of the scroll-container is calculated correctly
+.BookmarksPopup .tree .ScrollBox
+  display: flex
+  flex-direction: column
+
 .BookmarksPopup .tree .fav:hover
   transition: none
   opacity: .64

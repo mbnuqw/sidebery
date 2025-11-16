@@ -14,7 +14,7 @@
       :index="i")
 
     NotificationContainer(
-      v-if="activeNotif"
+      v-if="activeNotif && !DnD.reactive.isStarted"
       :key="activeNotif.id"
       :notification="activeNotif"
       :index="activeNotificationIndex")
@@ -25,6 +25,7 @@
 import { computed, ref, watch } from 'vue'
 import { Notification } from 'src/types'
 import { Notifications } from 'src/services/notifications'
+import { DnD } from 'src/services/drag-and-drop'
 import NotificationContainer from './popup.notification.vue'
 
 const activeNotificationIndex = ref(0)

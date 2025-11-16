@@ -1,5 +1,5 @@
 import { NOID } from 'src/defaults'
-import { DragItem, DragType, DropType } from 'src/types'
+import { DragInfo, DragItem, DragType, DropType } from 'src/types'
 import * as DndActions from 'src/services/drag-and-drop.actions'
 
 export const enum DndPointerMode {
@@ -50,9 +50,7 @@ export const DnD = {
     dragTooltipInfo: '',
   } as DragAndDropState,
 
-  dropEventConsumed: false,
   dropMode: 'auto' as 'auto' | 'copy',
-  inheritContainer: false,
   items: [] as DragItem[],
   isExternal: false,
   goOutside: false,
@@ -67,6 +65,8 @@ export const DnD = {
   srcIndex: -1,
 
   dragEndedRecently: false,
+  droppedRecently: false,
+  dragInfo: null as DragInfo | null,
 
   ...DndActions,
 }

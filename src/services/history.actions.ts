@@ -18,8 +18,6 @@ const UNLIMITED = 1234567
 const INITIAL_COUNT = 100
 const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
 
-let lastItemTime = 0
-
 let reactFn: (<T extends object>(rObj: T) => T) | undefined
 export function initHistory(react: (rObj: object) => object) {
   reactFn = react as <T extends object>(rObj: T) => T
@@ -105,7 +103,6 @@ export async function load(): Promise<void> {
 
   const lastItemVisitTime = result[result.length - 1]?.lastVisitTime
   const visits = await normalizeHistory(result, true, lastItemVisitTime)
-  lastItemTime = getLastVisitTime(visits) - 1
 
   if (!visits.length) await loadMore()
   else History.visits = visits
@@ -170,6 +167,7 @@ export function recalcDays() {
     if (prevVisit && pvTitle && vTitle.length === pvTitle.length && vTitle === pvTitle) {
       if (!prevVisit.reactive.moreVisits) prevVisit.reactive.moreVisits = [visit.id]
       else prevVisit.reactive.moreVisits.push(visit.id)
+      visit.hiddenUnderParentId = prevVisit.id
       continue
     }
 
@@ -282,55 +280,63 @@ export async function normalizeHistory(
 
 export async function loadMore(): Promise<void> {
   if (History.allLoaded) return
+  History.loadingMore = true
 
-  const before = lastItemTime
-  const after = lastItemTime - LOAD_RANGE
+  const before = getLastVisitTime() - 1
+  const after = before - LOAD_RANGE
 
-  let result = await browser.history.search({
-    text: '',
-    maxResults: UNLIMITED,
-    startTime: after,
-    endTime: before,
-  })
+  let result = await browser.history
+    .search({
+      text: Search.reactive.value,
+      maxResults: UNLIMITED,
+      startTime: after,
+      endTime: before,
+    })
+    .catch(() => [])
 
   // First check
   if (result.length) {
-    const newVisits = await normalizeHistory(result, true, after, before)
+    const newVisits = await normalizeHistory(result, true, after, before).catch(() => [])
     if (newVisits.length) {
-      History.visits.push(...newVisits)
+      if (History.filtered) History.filtered.push(...newVisits)
+      else History.visits.push(...newVisits)
       History.reactive.days = History.recalcDays()
-      lastItemTime = getLastVisitTime() - 1
+      History.loadingMore = false
       return
     }
   }
 
   // If got nothing, try to get next 100 items
-  result = await browser.history.search({
-    text: '',
-    maxResults: 100,
-    startTime: 0,
-    endTime: before,
-  })
+  result = await browser.history
+    .search({
+      text: Search.reactive.value,
+      maxResults: 100,
+      startTime: 0,
+      endTime: before,
+    })
+    .catch(() => [])
 
   // Second check
   if (result.length) {
     // Find lowest time
     const oldestTime = result[result.length - 1]?.lastVisitTime ?? 0
-    const newVisits = await normalizeHistory(result, true, oldestTime, before)
+    const newVisits = await normalizeHistory(result, true, oldestTime, before).catch(() => [])
     if (newVisits.length) {
-      History.visits.push(...newVisits)
+      if (History.filtered) History.filtered.push(...newVisits)
+      else History.visits.push(...newVisits)
       History.reactive.days = History.recalcDays()
-      lastItemTime = getLastVisitTime() - 1
+      History.loadingMore = false
       return
     }
   }
 
   // Okay...
+  History.loadingMore = false
   History.allLoaded = true
 }
 
 function getLastVisitTime(list?: Visit[]): number {
-  if (!list) list = History.visits
+  if (!list) list = History.filtered ?? History.visits
 
   const lastVisit = list[list.length - 1]
   if (!lastVisit) return Date.now()
@@ -450,12 +456,15 @@ export async function open(
   const tabInfo: ItemInfo = { id: 0, url: visit.url, title: visit.title, active: activateFirstTab }
   const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false, panelId: dst.panelId }
   const panel = Sidebar.panelsById[dstInfo.panelId ?? NOID]
-  if (!Utils.isTabsPanel(panel)) return
 
-  dstInfo.panelId = panel.id
+  if (panel) dstInfo.panelId = panel.id
   dstInfo.containerId = Containers.getContainerFor(visit.url)
 
-  if (!dstInfo.containerId && Containers.reactive.byId[panel.newTabCtx]) {
+  if (
+    !dstInfo.containerId &&
+    Utils.isTabsPanel(panel) &&
+    Containers.reactive.byId[panel.newTabCtx]
+  ) {
     dstInfo.containerId = panel.newTabCtx
   }
 

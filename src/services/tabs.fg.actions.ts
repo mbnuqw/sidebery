@@ -1,10 +1,10 @@
 import * as Utils from 'src/utils'
-import { CONTAINER_ID, GROUP_URL, NOID, Err, SAMEID } from 'src/defaults'
+import { CONTAINER_ID, GROUP_URL, NOID, Err, SAMEID, URL_URL } from 'src/defaults'
 import { BKM_OTHER_ID, ADDON_HOST, BKM_ROOT_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTabProps } from 'src/types'
-import { Notification, TabSessionData, TabsTreeData, NativeTab } from 'src/types'
-import { ItemInfo, TabTreeData, TabStatus } from 'src/types'
+import { Notification, TabSessionData, TabsTreeData, NativeTab, DstPlaceInfo } from 'src/types'
+import { ItemInfo, TabTreeData, TabStatus, CopyTemplate, LoadSrc } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -15,7 +15,8 @@ import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
-import { Selection } from './selection'
+import * as Selection from './selection'
+import { Favicons } from './_services.fg'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -46,8 +47,7 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
   if (tab.internal) tab.favIconUrl = undefined
   else {
     if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') tab.warn = true
-    if (tab.favIconUrl === undefined) tab.favIconUrl = undefined
-    else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = undefined
+    if (tab.favIconUrl?.startsWith('chrome:')) tab.favIconUrl = undefined
   }
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
   if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
@@ -60,20 +60,18 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       mediaPaused: tab.mediaPaused,
       containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
       discarded: tab.discarded ?? false,
-      favIconUrl: tab.favIconUrl,
       pinned: tab.pinned,
       status: Tabs.getStatus(tab),
       isParent: tab.isParent,
       folded: tab.folded,
-      title: tab.title,
-      tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
-      customTitle: tab.customTitle ?? null,
+      tooltip: Settings.state.forceUpdTooltip ? getTooltip(tab) : '',
       customTitleEdit: false,
       customColor: tab.customColor ?? null,
       url: tab.url,
       lvl: tab.lvl,
       branchLen: 0,
       sel: tab.sel,
+      selLock: tab.selLock,
       warn: tab.warn,
       updated: tab.updated,
       unread: !!tab.unread,
@@ -101,20 +99,18 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     mediaPaused: tab.mediaPaused,
     containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
     discarded: tab.discarded ?? false,
-    favIconUrl: tab.favIconUrl,
     pinned: tab.pinned,
     status: Tabs.getStatus(tab),
     isParent: tab.isParent,
     folded: tab.folded,
-    title: tab.title,
-    tooltip: Settings.state.previewTabs ? '' : getTooltip(tab),
-    customTitle: tab.customTitle ?? null,
+    tooltip: Settings.state.forceUpdTooltip ? getTooltip(tab) : '',
     customTitleEdit: false,
     customColor: tab.customColor ?? null,
     url: tab.url,
     lvl: tab.lvl,
     branchLen: 0,
     sel: tab.sel,
+    selLock: tab.selLock,
     warn: tab.warn,
     updated: tab.updated,
     unread: !!tab.unread,
@@ -138,16 +134,16 @@ export function getStatus(tab: Tab): TabStatus {
   return TabStatus.Complete
 }
 
-let waitingForTabs: (() => void)[] = []
+let waitingForTabsReadiness: (() => void)[] = []
 export async function waitForTabsReady(): Promise<void> {
   if (Tabs.ready) return
 
   return new Promise(ok => {
-    waitingForTabs.push(ok)
+    waitingForTabsReadiness.push(ok)
   })
 }
 
-export async function load(): Promise<void> {
+export async function load(src?: LoadSrc): Promise<void> {
   const ts = performance.now()
   Logs.info('Tabs.load')
 
@@ -156,17 +152,21 @@ export async function load(): Promise<void> {
   Tabs.setupTabsListeners()
 
   await Utils.retry({
-    action: async again => {
+    action: async (again, isLastTry) => {
       try {
-        await restoreTabsState()
+        await restoreTabsState(src, isLastTry)
       } catch (err) {
-        if (err === Err.TabsLocked) again()
-        else Logs.err('Tabs.load: Cannot restore tabs state', err)
+        if (err === Err.TabsLocked) {
+          Logs.warn('Tabs.load: Err.TabsLocked, trying again...')
+          again()
+        } else {
+          Logs.err('Tabs.load: Cannot restore tabs state', err)
+        }
       }
     },
-    interval: 1000,
-    increment: 500,
-    count: 5,
+    interval: 500,
+    increment: 250,
+    count: 10,
   })
 
   Tabs.updateActiveGroupPage()
@@ -175,8 +175,11 @@ export async function load(): Promise<void> {
   const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
+  const sessionRestoreTabOnly =
+    Tabs.list.length === 1 && Tabs.list[0]?.url === 'about:sessionrestore'
+
   Tabs.updateNativeTabsVisibility()
-  Tabs.cacheTabsData(1000)
+  if (!sessionRestoreTabOnly) Tabs.cacheTabsData(1000)
   Tabs.list.forEach(t => {
     Tabs.updateUrlCounter(t.url, 1)
 
@@ -209,8 +212,8 @@ export async function load(): Promise<void> {
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
 
-  waitingForTabs.forEach(cb => cb())
-  waitingForTabs = []
+  waitingForTabsReadiness.forEach(cb => cb())
+  waitingForTabsReadiness = []
 
   Logs.info(`Tabs.load: Done: ${performance.now() - ts}ms`)
 }
@@ -218,20 +221,30 @@ export async function load(): Promise<void> {
 export function unload(): void {
   Tabs.ready = false
   Tabs.resetTabsListeners()
+  Tabs.cancelSavingTabData()
+  Tabs.cancelCachingTabsData()
 
   Tabs.reactive.pinnedIds = []
   Tabs.reactive.recentlyRemovedLen = 0
-  Tabs.recentlyRemoved = []
+  Tabs.reactive.inlinePreviewTabId = NOID
+  Tabs.reactive.inlinePreviewPinnedImg = ''
   Tabs.list = []
   Tabs.byId = {}
+  Tabs.pinned = []
+  Tabs.recentlyRemoved = []
+
   Tabs.urlsInUse = {}
+  Tabs.shadowMode = false
+  Tabs.shadowReady = false
 
   Tabs.tabsReinitializing = false
   Tabs.removedTabs = []
   Tabs.newTabsPosition = {}
   Tabs.movingTabs = []
   Tabs.attachingTabs = []
+  Tabs.detachingTabIds = new Set<ID>()
   Tabs.normTabsMoving = false
+  Tabs.editableTabId = NOID
 
   Tabs.activeTabsGlobal.actTabOffset = -1
   Tabs.activeTabsGlobal.actTabs = []
@@ -241,40 +254,58 @@ export function unload(): void {
   Tabs.ignoreTabsEvents = false
   Tabs.activeId = -1
 
-  for (const panel of Sidebar.panels) {
-    if (Utils.isTabsPanel(panel)) {
-      panel.tabs = []
-      panel.pinnedTabs = []
-      panel.reactive.visibleTabIds = []
-      panel.reactive.pinnedTabIds = []
-      panel.reactive.len = 0
-      panel.reactive.empty = true
-      panel.ready = false
-    }
-  }
+  Sidebar.recalcTabsPanels()
+  Sidebar.recalcVisibleTabs()
+}
 
+export function reloadInShadowMode() {
+  unload()
   Tabs.loadInShadowMode()
 }
 
-async function restoreTabsState(): Promise<void> {
+// function dbgTabs(msg: string, tabs: Tab[]) {
+//   const dbg = tabs.map(t => `id:${t.id}, i:${t.index}, pr:${t.parentId}, pn:${t.panelId}`)
+//   Logs.info(msg, '\n' + dbg.join('\n'))
+// }
+
+async function restoreTabsState(src?: LoadSrc, ignoreLockedTabs?: boolean): Promise<void> {
   if (!Sidebar.hasTabs) return
 
   const ts = performance.now()
   Logs.info('Tabs.restoreTabsState')
 
+  let isWindowTabsLocked
+  if (!ignoreLockedTabs) {
+    try {
+      isWindowTabsLocked = await IPC.bg('isWindowTabsLocked', Windows.id)
+    } catch {
+      isWindowTabsLocked = true
+    }
+  }
+
+  // Check if tabs are locked (sidebery is opening this window)
+  if (isWindowTabsLocked === true) {
+    Logs.info('Tabs.restoreTabsState: window tabs are locked (still opening?)')
+    throw Err.TabsLocked
+  }
+
+  // Clear deferredEventHandling
+  Tabs.deferredEventHandling = []
+
+  const sessionOnly = src === LoadSrc.SessionOnly
   const results = await Promise.allSettled([
     browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT }),
-    browser.storage.local.get<Stored>('tabsDataCache'),
-    IPC.bg('isWindowTabsLocked', Windows.id),
+    sessionOnly ? ({} as Stored) : browser.storage.local.get<Stored>('tabsDataCache'),
   ])
   const nativeTabs = Utils.settledOr(results[0], [])
   const storage = Utils.settledOr(results[1], {})
-  const isWindowTabsLocked = Utils.settledOr(results[2], false)
   let tabsWasMoved = false
 
-  // Check if tabs are locked right now
+  Logs.info('Tabs.restoreTabsState: nativeTabs.length:', nativeTabs.length)
+
+  // Check if tabs were locked (sidebery opened this window)
   if (isWindowTabsLocked) {
-    if (isWindowTabsLocked === true) throw Err.TabsLocked
+    Logs.info('Tabs.restoreTabsState: window tabs were locked')
     storage.tabsDataCache = [isWindowTabsLocked.cache]
     tabsWasMoved = isWindowTabsLocked.move
   }
@@ -286,12 +317,14 @@ async function restoreTabsState(): Promise<void> {
   const lastPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
   if (!lastPanel) return Logs.err('Cannot load tabs: No tabs panels')
 
-  // Find most appropriate cache data
-  if (storage.tabsDataCache) tabsCache = findCachedData(nativeTabs, storage.tabsDataCache)
+  // Find the most appropriate cache data
+  if (storage.tabsDataCache && !sessionOnly) {
+    tabsCache = findCachedData(nativeTabs, storage.tabsDataCache)
+  }
 
   // Restore tabs data from cache
   if (tabsCache) {
-    tabs = restoreTabsFromCache(nativeTabs, tabsCache, lastPanel)
+    tabs = restoreTabsFromCache([...nativeTabs], tabsCache, lastPanel)
   }
 
   // From session data
@@ -306,8 +339,12 @@ async function restoreTabsState(): Promise<void> {
       tabsSessionData = []
     }
 
-    tabs = restoreTabsFromSessionData(nativeTabs, tabsSessionData, lastPanel)
+    tabs = restoreTabsFromSessionData([...nativeTabs], tabsSessionData, lastPanel)
   }
+
+  // dbgTabs('Tabs.restoreTabsState: Restored:', tabs)
+
+  tabs = await restoreTabPanelsContent(tabs)
 
   Tabs.list = tabs
   Sidebar.recalcTabsPanels()
@@ -356,55 +393,147 @@ async function restoreTabsState(): Promise<void> {
   Logs.info(`Tabs.restoreTabsState: Done: ${performance.now() - ts}ms`)
 }
 
+/**
+ * Moves tabs to their panels if needed
+ */
+async function restoreTabPanelsContent(tabs: Tab[]) {
+  // Get sorted tabs
+  let sortedTabs: Tab[] = []
+  if (Settings.state.pinnedTabsPosition === 'panel') {
+    for (const panel of Sidebar.panels) {
+      sortedTabs = sortedTabs.concat(tabs.filter(t => t.pinned && t.panelId === panel.id))
+    }
+  } else {
+    for (const tab of tabs) {
+      if (tab.pinned) sortedTabs.push(tab)
+      else break
+    }
+  }
+  for (const panel of Sidebar.panels) {
+    sortedTabs = sortedTabs.concat(tabs.filter(t => !t.pinned && t.panelId === panel.id))
+  }
+
+  // Check if sorted and native tabs have different orders
+  let tabsAreUnsorted = false
+  let unmatchIndex = -1
+  for (let i = 0; i < tabs.length; i++) {
+    if (tabs[i] !== sortedTabs[i]) {
+      tabsAreUnsorted = true
+      unmatchIndex = i
+      break
+    }
+  }
+
+  if (tabsAreUnsorted) {
+    Logs.warn('Tabs.restoreTabPanelsContent: Tabs are unsorted; unmatchIndex:', unmatchIndex)
+
+    // Sort tabs
+    Tabs.ignoreMoveEvents(true, 'initsort')
+    const idsToMove = sortedTabs.map(t => t.id).slice(unmatchIndex)
+    Logs.info('Tabs.restoreTabPanelsContent: idsToMove:', idsToMove)
+    try {
+      await browser.tabs.move(idsToMove, { index: unmatchIndex })
+    } catch (err) {
+      Tabs.ignoreMoveEvents(false, 'initsort')
+      throw err
+    }
+    tabs = sortedTabs
+
+    // Update indexes
+    for (let i = unmatchIndex; i < tabs.length; i++) {
+      tabs[i].index = i
+    }
+    Tabs.ignoreMoveEvents(false, 'initsort')
+
+    // dbgTabs('Tabs.restoreTabsState: Sorted:', tabs)
+  }
+
+  return tabs
+}
+
+function restoreTab(
+  nativeTab: NativeTab,
+  idsMap: Partial<Record<ID, ID>>,
+  fallbackPanelId: ID,
+  props?: TabCache | TabSessionData
+): Tab {
+  // Convert native tab to sidebery tab
+  const tab = mutateNativeTabToSideberyTab(nativeTab)
+
+  // Restore props
+  if (props) {
+    // Parent tab
+    const actualParentId = idsMap[props.parentId ?? NOID]
+    if (actualParentId !== undefined) tab.parentId = actualParentId
+
+    tab.reactive.folded = tab.folded = !!props.folded
+    if (props.customTitle) tab.customTitle = props.customTitle
+    if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+  } else {
+    Logs.warn(`Tabs.restoreTab: no props for: "${tab.id} i${tab.index} url${tab.url}"`)
+  }
+
+  // Use openerTabId as fallback for parentId
+  if (tab.parentId === -1 && tab.openerTabId !== undefined && Tabs.byId[tab.openerTabId]) {
+    tab.parentId = tab.openerTabId
+  }
+
+  // Set panel
+  const panel = Sidebar.panelsById[props?.panelId ?? NOID]
+  if (panel) {
+    // Panel is found
+    if (tab.pinned && Settings.state.pinnedTabsPosition !== 'panel') {
+      // Set the first tabs panel (fallbackPanelId) as the panel for global pinned tabs
+      tab.panelId = fallbackPanelId
+    } else {
+      tab.panelId = panel.id
+    }
+  } else {
+    // Panel is not found
+    Logs.warn(`Tabs.restoreTab: cannot find panel: "${props?.panelId}"; tab index: ${tab.index}`)
+    const parentTab = Tabs.byId[tab.parentId]
+    if (!props && parentTab && parentTab.index < tab.index) {
+      // Append unknown (new) tabs to the panel of parent tab
+      tab.panelId = parentTab.panelId
+    } else if (!props && Utils.isTabsPanel(Sidebar.panelsById[Sidebar.prevActivePanelId])) {
+      // Append unknown (new) tabs to the last active tabs panel
+      tab.panelId = Sidebar.prevActivePanelId
+    } else {
+      // Or just set the fallback
+      tab.panelId = fallbackPanelId
+    }
+  }
+
+  return tab
+}
+
+/**
+ * Restores sidebery tabs props from cache
+ */
 function restoreTabsFromCache(
   nativeTabs: NativeTab[],
   cache: Record<ID, TabCache>,
-  lastPanel: Panel
+  fallbackPanel: Panel
 ): Tab[] {
   Logs.info('Tabs.restoreTabsFromCache')
 
-  const firstPanelId = lastPanel.id
-  const idsMap: Record<ID, ID> = {}
   const tabs: Tab[] = []
+
+  // Get ids map
+  const idsMap: Partial<Record<ID, ID>> = {}
+  for (const nativeTab of [...nativeTabs]) {
+    const data = cache[nativeTab.id]
+    if (data) idsMap[data.id] = nativeTab.id
+  }
 
   // Go through tabs and restore sidebery props
   Tabs.byId = {}
   for (const nativeTab of [...nativeTabs]) {
     const data = cache[nativeTab.id]
+    const tab = restoreTab(nativeTab, idsMap, fallbackPanel.id, data)
 
-    // Normalize tab
-    const tab = mutateNativeTabToSideberyTab(nativeTab)
-    if (tab.pinned) tab.panelId = firstPanelId
-
-    if (data) {
-      if (data.parentId === undefined) data.parentId = NOID
-
-      // Restore props
-      tab.panelId = data.panelId ?? lastPanel.id
-      const actualParentId = idsMap[data.parentId]
-      if (actualParentId !== undefined) tab.parentId = actualParentId
-      tab.reactive.folded = tab.folded = !!data.folded
-      if (data.customTitle) tab.reactive.customTitle = tab.customTitle = data.customTitle
-      if (data.customColor) tab.reactive.customColor = tab.customColor = data.customColor
-      idsMap[data.id] = tab.id
-    }
-
-    // Normalize panelId
-    const panel = Sidebar.panelsById[tab.panelId]
-    if (!panel) {
-      tab.panelId = lastPanel.id
-    } else {
-      if (!tab.pinned) {
-        // Check order of panels
-        if (panel.index < lastPanel.index) tab.panelId = lastPanel.id
-        else lastPanel = panel
-      }
-    }
-
-    // Use openerTabId as fallback for parentId
-    if (tab.parentId === -1 && tab.openerTabId !== undefined && Tabs.byId[tab.openerTabId]) {
-      tab.parentId = tab.openerTabId
-    }
+    // Update fallback panel so the next tab without panelId will be appended to it
+    if (!tab.pinned) fallbackPanel = Sidebar.panelsById[tab.panelId] ?? fallbackPanel
 
     Tabs.reactivateTab(tab)
     Tabs.byId[tab.id] = tab
@@ -414,80 +543,41 @@ function restoreTabsFromCache(
   return tabs
 }
 
+/**
+ * Restores sidebery tabs props from session data
+ */
 function restoreTabsFromSessionData(
   nativeTabs: NativeTab[],
   tabsData: (TabSessionData | undefined)[],
-  lastPanel: Panel
+  fallbackPanel: Panel
 ): Tab[] {
   Logs.info('Tabs.restoreTabsFromSessionData')
 
-  const firstPanelId = lastPanel.id
-  const idsMap: Record<ID, ID> = {}
   const tabs: Tab[] = []
+
+  // Get ids map
+  const idsMap: Partial<Record<ID, ID>> = {}
+  for (let data, nativeTab, i = 0; i < nativeTabs.length; i++) {
+    nativeTab = nativeTabs[i]
+    data = tabsData[i]
+    if (data && nativeTab) idsMap[data.id] = nativeTab.id
+  }
 
   // Set tabs initial props and update state
   Tabs.byId = {}
   for (let data, nativeTab, i = 0; i < nativeTabs.length; i++) {
     nativeTab = nativeTabs[i]
-    if (!nativeTab) {
-      Logs.err('Tabs.restoreTabsFromSessionData: No tab')
-      break
-    }
-
     data = tabsData[i]
+    if (!nativeTab) throw `Tabs.restoreTabsFromSessionData: ${i}'st native tab is undefined`
 
-    const tab = mutateNativeTabToSideberyTab(nativeTab)
-    if (tab.pinned) tab.panelId = firstPanelId
+    const tab = restoreTab(nativeTab, idsMap, fallbackPanel.id, data)
 
-    if (data) {
-      if (data.parentId === undefined) data.parentId = NOID
-
-      // Restore props
-      tab.panelId = data.panelId ?? lastPanel.id
-      const actualParentId = idsMap[data.parentId]
-      if (actualParentId !== undefined) tab.parentId = actualParentId
-      tab.reactive.folded = tab.folded = !!data.folded
-      if (data.customTitle) tab.reactive.customTitle = tab.customTitle = data.customTitle
-      if (data.customColor) tab.reactive.customColor = tab.customColor = data.customColor
-      idsMap[data.id] = tab.id
-    }
-
-    // Normalize panelId
-    const panel = Sidebar.panelsById[tab.panelId]
-    if (!panel) tab.panelId = lastPanel.id
-
-    // Use openerTabId as fallback for parentId
-    if (tab.parentId === -1 && tab.openerTabId !== undefined && Tabs.byId[tab.openerTabId]) {
-      tab.parentId = tab.openerTabId
-    }
+    // Update fallback panel so the next tab without panelId will be appended to it
+    if (!tab.pinned) fallbackPanel = Sidebar.panelsById[tab.panelId] ?? fallbackPanel
 
     Tabs.reactivateTab(tab)
     Tabs.byId[tab.id] = tab
     tabs.push(tab)
-  }
-
-  let lastPanelIndex = -1
-  for (const panel of Sidebar.panels) {
-    if (!Utils.isTabsPanel(panel)) continue
-
-    let prevTabIndex = -1
-    for (let ti = 0; ti < tabs.length; ti++) {
-      const tab = tabs[ti]
-      if (tab.pinned) continue
-
-      if (tab.panelId !== panel.id) continue
-
-      if (tab.index <= lastPanelIndex || (prevTabIndex !== -1 && tab.index - 1 !== prevTabIndex)) {
-        let prevTab = tabs[ti - 1] as Tab | undefined
-        if (prevTab?.pinned) prevTab = undefined
-        tab.panelId = prevTab?.panelId ?? firstPanelId
-        continue
-      }
-
-      prevTabIndex = tab.index
-    }
-
-    lastPanelIndex = prevTabIndex
   }
 
   return tabs
@@ -503,13 +593,25 @@ function findCachedData(
   let maxEqualityCounter = 1
   let result: Record<ID, TabCache> | undefined
 
+  Logs.info('Tabs.findCachedData')
+  Logs.info('Tabs.findCachedData: cached windows count:', data.length)
+
+  if (tabs.length <= 1) {
+    Logs.info('Tabs.findCachedData: Skipping')
+    return
+  }
+
   if (Windows.uniqWinId && Windows.uniqWinId !== NOID) {
     const winTabsCache = data.find(winTabs => winTabs[0]?.uniqWinId === Windows.uniqWinId)
     if (winTabsCache) data = [winTabsCache]
+    Logs.info('Tabs.findCachedData: Window has uniqWinId, matched cache found:', !!winTabsCache)
   }
 
   for (const winTabs of data) {
     let equalityCounter = 0
+    let blindspotCounter = 0
+
+    Logs.info('Tabs.findCachedData:   cached tabs length:', winTabs.length)
 
     const existedTabs: Record<ID, TabCache> = {}
 
@@ -523,6 +625,7 @@ function findCachedData(
 
       // Match
       const blindspot = tab.status === 'loading' && tab.url === 'about:blank'
+      if (blindspot) blindspotCounter++
       if ((tabData.url === tab.url && !!tabData.pin === tab.pinned) || blindspot) {
         existedTabs[tab.id] = tabData
         equalityCounter++
@@ -544,12 +647,14 @@ function findCachedData(
       }
     }
 
+    Logs.info('Tabs.findCachedData:     equalityCounter:', equalityCounter)
+    Logs.info('Tabs.findCachedData:     blindspotCounter:', blindspotCounter)
+
     const mismatchedLen = tabs.length - equalityCounter
-    const mismatchedTh = tabs.length < 3 ? 0 : tabs.length < 10 ? 1 : 2
 
     if (
-      (tabs.length <= winTabs.length && mismatchedLen > mismatchedTh) ||
-      (tabs.length > winTabs.length && mismatchedLen > mismatchedTh + tabs.length - winTabs.length)
+      (tabs.length <= winTabs.length && mismatchedLen > 0) ||
+      (tabs.length > winTabs.length && mismatchedLen > tabs.length - winTabs.length)
     ) {
       Logs.warn('Tabs.findCachedData: mismatched:', mismatchedLen, tabs.length, winTabs.length)
       continue
@@ -571,6 +676,10 @@ function findCachedData(
  */
 export function cacheTabsData(delay = 300): void {
   // Logs.info('Tabs.cacheTabsData', delay)
+
+  // Ignore private windows
+  if (Windows.incognito) return
+
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsReinitializing) return
@@ -597,11 +706,41 @@ export function cacheTabsData(delay = 300): void {
 }
 let cacheTabsDataTimeout: number | undefined
 
+export function cancelCachingTabsData() {
+  clearTimeout(cacheTabsDataTimeout)
+}
+
+const saveTabDataTimeouts = new Map<ID, number>()
+
 /**
  * Save tab data to its session storage
  */
-export function saveTabData(tabId: ID, forced?: boolean): void {
+export function saveTabData(tabId: ID, forced?: boolean, delay?: number): void {
   // Logs.info('Tabs.saveTabData', tabId)
+  const timeout = saveTabDataTimeouts.get(tabId)
+  clearTimeout(timeout)
+
+  if (delay) {
+    saveTabDataTimeouts.set(
+      tabId,
+      setTimeout(() => {
+        saveTabDataTimeouts.delete(tabId)
+        _saveTabData(tabId, forced)
+      }, delay)
+    )
+  } else {
+    saveTabDataTimeouts.delete(tabId)
+    _saveTabData(tabId, forced)
+  }
+}
+
+export function cancelSavingTabData() {
+  for (const [_, timeout] of saveTabDataTimeouts) {
+    clearTimeout(timeout)
+  }
+}
+
+function _saveTabData(tabId: ID, forced?: boolean): void {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
@@ -753,96 +892,18 @@ export function reinitTabs(delay = 500): void {
   }, delay)
 }
 
-let sortNativeTabsTimeout: number | undefined
-let sortingNativeTabs = false
-export function sortNativeTabs(delayMS = 500): void {
-  sortingNativeTabs = false
-
-  clearTimeout(sortNativeTabsTimeout)
-  sortNativeTabsTimeout = setTimeout(async () => {
-    sortingNativeTabs = true
-
-    const nativeTabs = await browser.tabs.query({ currentWindow: true })
-    if (!sortingNativeTabs) return sortNativeTabs()
-    const nativeTabsById: Record<ID, NativeTab> = {}
-
-    for (const nativeTab of nativeTabs) {
-      nativeTabsById[nativeTab.id] = nativeTab
-
-      const tab = Tabs.byId[nativeTab.id]
-      if (!tab) {
-        Logs.warn(`Tabs.sortNativeTabs: Cannot find sidebery tab: ${nativeTab.id}`)
-        return Tabs.reinitTabs()
-      }
-    }
-
-    type Move = { index: number; ids: ID[]; step: number }
-    const moves: Move[] = []
-    let prevMove: Move | undefined
-    let prevMoveStep = 0
-    for (const tab of Tabs.list) {
-      const nativeTabById = nativeTabsById[tab.id]
-      if (!nativeTabById) {
-        Logs.warn('Tabs.sortNativeTabs: Cannot find native tab')
-        return Tabs.reinitTabs()
-      }
-
-      const nativeTabByIndex = nativeTabs[tab.index]
-      if (!nativeTabByIndex || nativeTabByIndex.id !== tab.id) {
-        const step = nativeTabById.index - tab.index
-
-        nativeTabs.splice(nativeTabById.index, 1)
-        nativeTabs.splice(tab.index, 0, nativeTabById)
-
-        if (prevMoveStep === step && prevMove) {
-          prevMove.ids.push(tab.id)
-        } else {
-          prevMove = { index: tab.index, ids: [tab.id], step: step }
-          moves.push(prevMove)
-        }
-
-        prevMoveStep = step
-      } else {
-        prevMove = undefined
-        prevMoveStep = 0
-      }
-    }
-
-    for (const move of moves) {
-      // Invert moving tabs
-      if (move.step < move.ids.length) {
-        const k = move.index + move.ids.length
-        const targetIndex = move.index + move.ids.length
-        const tabs = Tabs.list.slice(k, k + move.step)
-        const ids = tabs.map(t => {
-          t.moving = true
-          return t.id
-        })
-        Tabs.movingTabs.push(...ids)
-        await browser.tabs.move(ids, { index: targetIndex, windowId: Windows.id }).catch(err => {
-          Logs.err('Tabs.sortNativeTabs: Cannot move tabs', err)
-        })
-        tabs.forEach(t => (t.moving = undefined))
-      } else {
-        Tabs.movingTabs.push(...move.ids)
-        move.ids.forEach(id => {
-          const tab = Tabs.byId[id]
-          if (tab) tab.moving = true
-        })
-        await browser.tabs.move(move.ids, { index: move.index, windowId: Windows.id }).catch(e => {
-          Logs.err('Tabs.sortNativeTabs: Cannot move tabs', e)
-        })
-        move.ids.forEach(id => {
-          const tab = Tabs.byId[id]
-          if (tab) tab.moving = undefined
-        })
-      }
-      Tabs.movingTabs = []
-    }
-
-    sortingNativeTabs = false
-  }, delayMS)
+export async function sortNativeTabs() {
+  const ids = Tabs.list.map(t => {
+    t.moving = true
+    return t.id
+  })
+  await Utils.GLOBAL_QUEUE.add(browser.tabs.move, ids, { index: 0 }).catch(err => {
+    Logs.err('Tabs.sortNativeTabs: Cannot sort the tabs:', err)
+  })
+  Tabs.list.forEach(t => (t.moving = undefined))
 }
+
+export const sortNativeTabsDebounced = Utils.debounce(sortNativeTabs)
 
 let switchTabPause: number | undefined
 /**
@@ -930,11 +991,13 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
 
 let switchPreselectTabPause: number | undefined
 export function switchTabWithPreselect(globaly: boolean, cycle: boolean, dir: 1 | -1): void {
-  if (switchPreselectTabPause) return
-  switchPreselectTabPause = setTimeout(() => {
-    clearTimeout(switchPreselectTabPause)
-    switchPreselectTabPause = undefined
-  }, 50)
+  if (Settings.state.scrollThroughTabsPreselDelay > 0) {
+    if (switchPreselectTabPause) return
+    switchPreselectTabPause = setTimeout(() => {
+      clearTimeout(switchPreselectTabPause)
+      switchPreselectTabPause = undefined
+    }, Settings.state.scrollThroughTabsPreselDelay)
+  }
 
   const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) return
@@ -952,9 +1015,10 @@ export function switchTabWithPreselect(globaly: boolean, cycle: boolean, dir: 1 
   if (!tabs.length) return
 
   const selIsSet = Selection.isSet()
+  const skipDiscarded = Settings.state.scrollThroughTabsSkipDiscarded
   let target: Tab | undefined
 
-  if (Settings.state.selectActiveTabFirst && !selIsSet) {
+  if (Settings.state.scrollThroughTabsPreselAct && !selIsSet) {
     target = Tabs.byId[Tabs.activeId]
     const wrongPanel =
       target &&
@@ -968,6 +1032,7 @@ export function switchTabWithPreselect(globaly: boolean, cycle: boolean, dir: 1 
     let afterSel = false
     const tabFinder = (tab: Tab) => {
       if (tab.invisible) return false
+      if (skipDiscarded && tab.discarded) return false
       if (afterSel) return true
       if ((selIsSet && tab.sel) || (!selIsSet && tab.active)) afterSel = true
     }
@@ -975,12 +1040,13 @@ export function switchTabWithPreselect(globaly: boolean, cycle: boolean, dir: 1 
   }
 
   if (!target) {
+    const tabFinder = (tab: Tab) => !tab.invisible && (!skipDiscarded || !tab.discarded)
     if (cycle) {
-      if (dir > 0) target = tabs[0]
-      else target = tabs[tabs.length - 1]
+      if (dir > 0) target = tabs.find(tabFinder)
+      else target = tabs.findLast(tabFinder)
     } else {
-      if (dir > 0) target = tabs[tabs.length - 1]
-      else target = tabs[0]
+      if (dir > 0) target = tabs.findLast(tabFinder)
+      else target = tabs.find(tabFinder)
     }
   }
   if (!target) return
@@ -1129,7 +1195,7 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
   }
 
   // Update succession for active tab to prevent switching to discarded tabs
-  const activeTab = Tabs.byId[Tabs.activeId]
+  let activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab) {
     const target = findSuccessorTab(activeTab, tabIds)
 
@@ -1137,6 +1203,7 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
       // If active tab will be discraded activate another
       if (tabIds.includes(Tabs.activeId)) {
         await browser.tabs.update(target.id, { active: true })
+        activeTab = target
       } else if (activeTab.successorTabId !== target.id) {
         browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
           Logs.err('Tabs.discardTabs: Cannot update succession:', err)
@@ -1144,6 +1211,15 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
         activeTab.successorTabId = target.id
       }
     }
+  }
+
+  // Reset highlighing of the native tabs.
+  // This is a workaround for the issue when Firefox doesn't update the highlighting
+  // for the already hidden tabs. Not sure if this is a bug or norm though.
+  if (Settings.state.nativeHighlight && Settings.state.hideUnloadedTabs && activeTab) {
+    browser.tabs
+      .highlight({ windowId: Windows.id, populate: false, tabs: [activeTab.index] })
+      .catch(() => {})
   }
 
   // Try to discard tabs
@@ -1297,7 +1373,7 @@ export async function duplicateTabs(tabIds: ID[], asChild?: boolean): Promise<vo
         if (t.lvl <= tab.lvl) break
 
         if (tabIds.includes(t.id)) {
-          const dupAncestorId = Tabs.findAncestor(t.id, id => tabIds.includes(id))
+          const dupAncestorId = Tabs.findAncestorId(t.id, id => tabIds.includes(id))
           if (dupAncestorId !== undefined) {
             descendantsToDuplicate.push([t.id, dupAncestorId])
             processed.push(t.id)
@@ -1323,7 +1399,7 @@ export async function duplicateTabs(tabIds: ID[], asChild?: boolean): Promise<vo
   }
 }
 
-export function findAncestor(tabId: ID, cb: (ancestorId: ID) => boolean): ID | void {
+export function findAncestorId(tabId: ID, cb: (ancestorId: ID) => boolean): ID | void {
   const tab = Tabs.byId[tabId]
   if (!tab) throw 'Tabs.getAncestors: No target tab'
 
@@ -1337,7 +1413,7 @@ export function findAncestor(tabId: ID, cb: (ancestorId: ID) => boolean): ID | v
 /**
  * Close tabs duplicates
  */
-export function dedupTabs(tabIds: ID[]): void {
+export function dedupeTabs(tabIds: ID[]): void {
   if (!tabIds || !tabIds.length) return
 
   const urls: string[] = []
@@ -1408,7 +1484,13 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       parentId = result.location ?? BKM_OTHER_ID
       if (parentId === NOID) parentId = BKM_OTHER_ID
 
-      const info = { id: tab.id, title: result.name, container: tab.cookieStoreId }
+      const info = {
+        id: tab.id,
+        title: result.name,
+        container: tab.cookieStoreId,
+        customColor: tab.customColor,
+        customTitle: tab.customTitle,
+      }
       Bookmarks.attachTabInfoToTitle(info)
 
       await browser.bookmarks.create({
@@ -1439,6 +1521,9 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       parentId: t.parentId,
       url: t.url,
       title: t.customTitle ?? t.title,
+      container: t.cookieStoreId,
+      customColor: t.customColor,
+      customTitle: t.customTitle,
     }))
     await Bookmarks.createFrom(items, { parentId })
   }
@@ -1537,6 +1622,7 @@ export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.state.hideFoldedTabs
   const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
   const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
+  const hideUnloaded = Settings.state.hideUnloadedTabs
   const hideInact = Settings.state.hideInact
 
   if (!browser.tabs.hide) return
@@ -1563,6 +1649,11 @@ export function updateNativeTabsVisibility(): void {
     }
 
     if (Utils.isTabsPanel(actPanel) && hideInact && tab.panelId !== actPanel.id) {
+      if (!tab.hidden) toHide.push(tab.id)
+      continue
+    }
+
+    if (hideUnloaded && tab.discarded) {
       if (!tab.hidden) toHide.push(tab.id)
       continue
     }
@@ -1697,8 +1788,9 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
   const hideFolded = Settings.state.hideFoldedTabs
   const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
   const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
-  const toShow: ID[] = []
+  const hideUnloaded = Settings.state.hideUnloadedTabs
   const preserve: ID[] = []
+  let toShow: ID[] = []
   let autoFold: Tab[] = []
 
   const rootTab = Tabs.byId[rootTabId]
@@ -1765,12 +1857,13 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
 
   // Show the parent tab when expanding the group
   if (hideFolded && (hideFoldedParent || (hideFoldedGroup && rootTab.isGroup))) {
-    browser.tabs.show?.(rootTabId).catch(err => {
-      Logs.err('Tabs.expTabsBranch: Cannot show parent tab:', err)
-    })
+    toShow.unshift(rootTabId)
   }
 
   if (hideFolded && toShow.length) {
+    // Skip unloaded tabs if needed
+    if (hideUnloaded) toShow = toShow.filter(id => !Tabs.byId[id]?.discarded)
+
     browser.tabs.show?.(toShow).catch(err => {
       Logs.err('Tabs.expTabsBranch: Cannot show tabs:', err)
     })
@@ -2046,6 +2139,7 @@ export function getTabsTreeData(): TabsTreeData {
       else data.pid = tab.panelId
     }
     if (tab.parentId !== NOID) data.tid = tab.parentId
+    if (tab.isParent && tab.folded) data.f = 1
     if (tab.customTitle) data.ct = tab.customTitle
     if (tab.customColor) data.cc = tab.customColor
 
@@ -2080,30 +2174,33 @@ const enum SuccessorSearchMode {
  * Find successor tab (tab that will be activated
  * after removing currenly active tab)
  */
-export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
+export function findSuccessorTab(tab: Tab, exclude?: readonly ID[]): Tab | undefined {
   // Logs.info('Tabs.findSuccessorTab', tab.id, exclude)
   let target
   const tree = Settings.state.tabsTree
-  const rmFolded = Settings.state.rmChildTabs === 'folded'
-  const rmChild = Settings.state.rmChildTabs === 'all'
   const skipFolded = Settings.state.activateAfterClosingNoFolded
   const skipDiscarded = Settings.state.activateAfterClosingNoDiscarded
-  const dirNext = Settings.state.activateAfterClosing === 'next'
-  const dirPrev = Settings.state.activateAfterClosing === 'prev'
+  const dirNext = Settings.activateAfterClosingNext
+  const dirPrev = Settings.activateAfterClosingPrev
   const stayInPanel = Settings.state.activateAfterClosingStayInPanel
-
-  if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
 
   if (tab.pinned && (dirNext || dirPrev)) {
     let discardedFallback: Tab | undefined
     const pinInPanels = Settings.state.pinnedTabsPosition === 'panel'
     const dirDir = dirNext ? 1 : -1
     const opDir = dirDir * -1
-    if (Tabs.byId[tab.relGroupId]) target = Tabs.byId[tab.relGroupId]
+    if (Tabs.byId[tab.relGroupId]) {
+      target = Tabs.byId[tab.relGroupId]
+      if (exclude && target && exclude.includes(target.id)) {
+        target = undefined
+      }
+    }
     // Search in pinned tabs after active
     if (!target) {
       for (let foundTab, i = tab.index + dirDir; (foundTab = Tabs.list[i]); i += dirDir) {
         if (!foundTab?.pinned) break
+        if (foundTab.removing) continue
+        if (exclude && exclude.includes(foundTab.id)) continue
 
         // Skip discarded tab
         if (skipDiscarded && foundTab.discarded) {
@@ -2111,14 +2208,15 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
           continue
         }
 
-        if (pinInPanels && foundTab.panelId === tab.panelId) target = foundTab
-        else if (!pinInPanels) target = foundTab
+        if (foundTab.panelId === tab.panelId || !pinInPanels) target = foundTab
       }
     }
     // Search in pinned tabs before active
     if (!target) {
       for (let foundTab, i = tab.index + opDir; (foundTab = Tabs.list[i]); i += opDir) {
         if (!foundTab?.pinned) break
+        if (foundTab.removing) continue
+        if (exclude && exclude.includes(foundTab.id)) continue
 
         // Skip discarded tab
         if (skipDiscarded && foundTab.discarded) {
@@ -2126,8 +2224,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
           continue
         }
 
-        if (pinInPanels && foundTab.panelId === tab.panelId) target = foundTab
-        else if (!pinInPanels) target = foundTab
+        if (foundTab.panelId === tab.panelId || !pinInPanels) target = foundTab
       }
     }
     // Search in current panel
@@ -2136,54 +2233,62 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
       if (pinInPanels) panel = Sidebar.panelsById[tab.panelId]
       else panel = Sidebar.panelsById[Sidebar.activePanelId]
       if (Utils.isTabsPanel(panel)) {
-        for (const tab of panel.tabs) {
+        for (const t of panel.tabs) {
+          if (t.removing) continue
+          if (exclude && exclude.includes(t.id)) continue
+
           // Skip discarded tab
-          if (skipDiscarded && tab.discarded) {
-            if (!discardedFallback) discardedFallback = tab
+          if (skipDiscarded && t.discarded) {
+            if (!discardedFallback) discardedFallback = t
             continue
           }
 
-          target = tab
+          target = t
           break
         }
       }
     }
     // Check the last active tab of the previous active tabs panel
     if (!target) {
-      const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.lastTabsPanelId)
+      const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.prevTabsPanelId)
       if (prevTabsPanelHistory?.actTabs.length) {
-        const panelId = Sidebar.lastTabsPanelId
+        const panelId = Sidebar.prevTabsPanelId
         const actTabs = prevTabsPanelHistory.actTabs
         const prevActTab = Tabs.byId[actTabs[actTabs.length - 1]]
         if (prevActTab && prevActTab.panelId === panelId && !prevActTab.discarded) {
-          return prevActTab
+          if (!exclude || !exclude.includes(prevActTab.id)) return prevActTab
         }
       }
     }
     // Search in global scope
     if (!target) {
-      for (const tab of Tabs.list) {
+      for (const t of Tabs.list) {
+        if (t.removing) continue
+        if (exclude && exclude.includes(t.id)) continue
+
         // Skip discarded tab
-        if (skipDiscarded && tab.discarded) {
-          if (!discardedFallback) discardedFallback = tab
+        if (skipDiscarded && t.discarded) {
+          if (!discardedFallback) discardedFallback = t
           continue
         }
 
-        target = tab
+        target = t
         break
       }
     }
+
+    if (exclude && target && exclude.includes(target.id)) return discardedFallback
 
     return target ?? discardedFallback
   }
 
   // If group tab linked with pinned tab switch to that pinned tab
-  if (tab.url.startsWith(GROUP_URL)) {
+  if (tab.isGroup) {
     const urlInfo = new URL(tab.url)
     const pin = urlInfo.searchParams.get('pin')
     if (pin) {
       const [containerId, url] = pin.split('::')
-      target = Tabs.list.find(t => t.pinned && t.cookieStoreId === containerId && t.url === url)
+      target = Tabs.pinned.find(t => t.cookieStoreId === containerId && t.url === url)
       if (target) return target
     }
   }
@@ -2236,6 +2341,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
                 if (!discardedFallback) discardedFallback = Tabs.byId[pTab.id]
                 continue
               }
+              if (pTab.removing) continue
               if (exclude && exclude.includes(pTab.id)) continue
               target = Tabs.byId[pTab.id]
               break mainLoop
@@ -2246,13 +2352,19 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
           }
 
           // Check the last active tab of the previous active tabs panel
-          const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.lastTabsPanelId)
-          if (prevTabsPanelHistory?.actTabs.length) {
-            const panelId = Sidebar.lastTabsPanelId
-            const actTabs = prevTabsPanelHistory.actTabs
-            const prevActTab = Tabs.byId[actTabs[actTabs.length - 1]]
-            if (prevActTab && prevActTab.panelId === panelId && !prevActTab.discarded) {
-              return prevActTab
+          if (tab.panelId !== Sidebar.prevTabsPanelId) {
+            const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.prevTabsPanelId)
+            if (prevTabsPanelHistory?.actTabs.length) {
+              const panelId = Sidebar.prevTabsPanelId
+              const actTabs = prevTabsPanelHistory.actTabs
+              const prevActTabId = actTabs.findLast(id => {
+                const tab = Tabs.byId[id]
+                return tab && tab.panelId === panelId && !tab.discarded
+              })
+              const prevActTab = Tabs.byId[prevActTabId ?? NOID]
+              if (prevActTab) {
+                return prevActTab
+              }
             }
           }
 
@@ -2280,14 +2392,17 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     if (dir === 1) downI++
     else upI--
 
+    // Next tab is in removing process
+    if (foundTab.removing) continue
+
     // Next tab excluded
     if (exclude && exclude.includes(foundTab.id)) continue
 
     // Invisible(folded) tab will be removed too
-    if (rmFolded && foundTab.invisible) continue
+    if (Settings.rmChildTabsFolded && foundTab.invisible) continue
 
     // Child tab will be removed too
-    if (rmChild && foundTab.lvl > tab.lvl) continue
+    if (Settings.rmChildTabsAll && foundTab.lvl > tab.lvl) continue
 
     // Prev tab is invisible
     if (dir === -1 && foundTab.invisible) {
@@ -2306,7 +2421,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   }
 
   // Previously active tab
-  if (Settings.state.activateAfterClosing === 'prev_act') {
+  if (Settings.activateAfterClosingPrevAct) {
     let history: ActiveTabsHistory
     if (Settings.state.activateAfterClosingGlobal) {
       history = Tabs.activeTabsGlobal
@@ -2408,7 +2523,11 @@ export function tabFlip() {
   }
 
   const history = Tabs.getActiveTabsHistory(panelId)
-  const prevTabId = Utils.findLast(history.actTabs, id => id !== Tabs.activeId)
+  const prevTabId = history.actTabs.findLast(id => {
+    const tab = Tabs.byId[id]
+    if (Settings.state.tabsSecondClickActPrevNoUnload && tab?.discarded) return false
+    return id !== Tabs.activeId
+  })
   if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
 }
 
@@ -2515,45 +2634,193 @@ export function forEachDescendant(rootTab: Tab, cb: (t: Tab) => void) {
   }
 }
 
-export async function copyUrls(ids: ID[]): Promise<void> {
+export function findAncestor(childTab: Tab, cb: (t: Tab) => any): Tab | undefined {
+  let parent = Tabs.byId[childTab.parentId]
+  while (parent) {
+    if (cb(parent)) return parent
+    parent = Tabs.byId[parent.parentId]
+  }
+}
+
+export async function copy(ids: ID[], template: CopyTemplate) {
   if (!Permissions.reactive.clipboardWrite) {
     const result = await Permissions.request('clipboardWrite')
     if (!result) return
   }
 
-  let urls = ''
+  Tabs.sortTabIds(ids)
+
+  const isDBG = template.str === '%DBG'
+  const lines: string[] = []
+  const bullet = ids.length > 1 ? Settings.state.copyMultiBullet : ''
+  const indent = Settings.state.copyTreeIndent
+  const indentLevelsById = new Map<ID, number>()
   for (const id of ids) {
     const tab = Tabs.byId[id]
-    if (tab) urls += '\n' + tab.url
+    if (!tab) continue
+
+    if (isDBG) {
+      lines.push(JSON.stringify(tab, null, 2))
+      continue
+    }
+
+    // Get indent lvl
+    let indentLvl = 0
+    if (tab.lvl > 0) {
+      const pTabId = Tabs.findAncestorId(id, pid => ids.includes(pid))
+      const pLvl = pTabId ? indentLevelsById.get(pTabId) : undefined
+      indentLvl = pLvl !== undefined ? pLvl + 1 : 0
+    }
+
+    indentLevelsById.set(tab.id, indentLvl)
+
+    let result = template.str
+    if (template.hasB) result = result.replaceAll('%B', bullet)
+    if (template.hasCT) result = result.replaceAll('%CT', tab.customTitle || tab.title)
+    if (template.hasT) result = result.replaceAll('%T', tab.title)
+    if (template.hasU) result = result.replaceAll('%U', tab.url)
+    lines.push(indent.repeat(indentLvl) + result)
   }
 
-  const resultString = urls.trim()
+  const resultString = lines.join('\n')
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export async function copyTitles(ids: ID[]): Promise<void> {
-  if (!Permissions.reactive.clipboardWrite) {
-    const result = await Permissions.request('clipboardWrite')
-    if (!result) return
+export async function pasteInPanelOrAfterTabs(ids: ID[]) {
+  if (ids.length === 1 && Utils.isTabsPanel(Sidebar.panelsById[ids[0]])) {
+    return paste({ panelId: ids[0], discarded: true })
+  } else {
+    return pasteAfter(ids)
   }
-
-  let titles = ''
-  for (const id of ids) {
-    const tab = Tabs.byId[id]
-    if (tab) titles += '\n' + tab.title
-  }
-
-  const resultString = titles.trim()
-  if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-let flashAnimationTimeout: number | undefined
+export async function pasteAfter(dstIds: ID[]) {
+  Tabs.sortTabIds(dstIds)
+
+  const lastSelTabId = dstIds[dstIds.length - 1]
+  const lastSelTab = Tabs.byId[lastSelTabId]
+  if (!lastSelTab) return Logs.warn('Tabs.pasteAfter: No dst tab')
+
+  const pinned = lastSelTab.pinned
+  const panelId = lastSelTab.panelId
+  const parentId = lastSelTab.parentId
+  let index = lastSelTab.index + 1
+  if (lastSelTab.isParent) {
+    index = lastSelTab.index + (Tabs.getBranchLen(lastSelTab.id) ?? 0) + 1
+  }
+
+  const dst: DstPlaceInfo = {
+    index,
+    parentId,
+    discarded: true,
+    pinned,
+    panelId,
+  }
+
+  return paste(dst)
+}
+
+export async function paste(dst: DstPlaceInfo) {
+  // Check permission
+  if (!Permissions.reactive.clipboardRead) {
+    const result = await Permissions.request('clipboardRead')
+    if (!result) return Logs.warn('Tabs.paste: No permission')
+  }
+
+  // Get and parse text from clipboard
+  const rawText = await navigator.clipboard.readText()
+  const items = Utils.parseTextForItems(rawText)
+  if (!items.length) return Logs.warn('Tabs.paste: No parsed items')
+
+  // Check/Normalize dst info
+  // - Panel
+  let dstPanel
+  if (dst.panelId === undefined && (!dst.pinned || Settings.state.pinnedTabsPosition === 'panel')) {
+    dst.parentId = undefined
+    dst.index = undefined
+    dstPanel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (Utils.isTabsPanel(dstPanel)) dst.panelId = Sidebar.activePanelId
+    else return Logs.warn('Tabs.paste: Unable to find dst panel')
+  } else if (dst.panelId) {
+    dstPanel = Sidebar.panelsById[dst.panelId]
+    if (!Utils.isTabsPanel(dstPanel)) return Logs.warn('Tabs.paste: Wrong dst panel')
+  } else {
+    dst.panelId = NOID
+  }
+  // - Parent tab
+  let dstParent
+  if (!dst.pinned) {
+    if (dst.parentId === undefined) {
+      dst.index = undefined
+      dst.parentId = NOID
+    } else if (dst.parentId !== NOID) {
+      dstParent = Tabs.byId[dst.parentId]
+      if (!dstParent || dstParent.panelId !== dst.panelId) {
+        return Logs.warn('Tabs.paste: Wrong dst parent tab')
+      }
+    }
+  } else {
+    dst.parentId = NOID
+  }
+  // - Index
+  if (dst.index === undefined) {
+    if (dstParent) {
+      const branchLen = Tabs.getBranchLen(dstParent.id) ?? 0
+      dst.index = dstParent.index + branchLen + 1
+    } else if (dstPanel) {
+      dst.index = dstPanel.nextTabIndex
+    } else if (dst.pinned) {
+      dst.index = Tabs.pinned.length
+    } else {
+      return Logs.warn('Tabs.paste: No dst index')
+    }
+  } else {
+    let indexIsOk = true
+    if (dst.pinned) {
+      indexIsOk = dst.index >= 0 && dst.index <= Tabs.pinned.length
+    } else {
+      indexIsOk = dst.index >= Tabs.pinned.length
+      if (indexIsOk && dstPanel) {
+        indexIsOk = dst.index >= dstPanel.startTabIndex && dst.index <= dstPanel.nextTabIndex
+      }
+      if (indexIsOk && dstParent) {
+        const branchLen = Tabs.getBranchLen(dstParent.id) ?? 0
+        indexIsOk = dst.index > dstParent.index && dst.index <= dstParent.index + branchLen + 1
+      }
+    }
+    if (!indexIsOk) return Logs.warn('Tabs.paste: Incorrect dst index')
+  }
+
+  // Search
+  if (items.length === 1 && items[0]?.title && !items[0]?.url) {
+    const query = items[0]?.title
+
+    if (dst.pinned) {
+      browser.search.search({ query, disposition: 'NEW_TAB' })
+    } else {
+      const conf: browser.tabs.CreateProperties = {
+        active: false,
+        index: dst.index,
+        windowId: Windows.id,
+      }
+      Tabs.setNewTabPosition(dst.index, dst.parentId, dst.panelId)
+      const tabWithSearch = await browser.tabs.create(conf)
+      browser.search.search({ query, tabId: tabWithSearch.id })
+    }
+  }
+
+  // or Create discarded tabs
+  else {
+    await Tabs.open(Utils.withoutEmptyFolders(items), dst)
+  }
+}
+
 export function triggerFlashAnimation(tab: Tab): void {
-  if (flashAnimationTimeout) return
-  tab.reactive.flash = true
-  flashAnimationTimeout = setTimeout(() => {
-    flashAnimationTimeout = undefined
-    tab.reactive.flash = false
+  if (tab.flashAnimationTimeout) return
+  if (tab.flashFxEl) tab.flashFxEl.setAttribute('data-run', 'true')
+  tab.flashAnimationTimeout = setTimeout(() => {
+    tab.flashAnimationTimeout = undefined
+    if (tab.flashFxEl) tab.flashFxEl.setAttribute('data-run', 'false')
   }, 1000)
 }
 
@@ -2635,6 +2902,7 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
         Sidebar.activatePanel(tab.panelId)
       }
 
+      Logs.info('Tabs.switchToRecentlyActiveTab', tabId)
       browser.tabs.update(tabId, { active: true }).catch(err => {
         Logs.err('Tabs.switchToRecentlyActiveTab: Cannot activate tab:', err)
       })
@@ -2645,21 +2913,14 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
 export function pringDbgInfo(reset = false): void {
   for (const tab of Tabs.list) {
     if (reset) {
-      tab.reactive.title = tab.title
+      renderTitle(tab)
     } else {
-      tab.reactive.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
+      renderTitle(tab, `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`)
     }
   }
 }
 
-const updateTooltipBuf: Map<ID, number> = new Map()
-export function updateTooltipDebounced(tabId: ID, delay: number) {
-  clearTimeout(updateTooltipBuf.get(tabId))
-  updateTooltipBuf.set(tabId, setTimeout(updateTooltip, delay, tabId))
-}
 export function updateTooltip(tabId: ID) {
-  updateTooltipBuf.delete(tabId)
-
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
@@ -2680,12 +2941,17 @@ export function getTooltip(tab: Tab): string {
     str += `\n---\n${decodedUrl.split('?')[0]}`
   }
 
+  const containerName = Containers.reactive.byId[tab.cookieStoreId]?.name || ''
+  if (containerName && Settings.state.tabsContainerInTooltip) {
+    str += `\n---\n${containerName}`
+  }
+
   return str
 }
 
 let updateSuccesionTimeout: number | undefined
-export function updateSuccessionDebounced(delay: number, exclude?: ID[]) {
-  if (Settings.state.activateAfterClosing === 'none') return
+export function updateSuccessionDebounced(delay: number, exclude?: readonly ID[]) {
+  if (Settings.activateAfterClosingNone) return
 
   clearTimeout(updateSuccesionTimeout)
 
@@ -2694,17 +2960,63 @@ export function updateSuccessionDebounced(delay: number, exclude?: ID[]) {
   updateSuccesionTimeout = setTimeout(() => updateSuccession(exclude), delay)
 }
 
-function updateSuccession(exclude?: ID[]) {
+function updateSuccession(exclude?: readonly ID[]) {
+  let firstSuccessor: Tab | undefined
+
+  if (Tabs.list.length < 2) return
+
   const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab) {
-    const target = Tabs.findSuccessorTab(activeTab, exclude)
-    // Logs.info('Tabs.updateSuccession: active, target', activeTab.id, target?.id)
-    if (target) {
-      browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-        Logs.err('Tabs.updateSuccession: Cannot update succession:', err)
-      })
-      activeTab.successorTabId = target.id
-      return target
+    const suc = [activeTab.id]
+    firstSuccessor = Tabs.findSuccessorTab(activeTab, exclude)
+    if (firstSuccessor) {
+      activeTab.successorTabId = firstSuccessor.id
+      if (firstSuccessor.id !== activeTab.id) suc.push(firstSuccessor.id)
+
+      if (!exclude) {
+        const secondSuccessor = Tabs.findSuccessorTab(firstSuccessor, suc)
+        if (secondSuccessor && secondSuccessor.id !== activeTab.id) {
+          suc.push(secondSuccessor.id)
+        }
+      }
     }
+
+    if (suc.length > 1) {
+      browser.tabs.moveInSuccession(suc).catch(err => {
+        Logs.err('Tabs.updateSuccession: Cannot update succession:', err, suc)
+      })
+    }
+  }
+
+  return firstSuccessor
+}
+
+export function renderTitle(tab: Tab, forcedTitle?: string) {
+  if (tab.titleEl) {
+    tab.titleEl.innerText = forcedTitle ?? tab.customTitle ?? tab.title
+  }
+  if (Settings.state.forceUpdTooltip) {
+    updateTooltip(tab.id)
+  }
+}
+
+export function renderFavicon(tab: Tab) {
+  const imgEl = tab.favImgEl
+  const svgUseEl = tab.favSvgUseEl
+  if (tab.favIconUrl && imgEl) {
+    // Set img
+    imgEl.src = tab.favIconUrl
+    // Show img
+    if (imgEl.style) imgEl.style.display = 'block'
+    // Hide svg
+    if (svgUseEl?.parentElement) svgUseEl.parentElement.style.display = 'none'
+  } else if (svgUseEl?.parentElement) {
+    // Set svg
+    const icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+    svgUseEl.setAttribute('href', icon)
+    // Show svg
+    svgUseEl.parentElement.style.display = 'block'
+    // Hide img
+    if (imgEl) imgEl.style.display = 'none'
   }
 }

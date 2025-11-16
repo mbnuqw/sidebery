@@ -7,24 +7,24 @@
     v-if="isTopLvl"
     :title="translate('menu.editor.create_sub_tooltip')"
     @click.stop="emit('createSubMenu', type, option)")
-    svg: use(xlink:href="#icon_expand")
+    svg: use(href="#icon_expand")
 
   .opt-title {{shrinkedTitle}}
 
   .opt-btn(
     :title="translate('menu.editor.down_tooltip')"
     @click.stop="emit('downOpt', type, option)")
-    svg: use(xlink:href="#icon_expand")
+    svg: use(href="#icon_expand")
 
   .opt-btn.-up(
     :title="translate('menu.editor.up_tooltip')"
     @click.stop="emit('upOpt', type, option)")
-    svg: use(xlink:href="#icon_expand")
+    svg: use(href="#icon_expand")
 
   .opt-btn.-rm(
     :title="translate('menu.editor.disable_tooltip')"
     @click.stop="emit('disableOpt', type, option)")
-    svg: use(xlink:href="#icon_remove")
+    svg: use(href="#icon_remove")
 </template>
 
 <script lang="ts" setup>

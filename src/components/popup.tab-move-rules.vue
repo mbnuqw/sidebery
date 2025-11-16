@@ -11,18 +11,18 @@
         @click="editRule(rule)")
         .container-box(v-if="rule.containerId" :data-color="rule.containerColor")
           .icon-box
-            svg.icon: use(:xlink:href="rule.containerIcon")
+            svg.icon: use(:href="rule.containerIcon")
           .container {{rule.containerName}}
           .controls-box(v-if="!editing")
-            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-rm(@click.stop="removeRule(rule)"): svg: use(xlink:href="#icon_remove")
+            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(href="#icon_expand")
+            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(href="#icon_expand")
+            .btn-rm(@click.stop="removeRule(rule)"): svg: use(href="#icon_remove")
         .url-box(v-if="rule.url" :data-with-container="!!rule.containerId")
           .url {{rule.name || rule.url}}
           .controls-box(v-if="!rule.containerId && !editing")
-            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
-            .btn-rm(@click.stop="removeRule(rule)"): svg: use(xlink:href="#icon_remove")
+            .btn-up(@click.stop="shortcutUp(rule)"): svg: use(href="#icon_expand")
+            .btn-down(@click.stop="shortcutDown(rule)"): svg: use(href="#icon_expand")
+            .btn-rm(@click.stop="removeRule(rule)"): svg: use(href="#icon_remove")
     .space
     h2 {{editing ? translate('popup.tab_move_rules.editor_title.edit') : translate('popup.tab_move_rules.editor_title.new')}}
     TextField.-no-separator.-compact(
@@ -189,8 +189,8 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
       value: 'none',
       color: 'inactive',
       icon: '#icon_none',
-      title: 'Not set',
-      tooltip: 'Not set',
+      title: translate('popup.tab_move_rules.rule_container_not_set'),
+      tooltip: translate('popup.tab_move_rules.rule_container_not_set'),
     },
     {
       value: DEFAULT_CONTAINER_ID,

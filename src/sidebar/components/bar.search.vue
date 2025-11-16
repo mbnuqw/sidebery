@@ -6,7 +6,7 @@
   :data-focused="Search.reactive.barIsFocused"
   :data-filled="!!Search.reactive.rawValue")
   .search-icon(@mousedown.stop.prevent="" @mouseup.stop.prevent="")
-    svg: use(xlink:href="#icon_search")
+    svg: use(href="#icon_search")
   .placeholder {{translate('bar.search.placeholder')}}
   input.input(
     ref="textEl"
@@ -25,7 +25,7 @@
     v-if="Settings.state.searchBarMode === 'dynamic' || Search.reactive.rawValue"
     @mousedown.stop="onClearBtnMouseDown"
     @mouseup.stop="onClearBtnMouseUp")
-    svg: use(xlink:href="#icon_remove")
+    svg: use(href="#icon_remove")
 </template>
 
 <script lang="ts" setup>

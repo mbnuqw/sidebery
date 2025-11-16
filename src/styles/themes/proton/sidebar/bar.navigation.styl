@@ -56,18 +56,19 @@
     align-items: center
     max-height: 100%
     &[data-layout="left"]
-      flex-grow: 1
     &[data-layout="right"]
       flex-grow: 1
 
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="left"]
   border-top-right-radius: var(--general-border-radius)
-  padding: calc(var(--nav-btn-margin) + 1px) 0 0
+  padding: 0
+  margin: 0
   .main-items .nav-item:first-of-type
     border-top-right-radius: var(--general-border-radius)
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="right"]
   border-top-left-radius: var(--general-border-radius)
-  padding: calc(var(--nav-btn-margin) + 1px) 0 0
+  padding: 0
+  margin: 0
   .main-items .nav-item:first-of-type
     border-top-left-radius: var(--general-border-radius)
 
@@ -86,12 +87,15 @@
   flex-direction: column
   flex-wrap: nowrap
   max-height: 100%
+  overflow-y: auto
+  scrollbar-width: none
 
 // ---
 // -- Navigational button
 // -
 .NavigationBar .nav-item
   position: relative
+  contain: layout style
   display: flex
   width: var(--nav-btn-width)
   height: var(--nav-btn-height)
@@ -160,6 +164,11 @@
 
   &[data-unloaded="true"] > *
     opacity: .3
+
+// Remove border radius for the last item in vertical navbar.
+.NavigationBar&.-vert .main-items .nav-item:last-of-type
+  border-bottom-left-radius: 0
+  border-bottom-right-radius: 0
 
 .NavigationBar .hidden-panels-popup .nav-item
   width: auto
@@ -257,6 +266,9 @@
     #000000 5px,
     #000000
   )
+
+.Sidebar[data-syncing="true"] #navsync .icon
+  animation: syncing-animation 1s linear infinite
 
 // ---
 // -- Sub icon
@@ -391,7 +403,6 @@
     left: -50vw
     width: 200vw
     height: 200vh
-    background-color: #0003
 
 .NavigationBar.-top .hidden-panels-popup-layer
   width: 100%
@@ -416,8 +427,7 @@
   overflow: hidden
   overflow-y: auto
   background-color: var(--toolbar-bg)
-  box-shadow: 0 0 12px 0 #00000056,
-              0 0 0 1px var(--border)
+  box-shadow: var(--ctx-menu-shadow)
 
 .NavigationBar.-top .hidden-panels-popup
   max-width: calc(100vw - var(--nav-btn-width) - var(--nav-hidden-panels-popup-margin) * 2 - 6px)

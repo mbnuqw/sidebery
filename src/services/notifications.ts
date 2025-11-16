@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
 import { Notification } from 'src/types'
 import { translate } from 'src/dict'
-import { SetupPage } from './setup-page'
+import * as SetupPage from './setup-page'
 
 export interface NotificationsState {
   list: Notification[]
@@ -33,7 +33,7 @@ function notify(config: Notification, timeout = 5555): Notification {
   const id = Utils.uid()
   config.id = id
   if (!config.lvl) config.lvl = 'info'
-  config.timeout = timeout
+  if (!config.timeout) config.timeout = timeout
   if (timersEnabled) restartTimer(config)
   const len = Notifications.reactive.list.push(config)
   return Notifications.reactive.list[len - 1]

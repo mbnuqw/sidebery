@@ -81,7 +81,6 @@ interface MatchOption {
 interface URLInfo {
   scheme: string
   hostParts: string[]
-  pathParts: string[]
 }
 
 const matchOptions = ref<MatchOption[] | null>(null)
@@ -137,8 +136,9 @@ function init() {
 
   const url = Popups.reactive.siteConfigPopup.url
   const urlInfo = parseURL(url)
-  const isHTTP = urlInfo.scheme.startsWith('http')
+  if (!urlInfo) return
 
+  const isHTTP = urlInfo.scheme.startsWith('http')
   const options: MatchOption[] = []
   const isCustomOptActive = urlInfo.hostParts.length <= 1 || !isHTTP
 
@@ -250,17 +250,19 @@ function parseUrlRuleRE(url: string): RegExp | undefined {
   }
 }
 
-function parseURL(url: string): URLInfo {
-  const sParts = url.split('://')
-  const pParts = sParts[sParts.length - 1]?.split('/')
-  const host = pParts.shift()
-  const hostParts = host?.split('.') ?? []
-  const scheme = sParts[0]
+function parseURL(url: string): URLInfo | undefined {
+  let u
+  try {
+    u = new URL(url)
+  } catch {
+    return
+  }
+  const scheme = u.protocol.slice(0, -1)
+  const hostParts = u.host.split('.') ?? []
 
   return {
     scheme,
     hostParts,
-    pathParts: pParts,
   }
 }
 

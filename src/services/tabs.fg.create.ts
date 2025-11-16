@@ -1,5 +1,15 @@
-import { DragInfo, DstPlaceInfo, ItemInfo, Panel, PanelType, Tab, TabsPanel } from 'src/types'
+import {
+  DragInfo,
+  DstPlaceInfo,
+  ItemInfo,
+  Panel,
+  PanelType,
+  SettingsState,
+  Tab,
+  TabsPanel,
+} from 'src/types'
 import { ASKID, CONTAINER_ID, GROUP_URL, INITIAL_TITLE_RE, NEWID, NOID } from 'src/defaults'
+import { PRIVATE_CONTAINER_ID } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Settings } from 'src/services/settings'
@@ -67,12 +77,16 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   })
 }
 
+interface CreateTabInPanelConf extends browser.tabs.CreateProperties {
+  fromNewTabButton?: boolean
+}
+
 let _creatingTabInPanel = false
 const _createTabInPanelQueue: (() => Promise<void>)[] = []
 /**
  * Create new tab in panel
  */
-export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateProperties) {
+export async function createTabInPanel(panel: Panel, conf?: CreateTabInPanelConf) {
   if (!Utils.isTabsPanel(panel)) return
   if (_creatingTabInPanel) {
     _createTabInPanelQueue.push(() => createTabInPanel(panel, conf))
@@ -87,9 +101,8 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
     }
   }
 
-  const tabShell = {} as Tab
-  let index = Tabs.getIndexForNewTab(panel, tabShell)
-  const parentId = Tabs.getParentForNewTab(panel)
+  let index = Tabs.getIndexForNewTab(panel, conf)
+  const parentId = Tabs.getParentForNewTab(panel, conf)
   if (!Utils.isTabsPanel(panel)) return
   if (index === undefined && panel.nextTabIndex > -1) index = panel.nextTabIndex
 
@@ -103,6 +116,7 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
   if (conf?.active !== undefined) config.active = conf.active
   if (index !== undefined) Tabs.setNewTabPosition(index, parentId ?? NOID, panel.id)
   if (panel.newTabCtx !== 'none' && !conf?.cookieStoreId) config.cookieStoreId = panel.newTabCtx
+  if (Windows.incognito && config.cookieStoreId) config.cookieStoreId = PRIVATE_CONTAINER_ID
 
   _creatingTabInPanel = true
   await browser.tabs.create(config).catch(err => {
@@ -116,9 +130,14 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
   }
 }
 
-export function handleReopening(tabId: ID, dstContainerId?: string): number | undefined {
+export async function handleReopening(tabId: ID, dstContainerId?: string) {
   const targetTab = Tabs.byId[tabId]
-  if (!targetTab) return
+  if (!targetTab) {
+    Logs.warn('Tabs.handleReopening: No such tab:', tabId)
+    return
+  }
+
+  await Tabs.waitForTabsReady()
 
   if (!dstContainerId) dstContainerId = CONTAINER_ID
 
@@ -162,10 +181,16 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
     } catch (err) {
       return
     }
-    if (info.items) {
+
+    if (info?.items) {
       const groupUrlStartRe = /^moz-extension:\/\/.{36}\/(page.)?group\/group\.html(.+)$/
-      // Update sidebery internal urls
       for (const item of info.items) {
+        // Remove containers info b/c it's a different profile, hence containerId
+        // refers to a different container.
+        // TODO: tell user about this
+        delete item.container
+
+        // Update sidebery internal urls
         if (item.url && groupUrlStartRe.test(item.url)) {
           item.url = item.url.replace(groupUrlStartRe, (_, _1, $2: string) => GROUP_URL + $2)
         }
@@ -179,6 +204,11 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
   const result = await Utils.parseDragEvent(e)
   const panel = Sidebar.panelsById[dst.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return
+
+  if (result?.items) {
+    await Tabs.open(result.items, dst)
+    return
+  }
 
   const container = Containers.reactive.byId[panel.newTabCtx]
   const inside = dst.index === -1
@@ -290,16 +320,24 @@ export async function reopen(
   const result = await open(tabsInfo, dst, idsMap)
   if (!result) return Logs.err('Tabs: Cannot reopen tabs')
 
+  // Get ids and set removing flags
+  const ids = tabsInfo.map(t => {
+    const tab = Tabs.byId[t.id]
+    if (tab) tab.removing = true
+    return t.id
+  })
+
   // Update succession on reopening in another window
-  const ids = tabsInfo.map(ti => ti.id)
   if (dst.windowId !== undefined && dst.windowId !== Windows.id && ids.includes(Tabs.activeId)) {
-    Tabs.updateSuccessionDebounced(0, ids)
+    Tabs.updateSuccessionDebounced(0)
   }
 
   // Remove source tabs
-  const toRemove = tabsInfo.map(t => t.id)
-  Tabs.removingTabs = [...toRemove]
-  await browser.tabs.remove(toRemove)
+  Tabs.removingTabs = [...ids]
+  await browser.tabs.remove(ids)
+  if (Tabs.removingTabs.length) {
+    ids.forEach(rmId => Utils.rmFromArray(Tabs.removingTabs, rmId))
+  }
 
   // Fix tree
   let treeUpdateNeeded = false
@@ -353,7 +391,12 @@ export async function open(
   // ---
   // Get dst panel
   let dstPanel: Panel | undefined = Sidebar.panelsById[dst.panelId ?? NOID]
-  if (dst.panelId === undefined || !dstPanel || dstPanel.type !== PanelType.tabs) {
+  if (!Utils.isTabsPanel(dstPanel) && dst.parentId && dst.parentId !== NOID) {
+    const parent = Tabs.byId[dst.parentId]
+    if (parent) dstPanel = Sidebar.panelsById[parent.panelId]
+  }
+  if (!Utils.isTabsPanel(dstPanel)) dstPanel = Sidebar.panelsById[Sidebar.prevTabsPanelId]
+  if (!Utils.isTabsPanel(dstPanel)) {
     dstPanel = Sidebar.panels.find(p => p.type === PanelType.tabs)
   }
 
@@ -445,12 +488,20 @@ export async function open(
 
     if (item.customTitle) {
       const newTab = Tabs.byId[tab.id]
-      if (newTab) newTab.reactive.customTitle = newTab.customTitle = item.customTitle
+      if (newTab) {
+        newTab.customTitle = item.customTitle
+        Tabs.renderTitle(newTab)
+      }
     }
 
     if (item.customColor) {
       const newTab = Tabs.byId[tab.id]
       if (newTab) newTab.reactive.customColor = newTab.customColor = item.customColor
+    }
+
+    if (item.folded) {
+      const newTab = Tabs.byId[tab.id]
+      if (newTab) newTab.reactive.folded = newTab.folded = true
     }
   }
 
@@ -578,7 +629,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   const parentTab = Tabs.byId[tab.openerTabId ?? NOID]
   let activePanel: Panel | undefined = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) {
-    activePanel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
+    activePanel = Sidebar.panelsById[Sidebar.prevTabsPanelId]
   }
   if (!Utils.isTabsPanel(activePanel)) activePanel = undefined
 
@@ -601,9 +652,18 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 
   // Find panel for tab opened from another tab
   if (parentTab && !parentTab.pinned) {
-    const panelOfParent = Sidebar.panelsById[parentTab.panelId] as TabsPanel
-    if (!Settings.state.moveNewTabParentActPanel || panelOfParent === activePanel) {
-      return panelOfParent
+    // For the 'default' opt (do not move it / keep original position)
+    // find the panel by tab index (e.g. if `browser.tabs.insertRelatedAfterCurrent` is false
+    // Firefox will open new child tabs at the end of list)
+    if (Settings.state.moveNewTabParent === 'default') {
+      return findTabsPanelNearToTabIndex(tab.index)
+    }
+    // For the other cases (except 'none') use the panel of the parent tab
+    else if (Settings.state.moveNewTabParent !== 'none') {
+      const panelOfParent = Sidebar.panelsById[parentTab.panelId] as TabsPanel
+      if (!Settings.state.moveNewTabParentActPanel || panelOfParent === activePanel) {
+        return panelOfParent
+      }
     }
   }
 
@@ -628,9 +688,11 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 }
 
 interface IndexForNewTabConf {
+  pinned?: boolean
   openerTabId?: ID
   autoGroupped?: boolean
-  index: number
+  index?: number
+  fromNewTabButton?: boolean
 }
 
 /**
@@ -641,8 +703,16 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   const startIndex = panel.startTabIndex > -1 ? panel.startTabIndex : 0
   const nextIndex = panel.nextTabIndex > -1 ? panel.nextTabIndex : Tabs.list.length
   const activeTab = Tabs.byId[Tabs.activeId]
-  const autoGroupped = conf ? conf.autoGroupped : false
-  const fallbackIndex = conf ? conf.index : nextIndex
+  const autoGroupped = conf?.autoGroupped ?? false
+  const fallbackIndex = conf?.index ?? nextIndex
+  const fromNewTabButton = conf?.fromNewTabButton ?? false
+
+  // Place pinned tab
+  if (conf?.pinned) {
+    const pinLen = Tabs.pinned.length
+    if (conf?.index !== undefined && conf.index <= pinLen) return conf.index
+    else return pinLen
+  }
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
@@ -686,20 +756,28 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   }
 
   // Place new tab (for the other cases)
-  if (Settings.state.moveNewTab === 'start') return startIndex
-  if (Settings.state.moveNewTab === 'end') return nextIndex
-  if (Settings.state.moveNewTab === 'before') {
+  const moveNewTabSetting = fromNewTabButton
+    ? Settings.state.moveNewTabButton
+    : Settings.state.moveNewTab
+
+  const moveNewTabActivePinSetting = fromNewTabButton
+    ? Settings.state.moveNewTabButtonActivePin
+    : Settings.state.moveNewTabActivePin
+
+  if (moveNewTabSetting === 'start') return startIndex
+  if (moveNewTabSetting === 'end') return nextIndex
+  if (moveNewTabSetting === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
     else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else return activeTab.index
   }
-  if (Settings.state.moveNewTab === 'after') {
+  if (moveNewTabSetting === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1
@@ -710,21 +788,21 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return index
     }
   }
-  if (Settings.state.moveNewTab === 'first_child') {
+  if (moveNewTabSetting === 'first_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       return activeTab.index + 1
     }
   }
-  if (Settings.state.moveNewTab === 'last_child') {
+  if (moveNewTabSetting === 'last_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
-      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      if (moveNewTabActivePinSetting === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1
@@ -739,11 +817,18 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   return fallbackIndex
 }
 
+interface ParentForNewTabConf {
+  index?: number
+  openerTabId?: ID
+  fromNewTabButton?: boolean
+}
+
 /**
  * Find and return parent id
  */
-export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefined {
-  const activeTab = Tabs.byId[Tabs.activeId]
+export function getParentForNewTab(panel: Panel, conf?: ParentForNewTabConf): ID | undefined {
+  const openerTabId = conf?.openerTabId
+  const fromNewTabButton = conf?.fromNewTabButton ?? false
 
   let parent: Tab | undefined
   if (openerTabId) parent = Tabs.byId[openerTabId]
@@ -759,18 +844,49 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
     if (Settings.state.moveNewTabParent === 'last_child') return openerTabId
     if (Settings.state.moveNewTabParent === 'start') return
     if (Settings.state.moveNewTabParent === 'end') return
-    if (Settings.state.moveNewTabParent === 'default') return openerTabId
-    if (Settings.state.moveNewTabParent === 'none') return openerTabId
+    // Find appropriate parent for the unknown (not controlled by Sidebery) index
+    if (Settings.state.moveNewTabParent === 'default') {
+      const prevTab = conf?.index ? Tabs.list[conf.index - 1] : undefined
+      const prevIsSiblingToParent = prevTab !== parent && prevTab?.parentId === parent.parentId
+      const nextTab = conf?.index ? Tabs.list[conf.index] : undefined
+      Logs.info('next tab:', nextTab?.url)
+
+      // If the prev tab is the parent, the sibling of the parent or is inside the parent branch
+      // and if the next tab is not in the branch
+      if (
+        // prettier-ignore
+        (prevTab &&
+          (prevTab === parent ||
+          prevIsSiblingToParent ||
+          Tabs.findAncestor(prevTab, t => t === parent))
+        ) &&
+        (!nextTab || (nextTab && !Tabs.findAncestor(nextTab, t => t === parent)))
+      ) {
+        // Create branch or keep it flat
+        if (Settings.state.moveNewTabParentIndent && !prevIsSiblingToParent) return parent.id
+        else return parent.parentId
+      }
+      // or integrate the new tab inside existed tree/list
+      else {
+        return nextTab?.parentId
+      }
+    }
   }
 
   // Place new tab (for the other cases)
-  if (Settings.state.moveNewTab === 'start') return
-  if (Settings.state.moveNewTab === 'end') return
+  const moveNewTabSetting = fromNewTabButton
+    ? Settings.state.moveNewTabButton
+    : Settings.state.moveNewTab
+
+  if (moveNewTabSetting === 'start') return
+  if (moveNewTabSetting === 'end') return
+
+  const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
-    if (Settings.state.moveNewTab === 'before') return activeTab.parentId
-    else if (Settings.state.moveNewTab === 'after') return activeTab.parentId
-    else if (Settings.state.moveNewTab === 'first_child') return activeTab.id
-    else if (Settings.state.moveNewTab === 'last_child') return activeTab.id
+    if (moveNewTabSetting === 'before') return activeTab.parentId
+    else if (moveNewTabSetting === 'after') return activeTab.parentId
+    else if (moveNewTabSetting === 'first_child') return activeTab.id
+    else if (moveNewTabSetting === 'last_child') return activeTab.id
   }
 
   return openerTabId

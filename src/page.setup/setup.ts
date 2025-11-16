@@ -9,17 +9,19 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
 import { Info } from 'src/services/info'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage, Utils } from 'src/services/_services'
 import { Styles } from 'src/services/styles'
 import * as Favicons from 'src/services/favicons.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { initSidebarConfig, loadSidebarConfig } from 'src/services/sidebar-config'
 import { setupSidebarConfigListeners } from 'src/services/sidebar-config'
-import { showUpgradingScreen } from 'src/services/upgrading'
 import { initPopups } from 'src/services/popups'
+import { Notifications } from 'src/services/notifications'
 
 async function main(): Promise<void> {
+  const ts = performance.now()
+
   Info.setInstanceType(InstanceType.setup)
   IPC.setInstanceType(InstanceType.setup)
   Logs.setInstanceType(InstanceType.setup)
@@ -33,13 +35,15 @@ async function main(): Promise<void> {
   initSidebarConfig(reactive)
   initPopups(reactive)
   Permissions.reactive = reactive(Permissions.reactive)
-  SetupPage.reactive = reactive(SetupPage.reactive)
+  SetupPage.initSetupPage(reactive)
   Info.reactive = reactive(Info.reactive)
   Styles.reactive = reactive(Styles.reactive)
+  Notifications.reactive = reactive(Notifications.reactive)
 
   IPC.registerActions({
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
+    reloadFavicons: Favicons.loadFavicons,
   })
 
   SetupPage.updateActiveView()
@@ -53,6 +57,7 @@ async function main(): Promise<void> {
     Info.loadVersionInfo(),
     Info.loadCurrentTabInfo(),
   ])
+  Logs.info(`Init: base services loaded: ${performance.now() - ts}ms`)
 
   IPC.setWinId(Windows.id)
   IPC.setTabId(Info.currentTabId)
@@ -61,11 +66,7 @@ async function main(): Promise<void> {
 
   const app = createApp(Root)
   app.mount('#root_container')
-
-  if (Info.isMajorUpgrade()) {
-    showUpgradingScreen()
-    return
-  }
+  Logs.info(`Init: app.mount: ${performance.now() - ts}ms`)
 
   Settings.setupSettingsChangeListener()
 
@@ -80,6 +81,9 @@ async function main(): Promise<void> {
   IPC.connectTo(InstanceType.bg)
   IPC.setupGlobalMessageListener()
 
-  SetupPage.initialized()
+  SetupPage.finishInitialization()
+  SetupPage.calcStorageInfo()
+
+  Logs.info(`Init end: ${performance.now() - ts}ms`)
 }
 main()

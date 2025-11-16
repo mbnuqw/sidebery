@@ -7,9 +7,9 @@ import { execSync } from 'child_process'
 const OWNER = 'mbnuqw'
 const REPO = 'sidebery'
 const BRANCH = 'v5'
-const MAX_ASSETS_COUNT = 3
+const MAX_ASSETS_COUNT = 10
 const ADDON_ID = '{3c078156-979c-498b-8990-85f7987dd929}'
-const CONSIDERED_COMMIT_PREFIXES_RE = /^(fix|feat|perf)/
+const CONSIDERED_COMMIT_PREFIXES_RE = /^(fix|feat|perf|l10n)/
 const ASSET_RE = /sidebery-(\d\d?\.\d\d?\.\d\d?\.\d?\d?\d?)\.xpi/
 
 const gitLogFlags = `--date-order --abbrev-commit --decorate --format=format:'%H::%s' ${BRANCH}`
@@ -39,11 +39,11 @@ async function main() {
   console.log('Last commit of "updates.json":', updatesLastCommit)
   const gitlogResult = execSync(`git log ${gitLogFlags}`, { encoding: 'utf-8' })
   const noChanges = !hasUsefullCommitsSinceLastUpdate(gitlogResult, updatesLastCommit)
-  if (noChanges) throw 'No changes'
+  if (noChanges) throw 'No considerable changes in git logs'
 
   // Build and sign
   console.log('Building and signing...')
-  execSync(`node ./build/addon.mjs --sign ${newVersion}`, { encoding: 'utf-8', stdio: 'inherit' })
+  execSync(`node ./build/addon.js --sign ${newVersion}`, { encoding: 'utf-8', stdio: 'inherit' })
 
   // Get the last github release
   console.log('Getting the last github release...')

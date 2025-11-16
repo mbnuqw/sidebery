@@ -10,6 +10,7 @@ export interface Tab extends NativeTab {
   prevPanelId: ID
   lvl: number
   sel: boolean
+  selLock: boolean
   updated: boolean
   loading: boolean | 'ok' | 'err'
   warn: boolean
@@ -35,9 +36,19 @@ export interface Tab extends NativeTab {
   moving?: boolean
   preventAutoReopening?: boolean
   previewImg?: string
+  removing?: boolean
+  flashAnimationTimeout?: number
 
   reactive: ReactiveTabProps
   sessionData?: TabSessionData
+
+  titleEl?: HTMLElement
+  favImgEl?: HTMLImageElement
+  favSvgUseEl?: SVGElement
+  flashFxEl?: HTMLElement
+
+  checkingSessionRestore?: Promise<boolean>
+  resolveSessionRestoreDetection?: (isSessionRestore: boolean) => void
 }
 
 export const enum TabStatus {
@@ -53,19 +64,17 @@ export interface ReactiveTabProps {
   mediaPaused: boolean
   containerColor: string | null
   discarded: boolean
-  favIconUrl?: string
   pinned: boolean
   status: TabStatus
   isParent: boolean
   folded: boolean
-  title: string
   tooltip: string
-  customTitle: string | null
   customTitleEdit: boolean
   url: string
   lvl: number
   branchLen: number
   sel: boolean
+  selLock: boolean
   warn: boolean
   updated: boolean
   unread: boolean
@@ -75,6 +84,10 @@ export interface ReactiveTabProps {
   customColor: string | null
   isGroup: boolean
   preview: boolean
+}
+
+export const enum LoadSrc {
+  SessionOnly = 1,
 }
 
 export interface InlineTabData {
@@ -201,6 +214,7 @@ export interface TabTreeData {
   tid?: ID
   ct?: string
   cc?: string
+  f?: 1
 }
 export type TabsTreeData = TabTreeData[]
 
@@ -211,6 +225,8 @@ export interface RemovedTabInfo {
   parentId: ID
   panelId: ID
   children?: ID[]
+  customTitle?: string
+  customColor?: string
 }
 
 export interface RecentlyClosedTabInfo {

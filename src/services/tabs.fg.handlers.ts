@@ -1,12 +1,13 @@
 import * as Utils from 'src/utils'
-import { NativeTab, Tab, TabStatus, TabsPanel, RemovedTabInfo } from 'src/types'
+import { NativeTab, Tab, TabStatus, TabsPanel, RemovedTabInfo, TabSessionData } from 'src/types'
+import { LoadSrc } from 'src/types'
 import { NOID, GROUP_URL, ADDON_HOST, GROUP_INITIAL_TITLE } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import * as Favicons from 'src/services/favicons.fg'
@@ -17,6 +18,7 @@ import * as Preview from 'src/services/tabs.preview'
 import { Search } from './search'
 import { Containers } from './containers'
 import { Mouse } from './mouse'
+import { Popups } from './_services'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -62,10 +64,13 @@ function waitForOtherReopenedTabs(tab: Tab): void {
   // Get session data of probably reopened tab
   // to check if it was actually reopened
   browser.sessions
-    .getTabValue(tab.id, 'data')
+    .getTabValue<TabSessionData>(tab.id, 'data')
     .then(data => {
       tab.reopened = !!data
+
+      // It's too late
       if (!waitForOtherReopenedTabsBuffer) return
+
       waitForOtherReopenedTabsCheckLen--
       if (waitForOtherReopenedTabsCheckLen <= 0) {
         clearTimeout(waitForOtherReopenedTabsTimeout)
@@ -96,7 +101,138 @@ function releaseReopenedTabsBuffer(): void {
   Tabs.deferredEventHandling = []
 }
 
-function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
+const SESSION_RESTORE_MIN_TABS_COUNT = 2
+let checkingIfSessionRestoringTimeout: number | undefined
+let prevSRCheckTimestamp = 0
+let maybeRestoredTabs = null as Tab[] | null
+let maybeRestoredTabsDataQuerying = null as Promise<TabSessionData | undefined>[] | null
+function checkIfSessionIsRestoring(newTab: Tab) {
+  const srCheckTimestamp = performance.now()
+  let srCheckTimeDif = 0
+  if (prevSRCheckTimestamp !== 0) srCheckTimeDif = srCheckTimestamp - prevSRCheckTimestamp
+  prevSRCheckTimestamp = srCheckTimestamp
+
+  // Collect suspect tabs
+  if (!maybeRestoredTabs) maybeRestoredTabs = [newTab]
+  else maybeRestoredTabs.push(newTab)
+
+  // Start getting tabs session data only if there are enough tabs
+  if (
+    !maybeRestoredTabsDataQuerying &&
+    maybeRestoredTabs &&
+    maybeRestoredTabs.length >= SESSION_RESTORE_MIN_TABS_COUNT
+  ) {
+    Popups.openProcessingTabsPopup()
+
+    cancelDeferredMovingOfNewTabs()
+
+    Tabs.cancelCachingTabsData()
+    Tabs.cancelSavingTabData()
+
+    maybeRestoredTabsDataQuerying = maybeRestoredTabs.map(t => {
+      return browser.sessions
+        .getTabValue<TabSessionData | undefined>(t.id, 'data')
+        .catch(() => undefined)
+    })
+  }
+
+  // or continue to get tab session data;
+  else if (maybeRestoredTabsDataQuerying) {
+    const dataQuerying = browser.sessions.getTabValue<TabSessionData | undefined>(newTab.id, 'data')
+    maybeRestoredTabsDataQuerying.push(dataQuerying.catch(() => undefined))
+  }
+
+  // Set the promise for awaiting a session restore detection
+  if (maybeRestoredTabsDataQuerying) {
+    newTab.checkingSessionRestore = new Promise(ok => {
+      newTab.resolveSessionRestoreDetection = ok
+    })
+  }
+
+  clearTimeout(checkingIfSessionRestoringTimeout)
+  checkingIfSessionRestoringTimeout = setTimeout(async () => {
+    if (
+      maybeRestoredTabs &&
+      maybeRestoredTabs.length >= SESSION_RESTORE_MIN_TABS_COUNT &&
+      maybeRestoredTabsDataQuerying
+    ) {
+      let tabsSessionData: (TabSessionData | undefined)[] | undefined
+      try {
+        tabsSessionData = (await Promise.all(maybeRestoredTabsDataQuerying)) ?? []
+      } catch (err) {
+        Logs.err('Tabs.checkIfSessionIsRestoring: Cannot get tabs data from session:', err)
+        tabsSessionData = []
+      }
+
+      tryToRestoreTabsStateFromSessionData(maybeRestoredTabs, tabsSessionData)
+    } else {
+      // It's not a session restore, resolve the promises
+      maybeRestoredTabs?.forEach(t => t.resolveSessionRestoreDetection?.(false))
+    }
+
+    maybeRestoredTabs = null
+    prevSRCheckTimestamp = 0
+    maybeRestoredTabsDataQuerying = null
+  }, 250 + srCheckTimeDif)
+}
+
+async function tryToRestoreTabsStateFromSessionData(
+  tabs: Tab[],
+  sData: (TabSessionData | undefined)[]
+) {
+  Logs.info('Tabs.tryToRestoreTabsStateFromSessionData', tabs.length, sData.length)
+
+  // Check if there is enough session data
+  const tabsWithSessionDataLen = sData.filter(d => !!d).length
+  if (tabsWithSessionDataLen < SESSION_RESTORE_MIN_TABS_COUNT) {
+    Logs.warn('Tabs.tryToRestoreTabsStateFromSessionData: Not enough session data')
+
+    // Restart deferred tabs moving to sort all new tabs, not just
+    // the last one in case of two opened tabs b/c the first deferred
+    // moving was canceled in checkIfSessionIsRestoring fn.
+    handleNewTabMove()
+
+    // It's not a session restore, resolve the promises
+    tabs?.forEach(t => t.resolveSessionRestoreDetection?.(false))
+
+    Popups.closeProcessingTabsPopup()
+    return
+  }
+
+  // It's a session restore, resolve the session restore detection promises
+  tabs.forEach(t => t.resolveSessionRestoreDetection?.(true))
+
+  // Show popup about restoring the tabs
+  Popups.openProcessingTabsPopup()
+
+  // Unload tabs
+  Tabs.unload()
+
+  // ReSave restored session data
+  const resavingSessionData = []
+  for (let data, tab, i = 0; i < tabs.length; i++) {
+    tab = tabs[i]
+    data = sData[i]
+    if (!tab || !data) continue
+
+    const saving = browser.sessions.setTabValue(tab.id, 'data', data).catch(err => {
+      Logs.warn('Tabs.tryToRestoreTabsStateFromSessionData: Cannot resave session data:', err)
+    })
+    resavingSessionData.push(saving)
+  }
+  await Promise.all(resavingSessionData)
+
+  // Load tabs
+  await Tabs.load(LoadSrc.SessionOnly)
+
+  // Wait for the browser to render sidebery tabs calmly
+  await Utils.sleep(100)
+
+  // Close popup
+  Popups.closeProcessingTabsPopup()
+}
+
+async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   if (nativeTab.windowId !== Windows.id) return
   if (!Tabs.ready || Tabs.sorting) {
     Tabs.deferredEventHandling.push(() => onTabCreated(nativeTab))
@@ -104,10 +240,6 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   }
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
-
-  if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup(true)
-
-  if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(nativeTab.url)
 
   Menu.close()
   Selection.resetSelection()
@@ -118,6 +250,19 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
 
+  // Stop if multiple tabs were open and data querying is started
+  let notSessionRestore
+  if (maybeRestoredTabsDataQuerying) {
+    checkIfSessionIsRestoring(tab)
+    if (tab.checkingSessionRestore) {
+      const sessionRestoreIsDetected = await tab.checkingSessionRestore
+      delete tab.checkingSessionRestore
+      delete tab.resolveSessionRestoreDetection
+      if (sessionRestoreIsDetected) return
+      notSessionRestore = true
+    }
+  }
+
   // Check if opener tab is pinned
   if (
     Settings.state.pinnedAutoGroup &&
@@ -127,7 +272,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   ) {
     initialOpenerSpec = encodeURIComponent(initialOpener.cookieStoreId + '::' + initialOpener.url)
     autoGroupTab = Tabs.list.find(t => {
-      return t.url.startsWith(GROUP_URL) && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
+      return t.isGroup && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
     })
     if (autoGroupTab) {
       tab.openerTabId = autoGroupTab.id
@@ -174,6 +319,12 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     const oldTab = Tabs.list[tab.index]
     if (oldTab?.reopening) {
       oldTab.reopening.id = tab.id
+
+      // Restore some props
+      tab.customColor = oldTab.customColor
+      tab.reactive.customColor = oldTab.customColor ?? null
+      tab.customTitle = oldTab.customTitle
+      Tabs.renderTitle(tab)
     }
   }
 
@@ -221,11 +372,13 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     // Parent tab doesn't exist
     else {
       // Old index is ok
-      if (
+      const pinnedIndexOk = tab.pinned && tab.index <= panel.startTabIndex
+      const unpinnedIndexOk =
+        !tab.pinned &&
         (!nextTab || (nextTab.panelId === panel.id && nextTab.lvl === 0)) &&
         tab.index >= panel.startTabIndex &&
         tab.index <= panel.nextTabIndex
-      ) {
+      if (pinnedIndexOk || unpinnedIndexOk) {
         index = tab.index
       }
 
@@ -238,33 +391,53 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
 
   // Find appropriate position using the current settings
   else {
+    // Check if this is event is part of session restore
+    if (
+      !notSessionRestore &&
+      !attached &&
+      // Tab is unloaded and has set url
+      ((tab.discarded && tab.url !== 'about:blank') ||
+        // or tab is active and sidebery got activation event before creation event (this)
+        (tab.active && Tabs.activeId === tab.id) ||
+        // or tab is pinned
+        tab.pinned)
+    ) {
+      checkIfSessionIsRestoring(tab)
+      if (maybeRestoredTabsDataQuerying && tab.checkingSessionRestore) {
+        const sessionRestoreIsDetected = await tab.checkingSessionRestore
+        delete tab.checkingSessionRestore
+        delete tab.resolveSessionRestoreDetection
+        if (sessionRestoreIsDetected) return
+      }
+    }
+
+    // Get panel
+    panel = Tabs.getPanelForNewTab(tab)
+    if (!panel) return Logs.err('Cannot handle new tab: Cannot find target panel')
+
+    // Outdent if opener tab is folded (if configured)
     const parent = Tabs.byId[tab.openerTabId ?? NOID]
     if (!attached && parent?.folded && Settings.state.ignoreFoldedParent) {
       tab.openerTabId = parent.parentId
     }
 
-    panel = Tabs.getPanelForNewTab(tab)
-    if (!panel) return Logs.err('Cannot handle new tab: Cannot find target panel')
+    // Get target index
     index = Tabs.getIndexForNewTab(panel, tab)
+
+    // Update opener
     if (!autoGroupTab) {
-      if (!Settings.state.groupOnOpen) tab.openerTabId = undefined
-      else tab.openerTabId = Tabs.getParentForNewTab(panel, tab.openerTabId)
+      tab.openerTabId = Tabs.getParentForNewTab(panel, tab)
     }
   }
 
-  // If new tab has wrong possition - move it
-  if (panel && !tab.pinned && tab.index !== index) {
-    tab.dstPanelId = panel.id
-    Tabs.movingTabs.push(tab.id)
-    tab.moving = true
-    browser.tabs
-      .move(tab.id, { index })
-      .catch(err => {
-        Logs.err('Tabs.onTabCreated: Cannot move the tab to the correct position:', err)
-      })
-      .finally(() => {
-        tab.moving = undefined
-      })
+  // If the new tab has wrong position - move it
+  if (panel && tab.index !== index) {
+    handleNewTabMove(tab)
+  }
+  // If the prev newtab move already scheduled defer it to be sure that
+  // sidebery consumed all batched newtab events.
+  else if (handleNewTabMoveTimeout !== undefined) {
+    handleNewTabMove()
   }
 
   // Update tabs indexses after inserted one.
@@ -282,10 +455,18 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   tab.index = index
   tab.parentId = Settings.state.tabsTree ? (tab.openerTabId ?? NOID) : NOID
   if (!tab.favIconUrl && !tab.internal && !tab.url.startsWith('a')) {
-    tab.reactive.favIconUrl = tab.favIconUrl = Favicons.getFavicon(tab.url)
+    tab.favIconUrl = Favicons.getFavicon(tab.url)
+    Tabs.renderFavicon(tab)
   }
-  if (!attached && !Settings.state.autoExpandTabsOnNew && Tabs.byId[tab.parentId]?.folded) {
-    tab.invisible = true
+  if (!attached && !Settings.state.autoExpandTabsOnNew) {
+    const parent = Tabs.byId[tab.parentId]
+    if (parent && (parent.folded || Tabs.findAncestor(parent, t => t.folded))) {
+      tab.invisible = true
+    }
+  }
+  if (reopenedTabInfo?.customTitle) tab.customTitle = reopenedTabInfo.customTitle
+  if (reopenedTabInfo?.customColor) {
+    tab.reactive.customColor = tab.customColor = reopenedTabInfo.customColor
   }
 
   // Check if tab should be reopened in different container
@@ -364,6 +545,9 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
         if (reopenedTabInfo.children.includes(t.id)) {
           t.parentId = tab.id
           treeHasChanged = true
+          Tabs.saveTabData(t.id, false, 250)
+        } else if (t.lvl > tab.lvl) {
+          continue
         } else {
           break
         }
@@ -394,7 +578,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
 
     // Inherit custom color from parent
-    if (tab.openerTabId !== undefined && Settings.state.inheritCustomColor) {
+    if (tab.openerTabId !== undefined && !tab.customColor && Settings.state.inheritCustomColor) {
       const parent = Tabs.byId[tab.openerTabId]
       if (parent?.customColor) {
         tab.reactive.customColor = tab.customColor = parent.customColor
@@ -402,7 +586,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     }
   }
 
-  Tabs.saveTabData(tab.id)
+  Tabs.saveTabData(tab.id, false, 250)
   Tabs.cacheTabsData()
 
   // Update openerTabId
@@ -420,11 +604,13 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   Tabs.updateSuccessionDebounced(100)
 
   if (createGroup && !tab.pinned && initialOpener) {
-    Tabs.groupTabs([tab.id], {
-      active: false,
-      title: initialOpener.title,
-      pin: initialOpenerSpec,
-      pinnedTab: initialOpener,
+    waitForNewTabMove().then(() => {
+      Tabs.groupTabs([tab.id], {
+        active: false,
+        title: initialOpener.title,
+        pin: initialOpenerSpec,
+        pinnedTab: initialOpener,
+      })
     })
   }
 
@@ -439,7 +625,13 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   }
 
   // Scroll to new inactive tab
-  if (!tab.pinned && !tab.active && !tab.invisible && tab.panelId === Sidebar.activePanelId) {
+  if (
+    !tab.pinned &&
+    !tab.active &&
+    !tab.invisible &&
+    tab.panelId === Sidebar.activePanelId &&
+    Settings.state.autoScrollToNewTab
+  ) {
     Tabs.scrollToTabDebounced(120, tab.id, true)
   }
 
@@ -454,6 +646,91 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   if (attached && (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted)) {
     Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
   }
+
+  if (Sidebar.reactive.hiddenPanelsPopup) {
+    Sidebar.closeHiddenPanelsPopup(true)
+  }
+
+  if (Settings.state.highlightOpenBookmarks) {
+    Bookmarks.markOpenBookmarksDebounced(nativeTab.url)
+  }
+}
+
+const NEW_TAB_MOVE_DELAY = 200
+
+let handleNewTabMoveTimeout: number | undefined
+let newTabToMove: Tab | undefined
+let waitingNewTabMove: (() => void)[] = []
+
+function handleNewTabMove(newTab?: Tab) {
+  // Change the target tab only if the newTab is set.
+  // Without it, just restart timeout.
+  if (newTab) {
+    // There is already a new tab waiting for move
+    if (newTabToMove) {
+      // Reset the previous new tab to sort all tabs
+      newTabToMove = undefined
+    }
+    // There is no new tab and timeout is not started
+    else if (handleNewTabMoveTimeout === undefined) {
+      // Set tab to move as this is the first new tab in a while (NEW_TAB_MOVE_DELAY)
+      newTabToMove = newTab
+    }
+  }
+
+  clearTimeout(handleNewTabMoveTimeout)
+  handleNewTabMoveTimeout = setTimeout(() => {
+    handleNewTabMoveTimeout = undefined
+
+    // There is still tabs data querying, canceling moving...
+    if (maybeRestoredTabsDataQuerying) {
+      if (waitingNewTabMove.length) {
+        waitingNewTabMove.forEach(cb => cb())
+        waitingNewTabMove = []
+      }
+      return
+    }
+
+    const tab = newTabToMove
+    newTabToMove = undefined
+
+    if (!tab) {
+      Tabs.sortNativeTabs()
+    } else {
+      tab.moving = true
+      Utils.GLOBAL_QUEUE.add(browser.tabs.move, tab.id, { index: tab.index })
+        .catch(err => {
+          Logs.err('Tabs.handleNewTabMove: Cannot move the tab to the correct position:', err)
+        })
+        .finally(() => {
+          tab.moving = undefined
+
+          if (waitingNewTabMove.length) {
+            waitingNewTabMove.forEach(cb => cb())
+            waitingNewTabMove = []
+          }
+        })
+    }
+  }, NEW_TAB_MOVE_DELAY)
+}
+
+function cancelDeferredMovingOfNewTabs() {
+  clearTimeout(handleNewTabMoveTimeout)
+  handleNewTabMoveTimeout = undefined
+  newTabToMove = undefined
+
+  if (waitingNewTabMove.length) {
+    waitingNewTabMove.forEach(cb => cb())
+    waitingNewTabMove = []
+  }
+}
+
+async function waitForNewTabMove() {
+  if (handleNewTabMoveTimeout === undefined) return
+
+  return new Promise<void>(ok => {
+    waitingNewTabMove.push(ok)
+  })
 }
 
 /**
@@ -466,6 +743,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     return
   }
   if (Tabs.detachingTabIds.has(tabId)) return
+  if (maybeRestoredTabsDataQuerying) return
 
   const tab = Tabs.byId[tabId]
   if (!tab) {
@@ -508,13 +786,17 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       const groupTab = Tabs.getGroupTab(tab)
       if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, nativeTab.id)
 
-      if (!tab.favIconUrl) {
-        tab.favIconUrl = Favicons.getFavicon(tab.url)
-        tab.reactive.favIconUrl = tab.favIconUrl
+      if (!tab.favIconUrl && change.favIconUrl === undefined) {
+        change.favIconUrl = Favicons.getFavicon(tab.url)
       }
     }
 
     Sidebar.checkDiscardedTabsInPanelDebounced(tab.panelId, 120)
+
+    if (Settings.state.hideUnloadedTabs) {
+      if (change.discarded) browser.tabs.hide?.([tabId])
+      else browser.tabs.show?.([tabId])
+    }
   }
 
   // Status change
@@ -523,12 +805,15 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       if (Settings.state.animations && change.status !== tab.status) {
         Tabs.triggerFlashAnimation(tab)
       }
-      reloadTabFaviconDebounced(tab)
+      if (tab.internal) Tabs.renderFavicon(tab)
     }
     if (change.url && tab.mediaPaused) {
-      tab.mediaPaused = false
-      tab.reactive.mediaPaused = false
-      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+      Tabs.checkPausedMedia(tabId).then(stillPaused => {
+        if (stillPaused === null || stillPaused) return
+        tab.mediaPaused = false
+        tab.reactive.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+      })
     }
   }
 
@@ -542,18 +827,19 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     }
     tab.internal = isInternal
     Tabs.cacheTabsData()
-    if (!change.url.startsWith(tab.url.slice(0, 16))) {
-      tab.favIconUrl = ''
-      tab.reactive.favIconUrl = ''
+
+    // Reset favicon (to cached)
+    if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
+      change.favIconUrl = Favicons.getFavicon(change.url)
     }
 
     // Update URL of the linked group page (for pinned tab)
     if (tab.pinned && tab.relGroupId !== undefined) {
       const groupTab = Tabs.byId[tab.relGroupId]
       if (groupTab) {
-        const oldUrl = encodeURIComponent(tab.url)
-        const newUrl = encodeURIComponent(change.url)
-        const groupUrl = groupTab.url.replace(oldUrl, newUrl)
+        const pinProp = encodeURIComponent(tab.cookieStoreId + '::' + change.url)
+        const groupUrl = Utils.createGroupUrl(tab.title, { pin: pinProp })
+
         browser.tabs.update(groupTab.id, { url: groupUrl }).catch(err => {
           Logs.err('Tabs.onTabUpdated: Cannot reload related group page:', err)
         })
@@ -562,9 +848,12 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
     // Reset pause state
     if (tab.mediaPaused) {
-      tab.mediaPaused = false
-      tab.reactive.mediaPaused = false
-      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+      Tabs.checkPausedMedia(tabId).then(stillPaused => {
+        if (stillPaused === null || stillPaused) return
+        tab.mediaPaused = false
+        tab.reactive.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+      })
     }
 
     // Re-color tab
@@ -593,23 +882,19 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       Bookmarks.markOpenBookmarksDebounced(change.url)
     }
 
-    Tabs.updateTooltipDebounced(tabId, 1000)
-
     // Update filtered results
     if (Search.rawValue && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
       Search.searchDebounced(500, undefined, true)
     }
   }
 
-  // Handle favicon change
-  if (change.favIconUrl) {
-    if (change.favIconUrl.startsWith('chrome:')) {
-      if (change.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
-        tab.warn = true
-        tab.reactive.warn = true
-      }
-      change.favIconUrl = ''
+  // Handle Firefox internal favicon
+  if (change.favIconUrl?.startsWith('chrome:')) {
+    if (change.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+      tab.warn = true
+      tab.reactive.warn = true
     }
+    change.favIconUrl = ''
   }
 
   // Handle title change
@@ -618,44 +903,46 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
     // Mark tab with updated title
     if (
-      Settings.state.tabsUpdateMark === 'all' ||
-      (Settings.state.tabsUpdateMark === 'pin' && tab.pinned) ||
-      (Settings.state.tabsUpdateMark === 'norm' && !tab.pinned)
+      !tab.updated && // Tab is not updated
+      !nativeTab.active && // Tab is inactive
+      !tab.internal && //  Tab is not internal
+      !tab.discarded && // Tab is loaded
+      // Check settings
+      (Settings.tabsUpdateMarkAll ||
+        (Settings.tabsUpdateMarkPin && tab.pinned) ||
+        (Settings.tabsUpdateMarkNorm && !tab.pinned)) &&
+      // Tab is inactive for more than 5s
+      Date.now() - nativeTab.lastAccessed > 5000 &&
+      // Current url is the same as previous
+      tab.url === nativeTab.url
     ) {
-      if (!nativeTab.active && !tab.internal && Date.now() - nativeTab.lastAccessed > 5000) {
-        // If current url is the same as previous
-        if (tab.url === nativeTab.url) {
-          // Check if this title update is the first for current URL
-          const ok = Settings.state.tabsUpdateMarkFirst
-            ? !URL_HOST_PATH_RE.test(nativeTab.title)
-            : !URL_HOST_PATH_RE.test(tab.title) && !URL_HOST_PATH_RE.test(nativeTab.title)
-          if (ok && !tab.discarded) {
-            const panel = Sidebar.panelsById[tab.panelId]
-            tab.updated = true
-            tab.reactive.updated = true
-            if (
-              Utils.isTabsPanel(panel) &&
-              (!nativeTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-              panel.updatedTabs &&
-              !panel.updatedTabs.includes(tabId)
-            ) {
-              panel.updatedTabs.push(tabId)
-              panel.reactive.updated = panel.updatedTabs.length > 0
-            }
-          }
+      // Check if this title update is the first for current URL
+      const ok = Settings.state.tabsUpdateMarkFirst
+        ? !URL_HOST_PATH_RE.test(nativeTab.title)
+        : !URL_HOST_PATH_RE.test(tab.title) && !URL_HOST_PATH_RE.test(nativeTab.title)
+      if (ok) {
+        const panel = Sidebar.panelsById[tab.panelId]
+        tab.updated = true
+        tab.reactive.updated = true
+        if (
+          Utils.isTabsPanel(panel) &&
+          (!nativeTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+          panel.updatedTabs &&
+          !panel.updatedTabs.includes(tabId)
+        ) {
+          panel.updatedTabs.push(tabId)
+          panel.reactive.updated = true
         }
       }
     }
 
     // Reset custom title
     if (tab.isGroup && tab.active && change.title !== GROUP_INITIAL_TITLE) {
-      if (tab.reactive.customTitle) {
+      if (tab.customTitle) {
         tab.customTitle = undefined
-        tab.reactive.customTitle = null
+        Tabs.renderTitle(tab)
       }
     }
-
-    Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
     if (Search.rawValue && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
@@ -669,19 +956,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     tab.reactive.mediaPaused = false
   }
 
+  const pinned = change.pinned !== undefined && !tab.pinned && change.pinned
+  const unpinned = change.pinned !== undefined && tab.pinned && !change.pinned
+
   // Update tab object
   Object.assign(tab, change)
-  if (change.audible !== undefined) tab.reactive.mediaAudible = change.audible
-  if (change.discarded !== undefined) tab.reactive.discarded = change.discarded
-  if (change.favIconUrl !== undefined) {
-    if (tab.internal) tab.reactive.favIconUrl = undefined
-    else tab.reactive.favIconUrl = change.favIconUrl
-  }
-  if (change.mutedInfo?.muted !== undefined) tab.reactive.mediaMuted = change.mutedInfo.muted
-  if (change.pinned !== undefined) tab.reactive.pinned = change.pinned
-  if (change.status !== undefined) tab.reactive.status = Tabs.getStatus(tab)
-  if (change.title !== undefined) tab.reactive.title = change.title
-  if (change.url !== undefined) tab.reactive.url = change.url
 
   // Handle media state change
   if (change.audible !== undefined || change.mutedInfo?.muted !== undefined) {
@@ -689,7 +968,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   }
 
   // Handle unpinned tab
-  if (change.pinned !== undefined && !change.pinned) {
+  if (unpinned) {
     Tabs.cacheTabsData(640)
 
     let panel
@@ -697,7 +976,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       panel = Sidebar.panelsById[tab.panelId]
     } else {
       panel = Sidebar.panelsById[Sidebar.activePanelId]
-      if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
+      if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.prevTabsPanelId]
     }
     if (!Utils.isTabsPanel(panel)) panel = Sidebar.panels.find(Utils.isTabsPanel)
 
@@ -735,7 +1014,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   }
 
   // Handle pinned tab
-  if (change.pinned !== undefined && change.pinned) {
+  if (pinned) {
     Tabs.cacheTabsData(640)
 
     const prevPanelId = tab.prevPanelId
@@ -776,48 +1055,48 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Colorize branch
   if (branchColorizationNeeded) Tabs.colorizeBranch(tab.id)
+
+  accumulateChangesForBatchUpdate(tab, change)
 }
 
-const reloadTabFaviconTimeout: Record<ID, number> = {}
-function reloadTabFaviconDebounced(tab: Tab, delay = 500): void {
-  clearTimeout(reloadTabFaviconTimeout[tab.id])
-  reloadTabFaviconTimeout[tab.id] = setTimeout(() => {
-    delete reloadTabFaviconTimeout[tab.id]
+let changeLock = false
+const changesBuf = new Map<Tab, browser.tabs.ChangeInfo>()
+function accumulateChangesForBatchUpdate(tab: Tab, change: browser.tabs.ChangeInfo) {
+  if (changeLock) {
+    let bufferedChange = changesBuf.get(tab)
+    if (bufferedChange) Object.assign(bufferedChange, change)
+    else bufferedChange = change
+    changesBuf.set(tab, bufferedChange)
+    return
+  }
 
-    if (tab.internal) {
-      tab.favIconUrl = undefined
-      tab.reactive.favIconUrl = undefined
-      return
-    }
+  updTabReactiveProps(change, tab)
 
-    browser.tabs
-      .get(tab.id)
-      .then(tabInfo => {
-        if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
-          tab.favIconUrl = tabInfo.favIconUrl
-          tab.reactive.favIconUrl = tabInfo.favIconUrl
-        } else {
-          if (tabInfo.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
-            tab.warn = true
-            tab.reactive.warn = true
-          } else if (tab.warn) {
-            tab.warn = false
-            tab.reactive.warn = false
-          }
-          tab.favIconUrl = ''
-          tab.reactive.favIconUrl = ''
-        }
+  changeLock = true
+  setTimeout(() => {
+    changeLock = false
+    updTabsReactiveProps()
+  }, Settings.state.tabUpdDelay)
+}
 
-        const groupTab = Tabs.getGroupTab(tab)
-        if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
-      })
-      .catch(() => {
-        // If I close containered tab opened from bg script
-        // I'll get 'updated' event with 'status': 'complete'
-        // and since tab is in 'removing' state I'll get this
-        // error.
-      })
-  }, delay)
+function updTabsReactiveProps() {
+  if (!changesBuf.size) return
+  changesBuf.forEach(updTabReactiveProps)
+  changesBuf.clear()
+}
+
+function updTabReactiveProps(change: browser.tabs.ChangeInfo, tab: Tab) {
+  if (change.audible !== undefined) tab.reactive.mediaAudible = change.audible
+  if (change.discarded !== undefined) tab.reactive.discarded = change.discarded
+  if (change.favIconUrl !== undefined) {
+    if (tab.internal) tab.favIconUrl = undefined
+    Tabs.renderFavicon(tab)
+  }
+  if (change.mutedInfo?.muted !== undefined) tab.reactive.mediaMuted = change.mutedInfo.muted
+  if (change.pinned !== undefined) tab.reactive.pinned = change.pinned
+  if (change.status !== undefined) tab.reactive.status = Tabs.getStatus(tab)
+  if (change.title !== undefined) Tabs.renderTitle(tab)
+  if (change.url !== undefined) tab.reactive.url = change.url
 }
 
 let recentlyRemovedChildParentMap: Record<ID, ID> | null = null
@@ -843,7 +1122,10 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   }
   if (info.isWindowClosing) return
   if (Tabs.ignoreTabsEvents) return
+  if (maybeRestoredTabsDataQuerying) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
+  // Reset the new tab for deferred moving to sort all tabs
+  if (handleNewTabMoveTimeout !== undefined) newTabToMove = undefined
 
   // Logs.info('Tabs.onTabRemoved', tabId)
 
@@ -890,6 +1172,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       title: tab.title,
       parentId: recentlyRemovedChildParentMap?.[tab.id] ?? tab.parentId,
       panelId: tab.panelId,
+      customTitle: tab.customTitle,
+      customColor: tab.customColor,
     }
     Tabs.removedTabs.unshift(removedTabInfo)
     if (Tabs.removedTabs.length > 64) {
@@ -900,6 +1184,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   // Remember removed tab
   if (removedExternally && !detached) {
     Tabs.rememberRemoved([tab])
+  }
+
+  // Cancel confirmation for previous close event
+  if (Popups.reactive.confirm) {
+    Popups.finishConfirmation(false)
   }
 
   const autoGroup =
@@ -949,7 +1238,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         else if (removedTabInfo) removedTabInfo.children = [t.id]
       }
 
-      const willBeRemoved = Tabs.removingTabs.includes(t.id)
+      const willBeRemoved = t.removing
       if (!willBeRemoved) {
         const shouldBeRemoved =
           (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached && !tab.reopening) ||
@@ -960,8 +1249,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
           continue
         }
         // Or just make them visible, but only if this child tab is a direct
-        // descendant OR its parentTab is not folded
-        else if (t.invisible && (t.parentId === tabId || !Tabs.byId[t.parentId]?.folded)) {
+        // descendant OR its branch is not folded
+        else if (t.invisible && (t.parentId === tabId || !Tabs.findAncestor(t, p => p.folded))) {
           t.invisible = false
           fullVisTabsRecalcNeeded = true
           if (t.hidden) toShow.push(t.id)
@@ -1007,7 +1296,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       }
 
       // Save updated child tabs
-      if (!willBeRemoved) Tabs.saveTabData(t.id)
+      if (!willBeRemoved) Tabs.saveTabData(t.id, false, 250)
     }
 
     // Remove child tabs
@@ -1055,6 +1344,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     panel.reactive.updated = panel.updatedTabs.length > 0
   }
 
+  // Update media badges
+  if (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted) {
+    Sidebar.updateMediaStateOfPanelDebounced(120, tab.panelId)
+  }
+
   // On removing the last tab
   if (!Tabs.removingTabs.length) {
     // Update parent tab state
@@ -1098,11 +1392,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
     // Update filtered results
     if (Search.rawValue) Search.search()
-
-    // Update media badges
-    if (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted) {
-      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId)
-    }
   }
 
   // Update bookmarks marks
@@ -1131,18 +1420,24 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   }
 }
 
+let _ignoreMoveEvents = false
+
 /**
  * Tabs.onMoved
  */
 function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (info.windowId !== Windows.id) return
+  if (_ignoreMoveEvents) return
   if (!Tabs.ready) {
     Tabs.deferredEventHandling.push(() => onTabMoved(id, info))
     return
   }
   if (Tabs.ignoreTabsEvents) return
+  if (maybeRestoredTabsDataQuerying) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
   if (Tabs.detachingTabIds.has(id)) return
+  // Reset the new tab for deferred moving to sort all tabs
+  if (handleNewTabMoveTimeout !== undefined) newTabToMove = undefined
 
   const tab = Tabs.byId[id]
   if (!tab) {
@@ -1259,6 +1554,14 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (nativeTabsVisibilityUpdateNeeded) Tabs.updateNativeTabsVisibility()
 }
 
+const ignoreMoveEventsReasons = new Set<string>()
+
+export function ignoreMoveEvents(state: boolean, reason: string) {
+  if (state) ignoreMoveEventsReasons.add(reason)
+  else ignoreMoveEventsReasons.delete(reason)
+  _ignoreMoveEvents = ignoreMoveEventsReasons.size > 0
+}
+
 /**
  * Tabs.onDetached
  */
@@ -1350,6 +1653,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
   bufTabActivatedEventIndex = -1
   if (Tabs.ignoreTabsEvents) return
+  if (maybeRestoredTabsDataQuerying) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   // Logs.info('Tabs.onTabActivated', info.tabId)
@@ -1366,8 +1670,8 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
       return
     }
 
-    Logs.err('Tabs.onTabActivated: Cannot get target tab', info.tabId)
-    return Tabs.reinitTabs()
+    Tabs.activeId = info.tabId
+    return
   }
 
   // Update previous active tab and store his id
@@ -1399,6 +1703,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
+
+  // Update succession
+  Tabs.updateSuccessionDebounced(0)
 
   if (panel.updatedTabs.length) {
     Utils.rmFromArray(panel.updatedTabs, tab.id)
@@ -1456,10 +1763,16 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
-  if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id, true)
+  if (Settings.state.scrollPanelAfterSwitchingTab !== 'no' && !tab.pinned) {
+    if (Settings.state.scrollPanelAfterSwitchingTab === 'mouseleave' && Mouse.mouseIn) {
+      Sidebar.scrollOnMouseLeave = true
+    } else Tabs.scrollToTabDebounced(3, tab.id, true)
+  }
 
-  // Update succession
-  Tabs.updateSuccessionDebounced(10)
+  // Close in-page preview
+  if (Preview.state.status === Preview.Status.Open && Preview.state.mode === Preview.Mode.InPage) {
+    Preview.closePreview()
+  }
 
   // Reset fallback preview mode
   if (Settings.state.previewTabs && Preview.state.modeFallback) {

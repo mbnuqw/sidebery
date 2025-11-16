@@ -1,7 +1,7 @@
 import { MenuOption } from 'src/types'
 import { translate } from 'src/dict'
 import { History } from './history'
-import { Selection } from './selection'
+import * as Selection from './selection'
 import { Search } from './search'
 import { Sidebar } from './sidebar'
 
@@ -21,7 +21,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
   },
 
   copyHistoryUrls: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     return {
       label: translate('menu.copy_urls', selected.length),
       icon: 'icon_link',
@@ -31,7 +31,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
   },
 
   copyHistoryTitles: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
     return {
       label: translate('menu.copy_titles', selected.length),
       icon: 'icon_title',
@@ -41,7 +41,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
   },
 
   deleteVisits: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
 
     return {
       label: translate('menu.history.delete_visits', selected.length),
@@ -53,7 +53,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
   },
 
   deleteSites: () => {
-    const selected = Selection.get()
+    const selected = Selection.ids()
 
     return {
       label: translate('menu.history.delete_sites', selected.length),

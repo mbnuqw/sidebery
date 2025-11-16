@@ -9,7 +9,7 @@ import * as Logs from './logs'
 import * as IPC from './ipc'
 import { Menu } from './menu'
 import { Mouse } from './mouse'
-import { Selection } from './selection'
+import * as Selection from './selection'
 import { TabPreviewInitData } from 'src/injections/tab-preview'
 
 export const enum Status {
@@ -39,7 +39,6 @@ export const state = {
 }
 
 const approxFFToolbarsHeight = 70
-const approxPopupHeaderHeight = 40
 const inlinePreviewConf = {
   format: 'jpeg' as const,
   quality: 90,
@@ -77,17 +76,14 @@ export function setTargetTab(tabId: ID, y: number) {
   state.targetTabId = tabId
 
   // Start timeout to...
-  if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.length) {
+  if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.size) {
     // Update default tooltip
     clearTimeout(tooltipUpdTimeout)
     tooltipUpdTimeout = setTimeout(() => {
       const tab = Tabs.byId[tabId]
       if (tab) {
-        const isClosed = state.status === Status.Closed
         if (
           (Settings.state.previewTabsMode === 'p' && state.mode === Mode.Nope) ||
-          (state.mode === Mode.InPage && isClosed && (tab.discarded || tab.active)) ||
-          (state.mode === Mode.Window && isClosed && (tab.discarded || tab.active)) ||
           (state.mode === Mode.Inline && tab.discarded)
         ) {
           tab.reactive.tooltip = Tabs.getTooltip(tab)
@@ -119,7 +115,7 @@ export function setTargetTab(tabId: ID, y: number) {
     if (state.status === Status.Closed) {
       state.mouseEnterTimeout = setTimeout(() => {
         state.mouseEnterTimeout = undefined
-        showPreview(state.targetTabId, y)
+        showPreview(state.targetTabId, Mouse.y)
       }, Settings.state.previewTabsDelay)
       return
     }
@@ -142,6 +138,8 @@ export function resetTargetTab(tabId: ID) {
     }, 36)
   }
 }
+
+let cancelInjecting: (() => void) | undefined
 
 async function injectTabPreview(tabId: ID, y?: number) {
   const activeTab = Tabs.byId[Tabs.activeId]
@@ -169,8 +167,12 @@ async function injectTabPreview(tabId: ID, y?: number) {
     .catch(() => {
       // Cannot exec script
     })
-  const [result, _] = await Promise.all([injectingData, injectingScript])
-  return result
+
+  const cancelation = new Promise<void>((ok, _) => (cancelInjecting = ok))
+  const results = await Promise.any([Promise.all([injectingData, injectingScript]), cancelation])
+  cancelInjecting = undefined
+
+  return results?.[0]
 }
 
 function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
@@ -189,17 +191,21 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     url: tab?.url ?? '---',
     y: y ?? 0,
     dpr: window.devicePixelRatio,
+    sh: Sidebar.height,
     popupWidth: Settings.state.previewTabsPopupWidth,
     offsetY: Settings.state.previewTabsInPageOffsetY,
     offsetX: Settings.state.previewTabsInPageOffsetX,
     atTheLeft: Settings.state.previewTabsSide === 'right',
     rCrop: Settings.state.previewTabsCropRight,
+    tMax: Settings.state.previewTabsTitle,
+    uMax: Settings.state.previewTabsUrl,
+    unloaded: tab?.discarded ?? false,
   }
 }
 
 async function showPreview(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible || tab.discarded || tab.active) return
+  if (!tab || tab.invisible) return
 
   // Inline
   if (state.mode === Mode.Inline) {
@@ -218,6 +224,11 @@ async function showPreview(tabId: ID, y?: number) {
         closePreviewPopup()
       }
 
+      return
+    } else if (deadOnArrival) {
+      state.status = Status.Closed
+      deadOnArrival = false
+      if (IPC.state.previewConnection) IPC.sendToPreview('close')
       return
     }
 
@@ -238,13 +249,13 @@ async function showPreview(tabId: ID, y?: number) {
 
     if (Windows.focused && Settings.state.previewTabsPageModeFallback === 'w') {
       state.mode = Mode.Window
-      return showPreveiwPopupWindow(tabId, y)
+      return showPreviewPopupWindow(tabId, y)
     }
   }
 
   // Popup window
   else if (Windows.focused && state.mode === Mode.Window) {
-    return showPreveiwPopupWindow(tabId, y)
+    return showPreviewPopupWindow(tabId, y)
   }
 }
 
@@ -266,9 +277,9 @@ export function resetMode() {
   state.modeFallback = false
 }
 
-export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
+export async function showPreviewPopupWindow(tabId: ID, y?: number) {
   const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible || tab.discarded) return
+  if (!tab || tab.invisible) return
 
   state.status = Status.Opening
 
@@ -298,13 +309,17 @@ export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
     winId: Windows.id.toString(),
     title: tab.title,
     url: tab.url,
+    tMax: Settings.state.previewTabsTitle.toString(),
+    uMax: Settings.state.previewTabsUrl.toString(),
   }
 
   const pageWidth = currentWinWidth - Sidebar.width
+  const approxPageHeight = currentWinHeight - approxFFToolbarsHeight
 
   // Calc preview height
-  let previewHeight = Math.round((currentWinHeight / pageWidth) * previewWidth)
+  let previewHeight = Math.round((approxPageHeight / pageWidth) * previewWidth)
   if (previewHeight > previewWidth) previewHeight = previewWidth
+  previewData.ph = previewHeight.toString()
 
   // Calc preview scale
   const w = pageWidth / previewWidth
@@ -313,11 +328,15 @@ export async function showPreveiwPopupWindow(tabId: ID, y?: number) {
   if (scale > window.devicePixelRatio) scale = window.devicePixelRatio
 
   // Append height of header to previewHeight
-  previewHeight += approxPopupHeaderHeight
+  if (Settings.state.previewTabsTitle > 0) previewHeight += 22
+  if (Settings.state.previewTabsUrl > 0) previewHeight += 18
 
   previewData.scale = String(scale)
 
-  if (tab.discarded) previewData.off = 'y'
+  if (tab.discarded) {
+    previewData.off = 'y'
+    previewHeight = 0
+  }
 
   const params = new URLSearchParams(previewData).toString()
   const top = (currentWinY ?? 0) + (y ?? 0) + Settings.state.previewTabsWinOffsetY
@@ -413,6 +432,7 @@ export function updatePreviewPopup(tabId: ID) {
 export async function closePreviewPopup() {
   if (state.status === Status.Opening) {
     deadOnArrival = true
+    if (cancelInjecting) cancelInjecting()
     return
   }
 

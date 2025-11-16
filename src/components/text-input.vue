@@ -6,6 +6,7 @@
   :data-wrong="state.wrongValueAnimation"
   :data-width="props.width"
   @animationend="onAnimationEnd")
+  .focus-fx
   input(
     v-if="props.line"
     ref="textEl"
@@ -115,10 +116,15 @@ function error(): void {
   state.wrongValueAnimation = true
 }
 
+function getTextInput() {
+  if (textEl.value) return textEl.value
+}
+
 defineExpose<TextInputComponent>({
   focus,
   error,
   recalcTextHeight,
   selectAll,
+  getTextInput,
 })
 </script>

@@ -1,7 +1,7 @@
 /* eslint no-console: off */
-const fs = require('fs')
-const path = require('path')
-const { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST, logErr } = require('./utils')
+import fs from 'fs'
+import path from 'path'
+import { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST, logErr } from './utils.js'
 
 const COPY = {
   './src/manifest.json': {
@@ -19,6 +19,7 @@ const COPY = {
   './src/assets/group-page-favicon.svg': `${ADDON_PATH}/assets/`,
   './src/assets/snapshot-native.svg': `${ADDON_PATH}/assets/`,
   './src/assets/proxy-native.svg': `${ADDON_PATH}/assets/`,
+  './src/assets/window-native.svg': `${ADDON_PATH}/assets/`,
   [`./node_modules/vue/dist/${VUE_DIST}`]: `${ADDON_PATH}/vendor/`,
 }
 

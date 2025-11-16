@@ -1,9 +1,8 @@
-import { Container, Container_v4 } from './types/containers'
+import { Container } from './types/containers'
 import { SettingsState } from './types/settings'
-import { SidebarConfig, OldPanelConfig, TabsPanel } from './types/sidebar'
-import { ContextMenuConfig_v4, MenuConfs } from './types/menu'
-import { CssVars } from './types/styles'
-import { Snapshot, Snapshot_v4 } from './types/snapshots'
+import { SidebarConfig, TabsPanel } from './types/sidebar'
+import { MenuConfs } from './types/menu'
+import { Snapshot } from './types/snapshots'
 import { ItemInfo } from './types/tabs'
 import { WindowChoosingDetails } from './types/windows'
 import { ItemBounds } from './types/sidebar'
@@ -22,9 +21,15 @@ export * from './types/bookmarks'
 export * from './types/history'
 
 export interface ConfirmDialog {
+  type: ConfirmationType
   msg: string
   ok: () => void
   cancel: () => void
+}
+
+export const enum ConfirmationType {
+  Unknown = 1,
+  RmTab = 2,
 }
 
 export interface BookmarksFolderSelection {
@@ -89,13 +94,6 @@ export interface BackupData {
   favHashes?: number[]
   favDomains?: Record<string, FavDomain>
   keybindings?: Record<string, string>
-  // DEPRECATED //
-  containers_v4?: Record<string, Container_v4>
-  panels_v4?: OldPanelConfig[]
-  tabsMenu?: ContextMenuConfig_v4
-  bookmarksMenu?: ContextMenuConfig_v4
-  cssVars?: CssVars
-  snapshots_v4?: Snapshot_v4[]
 }
 
 export interface Command extends browser.commands.Command {
@@ -126,11 +124,17 @@ export const enum SubPanelType {
   RecentlyClosedTabs = 1,
   Bookmarks = 2,
   History = 3,
+  Sync = 4,
+}
+
+export interface ToggleInputComponent {
+  getFocusEl: () => HTMLElement | undefined
 }
 
 export interface SelectInputComponent {
   open: () => void
   close: () => void
+  getFocusEl: () => HTMLElement | undefined
 }
 
 export interface ContextMenuComponent {
@@ -143,6 +147,7 @@ export interface TextInputComponent {
   focus: () => void
   error: () => void
   selectAll: () => void
+  getTextInput: () => HTMLInputElement | undefined
 }
 
 export interface BookmarksPanelComponent {
@@ -173,7 +178,9 @@ export const enum DropType {
   NavItem = 3,
   TabsPanel = 31,
   BookmarksPanel = 32,
+  SyncPanel = 33,
   BookmarksSubPanelBtn = 41,
+  SyncSubPanelBtn = 42,
 }
 
 export interface DragItem {
@@ -183,6 +190,9 @@ export interface DragItem {
   pinned?: boolean
   parentId?: ID
   container?: string
+  customColor?: string
+  customTitle?: string
+  folded?: boolean
 }
 
 export interface DragInfo {
@@ -196,7 +206,6 @@ export interface DragInfo {
   pinnedTabs?: boolean
   index?: number
   copy?: boolean
-  inheritContainer?: boolean
 }
 
 export interface SrcPlaceInfo {
@@ -256,14 +265,10 @@ export interface DbgInfo {
   storage?: DbgStorage | string
   sidebar?: SidebarConfig | string
   containers?: Container[] | string
-  cssVars?: Record<string, string> | string
   sidebarCSSLen?: string
   groupCSSLen?: string
   windows?: DbgWindow[] | string
-  tabsMenu?: ContextMenuConfig_v4 | string
-  bookmarksMenu?: ContextMenuConfig_v4 | string
-  tabsPanelMenu?: ContextMenuConfig_v4 | string
-  bookmarksPanelMenu?: ContextMenuConfig_v4 | string
+  contextMenu?: MenuConfs | string
   bookmarks?: DbgBookmarks | string
 }
 
@@ -370,17 +375,6 @@ export const enum SelectionType {
   Header = 7,
 }
 
-export interface UpgradeMsg {
-  title: string
-  note: string
-  status: 'done' | 'in-progress' | 'pending' | 'err' | 'no' | 'finish'
-}
-
-export interface UpgradingState {
-  status: 'done' | 'loading' | 'err' | 'finish'
-  messages: UpgradeMsg[]
-}
-
 export const enum WheelDirection {
   Horizontal = 1,
   Vertical = 2,
@@ -397,3 +391,14 @@ export const enum MediaState {
   Audible = 1,
   Paused = 2,
 }
+
+export interface CopyTemplate {
+  name?: string
+  str: string
+  hasCT?: boolean
+  hasT?: boolean
+  hasU?: boolean
+  hasB?: boolean
+}
+
+export type DataUriImage = string & {}

@@ -17,13 +17,13 @@
         .body
           .flash-fx
           .fav(@dragstart.stop.prevent)
-            svg.fav-icon(v-if="!rmt.favIconUrl"): use(:xlink:href="rmt.favPlaceholder")
+            svg.fav-icon(v-if="!rmt.favIconUrl"): use(:href="rmt.favPlaceholder")
             img.fav-icon(v-if="rmt.favIconUrl" :src="rmt.favIconUrl" draggable="false")
           .t-box: .title {{rmt.title}}
           .branch-btn(
             @mousedown="onBranchMouseDown($event, rmt)"
             @mouseup="onBranchMouseUp($event, rmt)")
-            svg: use(xlink:href="#icon_tree_struct")
+            svg: use(href="#icon_tree_struct")
           .container-mark(v-if="rmt.containerColor" :data-color="rmt.containerColor")
   .nothing-placeholder(v-if="Tabs.reactive.recentlyRemovedLen === 0")
     .msg {{translate('panel.nothing')}}
@@ -35,7 +35,7 @@ import { DragItem, DragInfo, DropType, DragType, DstPlaceInfo, ItemInfo } from '
 import { RecentlyClosedTabInfo } from 'src/types'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -69,9 +69,24 @@ function onTabMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   }
 }
 
+let middleClickReactionTimeout: number | undefined
+
 function onTabMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   const sameTarget = Mouse.isTarget('closedTab', tab.id)
   Mouse.resetTarget()
+
+  if (e.button === 1) {
+    // Visualize clicking
+    const elId = 'rmt' + tab.id
+    const el = document.getElementById(elId)
+    if (el) {
+      el.classList.add('-middle-click')
+      clearTimeout(middleClickReactionTimeout)
+      middleClickReactionTimeout = setTimeout(() => {
+        el.classList.remove('-middle-click')
+      }, 300)
+    }
+  }
 
   if (e.button === 2) {
     e.stopPropagation()
@@ -140,9 +155,9 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     x: e.clientX,
     y: e.clientY,
     copy: true,
-    inheritContainer: true,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info
@@ -159,6 +174,8 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'copyMove'
   }
+
+  Sidebar.closeSubPanel()
 }
 
 function getBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {

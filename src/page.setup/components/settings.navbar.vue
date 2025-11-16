@@ -59,8 +59,15 @@ section(
       label="settings.sub_panel.history"
       v-model:value="Settings.state.subPanelHistory"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sub_panel.sync"
+      v-model:value="Settings.state.subPanelSync"
+      @update:value="Settings.saveDebounced(150)")
 
-  InfoField(label="settings.nav_bar_enabled" :inactive="!availableBtns.length").-sub-title
+  InfoField(
+    label="settings.nav_bar_enabled"
+    :value="Settings.state.navBarInline && Settings.state.navBarLayout === 'horizontal' ? translate('settings.nav_bar_enabled_inline_note') : undefined"
+    :inactive="!availableBtns.length").-sub-title
   .sub-fields
     .card.-placeholder(
       v-if="!enabledBtns.length"
@@ -93,9 +100,9 @@ section(
             @dragstart.stop="onDragStart($event, 'enabled', i, btn.id)")
           .card-icon(:data-color="btn.color")
             svg.bookmarks-badge-icon(v-if="isBookmarksBadgeNeeded(btn)")
-              use(xlink:href="#icon_bookmark_badge")
+              use(href="#icon_bookmark_badge")
             svg(v-if="!btn.iconIMG")
-              use(:xlink:href="'#' + btn.iconSVG")
+              use(:href="'#' + btn.iconSVG")
             img(v-else :src="btn.iconIMG")
           .card-name {{btn.name}}
           .card-inact-note(v-if="btn.inactive") {{translate('settings.nav_bar.inact_note')}}
@@ -104,21 +111,21 @@ section(
             v-if="btn.badgeMoveRules"
             :title="translate('panel.tab_move_rules_manage_badge')"
             @click="Popups.openTabMoveRulesPopup(SidebarConfigRState.panels[btn.id])")
-            svg.-rotate270: use(xlink:href="#icon_download_in_progress")
+            svg.-rotate270: use(href="#icon_download_in_progress")
             .len {{btn.badgeMoveRules}}
           .card-badge(
             v-if="btn.badgeShortcuts"
             :title="translate('panel.new_tab_shortcuts_manage_btn')"
             @click="Popups.openNewTabShortcutsPopup(SidebarConfigRState.panels[btn.id])")
-            svg: use(xlink:href="#icon_plus")
+            svg: use(href="#icon_plus")
             .len {{btn.badgeShortcuts}}
         .card-ctrls
           .card-ctrl.-down(@click="moveBtn(i, 1)")
-            svg: use(xlink:href="#icon_expand")
+            svg: use(href="#icon_expand")
           .card-ctrl.-up(:data-inactive="i === 0" @click="moveBtn(i, -1)")
-            svg: use(xlink:href="#icon_expand")
+            svg: use(href="#icon_expand")
           .card-ctrl.-rm(@click="disableBtn(i)")
-            svg: use(xlink:href="#icon_remove")
+            svg: use(href="#icon_remove")
 
   InfoField(label="settings.nav_bar.available_elements" :inactive="!availableBtns.length").-sub-title
   .sub-fields.-disabled(v-if="availableBtns.length")
@@ -132,7 +139,7 @@ section(
         .card-dnd-layer(draggable="true" @dragstart.stop="onDragStart($event, null, null, btn.id)")
         .card-icon
           svg(v-if="!btn.iconIMG")
-            use(:xlink:href="'#' + btn.iconSVG")
+            use(:href="'#' + btn.iconSVG")
           img(v-else :src="btn.iconIMG")
         .card-name {{btn.name}}
 
@@ -158,9 +165,10 @@ import {
   createTabsPanelConfig,
   createBookmarksPanelConfig,
   createHistoryPanelConfig,
+  createSyncPanelConfig,
 } from 'src/services/sidebar-config'
 import { Permissions } from 'src/services/permissions'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import InfoField from '../../components/info-field.vue'
@@ -217,9 +225,8 @@ const availableBtns = computed<Btn[]>(() => {
   const result: Btn[] = []
   // prettier-ignore
   const ids = [
-    'tabs_panel', 'bookmarks_panel', 'sp', 'sd', 'hdn',
-    'history', 'search', 'add_tp', 'create_snapshot',
-    'collapse', 'remute_audio_tabs', 'settings',
+    'tabs_panel', 'bookmarks_panel', 'history', 'sync', 'sp', 'sd', 'hdn', 'search',
+    'add_tp', 'create_snapshot', 'collapse', 'remute_audio_tabs', 'settings',
   ]
 
   for (const id of ids) {
@@ -283,6 +290,10 @@ async function createNavElement(id?: ID): Promise<ID | undefined> {
     const panelConf = createHistoryPanelConfig()
     SidebarConfigRState.panels[panelConf.id] = panelConf
     return panelConf.id
+  } else if (id === 'sync') {
+    const panelConf = createSyncPanelConfig()
+    SidebarConfigRState.panels[panelConf.id] = panelConf
+    return panelConf.id
   } else if (id === 'sp') id = 'sp-' + Utils.uid()
   else if (id === 'sd') id = 'sd-' + Utils.uid()
 
@@ -302,6 +313,8 @@ function disableBtn(index: number): void {
   if (panelConf) {
     const msg = getRmConfirmMsg(panelConf)
     if (msg && !window.confirm(msg)) return
+
+    delete SidebarConfigRState.panels[panelConf.id]
   }
 
   SidebarConfigRState.nav.splice(index, 1)
@@ -311,13 +324,9 @@ function disableBtn(index: number): void {
 function getRmConfirmMsg(panel: PanelConfig): string | undefined {
   if (!panel.name) return
   if (Utils.isTabsPanel(panel)) {
-    let preMsg = translate('settings.nav_rm_tabs_panel_confirm_pre')
-    let postMsg = translate('settings.nav_rm_tabs_panel_confirm_post')
-    return preMsg + panel.name + postMsg
+    return translate('settings.nav_rm_tabs_panel_confirm', panel.name)
   } else if (Utils.isBookmarksPanel(panel)) {
-    let preMsg = translate('settings.nav_rm_bookmarks_panel_confirm_pre')
-    let postMsg = translate('settings.nav_rm_bookmarks_panel_confirm_post')
-    return preMsg + panel.name + postMsg
+    return translate('settings.nav_rm_bookmarks_panel_confirm', panel.name)
   }
 }
 

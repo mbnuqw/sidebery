@@ -22,6 +22,8 @@
   :data-search="!!Search.reactive.value"
   :data-sticky-bookmarks="Settings.state.pinOpenedBookmarksFolder"
   :data-colorized-branches="Settings.state.colorizeTabsBranches"
+  :data-syncing="Sync.reactive.syncing"
+  :data-new-tab-btns="Settings.state.showNewTabBtns"
   @dragend="DnD.onDragEnd"
   @dragenter="DnD.onDragEnter"
   @dragleave="DnD.onDragLeave"
@@ -45,6 +47,7 @@
   Transition(name="popup" type="transition"): DialogPopup(v-if="Popups.reactive.dialog" :dialog="Popups.reactive.dialog")
   Transition(name="popup" type="transition"): NewTabShortcutsPopup(v-if="Popups.reactive.newTabShortcutsPopup")
   Transition(name="popup" type="transition"): SiteConfigPopup(v-if="Popups.reactive.siteConfigPopup")
+  Transition(name="popup" type="transition"): ProcessingTabsPopup(v-if="Popups.reactive.processingTabsPopup")
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
@@ -74,32 +77,35 @@
         .BottomBar(
           v-if="bottomBar && Utils.isTabsPanel(activePanel)"
           @dragover.prevent.stop=""
-          :data-drop-target-bookmarks="DnD.reactive.dstType === DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id")
+          :data-drop-target-bookmarks="DnD.reactive.dstType === DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id"
+          :data-drop-target-sync="DnD.reactive.dstType === DropType.SyncSubPanelBtn")
           .tool-btn(
             v-if="Settings.state.subPanelRecentlyClosedBar"
             :data-disabled="!Tabs.reactive.recentlyRemovedLen"
             @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, activePanel)")
-            svg: use(xlink:href="#icon_trash")
+            svg: use(href="#icon_trash")
           .tool-btn.-bookmarks(
             v-if="Settings.state.subPanelBookmarks"
-            :data-disabled="!Utils.isTabsPanel(activePanel)"
             @dragleave="onBSPBDragLeave"
             @click="Sidebar.openSubPanel(SubPanelType.Bookmarks, activePanel)")
             .dnd-layer(data-dnd-type="bspb")
-            svg: use(xlink:href="#icon_bookmarks")
+            svg: use(href="#icon_bookmarks")
           .tool-btn(
             v-if="Settings.state.subPanelHistory"
-            :data-disabled="!Utils.isTabsPanel(activePanel)"
             @click="Sidebar.openSubPanel(SubPanelType.History, activePanel)")
-            svg: use(xlink:href="#icon_clock")
+            svg: use(href="#icon_clock")
+          .tool-btn.-sync(
+            v-if="Settings.state.subPanelSync"
+            @dragleave="onSSPBDragLeave"
+            @click="Sidebar.openSubPanel(SubPanelType.Sync, activePanel)")
+            .dnd-layer(data-dnd-type="sspb")
+            svg: use(href="#icon_sync")
 
       SubPanel
 
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
       PinnedTabsBar(v-if="pinnedTabsBarRight")
       NavigationBar.-vert(v-if="navBarRight")
-
-  UpgradeScreen(v-if="reactiveUpgrading.status")
 </template>
 
 <script lang="ts" setup>
@@ -110,7 +116,7 @@ import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -119,7 +125,8 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Windows } from 'src/services/windows'
 import { Search } from 'src/services/search'
 import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
-import { reactiveUpgrading } from 'src/services/upgrading'
+import { Sync } from 'src/services/_services'
+import { Info } from 'src/services/info'
 import ConfirmPopup from './components/popup.confirm.vue'
 import CtxMenuPopup from './components/popup.context-menu.vue'
 import DragAndDropTooltip from './components/dnd-tooltip.vue'
@@ -130,6 +137,7 @@ import WindowsPopup from './components/popup.windows.vue'
 import TabsPanel from './components/panel.tabs.vue'
 import BookmarksPanel from './components/panel.bookmarks.vue'
 import HistoryPanel from './components/panel.history.vue'
+import SyncPanel from './components/panel.sync.vue'
 import SearchBar from './components/bar.search.vue'
 import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import PanelConfigPopup from './components/popup.panel-config.vue'
@@ -138,7 +146,7 @@ import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from 'src/components/popup.dialog.vue'
 import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
 import SiteConfigPopup from '../components/popup.site-config.vue'
-import UpgradeScreen from '../components/upgrade-screen.vue'
+import ProcessingTabsPopup from './components/popup.processing-tabs.vue'
 import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups'
@@ -161,7 +169,8 @@ let navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
 let bottomBar =
   Settings.state.subPanelRecentlyClosedBar ||
   Settings.state.subPanelBookmarks ||
-  Settings.state.subPanelHistory
+  Settings.state.subPanelHistory ||
+  Settings.state.subPanelSync
 
 function recalcStaticVars() {
   animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
@@ -176,7 +185,8 @@ function recalcStaticVars() {
   bottomBar =
     Settings.state.subPanelRecentlyClosedBar ||
     Settings.state.subPanelBookmarks ||
-    Settings.state.subPanelHistory
+    Settings.state.subPanelHistory ||
+    Settings.state.subPanelSync
 }
 
 Sidebar.reMountSidebar = () => {
@@ -209,13 +219,14 @@ function updSidebarEls() {
 
 onMounted(() => {
   updSidebarEls()
-  document.addEventListener('keyup', onDocumentKeyup)
+  document.addEventListener('keydown', onDocumentKeydown)
 })
 
 function getPanelComponent(panel: Panel): Component | undefined {
   if (panel.type === PanelType.tabs) return TabsPanel
   if (panel.type === PanelType.bookmarks) return BookmarksPanel
   if (panel.type === PanelType.history) return HistoryPanel
+  if (panel.type === PanelType.sync) return SyncPanel
 }
 
 function onFocusIn(e: FocusEvent): void {
@@ -230,7 +241,7 @@ function onFocusOut(e: FocusEvent): void {
   }
 }
 
-function onDocumentKeyup(e: KeyboardEvent): void {
+function onDocumentKeydown(e: KeyboardEvent): void {
   // Close popups
   if (e.code === 'Escape') {
     // Context menu
@@ -295,6 +306,32 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     // Confirm popup
     if (Popups.reactive.confirm?.ok) Popups.reactive.confirm.ok()
   }
+
+  // Paste
+  if (e.code === 'KeyV' && (Info.reactive.os === 'mac' ? e.metaKey : e.ctrlKey)) {
+    if (e.target instanceof HTMLInputElement) return
+
+    let actPanel
+    if (Sidebar.subPanelActive) actPanel = Sidebar.subPanels.bookmarks
+    else actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+
+    if (Utils.isTabsPanel(actPanel)) {
+      if (Selection.isTabs()) {
+        Tabs.pasteAfter(Selection.ids())
+      } else {
+        Tabs.paste({ panelId: Sidebar.activePanelId })
+      }
+    } else if (Utils.isBookmarksPanel(actPanel)) {
+      if (Selection.isBookmarks()) {
+        const target = Bookmarks.reactive.byId[Selection.getLast()]
+        if (!target) return Logs.warn('Sidebar.onDocumentKeyup: Paste bkm: No sel target')
+        if (target.type === 'folder') Bookmarks.pasteIn(target.id)
+        else Bookmarks.pasteAfter(target.id)
+      } else {
+        Bookmarks.pasteIn(actPanel.rootId)
+      }
+    }
+  }
 }
 
 let lastDir: number | undefined
@@ -342,7 +379,9 @@ function onMouseLeave(): void {
     Preview.closePreview()
   }
 
-  if (DnD.dragEndedRecently) return
+  // Detect if this event was fired right after drop/dragend
+  // so the mouse cursor might actually still be inside the sidebar
+  if (DnD.dragEndedRecently || DnD.droppedRecently) return
 
   Mouse.mouseIn = false
   Mouse.stopResizing()
@@ -361,18 +400,16 @@ function onMouseLeave(): void {
   }
 
   if (Sidebar.subPanelActive && !Search.rawValue && !Menu.isOpen && !DnD.items.length) {
-    clearTimeout(subPanelTimeout)
-    subPanelTimeout = setTimeout(() => {
-      Sidebar.closeSubPanel()
-    }, 300)
+    Sidebar.closeSubPanel()
   }
 
   if (Sidebar.switchOnMouseLeave) Sidebar.switchPanelOnMouseLeave()
+  if (Sidebar.scrollOnMouseLeave) Sidebar.scrollPanelOnMouseLeave()
 
   if (Tabs.activateSelectedOnMouseLeave && Selection.isTabs()) {
     Tabs.activateSelectedOnMouseLeave = false
 
-    const id = Selection.get()[0]
+    const id = Selection.ids()[0]
     const targetTab = Tabs.byId[id]
     if (!targetTab || targetTab.id === Tabs.activeId) return Selection.resetSelection()
 
@@ -412,7 +449,7 @@ function onMouseUp(e: MouseEvent): void {
       return
     }
 
-    Tabs.removeTabs(Selection.get())
+    Tabs.removeTabs(Selection.ids())
   } else if (e.button === 2) {
     let type: MenuType | undefined
     if (Selection.isBookmarks()) type = MenuType.Bookmarks
@@ -438,10 +475,15 @@ function getPanelPos(i: number, panelId: ID): PanelPosition {
 let onBSPBDragLeaveTimeout: number | undefined
 function onBSPBDragLeave() {
   if (Sidebar.subPanelActive) DnD.reactive.dstType = DropType.Bookmarks
+  else DnD.reactive.dstType = DropType.Nowhere
 
   clearTimeout(onBSPBDragLeaveTimeout)
   onBSPBDragLeaveTimeout = setTimeout(() => {
     if (Sidebar.subPanelActive) Sidebar.updateBounds()
   }, 120)
+}
+
+function onSSPBDragLeave() {
+  DnD.reactive.dstType = DropType.Nowhere
 }
 </script>

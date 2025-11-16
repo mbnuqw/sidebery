@@ -10,6 +10,16 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.open_snap_viewer")
     KeybindingField(:keybinding="Keybindings.reactive.byName.menu")
     .info(v-if="Settings.state.ctxMenuNative") {{translate('settings.kb_menu_note')}}
+    KeybindingField(:keybinding="Keybindings.reactive.byName.open_panel_config")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_title")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_url")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.copy_tmplt_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.open_bookmarks_sub_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.open_sync_popup")
 
   section
     h2 {{translate('settings.kb_switching_panel')}}
@@ -33,6 +43,7 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_7")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_8")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_9")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_prev_panel")
 
   section
     h2 {{translate('settings.kb_scroll_active_panel')}}
@@ -48,6 +59,7 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs")
     KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs_act")
     KeybindingField(:keybinding="Keybindings.reactive.byName.flatten_tabs")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.edit_title")
 
   section
     h2 {{translate('settings.kb_tabs_open')}}
@@ -81,9 +93,14 @@
           label="settings.select_active_tab_first"
           v-model:value="Settings.state.selectActiveTabFirst"
           @update:value="Settings.saveDebounced(150)")
+        ToggleField(
+          label="settings.select_cyclic"
+          v-model:value="Settings.state.selectCyclic"
+          @update:value="Settings.saveDebounced(150)")
       KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.sel_child_tabs")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.lock_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
     .info {{translate('settings.kb_select_act_note')}}
@@ -190,7 +207,7 @@
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Keybindings } from 'src/services/keybindings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Settings } from 'src/services/settings'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
 import ToggleField from 'src/components/toggle-field.vue'

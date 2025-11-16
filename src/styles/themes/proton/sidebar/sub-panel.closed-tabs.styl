@@ -109,6 +109,9 @@
 .ClosedTabsSubPanel .closed-tab:active .body:before
   background-color: var(--frame-el-overlay-clicked-bg)
 
+.ClosedTabsSubPanel .closed-tab.-middle-click .body
+  animation: middle-click-animation .2s
+
 #root[data-tabs-tree-lvl-marks="true"] .ClosedTabsSubPanel .closed-tab:not([data-lvl="0"]) .body:after
   display: block
   box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--frame-fg),

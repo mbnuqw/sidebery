@@ -1,9 +1,9 @@
 /* eslint no-console: off */
-const fs = require('fs')
-const path = require('path')
-const stylus = require('stylus')
-const csso = require('csso')
-const { IS_DEV, ADDON_PATH, getTime, watch, log, logOk } = require('./utils')
+import fs from 'fs'
+import path from 'path'
+import stylus from 'stylus'
+import * as csso from 'csso'
+import { IS_DEV, ADDON_PATH, getTime, watch, log, logOk } from './utils.js'
 
 const OUTPUT_DIR = `${ADDON_PATH}/themes`
 const THEMES = {
@@ -13,6 +13,8 @@ const THEMES = {
     './src/styles/themes/proton/page.group/group.styl',
     './src/styles/themes/proton/page.setup/setup.styl',
     './src/styles/themes/proton/popup.proxy/proxy.styl',
+    './src/styles/themes/proton/popup.sync/sync.styl',
+    './src/styles/themes/proton/popup.panel-config/panel-config.styl',
   ],
 }
 

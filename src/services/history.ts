@@ -15,6 +15,7 @@ export const History = {
 
   ready: false,
   allLoaded: false,
+  loadingMore: false,
 
   panelScrollEl: null as HTMLElement | null,
   subPanelScrollEl: null as HTMLElement | null,

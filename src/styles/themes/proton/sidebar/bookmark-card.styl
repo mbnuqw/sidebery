@@ -52,6 +52,23 @@
   background-color: var(--frame-fg)
 
 // ---
+// -- Color layer
+// -
+.BookmarkCard .color-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--bookmarks-border-radius)
+  background-color: var(--bkm-color)
+  opacity: 0.2
+  z-index: 10
+  pointer-events: none
+#root[data-frame-color-scheme="light"] .Tab .color-layer
+  opacity: 0.36
+
+// ---
 // -- Line
 // -
 .BookmarkCard .line
@@ -118,3 +135,26 @@
     flex-shrink: 0
     margin-right: 6px
     mask: none
+
+// ---
+// -- Container mark
+// -
+.BookmarkCard .container-mark
+  position: absolute
+  z-index: 10
+  top: 0
+  right: 0
+  width: var(--bookmarks-border-radius)
+  height: calc(100% - var(--bookmarks-margin))
+  overflow: clip
+  border-top-right-radius: var(--bookmarks-border-radius)
+  border-bottom-right-radius: var(--bookmarks-border-radius)
+  pointer-events: none
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    right: 0
+    width: 2px
+    height: 100%
+    background-color: var(--color)

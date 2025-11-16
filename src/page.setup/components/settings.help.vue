@@ -32,12 +32,11 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import { translate, LANG } from 'src/dict'
+import { translate } from 'src/dict'
 import { BackupData } from 'src/types'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
-import SelectField from '../../components/select-field.vue'
+import { SetupPage } from 'src/services/_services'
 import ExportConfig from './popup.export-config.vue'
 import ImportConfig from './popup.import-config.vue'
 

@@ -7,7 +7,7 @@
   .body
     .title {{title}}
     .len {{len}}
-    svg.expand: use(xlink:href="#icon_expand")
+    svg.expand: use(href="#icon_expand")
 </template>
 
 <script lang="ts" setup>

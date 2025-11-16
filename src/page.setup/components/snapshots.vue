@@ -18,11 +18,11 @@
             .date-time {{snapshot.dateStr}} - {{snapshot.timeStr}}
             .content-info {{getSnapInfo(snapshot)}}
           .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
-            svg: use(xlink:href="#icon_trash")
+            svg: use(href="#icon_trash")
 
     .active-snapshot-section
-      .header(v-if="state.activeSnapshot" @wheel="onHeaderWheel" :data-empty="!state.activeSnapshot")
-        .title {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
+      .header(v-if="state.activeSnapshot" :data-empty="!state.activeSnapshot")
+        .title(@wheel="onHeaderWheel") {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
         DropDownButton(
           :label="translate('snapshot.btn_export_snapshot')"
           @open="onExportSnapshotDropDownOpen")
@@ -38,53 +38,48 @@
       .content(v-if="state.activeSnapshot")
         .windows
           .window(v-for="(win, i) in state.activeSnapshot.windows" :key="i")
-            .window-bar
+            .window-bar(:data-folded="win.folded")
+              .drop-down-btn(@click="win.folded = !win.folded")
+                svg.exp-icon: use(href="#icon_expand")
               .win-name {{translate('snapshot.window_title') + ' ' + (i + 1)}}
+              svg.win-private(v-if="win.private"): use(href="#icon_priv_win")
               .win-len ({{win.tabsLen}} {{translate('snapshot.snap_tab', win.tabsLen)}})
-              .btn(@click="openWindow(state.activeSnapshot, i)") {{translate('snapshot.btn_open_win')}}
-            .panels
-              .panel(v-for="panel in win.panels" :key="panel.id" :data-void="panel.id === -1")
-                .panel-bar(:data-color="panel.color")
+              .btn(@click="openWindow(state.activeSnapshot, i, win.private)").
+                {{translate('snapshot.btn_open_win')}}
+              .btn(v-if="win.private" @click="openWindow(state.activeSnapshot, i, !win.private)").
+                {{translate('snapshot.btn_open_as_norm_win')}}
+              .btn(v-else @click="openWindow(state.activeSnapshot, i, !win.private)").
+                {{translate('snapshot.btn_open_as_private_win')}}
+            .panels(v-show="!win.folded")
+              .panel(v-for="panel in win.panels" :key="panel.id")
+                .panel-bar(:data-color="panel.color" :data-folded="panel.folded")
+                  .drop-down-btn(@click="panel.folded = !panel.folded")
+                    svg.exp-icon: use(href="#icon_expand")
                   .icon
                     img(v-if="panel.iconIMG" :src="panel.iconIMG")
-                    svg(v-else): use(:xlink:href="'#' + panel.iconSVG")
+                    svg(v-else): use(:href="'#' + panel.iconSVG")
                   .name {{panel.name}}
                   .len {{panel.tabs.length}} {{translate('snapshot.snap_tab', panel.tabs.length)}}
-                .tabs
-                  .tab(
-                    v-for="tab in panel.tabs"
+                .tabs(v-show="!panel.folded")
+                  SnapTab(
+                    v-for="(tab, i) in panel.tabs"
+                    v-show="!tab.invisible"
                     :key="tab.id"
-                    :title="tab.title"
-                    :id="String(tab.id)"
-                    :data-sel="tab.sel"
-                    :data-lvl="tab.lvl"
-                    :data-pinned="tab.pinned"
-                    :data-color="tab.containerColor"
-                    :data-shift-sel="state.mouseUpShiftTabId === tab.id"
-                    @click.stop.prevent="")
-                    a.link(
-                      target="_blank"
-                      :href="tab.url"
-                      @dragstart="onTabDragStart($event)"
-                      @mousedown="onTabMouseDown($event, tab)"
-                      @mouseup.stop.prevent="onTabMouseUp($event, tab)")
-                    .container-mark(v-if="tab.containerIcon")
-                    .icon
-                      img(
-                        v-if="tab.domain && Favicons.reactive.byDomains[tab.domain]"
-                        :src="Favicons.reactive.byDomains[tab.domain]")
-                      svg(v-else): use(:xlink:href="tab.iconSVG")
-                      svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
-                    .title-url
-                      .title {{tab.title}}
-                      .url {{tab.url}}
-                    .checkbox(
-                      :data-sel="tab.sel"
-                      @mousedown="onCheckboxMouseDown($event, tab)"
-                      @mouseup="onCheckboxMouseUp($event, tab)")
+                    :index="i"
+                    :tab="tab"
+                    :panel="panel"
+                    :snapshot="state.activeSnapshot"
+                    :viewerState="state")
       .selection-bar(:data-active="!!selectedTabsLen")
         .info {{translate('snapshot.selected')}} {{selectedTabsLen}}
-        .btn(@click="openSelectedTabs()") {{translate('snapshot.sel.open_in_panel')}}
+        DropDownButton(
+          :label="translate('snapshot.sel.open_in')")
+          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewWindow)")
+            .label {{translate('snapshot.sel.open_in_window')}}
+          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewPrivateWindow)")
+            .label {{translate('snapshot.sel.open_in_private_window')}}
+          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.CurrentPanel)")
+            .label {{translate('snapshot.sel.open_in_panel')}}
         .btn(@click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
 
     .placeholder(v-if="!state.snapshots.length")
@@ -95,28 +90,46 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, nextTick } from 'vue'
+import { computed, nextTick, reactive } from 'vue'
 import * as Utils from 'src/utils'
-import { Stored, Snapshot, SnapshotState, RemovingSnapshotResult } from 'src/types'
-import { SnapTabState, ItemInfo, NormalizedSnapshot, SnapExportInfo } from 'src/types'
+import {
+  ItemInfo,
+  NormalizedSnapshot,
+  RemovingSnapshotResult,
+  SnapExportInfo,
+  SnapOpenType,
+  Snapshot,
+  SnapshotState,
+  SnapTabState,
+  Stored,
+} from 'src/types'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as IPC from 'src/services/ipc'
-import * as Favicons from 'src/services/favicons.fg'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Store } from 'src/services/storage'
 import { Snapshots } from 'src/services/snapshots'
 import DropDownButton from 'src/components/drop-down-button.vue'
+import SnapTab from './snapshots.tab.vue'
+import { SetupPage } from 'src/services/_services'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
 
 const dayStartMs = Utils.getDayStartMS()
+
+export interface SnapshotsViewerState {
+  snapshots: SnapshotState[]
+  activeSnapshot: SnapshotState | null
+  mouseUpShiftTabId: ID | null
+  mouseUpShiftMode: boolean
+}
 const state = reactive({
-  snapshots: [] as SnapshotState[],
-  activeSnapshot: null as SnapshotState | null,
-  mouseUpShiftTabId: null as ID | null,
-})
+  snapshots: [],
+  activeSnapshot: null,
+  mouseUpShiftTabId: null,
+  mouseUpShiftMode: true,
+} as SnapshotsViewerState)
 
 const selectedTabsLen = computed<number>(() => {
   if (!state.activeSnapshot) return 0
@@ -159,6 +172,13 @@ void (async function init(): Promise<void> {
 
 function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   if (!newSnapshots) newSnapshots = []
+
+  SetupPage.updStorageInfo('snapshots', newSnapshots)
+
+  updateSnapshots(newSnapshots)
+}
+
+function updateSnapshots(newSnapshots: Snapshot[]) {
   const snapshots = []
 
   // Normalize snapshots
@@ -174,6 +194,7 @@ function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   state.snapshots = snapshots
   state.activeSnapshot = activeSnapshot ?? snapshots[0]
 }
+SetupPage.snapshotsViewer.refresh = updateSnapshots
 
 function activateSnapshot(snapshot?: SnapshotState): void {
   if (!snapshot || state.activeSnapshot === snapshot) return
@@ -202,116 +223,6 @@ function onHeaderWheel(e: WheelEvent): void {
   if (el) el.scrollIntoView(SCROLL_CONF)
 }
 
-const LONG_CLICK_DELAY = 700
-let longClickTimeout: number | undefined
-let mouseDownTabId: ID | undefined
-function onTabMouseDown(e: MouseEvent, tab: SnapTabState): void {
-  mouseDownTabId = tab.id
-  clearTimeout(longClickTimeout)
-
-  if (e.button === 0) {
-    longClickTimeout = setTimeout(() => {
-      tab.sel = true
-      mouseDownTabId = undefined
-    }, LONG_CLICK_DELAY)
-  }
-}
-
-let mouseUpShiftMode = true
-function onTabMouseUp(e: MouseEvent, tab: SnapTabState): void {
-  clearTimeout(longClickTimeout)
-  if (mouseDownTabId !== tab.id) {
-    mouseDownTabId = undefined
-    return
-  }
-  mouseDownTabId = undefined
-
-  if (e.shiftKey && e.button === 0) {
-    if (state.mouseUpShiftTabId === null) {
-      state.mouseUpShiftTabId = tab.id ?? null
-      tab.sel = !tab.sel
-      mouseUpShiftMode = tab.sel
-    } else {
-      selectRange(state.mouseUpShiftTabId, tab.id, !mouseUpShiftMode)
-      state.mouseUpShiftTabId = null
-    }
-    return
-  }
-
-  if (e.ctrlKey && e.button === 0) {
-    tab.sel = !tab.sel
-    return
-  }
-
-  state.mouseUpShiftTabId = null
-
-  if (e.button === 0) openTab(tab)
-}
-
-function onCheckboxMouseDown(e: MouseEvent, tab: SnapTabState): void {
-  mouseDownTabId = tab.id
-}
-
-function onCheckboxMouseUp(e: MouseEvent, tab: SnapTabState): void {
-  if (mouseDownTabId !== tab.id) {
-    mouseDownTabId = undefined
-    return
-  }
-  mouseDownTabId = undefined
-
-  if (e.shiftKey && e.button === 0) {
-    if (state.mouseUpShiftTabId === null) {
-      state.mouseUpShiftTabId = tab.id ?? null
-      tab.sel = !tab.sel
-      mouseUpShiftMode = tab.sel
-    } else {
-      selectRange(state.mouseUpShiftTabId, tab.id, !mouseUpShiftMode)
-      state.mouseUpShiftTabId = null
-    }
-    return
-  }
-  state.mouseUpShiftTabId = null
-
-  if (e.button === 0) {
-    tab.sel = !tab.sel
-  }
-}
-
-function onTabDragStart(e: DragEvent): void {
-  clearTimeout(longClickTimeout)
-
-  const target = e.currentTarget as HTMLElement
-
-  if (target.parentElement) {
-    const parentEl = target.parentElement as HTMLElement
-    const bounds = parentEl.getBoundingClientRect()
-    const x = e.clientX - bounds.x
-    const y = e.clientY - bounds.y
-    if (e.dataTransfer) e.dataTransfer.setDragImage(target.parentElement, x, y)
-  }
-}
-
-function selectRange(tabAId: ID, tabBId?: ID, deselectActually = false): void {
-  if (!state.activeSnapshot) return
-  if (!tabBId === undefined) tabBId = tabAId
-  const oneTab = tabAId === tabBId
-  let inRange = false
-
-  for (const win of state.activeSnapshot.windows) {
-    for (const panel of win.panels) {
-      for (const tab of panel.tabs) {
-        if (inRange) tab.sel = !deselectActually
-
-        if (tab.id === tabAId || tab.id === tabBId) {
-          inRange = !inRange
-          if (inRange) tab.sel = !deselectActually
-          if (oneTab) inRange = !inRange
-        }
-      }
-    }
-  }
-}
-
 function resetSelection(snapshot?: SnapshotState | null): void {
   if (!snapshot && state.activeSnapshot) snapshot = state.activeSnapshot
   if (!snapshot) return
@@ -329,32 +240,10 @@ function resetSelection(snapshot?: SnapshotState | null): void {
 
 function onClick() {
   state.mouseUpShiftTabId = null
-  mouseUpShiftMode = true
+  state.mouseUpShiftMode = true
 }
 
-async function openTab(tab: SnapTabState): Promise<void> {
-  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
-
-  if (Utils.isTabsPanel(activePanel)) {
-    const item: ItemInfo = {
-      id: tab.id ?? NOID,
-      url: tab.url,
-      title: tab.title,
-      container: tab.containerId ?? CONTAINER_ID,
-    }
-    await IPC.sidebar(Windows.id, 'openTabs', [item], { panelId: activePanel.id })
-  } else {
-    const conf: browser.tabs.CreateProperties = {
-      url: Utils.normalizeUrl(tab.url, tab.title),
-      windowId: Windows.id,
-      active: false,
-      cookieStoreId: tab.containerId ?? CONTAINER_ID,
-    }
-    browser.tabs.create(conf)
-  }
-}
-
-async function openSelectedTabs(): Promise<void> {
+async function openSelectedTabs(how: SnapOpenType): Promise<void> {
   if (!state.activeSnapshot) return
 
   const items: ItemInfo[] = []
@@ -371,8 +260,13 @@ async function openSelectedTabs(): Promise<void> {
         const item: ItemInfo = {
           id: tab.id,
           url: tab.url,
+          customTitle: tab.customTitle,
+          customColor: tab.customColor,
           title: tab.title,
-          container: tab.containerId ?? CONTAINER_ID,
+          container: await Snapshots.adaptContainer(
+            state.activeSnapshot,
+            tab.containerId ?? CONTAINER_ID
+          ),
         }
         if (tab.lvl && tab.lvl > 0) {
           let shift = 1
@@ -386,25 +280,50 @@ async function openSelectedTabs(): Promise<void> {
     }
   }
 
-  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
-  if (Utils.isTabsPanel(activePanel)) {
-    await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
-  } else {
-    for (const item of items) {
-      const conf: browser.tabs.CreateProperties = {
-        url: Utils.normalizeUrl(item.url, item.title),
-        windowId: Windows.id,
-        active: false,
-        cookieStoreId: item.container,
-      }
-      if (conf.url && !conf.url.startsWith('a') && item.title) {
-        conf.discarded = true
-        conf.title = item.title
-        conf.active = false
-      }
+  if (how === SnapOpenType.CurrentPanel) {
+    const activePanel = await browser.sidebarAction
+      .isOpen({ windowId: Windows.id })
+      .then(isOpen => (isOpen ? IPC.sidebar(Windows.id, 'getActivePanelConfig') : undefined))
+      .catch(() => undefined)
+    if (Utils.isTabsPanel(activePanel)) {
+      await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
+    } else if (activePanel) {
+      await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: NOID })
+    } else {
+      const creating = []
+      const oldNewIds: Record<ID, ID> = {}
+      for (const item of items) {
+        const conf: browser.tabs.CreateProperties = {
+          url: Utils.normalizeUrl(item.url, item.title),
+          windowId: Windows.id,
+          active: false,
+          cookieStoreId: item.container,
+        }
+        if (conf.url && !conf.url.startsWith('a') && item.title) {
+          conf.discarded = true
+          conf.title = item.title
+          conf.active = false
+        }
 
-      browser.tabs.create(conf)
+        creating.push(browser.tabs.create(conf).then(t => (oldNewIds[item.id] = t.id)))
+      }
+      try {
+        await Promise.all(creating)
+      } catch (err) {
+        Logs.err('Snapshots.openSelectedTabs: Cannot open tabs in current panel:', err)
+      }
+      // Update openerTabId to preserve tree structure
+      for (const item of items) {
+        if (item.parentId === undefined || item.parentId === NOID) continue
+        const tabId = oldNewIds[item.id]
+        const openerTabId = oldNewIds[item.parentId]
+        if (openerTabId !== undefined) browser.tabs.update(tabId, { openerTabId })
+      }
     }
+  } else {
+    await IPC.bg('createWindowWithTabs', items, {
+      incognito: how === SnapOpenType.NewPrivateWindow,
+    })
   }
 }
 
@@ -415,18 +334,26 @@ async function createSnapshot(): Promise<void> {
 async function openAllWindows(snapshot: SnapshotState | null): Promise<void> {
   if (!snapshot) return
 
+  const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
+
   try {
-    await IPC.bg('openSnapshotWindows', Utils.cloneObject(snapshot))
+    await IPC.bg('openSnapshotWindows', normSnapshot)
   } catch (err) {
     Logs.err('Snapshots: Cannot openAllWindows', err)
   }
 }
 
-async function openWindow(snapshot: SnapshotState | null, winIndex: number): Promise<void> {
+async function openWindow(
+  snapshot: SnapshotState | null,
+  winIndex: number,
+  incognito: boolean
+): Promise<void> {
   if (!snapshot) return
 
+  const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
+
   try {
-    await IPC.bg('openSnapshotWindows', Utils.cloneObject(snapshot), winIndex)
+    await IPC.bg('openSnapshotWindows', normSnapshot, winIndex, incognito)
   } catch (err) {
     Logs.err('Snapshots: Cannot openWindow', err)
   }
@@ -476,7 +403,15 @@ async function onExportSnapshotDropDownOpen() {
 
   if (!state.activeSnapshot) return
 
-  exportInfo = Snapshots.prepareExport(state.activeSnapshot, { JSON: true, Markdown: true })
+  const normActiveSnapshot: NormalizedSnapshot = {
+    id: state.activeSnapshot.id,
+    time: state.activeSnapshot.time,
+    containers: state.activeSnapshot.containers,
+    sidebar: state.activeSnapshot.sidebar,
+    tabs: state.activeSnapshot.tabs,
+  }
+
+  exportInfo = Snapshots.prepareExport(normActiveSnapshot, { JSON: true, Markdown: true })
   const dateStr = Utils.uDate(exportInfo.time, '.')
   const timeStr = Utils.uTime(exportInfo.time, '.')
 

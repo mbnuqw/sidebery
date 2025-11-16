@@ -74,6 +74,9 @@
 .HistoryPanel .item .body.-more
   margin-bottom: var(--history-item-margin)
 
+.HistoryPanel .item.-middle-click .body
+  animation: middle-click-animation .2s
+
 .HistoryPanel .item .title-line
   position: relative
   display: flex
@@ -197,7 +200,3 @@
     opacity: .5
   &:active
     opacity: .3
-
-#root[data-search="true"] .HistoryPanel .controls
-  opacity: 0
-  pointer-events: none

@@ -1,6 +1,5 @@
 import { Window } from 'src/types'
 import { Windows } from 'src/services/windows'
-import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.bg'
 import { Info } from 'src/services/info'
 import { NOID } from 'src/defaults'

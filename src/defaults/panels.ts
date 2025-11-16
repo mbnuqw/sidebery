@@ -1,6 +1,6 @@
 import { translate } from 'src/dict'
 import { PanelType, BookmarksPanelConfig, BookmarksPanel, MediaState } from 'src/types'
-import { TabsPanelConfig, TabsPanel } from 'src/types'
+import { TabsPanelConfig, TabsPanel, SyncPanelConfig, SyncPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
 
@@ -153,7 +153,47 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
   reactive: {
     name: '',
     color: 'toolbar',
-    iconSVG: 'icon_tabs',
+    iconSVG: 'icon_clock',
+    iconIMG: undefined,
+    hidden: false,
+    tooltip: '',
+    sel: false,
+    len: 0,
+    filteredLen: undefined,
+    ready: false,
+  },
+}
+
+export const SYNC_PANEL_CONFIG: SyncPanelConfig = {
+  type: PanelType.sync,
+  id: 'sync',
+  name: translate('panel.sync.title'),
+  color: 'toolbar',
+  iconSVG: 'icon_sync',
+  tempMode: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  viewMode: 'sync',
+}
+export const SYNC_PANEL_STATE: SyncPanel = {
+  ...SYNC_PANEL_CONFIG,
+
+  class: NavItemClass.panel,
+  index: -1,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  bottomOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  hidden: false,
+  ready: false,
+
+  reactive: {
+    name: '',
+    color: 'toolbar',
+    iconSVG: 'icon_sync',
     iconIMG: undefined,
     hidden: false,
     tooltip: '',

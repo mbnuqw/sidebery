@@ -8,6 +8,11 @@ section(ref="el")
     v-model:value="Settings.state.fontSize"
     :opts="Settings.getOpts('fontSize')"
     @update:value="Settings.saveDebounced(150)")
+  TextField.-inline(
+    label="settings.font_family"
+    or="system-ui"
+    v-model:value="Settings.state.fontFamily"
+    @update:value="Settings.saveDebounced(500)")
   ToggleField(
     label="settings.animations"
     v-model:value="Settings.state.animations"
@@ -49,10 +54,11 @@ section(ref="el")
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Styles } from 'src/services/styles'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
+import TextField from '../../components/text-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

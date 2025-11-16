@@ -5,8 +5,8 @@
   --bookmarks-bookmark-height: 30px
   --bookmarks-folder-height: 30px
   --bookmarks-separator-height: 17px
-  --bookmarks-bookmark-font: rem(15) sans-serif
-  --bookmarks-folder-font: rem(15) sans-serif
+  --bookmarks-bookmark-font: rem(15) var(--general-font-family)
+  --bookmarks-folder-font: rem(15) var(--general-font-family)
   --bookmarks-margin: var(--general-margin)
   --bookmarks-border-radius: var(--general-border-radius)
   --bookmarks-inner-gap: 6px
@@ -47,6 +47,7 @@
 // -
 .BookmarkNode > .body
   position: relative
+  contain: strict
   top: 0
   display: flex
   align-items: center
@@ -98,9 +99,18 @@
   background-color: var(--frame-el-overlay-clicked-bg)
   opacity: 1
 
+.BookmarkNode.-middle-click > .body
+  animation: middle-click-animation .2s
+
 .BookmarkNode[data-selected="true"] > .body:before
   background-color: var(--frame-el-overlay-selected-bg)
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
+.BookmarkNode[data-locked-selection="true"] > .body:before
+  outline: 2px dashed var(--frame-el-overlay-selected-border)
+  outline-offset: -2px
+.BookmarkNode[data-selected="true"][data-locked-selection="true"] > .body:before
+  background-color: var(--frame-el-overlay-selected-bg)
+  box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
 
 .BookmarkNode[data-open="true"] > .body:after
   content: ''
@@ -153,6 +163,23 @@
   width: 100vw
   left: auto
   right: 0
+
+// ---
+// -- Color layer
+// -
+.BookmarkNode .body .color-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: calc(100% - var(--bookmarks-margin))
+  border-radius: var(--bookmarks-border-radius)
+  background-color: var(--bkm-color)
+  opacity: 0.2
+  z-index: 10
+  pointer-events: none
+#root[data-frame-color-scheme="light"] .Tab .color-layer
+  opacity: 0.36
 
 // ---
 // -- Favicon
@@ -223,6 +250,29 @@
 
 .BookmarksPopup .BookmarkNode .len
   display: none
+
+// ---
+// -- Container mark
+// -
+.BookmarkNode > .body > .container-mark
+  position: absolute
+  z-index: 10
+  top: 0
+  right: 0
+  width: var(--bookmarks-border-radius)
+  height: calc(100% - var(--bookmarks-margin))
+  overflow: clip
+  border-top-right-radius: var(--bookmarks-border-radius)
+  border-bottom-right-radius: var(--bookmarks-border-radius)
+  pointer-events: none
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    right: 0
+    width: 2px
+    height: 100%
+    background-color: var(--color)
 
 // ---
 // -- Children box

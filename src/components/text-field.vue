@@ -65,5 +65,6 @@ defineExpose<TextInputComponent>({
   error,
   recalcTextHeight,
   selectAll,
+  getTextInput: () => inputEl.value?.getTextInput(),
 })
 </script>

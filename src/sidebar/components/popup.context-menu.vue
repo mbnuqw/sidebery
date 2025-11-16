@@ -9,7 +9,7 @@
               .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
-                    svg.icon.-rotate90: use(xlink:href="#icon_expand")
+                    svg.icon.-rotate90: use(href="#icon_expand")
                   .label.-header {{state.sub.name}}
                 .opt(:data-separator="true")
                 .opt(
@@ -22,9 +22,9 @@
                   @mousedown="onMouseDown($event, opt)"
                   @mouseup="onMouseUp($event, opt)")
                   .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
-                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
                     img.icon(v-if="opt.img" :src="opt.img")
-                    svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+                    svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
         div(v-for="group in state.tickBlocks" :class="`${group.type}-group`")
           .icon-opt(
@@ -38,9 +38,9 @@
             :title="opt.tooltip ?? opt.label"
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
-            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
             img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
+            svg.icon(v-else): use(:href="'#' + opt.icon")
           .opt(
             v-if="group.type === 'list'"
             v-for="opt in group.opts"
@@ -52,18 +52,18 @@
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
             .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
-              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
               img.icon(v-if="opt.img" :src="opt.img")
-              svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+              svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
             .label {{opt.label}}
             .icon-box(v-if="opt.sub")
-              svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+              svg.icon.-rotate-90: use(href="#icon_expand")
             .flag-btn(
               v-if="opt.flag?.icon"
               :data-active="!!opt.flag.active"
               @mousedown.stop=""
               @mouseup.stop="opt.flag?.onClick?.(opt)")
-              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:xlink:href="opt.flag.icon")
+              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:href="opt.flag.icon")
               img.flag-icon(v-else :src="opt.flag.icon")
   Transition(name="menu" type="transition"): .container(v-show="state.tackActive")
     .box.tack(ref="tackEl" :style="state.tackPosStyle")
@@ -74,7 +74,7 @@
               .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
-                    svg.icon.-rotate90: use(xlink:href="#icon_expand")
+                    svg.icon.-rotate90: use(href="#icon_expand")
                   .label.-header {{state.sub.name}}
                 .opt(:data-separator="true")
                 .opt(
@@ -87,9 +87,9 @@
                   @mousedown="onMouseDown($event, opt)"
                   @mouseup="onMouseUp($event, opt)")
                   .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
-                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
                     img.icon(v-if="opt.img" :src="opt.img")
-                    svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+                    svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
         div(v-for="group in state.tackBlocks" :class="`${group.type}-group`")
           .icon-opt(
@@ -103,9 +103,9 @@
             :title="opt.tooltip ?? opt.label"
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
-            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
             img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
+            svg.icon(v-else): use(:href="'#' + opt.icon")
           .opt(
             v-if="group.type === 'list'"
             v-for="(opt, i) in group.opts"
@@ -118,18 +118,18 @@
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
             .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
-              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
               img.icon(v-if="opt.img" :src="opt.img")
-              svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+              svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
             .label {{opt.label}}
             .icon-box(v-if="opt.sub")
-              svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+              svg.icon.-rotate-90: use(href="#icon_expand")
             .flag-btn(
               v-if="opt.flag?.icon"
               :data-active="!!opt.flag.active"
               @mousedown.stop=""
               @mouseup.stop="opt.flag?.onClick?.(opt)")
-              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:xlink:href="opt.flag.icon")
+              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:href="opt.flag.icon")
               img.flag-icon(v-else :src="opt.flag.icon")
 </template>
 
@@ -138,7 +138,7 @@ import { ref, reactive, computed, nextTick, onMounted } from 'vue'
 import { MenuBlock, MenuOption, ContextMenuComponent } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { Settings } from 'src/services/settings'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Mouse } from 'src/services/mouse'
 import { Search } from 'src/services/search'

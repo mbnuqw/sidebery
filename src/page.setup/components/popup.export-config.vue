@@ -4,8 +4,10 @@
 
   ToggleField(label="settings.backup_all" :value="allSelected" @update:value="onAllChanged")
   ToggleField(label="settings.backup_settings" v-model:value="state.settings")
-  ToggleField(v-if="state.hasStyles" label="settings.backup_styles" v-model:value="state.styles")
+  ToggleField(label="settings.backup_menu" v-model:value="state.menu")
   ToggleField(label="settings.backup_containers" v-model:value="state.containers")
+  ToggleField(label="settings.backup_nav" v-model:value="state.nav")
+  ToggleField(v-if="state.hasStyles" label="settings.backup_styles" v-model:value="state.styles")
   ToggleField(label="settings.backup_snapshots" v-model:value="state.snapshots")
   ToggleField(label="settings.backup_favicons" v-model:value="state.favicons")
   ToggleField(label="settings.backup_kb" v-model:value="state.keybindings")
@@ -28,9 +30,11 @@ const exportDataLink = ref<HTMLAnchorElement | null>(null)
 
 const state = reactive({
   settings: true,
+  menu: true,
+  containers: true,
+  nav: true,
   hasStyles: false,
   styles: true,
-  containers: true,
   snapshots: true,
   favicons: true,
   keybindings: true,
@@ -43,8 +47,10 @@ onMounted(async () => {
 const allSelected = computed<boolean>(() => {
   const all =
     state.settings &&
-    (!state.hasStyles || state.styles) &&
+    state.menu &&
     state.containers &&
+    state.nav &&
+    (!state.hasStyles || state.styles) &&
     state.snapshots &&
     state.favicons &&
     state.keybindings
@@ -54,15 +60,19 @@ const allSelected = computed<boolean>(() => {
 function onAllChanged(): void {
   if (allSelected.value) {
     state.settings = false
-    if (state.hasStyles) state.styles = false
+    state.menu = false
     state.containers = false
+    state.nav = false
+    if (state.hasStyles) state.styles = false
     state.snapshots = false
     state.favicons = false
     state.keybindings = false
   } else {
     state.settings = true
-    if (state.hasStyles) state.styles = true
+    state.menu = true
     state.containers = true
+    state.nav = true
+    if (state.hasStyles) state.styles = true
     state.snapshots = true
     state.favicons = true
     state.keybindings = true
@@ -79,14 +89,10 @@ function onWheel(e: WheelEvent): void {
 
 async function genExportData(): Promise<void> {
   const storageKeys: (keyof Stored)[] = []
-  if (state.containers) {
-    storageKeys.push('containers')
-  }
-  if (state.settings) {
-    storageKeys.push('settings')
-    storageKeys.push('sidebar')
-    storageKeys.push('contextMenu')
-  }
+  if (state.containers) storageKeys.push('containers')
+  if (state.settings) storageKeys.push('settings')
+  if (state.nav) storageKeys.push('sidebar')
+  if (state.menu) storageKeys.push('contextMenu')
   if (state.hasStyles && state.styles) {
     storageKeys.push('sidebarCSS')
     storageKeys.push('groupCSS')
@@ -105,29 +111,33 @@ async function genExportData(): Promise<void> {
   }
 
   let data
+  const backup: BackupData = {}
   try {
     data = await browser.storage.local.get<Stored>(storageKeys)
   } catch (err) {
     return Logs.err('genExportData: Cannot get storage data', err)
   }
 
-  if (state.favicons) {
-    if (data.favicons_01?.length) {
-      const fullList = data.favicons_01
-      if (data.favicons_02?.length) fullList.push(...data.favicons_02)
-      if (data.favicons_03?.length) fullList.push(...data.favicons_03)
-      if (data.favicons_04?.length) fullList.push(...data.favicons_04)
-      if (data.favicons_05?.length) fullList.push(...data.favicons_05)
-      data.favicons = fullList
-    }
-    delete data.favicons_01
-    delete data.favicons_02
-    delete data.favicons_03
-    delete data.favicons_04
-    delete data.favicons_05
+  if (state.containers && data.containers) backup.containers = data.containers
+  if (state.settings && data.settings) backup.settings = data.settings
+  if (state.nav && data.sidebar) backup.sidebar = data.sidebar
+  if (state.menu && data.contextMenu) backup.contextMenu = data.contextMenu
+  if (state.hasStyles && state.styles) {
+    if (data.sidebarCSS) backup.sidebarCSS = data.sidebarCSS
+    if (data.groupCSS) backup.groupCSS = data.groupCSS
+  }
+  if (state.snapshots && data.snapshots) backup.snapshots = data.snapshots
+  if (state.favicons && data.favicons_01?.length && data.favDomains && data.favHashes) {
+    const fullList = data.favicons_01
+    if (data.favicons_02?.length) fullList.push(...data.favicons_02)
+    if (data.favicons_03?.length) fullList.push(...data.favicons_03)
+    if (data.favicons_04?.length) fullList.push(...data.favicons_04)
+    if (data.favicons_05?.length) fullList.push(...data.favicons_05)
+    backup.favicons = fullList
+    backup.favDomains = data.favDomains
+    backup.favHashes = data.favHashes
   }
 
-  const backup: BackupData = { ...data }
   backup.ver = browser.runtime.getManifest().version
 
   if (state.keybindings) {

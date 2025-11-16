@@ -4,7 +4,10 @@ Sidebery provides the list of tabs structured in a tree, bookmarks and history w
 
 <strong>Some of the key features:</strong>
 
+<ul>
+
 <strong>- Tabs</strong>
+<ul>
 - Simple flat list or tree with the option to set tree limit.
 - Group tabs (aka folders) with a custom name helps organize open pages.
 - Tabs colorization: Automatic per-domain/URL or manual.
@@ -12,45 +15,65 @@ Sidebery provides the list of tabs structured in a tree, bookmarks and history w
 - Automatic unloading of tabs in a folded branch / inactive panel.
 - Customizable tab title.
 - ...
+</ul>
 
 <strong>- Bookmarks</strong>
+<ul>
 - Tree or chronological view.
 - Sort by name, URL or creation time
 - Basic operations: open in... / create / edit / delete.
 - Ability to highlight open bookmarks and activate the corresponding tab instead of opening a new one when clicked.
 - Automatically delete a bookmark on opening from "Other Bookmarks" folder or configured bookmarks panel.
 - ...
+</ul>
 
 <strong>- Tabs / Bookmarks panels</strong>
+<ul>
 - Organize your browsing with panels of tabs/bookmarks.
 - Convert open tabs in the panel to bookmarks and vice versa.
 - Automatically move tabs by URL to configured panel.
 - ...
+</ul>
 
 <strong>- Containers</strong>
+<ul>
 - Bind container to the tabs panel.
 - Automatically reopen tab in the target container by URL.
 - Setup proxy config and UserAgent header for tabs in a container.
 - ...
+</ul>
 
 <strong>- Customizable context menu</strong>
+<ul>
 Sidebery allows you to change the context menu for tabs and bookmarks. You can enable/disable/move options, create sub-menus/separators.
+</ul>
 
 <strong>- Customizable mouse/keyboard controls</strong>
+<ul>
 - Option to switch tabs with mouse-wheel.
 - Configurable drag and drop behavior.
 - A growing list of available actions for mouse/keyboard bindings.
+</ul>
 
 <strong>- Customizable styles</strong>
+<ul>
 Sidebery provides full control of styles for sidebar and group page via variables and custom CSS.
+</ul>
 
 <strong>- Snapshots</strong>
+<ul>
 You can setup auto snapshots that will keep info about open windows and tabs.
+</ul>
+</ul>
 
 
 <strong>Privacy policy</strong>
 <ul>
-Sidebery keeps all data that needed to correct work on the user's machine and doesn't send any kind of data to the outside.
+- Sidebery does not engage in ad targeting, data collection, or other activities that could compromise your privacy.
+- By default, all data is stored locally on your machine.
+- Sidebery sends data only when synchronization is enabled and only to chosen provider.
+- You can optionally enable one or more synchronization providers (third-party services) to sync your data across multiple devices.
+More detailed information can be found on this page: <a href="https://github.com/mbnuqw/sidebery/blob/v5/PRIVACY.md">https://github.com/mbnuqw/sidebery/blob/v5/PRIVACY.md</a>
 </ul>
 
 
@@ -70,15 +93,17 @@ Source code can be found here: <a href="https://github.com/mbnuqw/sidebery">http
 
 <strong>Optional permissions</strong>
 <ul>
-- "Access your data for all websites" and "Control browser proxy settings" - Required for the next features:
+- "Access your data for all websites" and "Control browser proxy settings"
 <ul>
+Required for the next features:
 - Context menu option for cleaning cookies
 - Proxy and url rules of containers
 - Page-screenshots for the group page and windows selection panel
 - Changing the User-Agent per container
 </ul>
-- "Hide and show browser tabs" - Required for the next features:
+- "Hide and show browser tabs"
 <ul>
+Required for the next features:
 - Hiding tabs on inactive panels
 - Hiding folded tabs
 </ul>
@@ -86,8 +111,9 @@ Source code can be found here: <a href="https://github.com/mbnuqw/sidebery">http
 - "Access browsing history" - for history panel functionality.
 - "Input data to the clipboard" - Context menu option for copying urls of tabs and bookmarks
 - "Download files and read and modify the browser’s download history" - Auto-export of snapshots.
-</ul>
+
 Note: You can deny these permissions at any time on the settings page.
+</ul>
 
 <strong>Notes</strong>
 <ul>
@@ -96,9 +122,13 @@ Note: You can deny these permissions at any time on the settings page.
 
 <strong>Donate to support the development of this project</strong>
 <ul>
-- Bitcoin (BTC): bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m
-- Ethereum (ETH), USDT (ERC20), USDC (ERC20): 0x11667D20AB328194AEEc68F9385CCcf713607929
-- USDT (TRC20), USDC (TRC20): TJEdp1TnsN7Jfhfi9Db8yXKDK8NEUovCZb
+- Payeer: <code>P1128042154</code>
+- Bitcoin (BTC): <code>bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m</code>
+- Ethereum (ETH), USDT (ERC20), USDC (ERC20): <code>0x11667D20AB328194AEEc68F9385CCcf713607929</code>
+- Tron (TRX), USDT (TRC20), USDC (TRC20): <code>TJEdp1TnsN7Jfhfi9Db8yXKDK8NEUovCZb</code>
+- Litecoin (LTC): <code>ltc1qpv4c4kaahdzhcwzj8yyrwlvnfcw2hw5qpxqr62</code>
+- Solana (SOL): <code>GdWipUmnhdDa7kqkF3SJm5jTYqp3UsTdbcGCC1xLbVJf</code>
+- TON: <code>UQAxwOfvZQz1YR4qieiE-J4wHiz3zrMXAyxDiRJQQXIDX8MH</code>
 </ul>
 
 <strong><a href="https://github.com/mbnuqw/sidebery#readme">More info you can find here</a></strong>

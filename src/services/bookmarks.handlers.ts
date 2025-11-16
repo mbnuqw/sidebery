@@ -31,6 +31,7 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
 
   bookmark.sel = false
   bookmark.isOpen = false
+  Bookmarks.parseTitle(bookmark)
   if (bookmark.type === 'separator') bookmark.url = undefined
   if (bookmark.type === 'folder') {
     bookmark.len = 0
@@ -83,6 +84,7 @@ function onBookmarkChangedFg(id: ID, info: browser.bookmarks.UpdateChanges): voi
 
   if (info.title !== undefined && bookmark.title !== info.title) {
     bookmark.title = info.title
+    Bookmarks.parseTitle(bookmark)
   }
 
   if (info.url !== undefined && oldUrl !== info.url) {
@@ -123,7 +125,7 @@ function onBookmarkMovedFg(id: ID, info: browser.bookmarks.MoveInfo): void {
   // Update length of parent folders
   const node = Bookmarks.reactive.byId[id]
   if (node && oldParent && newParent && newParent.id !== oldParent.id) {
-    const movedLen = node?.len || 1
+    const movedLen = node?.len || (node.type === 'bookmark' ? 1 : 0)
     Bookmarks.updateTreeLen(oldParent, -movedLen)
     Bookmarks.updateTreeLen(newParent, movedLen)
 
@@ -160,7 +162,7 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
   if (!node) return
 
   // Update length of parent folders
-  const removedLen = node.len || 1
+  const removedLen = node.len || (node.type === 'bookmark' ? 1 : 0)
   Bookmarks.updateTreeLen(parent, -removedLen)
 
   // Remove from tree

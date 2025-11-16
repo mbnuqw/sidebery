@@ -48,7 +48,7 @@ import { DropType, MenuType, ScrollBoxComponent, TabsPanel } from 'src/types'
 import { WheelDirection } from 'src/types'
 import { PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -199,7 +199,9 @@ function onDoubleClick(e: MouseEvent) {
   if (!Mouse.isTarget('panel', props.panel.id)) return
   if (Settings.state.tabsPanelLeftClickAction !== 'none') return
   const da = Settings.state.tabsPanelDoubleClickAction
-  if (da === 'tab') return Tabs.createTabInPanel(props.panel)
+  if (da === 'tab') {
+    return Tabs.createTabInPanel(props.panel, { fromNewTabButton: true })
+  }
   if (da === 'collapse') {
     const topLvlTabs = props.panel.tabs.filter(t => t.lvl === 0)
     if (topLvlTabs.length) return Tabs.foldAllInactiveBranches(topLvlTabs)

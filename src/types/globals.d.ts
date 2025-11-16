@@ -7,8 +7,8 @@ type DOMEvent<E extends Event, T = any> = E & {
   currentTarget: T
 }
 
-type PlurFn = (n?: number | string) => string
-type Translations = Record<string, Record<string, PlurFn | string>>
+type TranslationFn = (...args: (number | string)[]) => string
+type Translations = Record<string, Record<string, TranslationFn | string>>
 
 interface MozFocusEvent extends FocusEvent {
   explicitOriginalTarget: Node | Element
@@ -18,7 +18,7 @@ interface Window {
   sideberyInitData?: Record<string, any>
   onSideberyInitDataReady?: () => void
 
-  translations: Record<string, Record<string, PlurFn | string>> | undefined
+  translations: Record<string, Record<string, TranslationFn | string>> | undefined
 
   getSideberyState?: () => any
 }

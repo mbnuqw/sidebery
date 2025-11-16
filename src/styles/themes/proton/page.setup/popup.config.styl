@@ -21,7 +21,7 @@
   font-size: rem(28)
   font-weight: 400
   color: var(--toolbar-fg)
-  margin: 0 12px 24px
+  margin: 12px 12px 24px
   padding: 0
   input
     width: calc(100% - 16px)
@@ -157,3 +157,44 @@
   font-size: rem(21)
   font-weight: 700
   color: var(--status-err)
+
+.ConfigPopup .error-note
+  position: relative
+  font-size: rem(14)
+  margin: -8px 0 16px
+  padding: 0
+  color: var(--status-err)
+  white-space: pre-wrap
+
+.ConfigPopup .btn
+  overflow: visible
+
+.ConfigPopup .btn .focus-fx
+.ConfigPopup .img-rm .focus-fx
+  position: absolute
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  border-radius: 4px
+.ConfigPopup .btn:focus .focus-fx
+.ConfigPopup .img-rm:focus .focus-fx
+.ConfigPopup .btn:has(:focus) .focus-fx
+  box-shadow: 0 0 0 2px var(--toolbar-fg-active)
+
+.ConfigPopup .btn.-progress
+  cursor: progress
+
+.ConfigPopup .ctrls .LoadingDots
+  position: relative
+  width: auto
+
+.ConfigPopup .ToggleField[data-done="true"] .label:before
+  content: ''
+  position: absolute
+  width: 7px
+  height: 12px
+  top: calc(50% - 10px)
+  right: -20px
+  box-shadow: 2px 2px 0 0 var(--status-ok)
+  transform: rotateZ(45deg)

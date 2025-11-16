@@ -11,7 +11,7 @@ section(ref="el")
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import { Settings } from 'src/services/settings'
 import ToggleField from 'src/components/toggle-field.vue'
 

@@ -28,11 +28,18 @@
     height: 100%
     border-radius: var(--general-border-radius)
     background-color: var(--toolbar-fg)
-    opacity: 0
-  &:hover:before
     opacity: .1
+  &:hover:before
+    opacity: .15
 
-.NewTabShortcutsPopup .shortcut[data-edit="true"]:before
+.NewTabShortcutsPopup .shortcut[data-edit="true"]:after
+  content: ''
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--general-border-radius)
   background-color: transparent
   box-shadow: inset 0 0 0 2px var(--status-active)
   opacity: 1
@@ -140,5 +147,10 @@
     width: 16px
     height: 16px
     fill: var(--popup-fg)
+.NewTabShortcutsPopup .shortcut .btn-rm > svg
+  top: 3px
+  left: 3px
+  width: 18px
+  height: 18px
 .NewTabShortcutsPopup .shortcut .btn-up > svg
   transform: rotateZ(180deg)

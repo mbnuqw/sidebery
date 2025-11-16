@@ -7,7 +7,7 @@
   :data-hidden-panels-bar="Sidebar.reactive.hiddenPanelsPopup"
   :data-layout="layout"
   @drop="onDrop")
-  .main-items(@wheel.stop.prevent="onNavWheel")
+  .main-items(@wheel="onNavWheel")
     NavItemComponent(
       v-for="(item, i) in nav?.visibleItems"
       :key="item.id"
@@ -38,7 +38,10 @@
     :style="{ '--offset': `${Sidebar.reactive.hiddenPanelsPopupOffset}px` }"
     @mousedown="Sidebar.closeHiddenPanelsPopup()")
     .hidden-panels-popup(:data-offset-side="Sidebar.reactive.hiddenPanelsPopupOffsetSide")
-      .hidden-panels-popup-content(@mousedown.stop @mouseup.stop)
+      .hidden-panels-popup-content(
+        ref="hiddenPanelsPopupScrollEl"
+        @mousedown.stop
+        @mouseup.stop)
         NavItemComponent(
           v-if="nav?.inlineOverflowed"
           v-for="item in nav?.visibleItems.filter((_, i) => getBtnInlineIndex(i) === -1)"
@@ -73,27 +76,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { BTN_ICONS, COLOR_NAMES } from 'src/defaults'
-import { NavItemClass, ButtonTypes, DragType, DropType, Tab } from 'src/types'
+import { BTN_ICONS, COLOR_NAMES, NOID } from 'src/defaults'
+import { NavItemClass, ButtonTypes, DragType, DropType, Tab, Panel } from 'src/types'
 import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
 import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Mouse } from 'src/services/mouse'
-import { SetupPage } from 'src/services/setup-page'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Snapshots } from 'src/services/snapshots'
-import * as Popups from 'src/services/popups'
 import NavItemComponent from './nav-item.vue'
+import { Logs, Sync, Popups, SetupPage } from 'src/services/_services'
 
 const HIDDEN_PANELS_BTN: NavBtn = {
   id: 'hidden_panels_btn',
@@ -108,6 +110,7 @@ const MIN_INLINE_STATIC_BTNS_LEN = 1
 let droppedOnPanel = false
 
 const el = ref<HTMLElement | null>(null)
+const hiddenPanelsPopupScrollEl = ref<HTMLElement | null>(null)
 
 const isInline = Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
 let layout = 'none'
@@ -272,7 +275,118 @@ onMounted(() => {
     Sidebar.registerHorizontalNavBarEl(el.value)
     Sidebar.reactive.horNavWidth = el.value.offsetWidth
   }
+  Sidebar.selectPanel = selectPanel
 })
+
+function selectPanel(dir: 1 | -1) {
+  if (Settings.state.navBarLayout === 'hidden') return
+  if (!nav.value) return
+
+  let selPanelId: ID | undefined
+  if (Selection.isNavItem()) {
+    const firstSelId = Selection.ids()[0]
+    if (Sidebar.panelsById[firstSelId]) selPanelId = firstSelId
+  }
+  if (selPanelId === undefined || !Sidebar.panelsById[selPanelId]) {
+    selPanelId = Sidebar.activePanelId
+  }
+
+  const selectedPanel: Panel | undefined = Sidebar.panelsById[selPanelId]
+  if (!selectedPanel) return
+
+  Menu.close()
+  Selection.resetSelection()
+
+  // Get list of visible and hidden elements
+  const list: { id: ID; hidden: boolean }[] = []
+  const overflowed: { id: ID; hidden: boolean }[] = []
+  const isOverflowedInline = isInline && !!nav.value.inlineOverflowed
+  const visLength = nav.value.visibleItems.length
+  let hiddenPanelsAdded = false
+  for (let el, i = 0; i < visLength; i++) {
+    el = nav.value.visibleItems[i]
+    if (el.id === 'hidden_panels_btn' && nav.value.hiddenPanels) {
+      nav.value.hiddenPanels.forEach(hel => list.push({ id: hel.id, hidden: true }))
+      hiddenPanelsAdded = true
+      continue
+    }
+    if (el.class !== NavItemClass.panel) continue
+    if (isOverflowedInline && getBtnInlineIndex(i) === -1) {
+      overflowed.push({ id: el.id, hidden: true })
+    } else {
+      list.push({ id: el.id, hidden: false })
+    }
+  }
+  overflowed.forEach(oel => list.push({ id: oel.id, hidden: true }))
+  if (!hiddenPanelsAdded && nav.value.hiddenPanels) {
+    nav.value.hiddenPanels.forEach(hel => list.push({ id: hel.id, hidden: true }))
+  }
+
+  // Find the next selected element
+  let currentSelElIsHidden = false
+  let afterSel = false
+  let nextBtn = findNext(list, dir, btn => {
+    if (afterSel) return true
+    if (btn.id === selPanelId) {
+      if (btn.hidden && !currentSelElIsHidden) currentSelElIsHidden = true
+      afterSel = true
+    }
+  })
+
+  // Open/Close hidden panels popup
+  const hppIsOpen = Sidebar.reactive.hiddenPanelsPopup
+  const btnToSelHidden = nextBtn ? nextBtn.hidden : currentSelElIsHidden
+  if (btnToSelHidden && !hppIsOpen) Sidebar.openHiddenPanelsPopup()
+  else if (!btnToSelHidden && hppIsOpen) Sidebar.reactive.hiddenPanelsPopup = false
+
+  // Select btn
+  const btnIdToSel = nextBtn?.id ?? selPanelId
+  Selection.selectNavItem(btnIdToSel)
+
+  // Scroll to selected btn
+  scrollHiddenPanelsPopupTo(btnIdToSel)
+}
+
+function findNext<T>(arr: T[], dir: 1 | -1, pre: (v: T) => boolean | undefined): T | undefined {
+  if (dir === 1) return arr.find(pre)
+  else return arr.findLast(pre)
+}
+
+const PRE_SCROLL = 1
+const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
+async function scrollHiddenPanelsPopupTo(id: ID) {
+  const justOpen = !hiddenPanelsPopupScrollEl.value
+
+  await nextTick()
+
+  if (!hiddenPanelsPopupScrollEl.value) return
+
+  const scrollEl = hiddenPanelsPopupScrollEl.value
+  const btnId = 'nav' + id
+  const btnEl = document.querySelector('.hidden-panels-popup-content #' + btnId)
+  // const btnEl = document.getElementById(btnId)
+  if (!btnEl || !(btnEl instanceof HTMLElement)) return
+
+  const pH = scrollEl.offsetHeight
+  const pS = scrollEl.scrollTop
+  const tH = btnEl.offsetHeight
+  const tY = btnEl.offsetTop
+
+  if (justOpen) scrollConf.behavior = 'instant'
+  else scrollConf.behavior = 'smooth'
+
+  if (tY < pS + PRE_SCROLL) {
+    if (pS > 0) {
+      let y = tY - PRE_SCROLL
+      if (y < 0) y = 0
+      scrollConf.top = y
+      scrollEl.scroll(scrollConf)
+    }
+  } else if (tY + tH > pS + pH - PRE_SCROLL) {
+    scrollConf.top = tY + tH - pH + PRE_SCROLL
+    scrollEl.scroll(scrollConf)
+  }
+}
 
 function getBtnInlineIndex(index: number): number {
   if (!isInline) return -1
@@ -423,6 +537,11 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
       }
     }
 
+    // TODO: tmp shit, remove/update later
+    if (item.type === PanelType.sync) {
+      Sync.openSyncPopup()
+    }
+
     if (item.type === ButtonType.create_snapshot) SetupPage.open('snapshots')
 
     if (item.type === ButtonType.remute_audio_tabs) {
@@ -495,6 +614,9 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
         return Sidebar.scrollPanelToEdge()
       }
     }
+    if (item.type === PanelType.sync) {
+      Sync.reload()
+    }
   }
 
   // Right
@@ -563,12 +685,16 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
         title: tab.title,
         parentId: tab.parentId,
         container: tab.cookieStoreId,
+        customColor: tab.customColor,
+        customTitle: tab.customTitle,
+        folded: tab.folded,
       })
     }
   } else {
     dragItems.push({ id: item.id })
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.NavItem)
 
   // Set native drag info
@@ -589,7 +715,7 @@ function onNavItemDrop(item: NavItem): void {
 
 async function addTabsPanel(silent?: boolean): Promise<void> {
   // Find target index
-  let index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
+  let index = Sidebar.reactive.nav.findLastIndex(id => {
     const panel = Sidebar.panelsById[id]
     return Utils.isTabsPanel(panel)
   })

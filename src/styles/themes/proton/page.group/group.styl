@@ -13,7 +13,7 @@ body
   width: calc(100% - 16px)
   height: auto
   min-height: 100%
-  font-family: sans-serif
+  font-family: system-ui
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   opacity: 1
@@ -133,7 +133,7 @@ body[data-disconnected="true"] .disconnected-warn
   background-color: #78787824
   overflow: hidden
   border-radius: 6px
-  cursor: pointer
+  cursor: default
   box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
   -moz-user-select: none
   &:after
@@ -225,7 +225,7 @@ body[data-layout="list"] .tabs
   width: 100%
   background-color: #78787812
   overflow: hidden
-  cursor: pointer
+  cursor: default
   box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
   &:before
     content: ''
@@ -264,7 +264,7 @@ body[data-layout="list"] .new-tab
   width: 100%
   background-color: #78787824
   overflow: hidden
-  cursor: pointer
+  cursor: default
   box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
   -moz-user-select: none
   &:after
@@ -341,7 +341,7 @@ body[data-layout="list"] .tab[data-discarded="true"] .bg
   left: 16px
   width: 16px
   height: 16px
-  background-size: cover
+  background-size: contain
   background-repeat: no-repeat
   overflow: hidden
   filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)

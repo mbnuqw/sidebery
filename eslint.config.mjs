@@ -1,8 +1,18 @@
 import js from '@eslint/js'
 import ts from 'typescript-eslint'
+import globals from 'globals'
 import pluginVue from 'eslint-plugin-vue'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+
+const runtimeGlobTypes = {
+  browser: true,
+  global: true,
+  DOMEvent: true,
+  ScrollToOptions: true,
+  MozFocusEvent: true,
+  ID: true,
+}
 
 export default [
   js.configs.recommended,
@@ -10,9 +20,12 @@ export default [
   ...pluginVue.configs['flat/recommended'],
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
+
+  // Addon vue
   {
     files: ['**/*.vue'],
     languageOptions: {
+      globals: { ...globals.browser, ...runtimeGlobTypes },
       parserOptions: {
         parser: {
           js: 'espree',
@@ -26,42 +39,29 @@ export default [
       },
     },
   },
+
+  // Addon js/ts
   {
-    files: ['**/*.vue', '**/*.js', '**/*.mjs', '**/*.ts'],
+    files: ['./src/**/*.js', './src/**/*.mjs', './src/**/*.ts'],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: {
-        process: true,
-        browser: true,
-        global: true,
-        jest: true,
-        expect: true,
-        mockFn: true,
-        config: true,
-        afterEach: true,
-        beforeEach: true,
-        describe: true,
-        it: true,
-        test: true,
-        runs: true,
-        waitsFor: true,
-        pit: true,
-        require: true,
-        xdescribe: true,
-        xit: true,
-        DOMEvent: true,
-        defineExpose: true,
-        defineProps: true,
-        defineEmits: true,
-        withDefaults: true,
-        MozFocusEvent: true,
-        ID: true,
-      },
+      globals: { ...globals.browser, ...runtimeGlobTypes },
     },
   },
+
+  // Build/Test
   {
-    ignores: ['addon/*'],
+    files: ['./build/*', './test/*'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      globals: { ...globals.node },
+    },
   },
+
+  // Exclude
+  { ignores: ['addon/*'] },
+
+  // Rules configs
   {
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
@@ -82,7 +82,8 @@ export default [
       'no-console': 'warn',
       indent: ['error', 2, { SwitchCase: 1 }],
       'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single', { avoidEscape: true }],
+      // quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+      quotes: 'off',
       semi: ['error', 'never'],
       'require-atomic-updates': 'off',
       'vue/html-self-closing': 'off',

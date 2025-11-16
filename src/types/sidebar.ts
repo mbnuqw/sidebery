@@ -33,6 +33,7 @@ export const enum PanelType {
   bookmarks = 1,
   tabs = 2,
   history = 4,
+  sync = 5,
 }
 
 export const enum ButtonType {
@@ -55,6 +56,7 @@ export const NavItemTypeNames = {
   [PanelType.bookmarks]: 'bookmarks',
   [PanelType.tabs]: 'tabs',
   [PanelType.history]: 'history',
+  [PanelType.sync]: 'sync',
   [ButtonType.settings]: 'settings',
   [ButtonType.add_tp]: 'add_tp',
   [ButtonType.search]: 'search',
@@ -122,26 +124,6 @@ export interface PanelBounds {
   rightOffset: number
   bottomOffset: number
   items: ItemBounds[]
-}
-
-export interface OldPanelConfig {
-  type: string
-  id: ID
-  name: string
-  icon: string
-  color: string
-  customIconSrc: string
-  customIcon: string
-  lockedTabs: boolean
-  lockedPanel: boolean
-  skipOnSwitching: boolean
-  noEmpty: boolean
-  newTabCtx: string
-  dropTabCtx: string
-  moveTabCtx: string
-  moveTabCtxNoChild: boolean
-  urlRulesActive: boolean
-  urlRules: string
 }
 
 export interface SrcBookmarksPanelConfig {
@@ -262,6 +244,9 @@ export interface BookmarksPanel extends PanelCommonProps, BookmarksPanelConfig {
   component?: BookmarksPanelComponent
 
   reactive: BookmarksPanelReactiveProps
+
+  pathUp?: () => boolean
+  pathDown?: () => boolean
 }
 
 export interface BookmarksPanelReactiveProps extends PanelCommonReactiveProps {
@@ -287,6 +272,21 @@ export interface HistoryPanel extends PanelCommonProps, HistoryPanelConfig {
 }
 
 ///
+/// Sync panel
+///
+export interface SyncPanelConfig extends PanelConfigCommonProps {
+  type: PanelType.sync
+  viewMode: string
+  tempMode: boolean
+}
+
+export interface SyncPanel extends PanelCommonProps, SyncPanelConfig {
+  type: PanelType.sync
+
+  reactive: PanelCommonReactiveProps
+}
+
+///
 ///
 ///
 
@@ -295,8 +295,12 @@ export interface ViewModeBtn {
   icon: string
 }
 
-export type PanelConfig = BookmarksPanelConfig | TabsPanelConfig | HistoryPanelConfig
-export type Panel = BookmarksPanel | TabsPanel | HistoryPanel
+export type PanelConfig =
+  | BookmarksPanelConfig
+  | TabsPanelConfig
+  | HistoryPanelConfig
+  | SyncPanelConfig
+export type Panel = BookmarksPanel | TabsPanel | HistoryPanel | SyncPanel
 
 export interface TabToPanelMoveRuleConfig {
   id: ID

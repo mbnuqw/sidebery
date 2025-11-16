@@ -1,4 +1,4 @@
-import { SidebarConfig, OldPanelConfig } from './sidebar'
+import { SidebarConfig } from './sidebar'
 import { Container } from './containers'
 
 export const enum SnapStoreMode {
@@ -30,6 +30,8 @@ export interface SnapWindowState {
   id: ID
   panels: SnapPanelState[]
   tabsLen: number
+  folded: boolean
+  private: boolean
 }
 
 export interface SnapPanelState {
@@ -39,6 +41,7 @@ export interface SnapPanelState {
   iconSVG: string
   iconIMG?: string
   color?: string
+  folded: boolean
 }
 
 export interface SnapTab {
@@ -47,11 +50,14 @@ export interface SnapTab {
   panelId: ID
   lvl?: number
   pinned?: boolean
+  folded?: boolean
   containerId?: string
   customTitle?: string
   customColor?: string
+  priv?: boolean
 }
 export interface SnapTabState extends SnapTab {
+  ref: SnapTab
   id?: ID
   parentId?: ID
   containerIcon?: string
@@ -59,11 +65,21 @@ export interface SnapTabState extends SnapTab {
   domain?: string
   iconSVG?: string
   sel?: boolean
+  folded: boolean
+  isParent: boolean
+  invisible: boolean
+  branchLen: number
 }
 
 export const enum RemovingSnapshotResult {
   Ok = 1,
   Err = -1,
+}
+
+export const enum SnapOpenType {
+  CurrentPanel = 1,
+  NewWindow = 2,
+  NewPrivateWindow = 3,
 }
 
 export interface SnapExportTypes {
@@ -80,35 +96,4 @@ export interface SnapExportInfo {
   jsonFile?: Blob
   md?: string
   mdFile?: Blob
-}
-
-// OLD STUFF //
-
-export interface Snapshot_v4 {
-  id?: ID
-  time?: number
-  containersById?: Record<ID, SnapContainerV4>
-  panels?: OldPanelConfig[]
-  windows?: Record<ID, SnapWinV4>
-}
-
-interface SnapContainerV4 {
-  id?: string
-  color?: browser.ColorName
-  icon?: string
-  name?: string
-}
-
-interface SnapWinV4 {
-  items?: SnapTabV4[]
-}
-
-interface SnapTabV4 {
-  id?: ID
-  url?: string
-  title?: string
-  panel?: ID
-  lvl?: number
-  ctr?: string
-  pinned?: boolean
 }

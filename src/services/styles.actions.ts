@@ -1,4 +1,4 @@
-import { CustomCssTarget, CustomCssFieldName, Stored, RGBA, RGB } from 'src/types'
+import { CustomCssTarget, CustomCssFieldName, Stored, RGBA, RGB, CustomStyles } from 'src/types'
 import { ColorSchemeVariant, ParsedTheme, SrcVars, Styles } from 'src/services/styles'
 import { Settings } from 'src/services/settings'
 import { Store } from 'src/services/storage'
@@ -8,6 +8,9 @@ import { Sidebar } from './sidebar'
 import { Windows } from './windows'
 import { NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
+import { Sync } from './_services'
+import { Notifications } from './notifications'
+import { translate } from 'src/dict'
 
 const SRC_VARS: (keyof SrcVars)[] = [
   'frame_bg',
@@ -558,15 +561,14 @@ export function resetThemeSrcVars(): void {
 }
 
 export async function loadCustomSidebarCSS(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('sidebarCSS')
+  let stored = await browser.storage.managed.get<Stored>('sidebarCSS').catch(() => {})
+  if (!stored?.sidebarCSS) {
+    stored = await browser.storage.local.get<Stored>('sidebarCSS')
+  }
+
   applyCustomCSS(stored.sidebarCSS)
   // Recalculate sizes when custom CSS is changed
   Sidebar.recalcElementSizesDebounced()
-}
-
-export async function loadCustomGroupCSS(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('groupCSS')
-  applyCustomCSS(stored.groupCSS)
 }
 
 /**
@@ -614,43 +616,12 @@ export async function hasCustomCSS(): Promise<boolean> {
 }
 
 /**
- * Apply custom css and save it
+ * Save custom css
  */
-export function setCustomCSS(target: CustomCssTarget, css: string): void {
-  const fieldName = (target + 'CSS') as CustomCssFieldName
+export async function saveCustomCSS() {
+  await Store.set({ sidebarCSS: Styles.sidebarCSS, groupCSS: Styles.groupCSS })
 
-  let settingsChanged = false
-  if (fieldName === 'sidebarCSS') {
-    if (Styles.sidebarCSS === css) return
-    if (Settings.state.sidebarCSS !== !!css) settingsChanged = true
-    Styles.sidebarCSS = css
-    Settings.state.sidebarCSS = !!css
-  } else if (fieldName === 'groupCSS') {
-    if (Styles.groupCSS === css) return
-    if (Settings.state.groupCSS !== !!css) settingsChanged = true
-    Styles.groupCSS = css
-    Settings.state.groupCSS = !!css
-  }
-
-  if (settingsChanged) Settings.saveSettings()
-  Store.set({ [fieldName]: css })
-
-  if (Settings.state.syncSaveStyles) saveStylesToSync()
-}
-
-export function upgradeCustomStyles(stored: Stored, newStorage: Stored): void {
-  const legacyCSSVars = stored.cssVars ? convertVarsToCSS(stored.cssVars) : ''
-
-  let sidebarCSS = ''
-  if (stored.sidebarCSS) sidebarCSS = `/* OLD STYLES\n${stored.sidebarCSS}\n*/`
-  if (legacyCSSVars) sidebarCSS = legacyCSSVars + '\n\n' + sidebarCSS
-
-  let groupCSS = ''
-  if (stored.groupCSS) groupCSS = `/* OLD STYLES\n${stored.groupCSS}\n*/`
-  if (legacyCSSVars) groupCSS = legacyCSSVars + '\n\n' + groupCSS
-
-  newStorage.sidebarCSS = sidebarCSS
-  newStorage.groupCSS = groupCSS
+  if (Settings.state.syncSaveStyles) await saveStylesToSync()
 }
 
 export function convertVarsToCSS(vars: Record<string, string | null>): string {
@@ -674,12 +645,74 @@ export async function loadCustomCSS(): Promise<void> {
 }
 
 export async function saveStylesToSync(): Promise<void> {
-  const value: Stored = {}
+  const value: CustomStyles = {}
 
-  if (Settings.state.sidebarCSS && Styles.sidebarCSS) value.sidebarCSS = Styles.sidebarCSS
-  if (Settings.state.groupCSS && Styles.groupCSS) value.groupCSS = Styles.groupCSS
+  if (Styles.sidebarCSS) value.sidebarCSS = Styles.sidebarCSS
+  if (Styles.groupCSS) value.groupCSS = Styles.groupCSS
 
-  await Store.sync('styles', value)
+  await Sync.save(Sync.SyncedEntryType.Styles, value)
+}
+
+export async function importSyncedStyles(entry: Sync.SyncedEntry) {
+  Logs.info('Styles.importSyncedStyles(): entry:', entry)
+
+  const prevStyles: CustomStyles = {}
+  const stored = await browser.storage.local.get<Stored>(['sidebarCSS', 'groupCSS'])
+  if (stored.sidebarCSS) prevStyles.sidebarCSS = stored.sidebarCSS
+  if (stored.groupCSS) prevStyles.groupCSS = stored.groupCSS
+
+  const styles = await Sync.getData<CustomStyles>(entry)
+  if (!styles) {
+    Logs.err('Styles.importSyncedStyles(): No data')
+    return
+  }
+
+  await importStyles(styles)
+
+  Notifications.notify({
+    icon: '#icon_sync',
+    title: translate('sync.success.import_styles'),
+    ctrl: translate('notif.undo_ctrl'),
+    callback: () => importStyles(prevStyles),
+  })
+}
+
+export async function importStyles(styles: CustomStyles) {
+  Logs.info('Styles.importStyles(): styles:', styles)
+
+  await Store.set({
+    sidebarCSS: styles.sidebarCSS ?? '',
+    groupCSS: styles.groupCSS ?? '',
+  })
+
+  if (Info.isSidebar) {
+    if (styles.sidebarCSS) applyCustomCSS(styles.sidebarCSS)
+    else removeCustomCSS()
+    Sidebar.recalcElementSizesDebounced()
+  }
+}
+
+export function updateGlobalFontSize(): void {
+  const htmlEl = document.documentElement
+  if (Settings.state.fontSize === 'xxs') htmlEl.style.fontSize = '14.5px'
+  else if (Settings.state.fontSize === 'xs') htmlEl.style.fontSize = '15px'
+  else if (Settings.state.fontSize === 's') htmlEl.style.fontSize = '15.5px'
+  else if (Settings.state.fontSize === 'm') htmlEl.style.fontSize = '16px'
+  else if (Settings.state.fontSize === 'l') htmlEl.style.fontSize = '16.5px'
+  else if (Settings.state.fontSize === 'xl') htmlEl.style.fontSize = '17px'
+  else if (Settings.state.fontSize === 'xxl') htmlEl.style.fontSize = '17.5px'
+  else htmlEl.style.fontSize = '16px'
+}
+
+export function udpateGlobalFontFamily() {
+  const bodyEl = document.body
+  if (!bodyEl) return
+
+  if (Settings.state.fontFamily) {
+    bodyEl.style.setProperty('--general-font-family', `${Settings.state.fontFamily}, system-ui`)
+  } else {
+    bodyEl.style.setProperty('--general-font-family', 'system-ui')
+  }
 }
 
 export function setupListeners(): void {

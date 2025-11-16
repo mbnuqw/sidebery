@@ -1,5 +1,6 @@
 import { ConfirmDialog, Container, Dialog, DialogConfig, GroupConfig, PanelConfig } from 'src/types'
 import { TabToPanelMoveRuleConfig, PanelType, TabsPanelConfig, Tab } from 'src/types'
+import { ConfirmationType } from 'src/types'
 import { GroupConfigResult, Sidebar } from './sidebar'
 import { Containers } from './containers'
 import * as Utils from 'src/utils'
@@ -13,6 +14,7 @@ export interface PopupsReactiveState {
   siteConfigPopup: SiteConfigPopup | null
   tabMoveRulesPopup: TabMoveRulesPopup | null
   tabReopenRulesPopup: TabReopenRulesPopup | null
+  processingTabsPopup: ProcessingTabsPopup | null
   confirm: ConfirmDialog | null
   dialog: Dialog | null
 }
@@ -55,6 +57,8 @@ export interface SiteConfigPopup {
   url: string
 }
 
+export interface ProcessingTabsPopup {}
+
 export let reactive: PopupsReactiveState = {
   panelConfigPopup: null,
   containerConfigPopup: null,
@@ -63,6 +67,7 @@ export let reactive: PopupsReactiveState = {
   siteConfigPopup: null,
   tabMoveRulesPopup: null,
   tabReopenRulesPopup: null,
+  processingTabsPopup: null,
   confirm: null,
   dialog: null,
 }
@@ -75,9 +80,10 @@ export function initPopups(reactivate?: (rObj: object) => object) {
   PopupsRState = reactive = reactFn(reactive)
 }
 
-export function confirm(msg: string): Promise<boolean> {
+export function confirm(msg: string, type?: ConfirmationType): Promise<boolean> {
   return new Promise(res => {
     reactive.confirm = {
+      type: type ?? ConfirmationType.Unknown,
       msg,
       ok: () => {
         reactive.confirm = null
@@ -217,4 +223,13 @@ export function openTabReopenRulesPopup(containerId: string): void {
 export function closeTabReopenRulesPopup(): void {
   if (!reactive.tabReopenRulesPopup) return
   reactive.tabReopenRulesPopup = null
+}
+
+export function openProcessingTabsPopup() {
+  reactive.processingTabsPopup = {}
+}
+
+export function closeProcessingTabsPopup() {
+  if (!reactive.processingTabsPopup) return
+  reactive.processingTabsPopup = null
 }

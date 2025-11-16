@@ -1,5 +1,5 @@
 <template lang="pug">
-.item(:id="'history' + visit.id")
+.item(ref="rootEl" :id="'history' + visit.id")
   .body(
     :title="visit.reactive.tooltip"
     :data-sel="visit.reactive.sel"
@@ -10,7 +10,7 @@
     @dragstart="onDragStart($event, visit)")
     .title-line
       .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, visit)")
-        svg(v-if="!favicon"): use(xlink:href="#icon_ff")
+        svg(v-if="!favicon"): use(href="#icon_ff")
         img(v-else :src="favicon")
       .title {{visit.reactive.title}}
     .url-line
@@ -19,7 +19,7 @@
       .time {{visit.timeStr}}
   template(v-if="visit.reactive.moreVisits")
     .body.-more(
-      v-if="!moreActive && !Search.reactive.rawValue"
+      v-if="!visit.reactive.moreActive"
       @click="onMoreClick")
       .more {{translate('panel.history.show_more')}} {{visit.reactive.moreVisits.length}}
     HistoryItem(
@@ -40,7 +40,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Mouse } from 'src/services/mouse'
 import { Menu } from 'src/services/menu'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Search } from 'src/services/search'
 import { History } from 'src/services/history'
@@ -49,8 +49,8 @@ import { DnD } from 'src/services/drag-and-drop'
 import { Windows } from 'src/services/windows'
 import * as Favicons from 'src/services/favicons.fg'
 
-const moreActive = ref(false)
 const props = defineProps<{ visit: Visit }>()
+const rootEl = ref<HTMLElement | null>(null)
 
 const favicon = computed(() => {
   return Favicons.reactive.byDomains[props.visit.domain]
@@ -81,6 +81,8 @@ function onMouseDown(e: MouseEvent, visit: Visit): void {
   }
 }
 
+let middleClickReactionTimeout: number | undefined
+
 function onMouseUp(e: MouseEvent, visit: Visit): void {
   const sameTarget = Mouse.isTarget('history', visit.id)
   Mouse.resetTarget()
@@ -88,13 +90,22 @@ function onMouseUp(e: MouseEvent, visit: Visit): void {
   if (!sameTarget) return
 
   if (e.button === 0 || e.button === 1) {
-    if (Selection.isHistory() && !Search.rawValue) {
+    if (Selection.isHistory()) {
       return Selection.resetSelection()
     }
 
     if (e.button === 1) {
       const action = Settings.state.historyMidClickAction
       if (action === 'forget_visit') return History.deleteVisits([visit.id])
+
+      // Visualize clicking
+      if (rootEl.value) {
+        rootEl.value.classList.add('-middle-click')
+        clearTimeout(middleClickReactionTimeout)
+        middleClickReactionTimeout = setTimeout(() => {
+          rootEl.value?.classList.remove('-middle-click')
+        }, 300)
+      }
     }
 
     let conf = History.getMouseOpeningConf(e.button)
@@ -118,7 +129,7 @@ function onMouseUp(e: MouseEvent, visit: Visit): void {
 }
 
 function onMoreClick() {
-  moreActive.value = true
+  props.visit.reactive.moreActive = true
 }
 
 function onFavMouseDown(e: MouseEvent, visit: Visit): void {
@@ -171,6 +182,7 @@ function onDragStart(e: DragEvent, visit: Visit): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo)
 
   // Set native drag info

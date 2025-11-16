@@ -32,7 +32,7 @@ section(ref="el")
     ToggleField(
       label="settings.scroll_through_tabs_skip_discarded"
       v-model:value="Settings.state.scrollThroughTabsSkipDiscarded"
-      :inactive="Settings.state.scrollThroughTabs === 'none' || Settings.state.scrollThroughTabs === 'psp' || Settings.state.scrollThroughTabs === 'psg'"
+      :inactive="Settings.state.scrollThroughTabs === 'none'"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.scroll_through_tabs_except_overflow"
@@ -52,6 +52,11 @@ section(ref="el")
       :allowNegative="true"
       :note="translate('settings.scroll_through_tabs_scroll_area_note')"
       @update:value="Settings.saveDebounced(500)")
+    ToggleField(
+      label="settings.select_active_tab_first"
+      v-model:value="Settings.state.scrollThroughTabsPreselAct"
+      :inactive="!Settings.state.scrollThroughTabs.startsWith('ps')"
+      @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.auto_menu_multi_sel"
     v-model:value="Settings.state.autoMenuMultiSel"
@@ -143,13 +148,26 @@ section(ref="el")
         v-model:value="Settings.state.tabsSecondClickActPrevPanelOnly"
         :inactive="!Settings.state.tabsSecondClickActPrev"
         @update:value="Settings.saveDebounced(150)")
+      ToggleField(
+        label="settings.tabs_second_click_act_prev_no_unload"
+        v-model:value="Settings.state.tabsSecondClickActPrevNoUnload"
+        :inactive="!Settings.state.tabsSecondClickActPrev"
+        @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.activate_on_mouseup"
       v-model:value="Settings.state.activateOnMouseUp"
       @update:value="onActivateOnMouseUpUpdate")
     ToggleField(
+      label="settings.tab_close_on_mouse_up"
+      v-model:value="Settings.state.tabCloseOnMouseUp"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
       label="settings.shift_selection_from_active"
       v-model:value="Settings.state.shiftSelAct"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.ctrl_selection_include_active"
+      v-model:value="Settings.state.ctrlSelAct"
       @update:value="Settings.saveDebounced(150)")
     SelectField(
       label="settings.tab_long_left_click"
@@ -185,6 +203,13 @@ section(ref="el")
         optLabel="settings.tab_action_"
         v-model:value="Settings.state.tabMiddleClickShift"
         :opts="Settings.getOpts('tabMiddleClickModifier')"
+        :folded="true"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.tab_pinned_middle_click"
+        optLabel="settings.tab_action_"
+        v-model:value="Settings.state.tabPinnedMiddleClick"
+        :opts="Settings.getOpts('tabPinnedMiddleClick')"
         :folded="true"
         @update:value="Settings.saveDebounced(150)")
       ToggleField(
@@ -342,7 +367,7 @@ section(ref="el")
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
@@ -376,14 +401,18 @@ function onTabDoubleClickUpdate(value: string): void {
 }
 
 function onActivateOnMouseUpUpdate(value: boolean): void {
-  if (!value && Settings.state.tabLongLeftClick === 'edit_title') {
+  if (
+    !value &&
+    (Settings.state.tabLongLeftClick === 'edit_title' ||
+      Settings.state.tabLongLeftClick === 'discard')
+  ) {
     Settings.state.tabLongLeftClick = 'none'
   }
   Settings.saveDebounced(150)
 }
 
 function onTabLongLeftClickUpdate(value: string): void {
-  if (value === 'edit_title' && !Settings.state.activateOnMouseUp) {
+  if ((value === 'edit_title' || value === 'discard') && !Settings.state.activateOnMouseUp) {
     Settings.state.activateOnMouseUp = true
   }
   Settings.saveDebounced(150)

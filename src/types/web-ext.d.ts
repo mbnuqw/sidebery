@@ -228,6 +228,7 @@ declare namespace browser {
       title: string
       url: string
       windowId: ID
+      groupId?: ID
     }
 
     interface TabsQueryOptions {
@@ -236,6 +237,7 @@ declare namespace browser {
       currentWindow?: boolean
       url?: string
       highlighted?: boolean
+      groupId?: ID
     }
 
     interface CreateProperties {
@@ -321,6 +323,18 @@ declare namespace browser {
       runAt?: 'document_start' | 'document_end' | 'document_idle'
     }
 
+    interface GroupOpts {
+      // The tab ID or list of tab IDs to add to the specified group.
+      tabIds: ID | ID[]
+      // The ID of the group to add the tabs to. If not specified, a new group will be created.
+      groupId?: ID
+      // Configurations for creating a group. Cannot be used if groupId is already specified.
+      createProperties?: {
+        // The window of the new group. Defaults to the current window.
+        windowId?: ID
+      }
+    }
+
     function create(createProperties: CreateProperties): Promise<Tab>
     function query(options: TabsQueryOptions): Promise<Tab[]>
     function remove(tabIds: ID | ID[]): Promise<void>
@@ -342,6 +356,16 @@ declare namespace browser {
     function duplicate(tabId: ID, opts?: DuplOpts): Promise<Tab>
     function executeScript(tabId: ID, opts: ExecuteOpts): Promise<any[]>
     function warmup(tabId: ID): Promise<void>
+    /**
+     * Adds one or more tabs to a specified group, or if no group is specified,
+     * adds the given tabs to a newly created group.
+     */
+    function group(options: GroupOpts): Promise<void>
+    /**
+     * Removes one or more tabs from their respective groups.
+     * If any groups become empty, they are deleted.
+     */
+    function ungroup(tabIds: ID | ID[]): Promise<void>
 
     interface RemoveInfo {
       windowId: ID
@@ -366,6 +390,7 @@ declare namespace browser {
       status?: string
       title?: string
       url?: string
+      groupId?: ID
     }
 
     type UpdateProp =
@@ -381,6 +406,7 @@ declare namespace browser {
       | 'status'
       | 'title'
       | 'url'
+      | 'groupId'
 
     interface ExtraParameters {
       urls?: string[]
@@ -454,9 +480,9 @@ declare namespace browser {
     function getRecentlyClosed(filter?: Filter): Promise<Session[]>
     function restore(sessionId: string): Promise<Session>
     function setWindowValue<T>(windowId: ID, key: string, value: T): Promise<void>
-    function getWindowValue<T>(id: ID, key: string): Promise<T>
+    function getWindowValue<T>(id: ID, key: string): Promise<T | undefined>
     function setTabValue<T>(tabId: ID, key: string, value: T): Promise<void>
-    function getTabValue<T>(tabId: ID, key: string): Promise<T>
+    function getTabValue<T>(tabId: ID, key: string): Promise<T | undefined>
     function forgetClosedWindow(sessionId: string): Promise<void>
     function forgetClosedTab(windowId: number, sessionId: string): Promise<void>
 
@@ -481,6 +507,7 @@ declare namespace browser {
 
     const local: StorageArea
     const sync: StorageArea
+    const managed: StorageArea
 
     interface StorageChange<T> {
       newValue: T
@@ -1042,6 +1069,7 @@ declare namespace browser {
       query: string
       engine?: string
       tabId?: ID
+      disposition?: 'CURRENT_TAB' | 'NEW_TAB' | 'NEW_WINDOW'
     }
 
     function search(searchProps: SearchProps): void
@@ -1405,5 +1433,16 @@ declare namespace browser {
     type ThemeUpdatedListener = (upd: Update) => void
 
     const onUpdated: EventTarget<ThemeUpdatedListener>
+  }
+
+  namespace identity {
+    interface LaunchWebAuthDetails {
+      url: string
+      redirect_uri?: string
+      interactive?: boolean
+    }
+
+    function getRedirectURL(): string
+    function launchWebAuthFlow(details: LaunchWebAuthDetails): Promise<string>
   }
 }

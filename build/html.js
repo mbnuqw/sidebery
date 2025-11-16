@@ -1,7 +1,7 @@
 /* eslint no-console: off */
-const fs = require('fs')
-const path = require('path')
-const {
+import fs from 'fs'
+import path from 'path'
+import {
   IS_DEV,
   ADDON_PATH,
   getTime,
@@ -11,7 +11,7 @@ const {
   log,
   logOk,
   logErr,
-} = require('./utils')
+} from './utils.js'
 
 const SRC_DIR = './src'
 const OUTPUT_DIR = ADDON_PATH

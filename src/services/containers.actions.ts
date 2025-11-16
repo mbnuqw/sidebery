@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
-import { Stored, Container, TabReopenRuleType, Container_v4, TabReopenRuleConfig } from 'src/types'
+import { Stored, Container, TabReopenRuleType } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { DEFAULT_CONTAINER } from 'src/defaults'
+import { DEFAULT_CONTAINER, RE_STR_RE } from 'src/defaults'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import * as Logs from 'src/services/logs'
@@ -48,12 +48,6 @@ export async function load(): Promise<void> {
       }
 
       Utils.normalizeObject(container, DEFAULT_CONTAINER)
-
-      // TEMP update for b31
-      if (updateReopeningRules(container) && !saveNeeded) {
-        saveNeeded = true
-      }
-      // TEMP --------------
     }
 
     Containers.reactive.byId = containers
@@ -68,140 +62,45 @@ export async function load(): Promise<void> {
   }
 }
 
-export function updateReopeningRules(container: Container): boolean {
-  if (!container.reopenRules) container.reopenRules = []
-  if (container.reopenRulesActive === undefined) container.reopenRulesActive = false
-
-  let saveNeeded = false
-  const initiallyEmpty = container.reopenRules.length === 0
-
-  if (container.includeHosts) {
-    const active = !!container.includeHostsActive
-    for (const rawRule of container.includeHosts.split('\n')) {
-      const ruleStr = rawRule.trim()
-      if (!ruleStr) continue
-
-      container.reopenRules.push({
-        id: Utils.uid(),
-        active,
-        type: TabReopenRuleType.Include,
-        url: ruleStr,
-      })
-
-      if (!saveNeeded) saveNeeded = true
-    }
-  }
-  if (container.includeHosts !== undefined) delete container.includeHosts
-  if (container.includeHostsActive !== undefined) delete container.includeHostsActive
-
-  if (container.excludeHosts) {
-    const active = !!container.excludeHostsActive
-    for (const rawRule of container.excludeHosts.split('\n')) {
-      const ruleStr = rawRule.trim()
-      if (!ruleStr) continue
-
-      container.reopenRules.push({
-        id: Utils.uid(),
-        active,
-        type: TabReopenRuleType.Exclude,
-        url: ruleStr,
-      })
-
-      if (!saveNeeded) saveNeeded = true
-    }
-  }
-  if (container.excludeHosts !== undefined) delete container.excludeHosts
-  if (container.excludeHostsActive !== undefined) delete container.excludeHostsActive
-
-  if (initiallyEmpty && container.reopenRules.length > 0) {
-    container.reopenRulesActive = true
-  }
-
-  return saveNeeded
-}
-
-function upgradeReopeningRules(oldCtr: Container_v4, newCtr: Container) {
-  if (oldCtr.includeHosts) {
-    const active = !!oldCtr.includeHostsActive
-    for (const rawRule of oldCtr.includeHosts.split('\n')) {
-      const ruleStr = rawRule.trim()
-      if (!ruleStr) continue
-
-      newCtr.reopenRules.push({
-        id: Utils.uid(),
-        active,
-        type: TabReopenRuleType.Include,
-        url: ruleStr,
-      })
-
-      if (!newCtr.reopenRulesActive) newCtr.reopenRulesActive = true
-    }
-  }
-
-  if (oldCtr.excludeHosts) {
-    const active = !!oldCtr.excludeHostsActive
-    for (const rawRule of oldCtr.excludeHosts.split('\n')) {
-      const ruleStr = rawRule.trim()
-      if (!ruleStr) continue
-
-      newCtr.reopenRules.push({
-        id: Utils.uid(),
-        active,
-        type: TabReopenRuleType.Exclude,
-        url: ruleStr,
-      })
-
-      if (!newCtr.reopenRulesActive) newCtr.reopenRulesActive = true
-    }
-  }
-}
-
-export function upgradeV4Containers(
-  oldContainers: Record<ID, Container_v4>
-): Record<ID, Container> {
-  const output: Record<ID, Container> = {}
-
-  for (const id of Object.keys(oldContainers)) {
-    const oldContainer = oldContainers[id]
-    const newContainer = Utils.cloneObject(DEFAULT_CONTAINER)
-
-    newContainer.cookieStoreId = oldContainer.cookieStoreId ?? oldContainer.id ?? id
-    if (oldContainer.name) newContainer.name = oldContainer.name
-    if (oldContainer.icon) newContainer.icon = oldContainer.icon
-    if (oldContainer.color) newContainer.color = oldContainer.color
-    if (oldContainer.colorCode) newContainer.colorCode = oldContainer.colorCode
-    newContainer.id = oldContainer.id ?? oldContainer.cookieStoreId ?? id
-    if (oldContainer.proxified) newContainer.proxified = oldContainer.proxified
-    if (oldContainer.proxy) newContainer.proxy = Utils.cloneObject(oldContainer.proxy)
-    upgradeReopeningRules(oldContainer, newContainer)
-    if (oldContainer.userAgentActive) newContainer.userAgentActive = oldContainer.userAgentActive
-    if (oldContainer.userAgent) newContainer.userAgent = oldContainer.userAgent
-
-    output[id] = newContainer
-  }
-
-  return output
-}
-
+let saveContainersTimeout: number | undefined
 export async function saveContainers(delay?: number): Promise<void> {
-  return Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) }, delay)
+  clearTimeout(saveContainersTimeout)
+
+  if (!delay) {
+    return Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
+  } else {
+    saveContainersTimeout = setTimeout(() => {
+      Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
+    }, delay)
+  }
 }
 
 export function updateContainers(newContainers?: Record<ID, Container> | null): void {
+  clearTimeout(saveContainersTimeout)
+
   if (!newContainers) return
+  const oldContainers = Containers.reactive.byId
   Containers.reactive.byId = newContainers
 
-  if (Info.isBg) WebReq.updateReqHandlersDebounced()
+  if (Info.isBg) WebReq.updateReqHandlersDebounced(0)
 
   if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
     Menu.parseContainersRules()
   }
 
-  // Update colors in reactive tabs
+  // Update colors in tabs
   if (Info.isSidebar) {
+    const tabColor = Settings.state.colorizeTabsSrc === 'container'
+
     for (const tab of Tabs.list) {
+      const oldContainer = oldContainers[tab.cookieStoreId]
       const container = newContainers[tab.cookieStoreId]
-      if (container) tab.reactive.containerColor = container.color
+
+      // Update color
+      if (container && (!oldContainer || oldContainer.color !== container.color)) {
+        tab.reactive.containerColor = container.color
+        if (tabColor) Tabs.colorizeTab(tab.id)
+      }
     }
   }
 }
@@ -264,35 +163,47 @@ export function findUnique(
   return container
 }
 
+/**
+ * Parse match string for include/exclude rules. No error throwing.
+ */
+export function parseReopenRule(s: string): string | RegExp | undefined {
+  const urlMatchStr = s.trim()
+  if (!urlMatchStr) return
+
+  const isMatchStrRe = RE_STR_RE.exec(urlMatchStr)
+  if (isMatchStrRe?.groups?.re) {
+    try {
+      return new RegExp(isMatchStrRe?.groups?.re, isMatchStrRe?.groups?.flags)
+    } catch {
+      Logs.warn(`Containers.parseReopenRule: Cannot parse RegExp: ${urlMatchStr}`)
+    }
+  }
+  return urlMatchStr
+}
+
 export function getContainerFor(url: string): string | undefined {
   for (const ctr of Object.values(Containers.reactive.byId)) {
     if (ctr.reopenRulesActive) {
-      let matchedContiner = false
+      let matchedContainer = false
 
       for (const rule of ctr.reopenRules) {
         if (!rule.active) continue
 
-        const urlMatchStr = rule.url.trim()
-        if (!urlMatchStr) continue
+        const subStrOrRE = parseReopenRule(rule.url)
+        if (!subStrOrRE) continue
 
-        let urlMatchRe
-        if (urlMatchStr.startsWith('/') && urlMatchStr.endsWith('/')) {
-          try {
-            urlMatchRe = new RegExp(urlMatchStr.slice(1, -1))
-            if (urlMatchRe.test(url)) {
-              matchedContiner = true
-              break
-            }
-          } catch {
-            Logs.warn(`Containers.getContainerFor: Cannot parse RegExp: ${urlMatchStr}`)
+        if (subStrOrRE instanceof RegExp) {
+          if (subStrOrRE.test(url)) {
+            matchedContainer = true
+            break
           }
-        } else if (url.includes(urlMatchStr)) {
-          matchedContiner = true
+        } else if (url.includes(subStrOrRE)) {
+          matchedContainer = true
           break
         }
       }
 
-      if (matchedContiner) return ctr.id
+      if (matchedContainer) return ctr.id
     }
   }
 

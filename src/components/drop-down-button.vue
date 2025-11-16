@@ -16,6 +16,7 @@
 <script lang="ts" setup>
 import { ref, nextTick, onMounted, reactive } from 'vue'
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 
 interface Props {
   label: string
@@ -74,7 +75,9 @@ async function open() {
 
   const elStyles = window.getComputedStyle(rootEl.value, null)
   let bottomPadding = parseInt(elStyles.getPropertyValue('padding-bottom'))
+  let topPadding = parseInt(elStyles.getPropertyValue('padding-top'))
   if (isNaN(bottomPadding)) bottomPadding = 0
+  if (isNaN(topPadding)) topPadding = 0
 
   await nextTick()
   if (!dropDownEl.value) return
@@ -84,12 +87,14 @@ async function open() {
 
   const viewportHeight = window.innerHeight
   const viewportWidth = window.innerWidth
+  const inputTop = Math.round(inputRect.top)
   const inputBottom = Math.round(inputRect.bottom)
   const inputRight = Math.round(inputRect.right)
 
   let dropDownTop = inputBottom - bottomPadding + 1
+
   if (viewportHeight <= dropDownTop + dropDownRect.height + bottomPadding) {
-    dropDownTop = viewportHeight - dropDownRect.height - bottomPadding
+    dropDownTop = inputTop - dropDownRect.height - topPadding - 1
   }
 
   if (viewportWidth < dropDownRect.width + (viewportWidth - inputRight)) {

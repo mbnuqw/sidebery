@@ -3,7 +3,7 @@
 // -
 #root
   --general-margin: 2px
-  --general-border-radius: 4px
+  --general-border-radius: 5px
   --bottom-bar-height: 30px
 #root[data-density="compact"]
   --general-margin: 1px
@@ -11,7 +11,7 @@
   --bottom-bar-height: 28px
 #root[data-density="loose"]
   --general-margin: 3px
-  --general-border-radius: 5px
+  --general-border-radius: 7px
   --bottom-bar-height: 32px
 
 // ---
@@ -95,9 +95,9 @@
 // -- Plain theme
 // -
 #root[data-theme="plain"][data-density="default"]
-  --general-border-radius: 2px
-#root[data-theme="plain"][data-density="loose"]
   --general-border-radius: 3px
+#root[data-theme="plain"][data-density="loose"]
+  --general-border-radius: 5px
 #root[data-theme="plain"][data-frame-color-scheme="dark"]
   --frame-el-bg: var(--toolbar-bg)
   --frame-el-fg: var(--toolbar-fg)

@@ -2,7 +2,7 @@ import { ItemBoundsType, SubPanelType, WheelDirection } from 'src/types'
 import { NOID, PRE_SCROLL } from 'src/defaults'
 import { Mouse, ResizingMode } from 'src/services/mouse'
 import { Settings } from 'src/services/settings'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -25,6 +25,7 @@ type TargetType =
   | 'menu.option'
   | 'closedTab'
   | 'closedTab.branch'
+  | 'sync.tab'
 type ResizingCallback = (start: number, delta: number) => void
 type LongClickTargetType = 'tab' | 'bookmark' | 'panel'
 
@@ -69,6 +70,9 @@ export function isCtxTarget(type: TargetType, id?: ID): boolean {
 }
 
 export function onMouseMove(e: MouseEvent): void {
+  Mouse.x = e.clientX
+  Mouse.y = e.clientY
+
   if (Mouse.resizing) {
     if (Mouse.resizing === 'x') {
       if (resizingStart === -1) resizingStart = e.clientX
@@ -197,6 +201,7 @@ export function startLongClick(
       if (!tab) return
 
       if (action === 'reload') Tabs.reloadTabs([tab.id])
+      if (action === 'discard') Tabs.discardTabs([tab.id])
       if (action === 'duplicate') Tabs.duplicateTabs([tab.id])
       if (action === 'pin') Tabs.repinTabs([tab.id])
       if (action === 'mute') Tabs.remuteTabs([tab.id])

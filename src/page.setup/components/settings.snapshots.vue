@@ -2,7 +2,7 @@
 section(ref="el")
   h2
     span {{translate('settings.snapshots_title')}}
-    .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}} / 10 mb)
+    .title-note   ({{snapshotsLen}}: {{snapshotsSize}} / 10 mb)
   span.header-shadow
   ToggleField(
     label="settings.snap_notify"
@@ -66,13 +66,12 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
-import { Stored } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { Logs, SetupPage } from 'src/services/_services'
 import { MAX_SIZE_LIMIT } from 'src/services/snapshots.actions'
 import NumField from '../../components/num-field.vue'
 import TextField from '../../components/text-field.vue'
@@ -89,26 +88,21 @@ const state = reactive({
 
 onMounted(() => {
   SetupPage.registerEl('settings_snapshots', el.value)
+})
 
-  calcInfo()
+const snapshotsLen = computed(() => {
+  const storageProp = SetupPage.reactive.storagePropsByName.snapshots
+  return storageProp?.len ?? 0
+})
+
+const snapshotsSize = computed(() => {
+  const storageProp = SetupPage.reactive.storagePropsByName.snapshots
+  return storageProp?.sizeStr ? '~' + storageProp?.sizeStr : '0'
 })
 
 async function createSnapshot(): Promise<void> {
   await IPC.bg('createSnapshot')
-  calcInfo()
-}
-
-async function calcInfo(): Promise<void> {
-  let stored: Stored
-  try {
-    stored = await browser.storage.local.get<Stored>('snapshots')
-  } catch (err) {
-    return
-  }
-
-  const snapshots = stored.snapshots ?? []
-  state.snapshotsLen = snapshots.length.toString()
-  state.snapshotsSize = Utils.bytesToStr(new Blob([JSON.stringify(snapshots)]).size)
+  SetupPage.updStorageInfo('snapshots')
 }
 
 async function toggleAutoExport() {

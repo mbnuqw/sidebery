@@ -43,7 +43,7 @@ const emit = defineEmits(['update:value', 'update:unit'])
 const props = defineProps<NumFieldProps>()
 
 const validUnit = computed((): string => {
-  return !props.value ? 'none' : props.unit ?? 'none'
+  return !props.value ? 'none' : (props.unit ?? 'none')
 })
 
 function valueFilter(e: Event): number | void {

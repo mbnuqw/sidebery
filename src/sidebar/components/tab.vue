@@ -6,6 +6,7 @@
   :data-loading="tab.reactive.status === TabStatus.Loading"
   :data-pending="tab.reactive.status === TabStatus.Pending"
   :data-selected="tab.reactive.sel"
+  :data-locked-selection="tab.reactive.selLock"
   :data-audible="tab.reactive.mediaAudible"
   :data-muted="tab.reactive.mediaMuted"
   :data-paused="tab.reactive.mediaPaused"
@@ -29,38 +30,35 @@
   @mouseenter.stop="onMouseEnter"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick")
-  .dnd-layer(data-dnd-type="tab" :data-dnd-id="tab.id")
+  .dnd-layer(v-once data-dnd-type="tab" :data-dnd-id="tab.id")
   .body
     .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
-    .flash-fx(v-if="tab.reactive.flash")
+    .flash-fx(ref="flashFxEl")
     .unread-mark(v-if="tab.reactive.unread")
     .fav(@dragstart.stop.prevent)
-      img.fav-icon(v-if="tab.reactive.favIconUrl" :src="tab.reactive.favIconUrl" @error="onError" draggable="false")
-      svg.fav-icon(v-else): use(:xlink:href="favPlaceholder")
+      img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
+      svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
       .exp(
         v-if="tab.reactive.isParent"
         @dblclick.prevent.stop
         @mousedown.stop="onExpandMouseDown"
         @mouseup="onExpandMouseUp")
-        svg.exp-icon: use(xlink:href="#icon_expand")
+        svg.exp-icon: use(href="#icon_expand")
       .badge
-      template(v-if="Settings.state.animations")
-        .progress-spinner(v-show="tab.reactive.status === TabStatus.Loading")
-      template(v-else)
-        svg.progress-spinner(v-show="tab.reactive.status === TabStatus.Loading")
-          use(xlink:href="#icon_hourglass")
+      .progress-spinner(v-if="Settings.state.animations")
+      svg.progress-spinner(v-else): use(href="#icon_hourglass")
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
       @mouseup.stop="onAudioMouseUp($event, tab)")
-      svg.audio-icon.-loud: use(xlink:href="#icon_loud_badge")
-      svg.audio-icon.-mute: use(xlink:href="#icon_mute_badge")
-      svg.audio-icon.-pause: use(xlink:href="#icon_pause_12")
+      svg.audio-icon.-loud: use(href="#icon_loud_badge")
+      svg.audio-icon.-mute: use(href="#icon_mute_badge")
+      svg.audio-icon.-pause: use(href="#icon_pause_12")
     .t-box(v-if="!iconOnly")
       input.custom-title-input(
         v-if="tab.reactive.customTitleEdit"
-        v-model="tab.reactive.customTitle"
+        :value="tab.customTitle"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
@@ -68,37 +66,48 @@
         tabindex="-1"
         @blur="onCustomTitleBlur"
         @keydown="onCustomTitlteKD")
-      .title(v-else) {{tab.reactive.customTitle ?? tab.reactive.title}}
+      .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
+      draggable="true"
+      @dragstart.stop.prevent
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
-      svg.close-icon: use(xlink:href="#icon_remove")
-    .ctx(v-if="tab.reactive.containerColor")
+      svg.close-icon: use(href="#icon_remove")
+    .ctx(v-once v-if="tab.reactive.containerColor")
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { DragInfo, DragItem, DragType, DropType, MenuType, Tab } from 'src/types'
 import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
-import * as Favicons from 'src/services/favicons.fg'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import * as Preview from 'src/services/tabs.preview'
 
-const props = defineProps<{ tabId: ID; iconOnly?: boolean }>()
+const props = defineProps<{ tabId: ID }>()
 const tab = Tabs.byId[props.tabId] as Tab
+const iconOnly =
+  tab.pinned &&
+  (!Settings.state.pinnedTabsList ||
+    Settings.state.pinnedTabsPosition === 'left' ||
+    Settings.state.pinnedTabsPosition === 'right')
+
+const titleEl = ref<HTMLElement | null>(null)
+const favImgEl = ref<HTMLImageElement | null>(null)
+const favSvgUseEl = ref<SVGElement | null>(null)
+const flashFxEl = ref<HTMLElement | null>(null)
 
 const tabColor = computed<string>(() => {
   if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
@@ -114,9 +123,16 @@ const tabColor = computed<string>(() => {
     return ''
   }
 })
-const favPlaceholder = computed((): string => {
-  if (tab.reactive.warn) return '#icon_warn'
-  return Favicons.getFavPlaceholder(tab.reactive.url)
+
+onMounted(() => {
+  if (titleEl.value) tab.titleEl = titleEl.value
+  if (favImgEl.value) tab.favImgEl = favImgEl.value
+  if (favSvgUseEl.value) tab.favSvgUseEl = favSvgUseEl.value
+  if (flashFxEl.value) tab.flashFxEl = flashFxEl.value
+
+  if (tab.url !== 'about:blank') {
+    Tabs.renderFavicon(tab)
+  }
 })
 
 function shouldBeConvertedToGroup(): boolean {
@@ -140,7 +156,7 @@ function tempLockCloseBtn(): void {
   clearTimeout(tempLockCloseBtnTimeout)
   tempLockCloseBtnTimeout = setTimeout(() => {
     closeLock = false
-  }, 1000)
+  }, 100)
 }
 function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
@@ -149,11 +165,40 @@ function onMouseDownClose(e: MouseEvent): void {
     Menu.close()
     return
   }
+
   if (Tabs.editableTabId === tab.id) {
-    tab.reactive.customTitle = tab.title
-  } else if (e.button === 0) {
+    Tabs.setEditingValue(tab.title)
+    Mouse.resetTarget()
+  }
+
+  tempLockCloseBtn()
+
+  // Prevent auto-scrolling with middle-btn
+  if (e.button === 1) e.preventDefault()
+
+  if (!Settings.state.tabCloseOnMouseUp) closeBtnAction(e)
+}
+function onMouseUpClose(e: MouseEvent): void {
+  if (!Mouse.isTarget('tab.close', tab.id)) {
+    e.stopPropagation()
+    e.preventDefault()
+    Mouse.resetTarget()
+    Mouse.stopLongClick()
+    return
+  }
+  Mouse.resetTarget()
+  Mouse.stopLongClick()
+  Mouse.stopMultiSelection()
+  Selection.resetSelection()
+
+  if (Settings.state.tabCloseOnMouseUp) closeBtnAction(e)
+}
+function closeBtnAction(e: MouseEvent) {
+  if (e.button === 0) {
     if (shouldBeConvertedToGroup()) return convertToGroup()
     Tabs.removeTabs([tab.id])
+    e.preventDefault()
+    e.stopPropagation()
   } else if (e.button === 1) {
     if (Settings.state.tabCloseMiddleClick === 'close') {
       if (shouldBeConvertedToGroup()) return convertToGroup()
@@ -167,13 +212,6 @@ function onMouseDownClose(e: MouseEvent): void {
   } else if (e.button === 2) {
     Tabs.removeBranches([tab.id])
   }
-  tempLockCloseBtn()
-}
-function onMouseUpClose(e: MouseEvent): void {
-  Mouse.resetTarget()
-  Mouse.stopLongClick()
-  Mouse.stopMultiSelection()
-  Selection.resetSelection()
 }
 
 function onMouseDown(e: MouseEvent): void {
@@ -200,8 +238,24 @@ function onMouseDown(e: MouseEvent): void {
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!tab.sel) Selection.selectTab(tab.id)
-      else Selection.deselectTab(tab.id)
+      if (!(tab.sel || tab.selLock)) {
+        const noSel = !Selection.isSet()
+
+        Selection.selectTab(tab.id)
+
+        // Select active tab on initial ctrl-click, if setting enabled
+        if (Settings.state.ctrlSelAct && noSel) {
+          // Only if both active and current tab have the same
+          // pinned state, since sidebery doesn't support (yet)
+          // mixed selections.
+          const actTab = Tabs.byId[Tabs.activeId]
+          if (actTab && actTab.pinned === tab.pinned) {
+            Selection.selectTab(Tabs.activeId)
+          }
+        }
+      } else {
+        Selection.deselectTab(tab.id)
+      }
       return
     }
 
@@ -215,7 +269,7 @@ function onMouseDown(e: MouseEvent): void {
       return
     }
 
-    if (Selection.isSet() && !tab.sel) Selection.resetSelection()
+    if (Selection.isSet() && !(tab.sel || tab.selLock)) Selection.resetSelection()
 
     if (!Selection.isSet() && !Settings.state.activateOnMouseUp) activate()
 
@@ -227,7 +281,7 @@ function onMouseDown(e: MouseEvent): void {
     e.preventDefault()
     Mouse.blockWheel()
 
-    const selectedTabs = Selection.isTabs() ? Selection.get() : []
+    const selectedTabs = Selection.isTabs() ? Selection.ids() : []
     Selection.resetSelection()
 
     if (!selectedTabs.includes(tab.id)) selectedTabs.push(tab.id)
@@ -237,7 +291,7 @@ function onMouseDown(e: MouseEvent): void {
         Tabs.discardTabs(selectedTabs)
         return
       } else if (Settings.state.tabMiddleClickCtrl === 'discard_or_close') {
-        discardOrCloseTabs(selectedTabs);
+        discardOrCloseTabs(selectedTabs)
         return
       } else if (Settings.state.tabMiddleClickCtrl === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
@@ -256,7 +310,7 @@ function onMouseDown(e: MouseEvent): void {
         Tabs.discardTabs(selectedTabs)
         return
       } else if (Settings.state.tabMiddleClickShift === 'discard_or_close') {
-        discardOrCloseTabs(selectedTabs);
+        discardOrCloseTabs(selectedTabs)
         return
       } else if (Settings.state.tabMiddleClickShift === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
@@ -270,6 +324,26 @@ function onMouseDown(e: MouseEvent): void {
       }
     }
 
+    if (tab.pinned) {
+      if (Settings.state.tabPinnedMiddleClick === 'discard') {
+        Tabs.discardTabs(selectedTabs)
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'close') {
+        if (shouldBeConvertedToGroup()) convertToGroup()
+        else Tabs.removeTabs(selectedTabs)
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'discard_or_close') {
+        discardOrCloseTabs(selectedTabs)
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'duplicate') {
+        Tabs.duplicateTabs([tab.id])
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'unpin') {
+        Tabs.unpinTabs([tab.id])
+        return
+      }
+    }
+
     if (Settings.state.multipleMiddleClose && Settings.state.tabMiddleClick === 'close') {
       Mouse.startMultiSelection(e, tab.id, selectedTabs)
     } else {
@@ -279,7 +353,7 @@ function onMouseDown(e: MouseEvent): void {
       } else if (Settings.state.tabMiddleClick === 'discard') {
         Tabs.discardTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'discard_or_close') {
-        discardOrCloseTabs(selectedTabs);
+        discardOrCloseTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'duplicate') {
         Tabs.duplicateTabs([tab.id])
       } else if (Settings.state.tabMiddleClick === 'dup_child') {
@@ -290,7 +364,7 @@ function onMouseDown(e: MouseEvent): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.state.ctxMenuNative && !tab.sel) {
+    if (!Settings.state.ctxMenuNative && !(tab.sel || tab.selLock)) {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, tab.id)
     }
@@ -330,6 +404,7 @@ function onMouseUp(e: MouseEvent): void {
     const preselectedTabs = Mouse.stopMultiSelection()
 
     if (
+      tab.pinned ||
       (e.ctrlKey && Settings.state.tabMiddleClickCtrl !== 'none') ||
       (e.shiftKey && Settings.state.tabMiddleClickShift !== 'none')
     ) {
@@ -342,7 +417,7 @@ function onMouseUp(e: MouseEvent): void {
       sameTargetType
     ) {
       if (!Selection.isSet()) select()
-      let selectedTabs = Selection.get()
+      let selectedTabs = Selection.ids()
       if (selectedTabs.length === 1 && preselectedTabs?.length) selectedTabs = preselectedTabs
       Tabs.removeTabs(selectedTabs)
     }
@@ -377,7 +452,7 @@ function onCtxMenu(e: MouseEvent): void {
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !tab.sel) {
+  if (!e.ctrlKey && !e.shiftKey && !(tab.sel || tab.selLock)) {
     Selection.resetSelection()
   }
 
@@ -432,15 +507,7 @@ function onDragStart(e: DragEvent): void {
     clearTimeout(Preview.state.mouseLeaveTimeout)
 
     if (Preview.state.mode === Preview.Mode.Inline) Preview.closePreviewInline()
-    else {
-      if (Preview.state.status === Preview.Status.Opening) {
-        e.stopPropagation()
-        e.preventDefault()
-        return
-      } else {
-        Preview.closePreviewPopup()
-      }
-    }
+    else Preview.closePreviewPopup()
   }
 
   // Check what to drag
@@ -464,6 +531,9 @@ function onDragStart(e: DragEvent): void {
         title: tab.title,
         parentId: tab.parentId,
         container: tab.cookieStoreId,
+        customTitle: tab.customTitle,
+        customColor: tab.customColor,
+        folded: tab.folded,
       })
     }
   }
@@ -479,6 +549,7 @@ function onDragStart(e: DragEvent): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info
@@ -517,12 +588,16 @@ function onMouseEnter(e: MouseEvent) {
 
   if (Settings.state.previewTabs) {
     Preview.setTargetTab(props.tabId, e.clientY)
+  } else if (!Settings.state.forceUpdTooltip) {
+    updateTooltipDebounced()
   }
 }
 
 function onMouseLeave(): void {
   if (Settings.state.previewTabs) {
     Preview.resetTargetTab(props.tabId)
+  } else {
+    clearTimeout(updateTooltipDebouncedTimeout)
   }
 }
 
@@ -556,11 +631,19 @@ function onAudioMouseUp(e: MouseEvent, tab: Tab) {
   }
 }
 
+let updateTooltipDebouncedTimeout: number | undefined
+function updateTooltipDebounced() {
+  clearTimeout(updateTooltipDebouncedTimeout)
+  updateTooltipDebouncedTimeout = setTimeout(() => {
+    Tabs.updateTooltip(props.tabId)
+  }, Settings.state.updTooltipDelay)
+}
+
 function discardOrCloseTabs(selectedTabs: ID[]): void {
   if (tab.discarded) {
-    Tabs.removeTabs(selectedTabs);
+    Tabs.removeTabs(selectedTabs)
   } else {
-    Tabs.discardTabs(selectedTabs);
+    Tabs.discardTabs(selectedTabs)
   }
 }
 
@@ -628,11 +711,15 @@ function onExpandMouseUp(e: MouseEvent): void {
 }
 
 function onError(): void {
-  tab.reactive.favIconUrl = tab.favIconUrl = undefined
+  tab.favIconUrl = undefined
+  Tabs.renderFavicon(tab)
 }
 
-function onCustomTitleBlur() {
+function onCustomTitleBlur(e: Event) {
+  const titleInputEl = e.target as HTMLInputElement
+
   Tabs.editableTabId = NOID
+  tab.customTitle = titleInputEl.value
   tab.reactive.customTitleEdit = false
   Tabs.saveCustomTitle(tab.id)
 }

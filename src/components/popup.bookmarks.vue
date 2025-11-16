@@ -30,7 +30,7 @@
       .location-body
         .location-value {{selectedFolder}}
         .new-folder-btn(v-if="!state.newFolderMode" @click.stop="onNewFolderClick")
-          svg: use(xlink:href="#icon_new_folder")
+          svg: use(href="#icon_new_folder")
       .new-folder-field(v-if="state.newFolderMode")
         LoadingDots(v-if="state.creatingNewFolder")
         TextInput.new-folder-input(
@@ -43,8 +43,8 @@
           @keydown="onNewFolderKD")
         .new-folder-btn(v-if="!state.creatingNewFolder" @click.stop="onNewFolderClick")
           svg
-            use(v-if="state.newFolderTitle" xlink:href="#icon_new_folder")
-            use(v-else xlink:href="#icon_x")
+            use(v-if="state.newFolderTitle" href="#icon_new_folder")
+            use(v-else href="#icon_x")
     .tree(v-if="state.showTree")
       ScrollBox
         BookmarkNode.root-node(
@@ -60,7 +60,7 @@
         :key="folder.id"
         :data-sel="folder.id === Bookmarks.reactive.popup.location"
         @click="onRecentFolderClick(folder)")
-        svg.folder-icon: use(xlink:href="#icon_folder")
+        svg.folder-icon: use(href="#icon_folder")
         .folder-label {{folder.title}}
     .loading-screen(v-if="state.loading")
       LoadingDots
@@ -78,7 +78,7 @@ import { translate } from 'src/dict'
 import { Bookmark, Stored, TextInputComponent } from 'src/types'
 import { NOID, BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
-import { Selection } from 'src/services/selection'
+import * as Selection from 'src/services/selection'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from './loading-dots.vue'

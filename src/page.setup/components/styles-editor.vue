@@ -63,9 +63,8 @@ import { CustomCssTarget } from 'src/types'
 import { Styles } from 'src/services/styles'
 import { Permissions } from 'src/services/permissions'
 import StyleField from '../../components/style-field.vue'
-import { SETTINGS_OPTIONS } from 'src/defaults'
 import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/setup-page'
+import { SetupPage } from 'src/services/_services'
 
 interface CssVar {
   active: boolean
@@ -98,19 +97,22 @@ const state = reactive({
   cssTarget: 'sidebar' as CustomCssTarget,
   colorSampleValue: '#000000',
   groups: [
-    { id: '--general-', label: 'General', vars: [], match: /^--(general|frame|toolbar)/ },
-    { id: '--frame-', label: 'Frame colors', vars: [] },
-    { id: '--toolbar-', label: 'Toolbar colors', vars: [] },
+    {
+      id: '--general-',
+      label: translate('styles.vars_group.general'),
+      vars: [],
+      match: /^--(general|frame|toolbar)/,
+    },
     { id: '--nav-', label: translate('styles.vars_group.nav'), vars: [] },
     { id: '--tabs-', label: translate('styles.vars_group.tabs'), vars: [] },
     { id: '--bookmarks-', label: translate('styles.vars_group.bookmarks'), vars: [] },
-    { id: '--history-', label: 'History', vars: [] },
-    { id: '--popup-', label: 'Popup', vars: [] },
+    { id: '--history-', label: translate('styles.vars_group.history'), vars: [] },
+    { id: '--popup-', label: translate('styles.vars_group.popup'), vars: [] },
     { id: '--ctx-menu-', label: translate('styles.vars_group.menu'), vars: [] },
-    { id: '--slt-', label: 'Sub-list title', vars: [] },
-    { id: '--search-', label: 'Search bar', vars: [] },
-    { id: '--ntb-', label: 'New-tab bar', vars: [] },
-    { id: '--notification-', label: 'Notification', vars: [] },
+    { id: '--slt-', label: translate('styles.vars_group.sub-list_title'), vars: [] },
+    { id: '--search-', label: translate('styles.vars_group.search_bar'), vars: [] },
+    { id: '--ntb-', label: translate('styles.vars_group.new-tab_bar'), vars: [] },
+    { id: '--notification-', label: translate('styles.vars_group.notification'), vars: [] },
     { id: '--btn-', label: translate('styles.vars_group.buttons'), vars: [] },
     { id: '--scroll-', label: translate('styles.vars_group.scroll'), vars: [] },
     { id: '--d-', label: translate('styles.vars_group.animation'), vars: [] },
@@ -475,7 +477,11 @@ function undoRedo(e: KeyboardEvent): void {
 let applyTimeout: number | undefined
 function applyCssDebounced(delay = 1000): void {
   clearTimeout(applyTimeout)
-  applyTimeout = setTimeout(() => Styles.setCustomCSS(state.cssTarget, state.customCSS), delay)
+  applyTimeout = setTimeout(() => {
+    if (state.cssTarget === 'sidebar') Styles.sidebarCSS = state.customCSS
+    else if (state.cssTarget === 'group') Styles.groupCSS = state.customCSS
+    Styles.saveCustomCSS()
+  }, delay)
 }
 
 function onColorSampelInput(e: Event): void {

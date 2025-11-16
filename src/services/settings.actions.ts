@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
-import { SettingsState, Stored, InstanceType } from 'src/types'
+import { DEFAULT_SETTINGS, NOID, SETTINGS_OPTIONS } from 'src/defaults'
+import { SettingsState, Stored, InstanceType, CopyTemplate } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Store } from './storage'
 import { Info } from './info'
@@ -15,38 +15,66 @@ import * as IPC from './ipc'
 import * as Preview from 'src/services/tabs.preview'
 import { updateWebReqHandlers } from './web-req.fg'
 import { Search } from './search'
+import { Logs, Sync } from './_services'
+import { Notifications } from './notifications'
+import { translate } from 'src/dict'
 
 type Opts = typeof SETTINGS_OPTIONS
 export async function loadSettings(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('settings')
+  const [managedResult, localResult] = await Promise.allSettled([
+    browser.storage.managed.get<Stored>('settings'),
+    browser.storage.local.get<Stored>('settings'),
+  ])
 
-  if (!stored.settings) {
+  const storedManaged = Utils.settledOr(managedResult, {} as Stored)
+  if (!storedManaged.settings) storedManaged.settings = {} as SettingsState
+
+  const storedLocal = Utils.settledOr(localResult, {} as Stored)
+  if (!storedLocal.settings) {
     // Respect prefersReducedMotion rule for default settings
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (prefersReducedMotion?.matches) DEFAULT_SETTINGS.animations = false
 
-    stored.settings = {} as SettingsState
+    storedLocal.settings = {} as SettingsState
   }
 
-  Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
-  Utils.updateObject(Settings.state, stored.settings, Settings.state)
+  Utils.normalizeObject(storedManaged.settings, storedLocal.settings)
+  const groupOnOpen = storedManaged.settings.groupOnOpen
+  Utils.normalizeObject(storedManaged.settings, DEFAULT_SETTINGS)
+  Utils.updateObject(Settings.state, storedManaged.settings, Settings.state)
 
   if (Settings.state.hideInact) {
     Settings.state.activateLastTabOnPanelSwitching = true
     Settings.state.tabsPanelSwitchActMove = true
   }
 
+  // TMP
+  // Try to keep previous behavior with moveNewTabParent === 'default' and groupOnOpen
+  if (groupOnOpen && Settings.state.moveNewTabParent === 'default') {
+    Settings.state.moveNewTabParentIndent = true
+  }
+
   parsePrefaceTemplate()
 
+  if (Info.isSidebar) {
+    parseCopyTemplates()
+  }
+
   Search.parseShortcuts()
+
+  updPrecalcSettings()
 }
 
 export async function saveSettings(): Promise<void> {
+  Logs.info('Settings.saveSettings')
+
   const clone = Utils.cloneObject(Settings.state)
   const settings = Utils.recreateNormalizedObject(clone, DEFAULT_SETTINGS)
   await Store.set({ settings })
 
-  if (settings.syncSaveSettings) saveSettingsToSync()
+  if (settings.syncSaveSettings) {
+    Sync.save(Sync.SyncedEntryType.Settings, settings)
+  }
 }
 
 let saveSettingsTimeout: number | undefined
@@ -57,18 +85,51 @@ export function saveDebounced(delay = 500): void {
   }, delay)
 }
 
-async function saveSettingsToSync(settings?: SettingsState): Promise<void> {
-  if (!settings) settings = Utils.recreateNormalizedObject(Settings.state, DEFAULT_SETTINGS)
-  await Store.sync('settings', { settings })
-}
-
 export function setupSettingsChangeListener(): void {
   if (Info.isBg) Store.onKeyChange('settings', updateSettingsBg)
   else Store.onKeyChange('settings', updateSettingsFg)
 }
 
+export async function importSyncedSettings(entry: Sync.SyncedEntry) {
+  Logs.info('Settings.importSyncedSettings(): entry:', entry)
+
+  const prevSettings = Utils.clone(Settings.state)
+  const settings = await Sync.getData<SettingsState>(entry)
+  if (!settings) {
+    Logs.err('Settings.importSyncedSettings(): No data')
+    return
+  }
+
+  // Keep sync settings
+  settings.syncName = Settings.state.syncName
+  settings.syncSaveSettings = Settings.state.syncSaveSettings
+  settings.syncSaveCtxMenu = Settings.state.syncSaveCtxMenu
+  settings.syncSaveStyles = Settings.state.syncSaveStyles
+  settings.syncSaveKeybindings = Settings.state.syncSaveKeybindings
+
+  await importSettings(settings)
+
+  Notifications.notify({
+    icon: '#icon_sync',
+    title: translate('sync.success.import_settings'),
+    ctrl: translate('notif.undo_ctrl'),
+    callback: () => importSettings(prevSettings),
+  })
+}
+
+export async function importSettings(settings: SettingsState) {
+  Logs.info('Settings.importSettings: settings:', settings)
+
+  await Store.set({ settings: settings })
+
+  if (Info.isBg) Settings.updateSettingsBg(settings)
+  else Settings.updateSettingsFg(settings)
+}
+
 export function updateSettingsBg(settings?: SettingsState | null): void {
   if (!settings) return
+
+  Logs.info('Settings.updateSettingsBg()')
 
   const prev = Settings.state
   const next = settings
@@ -87,7 +148,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
       } else if (IPC.isConnected(InstanceType.sidebar, win.id)) {
-        IPC.sendToSidebar(win.id, 'updWindowPreface')
+        IPC.sendToSidebar(win.id, 'updWindowPreface', next.markWindowPreface)
       }
     }
   } else if (markWindowPrefaceChanged) {
@@ -102,10 +163,14 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
   if (snapIntervalChanged || snapIntervalUnitChanged) Snapshots.scheduleSnapshots()
 
   if (colorSchemeChanged) Styles.updateColorScheme()
+
+  updPrecalcSettings()
 }
 
 export function updateSettingsFg(settings?: SettingsState | null): void {
   if (!settings) return
+
+  Logs.info('Settings.updateSettingsFg()')
 
   const prev = Settings.state
   const next = settings
@@ -116,14 +181,17 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.activateAfterClosing !== next.activateAfterClosing ||
     prev.activateAfterClosingNoDiscarded !== next.activateAfterClosingNoDiscarded
   const resetTree = prev.tabsTree !== next.tabsTree && prev.tabsTree
-  const updateTree = prev.tabsTreeLimit !== next.tabsTreeLimit
+  const reviveTree = prev.tabsTree !== next.tabsTree && !prev.tabsTree
+  const tabsTreeLimit = prev.tabsTreeLimit !== next.tabsTreeLimit
   const hideFoldedTabs = prev.hideFoldedTabs !== next.hideFoldedTabs
+  const hideUnloadedTabs = prev.hideUnloadedTabs !== next.hideUnloadedTabs
   const hideFoldedParent = prev.hideFoldedParent !== next.hideFoldedParent
   const theme = prev.theme !== next.theme
   const highlightOpenBookmarks = prev.highlightOpenBookmarks !== next.highlightOpenBookmarks
   const colorScheme = prev.colorScheme !== next.colorScheme
   const ctxMenuCtrIgnore = prev.ctxMenuIgnoreContainers !== next.ctxMenuIgnoreContainers
   const fontSize = prev.fontSize !== next.fontSize
+  const fontFamily = prev.fontFamily !== next.fontFamily
   const updateSidebarTitleChanged = prev.updateSidebarTitle !== next.updateSidebarTitle
   const pinnedTabsPositionChanged = prev.pinnedTabsPosition !== next.pinnedTabsPosition
   const colorizeTabsChanged = prev.colorizeTabs !== next.colorizeTabs
@@ -136,15 +204,17 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
   const navBookmarksPanelMidClickAction =
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
-  const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
   const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
   const tabsUnreadMark = prev.tabsUnreadMark !== next.tabsUnreadMark
+  const copyTemplates = prev.copyTemplates !== next.copyTemplates
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
+
+  updPrecalcSettings()
 
   if (Info.isSidebar && newTabCtxReopen) updateWebReqHandlers()
 
@@ -152,11 +222,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     Tabs.list.forEach(t => (t.reactive.unread = t.unread = false))
   }
 
-  if (tabsUrlInTooltip || previewTabs) {
-    Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
-  }
-
-  if (previewTabsMode) {
+  if (previewTabs || previewTabsMode) {
     Preview.resetMode()
   }
 
@@ -179,12 +245,23 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     Sidebar.recalcVisibleTabs()
   }
 
-  if (updateTree && Sidebar.hasTabs) {
+  if (reviveTree && Sidebar.hasTabs) {
+    for (const tab of Tabs.list) {
+      tab.parentId = tab.openerTabId ?? NOID
+    }
     Tabs.updateTabsTree()
     Sidebar.recalcVisibleTabs()
   }
 
-  if ((hideInactTabs || hideFoldedTabs || hideFoldedParent) && Sidebar.hasTabs) {
+  if (tabsTreeLimit && Sidebar.hasTabs) {
+    Tabs.updateTabsTree()
+    Sidebar.recalcVisibleTabs()
+  }
+
+  if (
+    (hideInactTabs || hideFoldedTabs || hideFoldedParent || hideUnloadedTabs) &&
+    Sidebar.hasTabs
+  ) {
     Tabs.updateNativeTabsVisibility()
   }
 
@@ -201,7 +278,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     }
   }
   if (ctxMenuCtrIgnore) Menu.parseContainersRules()
-  if (fontSize) Sidebar.updateFontSize()
+  if (fontSize) Styles.updateGlobalFontSize()
+  if (fontFamily) Styles.udpateGlobalFontFamily()
 
   if (colorScheme) Styles.updateColorScheme()
 
@@ -236,11 +314,30 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (markWindowPreface) parsePrefaceTemplate()
 
+  if (Info.isSidebar && copyTemplates) parseCopyTemplates()
+
   Search.parseShortcuts()
+}
+
+function updPrecalcSettings() {
+  Settings.rmChildTabsFolded = Settings.state.rmChildTabs === 'folded'
+  Settings.rmChildTabsAll = Settings.state.rmChildTabs === 'all'
+  Settings.rmChildTabsNone = Settings.state.rmChildTabs === 'none'
+
+  Settings.activateAfterClosingNone = Settings.state.activateAfterClosing === 'none'
+  Settings.activateAfterClosingNext = Settings.state.activateAfterClosing === 'next'
+  Settings.activateAfterClosingPrev = Settings.state.activateAfterClosing === 'prev'
+  Settings.activateAfterClosingPrevAct = Settings.state.activateAfterClosing === 'prev_act'
+
+  Settings.tabsUpdateMarkAll = Settings.state.tabsUpdateMark === 'all'
+  Settings.tabsUpdateMarkPin = Settings.state.tabsUpdateMark === 'pin'
+  Settings.tabsUpdateMarkNorm = Settings.state.tabsUpdateMark === 'norm'
+  Settings.tabsUpdateMarkNone = Settings.state.tabsUpdateMark === 'none'
 }
 
 export function resetSettings(): void {
   Utils.updateObject(Settings.state, DEFAULT_SETTINGS, DEFAULT_SETTINGS)
+  updPrecalcSettings()
 }
 
 /**
@@ -253,4 +350,35 @@ export function getOpts<K extends keyof Opts, V extends Opts[K]>(key: K): V {
 function parsePrefaceTemplate() {
   const preface = Settings.state.markWindowPreface
   Settings.updateWinPrefaceOnPanelSwitch = preface.includes('%PN')
+}
+
+const COPY_TEMPLATE_RE = /^(?<name>.+):(?<template>.+)$/
+function parseCopyTemplates() {
+  const templates: CopyTemplate[] = []
+
+  if (Settings.state.copyTemplates) {
+    const rawLines = Settings.state.copyTemplates.split('\n')
+    for (const rawLine of rawLines) {
+      const line = rawLine.trim()
+      if (!line) continue
+
+      const result = COPY_TEMPLATE_RE.exec(line)
+      if (!result?.groups) continue
+
+      const name = result.groups['name']
+      const template = result.groups['template']
+      if (!name || !template) continue
+
+      templates.push({
+        name,
+        str: template,
+        hasCT: template.includes('%CT'),
+        hasT: template.includes('%T'),
+        hasU: template.includes('%U'),
+        hasB: template.includes('%B'),
+      })
+    }
+  }
+
+  Settings.copyTemplates = templates
 }

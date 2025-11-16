@@ -15,7 +15,7 @@
     @keyup.prevent.stop="onKBKeyUp($event)")
   .icon-btn(
     :data-enabled="!!keybinding.shortcut"
-    @click="removeKeybinding(keybinding)"): svg: use(xlink:href="#icon_remove")
+    @click="removeKeybinding(keybinding)"): svg: use(href="#icon_remove")
 </template>
 
 <script lang="ts" setup>

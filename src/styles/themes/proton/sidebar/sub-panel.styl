@@ -15,6 +15,12 @@
   z-index: 200
   transition: z-index var(--d-fast)
 
+// Make the inner scrollbox flex so that the height
+// of the scroll-container is calculated correctly
+.SubPanel .ScrollBox
+  display: flex
+  flex-direction: column
+
 .SubPanel .overlay
   position: absolute
   width: 100%
@@ -42,7 +48,7 @@
 .SubPanel .header
   position: relative
   display: flex
-  justify-content: center
+  justify-content: space-between
   align-items: center
   background-color: var(--toolbar-bg)
   width: 100%
@@ -51,6 +57,41 @@
 
 .SubPanel .header > .title
   position: relative
+  margin: 0 auto
   font-size: rem(14)
   font-weight: 700
   color: var(--toolbar-fg)
+
+.SubPanel .header .space-filler
+.SubPanel .header .header-btn
+  position: relative
+  width: 30px
+  height: 30px
+  flex-shrink: 0
+
+.SubPanel .header .header-btn
+  &:before
+    content: ''
+    position: absolute
+    width: 26px
+    height: 26px
+    top: 2px
+    left: 2px
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  .icon
+    position: absolute
+    width: 16px
+    height: 16px
+    top: calc(50% - 8px)
+    left: calc(50% - 8px)
+    fill: var(--toolbar-fg)
+    opacity: .7
+  &:hover:before
+    opacity: .1
+  &:active
+    opacity: .7
+.Sidebar[data-syncing="true"] .SubPanel .icon.-sync
+  opacity: 1
+  animation: syncing-animation 1s linear infinite
