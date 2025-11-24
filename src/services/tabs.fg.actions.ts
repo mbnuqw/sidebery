@@ -17,6 +17,7 @@ import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import * as Selection from './selection'
 import { Favicons } from './_services.fg'
+import { groupTabs } from './tabs.fg.groups'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -132,6 +133,68 @@ export function getStatus(tab: Tab): TabStatus {
   if (tab.status === 'loading') return TabStatus.Loading
   if (tab.status === 'pending') return TabStatus.Pending
   return TabStatus.Complete
+}
+
+/**
+ * Create a hidden tab to represent a native group
+ * This acts as a parent tab for all tabs in the native group
+ */
+const groupTabBeingCreated = new Map<ID, Promise<void>>()
+
+export async function parentToNativeGroupTab(
+  groupInfo: browser.tabGroups.TabGroup,
+  addTab: Tab
+): Promise<undefined> {
+  const { id, title, color, collapsed } = groupInfo
+
+  if (groupTabBeingCreated.has(id)) {
+    await groupTabBeingCreated.get(id)
+  }
+
+  const existing = Tabs.list.find(t => t.nativeGroupId === id)
+  if (existing) {
+    addTab.parentId = existing.id
+    return
+  }
+
+  let resolve = () => {}
+  groupTabBeingCreated.set(
+    id,
+    new Promise(res => {
+      resolve = res
+    })
+  )
+
+  try {
+    // Group tabs
+    const tabId = await groupTabs([addTab.id], {
+      title,
+    })
+    if (!tabId) return
+
+    resolve()
+    groupTabBeingCreated.delete(id)
+
+    const tab = Tabs.byId[tabId]
+    if (!tab) return
+
+    // Set native group properties
+    tab.customColor = color
+    tab.folded = collapsed ?? false
+    tab.nativeGroupId = id
+
+    // Update reactive properties
+    tab.reactive.customColor = color ?? null
+    tab.reactive.folded = collapsed ?? false
+
+    // Hide the tab immediately
+    await browser.tabs.hide(tab.id)
+  } catch (err) {
+    resolve()
+    groupTabBeingCreated.delete(id)
+
+    Logs.err('Tabs.createHiddenNativeGroupTab: Failed to create hidden tab:', err)
+  }
 }
 
 let waitingForTabsReadiness: (() => void)[] = []
@@ -346,6 +409,10 @@ async function restoreTabsState(src?: LoadSrc, ignoreLockedTabs?: boolean): Prom
 
   tabs = await restoreTabPanelsContent(tabs)
 
+  for (const tab of tabs) {
+    Tabs.handleTabGroupChanged(tab.id, tab.groupId)
+  }
+
   Tabs.list = tabs
   Sidebar.recalcTabsPanels()
   if (Settings.state.tabsTree) updateTabsTree()
@@ -469,6 +536,7 @@ function restoreTab(
     tab.reactive.folded = tab.folded = !!props.folded
     if (props.customTitle) tab.customTitle = props.customTitle
     if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+    if (props.nativeGroupId) tab.nativeGroupId = props.nativeGroupId
   } else {
     Logs.warn(`Tabs.restoreTab: no props for: "${tab.id} i${tab.index} url${tab.url}"`)
   }
@@ -695,6 +763,7 @@ export function cacheTabsData(delay = 300): void {
       if (tab.cookieStoreId !== CONTAINER_ID) info.ctx = tab.cookieStoreId
       if (tab.customTitle) info.customTitle = tab.customTitle
       if (tab.customColor) info.customColor = tab.customColor
+      if (tab.nativeGroupId !== undefined) info.nativeGroupId = tab.nativeGroupId
       data.push(info)
     }
 
@@ -775,6 +844,8 @@ function _saveTabData(tabId: ID, forced?: boolean): void {
   else delete data.customTitle
   if (tab.customColor) data.customColor = tab.customColor
   else delete data.customColor
+  if (tab.nativeGroupId !== undefined) data.nativeGroupId = tab.nativeGroupId
+  else delete data.nativeGroupId
 
   // Logs.info('Tabs.saveTabData: Saving...', tabId, { ...data })
   browser.sessions.setTabValue(tabId, 'data', data).catch(err => {
@@ -1637,6 +1708,11 @@ export function updateNativeTabsVisibility(): void {
   const toHide = []
   for (const tab of Tabs.list) {
     if (tab.pinned) continue
+
+    if (tab.nativeGroupId) {
+      if (!tab.hidden) toHide.push(tab.id)
+      continue
+    }
 
     if (hideFolded && tab.invisible) {
       if (!tab.hidden) toHide.push(tab.id)

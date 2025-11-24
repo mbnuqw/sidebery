@@ -4,6 +4,7 @@ import { NOID } from 'src/defaults'
 import * as TabsActions from 'src/services/tabs.fg.actions'
 import * as TabsHandlers from 'src/services/tabs.fg.handlers'
 import * as TabsGroups from 'src/services/tabs.fg.groups'
+import * as TabsNativeGroups from 'src/services/tabs.fg.native-groups'
 import * as TabsShadow from 'src/services/tabs.fg.shadow'
 import * as TabsScroll from 'src/services/tabs.fg.scroll'
 import * as TabsEditTitle from 'src/services/tabs.fg.edit-title'
@@ -62,6 +63,7 @@ export const Tabs = {
   ...TabsActions,
   ...TabsHandlers,
   ...TabsGroups,
+  ...TabsNativeGroups,
   ...TabsShadow,
   ...TabsScroll,
   ...TabsEditTitle,
