@@ -19,14 +19,11 @@ function setupListeners() {
   }
 
   browser.omnibox.onInputChanged.addListener(async (input, suggest) => {
-    const suggestions =
-      input.length >= 3
-        ? matchContainers(input).map(ctx => ({
-            content: ctx.name,
-            description: ctx.name,
-            deletable: false,
-          }))
-        : []
+    const suggestions = matchContainers(input).map(ctx => ({
+      content: ctx.name,
+      description: ctx.name,
+      deletable: false,
+    }))
     suggest(suggestions)
   })
 
