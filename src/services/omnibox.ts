@@ -22,10 +22,10 @@ function setupListeners() {
     const suggestions =
       input.length >= 3
         ? matchContainers(input).map(ctx => ({
-          content: ctx.name,
-          description: ctx.name,
-          deletable: false,
-        }))
+            content: ctx.name,
+            description: ctx.name,
+            deletable: false,
+          }))
         : []
     suggest(suggestions)
   })
