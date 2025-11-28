@@ -607,14 +607,9 @@ export function updateBounds(): void {
 function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
   // Logs.info('Sidebar.calcTabsBounds', panel.id)
   const result: ItemBounds[] = []
-  const th = Sidebar.tabHeight
   const tm = Sidebar.tabMargin
-  if (th === 0) return result
-  const half = th >> 1
   const marginA = Math.floor(tm / 2)
   const marginB = Math.ceil(tm / 2)
-  const insideA = (half >> 1) + marginB + 2
-  const insideB = (half >> 1) + marginB - 2
 
   let overallHeight = -marginA
   let tabs = Tabs.list
@@ -628,6 +623,14 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
   for (const tab of tabs) {
     if (tab.invisible || tab.pinned) continue
     if (tab.panelId !== panel.id) continue
+
+    // This method to get tab element taken from: https://github.com/mbnuqw/sidebery/blob/d74c2f70bcd9a980dcec02738a5260b171f5ecc1/src/services/tabs.fg.scroll.ts#L25
+    const elId = 'tab' + tab.id.toString()
+    const el = document.getElementById(elId)
+    const th = el.offsetHeight - tm
+    const half = th >> 1
+    const insideA = (half >> 1) + marginB + 2
+    const insideB = (half >> 1) + marginB - 2
 
     result.push({
       type: ItemBoundsType.Tab,
