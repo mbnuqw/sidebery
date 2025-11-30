@@ -56,6 +56,12 @@ section(ref="el")
     label="settings.dnd_act_search_tab"
     v-model:value="Settings.state.dndActSearchTab"
     @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.move_tab_to_panel"
+    optLabel="settings.move_tab_to_panel_"
+    v-model:value="Settings.state.moveTabToPanel"
+    :opts="Settings.getOpts('moveTabToPanel')"
+    @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.dnd_move_tabs"
     :note="translate('settings.dnd_move_tabs_note')"

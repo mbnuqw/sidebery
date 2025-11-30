@@ -59,6 +59,7 @@ export interface SettingsState {
   dndActSearchTab: boolean
   dndMoveTabs: boolean
   dndMoveBookmarks: boolean
+  moveTabToPanel: (typeof SETTINGS_OPTIONS.moveTabToPanel)[number]
 
   // Search
   searchBarMode: (typeof SETTINGS_OPTIONS.searchBarMode)[number]
