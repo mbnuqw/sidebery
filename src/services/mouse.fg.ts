@@ -215,6 +215,7 @@ export function startLongClick(
       if (action === 'reload') Tabs.reloadTabs([tab.id])
       if (action === 'discard') Tabs.discardTabs([tab.id])
       if (action === 'duplicate') Tabs.duplicateTabs([tab.id])
+      if (action === 'dup_child') Tabs.duplicateTabs([tab.id], true)
       if (action === 'pin') Tabs.repinTabs([tab.id])
       if (action === 'mute') Tabs.remuteTabs([tab.id])
       if (action === 'clear_cookies') Tabs.clearTabsCookies([tab.id])
