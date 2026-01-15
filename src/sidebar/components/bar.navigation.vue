@@ -517,7 +517,9 @@ async function onNavMouseDown(e: MouseEvent, item: T.NavItem) {
 
       // Discard(unload) tabs
       if (Settings.state.navTabsPanelMidClickAction === 'discard') {
-        const ids = panel.tabs.map(t => t.id)
+        const ids: ID[] = []
+        panel.pinnedTabs.forEach(t => ids.push(t.id))
+        panel.tabs.forEach(t => ids.push(t.id))
         if (ids.length) Tabs.discardTabs(ids)
       }
 
