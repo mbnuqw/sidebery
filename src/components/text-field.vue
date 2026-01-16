@@ -1,5 +1,9 @@
 <template lang="pug">
-.TextField(:data-inactive="props.inactive" @mousedown="onMouseDown" @mouseup="onMouseUp")
+.TextField(
+  :data-inactive="props.inactive"
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu")
   .body
     .label {{translate(props.label)}}
     TextInput(
@@ -54,6 +58,11 @@ function onMouseDown(e: DOMEvent<MouseEvent>) {
 function onMouseUp(e: DOMEvent<MouseEvent>) {
   if (rangeIsSelected || getSelection()?.type === 'Range') return
   focus()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
 }
 
 function focus(): void {

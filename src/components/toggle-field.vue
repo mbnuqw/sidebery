@@ -4,6 +4,7 @@
   :data-loading="loading"
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu"
   @keydown="onKeyDown")
   .focus-fx
   .body
@@ -50,6 +51,11 @@ function onMouseDown(e: DOMEvent<MouseEvent>) {
 function onMouseUp(e: DOMEvent<MouseEvent>) {
   if (rangeIsSelected || getSelection()?.type === 'Range') return
   toggle()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
 }
 
 function toggle(): void {

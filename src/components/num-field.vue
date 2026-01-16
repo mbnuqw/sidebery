@@ -1,5 +1,9 @@
 <template lang="pug">
-.NumField(:data-active="!!props.value" :data-inactive="props.inactive")
+.NumField(
+  :data-active="!!props.value"
+  :data-inactive="props.inactive"
+  @contextmenu.stop="onContextMenu"
+  @mousedown="onMouseDown")
   .body
     .label {{translate(props.label)}}
     .input-group
@@ -45,6 +49,18 @@ const props = defineProps<NumFieldProps>()
 const validUnit = computed((): string => {
   return !props.value ? 'none' : (props.unit ?? 'none')
 })
+
+let rangeIsSelected = false
+
+function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
+}
 
 function valueFilter(e: Event): number | void {
   const target = e.target as HTMLInputElement

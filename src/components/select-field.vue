@@ -5,7 +5,7 @@
   :data-drop-down="dropDownOpen"
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
-  @contextmenu.stop.prevent=""
+  @contextmenu.stop="onContextMenu"
   @blur="onBlur"
   @keydown="onKeyDown")
   .focus-fx
@@ -72,6 +72,11 @@ function onMouseUp(e: DOMEvent<MouseEvent>) {
   if (props.inactive || !props.opts || Array.isArray(props.value)) return
   if (e.button === 0) switchOption(1)
   if (e.button === 2) switchOption(-1)
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
 }
 
 function switchOption(dir: 1 | -1): void {
