@@ -4,6 +4,7 @@
   :data-inactive="props.inactive"
   :data-drop-down="dropDownOpen"
   @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
   @contextmenu.stop.prevent=""
   @blur="onBlur"
   @keydown="onKeyDown")
@@ -59,7 +60,15 @@ const preSelected = ref<string | number>(-1)
 const inputComponent = ref<SelectInputComponent | null>(null)
 const rootEl = ref<HTMLElement | null>(null)
 
+let rangeIsSelected = false
+
 function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
   if (props.inactive || !props.opts || Array.isArray(props.value)) return
   if (e.button === 0) switchOption(1)
   if (e.button === 2) switchOption(-1)

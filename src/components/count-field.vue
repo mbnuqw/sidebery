@@ -1,5 +1,9 @@
 <template lang="pug">
-.CountField(:data-active="props.value !== off" :data-inactive="props.inactive" @click="toggle")
+.CountField(
+  :data-active="props.value !== off"
+  :data-inactive="props.inactive"
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp")
   .body
     .label {{translate(props.label)}}
     .input-group(@click.stop)
@@ -28,6 +32,18 @@ interface CountFieldProps {
 
 const emit = defineEmits(['update:value', 'change'])
 const props = withDefaults(defineProps<CountFieldProps>(), { min: 0 })
+
+let rangeIsSelected = false
+
+function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  toggle()
+}
 
 function onInput(val: string): void {
   emit('update:value', val)

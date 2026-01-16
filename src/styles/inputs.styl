@@ -28,7 +28,6 @@
   padding: 0 16px
   flex-shrink: 0
   cursor: default
-  -moz-user-select: none
   outline: none
   border-radius: 4px
   &:not(:first-of-type)
@@ -197,12 +196,16 @@
   padding: 0 0 12px 0px
   white-space: pre-wrap
   color: var(--toolbar-fg)
-  user-select: none
   opacity: .7
 
 // ---
 // -- Input
 // -
+.ToggleInput
+.SelectInput
+.TextInput
+  -moz-user-select: none
+
 .ToggleInput
 .SelectInput
   position: relative
@@ -415,6 +418,7 @@
   position: relative
   padding: 2px 3px
   overflow-y: auto
+  user-select: none
   scrollbar-color: var(--frame-scrollbar-color) #0000
 #root[data-native-scrollbars-thin="true"] .select-input-drop-down-content
   scrollbar-width: thin
@@ -650,7 +654,6 @@
     align-items: center
     color: var(--toolbar-fg)
     transition: color var(--d-fast)
-    -moz-user-select: none
   .input-group
     position: relative
     display: flex
@@ -706,7 +709,6 @@
 .StyleField
   position: relative
   padding: 8px 16px 2px
-  -moz-user-select: none
   &:not(:first-of-type)
     margin: 3px 0 0 0
 
