@@ -2,12 +2,14 @@
 .NumField(
   :data-active="!!props.value"
   :data-inactive="props.inactive"
-  @contextmenu.stop="onContextMenu"
-  @mousedown="onMouseDown")
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu")
   .body
     .label {{translate(props.label)}}
     .input-group
       TextInput.text-input(
+        ref="textInputEl"
         :value="props.value"
         :line="true"
         :filter="valueFilter"
@@ -24,9 +26,10 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { computed } from 'vue'
 import { translate } from 'src/dict'
-import type { InputOption } from 'src/types'
+import type { InputOption, InputObjOpt, TextInputComponent } from 'src/types'
 import TextInput from './text-input.vue'
 import SelectInput from './select-input.vue'
 
@@ -45,6 +48,7 @@ interface NumFieldProps {
 
 const emit = defineEmits(['update:value', 'update:unit'])
 const props = defineProps<NumFieldProps>()
+const textInputEl = ref<TextInputComponent | null>(null)
 
 const validUnit = computed((): string => {
   return !props.value ? 'none' : (props.unit ?? 'none')
@@ -57,9 +61,31 @@ function onMouseDown(e: DOMEvent<MouseEvent>) {
   if (e.detail > 1) e.preventDefault()
 }
 
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  if (e.button === 0) focusTextInput()
+  if (e.button === 2) switchUnitOption(-1)
+}
+
 function onContextMenu(payload: PointerEvent) {
   if (rangeIsSelected || getSelection()?.type === 'Range') return
   payload.preventDefault()
+}
+
+function switchUnitOption(dir: 1 | -1): void {
+  if (props.inactive || !props.unitOpts || Array.isArray(props.unit)) return
+  let i = props.unit !== undefined ? props.unitOpts.indexOf(props.unit) : -1
+  if (i === -1) i = props.unitOpts.findIndex(o => (o as InputObjOpt).value === props.unit)
+  if (i === -1) return
+  i += dir
+  if (i >= props.unitOpts.length) i = 0
+  if (i < 0) i = props.unitOpts.length - 1
+  let selected = props.unitOpts[i]
+  if (selected && (selected as InputObjOpt).value) {
+    emit('update:unit', (selected as InputObjOpt).value)
+  } else {
+    emit('update:unit', selected)
+  }
 }
 
 function valueFilter(e: Event): number | void {
@@ -73,6 +99,10 @@ function valueFilter(e: Event): number | void {
   if (isNaN(val) || (!props.allowNegative && val < 0)) return 0
   if (props.maxValue !== undefined && val > props.maxValue) val = props.maxValue
   return val
+}
+
+function focusTextInput(): void {
+  textInputEl.value?.focus()
 }
 
 function select(unit: string): void {

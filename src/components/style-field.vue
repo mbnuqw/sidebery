@@ -1,5 +1,10 @@
 <template lang="pug">
-.StyleField(:class="{ '-no-separator': noSeparator }" :data-active="!!props.value")
+.StyleField(
+  :class="{ '-no-separator': noSeparator }"
+  :data-active="!!props.value"
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu")
   .label
     .desc {{translate(props.label) || props.name}}
     .var(v-if="props.name") {{props.name}}
@@ -11,6 +16,7 @@
         :value="colorValue"
         @input="onColorInput")
     TextInput.text-input(
+      ref="textInputEl"
       :value="props.value"
       :line="true"
       :or="props.or"
@@ -24,6 +30,7 @@
 import { ref, computed } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
+import type { TextInputComponent } from 'src/types'
 import TextInput from './text-input.vue'
 import ToggleInput from './toggle-input.vue'
 
@@ -39,6 +46,7 @@ interface StyleFieldProps {
 
 const emit = defineEmits(['update:value', 'change', 'toggle'])
 const props = defineProps<StyleFieldProps>()
+const textInputEl = ref<TextInputComponent | null>(null)
 
 const opaq = ref('ff')
 
@@ -57,6 +65,24 @@ const colorOpacity = computed((): number => {
   if (isNaN(num)) return 1
   return num / 255
 })
+
+let rangeIsSelected = false
+
+function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  if (e.button === 0) focusTextInput()
+  if (e.button === 2) toggle()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
+}
 
 function onColorInput(e: Event): void {
   const len = (e.target as HTMLInputElement).value.length
@@ -77,6 +103,10 @@ function onKeyDown(e: KeyboardEvent): void {
 
 function onChange(): void {
   emit('change', props.value)
+}
+
+function focusTextInput(): void {
+  textInputEl.value?.focus()
 }
 
 function toggle(): void {

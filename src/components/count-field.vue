@@ -9,6 +9,7 @@
     .label {{translate(props.label)}}
     .input-group(@click.stop)
       TextInput.text-input(
+        ref="textInputEl"
         :value="props.value"
         :line="true"
         :filter="valueFilter"
@@ -18,7 +19,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { translate } from 'src/dict'
+import type { TextInputComponent } from 'src/types'
 import TextInput from './text-input.vue'
 import ToggleInput from './toggle-input.vue'
 
@@ -33,6 +36,7 @@ interface CountFieldProps {
 
 const emit = defineEmits(['update:value', 'change'])
 const props = withDefaults(defineProps<CountFieldProps>(), { min: 0 })
+const textInputEl = ref<TextInputComponent | null>(null)
 
 let rangeIsSelected = false
 
@@ -43,7 +47,8 @@ function onMouseDown(e: DOMEvent<MouseEvent>) {
 
 function onMouseUp(e: DOMEvent<MouseEvent>) {
   if (rangeIsSelected || getSelection()?.type === 'Range') return
-  toggle()
+  if (e.button === 0) focusTextInput()
+  if (e.button === 2) toggle()
 }
 
 function onContextMenu(payload: PointerEvent) {
@@ -64,6 +69,10 @@ function valueFilter(e: Event): number {
   if (isNaN(val)) return 0
   else if (props.min !== undefined && val < props.min) return props.min
   else return val
+}
+
+function focusTextInput(): void {
+  textInputEl.value?.focus()
 }
 
 function toggle(): void {
