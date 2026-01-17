@@ -6,7 +6,6 @@
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
   @contextmenu.stop="onContextMenu"
-  @blur="onBlur"
   @keydown="onKeyDown")
   .focus-fx
   .body
@@ -21,6 +20,7 @@
       :icon="props.icon"
       :folded="folded"
       :preSelected="preSelected"
+      @dropdown-blur="onDropdownBlur"
       @update:value="select")
   .note(v-if="props.note") {{props.note}}
 </template>
@@ -155,7 +155,7 @@ function select(option: string): void {
   if (rootEl.value) rootEl.value.tabIndex = -1
 }
 
-function onBlur(): void {
+function onDropdownBlur(): void {
   dropDownOpen.value = false
   if (inputComponent.value) inputComponent.value.close()
   if (rootEl.value) rootEl.value.tabIndex = -1

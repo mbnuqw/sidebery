@@ -15,7 +15,7 @@
     .opt.-exp(v-if="folded")
       svg: use(href="#icon_expand")
     teleport(v-if="folded && !disabledDropDownTeleport" to="#root")
-      .select-input-drop-down-layer(v-if="isOpen" @wheel="onWheel")
+      .select-input-drop-down-layer(v-if="isOpen" @wheel="onWheel" @mouseup="onMouseUp" @contextmenu.stop.prevent)
         .select-input-drop-down(:style="dropDownStyle")
           .select-input-drop-down-content(ref="dropDownEl")
             .opt(
@@ -25,7 +25,7 @@
               :data-none="((opt as InputObjOpt).value ?? opt) === props.noneOpt"
               :data-color="getOptColor(opt) ?? false"
               :data-active="((opt as InputObjOpt).value ?? opt) === preSelected"
-              @mousedown.stop="select(opt)")
+              @mouseup.stop="select(opt)")
               svg(v-if="((opt as InputObjOpt).icon || props.icon)?.startsWith('#')")
                 use(:href="((opt as InputObjOpt).icon || props.icon)")
               img(v-else-if="(opt as InputObjOpt).icon || props.icon" :src="(opt as InputObjOpt).icon || props.icon")
@@ -76,7 +76,7 @@ const focusEl = ref<HTMLElement | null>(null)
 const dropDownEl = ref<HTMLElement | null>(null)
 const disabledDropDownTeleport = ref(true)
 const isOpen = ref(false)
-const emit = defineEmits(['update:value'])
+const emit = defineEmits(['update:value', 'dropdown-blur'])
 const props = withDefaults(defineProps<SelectInputProps>(), { noneOpt: 'none' })
 const dropDownStyle = reactive({
   '--left': '0px',
@@ -142,6 +142,10 @@ function getTooltip(option: InputOption): string {
     }
   }
   return ''
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  emit('dropdown-blur')
 }
 
 function onWheel(e: WheelEvent): void {
