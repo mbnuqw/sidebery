@@ -5,6 +5,9 @@
   :data-valid="props.valid"
   :data-wrong="state.wrongValueAnimation"
   :data-width="props.width"
+  @contextmenu.stop
+  @mousedown.stop
+  @mouseup.stop
   @animationend="onAnimationEnd")
   .focus-fx
   input(
