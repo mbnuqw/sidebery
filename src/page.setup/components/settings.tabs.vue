@@ -297,7 +297,6 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.pinned.no_unload"
-      :inactive="Settings.state.pinnedTabsPosition !== 'panel'"
       dbg="pinnedNoUnload"
       v-model:value="Settings.state.pinnedNoUnload"
       :default="DEFAULT_SETTINGS.pinnedNoUnload"
