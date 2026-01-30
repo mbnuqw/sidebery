@@ -299,6 +299,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.discard'),
       icon: 'icon_discard',
+      inactive: Settings.state.pinnedNoUnload,
       onClick: () => Tabs.discardTabs(Selection.ids()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
@@ -773,6 +774,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tabs_panel.discard'),
       icon: 'icon_discard',
+      inactive: Settings.state.pinnedNoUnload && !panel.tabs.length,
       onClick: () => Tabs.discardTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
