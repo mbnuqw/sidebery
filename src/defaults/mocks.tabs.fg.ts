@@ -57,6 +57,7 @@ export class MTab implements Tab {
     sel: false,
     selLock: false,
     warn: false,
+    notificationBadgeCount: null,
     updated: false,
     unread: false,
     flash: false,

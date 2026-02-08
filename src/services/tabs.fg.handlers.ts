@@ -1098,7 +1098,8 @@ function updTabReactiveProps(change: browser.tabs.ChangeInfo, tab: Tab) {
   if (change.pinned !== undefined) tab.reactive.pinned = change.pinned
   if (change.status !== undefined) tab.reactive.status = Tabs.getStatus(tab)
   if (change.title !== undefined) Tabs.renderTitle(tab)
-  if (change.title !== undefined || change.pinned !== undefined) Tabs.updateNotificationBadgeCountTab(tab)
+  if (change.title !== undefined || change.pinned !== undefined)
+    Tabs.updateNotificationBadgeCountTab(tab)
   if (change.url !== undefined) tab.reactive.url = change.url
 }
 

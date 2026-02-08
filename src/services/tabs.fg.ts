@@ -203,9 +203,12 @@ export function updateNotificationBadgeCountTabs(): void {
   }
 }
 
-export function updateNotificationBadgeCountTab(tab: Tab, regexp: RegExp | undefined = undefined): void {
+export function updateNotificationBadgeCountTab(
+  tab: T.Tab,
+  regexp: RegExp | undefined = undefined
+): void {
   if (
-    (Settings.state.tabsNotificationBadgeScope === 'none') ||
+    Settings.state.tabsNotificationBadgeScope === 'none' ||
     (Settings.state.tabsNotificationBadgeScope === 'norm' && tab.pinned) ||
     (Settings.state.tabsNotificationBadgeScope === 'pin' && !tab.pinned)
   ) {
@@ -213,12 +216,13 @@ export function updateNotificationBadgeCountTab(tab: Tab, regexp: RegExp | undef
     return
   }
 
-  const matches = (regexp ?? (new RegExp(Settings.state.tabsNotificationBadgeRegExpPattern))).exec(tab.title)
+  const matches = (regexp ?? new RegExp(Settings.state.tabsNotificationBadgeRegExpPattern)).exec(
+    tab.title
+  )
   if (!matches) {
     tab.reactive.notificationBadgeCount = null
   } else {
     const notificationBadgeCount = matches.find((e, i) => i > 0 && e) ?? null
-    console.log(matches)
     tab.reactive.notificationBadgeCount = notificationBadgeCount
   }
 }

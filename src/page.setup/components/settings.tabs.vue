@@ -704,11 +704,12 @@ section(ref="el")
 import { ref, computed, onMounted } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
+import type { TextInputComponent } from 'src/types'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
 import * as Settings from 'src/services/settings.fg'
 import * as Permissions from 'src/services/permissions.fg'
 import * as SetupPage from 'src/services/setup-page.fg'
-import * as Tabs  from 'src/services/tabs.fg'
+import * as Tabs from 'src/services/tabs.fg'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
@@ -840,7 +841,9 @@ async function togglePreviewTabs() {
 
 const tabsNotificationBadgeRegExpPatternEl = ref<TextInputComponent | null>(null)
 const tabsNotificationBadgeRegExpPatternValid = ref('')
-const tabsNotificationBadgeRegExpPatternInput = ref(Settings.state.tabsNotificationBadgeRegExpPattern)
+const tabsNotificationBadgeRegExpPatternInput = ref(
+  Settings.state.tabsNotificationBadgeRegExpPattern
+)
 const tabsNotificationBadgeRegExpPatternValidate = Utils.debounce((value: string): void => {
   if (!value) {
     tabsNotificationBadgeRegExpPatternValid.value = ''
@@ -861,7 +864,8 @@ function onTabsNotificationBadgeRegExpPatternUpdate(value: string): void {
 }
 
 function onTabsNotificationBadgeRegExpPatternBlur(): void {
-  if (tabsNotificationBadgeRegExpPatternValid.value === 'invalid') tabsNotificationBadgeRegExpPatternEl.value.error()
+  if (tabsNotificationBadgeRegExpPatternValid.value === 'invalid')
+    tabsNotificationBadgeRegExpPatternEl.value?.error()
 }
 
 onMounted(() => {

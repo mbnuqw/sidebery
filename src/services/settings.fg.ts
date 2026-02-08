@@ -115,8 +115,10 @@ export function updateSettings(settings?: SettingsState | null): void {
   const colorizeTabsBranchesChanged = prev.colorizeTabsBranches !== next.colorizeTabsBranches
   const colorizeTabsBranchesSrcChanged =
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
-  const tabsNotificationBadgeScopeChanged = prev.tabsNotificationBadgeScope !== next.tabsNotificationBadgeScope
-  const tabsNotificationBadgeRegExpPatternChanged = prev.tabsNotificationBadgeRegExpPattern !== next.tabsNotificationBadgeRegExpPattern
+  const tabsNotificationBadgeScopeChanged =
+    prev.tabsNotificationBadgeScope !== next.tabsNotificationBadgeScope
+  const tabsNotificationBadgeRegExpPatternChanged =
+    prev.tabsNotificationBadgeRegExpPattern !== next.tabsNotificationBadgeRegExpPattern
   const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
   const navTabsPanelMidClickAction =
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
