@@ -1,27 +1,27 @@
-import { InstanceType } from 'src/types'
+import * as E from 'src/enums'
 import { NOID } from 'src/defaults'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
+import * as Settings from 'src/services/settings.bg'
+import * as Windows from 'src/services/windows.bg'
 import * as Favicons from 'src/services/favicons.bg'
-import { Containers } from 'src/services/containers'
-import { Tabs } from 'src/services/tabs.bg'
-import { Store } from 'src/services/storage'
-import { Permissions } from 'src/services/permissions'
-import { Snapshots } from 'src/services/snapshots'
-import { Sidebar } from 'src/services/sidebar'
-import { Info } from 'src/services/info'
-import { versionToInt } from 'src/services/info.actions'
-import { Menu } from 'src/services/menu'
-import { WebReq } from 'src/services/web-req'
-import { Sync } from 'src/services/_services'
-import { Styles } from 'src/services/styles'
+import * as Containers from 'src/services/containers.bg'
+import * as Tabs from 'src/services/tabs.bg'
+import * as Store from 'src/services/storage.bg'
+import * as Permissions from 'src/services/permissions.bg'
+import * as Snapshots from 'src/services/snapshots.bg'
+import * as Sidebar from 'src/services/sidebar.bg'
+import * as Info from 'src/services/info.bg'
+import * as Menu from 'src/services/menu.bg'
+import * as WebReq from 'src/services/web-req.bg'
+import * as Sync from 'src/services/sync.bg'
+import * as Omnibox from 'src/services/omnibox.bg'
+import * as Styles from 'src/services/styles.bg'
 
 void (async function main() {
-  Info.setInstanceType(InstanceType.bg)
-  IPC.setInstanceType(InstanceType.bg)
-  Logs.setInstanceType(InstanceType.bg)
+  Info.setInstanceType(E.InstanceType.bg)
+  IPC.setInstanceType(E.InstanceType.bg)
+  Logs.setInstanceType(E.InstanceType.bg)
 
   const ts = performance.now()
   Logs.info('Init start')
@@ -34,6 +34,7 @@ void (async function main() {
     getSidebarTabs: Tabs.getSidebarTabs,
     detachSidebarTabs: Tabs.detachSidebarTabs,
     openTabs: Tabs.openTabs,
+    setActivePanelId: Sidebar.setActivePanelId,
     createSnapshot: Snapshots.createSnapshot,
     addSnapshot: Snapshots.addSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
@@ -41,7 +42,7 @@ void (async function main() {
     createWindowWithTabs: Windows.createWithTabs,
     isWindowTabsLocked: Windows.isWindowTabsLocked,
     saveFavicon: Favicons.saveFavicon,
-    reloadFavicons: Favicons.loadFavicons,
+    reloadFavicons: Favicons.load,
     saveInLocalStorage: Store.setFromRemoteFg,
     checkIpInfo: WebReq.checkIpInfo,
     disableAutoReopening: WebReq.disableAutoReopening,
@@ -49,7 +50,11 @@ void (async function main() {
 
     saveToSync: Sync.save,
     saveTabsToSync: Sync.saveTabs,
+    saveProfileInfoToGoogleSync: Sync.Google.saveProfileInfo,
     removeFromSync: Sync.remove,
+    removeFromFirefoxSync: Sync.Firefox.remove,
+    removeByTypeFromSync: Sync.removeByType,
+    removeCachedIdFromGoogleSync: Sync.Google.removeCachedId,
     getDataFromSync: Sync.getData,
     loadSync: Sync.load,
   })
@@ -57,69 +62,73 @@ void (async function main() {
   // Init first-need stuff
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
-  await Promise.all([
-    Windows.loadWindows(),
-    Containers.load(),
-    Settings.loadSettings(),
-    Info.loadVersionInfo(),
-  ])
+  await Promise.all([Windows.load(), Containers.load(), Settings.load(), Info.loadVersionInfo()])
 
   Info.saveVersion()
   Windows.setupWindowsListeners()
-  Containers.setupContainersListeners()
+  Containers.setupListeners()
   Settings.setupSettingsChangeListener()
 
-  await Sidebar.loadNav()
+  await Sidebar.load()
   Sidebar.setupListeners()
 
   WebReq.updateReqHandlers()
 
-  Tabs.setupTabsListeners()
-  await Tabs.loadTabs()
+  Tabs.setupListeners()
+  await Tabs.load()
 
-  Permissions.loadPermissions()
+  Permissions.load()
   Permissions.setupListeners()
-  Favicons.loadFavicons()
+  Favicons.load()
   Menu.setupListeners()
   Snapshots.scheduleSnapshots()
 
   // Update title preface on sidebar connection/disconnection
-  IPC.onConnected(InstanceType.sidebar, winId => {
+  IPC.onConnected(E.InstanceType.sidebar, winId => {
     Logs.info('IPC.onConnected sidebar', winId)
 
-    const tabs = Windows.byId[winId]?.tabs
+    const tabs = Windows.byId.get(winId)?.tabs
     if (tabs) Tabs.initInternalPageScripts(tabs)
 
     if (Settings.state.markWindow && winId !== NOID) {
       IPC.sendToSidebar(winId, 'updWindowPreface')
     }
   })
-  IPC.onDisconnected(InstanceType.sidebar, winId => {
+  IPC.onDisconnected(E.InstanceType.sidebar, winId => {
     Logs.info('IPC.onDisconnected sidebar', winId)
 
-    if (Settings.state.markWindow && Windows.byId[winId]) {
+    if (Settings.state.markWindow && Windows.byId.has(winId)) {
       browser.windows.update(winId, { titlePreface: '' })
     }
   })
 
-  window.getSideberyState = () => {
-    // prettier-ignore
-    return {
-      IPC, Info, Settings, Windows, Tabs, Containers,
-      Sidebar, Favicons, Snapshots, Menu, Permissions,
-    }
-  }
-
   initToolbarButton()
-  Styles.initColorScheme()
+  Styles.load()
+  Styles.setupListeners()
 
   browser.runtime.onUpdateAvailable.addListener(details => {
-    const currentVersion = versionToInt(browser.runtime.getManifest().version)
-    const newVersion = versionToInt(details.version)
+    const currentVersion = Info.versionToInt(browser.runtime.getManifest().version)
+    const newVersion = Info.versionToInt(details.version)
     if (newVersion <= currentVersion) browser.runtime.reload()
   })
 
+  Omnibox.setupListeners()
+  Omnibox.load()
+
   Logs.info(`Init end: ${performance.now() - ts}ms`)
+
+  window.getSideberyState = () => {
+    return {
+      profileId: Info.getProfileId(),
+      Windows: {
+        byId: Windows.byId,
+      },
+      Tabs: {
+        byId: Tabs.byId,
+        cacheByWin: Tabs.cacheByWin,
+      },
+    }
+  }
 })()
 
 function initToolbarButton(): void {

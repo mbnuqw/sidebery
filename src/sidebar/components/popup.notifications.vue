@@ -23,19 +23,19 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { Notification } from 'src/types'
-import { Notifications } from 'src/services/notifications'
-import { DnD } from 'src/services/drag-and-drop'
+import type * as T from 'src/types'
+import * as Notifications from 'src/services/notifications.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
 import NotificationContainer from './popup.notification.vue'
 
 const activeNotificationIndex = ref(0)
 const restNotificationsVisible = ref(false)
 
-const activeNotif = computed<Notification | null>(() => {
+const activeNotif = computed<T.Notification | null>(() => {
   return Notifications.reactive.list[activeNotificationIndex.value] ?? null
 })
 
-const restNotifications = computed<Notification[]>(() => {
+const restNotifications = computed<T.Notification[]>(() => {
   const pre = Notifications.reactive.list.slice(0, activeNotificationIndex.value)
   const post = Notifications.reactive.list.slice(activeNotificationIndex.value + 1)
   return pre.concat(post)

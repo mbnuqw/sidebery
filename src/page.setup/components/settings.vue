@@ -2,6 +2,7 @@
 .Settings(ref="rootEl" @scroll.passive="onScroll")
   GeneralSection
   MenuSection
+  OmniboxSection
   NavbarSection
   GroupSection
   ContainersSection
@@ -29,10 +30,11 @@
 
 <script lang="ts" setup>
 import { ref, onActivated } from 'vue'
-import { SetupPage } from 'src/services/_services'
-import { Info } from 'src/services/info'
+import * as Info from 'src/services/info'
+import * as SetupPage from 'src/services/setup-page.fg'
 import GeneralSection from './settings.general.vue'
 import MenuSection from './settings.menu.vue'
+import OmniboxSection from './settings.omnibox.vue'
 import NavbarSection from './settings.navbar.vue'
 import GroupSection from './settings.group.vue'
 import ContainersSection from './settings.containers.vue'

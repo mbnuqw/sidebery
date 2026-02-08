@@ -5,6 +5,9 @@
   :data-valid="props.valid"
   :data-wrong="state.wrongValueAnimation"
   :data-width="props.width"
+  @contextmenu.stop
+  @mousedown.stop
+  @mouseup.stop
   @animationend="onAnimationEnd")
   .focus-fx
   input(
@@ -41,7 +44,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import { TextInputComponent } from 'src/types'
+import type { TextInputComponent } from 'src/types'
 
 interface TextInputProps {
   value?: string | number

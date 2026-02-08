@@ -2,21 +2,19 @@
 import fs from 'fs'
 import path from 'path'
 import stylus from 'stylus'
-import * as csso from 'csso'
+import esbuild from 'esbuild'
 import { IS_DEV, ADDON_PATH, getTime, watch, log, logOk } from './utils.js'
 
-const OUTPUT_DIR = `${ADDON_PATH}/themes`
-const THEMES = {
-  proton: [
-    './src/styles/themes/proton/sidebar/sidebar.styl',
-    './src/styles/themes/proton/page.url/url.styl',
-    './src/styles/themes/proton/page.group/group.styl',
-    './src/styles/themes/proton/page.setup/setup.styl',
-    './src/styles/themes/proton/popup.proxy/proxy.styl',
-    './src/styles/themes/proton/popup.sync/sync.styl',
-    './src/styles/themes/proton/popup.panel-config/panel-config.styl',
-  ],
-}
+const OUTPUT_DIR = `${ADDON_PATH}/styles`
+const ENTRIES = [
+  './src/styles/sidebar/sidebar.styl',
+  './src/styles/page.url/url.styl',
+  './src/styles/page.group/group.styl',
+  './src/styles/page.setup/setup.styl',
+  './src/styles/popup.proxy/proxy.styl',
+  './src/styles/popup.sync/sync.styl',
+  './src/styles/popup.panel-config/panel-config.styl',
+]
 
 /**
  * Build
@@ -97,7 +95,10 @@ async function compile(srcPath, outputPath, srcContent) {
       stylus(srcContent)
         .set('paths', [path.dirname(srcPath)])
         .render(async (err, css) => {
-          if (!IS_DEV) css = csso.minify(css, { restructure: false }).css
+          if (!IS_DEV) {
+            const { code } = await esbuild.transform(css, { minify: true, loader: 'css' })
+            css = code
+          }
           res(fs.promises.writeFile(outputPath, css))
         })
     } catch (err) {
@@ -112,13 +113,9 @@ async function compile(srcPath, outputPath, srcContent) {
  */
 function getEntries() {
   const entries = []
-  for (const name of Object.keys(THEMES)) {
-    const styles = THEMES[name]
-    const outputDir = path.join(OUTPUT_DIR, name)
-    for (const srcPath of styles) {
-      const outputPath = path.join(outputDir, path.basename(srcPath, '.styl') + '.css')
-      entries.push({ srcPath, outputDir, outputPath })
-    }
+  for (const srcPath of ENTRIES) {
+    const outputPath = path.join(OUTPUT_DIR, path.basename(srcPath, '.styl') + '.css')
+    entries.push({ srcPath, outputDir: OUTPUT_DIR, outputPath })
   }
   return entries
 }

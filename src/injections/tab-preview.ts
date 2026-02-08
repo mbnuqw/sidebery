@@ -1,4 +1,4 @@
-import { InstanceType } from 'src/types'
+import { InstanceType } from 'src/enums'
 import { NOID } from 'src/defaults'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -204,6 +204,9 @@ async function main() {
   window.sideberyInitData = undefined
   window.onSideberyInitDataReady = undefined
 
+  state.winId = initData.winId
+  state.referenceDevicePixelRatio = initData.dpr
+
   if (state.referenceDevicePixelRatio !== window.devicePixelRatio) {
     state.compScale = state.referenceDevicePixelRatio / window.devicePixelRatio
   }
@@ -211,8 +214,6 @@ async function main() {
   const sidebarHeight = initData.sh || pageHeight
   const heightDifBetweenSidebarAndPage = pageHeight - sidebarHeight
 
-  state.winId = initData.winId
-  state.referenceDevicePixelRatio = initData.dpr
   state.previewWidth = initData.popupWidth
   state.previewHeight = calcPreviewHeight(initData.popupWidth)
   state.offsetY = initData.offsetY + heightDifBetweenSidebarAndPage

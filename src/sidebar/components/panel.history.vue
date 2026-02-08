@@ -5,13 +5,13 @@
       .group(
         v-for="(day, i) of History.reactive.days"
         :key="day.title"
-        :data-folded="!state.expandedHistoryDays[i] && !isFiltering")
+        :data-folded="!History.reactive.expandedHistoryDays[i] && !isFiltering")
         SubListTitle(
           :title="day.title"
           :len="day.visits.length"
-          :expanded="!!state.expandedHistoryDays[i] || isFiltering"
+          :expanded="!!History.reactive.expandedHistoryDays[i] || isFiltering"
           @click="toggleHistoryGroup($event, i)")
-        .group-list(v-if="!!state.expandedHistoryDays[i] || isFiltering")
+        .group-list(v-if="!!History.reactive.expandedHistoryDays[i] || isFiltering")
           HistoryItemVue(
             v-for="visitId in day.visits"
             :key="visitId"
@@ -31,14 +31,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, onBeforeUnmount } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { ScrollBoxComponent, SubPanelType } from 'src/types'
-import { History } from 'src/services/history'
-import { Search } from 'src/services/search'
-import { Permissions } from 'src/services/permissions'
-import { Sidebar } from 'src/services/sidebar'
+import type { ScrollBoxComponent } from 'src/types'
+import { SubPanelType } from 'src/enums'
+import * as History from 'src/services/history.fg'
+import * as Search from 'src/services/search.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
@@ -50,7 +51,6 @@ const props = defineProps<{ isSubPanel?: boolean }>()
 
 const scrollBox = ref<ScrollBoxComponent | null>(null)
 const state = reactive({
-  expandedHistoryDays: [true],
   historyLoading: false,
   allLoaded: false,
 })
@@ -58,9 +58,26 @@ const state = reactive({
 onMounted(() => {
   if (scrollBox.value) {
     if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.History) {
-      History.subPanelScrollEl = scrollBox.value.getScrollBox()
+      History.setSubPanelScrollEl(scrollBox.value.getScrollBox())
     } else {
-      History.panelScrollEl = scrollBox.value.getScrollBox()
+      History.setPanelScrollEl(scrollBox.value.getScrollBox())
+    }
+  }
+
+  if (props.isSubPanel && History.ready) {
+    const spId = `${Sidebar.activePanelId}history`
+    const sbEl = scrollBox.value?.getScrollBox() ?? undefined
+    const prevScrollPosition = Sidebar.scrollPositions[spId]
+    if (sbEl && prevScrollPosition) sbEl.scrollTop = prevScrollPosition
+  }
+})
+
+onBeforeUnmount(() => {
+  if (props.isSubPanel) {
+    const spId = `${Sidebar.activePanelId}history`
+    const sbEl = scrollBox.value?.getScrollBox()
+    if (sbEl?.scrollTop !== undefined) {
+      Sidebar.scrollPositions[spId] = sbEl.scrollTop
     }
   }
 })
@@ -74,16 +91,16 @@ const isHidden = computed(() => {
   )
 })
 
-const isFiltering = computed<boolean>(() => !!Search.reactive.value && !History.reactive.loading)
+const isFiltering = computed<boolean>(() => Search.reactive.active && !History.reactive.loading)
 
 function toggleHistoryGroup(e: MouseEvent, index: number): void {
   if (e.altKey) {
-    const value = !state.expandedHistoryDays[index]
+    const value = !History.reactive.expandedHistoryDays[index]
     for (let i = 0; i < History.reactive.days.length; i++) {
-      state.expandedHistoryDays[i] = value
+      History.reactive.expandedHistoryDays[i] = value
     }
   } else {
-    state.expandedHistoryDays[index] = !state.expandedHistoryDays[index]
+    History.reactive.expandedHistoryDays[index] = !History.reactive.expandedHistoryDays[index]
   }
 }
 

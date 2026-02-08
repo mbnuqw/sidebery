@@ -3,7 +3,8 @@ import path from 'path'
 import fs from 'fs'
 import esbuild from 'esbuild'
 import { parse, compileTemplate, compileScript } from '@vue/compiler-sfc'
-import { IS_DEV, ADDON_PATH, VUE_DIST } from './utils.js'
+import { IS_DEV, ADDON_PATH, VUE_DIST, BUNDLE_VUE, KEEP_NAMES } from './utils.js'
+import { IIFE_BANNER_WITH_REINJECT_GUARD, IIFE_FOOTER } from './utils.js'
 import { treeToList, getTSConfig, colorize, watch, log, logOk, logErr } from './utils.js'
 
 const forChromium = process.argv.includes('--chromium')
@@ -11,10 +12,6 @@ const SRC_DIR = './src'
 const OUTPUT_DIR = ADDON_PATH
 const NORM_SRC_DIR = path.normalize(SRC_DIR)
 const TS_CONFIG = getTSConfig()
-const IIFE_BANNER_WITH_REINJECT_GUARD = `"use strict";\n(() => {
-if (window.sideberyInjected) return;
-else window.sideberyInjected = true;`
-const IIFE_FOOTER = '})();'
 const BUNDLES = {
   'src/injections/group.ts': {
     format: 'esm',
@@ -29,24 +26,26 @@ const BUNDLES = {
   'src/injections/tab-preview.ts': { format: 'iife' },
   'src/popup.tab-preview/tab-preview.ts': true,
 }
-const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
+const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?(\.ts)?"/g
 const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
 const PROD_ESBUILD_BASE_CONF = {
   tsconfig: 'tsconfig.json',
   charset: 'utf8',
+  minifyIdentifiers: !KEEP_NAMES,
   minifyWhitespace: true,
   minifySyntax: true,
   treeShaking: true,
   bundle: true,
   format: 'esm',
   define: ESBUILD_DEFINE,
+  dropLabels: ['DEV', 'TEST'],
 }
 
 function fixModuleImports(data) {
-  return data.replace(IMPORT_RE, (match, p1, p2, p3, p4, p5) => {
+  return data.replace(IMPORT_RE, (match, p1, p2, p3, p4, p5, p6) => {
     if (p4 === 'src') return `${p1}${p2}port ${p3} from '${p5}.js'`
-    else if (p4 === 'vue') return `${p1}${p2}port ${p3} from '/vendor/${VUE_DIST}'`
-    else return `${p1}${p2}port ${p3} from '${p4}${p5}.js'`
+    if (!BUNDLE_VUE && p4 === 'vue') return `${p1}${p2}port ${p3} from '/vendor/${VUE_DIST}'`
+    return `${p1}${p2}port ${p3} from '${p4}${p5}.js'`
   })
 }
 
@@ -97,9 +96,11 @@ async function getSrcFiles() {
 const vueComponentsPlugin = {
   name: 'vueComponentsPlugin',
   setup: build => {
-    build.onResolve({ filter: /^vue$/ }, () => {
-      return { path: `/vendor/${VUE_DIST}`, external: true }
-    })
+    if (!BUNDLE_VUE) {
+      build.onResolve({ filter: /^vue$/ }, () => {
+        return { path: `/vendor/${VUE_DIST}`, external: true }
+      })
+    }
 
     build.onResolve({ filter: /.*\.vue$/ }, args => {
       const impDir = path.dirname(args.importer)

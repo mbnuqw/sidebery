@@ -1,9 +1,9 @@
 /* eslint no-console: off */
-import { UrlPageInitData } from 'src/services/tabs.bg.actions'
+import type { ParsedTheme, SrcVars } from 'src/services/styles'
+import { UrlPageInitData } from 'src/services/tabs.bg'
 import { toCSSVarName } from 'src/utils'
 import * as Logs from 'src/services/logs'
-import { InstanceType } from 'src/types'
-import { ParsedTheme, SrcVars } from 'src/services/styles'
+import { InstanceType } from 'src/enums'
 
 function waitDOM(): Promise<void> {
   return new Promise(res => {

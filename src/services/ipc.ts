@@ -1,9 +1,8 @@
-import { AnyFunc, Actions, Message, InstanceType, ActionsKeys } from 'src/types'
-import { ActionsType } from 'src/types'
+import { AnyFunc, Actions, Message, ActionsKeys, ActionsType } from 'src/types'
+import { InstanceType } from 'src/enums'
 import { NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
-import { getInstanceName } from './info.actions'
-import { Windows } from './windows'
+import * as Info from 'src/services/info'
 import { GroupMsg } from 'src/injections/group.ipc'
 
 export interface PortNameData {
@@ -177,7 +176,7 @@ export function connectTo(
   const toPanelConfig = dstType === InstanceType.panelConfig
   const toGroup = dstType === InstanceType.group
   const toPreview = dstType === InstanceType.preview
-  const dbgPrefix = `IPC.connectTo(${getInstanceName(dstType)}):`
+  const dbgPrefix = `IPC.connectTo(${Info.getInstanceName(dstType)}):`
 
   // Check destination id
   let id
@@ -369,26 +368,6 @@ export function sendToSidebars<T extends InstanceType.sidebar, A extends Actions
     send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
   })
 }
-export function sendToLastFocusedSidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
-  action: A,
-  ...args: Parameters<ActionsType<T>[A]>
-): void {
-  if (state.sidebarConnections.size === 1) {
-    const [connection] = state.sidebarConnections.values()
-    if (connection) sidebar(connection.id, action, ...args)
-    return
-  }
-
-  if (Windows.lastFocusedWinId === undefined) {
-    sendToSidebars(action, ...args)
-    return
-  }
-
-  const win = Windows.byId[Windows.lastFocusedWinId]
-  if (win) {
-    sidebar(Windows.lastFocusedWinId, action, ...args)
-  }
-}
 
 /**
  * Sends message to setup page.
@@ -534,7 +513,7 @@ export async function request<T extends InstanceType, A extends ActionsKeys<T>>(
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   if (msg.dstType === undefined) return Promise.reject('IPC.request: No dstType')
   const dstType = msg.dstType
-  const dbgPrefix = `IPC.request ${getInstanceName(dstType)}: ${msg.action}:`
+  const dbgPrefix = `IPC.request ${Info.getInstanceName(dstType)}: ${msg.action}:`
 
   let id = NOID
   if (dstType === InstanceType.sidebar && msg.dstWinId !== undefined) id = msg.dstWinId
@@ -638,7 +617,7 @@ export async function request<T extends InstanceType, A extends ActionsKeys<T>>(
 
     // Wait confirmation
     const timeout = setTimeout(() => {
-      Logs.warn(`${dbgPrefix} No confirmation:`, getInstanceName(dstType), msg.action)
+      Logs.warn(`${dbgPrefix} No confirmation:`, Info.getInstanceName(dstType), msg.action)
 
       msgsWaitingForAnswer.delete(msgId)
 
@@ -680,7 +659,7 @@ function onConnect(port: browser.runtime.Port) {
   const srcType = portNameData.srcType
   const srcWinId = portNameData.srcWinId ?? NOID
   const srcTabId = portNameData.srcTabId ?? NOID
-  const dbgPrefix = `IPC.onConnect(${getInstanceName(srcType)}, ${srcWinId ?? srcTabId}):`
+  const dbgPrefix = `IPC.onConnect(${Info.getInstanceName(srcType)}, ${srcWinId ?? srcTabId}):`
   Logs.info(dbgPrefix)
 
   // Check connection data

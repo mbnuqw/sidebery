@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { Dialog } from 'src/types'
+import type { Dialog } from 'src/types'
 import ToggleField from 'src/components/toggle-field.vue'
 
 const props = defineProps<{ dialog: Dialog }>()

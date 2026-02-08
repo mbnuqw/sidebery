@@ -51,7 +51,7 @@
               .btn(v-else @click="openWindow(state.activeSnapshot, i, !win.private)").
                 {{translate('snapshot.btn_open_as_private_win')}}
             .panels(v-show="!win.folded")
-              .panel(v-for="panel in win.panels" :key="panel.id" :data-void="panel.id === -1")
+              .panel(v-for="panel in win.panels" :key="panel.id")
                 .panel-bar(:data-color="panel.color" :data-folded="panel.folded")
                   .drop-down-btn(@click="panel.folded = !panel.folded")
                     svg.exp-icon: use(href="#icon_expand")
@@ -91,36 +91,27 @@
 
 <script lang="ts" setup>
 import { computed, nextTick, reactive } from 'vue'
-import * as Utils from 'src/utils'
-import {
-  ItemInfo,
-  NormalizedSnapshot,
-  RemovingSnapshotResult,
-  SnapExportInfo,
-  SnapOpenType,
-  Snapshot,
-  SnapshotState,
-  SnapTabState,
-  Stored,
-} from 'src/types'
+import type * as T from 'src/types'
+import { SnapOpenType, RemovingSnapshotResult } from 'src/enums'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
+import * as Utils from 'src/utils'
+import * as Store from 'src/services/storage.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Snapshots from 'src/services/snapshots.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import { Windows } from 'src/services/windows'
-import { Store } from 'src/services/storage'
-import { Snapshots } from 'src/services/snapshots'
+import * as SetupPage from 'src/services/setup-page.fg'
 import DropDownButton from 'src/components/drop-down-button.vue'
 import SnapTab from './snapshots.tab.vue'
-import { SetupPage } from 'src/services/_services'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
 
 const dayStartMs = Utils.getDayStartMS()
 
 export interface SnapshotsViewerState {
-  snapshots: SnapshotState[]
-  activeSnapshot: SnapshotState | null
+  snapshots: T.SnapshotState[]
+  activeSnapshot: T.SnapshotState | null
   mouseUpShiftTabId: ID | null
   mouseUpShiftMode: boolean
 }
@@ -150,7 +141,7 @@ void (async function init(): Promise<void> {
   const snapshots = []
   let stored
   try {
-    stored = await browser.storage.local.get<Stored>('snapshots')
+    stored = await browser.storage.local.get<T.Stored>('snapshots')
   } catch (err) {
     return Logs.err('Snapshots.vue: init: Cannot get stored snapshots', err)
   }
@@ -170,7 +161,7 @@ void (async function init(): Promise<void> {
   Store.onKeyChange('snapshots', onSnapshotsChange)
 })()
 
-function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
+function onSnapshotsChange(newSnapshots?: T.Snapshot[]): void {
   if (!newSnapshots) newSnapshots = []
 
   SetupPage.updStorageInfo('snapshots', newSnapshots)
@@ -178,7 +169,7 @@ function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   updateSnapshots(newSnapshots)
 }
 
-function updateSnapshots(newSnapshots: Snapshot[]) {
+function updateSnapshots(newSnapshots: T.Snapshot[]) {
   const snapshots = []
 
   // Normalize snapshots
@@ -196,7 +187,7 @@ function updateSnapshots(newSnapshots: Snapshot[]) {
 }
 SetupPage.snapshotsViewer.refresh = updateSnapshots
 
-function activateSnapshot(snapshot?: SnapshotState): void {
+function activateSnapshot(snapshot?: T.SnapshotState): void {
   if (!snapshot || state.activeSnapshot === snapshot) return
   resetSelection(state.activeSnapshot)
   state.activeSnapshot = snapshot
@@ -223,7 +214,7 @@ function onHeaderWheel(e: WheelEvent): void {
   if (el) el.scrollIntoView(SCROLL_CONF)
 }
 
-function resetSelection(snapshot?: SnapshotState | null): void {
+function resetSelection(snapshot?: T.SnapshotState | null): void {
   if (!snapshot && state.activeSnapshot) snapshot = state.activeSnapshot
   if (!snapshot) return
 
@@ -246,10 +237,10 @@ function onClick() {
 async function openSelectedTabs(how: SnapOpenType): Promise<void> {
   if (!state.activeSnapshot) return
 
-  const items: ItemInfo[] = []
+  const items: T.ItemInfo[] = []
   for (const win of state.activeSnapshot.windows) {
     const ids: Record<ID, boolean> = {}
-    const tabsByLvl: Record<number, SnapTabState> = {}
+    const tabsByLvl: Record<number, T.SnapTabState> = {}
     for (const panel of win.panels) {
       for (const tab of panel.tabs) {
         if (tab.id === undefined) continue
@@ -257,7 +248,7 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
         if (!tab.sel) continue
         ids[tab.id] = true
 
-        const item: ItemInfo = {
+        const item: T.ItemInfo = {
           id: tab.id,
           url: tab.url,
           customTitle: tab.customTitle,
@@ -331,7 +322,7 @@ async function createSnapshot(): Promise<void> {
   await IPC.bg('createSnapshot')
 }
 
-async function openAllWindows(snapshot: SnapshotState | null): Promise<void> {
+async function openAllWindows(snapshot: T.SnapshotState | null): Promise<void> {
   if (!snapshot) return
 
   const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
@@ -344,7 +335,7 @@ async function openAllWindows(snapshot: SnapshotState | null): Promise<void> {
 }
 
 async function openWindow(
-  snapshot: SnapshotState | null,
+  snapshot: T.SnapshotState | null,
   winIndex: number,
   incognito: boolean
 ): Promise<void> {
@@ -359,7 +350,7 @@ async function openWindow(
   }
 }
 
-async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
+async function removeSnapshot(snapshot: T.SnapshotState): Promise<void> {
   const result = await IPC.bg('removeSnapshot', snapshot.id)
 
   if (result === RemovingSnapshotResult.Ok) {
@@ -389,7 +380,7 @@ async function recalcSizes(): Promise<void> {
   }
 }
 
-function getSnapInfo(s: SnapshotState): string {
+function getSnapInfo(s: T.SnapshotState): string {
   return (
     `${s.winCount} ${translate('snapshot.snap_win', s.winCount)} / ` +
     `${s.tabsCount} ${translate('snapshot.snap_tab', s.tabsCount)} / ` +
@@ -397,13 +388,13 @@ function getSnapInfo(s: SnapshotState): string {
   )
 }
 
-let exportInfo: SnapExportInfo | undefined
+let exportInfo: T.SnapExportInfo | undefined
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
 
-  const normActiveSnapshot: NormalizedSnapshot = {
+  const normActiveSnapshot: T.NormalizedSnapshot = {
     id: state.activeSnapshot.id,
     time: state.activeSnapshot.time,
     containers: state.activeSnapshot.containers,
@@ -455,7 +446,7 @@ function importSnapshot(importEvent: Event) {
       return Logs.err('Cannot import snapshot: Wrong file content')
     }
 
-    let snapshot: NormalizedSnapshot | undefined
+    let snapshot: T.NormalizedSnapshot | undefined
     try {
       snapshot = JSON.parse(jsonStr)
     } catch (err) {

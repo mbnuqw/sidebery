@@ -36,6 +36,28 @@
     "zh_TW": "開啟/關閉側邊欄面板",
     "ja": "サイドバーのパネルを開く/閉じる"
   },
+  "KbActivate": {
+    "en": "Activate/Apply",
+    "de": "Aktivieren/Anwenden",
+    "fr": "Activer/Appliquer",
+    "hu": "Aktiválás/Alkalmazás",
+    "pl": "Aktywuj/Zastosuj",
+    "ru": "Активировать/Применить",
+    "zh_CN": "激活/应用",
+    "zh_TW": "啟用/套用",
+    "ja": "有効化/適用"
+  },
+  "KbResetSelection": {
+    "en": "Cancel/Reset",
+    "de": "Abbrechen/Zurücksetzen",
+    "fr": "Annuler/Réinitialiser",
+    "hu": "Mégse/Visszaállítás",
+    "pl": "Anuluj/Resetuj",
+    "ru": "Отмена/Сброс",
+    "zh_CN": "取消/重置",
+    "zh_TW": "取消/重設",
+    "ja": "キャンセル/リセット"
+  },
   "KbSearch": {
     "en": "Search",
     "de": "Suche",
@@ -166,6 +188,28 @@
     "zh_CN": "切换到下一个面板",
     "zh_TW": "切換到下一個面板",
     "ja": "次のパネルに切り替え"
+  },
+  "KbLoopPanelsForwards": {
+    "en": "Loop through panels (Forwards)",
+    "de": "Durch die Panel schalten (vorwärts)",
+    "fr": "Boucle à travers les panneaux (vers l'avant)",
+    "hu": "Panelek áttekintése (előre)",
+    "pl": "Cyklicznie przełączać się między panelami (do przodu)",
+    "ru": "Циклически переключаться по панелям (вперед)",
+    "zh_CN": "循环遍历面板（向前）",
+    "zh_TW": "循環遍歷面板（向前）",
+    "ja": "パネルを順に巡回する（順方向）"
+  },
+  "KbLoopPanelsBackwards": {
+    "en": "Loop through panels (Backwards)",
+    "de": "Durch die Panel schalten (rückwärts)",
+    "fr": "Boucle à travers les panneaux (à rebours)",
+    "hu": "Panelek áttekintése (visszafelé)",
+    "pl": "Cyklicznie przełączać się między panelami (wstecz)",
+    "ru": "Циклически переключаться по панелям (назад)",
+    "zh_CN": "循环遍历面板（倒序）",
+    "zh_TW": "循環遍歷面板（倒序）",
+    "ja": "パネルを順に巡回する（逆方向）"
   },
   "KbPrevPanel": {
     "en": "Switch to previous panel",
@@ -544,6 +588,17 @@
     "zh_TW": "向下選取區間",
     "ja": "下方向の範囲選択"
   },
+  "KbSelBranch": {
+    "en": "Select the whole branch of tabs",
+    "de": "Wählen Sie den gesamten Zweig der Tabs aus",
+    "fr": "Sélectionnez toute la branche d'onglets",
+    "hu": "Válassza ki a lapok teljes ágát",
+    "pl": "Zaznacz całą gałąź kart",
+    "ru": "Выделить всю ветвь вкладок",
+    "zh_CN": "选中整个标签页分支",
+    "zh_TW": "選取整個分頁標籤樹狀結構",
+    "ja": "タブの枝全体を選択する"
+  },
   "KbSelChildTabs": {
     "en": "Select child tabs",
     "de": "Untergeordnete Tabs auswählen",
@@ -565,28 +620,6 @@
     "zh_CN": "锁定/解锁选择",
     "zh_TW": "鎖定/解鎖選取",
     "ja": "選択のロック/ロック解除"
-  },
-  "KbResetSelection": {
-    "en": "Reset selection",
-    "de": "Auswahl zurücksetzen",
-    "fr": "Réinitialiser la sélection",
-    "hu": "A kijelölés megszüntetése",
-    "pl": "Resetuj zaznaczenie",
-    "ru": "Сбросить выделение",
-    "zh_CN": "重置选择",
-    "zh_TW": "取消選取",
-    "ja": "選択をリセット"
-  },
-  "KbActivate": {
-    "en": "Activate selection",
-    "de": "Auswahl aktivieren oder aktiven Tab-Zweig oder ausgewählten Lesezeichenordner ein-/ausklappen",
-    "fr": "Activer la sélection",
-    "hu": "A kijelölés aktiválása",
-    "pl": "Aktywuj zaznaczenie",
-    "ru": "Активировать выделенное или свернуть/развернуть ветку активной вкладки или выбранную папку закладок",
-    "zh_CN": "激活或折叠/展开选定的项目",
-    "zh_TW": "啟動或折疊/展開選定的項目",
-    "ja": "選択をアクティブ化または選択したブックマークフォルダを展開/折りたたむ"
   },
   "KbUnloadTabs": {
     "en": "Unload selected/active tabs",
@@ -687,15 +720,15 @@
     "ja": "非アクティブなブランチを折りたたむ"
   },
   "KbActPrevActTabC": {
-    "en": "Activate previously active tab when clicking on the active tab (Tab flip)",
-    "de": "Beim Klicken auf aktiven Tab Aktivierung umkehren",
-    "fr": "Cliquer sur l’onglet actif active l’onglet précédemment actif (Onglet revers)",
-    "hu": "Az aktív lapra kattintás aktiválja az előzőleg aktív lapot (lapváltogatás)",
-    "pl": "Aktywuj wcześniej aktywną kartę po wciśnięciu na aktywną kartę (Zamiana kart)",
-    "ru": "Активировать ранее активную вкладку при нажатии на активную вкладку",
-    "zh_CN": "在活动标签页和先前活动的标签页间交替",
-    "zh_TW": "在當前分頁和先前分頁間交替",
-    "ja": "アクティブなタブをクリックしたときに以前のアクティブなタブをアクティブ化する（タブの切り替え）"
+    "en": "Activate previously active tab (Tab flip)",
+    "de": "Zuvor aktive Tab aktivieren (Tabwechsel)",
+    "fr": "Activer l'onglet précédemment actif (Onglet revers)",
+    "hu": "Korábban aktív lap aktiválása (lapváltogatás)",
+    "pl": "Aktywuj poprzednio aktywną kartę (Zamiana kart)",
+    "ru": "Активировать ранее активную вкладку",
+    "zh_CN": "在当前和先前活动的标签页间交替",
+    "zh_TW": "在當前和先前分頁間交替",
+    "ja": "以前にアクティブだったタブをアクティブにする（タブ切り替え）"
   },
   "KbActPrevActTab": {
     "en": "Active tabs history: Back",

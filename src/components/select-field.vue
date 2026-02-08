@@ -3,10 +3,12 @@
   ref="rootEl"
   :data-inactive="props.inactive"
   :data-drop-down="dropDownOpen"
+  :data-changed="props.default !== undefined && props.default !== value"
   @mousedown="onMouseDown"
-  @contextmenu.stop.prevent=""
-  @blur="onBlur"
-  @keydown="onKeyDown")
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu"
+  @keydown="onKeyDown"
+  @blur="onBlur")
   .focus-fx
   .body
     .label {{translate(props.label)}}
@@ -20,6 +22,7 @@
       :icon="props.icon"
       :folded="folded"
       :preSelected="preSelected"
+      @dropdown-blur="onDropdownBlur"
       @update:value="select")
   .note(v-if="props.note") {{props.note}}
 </template>
@@ -27,8 +30,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { translate } from 'src/dict'
-import { SelectInputComponent } from 'src/types'
-import { Utils } from 'src/services/_services'
+import type { SelectInputComponent } from 'src/types'
+import * as Utils from 'src/utils'
 import SelectInput from './select-input.vue'
 
 type InputObjOpt = {
@@ -50,6 +53,8 @@ interface SelectFieldProps {
   noneOpt?: string | number
   note?: string
   folded?: boolean
+  dbg?: string
+  default?: any
 }
 
 const emit = defineEmits(['update:value'])
@@ -59,10 +64,27 @@ const preSelected = ref<string | number>(-1)
 const inputComponent = ref<SelectInputComponent | null>(null)
 const rootEl = ref<HTMLElement | null>(null)
 
+let rangeIsSelected = false
+
 function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (e.altKey && e.ctrlKey && e.button === 0) {
+    navigator.clipboard.writeText(props.dbg ?? '')
+    return
+  }
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
   if (props.inactive || !props.opts || Array.isArray(props.value)) return
   if (e.button === 0) switchOption(1)
   if (e.button === 2) switchOption(-1)
+}
+
+function onContextMenu(e: PointerEvent) {
+  if (props.inactive || rangeIsSelected || getSelection()?.type === 'Range') return
+  e.preventDefault()
 }
 
 function switchOption(dir: 1 | -1): void {
@@ -141,7 +163,7 @@ function select(option: string): void {
   if (rootEl.value) rootEl.value.tabIndex = -1
 }
 
-function onBlur(): void {
+function onDropdownBlur(): void {
   dropDownOpen.value = false
   if (inputComponent.value) inputComponent.value.close()
   if (rootEl.value) rootEl.value.tabIndex = -1
@@ -188,6 +210,10 @@ function onKeyDown(e: KeyboardEvent) {
       preSelect(-1)
     }
   }
+}
+
+function onBlur() {
+  dropDownOpen.value = false
 }
 
 const publicInterface: SelectInputComponent = {

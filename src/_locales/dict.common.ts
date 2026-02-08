@@ -71,7 +71,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróc',
     ru: 'Восстановить',
     zh_CN: '恢复',
-    zh_TW: '復原',
+    zh_TW: '回復',
     ja: '復元',
   },
   'btn.update': {
@@ -83,6 +83,17 @@ export const commonTranslations: Translations = {
     ru: 'Обновить',
     zh: '更新',
     ja: '更新',
+  },
+  'btn.grant_permissions': {
+    en: 'Grant permissions',
+    de: 'Berechtigungen erteilen',
+    fr: 'Accorder les permissions',
+    hu: 'Engedélyek megadása',
+    pl: 'Przyznaj uprawnienia',
+    ru: 'Предоставить разрешения',
+    zh_CN: '授予权限',
+    zh_TW: '授予權限',
+    ja: '権限を付与する',
   },
   'btn.yes': {
     en: 'Yes',
@@ -182,7 +193,7 @@ export const commonTranslations: Translations = {
     hu: 'A könyvjelzők eléréséhez engedély szükséges.',
     pl: 'Panel zakładek wymaga pozwolenia "Zakładki".',
     ru: 'Панель закладок требует разрешения "Закладки".',
-    zh_CN: '书签面板需要"书签"权限。',
+    zh_CN: '书签面板需要“书签”权限。',
     zh_TW: '書籤面板需要「書籤」權限。',
     ja: 'ブックマークパネルには「ブックマーク」権限が必要です。',
   },
@@ -219,7 +230,7 @@ export const commonTranslations: Translations = {
     hu: 'Az előzmények eléréséhez engedély szükséges.',
     pl: 'Panel historii wymaga pozwolenia "Historia".',
     ru: 'Панель истории требует разрешения "История".',
-    zh_CN: '历史面板需要"历史"权限。',
+    zh_CN: '历史面板需要“历史”权限。',
     zh_TW: '歷史面板需要「歷史」權限。',
     ja: '履歴パネルには「履歴」権限が必要です。',
   },
@@ -593,7 +604,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróć z folderu zakładek',
     ru: 'Восстановить из папки закладок',
     zh_CN: '从书签文件夹恢复',
-    zh_TW: '從書籤資料夾復原',
+    zh_TW: '從書籤資料夾回復',
     ja: 'ブックマークフォルダから復元',
   },
   'popup.bookmarks.convert_title': {
@@ -936,7 +947,7 @@ export const commonTranslations: Translations = {
     hu: n => `…újranyitás ebben a konténerben: ${n}`,
     pl: n => `...otwórz ponownie w kontenrze "${n}"`,
     ru: n => `...открыть ee в контейнере "${n}"`,
-    zh_CN: n => `...在 "${n}" 容器中重新打开它`,
+    zh_CN: n => `...在“${n}”容器中重新打开它`,
     zh_TW: n => `...在「${n}」容器中重新開啟它`,
     ja: n => `...「${n}」コンテナで再度開く`,
   },
@@ -947,7 +958,7 @@ export const commonTranslations: Translations = {
     hu: n => `…és a jelenlegi konténere „${n}”, akkor újranyitás az alapértelmezett konténerben.`,
     pl: n => `...i jest w kontenerze "${n}", otwórz w domyślnym kontenerze.`,
     ru: n => `...и она находится в контейнере "${n}", открыть ее в контейнере по умолчанию.`,
-    zh_CN: n => `...而它在 "${n}" 容器中，在默认容器中重新打开它。`,
+    zh_CN: n => `...而它在“${n}”容器中，在默认容器中重新打开它。`,
     zh_TW: n => `...而它在「${n}」容器中，則在預設容器中重新開啟它。`,
     ja: n => `...かつそれが「${n}」コンテナにある場合、デフォルトコンテナで再度開きます。`,
   },
@@ -1081,13 +1092,13 @@ export const commonTranslations: Translations = {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
     },
-    zh_CN: tabsCount => `打开缓存窗口（${tabsCount} 个标签页）`,
-    zh_TW: tabsCount => `開啟快取視窗（${tabsCount} 個分頁）`,
+    zh_CN: tabsCount => `打开已缓存窗口（${tabsCount} 个标签页）`,
+    zh_TW: tabsCount => `開啟已快取視窗（${tabsCount} 個分頁）`,
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Open cached window',
-    zh_CN: '打开缓存窗口',
-    zh_TW: '開啟快取視窗',
+    zh_CN: '打开已缓存窗口',
+    zh_TW: '開啟已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
     en: (tabsCount, panelsCount) => {
@@ -1552,7 +1563,7 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_window_': {
     en: 'Move to window...',
     de: 'Verschieben in Fenster...',
-    fr: 'Déplacer vers une nouvelle fenêtre…',
+    fr: 'Déplacer vers une fenêtre existante…',
     hu: 'Áthelyezés ide: ablak…',
     pl: 'Przenieś do okna...',
     ru: 'Переместить в окно...',
@@ -1936,7 +1947,7 @@ export const commonTranslations: Translations = {
   'menu.tab.discard': {
     en: 'Unload',
     de: 'Entladen',
-    fr: 'Actualiser',
+    fr: 'Décharger',
     hu: 'Kisöprés',
     pl: 'Uśpij',
     ru: 'Выгрузить',
@@ -2247,7 +2258,7 @@ export const commonTranslations: Translations = {
     hu: 'Másodpéldányok bezárása',
     pl: 'Zamknij zduplikowane karty',
     ru: 'Закрыть дубликаты',
-    zh_CN: '关闭复制标签页',
+    zh_CN: '关闭重复的标签页',
     zh_TW: '關閉重複分頁',
     ja: '重複タブを閉じる',
   },
@@ -2281,7 +2292,7 @@ export const commonTranslations: Translations = {
     pl: 'Przywróć z zakładek',
     ru: 'Восстановить из закладок',
     zh_CN: '从书签中恢复',
-    zh_TW: '從書籤中復原',
+    zh_TW: '從書籤中回復',
     ja: 'ブックマークから復元',
   },
   'menu.tabs_panel.convert_to_bookmarks_panel': {
@@ -2375,9 +2386,14 @@ export const commonTranslations: Translations = {
   },
   'menu.copy_by_templates': {
     en: 'Copy by templates...',
+    de: 'Kopieren nach Vorlagen...',
     fr: 'Copier avec modèle…',
+    hu: 'Másolás sablonok alapján...',
+    pl: 'Kopiowanie według szablonów...',
+    ru: 'Копирование по шаблонам...',
     zh_CN: '通过模板复制...',
     zh_TW: '透過範本複製...',
+    ja: 'テンプレートによるコピー...',
   },
   'menu.copy_by_template': {
     en: name => 'Copy ' + name,
@@ -2774,6 +2790,28 @@ export const commonTranslations: Translations = {
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
     zh_CN: '扩展没有在隐私窗口中运行的权限',
     zh_TW: '擴充套件沒有於隱私視窗中執行的權限',
+  },
+
+  // ---
+  // -- Omnibox
+  // -
+  'omnibox.default_suggestion': {
+    en: 'Choose the command (default is the first one):',
+  },
+  'omnibox.reopen_in_ctr': {
+    en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
+  },
+  'omnibox.reopen_in_ctr.default_ctr_name': {
+    en: 'Default container',
+  },
+  'omnibox.move_to_panel': {
+    en: panelName => `↔ Move an active tab to "${panelName}" panel`,
+  },
+  'omnibox.switch_to_panel': {
+    en: panelName => `⮞ Switch to "${panelName}" panel`,
+  },
+  'omnibox.move_to_tab': {
+    en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
   },
 }
 

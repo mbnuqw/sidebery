@@ -38,14 +38,14 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import { translate } from 'src/dict'
+import type { TextInputComponent, Container } from 'src/types'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS } from 'src/defaults'
+import { translate } from 'src/dict'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Containers from 'src/services/containers'
+import * as Popups from 'src/services/popups.fg'
 import TextInput from 'src/components/text-input.vue'
 import SelectInput from 'src/components/select-input.vue'
-import { SetupPage } from 'src/services/_services'
-import { TextInputComponent, Container } from 'src/types'
-import { Containers } from 'src/services/containers'
-import * as Popups from 'src/services/popups'
 
 const titleInput = ref<TextInputComponent | null>(null)
 

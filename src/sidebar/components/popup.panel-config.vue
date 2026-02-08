@@ -37,16 +37,16 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+import type * as T from 'src/types'
 import * as Utils from 'src/utils'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
 import { translate } from 'src/dict'
-import { Sidebar } from 'src/services/sidebar'
+import * as Sidebar from 'src/services/sidebar.fg'
 import { PANEL_ICON_OPTS, COLOR_OPTS } from 'src/defaults'
+import * as SidebarConfig from 'src/services/sidebar-config'
+import * as Settings from 'src/services/settings'
 import TextInput from 'src/components/text-input.vue'
 import SelectInput from 'src/components/select-input.vue'
-import { SidebarConfig } from 'src/services/_services'
-import { InputOption, TextInputComponent, TabsPanelConfig, BookmarksPanelConfig } from 'src/types'
-import { Settings } from 'src/services/settings'
 
 const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: '#icon_tabs' }, ...PANEL_ICON_OPTS]
 const BOOKMARKS_PANEL_ICON_OPTS = [
@@ -54,7 +54,7 @@ const BOOKMARKS_PANEL_ICON_OPTS = [
   ...PANEL_ICON_OPTS,
 ]
 
-const titleInput = ref<TextInputComponent | null>(null)
+const titleInput = ref<T.TextInputComponent | null>(null)
 
 onMounted(() => {
   titleInput.value?.focus()
@@ -81,7 +81,7 @@ const popupTitle = computed<string>(() => {
   return ''
 })
 
-const iconsOpts = computed<InputOption[]>(() => {
+const iconsOpts = computed<T.InputOption[]>(() => {
   if (!Popups.reactive.panelConfigPopup) return []
   const popup = Popups.reactive.panelConfigPopup
 
@@ -129,9 +129,9 @@ function onSave(): void {
     const isTabsPanel = Utils.isTabsPanel(popup.config)
     const isBookmarksPanel = Utils.isBookmarksPanel(popup.config)
     if (isTabsPanel) {
-      panel = Sidebar.createTabsPanel(popup.config as TabsPanelConfig)
+      panel = Sidebar.createTabsPanel(popup.config as T.TabsPanelConfig)
     } else if (isBookmarksPanel) {
-      panel = Sidebar.createBookmarksPanel(popup.config as BookmarksPanelConfig)
+      panel = Sidebar.createBookmarksPanel(popup.config as T.BookmarksPanelConfig)
     } else {
       return
     }

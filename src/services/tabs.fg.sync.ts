@@ -1,10 +1,13 @@
 import { CONTAINER_ID, NOID } from 'src/defaults'
-import { Logs, Sync, Utils } from './_services'
-import { Favicons } from './_services.fg'
-import { Tabs } from './tabs.fg'
-import { Containers } from './containers'
-import { Sidebar } from './sidebar'
-import { SubPanelType } from 'src/types'
+import { SubPanelType } from 'src/enums'
+import * as Utils from 'src/utils'
+import * as Sync from 'src/services/sync.fg'
+import * as Logs from 'src/services/logs'
+import * as Info from 'src/services/info'
+import * as Favicons from 'src/services/favicons.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Containers from 'src/services/containers'
+import * as Sidebar from 'src/services/sidebar.fg'
 
 export async function sync(ids: ID[]) {
   Logs.info('TabsSync.sync():', ids)
@@ -16,7 +19,7 @@ export async function sync(ids: ID[]) {
     time: Date.now(),
     tabs: [],
     containers: {},
-    profileId: Sync.getProfileId(),
+    profileId: Info.getProfileId(),
   }
   Tabs.sortTabIds(ids)
   for (const tabId of ids) {

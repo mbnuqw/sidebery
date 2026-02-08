@@ -35,25 +35,25 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue'
-import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
-import { DragType, DragInfo, DropType } from 'src/types'
-import { Settings } from 'src/services/settings'
-import * as Selection from 'src/services/selection'
-import { Menu } from 'src/services/menu'
-import { Tabs } from 'src/services/tabs.fg'
-import { Mouse } from 'src/services/mouse'
-import { Containers } from 'src/services/containers'
-import { CONTAINER_ID, DOMAIN_RE, INITIAL_TITLE_RE, NEWID } from 'src/defaults'
-import { DEFAULT_CONTAINER_ID } from 'src/defaults'
-import * as Favicons from 'src/services/favicons.fg'
+import type { PropType } from 'vue'
+import { computed } from 'vue'
+import type { DragInfo, Container, DstPlaceInfo, ItemInfo, Tab, TabsPanel } from 'src/types'
+import { MenuType, DragType, DropType } from 'src/enums'
+import * as D from 'src/defaults'
+import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
+import * as Settings from 'src/services/settings'
+import * as Selection from 'src/services/selection.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as Containers from 'src/services/containers'
+import * as Favicons from 'src/services/favicons.fg'
 import * as Logs from 'src/services/logs'
 import * as IPC from 'src/services/ipc'
-import { Windows } from 'src/services/windows'
-import { translate } from 'src/dict'
-import { DnD } from 'src/services/drag-and-drop'
-import { Sidebar } from 'src/services/sidebar'
+import * as Windows from 'src/services/windows.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
 
 interface NewTabBtn {
   id: string
@@ -116,7 +116,7 @@ const btns = computed<NewTabBtn[]>(() => {
       part = part.trim()
 
       // Url?
-      const domain = DOMAIN_RE.exec(part)?.[1]
+      const domain = D.DOMAIN_RE.exec(part)?.[1]
       if (domain) {
         btn.url = part
         btn.domain = domain
@@ -126,8 +126,8 @@ const btns = computed<NewTabBtn[]>(() => {
 
       // Container?
       if (!container) {
-        if (part === DEFAULT_CONTAINER_ID) {
-          btn.containerId = CONTAINER_ID
+        if (part === D.DEFAULT_CONTAINER_ID) {
+          btn.containerId = D.CONTAINER_ID
           btn.containerName = translate('newTabBar.default_container_name')
           if (!btn.title) btn.title = btn.containerName
         } else {
@@ -145,7 +145,7 @@ const btns = computed<NewTabBtn[]>(() => {
     if (btn.domain) btn.icon = Favicons.reactive.byDomains[btn.domain]
     if (!btn.icon && btn.url) btn.icon = Favicons.getFavPlaceholder(btn.url)
     if (!btn.icon && container) btn.icon = '#' + container.icon
-    if (!btn.icon && btn.containerId === CONTAINER_ID) btn.icon = '#icon_ff'
+    if (!btn.icon && btn.containerId === D.CONTAINER_ID) btn.icon = '#icon_ff'
 
     btn.tooltip = createTooltip(btn)
 
@@ -346,7 +346,7 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   if (targetTabs.some(t => t.panelId !== props.panel.id)) return
 
   const targetContainerId =
-    btn?.id === 'default' ? (btn?.containerId ?? CONTAINER_ID) : btn?.containerId
+    btn?.id === 'default' ? (btn?.containerId ?? D.CONTAINER_ID) : btn?.containerId
   const toReopen: ItemInfo[] = []
   for (const tab of targetTabs) {
     // Updating url
@@ -357,7 +357,7 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
     else if (targetContainerId && tab.cookieStoreId !== targetContainerId) {
       const info: ItemInfo = Utils.cloneObject(tab)
       if (btn?.url) info.url = btn.url
-      else if (info.url === 'about:blank' && tab.title && INITIAL_TITLE_RE.test(tab.title)) {
+      else if (info.url === 'about:blank' && tab.title && D.INITIAL_TITLE_RE.test(tab.title)) {
         info.url = 'https://' + tab.title
       }
       if (info.url === 'about:blank') info.url = 'about:newtab'
@@ -391,7 +391,7 @@ function onDragStart(e: DragEvent, btn: NewTabBtn): void {
 
   const dragInfo: DragInfo = {
     type: DragType.NewTab,
-    items: [{ id: NEWID, container: btn.containerId, title: 'New tab', url: btn.url }],
+    items: [{ id: D.NEWID, container: btn.containerId, title: 'New tab', url: btn.url }],
     windowId: Windows.id,
     incognito: Windows.incognito,
     pinnedTabs: false,
@@ -399,6 +399,7 @@ function onDragStart(e: DragEvent, btn: NewTabBtn): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info

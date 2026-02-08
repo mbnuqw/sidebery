@@ -45,8 +45,8 @@
 
 <script lang="ts" setup>
 import { translate } from 'src/dict'
-import { Notification } from 'src/types'
-import { Notifications } from 'src/services/notifications'
+import type { Notification } from 'src/types'
+import * as Notifications from 'src/services/notifications.fg'
 
 const props = defineProps<{
   notification: Notification

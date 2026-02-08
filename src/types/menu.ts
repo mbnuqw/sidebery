@@ -10,15 +10,6 @@ export interface MenuConfs {
 }
 
 // Internal types
-export const enum MenuType {
-  Tabs = 1,
-  Bookmarks = 2,
-  History = 3,
-  NewTab = 6,
-  TabsPanel = 7,
-  BookmarksPanel = 8,
-  Panel = 9,
-}
 export type MenuOptionType = 'option' | 'separator'
 export interface MenuOptionFlag {
   active?: boolean

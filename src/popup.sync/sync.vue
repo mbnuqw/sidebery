@@ -24,9 +24,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Sync } from 'src/services/_services'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Sync from 'src/services/sync.fg'
 import SyncPanel from 'src/sidebar/components/panel.sync.vue'
 import NotificationsPopup from 'src/sidebar/components/popup.notifications.vue'
 

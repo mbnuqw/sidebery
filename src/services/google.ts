@@ -1,5 +1,5 @@
-import { Logs } from './_services'
-import { Settings } from './settings'
+import * as Logs from 'src/services/logs'
+import * as Settings from 'src/services/settings'
 
 export * as Drive from './google.drive'
 

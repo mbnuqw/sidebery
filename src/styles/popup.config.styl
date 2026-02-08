@@ -1,0 +1,200 @@
+@import './utils'
+
+.ConfigPopup
+  position: relative
+  display: flex
+  width: calc(100% - 64px)
+  height: calc(100% - 32px)
+  flex-direction: column
+  overflow-y: auto
+  padding: 32px 32px 0 32px
+  &:after
+    content: ''
+    position: relative
+    width: 100%
+    height: 32px
+    flex-shrink: 0
+
+.ConfigPopup > h2
+.ConfigPopup > .title
+  position: relative
+  font-size: rem(28)
+  font-weight: 400
+  color: var(--toolbar-fg)
+  margin: 12px 12px 24px
+  padding: 0
+  input
+    width: calc(100% - 16px)
+    padding-left: 8px
+    padding-right: 8px
+
+.ConfigPopup .field
+  position: relative
+  padding: 0 0 16px
+
+.ConfigPopup .label
+  max-width: 70%
+
+.ConfigPopup .TextInput
+  line-height: 1.5
+
+.ConfigPopup .TextField.custom-icon .body
+  align-items: center
+
+.ConfigPopup  .TextField.custom-icon .-sub
+  margin-top: -8px
+  margin-bottom: 2px
+  .TextInput
+    margin-left: 0
+
+.ConfigPopup .TextField.custom-icon .label
+  margin-right: auto
+
+.ConfigPopup .TextField.custom-icon .TextInput
+  margin: 8px 0 8px 32px
+  flex-grow: 1
+
+.ConfigPopup .TextField.custom-icon .img-box
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  width: 28px
+  height: 28px
+  margin: 0 0 0 16px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-top-left-radius: 4px
+    border-bottom-left-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+
+.ConfigPopup .TextField.custom-icon img
+  position: relative
+  width: 16px
+  height: 16px
+
+.ConfigPopup .TextField.custom-icon .img-rm
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 28px
+  height: 28px
+  margin-left: 1px
+  &:before
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: .16
+  &:after
+    background-color: #ff2200
+  > svg
+    position: relative
+    width: 18px
+    height: 18px
+    fill: var(--toolbar-fg)
+  &:hover:before
+  &:hover:after
+    opacity: .2
+  &:active:before
+  &:active:after
+    opacity: .1
+
+.ConfigPopup .TextField.custom-icon .btn
+  display: flex
+  align-items: center
+  font-size: rem(14)
+  padding: 0 8px
+  margin-left: 8px
+  height: 28px
+  cursor: default
+  &[data-active="true"]
+    color: var(--toolbar-fg-active)
+  &[data-active="true"]:before
+    opacity: .2
+    background-color: var(--toolbar-fg-active)
+
+.ConfigPopup .TextField.custom-icon .note
+  margin-top: 0
+
+.ConfigPopup .ctrls[data-inactive="true"]
+  opacity: .3
+  > .btn
+    cursor: default
+
+// Bookmarks root dir
+.ConfigPopup .InfoField.-folder
+  .value
+    margin: 8px 0
+    font-size: rem(14)
+    color: var(--toolbar-fg)
+  .ctrls
+    justify-content: flex-end
+    width: 100%
+    margin: 0
+  .btn
+    font-size: rem(14)
+    padding: 3px 8px
+    margin: 0
+
+.ConfigPopup .error-msg
+  position: relative
+  padding: 16px
+  font-size: rem(21)
+  font-weight: 700
+  color: var(--status-err)
+
+.ConfigPopup .error-note
+  position: relative
+  font-size: rem(14)
+  margin: -8px 0 16px
+  padding: 0
+  color: var(--status-err)
+  white-space: pre-wrap
+
+.ConfigPopup .btn
+  overflow: visible
+
+.ConfigPopup .btn .focus-fx
+.ConfigPopup .img-rm .focus-fx
+  position: absolute
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  border-radius: 4px
+.ConfigPopup .btn:focus .focus-fx
+.ConfigPopup .img-rm:focus .focus-fx
+.ConfigPopup .btn:has(:focus) .focus-fx
+  box-shadow: 0 0 0 2px var(--toolbar-fg-active)
+
+.ConfigPopup .btn.-progress
+  cursor: progress
+
+.ConfigPopup .ctrls .LoadingDots
+  position: relative
+  width: auto
+
+.ConfigPopup .ToggleField[data-done="true"] .label:before
+  content: ''
+  position: absolute
+  width: 7px
+  height: 12px
+  top: calc(50% - 10px)
+  right: -20px
+  box-shadow: 2px 2px 0 0 var(--status-ok)
+  transform: rotateZ(45deg)

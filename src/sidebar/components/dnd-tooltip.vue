@@ -5,5 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import { DnD } from 'src/services/drag-and-drop'
+import * as DnD from 'src/services/drag-and-drop.fg'
 </script>

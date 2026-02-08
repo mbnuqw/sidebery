@@ -16,7 +16,7 @@
   :data-lvl="tab.reactive.lvl"
   :data-group="tab.reactive.isGroup"
   :data-parent="tab.reactive.isParent"
-  :data-folded="tab.reactive.folded && !Search.reactive.value"
+  :data-folded="tab.reactive.folded"
   :data-color="tab.reactive.containerColor"
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
@@ -74,6 +74,8 @@
       .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
+      draggable="true"
+      @dragstart.stop.prevent
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
@@ -83,21 +85,21 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
-import { DragInfo, DragItem, DragType, DropType, MenuType, Tab } from 'src/types'
-import { TabStatus } from 'src/types'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
-import * as Selection from 'src/services/selection'
-import { Menu } from 'src/services/menu'
-import { Sidebar } from 'src/services/sidebar'
-import { Tabs } from 'src/services/tabs.fg'
-import { Mouse } from 'src/services/mouse'
-import { DnD } from 'src/services/drag-and-drop'
-import { Search } from 'src/services/search'
+import type { DragInfo, DragItem, Tab } from 'src/types'
+import { TabStatus, DragType, DropType, MenuType } from 'src/enums'
+import * as Settings from 'src/services/settings'
+import * as Windows from 'src/services/windows.fg'
+import * as Selection from 'src/services/selection.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Search from 'src/services/search.fg'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
-import * as Preview from 'src/services/tabs.preview'
+import * as Preview from 'src/services/tabs.fg.preview'
 
 const props = defineProps<{ tabId: ID }>()
 const tab = Tabs.byId[props.tabId] as Tab
@@ -159,7 +161,7 @@ function tempLockCloseBtn(): void {
   clearTimeout(tempLockCloseBtnTimeout)
   tempLockCloseBtnTimeout = setTimeout(() => {
     closeLock = false
-  }, 1000)
+  }, 100)
 }
 function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
@@ -168,17 +170,46 @@ function onMouseDownClose(e: MouseEvent): void {
     Menu.close()
     return
   }
+
   if (Tabs.editableTabId === tab.id) {
-    tab.customTitle = tab.title
-  } else if (e.button === 0) {
+    Tabs.setEditingValue(tab.title)
+    Mouse.resetTarget()
+  }
+
+  tempLockCloseBtn()
+
+  // Prevent auto-scrolling with middle-btn
+  if (e.button === 1) e.preventDefault()
+
+  if (!Settings.state.tabCloseOnMouseUp) closeBtnAction(e)
+}
+function onMouseUpClose(e: MouseEvent): void {
+  if (!Mouse.isTarget('tab.close', tab.id)) {
+    e.stopPropagation()
+    e.preventDefault()
+    Mouse.resetTarget()
+    Mouse.stopLongClick()
+    return
+  }
+  Mouse.resetTarget()
+  Mouse.stopLongClick()
+  Mouse.stopMultiSelection()
+  Selection.resetSelection()
+
+  if (Settings.state.tabCloseOnMouseUp) closeBtnAction(e)
+}
+function closeBtnAction(e: MouseEvent) {
+  if (e.button === 0) {
     if (shouldBeConvertedToGroup()) return convertToGroup()
     Tabs.removeTabs([tab.id])
+    e.preventDefault()
+    e.stopPropagation()
   } else if (e.button === 1) {
     if (Settings.state.tabCloseMiddleClick === 'close') {
       if (shouldBeConvertedToGroup()) return convertToGroup()
       Tabs.removeTabs([tab.id])
     } else if (Settings.state.tabCloseMiddleClick === 'discard') {
-      Tabs.discardTabs([tab.id])
+      Tabs.discardTabs([tab.id], true)
     } else if (Settings.state.tabCloseMiddleClick === 'discard_or_close') {
       discardOrCloseTabs([tab.id])
     }
@@ -186,13 +217,6 @@ function onMouseDownClose(e: MouseEvent): void {
   } else if (e.button === 2) {
     Tabs.removeBranches([tab.id])
   }
-  tempLockCloseBtn()
-}
-function onMouseUpClose(e: MouseEvent): void {
-  Mouse.resetTarget()
-  Mouse.stopLongClick()
-  Mouse.stopMultiSelection()
-  Selection.resetSelection()
 }
 
 function onMouseDown(e: MouseEvent): void {
@@ -254,7 +278,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (!Selection.isSet() && !Settings.state.activateOnMouseUp) activate()
 
-    Mouse.startLongClick(e, 'tab', tab.id, longClickFeedback)
+    Mouse.startLongClick(e, longClickFeedback)
   }
 
   // Middle
@@ -269,7 +293,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (e.ctrlKey) {
       if (Settings.state.tabMiddleClickCtrl === 'discard') {
-        Tabs.discardTabs(selectedTabs)
+        Tabs.discardTabs(selectedTabs, true)
         return
       } else if (Settings.state.tabMiddleClickCtrl === 'discard_or_close') {
         discardOrCloseTabs(selectedTabs)
@@ -288,7 +312,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (e.shiftKey) {
       if (Settings.state.tabMiddleClickShift === 'discard') {
-        Tabs.discardTabs(selectedTabs)
+        Tabs.discardTabs(selectedTabs, true)
         return
       } else if (Settings.state.tabMiddleClickShift === 'discard_or_close') {
         discardOrCloseTabs(selectedTabs)
@@ -307,7 +331,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (tab.pinned) {
       if (Settings.state.tabPinnedMiddleClick === 'discard') {
-        Tabs.discardTabs(selectedTabs)
+        Tabs.discardTabs(selectedTabs, true)
         return
       } else if (Settings.state.tabPinnedMiddleClick === 'close') {
         if (shouldBeConvertedToGroup()) convertToGroup()
@@ -332,7 +356,7 @@ function onMouseDown(e: MouseEvent): void {
         if (shouldBeConvertedToGroup()) convertToGroup()
         else Tabs.removeTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'discard') {
-        Tabs.discardTabs(selectedTabs)
+        Tabs.discardTabs(selectedTabs, true)
       } else if (Settings.state.tabMiddleClick === 'discard_or_close') {
         discardOrCloseTabs(selectedTabs)
       } else if (Settings.state.tabMiddleClick === 'duplicate') {
@@ -349,12 +373,36 @@ function onMouseDown(e: MouseEvent): void {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, tab.id)
     }
-    Mouse.startLongClick(e, 'tab', tab.id, longClickFeedback)
+    Mouse.startLongClick(e, longClickFeedback)
   }
 }
 
-function longClickFeedback(): void {
-  Tabs.triggerFlashAnimation(tab)
+function longClickFeedback(e: MouseEvent) {
+  let action
+  if (e.button === 0) {
+    action = Settings.state.tabLongLeftClick
+  } else if (e.button === 2) {
+    action = Settings.state.tabLongRightClick
+    Mouse.stopMultiSelection()
+    Selection.resetSelection()
+  }
+
+  let noop = false
+  if (action === 'reload') Tabs.reloadTabs([tab.id])
+  else if (action === 'discard') Tabs.discardTabs([tab.id], true)
+  else if (action === 'duplicate') Tabs.duplicateTabs([tab.id])
+  else if (action === 'dup_child') Tabs.duplicateTabs([tab.id], true)
+  else if (action === 'pin') Tabs.repinTabs([tab.id])
+  else if (action === 'mute') Tabs.remuteTabs([tab.id])
+  else if (action === 'clear_cookies') Tabs.clearTabsCookies([tab.id])
+  else if (action === 'new_after') Tabs.createTabAfter(tab.id)
+  else if (action === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
+  else if (action === 'edit_title' && !tab.pinned) Tabs.editTabTitle([tab.id])
+  else noop = true
+
+  if (!noop) Tabs.triggerFlashAnimation(tab)
+
+  return !noop
 }
 
 function onMouseUp(e: MouseEvent): void {
@@ -530,6 +578,7 @@ function onDragStart(e: DragEvent): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info
@@ -568,7 +617,7 @@ function onMouseEnter(e: MouseEvent) {
 
   if (Settings.state.previewTabs) {
     Preview.setTargetTab(props.tabId, e.clientY)
-  } else {
+  } else if (!Settings.state.forceUpdTooltip) {
     updateTooltipDebounced()
   }
 }
@@ -623,7 +672,7 @@ function discardOrCloseTabs(selectedTabs: ID[]): void {
   if (tab.discarded) {
     Tabs.removeTabs(selectedTabs)
   } else {
-    Tabs.discardTabs(selectedTabs)
+    Tabs.discardTabs(selectedTabs, true)
   }
 }
 
@@ -631,7 +680,7 @@ function discardOrCloseTabs(selectedTabs: ID[]): void {
  * Select this tab
  */
 function select(): void {
-  if (!tab.pinned && tab.isParent && tab.folded) {
+  if (!tab.pinned && tab.isParent && tab.folded && !Search.active) {
     Selection.selectTabsBranch(tab)
   } else {
     Selection.selectTab(tab.id)
@@ -642,7 +691,7 @@ let activating = false
 function activate(): void {
   if (Mouse.longClickApplied) return
 
-  if (Search.rawValue) {
+  if (Search.active && !Settings.state.searchTabSwitch) {
     Search.stop()
     Selection.resetSelection()
   }
@@ -698,7 +747,7 @@ function onError(): void {
 function onCustomTitleBlur(e: Event) {
   const titleInputEl = e.target as HTMLInputElement
 
-  Tabs.editableTabId = NOID
+  Tabs.setEditableTabId(NOID)
   tab.customTitle = titleInputEl.value
   tab.reactive.customTitleEdit = false
   Tabs.saveCustomTitle(tab.id)

@@ -23,12 +23,14 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
-import { PanelConfig } from 'src/types'
+import type { PanelConfig } from 'src/types'
 import { NOID } from 'src/defaults'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Logs, SidebarConfig, Popups } from 'src/services/_services'
-import { Bookmarks } from 'src/services/bookmarks'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups.fg'
+import * as SidebarConfig from 'src/services/sidebar-config'
+import * as Bookmarks from 'src/services/bookmarks.fg'
 import PanelConfigPopup from 'src/page.setup/components/popup.panel-config.vue'
 import NewTabShortcutsPopup from 'src/components/popup.new-tab-shortcuts.vue'
 import TabMoveRulesPopup from 'src/components/popup.tab-move-rules.vue'
@@ -47,6 +49,10 @@ onMounted(() => {
 
   // Select fields found by Firefox find
   document.addEventListener('selectionchange', () => {
+    // Handle this event only if document doesn't
+    // have focus (e.g. Firefox's Find input focused)
+    if (document.hasFocus()) return
+
     const selection = document.getSelection()
     if (selection?.type !== 'Range') return
 

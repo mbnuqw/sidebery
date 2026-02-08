@@ -13,15 +13,16 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { DropType, TabsPanel, WheelDirection } from 'src/types'
-import { Settings } from 'src/services/settings'
-import { Tabs } from 'src/services/tabs.fg'
-import { Mouse } from 'src/services/mouse'
-import { DnD } from 'src/services/drag-and-drop'
+import type * as T from 'src/types'
+import * as E from 'src/enums'
+import * as Settings from 'src/services/settings'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
 import Tab from './tab.vue'
 import { NOID } from 'src/defaults'
 
-const props = defineProps<{ panel?: TabsPanel }>()
+const props = defineProps<{ panel?: T.TabsPanel }>()
 const pinnedTabs = computed(() => {
   if (props.panel) return props.panel.reactive.pinnedTabIds
   else return Tabs.reactive.pinnedIds
@@ -33,7 +34,7 @@ const dropId = computed(() => {
 })
 const dropToEnd = computed(() => DnD.reactive.dstPin && dropId.value === NOID)
 
-const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
+const onWheel = Mouse.getWheelDebouncer(E.WheelDirection.Vertical, (e: WheelEvent) => {
   if (
     Settings.state.pinnedTabsPosition !== 'panel' &&
     Settings.state.scrollThroughTabs !== 'none'
@@ -41,13 +42,14 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
     const globaly = (Settings.state.scrollThroughTabs === 'global') !== e.shiftKey
     const cyclic = Settings.state.scrollThroughTabsCyclic !== e.ctrlKey
 
-    if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, true)
-    if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, true)
+    const globPin = Settings.state.scrollThroughTabsGlobPinIsolate ? true : undefined
+    if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, globPin)
+    else if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, globPin)
   }
 })
 
 function onDrop(): void {
-  DnD.reactive.dstType = DropType.Tabs
+  DnD.reactive.dstType = E.DropType.Tabs
   DnD.reactive.dstPin = true
 }
 </script>

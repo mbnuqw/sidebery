@@ -1,34 +1,38 @@
 import { createApp, reactive } from 'vue'
+import * as E from 'src/enums'
+import * as Info from 'src/services/info'
+import * as Sync from 'src/services/sync.fg'
+import * as SidebarConfig from 'src/services/sidebar-config'
+import * as Popups from 'src/services/popups.fg'
+import * as Logs from 'src/services/logs'
+import * as IPC from 'src/services/ipc'
+import * as Windows from 'src/services/windows.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Notifications from 'src/services/notifications.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Favicons from 'src/services/favicons.fg'
+import * as Store from 'src/services/storage.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
 import Root from './panel-config.vue'
-import { InstanceType } from 'src/types'
-import { Info } from 'src/services/info'
-import { IPC, Logs, Popups, SidebarConfig, Sync } from 'src/services/_services'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Windows } from 'src/services/windows'
-import { Notifications } from 'src/services/notifications'
-import { Containers } from 'src/services/containers'
-import { Permissions } from 'src/services/permissions'
-import { Favicons } from 'src/services/_services.fg'
-import { Store } from 'src/services/storage'
-import { Bookmarks } from 'src/services/bookmarks'
 
 async function main(): Promise<void> {
-  Info.setInstanceType(InstanceType.panelConfig)
-  IPC.setInstanceType(InstanceType.panelConfig)
-  Logs.setInstanceType(InstanceType.panelConfig)
+  Info.setInstanceType(E.InstanceType.panelConfig)
+  IPC.setInstanceType(E.InstanceType.panelConfig)
+  Logs.setInstanceType(E.InstanceType.panelConfig)
 
   Logs.info('Init start')
 
-  Settings.state = reactive(Settings.state)
-  Sync.initSync(reactive)
-  Styles.reactive = reactive(Styles.reactive)
-  Notifications.reactive = reactive(Notifications.reactive)
-  SidebarConfig.initSidebarConfig(reactive)
-  Containers.reactive = reactive(Containers.reactive)
-  Popups.initPopups(reactive)
-  Permissions.reactive = reactive(Permissions.reactive)
-  Bookmarks.reactive = reactive(Bookmarks.reactive)
+  Settings.reactivate(reactive)
+  Sync.reactivate(reactive)
+  Styles.reactivate(reactive)
+  Notifications.reactivate(reactive)
+  SidebarConfig.reactivate(reactive)
+  Containers.reactivate(reactive)
+  Popups.reactivate(reactive)
+  Permissions.reactivate(reactive)
+  Bookmarks.reactivate(reactive)
 
   IPC.registerActions({
     storageChanged: Store.storageChangeListener,
@@ -36,8 +40,8 @@ async function main(): Promise<void> {
   })
 
   await Promise.all([
-    Settings.loadSettings(),
-    Windows.loadWindowInfo(),
+    Settings.load(),
+    Windows.load(),
     Containers.load(),
     SidebarConfig.loadSidebarConfig(),
   ])
@@ -51,16 +55,16 @@ async function main(): Promise<void> {
   const app = createApp(Root)
   app.mount('#root_container')
 
-  Styles.initColorScheme()
+  Styles.load()
 
   Settings.setupSettingsChangeListener()
   SidebarConfig.setupSidebarConfigListeners()
 
-  Permissions.loadPermissions()
+  Permissions.load()
   Permissions.setupListeners()
 
-  Favicons.loadFavicons()
+  Favicons.load()
 
-  IPC.connectTo(InstanceType.bg)
+  IPC.connectTo(E.InstanceType.bg)
 }
 main()

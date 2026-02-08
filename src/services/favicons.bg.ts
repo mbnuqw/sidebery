@@ -2,7 +2,7 @@ import { FavDomain, Stored } from 'src/types'
 import * as Logs from 'src/services/logs'
 import * as IPC from 'src/services/ipc'
 import * as Utils from 'src/utils'
-import { Store } from 'src/services/storage'
+import * as Store from 'src/services/storage.bg'
 import { MAX_COUNT_LIMIT, MAX_IMG_SIZE, SHARD_SIZE } from './favicons'
 import { loadFaviconsData, resizeFavicon } from './favicons'
 
@@ -18,7 +18,7 @@ let domainsInfo: Record<string, FavDomain> = {}
 /**
  * Load favicons
  */
-export async function loadFavicons(): Promise<void> {
+export async function load(): Promise<void> {
   let favData
   try {
     favData = await loadFaviconsData()

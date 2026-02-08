@@ -77,35 +77,47 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import * as Utils from 'src/utils'
+import type * as T from 'src/types'
+import * as D from 'src/defaults'
+import * as E from 'src/enums'
 import { translate } from 'src/dict'
-import { BTN_ICONS, COLOR_NAMES, NOID } from 'src/defaults'
-import { NavItemClass, ButtonTypes, DragType, DropType, Tab, Panel } from 'src/types'
-import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
-import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
-import { Settings } from 'src/services/settings'
-import { Sidebar } from 'src/services/sidebar'
-import { Windows } from 'src/services/windows'
-import * as Selection from 'src/services/selection'
-import { Menu } from 'src/services/menu'
-import { Tabs } from 'src/services/tabs.fg'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Mouse } from 'src/services/mouse'
-import { DnD } from 'src/services/drag-and-drop'
-import { Search } from 'src/services/search'
-import { Snapshots } from 'src/services/snapshots'
+import * as Utils from 'src/utils'
+import * as Settings from 'src/services/settings'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Selection from 'src/services/selection.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Search from 'src/services/search.fg'
+import * as Snapshots from 'src/services/snapshots.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Popups from 'src/services/popups.fg'
+import * as Logs from 'src/services/logs'
+import * as Sync from 'src/services/sync.fg'
 import NavItemComponent from './nav-item.vue'
-import { Logs, Sync, Popups, SetupPage } from 'src/services/_services'
 
-const HIDDEN_PANELS_BTN: NavBtn = {
+const HIDDEN_PANELS_BTN: T.NavBtn = {
   id: 'hidden_panels_btn',
-  class: NavItemClass.btn,
-  type: ButtonType.hidden,
+  class: E.NavItemClass.btn,
+  type: E.ButtonType.hidden,
   iconSVG: 'icon_expand',
   name: translate('nav.show_hidden_tooltip'),
   tooltip: translate('nav.show_hidden_tooltip'),
 }
 const MIN_INLINE_STATIC_BTNS_LEN = 1
+
+const ButtonTypes: Record<string, E.ButtonType> = {
+  settings: E.ButtonType.settings,
+  search: E.ButtonType.search,
+  add_tp: E.ButtonType.add_tp,
+  hidden: E.ButtonType.hidden,
+  collapse: E.ButtonType.collapse,
+  create_snapshot: E.ButtonType.create_snapshot,
+  remute_audio_tabs: E.ButtonType.remute_audio_tabs,
+}
 
 let droppedOnPanel = false
 
@@ -121,10 +133,10 @@ if (Settings.state.navBarLayout === 'horizontal') {
 }
 
 interface Nav {
-  visibleItems: NavItem[]
-  hiddenPanels?: NavItem[]
-  visibleStaticButtons?: NavBtn[]
-  hiddenStaticButtons?: NavBtn[]
+  visibleItems: T.NavItem[]
+  hiddenPanels?: T.NavItem[]
+  visibleStaticButtons?: T.NavBtn[]
+  hiddenStaticButtons?: T.NavBtn[]
   inlineOverflowed?: boolean
   visibleItemsMax?: number
 }
@@ -179,16 +191,22 @@ const nav = computed<Nav | undefined>(() => {
       if (isSearch && Settings.state.searchBarMode !== 'dynamic') continue
 
       if (isSpace) {
-        nav.visibleItems.push({ id, class: NavItemClass.space, type: SpaceType.dynamic })
+        nav.visibleItems.push({ id, class: E.NavItemClass.space, type: E.SpaceType.dynamic })
       } else if (isDelimiter) {
-        nav.visibleItems.push({ id, class: NavItemClass.space, type: SpaceType.static })
+        nav.visibleItems.push({ id, class: E.NavItemClass.space, type: E.SpaceType.static })
       } else {
         const type = ButtonTypes[id]
         if (!type) continue
 
         const name = translate(`nav.btn_${id}`)
 
-        nav.visibleItems.push({ id, class: NavItemClass.btn, type, name, iconSVG: BTN_ICONS[id] })
+        nav.visibleItems.push({
+          id,
+          class: E.NavItemClass.btn,
+          type,
+          name,
+          iconSVG: D.BTN_ICONS[id],
+        })
       }
     }
   }
@@ -237,7 +255,7 @@ const nav = computed<Nav | undefined>(() => {
         const type = ButtonTypes[id]
         if (!type) continue
 
-        const btn = { id, class: NavItemClass.btn, type, iconSVG: BTN_ICONS[id], name }
+        const btn = { id, class: E.NavItemClass.btn, type, iconSVG: D.BTN_ICONS[id], name }
         if (nav.visibleStaticButtons.length < max) nav.visibleStaticButtons.unshift(btn)
         else nav.hiddenStaticButtons.unshift(btn)
       }
@@ -275,7 +293,8 @@ onMounted(() => {
     Sidebar.registerHorizontalNavBarEl(el.value)
     Sidebar.reactive.horNavWidth = el.value.offsetWidth
   }
-  Sidebar.selectPanel = selectPanel
+  Sidebar.setSelectPanelFn(selectPanel)
+  Sidebar.setScrollHiddenPanelsPopupToFn(scrollHiddenPanelsPopupTo)
 })
 
 function selectPanel(dir: 1 | -1) {
@@ -291,7 +310,7 @@ function selectPanel(dir: 1 | -1) {
     selPanelId = Sidebar.activePanelId
   }
 
-  const selectedPanel: Panel | undefined = Sidebar.panelsById[selPanelId]
+  const selectedPanel: T.Panel | undefined = Sidebar.panelsById[selPanelId]
   if (!selectedPanel) return
 
   Menu.close()
@@ -310,7 +329,7 @@ function selectPanel(dir: 1 | -1) {
       hiddenPanelsAdded = true
       continue
     }
-    if (el.class !== NavItemClass.panel) continue
+    if (el.class !== E.NavItemClass.panel) continue
     if (isOverflowedInline && getBtnInlineIndex(i) === -1) {
       overflowed.push({ id: el.id, hidden: true })
     } else {
@@ -414,7 +433,7 @@ function getBtnInlineIndex(index: number): number {
   else return -1
 }
 
-const onNavWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
+const onNavWheel = Mouse.getWheelDebouncer(E.WheelDirection.Vertical, (e: WheelEvent) => {
   if (Settings.state.navSwitchPanelsWheel) {
     if (e.deltaY > 0) return Sidebar.switchPanel(1, true)
     if (e.deltaY < 0) return Sidebar.switchPanel(-1, true)
@@ -422,14 +441,14 @@ const onNavWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEve
 })
 
 function onDrop(e: DragEvent): void {
-  if (!droppedOnPanel) DnD.reactive.dstType = DropType.Nowhere
+  if (!droppedOnPanel) DnD.reactive.dstType = E.DropType.Nowhere
   droppedOnPanel = false
 }
 
 /**
  * Handle context menu event
  */
-function onNavCtxMenu(e: MouseEvent, item: NavItem) {
+function onNavCtxMenu(e: MouseEvent, item: T.NavItem) {
   if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     e.stopPropagation()
     e.preventDefault()
@@ -447,16 +466,16 @@ function onNavCtxMenu(e: MouseEvent, item: NavItem) {
   let nativeCtx = { showDefaults: false }
   browser.menus.overrideContext(nativeCtx)
 
-  let type: MenuType
-  if (panel.type === PanelType.bookmarks) type = MenuType.BookmarksPanel
-  else if (panel.type === PanelType.tabs) type = MenuType.TabsPanel
-  else type = MenuType.Panel
+  let type: E.MenuType
+  if (panel.type === E.PanelType.bookmarks) type = E.MenuType.BookmarksPanel
+  else if (panel.type === E.PanelType.tabs) type = E.MenuType.TabsPanel
+  else type = E.MenuType.Panel
 
   if (!Selection.isSet()) Selection.selectNavItem(panel.id)
   Menu.open(type)
 }
 
-async function onNavMouseDown(e: MouseEvent, item: NavItem) {
+async function onNavMouseDown(e: MouseEvent, item: T.NavItem) {
   if (Utils.isNavSpace(item)) return Mouse.resetTarget()
   Mouse.setTarget('nav', item.id)
   Menu.close()
@@ -464,7 +483,7 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
 
   // Middle click action
   if (e.button === 1) {
-    if (item.type === PanelType.tabs) {
+    if (item.type === E.PanelType.tabs) {
       const panel = Sidebar.panelsById[item.id]
       if (!Utils.isTabsPanel(panel)) return
 
@@ -498,7 +517,9 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
 
       // Discard(unload) tabs
       if (Settings.state.navTabsPanelMidClickAction === 'discard') {
-        const ids = panel.tabs.map(t => t.id)
+        const ids: ID[] = []
+        panel.pinnedTabs.forEach(t => ids.push(t.id))
+        panel.tabs.forEach(t => ids.push(t.id))
         if (ids.length) Tabs.discardTabs(ids)
       }
 
@@ -525,7 +546,7 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
       }
     }
 
-    if (item.type === PanelType.bookmarks) {
+    if (item.type === E.PanelType.bookmarks) {
       const panel = Sidebar.panelsById[item.id]
       if (!Utils.isBookmarksPanel(panel)) return
 
@@ -538,15 +559,15 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
     }
 
     // TODO: tmp shit, remove/update later
-    if (item.type === PanelType.sync) {
+    if (item.type === E.PanelType.sync) {
       Sync.openSyncPopup()
     }
 
-    if (item.type === ButtonType.create_snapshot) SetupPage.open('snapshots')
+    if (item.type === E.ButtonType.create_snapshot) SetupPage.open('snapshots')
 
-    if (item.type === ButtonType.remute_audio_tabs) {
-      const pausedTabs: Tab[] = []
-      const audibleTabs: Tab[] = []
+    if (item.type === E.ButtonType.remute_audio_tabs) {
+      const pausedTabs: T.Tab[] = []
+      const audibleTabs: T.Tab[] = []
       for (const tab of Tabs.list) {
         if (tab.mediaPaused) pausedTabs.push(tab)
         else if (tab.audible) audibleTabs.push(tab)
@@ -556,24 +577,24 @@ async function onNavMouseDown(e: MouseEvent, item: NavItem) {
       else if (pausedTabs.length === 1) Tabs.playAllPausedTabsMedia()
     }
 
-    if (item.type === ButtonType.collapse) collapseAll()
+    if (item.type === E.ButtonType.collapse) collapseAll()
 
-    if (item.type === ButtonType.add_tp) addTabsPanel(true)
+    if (item.type === E.ButtonType.add_tp) addTabsPanel(true)
   }
 }
 
-function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
+function onNavMouseUp(e: MouseEvent, item: T.NavItem, inHiddenBar?: boolean) {
   if (Utils.isNavSpace(item)) return
   if (!Mouse.isTarget('nav', item.id)) return
 
-  const isTabs = item.type === PanelType.tabs
-  const isBookmarks = item.type === PanelType.bookmarks
-  const isHiddenPanels = item.type === ButtonType.hidden
-  const isSettings = item.type === ButtonType.settings
-  const isSearch = item.type === ButtonType.search
-  const isCreateSnapshot = item.type === ButtonType.create_snapshot
-  const isRemuteAudioTabs = item.type === ButtonType.remute_audio_tabs
-  const isAddTP = item.type === ButtonType.add_tp
+  const isTabs = item.type === E.PanelType.tabs
+  const isBookmarks = item.type === E.PanelType.bookmarks
+  const isHiddenPanels = item.type === E.ButtonType.hidden
+  const isSettings = item.type === E.ButtonType.settings
+  const isSearch = item.type === E.ButtonType.search
+  const isCreateSnapshot = item.type === E.ButtonType.create_snapshot
+  const isRemuteAudioTabs = item.type === E.ButtonType.remute_audio_tabs
+  const isAddTP = item.type === E.ButtonType.add_tp
   const panel = Sidebar.panelsById[item.id]
 
   // Left
@@ -596,7 +617,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isSearch) return Search.toggleBar()
     if (isCreateSnapshot) return Snapshots.createSnapshot()
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
-    if (item.type === ButtonType.collapse) collapseAll()
+    if (item.type === E.ButtonType.collapse) collapseAll()
 
     if (isSwitchingPanel) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
@@ -609,12 +630,14 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     }
     if (isTabs && panel) {
       if (Settings.state.navActTabsPanelLeftClickAction === 'new_tab') {
-        return Tabs.createTabInPanel(panel)
+        return Tabs.createTabInPanel(panel, {
+          position: Settings.state.navActTabsPanelLeftClickTabPos,
+        })
       } else if (Settings.state.navActTabsPanelLeftClickAction === 'scroll') {
         return Sidebar.scrollPanelToEdge()
       }
     }
-    if (item.type === PanelType.sync) {
+    if (item.type === E.PanelType.sync) {
       Sync.reload()
     }
   }
@@ -634,17 +657,17 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     const panel = Sidebar.panelsById[item.id]
     if (!panel) return
 
-    let type: MenuType
-    if (item.type === PanelType.bookmarks) type = MenuType.BookmarksPanel
-    else if (item.type === PanelType.tabs) type = MenuType.TabsPanel
-    else type = MenuType.Panel
+    let type: E.MenuType
+    if (item.type === E.PanelType.bookmarks) type = E.MenuType.BookmarksPanel
+    else if (item.type === E.PanelType.tabs) type = E.MenuType.TabsPanel
+    else type = E.MenuType.Panel
 
     Selection.selectNavItem(item.id)
     Menu.open(type, e.clientX, e.clientY)
   }
 }
 
-function onNavDragStart(e: DragEvent, item: NavItem) {
+function onNavDragStart(e: DragEvent, item: T.NavItem) {
   Menu.close()
   Selection.resetSelection()
 
@@ -652,17 +675,17 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   const isTabsPanel = Utils.isTabsPanel(panel)
   const isBookmarksPanel = Utils.isBookmarksPanel(panel)
 
-  let dndType: DragType
-  if (isTabsPanel) dndType = DragType.TabsPanel
-  else if (isBookmarksPanel) dndType = DragType.BookmarksPanel
-  else dndType = DragType.NavItem
+  let dndType: E.DragType
+  if (isTabsPanel) dndType = E.DragType.TabsPanel
+  else if (isBookmarksPanel) dndType = E.DragType.BookmarksPanel
+  else dndType = E.DragType.NavItem
 
   if (isTabsPanel || isBookmarksPanel) Sidebar.updateBounds()
   Selection.selectNavItem(item.id)
 
   const contentList = []
-  const dragItems: DragItem[] = []
-  const dragInfo: DragInfo = {
+  const dragItems: T.DragItem[] = []
+  const dragInfo: T.DragInfo = {
     type: dndType,
     items: dragItems,
     windowId: Windows.id,
@@ -694,7 +717,8 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
     dragItems.push({ id: item.id })
   }
 
-  DnD.start(dragInfo, DropType.NavItem)
+  DnD.broadcastDragInfo(dragInfo)
+  DnD.start(dragInfo, E.DropType.NavItem)
 
   // Set native drag info
   if (e.dataTransfer) {
@@ -708,7 +732,7 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   }
 }
 
-function onNavItemDrop(item: NavItem): void {
+function onNavItemDrop(item: T.NavItem): void {
   droppedOnPanel = true
 }
 
@@ -725,13 +749,13 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
   // Start panel creation
   let panel
   if (!silent) {
-    const result = await Popups.openPanelPopup({ type: PanelType.tabs }, index)
+    const result = await Popups.openPanelPopup({ type: E.PanelType.tabs }, index)
     if (!result) return
 
     panel = Sidebar.panelsById[result]
   } else {
-    const name = Sidebar.getPanelAutoName(PanelType.tabs)
-    panel = Sidebar.createTabsPanel({ name, color: Utils.getRandomFrom(COLOR_NAMES) })
+    const name = Sidebar.getPanelAutoName(E.PanelType.tabs)
+    panel = Sidebar.createTabsPanel({ name, color: Utils.getRandomFrom(D.COLOR_NAMES) })
     Sidebar.addPanel(index, panel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()
@@ -741,6 +765,9 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
   if (!panel) return
 
   Sidebar.activatePanel(panel.id)
+
+  if (!Tabs.ready) await Tabs.load()
+
   Tabs.createTabInPanel(panel)
 }
 
@@ -750,7 +777,7 @@ function collapseAll(): void {
 
   // Tabs
   if (Utils.isTabsPanel(activePanel)) {
-    const tabs: Tab[] = []
+    const tabs: T.Tab[] = []
     for (const rTab of activePanel.tabs) {
       const tab = Tabs.byId[rTab.id]
       if (tab && tab.lvl === 0) tabs.push(tab)

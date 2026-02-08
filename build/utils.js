@@ -4,6 +4,8 @@ import path from 'path'
 import ts from 'typescript'
 
 export const IS_DEV = process.argv.includes('--dev')
+export const BUNDLE_VUE = process.argv.includes('--bundle-vue')
+export const KEEP_NAMES = process.argv.includes('--keep-names')
 export const ADDON_PATH = (IS_DEV && process.env.SIDEBERY_DEV_DIR) || path.resolve('./addon')
 export const VUE_DIST = IS_DEV ? 'vue.runtime.esm-browser.js' : 'vue.runtime.esm-browser.prod.js'
 export const FMT_HOST = {
@@ -11,6 +13,11 @@ export const FMT_HOST = {
   getCurrentDirectory: ts.sys.getCurrentDirectory,
   getNewLine: () => ts.sys.newLine,
 }
+export const IIFE_BANNER_WITH_REINJECT_GUARD = `"use strict";
+(() => {
+if (window.sideberyInjected) return;
+else window.sideberyInjected = true;`
+export const IIFE_FOOTER = '})();'
 const WATCH_DEBOUNCE_DELAY = 640
 
 export function getTime() {

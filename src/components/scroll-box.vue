@@ -1,5 +1,5 @@
 <template lang="pug">
-.ScrollBox(ref="el" @wheel="onWheel")
+.ScrollBox(@wheel="onWheel")
   .top-shadow(:data-show="state.topOverflow")
   .bottom-shadow(:data-show="state.bottomOverflow")
   .scroll-container(ref="scrollBoxEl" tabindex="-1" @scroll.passive="recalcScroll(true)")
@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
-import { ScrollBoxComponent } from 'src/types'
+import type * as T from 'src/types'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 
@@ -22,7 +22,6 @@ const props = defineProps<{
   preScroll?: number
 }>()
 
-const el = ref<HTMLElement | null>(null)
 const scrollBoxEl = ref<HTMLElement | null>(null)
 const scrollContentEl = ref<HTMLElement | null>(null)
 
@@ -88,7 +87,7 @@ function getScrollableBox(): HTMLElement | null {
   return scrollContentEl.value
 }
 
-const publicInterface: ScrollBoxComponent = {
+const publicInterface: T.ScrollBoxComponent = {
   setScrollY,
   recalcScroll,
   getScrollBox,

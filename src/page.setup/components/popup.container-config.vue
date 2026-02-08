@@ -88,14 +88,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, nextTick, PropType } from 'vue'
-import * as Utils from 'src/utils'
-import * as Popups from 'src/services/popups'
-import { translate } from 'src/dict'
+import type { PropType } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
+import type { Container, TextInputComponent } from 'src/types'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS, PROXY_OPTS } from 'src/defaults'
-import { Container, TextInputComponent } from 'src/types'
-import { Containers } from 'src/services/containers'
-import { Permissions } from 'src/services/permissions'
+import { translate } from 'src/dict'
+import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Permissions from 'src/services/permissions.fg'
 import TextField from '../../components/text-field.vue'
 import TextInput from '../../components/text-input.vue'
 import ToggleField from '../../components/toggle-field.vue'
@@ -210,8 +211,6 @@ async function checkWebDataPerm(): Promise<boolean> {
       props.conf.proxified = false
       if (props.conf.proxy) props.conf.proxy.type = 'direct'
     }
-    props.conf.includeHostsActive = false
-    props.conf.excludeHostsActive = false
     props.conf.userAgentActive = false
     Containers.saveContainers()
     return Permissions.request('<all_urls>')

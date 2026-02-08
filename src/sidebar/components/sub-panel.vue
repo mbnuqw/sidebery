@@ -1,7 +1,6 @@
 <template lang="pug">
 .SubPanel(
   :data-active="Sidebar.reactive.subPanelActive"
-  :data-search-active="Search.reactive.barIsActive"
   @wheel.stop=""
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
@@ -24,16 +23,15 @@
 </template>
 
 <script lang="ts" setup>
-import { MenuType, SubPanelType, DropType } from 'src/types'
 import { computed } from 'vue'
+import { SubPanelType, DropType } from 'src/enums'
 import { translate } from 'src/dict'
-import { Menu } from 'src/services/menu'
-import * as Selection from 'src/services/selection'
-import { Settings } from 'src/services/settings'
-import { DnD } from 'src/services/drag-and-drop'
-import { Search } from 'src/services/search'
-import { Sidebar } from 'src/services/sidebar'
-import { Sync } from 'src/services/_services'
+import * as Menu from 'src/services/menu.fg'
+import * as Selection from 'src/services/selection.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Search from 'src/services/search.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Sync from 'src/services/sync.fg'
 import ClosedTabsSubPanel from './sub-panel.closed-tabs.vue'
 import BookmarksSubPanel from './sub-panel.bookmarks.vue'
 import HistoryPanel from './panel.history.vue'
@@ -61,24 +59,17 @@ function onDrop(): void {
 }
 
 function onDragEnter(): void {
-  if (Search.rawValue) Search.stop()
+  if (Search.active) Search.stop()
   Sidebar.closeSubPanel()
 }
 
 function onOverlayClick() {
-  if (Search.rawValue) Search.stop()
+  if (Search.active) Search.stop()
   Sidebar.closeSubPanel()
 }
 
 function onMouseUp(e: MouseEvent): void {
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
-
-  const panel = Sidebar.subPanelHost
-
-  if (e.button === 2 && !Settings.state.ctxMenuNative && panel) {
-    Selection.selectNavItem(panel.id)
-    Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
-  }
 }
 </script>

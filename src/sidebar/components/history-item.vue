@@ -35,18 +35,19 @@ export default { name: 'HistoryItem' }
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { DragInfo, DragType, Visit, MenuType } from 'src/types'
+import type { DragInfo, Visit } from 'src/types'
+import { DragType, MenuType } from 'src/enums'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { Mouse } from 'src/services/mouse'
-import { Menu } from 'src/services/menu'
-import * as Selection from 'src/services/selection'
-import { Settings } from 'src/services/settings'
-import { Search } from 'src/services/search'
-import { History } from 'src/services/history'
-import { Sidebar } from 'src/services/sidebar'
-import { DnD } from 'src/services/drag-and-drop'
-import { Windows } from 'src/services/windows'
+import * as Mouse from 'src/services/mouse.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Selection from 'src/services/selection.fg'
+import * as Settings from 'src/services/settings'
+import * as Search from 'src/services/search.fg'
+import * as History from 'src/services/history.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Windows from 'src/services/windows.fg'
 import * as Favicons from 'src/services/favicons.fg'
 
 const props = defineProps<{ visit: Visit }>()
@@ -110,7 +111,7 @@ function onMouseUp(e: MouseEvent, visit: Visit): void {
 
     let conf = History.getMouseOpeningConf(e.button)
     // Reset search input, if navigating away from the history panel
-    if (Search.rawValue && conf.activateFirstTab) {
+    if (Search.active && conf.activateFirstTab) {
       Search.stop()
       Selection.resetSelection()
     }
@@ -182,6 +183,7 @@ function onDragStart(e: DragEvent, visit: Visit): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo)
 
   // Set native drag info

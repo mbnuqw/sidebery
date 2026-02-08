@@ -1,0 +1,45 @@
+@import '../utils'
+
+.BookmarksPanel
+  position: absolute
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  z-index: 100
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  overflow: hidden
+
+#root[data-sticky-bookmarks="true"]:not([data-drag="true"]) .BookmarksPanel[data-view-mode="tree"] .ScrollBox .top-shadow
+  display: none
+
+.BookmarksPanel .bookmarks-tree
+.BookmarksPanel .bookmarks-history
+  position: relative
+  padding-bottom: 64px
+
+.BookmarksPanel .SubListTitle[data-folded="false"]
+  position: sticky
+  top: 0px
+
+.BookmarksPanel .group
+  position: relative
+
+.BookmarksPanel .group-list
+  position: relative
+  padding: 0 0 12px
+
+// ---
+// -- Root nodes
+// -
+.BookmarksPanel .root-node
+  position: relative
+  opacity: 1
+  transition: opacity var(--d-fast)
+
+// ---
+// -- Search
+// -
+.BookmarksPanel .filtered
+  position: relative
+  padding-bottom: 64px

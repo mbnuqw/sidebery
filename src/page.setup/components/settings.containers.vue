@@ -5,6 +5,8 @@ section(ref="el")
   ToggleField(
     label="settings.containers_sort_by_name"
     v-model:value="Settings.state.containersSortByName"
+    dbg="containersSortByName"
+    :default="DEFAULT_SETTINGS.containersSortByName"
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
     .card(
@@ -38,18 +40,18 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import * as Utils from 'src/utils'
+import type { Container } from 'src/types'
+import { DEFAULT_CONTAINER, DEFAULT_SETTINGS } from 'src/defaults'
 import { translate } from 'src/dict'
-import { Container } from 'src/types'
-import { Containers } from 'src/services/containers'
-import { SetupPage } from 'src/services/_services'
+import * as Utils from 'src/utils'
+import * as Containers from 'src/services/containers'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as SidebarConf from 'src/services/sidebar-config.fg'
 import ContainerConfig from './popup.container-config.vue'
 import ToggleField from '../../components/toggle-field.vue'
-import * as Logs from 'src/services/logs'
-import * as Popups from 'src/services/popups'
-import { DEFAULT_CONTAINER } from 'src/defaults'
-import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
-import { Settings } from 'src/services/settings'
 
 const el = ref<HTMLElement | null>(null)
 
@@ -90,7 +92,7 @@ async function removeContainer(container: Container): Promise<void> {
 
     delete Containers.reactive.byId[container.id]
 
-    for (let panelConf of Object.values(SidebarConfigRState.panels)) {
+    for (let panelConf of Object.values(SidebarConf.reactive.panels)) {
       if (!Utils.isTabsPanel(panelConf)) continue
       if (panelConf.newTabCtx === container.id) {
         panelConf.newTabCtx = 'none'
@@ -109,7 +111,7 @@ async function removeContainer(container: Container): Promise<void> {
       }
     }
 
-    if (navSaveNeeded) saveSidebarConfig()
+    if (navSaveNeeded) SidebarConf.saveSidebarConfig()
   }
 }
 </script>

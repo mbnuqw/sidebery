@@ -21,13 +21,13 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import type { TextInputComponent } from 'src/types'
+import { GroupConfigResult } from 'src/enums'
 import { translate } from 'src/dict'
-import { GroupConfigResult } from 'src/services/sidebar'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
+import * as Settings from 'src/services/settings.fg'
 import TextInput from 'src/components/text-input.vue'
 import ToggleField from 'src/components/toggle-field.vue'
-import { TextInputComponent } from 'src/types'
-import { Settings } from 'src/services/settings'
 
 const titleInput = ref<TextInputComponent | null>(null)
 const doNotShowAgain = ref(!Settings.state.showNewGroupConf)

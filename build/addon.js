@@ -10,6 +10,9 @@ async function main() {
   const versionRE = /^\d\d?\.\d\d?\.\d\d?\.?\d?\d?\d?$/
   const version = process.argv[process.argv.length - 1]
   const is4Digit = version.split('.').length === 4
+  const vite = process.argv.includes('vite')
+  const keepNames = process.argv.includes('keep-names')
+  const bundleVue = process.argv.includes('bundle-vue')
   const preserveVersion = process.argv.some(arg => arg === '--preserve')
   const sign = process.argv.some(arg => arg === '--sign')
   if (!versionRE.test(version)) {
@@ -65,7 +68,17 @@ async function main() {
 
   // Build ('build')
   console.log('Preparing code...')
-  execSync('node ./build/all.js', { encoding: 'utf-8', stdio: 'inherit' })
+  let buildIsOk = false
+  try {
+    const v = vite ? '.vite' : ''
+    const kn = keepNames ? ' --keep-names' : ''
+    const bv = bundleVue ? ' --bundle-vue' : ''
+    execSync(`node ./build/all${v}.js${kn}${bv}`, { encoding: 'utf-8', stdio: 'inherit' })
+    buildIsOk = true
+  } catch (err) {
+    console.log('\n Cannot build addon')
+    console.log(err)
+  }
 
   // Revert version in package.json, package-lock.json and manifest.json
   const revertVersion = !preserveVersion && prevVersion && version !== prevVersion
@@ -108,6 +121,9 @@ async function main() {
       return
     }
   }
+
+  // Stop here if build is not ok
+  if (!buildIsOk) return
 
   // Create './dist/sidebery-X.zip' ('build.ext')
   console.log('Creating addon archive...')

@@ -12,9 +12,9 @@
   :data-color="item.reactive.color"
   :data-sel="item.id === Sidebar.reactive.selectedNavId"
   :data-empty="item.reactive.allDiscarded"
-  :data-audible="item.reactive.mediaState === MediaState.Audible"
-  :data-paused="item.reactive.mediaState === MediaState.Paused"
-  :data-muted="item.reactive.mediaState === MediaState.Muted"
+  :data-audible="item.reactive.mediaState === E.MediaState.Audible"
+  :data-paused="item.reactive.mediaState === E.MediaState.Paused"
+  :data-muted="item.reactive.mediaState === E.MediaState.Muted"
   :data-drop-mode="dropPointerMode(item.id)"
   :title="item.reactive.tooltip || item.reactive.name"
   @dragstart="emit('dragstart', $event)"
@@ -27,7 +27,7 @@
   svg.icon(v-else-if="item.reactive.iconSVG"): use(:href="'#' + item.reactive.iconSVG")
   .badge
   .audio(
-    v-if="item.reactive.mediaState !== MediaState.Silent"
+    v-if="item.reactive.mediaState !== E.MediaState.Silent"
     @mousedown="onAudioMouseDown($event, item)"
     @mouseup.stop)
     svg.-audible: use(href="#icon_loud_badge")
@@ -100,20 +100,35 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import * as Utils from 'src/utils'
-import { NavItem, PanelType, DropType, Tab } from 'src/types'
-import { NavItemTypeNames, DragType, MediaState } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
-import { DnD } from 'src/services/drag-and-drop'
-import { Settings } from 'src/services/settings'
-import { Tabs } from 'src/services/tabs.fg'
-import { TabsPanel } from 'src/types'
+import type { NavItem, Tab, TabsPanel } from 'src/types'
+import * as E from 'src/enums'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Settings from 'src/services/settings'
+import * as Tabs from 'src/services/tabs.fg'
+
+const NavItemTypeNames = {
+  [E.PanelType.bookmarks]: 'bookmarks',
+  [E.PanelType.tabs]: 'tabs',
+  [E.PanelType.history]: 'history',
+  [E.PanelType.sync]: 'sync',
+  [E.ButtonType.settings]: 'settings',
+  [E.ButtonType.add_tp]: 'add_tp',
+  [E.ButtonType.search]: 'search',
+  [E.ButtonType.hidden]: 'hidden',
+  [E.ButtonType.create_snapshot]: 'create_snapshot',
+  [E.ButtonType.remute_audio_tabs]: 'remute_audio_tabs',
+  [E.ButtonType.collapse]: 'collapse',
+  [E.SpaceType.dynamic]: 'dynamic',
+  [E.SpaceType.static]: 'static',
+}
 
 const emit = defineEmits(['dragstart', 'drop', 'mousedown', 'mouseup', 'contextmenu'])
 
 const props = defineProps<{ item: NavItem; dndType: string; inlineIndex?: number }>()
 
 const bookmarksBadge =
-  props.item.type === PanelType.bookmarks &&
+  props.item.type === E.PanelType.bookmarks &&
   (props.item.iconSVG !== 'icon_bookmarks' || !!props.item.iconIMG)
 
 const isUpdated = computed<boolean>(() => {
@@ -127,14 +142,14 @@ function dropPointerMode(id: ID): string {
   if (id === DnD.items[0]?.id) return 'none'
 
   const srcIsNavItem =
-    DnD.srcType === DragType.TabsPanel ||
-    DnD.srcType === DragType.BookmarksPanel ||
-    DnD.srcType === DragType.NavItem
+    DnD.srcType === E.DragType.TabsPanel ||
+    DnD.srcType === E.DragType.BookmarksPanel ||
+    DnD.srcType === E.DragType.NavItem
   const dstIsNavItem =
-    DnD.reactive.dstType === DropType.TabsPanel ||
-    DnD.reactive.dstType === DropType.BookmarksPanel ||
-    DnD.reactive.dstType === DropType.SyncPanel ||
-    DnD.reactive.dstType === DropType.NavItem
+    DnD.reactive.dstType === E.DropType.TabsPanel ||
+    DnD.reactive.dstType === E.DropType.BookmarksPanel ||
+    DnD.reactive.dstType === E.DropType.SyncPanel ||
+    DnD.reactive.dstType === E.DropType.NavItem
   const dstId = Sidebar.reactive.nav[DnD.reactive.dstIndex]
   if (dstIsNavItem && dstId === id) {
     if (srcIsNavItem) {
@@ -145,7 +160,7 @@ function dropPointerMode(id: ID): string {
       }
       return 'before'
     } else {
-      if (DnD.reactive.dstType !== DropType.NavItem || id === 'add_tp') return 'in'
+      if (DnD.reactive.dstType !== E.DropType.NavItem || id === 'add_tp') return 'in'
     }
   }
   return 'none'
@@ -204,15 +219,15 @@ function activateAudibleTab(): void {
 function onAudioMouseDown(e: MouseEvent, panel: TabsPanel): void {
   e.stopPropagation()
 
-  if (panel.reactive.mediaState === MediaState.Audible) {
+  if (panel.reactive.mediaState === E.MediaState.Audible) {
     if (e.button === 0) muteTabs()
     else if (e.button === 1) pauseMedia()
     else if (e.button === 2) activateAudibleTab()
-  } else if (panel.reactive.mediaState === MediaState.Muted) {
+  } else if (panel.reactive.mediaState === E.MediaState.Muted) {
     if (e.button === 0) unmuteTabs()
     else if (e.button === 1) pauseMedia()
     else if (e.button === 2) activateAudibleTab()
-  } else if (panel.reactive.mediaState === MediaState.Paused) {
+  } else if (panel.reactive.mediaState === E.MediaState.Paused) {
     if (e.button === 0) playMedia()
     else if (e.button === 1) Tabs.resetPausedMediaState(props.item.id)
     else if (e.button === 2) activateAudibleTab()

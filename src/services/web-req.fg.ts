@@ -1,10 +1,10 @@
-import { Tabs } from './tabs.fg'
-import { Windows } from './windows'
-import * as Logs from './logs'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
-import { Settings } from './settings'
-import { Sidebar } from './sidebar'
-import { Containers } from './containers'
+import * as Settings from 'src/services/settings'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Containers from 'src/services/containers'
 
 type optBlockingResponse = browser.webRequest.BlockingResponse | void
 

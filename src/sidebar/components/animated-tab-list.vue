@@ -5,10 +5,10 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUpdate, onUpdated } from 'vue'
-import { Settings } from 'src/services/settings'
-import { Sidebar } from 'src/services/sidebar'
-import { Tabs } from 'src/services/tabs.fg'
-import { TabsPanel } from 'src/types'
+import type { TabsPanel } from 'src/types'
+import * as Settings from 'src/services/settings'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Tabs from 'src/services/tabs.fg'
 
 interface SdbrHTMLElement extends HTMLElement {
   __sdbr_isTab?: boolean

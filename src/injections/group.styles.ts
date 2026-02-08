@@ -1,4 +1,4 @@
-import { ParsedTheme, SrcVars } from 'src/services/styles'
+import type { ParsedTheme, SrcVars } from 'src/services/styles'
 import { Stored } from 'src/types'
 import { toCSSVarName } from 'src/utils'
 

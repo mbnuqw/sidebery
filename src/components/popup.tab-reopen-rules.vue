@@ -68,13 +68,14 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { TabReopenRuleConfig, TabReopenRuleType } from 'src/types'
-import { Containers } from 'src/services/containers'
+import type { TabReopenRuleConfig } from 'src/types'
+import * as E from 'src/enums'
+import * as Containers from 'src/services/containers.fg'
 import * as Utils from 'src/utils'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
+import * as Permissions from 'src/services/permissions.fg'
 import TextField from './text-field.vue'
 import ToggleField from './toggle-field.vue'
-import { Permissions } from 'src/services/permissions'
 
 interface ReopenRulePreview {
   id: ID
@@ -115,7 +116,7 @@ function initPopupState() {
 function createRulePreview(ruleConfig: TabReopenRuleConfig): ReopenRulePreview {
   const rule: ReopenRulePreview = {
     id: ruleConfig.id,
-    type: ruleConfig.type === TabReopenRuleType.Include ? 'include' : 'exclude',
+    type: ruleConfig.type === E.TabReopenRuleType.Include ? 'include' : 'exclude',
     url: ruleConfig.url,
     active: ruleConfig.active,
   }
@@ -147,7 +148,8 @@ async function onAdd() {
   const ruleConfig: TabReopenRuleConfig = {
     id: Utils.uid(),
     active: true,
-    type: newRuleType.value === 'include' ? TabReopenRuleType.Include : TabReopenRuleType.Exclude,
+    type:
+      newRuleType.value === 'include' ? E.TabReopenRuleType.Include : E.TabReopenRuleType.Exclude,
     url: newRuleURL.value,
   }
   if (!container.reopenRules.length) container.reopenRulesActive = true
@@ -268,7 +270,7 @@ function onSave() {
     ruleConfig.active = true
     ruleConfig.url = newRuleURL.value
     const isIncludeRule = newRuleType.value === 'include'
-    ruleConfig.type = isIncludeRule ? TabReopenRuleType.Include : TabReopenRuleType.Exclude
+    ruleConfig.type = isIncludeRule ? E.TabReopenRuleType.Include : E.TabReopenRuleType.Exclude
     if (name) ruleConfig.name = name
     else delete ruleConfig.name
     Containers.saveContainers(1000)

@@ -1,8 +1,8 @@
 import { Tab } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
-import { Tabs } from 'src/services/tabs.fg'
-import { Permissions } from 'src/services/permissions'
-import { Settings } from 'src/services/settings'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Settings from 'src/services/settings'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
 

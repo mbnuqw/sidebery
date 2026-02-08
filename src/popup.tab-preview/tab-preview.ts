@@ -1,6 +1,6 @@
 import { NOID } from 'src/defaults'
 import * as IPC from 'src/services/ipc'
-import { InstanceType } from 'src/types'
+import { InstanceType } from 'src/enums'
 
 const state = {
   tabId: NOID,

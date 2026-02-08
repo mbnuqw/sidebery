@@ -2,9 +2,9 @@
 .SearchBar(
   id="search_bar"
   :data-showed="Settings.state.searchBarMode === 'static' || Search.reactive.barIsShowed"
-  :data-active="Search.reactive.barIsActive"
+  :data-active="Search.reactive.popupIsShowed || Search.reactive.barIsFocused"
   :data-focused="Search.reactive.barIsFocused"
-  :data-filled="!!Search.reactive.rawValue")
+  :data-filled="!!Search.reactive.rawQuery")
   .search-icon(@mousedown.stop.prevent="" @mouseup.stop.prevent="")
     svg: use(href="#icon_search")
   .placeholder {{translate('bar.search.placeholder')}}
@@ -15,14 +15,14 @@
     autocapitalize="off"
     spellcheck="false"
     tabindex="-1"
-    v-model="Search.reactive.rawValue"
+    v-model="Search.reactive.rawQuery"
     @input.passive="onInput"
     @focus="onFocus"
     @blur="onBlur"
     @change="onChange"
     @keydown="onKD")
   .clear-btn(
-    v-if="Settings.state.searchBarMode === 'dynamic' || Search.reactive.rawValue"
+    v-if="Settings.state.searchBarMode === 'dynamic' || Search.reactive.rawQuery"
     @mousedown.stop="onClearBtnMouseDown"
     @mouseup.stop="onClearBtnMouseUp")
     svg: use(href="#icon_remove")
@@ -31,8 +31,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import { Search } from 'src/services/search'
+import * as Settings from 'src/services/settings'
+import * as Search from 'src/services/search.fg'
 
 const textEl = ref<HTMLInputElement | null>(null)
 
@@ -41,7 +41,7 @@ onMounted(() => {
 })
 
 function onClearBtnMouseDown(e: MouseEvent): void {
-  if (Search.rawValue) Search.onOutsideSearchInput('')
+  if (Search.reactive.rawQuery) Search.stop(true)
   else {
     Search.hideBar()
     e.preventDefault()
@@ -79,7 +79,7 @@ function onKD(e: KeyboardEvent): void {
     Search.history()
   }
 
-  if (!Search.rawValue) return
+  if (!Search.reactive.rawQuery) return
 
   // Select all
   if (e.code === 'KeyA' && e.ctrlKey && e.shiftKey) {
@@ -112,27 +112,27 @@ function onKD(e: KeyboardEvent): void {
   }
 }
 
-let inputTimeout: number | undefined
 function onInput(e: Event) {
-  Search.rawValue = (e.target as HTMLInputElement | null)?.value ?? ''
+  const rawQuery = (e.target as HTMLInputElement | null)?.value ?? ''
 
-  clearTimeout(inputTimeout)
-  inputTimeout = setTimeout(() => {
-    Search.search((e.target as HTMLInputElement | null)?.value)
-  }, Search.INPUT_TIMEOUT)
+  if (Settings.state.searchInputTimeout > 0) {
+    Search.searchDebounced(Settings.state.searchInputTimeout, rawQuery)
+  } else {
+    Search.search(rawQuery)
+  }
 }
 
 function onChange(e: Event): void {
-  Search.search(Search.rawValue)
+  if (!Search.active) return
+  const rawQuery = (e.target as HTMLInputElement | null)?.value ?? ''
+  Search.search(rawQuery)
 }
 
 function onFocus(e: Event): void {
-  Search.reactive.barIsActive = true
   Search.reactive.barIsFocused = true
 }
 
 function onBlur(e: Event): void {
-  Search.reactive.barIsActive = false
   Search.reactive.barIsFocused = false
 }
 </script>

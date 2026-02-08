@@ -18,12 +18,12 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { BackupData, Stored } from 'src/types'
-import * as Utils from 'src/utils'
+import type { BackupData, Stored } from 'src/types'
 import { translate } from 'src/dict'
-import { Styles } from 'src/services/styles'
-import ToggleField from '../../components/toggle-field.vue'
+import * as Utils from 'src/utils'
+import * as Styles from 'src/services/styles'
 import * as Logs from 'src/services/logs'
+import ToggleField from '../../components/toggle-field.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
 const exportDataLink = ref<HTMLAnchorElement | null>(null)

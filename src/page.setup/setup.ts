@@ -1,59 +1,60 @@
 import { createApp, reactive } from 'vue'
-import Root from './setup.vue'
-import { InstanceType } from 'src/types'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
-import { Containers } from 'src/services/containers'
-import { Keybindings } from 'src/services/keybindings'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Store } from 'src/services/storage'
-import { Permissions } from 'src/services/permissions'
-import { Info } from 'src/services/info'
-import { SetupPage, Utils } from 'src/services/_services'
-import { Styles } from 'src/services/styles'
-import * as Favicons from 'src/services/favicons.fg'
+import * as E from 'src/enums'
+import * as Settings from 'src/services/settings.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Store from 'src/services/storage.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Info from 'src/services/info'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import { initSidebarConfig, loadSidebarConfig } from 'src/services/sidebar-config'
-import { setupSidebarConfigListeners } from 'src/services/sidebar-config'
-import { initPopups } from 'src/services/popups'
-import { Notifications } from 'src/services/notifications'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
+import * as Favicons from 'src/services/favicons.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as SidebarConfig from 'src/services/sidebar-config'
+import * as Popups from 'src/services/popups.fg'
+import * as Notifications from 'src/services/notifications.fg'
+import Root from './setup.vue'
 
 async function main(): Promise<void> {
   const ts = performance.now()
 
-  Info.setInstanceType(InstanceType.setup)
-  IPC.setInstanceType(InstanceType.setup)
-  Logs.setInstanceType(InstanceType.setup)
+  Info.setInstanceType(E.InstanceType.setup)
+  IPC.setInstanceType(E.InstanceType.setup)
+  Logs.setInstanceType(E.InstanceType.setup)
 
-  Settings.state = reactive(Settings.state)
-  Containers.reactive = reactive(Containers.reactive)
-  Windows.reactive = reactive(Windows.reactive)
-  Favicons.initFavicons(reactive)
-  Keybindings.reactive = reactive(Keybindings.reactive)
-  Bookmarks.reactive = reactive(Bookmarks.reactive)
-  initSidebarConfig(reactive)
-  initPopups(reactive)
-  Permissions.reactive = reactive(Permissions.reactive)
-  SetupPage.initSetupPage(reactive)
-  Info.reactive = reactive(Info.reactive)
-  Styles.reactive = reactive(Styles.reactive)
-  Notifications.reactive = reactive(Notifications.reactive)
+  Settings.reactivate(reactive)
+  Containers.reactivate(reactive)
+  Windows.reactivate(reactive)
+  Favicons.reactivate(reactive)
+  Keybindings.reactivate(reactive)
+  Bookmarks.reactivate(reactive)
+  SidebarConfig.reactivate(reactive)
+  Popups.reactivate(reactive)
+  Permissions.reactivate(reactive)
+  SetupPage.reactivate(reactive)
+  Info.reactivate(reactive)
+  Styles.reactivate(reactive)
+  Notifications.reactivate(reactive)
 
   IPC.registerActions({
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
-    reloadFavicons: Favicons.loadFavicons,
+    reloadFavicons: Favicons.load,
   })
 
   SetupPage.updateActiveView()
   SetupPage.setupListeners()
 
+  Styles.setupListeners()
+
   await Promise.all([
-    Windows.loadWindowInfo(),
-    Settings.loadSettings().then(() => Styles.initColorScheme()),
+    Windows.load(),
+    Settings.load().then(() => Styles.load()),
     Containers.load(),
-    Keybindings.loadKeybindings(),
+    Keybindings.load(),
     Info.loadVersionInfo(),
     Info.loadCurrentTabInfo(),
   ])
@@ -70,15 +71,14 @@ async function main(): Promise<void> {
 
   Settings.setupSettingsChangeListener()
 
-  await loadSidebarConfig()
-  setupSidebarConfigListeners()
+  await SidebarConfig.loadSidebarConfig()
+  SidebarConfig.setupSidebarConfigListeners()
   Styles.loadCustomCSS()
   Info.loadPlatformInfo()
-  Info.loadVersionInfo()
-  Permissions.loadPermissions()
+  Permissions.load()
   Permissions.setupListeners()
-  Favicons.loadFavicons()
-  IPC.connectTo(InstanceType.bg)
+  Favicons.load()
+  IPC.connectTo(E.InstanceType.bg)
   IPC.setupGlobalMessageListener()
 
   SetupPage.finishInitialization()

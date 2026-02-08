@@ -60,16 +60,16 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { translate } from 'src/dict'
-import { Container } from 'src/types'
+import type { Container } from 'src/types'
 import { DEFAULT_CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
-import { Sidebar } from 'src/services/sidebar'
-import { Windows } from 'src/services/windows'
-import { Containers } from 'src/services/containers'
-import { Info } from 'src/services/info'
-import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Containers from 'src/services/containers'
+import * as Info from 'src/services/info'
+import * as SidebarConf from 'src/services/sidebar-config.fg'
 import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
 import TextField from './text-field.vue'
 import SelectField from './select-field.vue'
 
@@ -169,7 +169,7 @@ const shortcuts = computed<NewTabShortcut[]>(() => {
 const availableContainersOpts = computed<ContainerOption[]>(() => {
   if (!Popups.reactive.newTabShortcutsPopup) return []
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return []
 
   const notSetTitle = translate('popup.new_tab_shortcuts.new_shortcut_not_set_container')
@@ -219,7 +219,7 @@ function onAddBr() {
   if (!Popups.reactive.newTabShortcutsPopup) return
 
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const rawShortcuts = toRawShortcuts(shortcuts.value)
@@ -233,7 +233,7 @@ function onAddBr() {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function onAdd() {
@@ -252,7 +252,7 @@ function onAdd() {
   if (!btnConfig.length) return
 
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const rawShortcuts = toRawShortcuts(shortcuts.value)
@@ -271,7 +271,7 @@ function onAdd() {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function onCancel() {
@@ -283,7 +283,7 @@ function onCancel() {
 function shortcutUp(index: number) {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   if (index <= 0) return
@@ -298,13 +298,13 @@ function shortcutUp(index: number) {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function shortcutDown(index: number): void {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   if (index >= panel.newTabBtns.length - 1) return
@@ -319,13 +319,13 @@ function shortcutDown(index: number): void {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function removeShortcut(index: number): void {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const rawShortcuts = toRawShortcuts(shortcuts.value)
@@ -336,7 +336,7 @@ function removeShortcut(index: number): void {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function editShortcut(shortcut: NewTabShortcut) {
@@ -383,7 +383,7 @@ function onSaveEdit() {
   if (!sConfig.length) return
 
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
-  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConf.reactive.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const rawShortcut = sConfig.join(', ')
@@ -401,7 +401,7 @@ function onSaveEdit() {
 
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
-  else saveSidebarConfig(1000)
+  else SidebarConf.saveSidebarConfig(1000)
 }
 
 function onCancelEdit() {

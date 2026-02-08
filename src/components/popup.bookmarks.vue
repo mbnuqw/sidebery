@@ -48,9 +48,9 @@
     .tree(v-if="state.showTree")
       ScrollBox
         BookmarkNode.root-node(
-          v-for="node in Bookmarks.reactive.tree"
-          :key="node.id"
-          :node="node"
+          v-for="nodeId in Bookmarks.reactive.root"
+          :key="nodeId"
+          :nodeId="nodeId"
           :filter="foldersFilter"
           :panelId="'popup'")
     .recent-locations(v-if="state.bookmarksRecentFolders.length && !state.showTree")
@@ -59,7 +59,7 @@
         v-for="folder of state.bookmarksRecentFolders"
         :key="folder.id"
         :data-sel="folder.id === Bookmarks.reactive.popup.location"
-        @click="onRecentFolderClick(folder)")
+        @click="onRecentFolderClick(folder.id)")
         svg.folder-icon: use(href="#icon_folder")
         .folder-label {{folder.title}}
     .loading-screen(v-if="state.loading")
@@ -75,16 +75,17 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, nextTick } from 'vue'
 import { translate } from 'src/dict'
-import { Bookmark, Stored, TextInputComponent } from 'src/types'
+import type { Stored, TextInputComponent } from 'src/types'
+import { BkmType } from 'src/enums'
 import { NOID, BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
-import { Bookmarks } from 'src/services/bookmarks'
-import * as Selection from 'src/services/selection'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Selection from 'src/services/selection.fg'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from './loading-dots.vue'
 import TextInput from './text-input.vue'
 import * as Utils from 'src/utils'
-import { Store } from 'src/services/storage'
+import * as Store from 'src/services/storage.fg'
 
 const nameInput = ref<TextInputComponent | null>(null)
 const urlInput = ref<TextInputComponent | null>(null)
@@ -101,8 +102,8 @@ const state = reactive({
   newFolderTitle: '',
   newFolderMode: false,
   creatingNewFolder: false,
-  path: [] as Bookmark[],
-  bookmarksRecentFolders: [] as Bookmark[],
+  // path: [] as Bookmark[],
+  bookmarksRecentFolders: [] as Bookmarks.BkmNode[],
 })
 
 let validateTimeout: number | undefined
@@ -110,23 +111,22 @@ let validateTimeout: number | undefined
 const selectedFolder = computed((): string => {
   const location = Bookmarks.reactive.popup?.location ?? NOID
   if (location === NOID) return '---'
-  let folder = Bookmarks.reactive.byId[location]
-  if (!folder || folder.type !== 'folder') return '---'
-  return folder.title
+  let folder = Bookmarks.byId.get(location)
+  if (!folder || folder.type !== BkmType.Folder) return '---'
+  return folder.title || '---'
 })
 
 const path = computed<string>(() => {
   const location = Bookmarks.reactive.popup?.location ?? NOID
-  if (!Bookmarks.reactive.tree.length) return ''
+  if (!Bookmarks.reactive.root.length) return ''
   if (location === NOID) return ''
-  let folder = Bookmarks.reactive.byId[location]
-  if (!folder || folder.type !== 'folder') return ''
+  let folder = Bookmarks.byId.get(location)
+  if (!folder || folder.type !== BkmType.Folder) return ''
 
   let result = folder.title + ' /'
-  while (Bookmarks.reactive.byId[folder.parentId]) {
-    folder = Bookmarks.reactive.byId[folder.parentId]
-    result = folder.title + ' / ' + result
-  }
+  folder.forEachAncestor(parent => {
+    result = parent.title + ' / ' + result
+  })
 
   return result.trim()
 })
@@ -158,7 +158,7 @@ void (async function init() {
 
       if (state.showTree) {
         Bookmarks.collapseAllBookmarks('popup')
-        const folder = Bookmarks.reactive.byId[popup.location]
+        const folder = Bookmarks.byId.get(popup.location)
         if (folder?.parentId && folder.parentId !== BKM_ROOT_ID) {
           Bookmarks.expandBookmark(folder.parentId, 'popup')
         }
@@ -167,7 +167,7 @@ void (async function init() {
   }, 256)
 
   const asyncTasks = []
-  if (!Bookmarks.reactive.tree.length) asyncTasks.push(Bookmarks.load())
+  if (!Bookmarks.reactive.root.length) asyncTasks.push(Bookmarks.load())
   if (Bookmarks.reactive.popup.recentLocations) asyncTasks.push(loadBookmarksRecentFolders())
   await Promise.all(asyncTasks)
   checkDefaultLocation()
@@ -183,7 +183,7 @@ function checkDefaultLocation() {
   const id = Bookmarks.reactive.popup.location
   if (id === undefined || id === NOID || id === BKM_ROOT_ID) return
 
-  const node = Bookmarks.reactive.byId[id]
+  const node = Bookmarks.byId.get(id)
   if (!node) Bookmarks.reactive.popup.location = BKM_OTHER_ID
 }
 
@@ -201,7 +201,7 @@ function initRecentFolders() {
   let firstFolderId: ID | undefined
   const folders = []
   for (const id of loadedRecentFolders) {
-    const folder = Bookmarks.reactive.byId[id]
+    const folder = Bookmarks.byId.get(id)
     if (folder) {
       folders.push(folder)
       if (!firstFolderId) firstFolderId = id
@@ -218,7 +218,7 @@ function initRecentFolders() {
 
 const RECENT_FOLDERS_LIMIT = 5
 async function saveBookmarksRecentFolders(lastFolderId: ID): Promise<void> {
-  const lastFolder = Bookmarks.reactive.byId[lastFolderId]
+  const lastFolder = Bookmarks.byId.get(lastFolderId)
   if (!lastFolder) return
 
   const recentIndex = state.bookmarksRecentFolders.findIndex(f => f.id === lastFolderId)
@@ -243,7 +243,7 @@ function toggleTree(): void {
 
   if (state.showTree) {
     Bookmarks.collapseAllBookmarks('popup')
-    const folder = Bookmarks.reactive.byId[Bookmarks.reactive.popup.location]
+    const folder = Bookmarks.byId.get(Bookmarks.reactive.popup.location)
     if (folder?.parentId && folder.parentId !== BKM_ROOT_ID) {
       Bookmarks.expandBookmark(folder.parentId, 'popup')
       Selection.selectBookmark(folder.id)
@@ -272,8 +272,8 @@ async function createNewFolder(): Promise<void> {
   state.creatingNewFolder = true
 
   const location = Bookmarks.reactive.popup.location ?? NOID
-  let parent = Bookmarks.reactive.byId[location]
-  if (!parent || parent.type !== 'folder') return
+  let parent = Bookmarks.byId.get(location)
+  if (!parent || parent.type !== BkmType.Folder) return
 
   const newFolderPosition = Bookmarks.reactive.popup.newFolderPosition
   let newFolderIndex
@@ -283,12 +283,15 @@ async function createNewFolder(): Promise<void> {
     newFolderIndex = parent.children?.length ?? 0
   }
 
-  const folder = (await browser.bookmarks.create({
-    index: newFolderIndex,
-    parentId: parent.id,
-    title: state.newFolderTitle.trim(),
-    type: 'folder',
-  })) as Bookmark
+  const nativeFolder = await browser.bookmarks
+    .create({
+      index: newFolderIndex,
+      parentId: parent.id,
+      title: state.newFolderTitle.trim(),
+      type: 'folder',
+    })
+    .catch(() => undefined)
+  const folder = nativeFolder ? Bookmarks.byId.get(nativeFolder.id) : undefined
 
   if (!folder) {
     state.creatingNewFolder = false
@@ -386,12 +389,12 @@ function onCancel(): void {
   Bookmarks.reactive.popup.close()
 }
 
-function foldersFilter(node: Bookmark): boolean {
-  return node.type === 'folder'
+function foldersFilter(node: Bookmarks.BkmNode): boolean {
+  return node.type === BkmType.Folder
 }
 
-function onRecentFolderClick(folder: Bookmark): void {
+function onRecentFolderClick(folderId: ID): void {
   if (!Bookmarks.reactive.popup) return
-  Bookmarks.reactive.popup.location = folder.id
+  Bookmarks.reactive.popup.location = folderId
 }
 </script>

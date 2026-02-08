@@ -41,22 +41,25 @@
 </template>
 
 <script lang="ts" setup>
-import { Logs, Sync, Utils } from 'src/services/_services'
+import type { DragInfo, DragItem, DstPlaceInfo, ItemInfo } from 'src/types'
+import type { SyncedEntry } from 'src/services/sync'
+import { DragType, DropType } from 'src/enums'
 import { translate } from 'src/dict'
-import { SyncedEntry } from 'src/services/sync'
-import { Keybindings } from 'src/services/keybindings'
-import { Menu } from 'src/services/menu'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Favicons } from 'src/services/_services.fg'
-import { Mouse } from 'src/services/mouse'
-import { Tabs } from 'src/services/tabs.fg'
-import { DragInfo, DragItem, DragType, DropType, DstPlaceInfo, ItemInfo } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
-import { Windows } from 'src/services/windows'
-import { Containers } from 'src/services/containers'
-import { DnD } from 'src/services/drag-and-drop'
-import { Info } from 'src/services/info'
+import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
+import * as Sync from 'src/services/sync.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Favicons from 'src/services/favicons.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Containers from 'src/services/containers'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Info from 'src/services/info'
 
 const props = defineProps<{ entry: SyncedEntry }>()
 const title = getTypeTitle()
@@ -273,6 +276,7 @@ function onTabDragStart(e: DragEvent, tab: Sync.EntryTab, entry: Sync.SyncedEntr
     copy: true,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info

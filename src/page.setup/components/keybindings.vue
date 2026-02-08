@@ -4,6 +4,10 @@
     h2 {{translate('settings.kb_general')}}
     span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName._execute_sidebar_action")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
+    .info {{translate('settings.kb_select_act_note')}}
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
+    .info {{translate('settings.kb_reset_selection_note')}}
     KeybindingField(:keybinding="Keybindings.reactive.byName.search")
     KeybindingField(:keybinding="Keybindings.reactive.byName.hide_act_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.create_snapshot")
@@ -24,7 +28,15 @@
   section
     h2 {{translate('settings.kb_switching_panel')}}
     span.header-shadow
-    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.next_panel")
+    InfoField(label="settings.kb_loop_panels")
+    .sub-fields
+      KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.loop_panels_forwards")
+      KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.loop_panels_backwards")
+      ToggleField.-no-separator(
+        label="settings.kb_switching_panel.ignore_hidden"
+        v-model:value="Settings.state.loopPanelsIgnoreHidden"
+        @update:value="Settings.saveDebounced(150)")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.next_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.prev_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_0")
     KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_1")
@@ -58,6 +70,14 @@
     h2 {{translate('settings.kb_tabs_open')}}
     span.header-shadow
     KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.new_tab_on_panel")
+    .sub-fields
+      SelectField(
+        label="settings.new_tab_in_panel_pos"
+        optLabel="settings.new_tab_in_panel_pos_"
+        v-model:value="Settings.state.kbNewTabInPanelPos"
+        :folded="true"
+        :opts="Settings.getOpts('newTabInPanelPos')"
+        @update:value="Settings.saveDebounced(150)")
     KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_in_group")
     KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_as_first_child")
     KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_as_last_child")
@@ -92,11 +112,9 @@
           @update:value="Settings.saveDebounced(150)")
       KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
       KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.sel_tabs_branch")
       KeybindingField(:keybinding="Keybindings.reactive.byName.sel_child_tabs")
       KeybindingField(:keybinding="Keybindings.reactive.byName.lock_selection")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
-    .info {{translate('settings.kb_select_act_note')}}
 
   section
     h2 {{translate('settings.kb_unloading_tabs')}}
@@ -199,11 +217,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { Keybindings } from 'src/services/keybindings'
-import { SetupPage } from 'src/services/_services'
-import { Settings } from 'src/services/settings'
+import * as Settings from 'src/services/settings.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
 import ToggleField from 'src/components/toggle-field.vue'
+import SelectField from 'src/components/select-field.vue'
 import InfoField from 'src/components/info-field.vue'
 
 const el = ref<HTMLElement | null>(null)

@@ -50,6 +50,7 @@ export const SETTINGS_RE = /\/page\.setup\/setup\.html/
 export const FOLDER_NAME_DATA_RE = /^(.*) \[(.*)\]$/
 export const CONTAINER_IN_BOOKMARK_RE = / \[(".+","\w+","\w+"(,"\w+")?)\]/
 export const COLOR_IN_BOOKMARK_RE = / \[(c\d)\]/
+export const TITLE_IN_BOOKMARK_RE = / \[\*\]/
 export const GROUP_INITIAL_TITLE = '...'
 export const INITIAL_TITLE_RE = /^[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})+\//
 export const SITE_URL_RE =
@@ -81,11 +82,6 @@ export const SAMEID: ID = -5
 export const NEWID: ID = -10
 export const ASKID: ID = -11
 export const MOVEID: ID = -12
-
-export const enum Err {
-  TabsLocked = 1,
-  Canceled = 2,
-}
 
 export const CONTAINER_ICON_OPTS = [
   { value: 'fingerprint', icon: '#fingerprint' },

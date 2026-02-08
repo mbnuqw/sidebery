@@ -1,64 +1,62 @@
 <template lang="pug">
 .BookmarkCard(
   :id="'bookmark' + panelId + node.id"
-  :data-selected="node.sel"
-  :data-open="node.isOpen"
+  :data-selected="node.reactive.sel"
+  :data-open="node.reactive.hasOpenTabs"
+  :data-color="node.reactive.containerColor"
   :title="tooltip"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .dnd-layer(draggable="true" data-dnd-type="panel" data-dnd-id="bookmarks" @dragstart="onDragStart")
   .body
+    .color-layer(v-if="node.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as browser.ColorName] }")
     .line
       .fav
         svg(v-if="!favicon")
           use(href="#icon_ff")
         img(v-else :src="favicon")
-      .title {{node.title}}
+      .title {{node.parsedTitle || node.title}}
     .line
       .info {{getFolder(node)}}
       .info.-end {{getDate(node)}}
+    .container-mark(v-if="node.reactive.containerColor")
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import * as Utils from 'src/utils'
-import { Bookmark, DragInfo, DragType, DropType, DstPlaceInfo } from 'src/types'
-import { MenuType } from 'src/types'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
-import * as Selection from 'src/services/selection'
+import type { DragInfo } from 'src/types'
+import { MenuType, DragType, DropType, BkmType } from 'src/enums'
+import { RGB_COLORS } from 'src/defaults'
+import * as Settings from 'src/services/settings'
+import * as Windows from 'src/services/windows.fg'
+import * as Selection from 'src/services/selection.fg'
 import * as Favicons from 'src/services/favicons.fg'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Menu } from 'src/services/menu'
-import { Sidebar } from 'src/services/sidebar'
-import { Tabs } from 'src/services/tabs.fg'
-import { Mouse } from 'src/services/mouse'
-import { DnD } from 'src/services/drag-and-drop'
-import { FOLDER_NAME_DATA_RE } from 'src/defaults'
-import { Search } from 'src/services/search'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Search from 'src/services/search.fg'
 
-const props = defineProps<{ node: Bookmark; panelId: ID }>()
+const props = defineProps<{ node: Bookmarks.BkmNode; panelId: ID }>()
 
 const favicon = computed((): string => {
   if (!props.node.url) return ''
   return Favicons.getFavicon(props.node.url)
 })
 const tooltip = computed((): string => {
-  if (props.node.url) return `${props.node.title}\n---\n${props.node.url}`
+  if (props.node.url) return `${props.node.parsedTitle || props.node.title}\n---\n${props.node.url}`
   else return ''
 })
 
-function getFolder(node: Bookmark): string {
-  const folderName = Bookmarks.reactive.byId[node.parentId]?.title ?? '???'
-  if (folderName.length > 36) {
-    const folderNameExec = FOLDER_NAME_DATA_RE.exec(folderName)
-    if (folderNameExec) return folderNameExec[1]
-  }
-  return folderName
+function getFolder(node: Bookmarks.BkmNode): string {
+  const folder = Bookmarks.byId.get(node.parentId)
+  return folder?.parsedTitle ?? folder?.title ?? '???'
 }
 
-function getDate(node: Bookmark): string {
+function getDate(node: Bookmarks.BkmNode): string {
   const time = node.dateAdded
   if (!time) return '???'
 
@@ -93,7 +91,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     e.preventDefault()
     if (Selection.isBookmarks()) {
       Selection.resetSelection()
-      if (!Search.rawValue) return
+      if (!Search.active) return
     }
 
     const action = Settings.state.bookmarksMidClickAction
@@ -123,7 +121,7 @@ function onMouseUp(e: MouseEvent): void {
       return Selection.resetSelection()
     }
 
-    if (Settings.state.activateOpenBookmarkTab && props.node.isOpen) {
+    if (Settings.state.activateOpenBookmarkTab && props.node.hasOpenTabs) {
       const tab = Tabs.list.find(t => t.url === props.node.url)
       if (tab) {
         browser.tabs.update(tab.id, { active: true })
@@ -131,7 +129,7 @@ function onMouseUp(e: MouseEvent): void {
       }
     }
 
-    if (props.node.type === 'bookmark' && props.node.url) {
+    if (props.node.type === BkmType.Bookmark && props.node.url) {
       const conf = Bookmarks.getMouseOpeningConf(e.button)
       Bookmarks.open([props.node.id], conf.dst, conf.useActiveTab, conf.activateFirstTab)
       if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], { noNotif: true })
@@ -183,6 +181,7 @@ function onDragStart(e: DragEvent): void {
     y: e.clientY,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Bookmarks)
 
   // Set native drag info

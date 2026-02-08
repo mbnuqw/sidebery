@@ -1,6 +1,6 @@
 {
   "name": "sidebery",
-  "version": "5.3.3",
+  "version": "5.4.0",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "type": "module",
@@ -18,35 +18,44 @@
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i __tests__",
     "build.run": "node build/webext.run.js",
     "build": "node build/all.js",
+    "vite": "node build/all.vite.js",
     "clear.npm": "rm -rf node_modules package-lock.json",
     "clear": "rm -rf addon",
-    "lint": "eslint ./src && web-ext lint -s ./addon",
+    "lint.eslint": "eslint ./src",
+    "lint.types": "vue-tsc --noemit",
+    "lint": "npm run lint.eslint && npm run lint.types",
     "changelog": "node build/changelog.js",
     "addon": "node build/addon.js",
     "release-notes": "node build/release-notes.js",
-    "release.nightly": "node build/release-nightly.js"
+    "release.nightly": "node build/release-nightly.js",
+    "test": "vitest run",
+    "test.watch": "vitest watch"
   },
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@vue/compiler-sfc": "3.5.21",
-    "@vue/language-plugin-pug": "3.0.6",
-    "csso": "5.0.5",
-    "esbuild": "0.25.9",
-    "eslint": "9.34.0",
+    "@vitejs/plugin-vue": "6.0.3",
+    "@vue/compiler-sfc": "3.5.26",
+    "@vue/language-plugin-pug": "3.2.2",
+    "esbuild": "0.27.2",
+    "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
-    "eslint-plugin-vue": "10.4.0",
-    "globals": "16.3.0",
-    "prettier": "3.6.2",
+    "eslint-plugin-prettier": "5.5.5",
+    "eslint-plugin-vue": "10.7.0",
+    "globals": "17.0.0",
+    "jsdom": "27.4.0",
+    "prettier": "3.8.0",
     "pug": "3.0.3",
     "stylus": "0.64.0",
-    "typescript": "5.9.2",
-    "typescript-eslint": "8.42.0",
-    "web-ext": "8.9.0"
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.53.0",
+    "vite": "7.3.1",
+    "vitest": "4.0.17",
+    "vue-tsc": "3.2.2",
+    "web-ext": "9.2.0"
   },
   "dependencies": {
-    "vue": "3.5.21"
+    "vue": "3.5.26"
   },
   "prettier": {
     "arrowParens": "avoid",
@@ -58,11 +67,10 @@
     "useTabs": false
   },
   "alias": {
-    "vue": "./node_modules/vue/dist/vue.runtime.esm-browser.js",
     "src": "./src"
   },
   "browserslist": [
-    "Firefox >= 128"
+    "Firefox >= 140"
   ],
   "sideEffects": false
 }

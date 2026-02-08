@@ -1,36 +1,36 @@
-import * as Utils from 'src/utils'
 import { createApp, reactive, shallowReactive } from 'vue'
-import { InstanceType } from 'src/types'
+import * as E from 'src/enums'
+import * as Utils from 'src/utils'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
 import * as Favicons from 'src/services/favicons.fg'
-import * as Preview from 'src/services/tabs.preview'
-import { Settings } from 'src/services/settings'
-import { Sidebar } from 'src/services/sidebar'
-import { Windows } from 'src/services/windows'
-import { Containers } from 'src/services/containers'
-import { Keybindings } from 'src/services/keybindings'
-import { Styles } from 'src/services/styles'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Menu } from 'src/services/menu'
-import { Tabs } from 'src/services/tabs.fg'
-import { Store } from 'src/services/storage'
-import { DnD } from 'src/services/drag-and-drop'
-import { Permissions } from 'src/services/permissions'
-import { Notifications } from 'src/services/notifications'
-import { History } from 'src/services/history'
-import { Search } from 'src/services/search'
-import { Info } from 'src/services/info'
+import * as Preview from 'src/services/tabs.fg.preview'
+import * as Windows from 'src/services/windows.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Store from 'src/services/storage.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Notifications from 'src/services/notifications.fg'
+import * as History from 'src/services/history.fg'
+import * as Search from 'src/services/search.fg'
+import * as Info from 'src/services/info'
+import * as Snapshots from 'src/services/snapshots.fg'
+import * as Sync from 'src/services/sync.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
+import * as WebReq from 'src/services/web-req.fg'
 import SidebarRoot from './sidebar.vue'
-import { Snapshots } from 'src/services/snapshots'
-import { updateWebReqHandlers } from 'src/services/web-req.fg'
-import { Sync } from 'src/services/_services'
 
 async function main(): Promise<void> {
-  Info.setInstanceType(InstanceType.sidebar)
-  IPC.setInstanceType(InstanceType.sidebar)
-  Logs.setInstanceType(InstanceType.sidebar)
+  Info.setInstanceType(E.InstanceType.sidebar)
+  IPC.setInstanceType(E.InstanceType.sidebar)
+  Logs.setInstanceType(E.InstanceType.sidebar)
 
   const ts = performance.now()
   Logs.info('Init start')
@@ -42,13 +42,17 @@ async function main(): Promise<void> {
     detachTabs: Tabs.detachTabs,
     getTabsTreeData: Tabs.getTabsTreeData,
     moveTabsToThisWin: Tabs.moveToThisWin,
+    moveTabToPanelViaOmnibox: Tabs.moveTabToPanelViaOmnibox,
+    moveTabToGroupViaOmnibox: Tabs.moveTabToGroupViaOmnibox,
     openTabs: Tabs.open,
     handleReopening: Tabs.handleReopening,
     getActivePanelConfig: Sidebar.getActivePanelConfig,
-    stopDrag: DnD.reset,
+    switchToPanel: Sidebar.switchToPanel,
+    stopDrag: DnD.onExternalStop,
+    setDragInfo: DnD.setDragInfo,
     getGroupInfo: Tabs.getGroupInfo,
-    loadFavicons: Favicons.loadFavicons,
-    reloadFavicons: Favicons.loadFavicons,
+    loadFavicons: Favicons.load,
+    reloadFavicons: Favicons.load,
     setFavicon: Favicons.set,
     onOutsideSearchInput: Search.onOutsideSearchInput,
     onOutsideSearchNext: Search.next,
@@ -59,7 +63,7 @@ async function main(): Promise<void> {
     onOutsideSearchExit: Search.onOutsideSearchExit,
     onOutsideSearchBookmarks: Search.bookmarks,
     onOutsideSearchHistory: Search.history,
-    onOutsideEditingInput: Tabs.onOutsideEditingInput,
+    onOutsideEditingInput: Tabs.setEditingValue,
     onOutsideEditingEnter: Tabs.onOutsideEditingEnter,
     onOutsideEditingExit: Tabs.onOutsideEditingExit,
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
@@ -73,10 +77,10 @@ async function main(): Promise<void> {
   })
 
   await Promise.all([
-    Windows.loadWindowInfo(),
-    Settings.loadSettings(),
+    Windows.load(),
+    Settings.load(),
     Containers.load(),
-    Permissions.loadPermissions(),
+    Permissions.load(),
     Info.loadVersionInfo(),
   ])
 
@@ -87,20 +91,20 @@ async function main(): Promise<void> {
   IPC.setupConnectionListener()
 
   // Reactivate data for vue
-  Containers.reactive = shallowReactive(Containers.reactive)
-  Sidebar.initSidebar(reactive)
-  Popups.initPopups(reactive)
-  Windows.reactive = reactive(Windows.reactive)
-  Favicons.initFavicons(reactive)
-  Bookmarks.reactive = reactive(Bookmarks.reactive)
-  Tabs.initTabs(reactive)
-  DnD.reactive = reactive(DnD.reactive)
-  Permissions.reactive = reactive(Permissions.reactive)
-  Notifications.reactive = reactive(Notifications.reactive)
-  History.initHistory(reactive)
-  Search.reactive = reactive(Search.reactive)
-  Styles.reactive = reactive(Styles.reactive)
-  Sync.initSync(reactive)
+  Containers.reactivate(shallowReactive)
+  Sidebar.reactivate(reactive)
+  Popups.reactivate(reactive)
+  Windows.reactivate(reactive)
+  Favicons.reactivate(reactive)
+  Bookmarks.reactivate(reactive)
+  Tabs.reactivate(reactive)
+  DnD.reactivate(reactive)
+  Permissions.reactivate(reactive)
+  Notifications.reactivate(reactive)
+  History.reactivate(reactive)
+  Search.reactivate(reactive)
+  Styles.reactivate(reactive)
+  Sync.reactivate(reactive)
 
   Styles.updateGlobalFontSize()
   Styles.udpateGlobalFontFamily()
@@ -111,20 +115,21 @@ async function main(): Promise<void> {
   Settings.setupSettingsChangeListener()
   Permissions.setupListeners()
   Windows.setupWindowsListeners()
-  Containers.setupContainersListeners()
-  Sidebar.setupListeners()
+  Containers.setupListeners()
 
+  Styles.setupListeners()
   Styles.loadCustomSidebarCSS()
-  Styles.initColorScheme()
+  Styles.load()
+
+  IPC.connectTo(E.InstanceType.bg)
 
   await Sidebar.loadPanels()
+  Sidebar.setupListeners()
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
   const initSync = Utils.isSyncPanel(actPanel)
-
-  IPC.connectTo(InstanceType.bg)
 
   if (Sidebar.hasTabs) await Tabs.load()
   else await Tabs.loadInShadowMode()
@@ -132,26 +137,24 @@ async function main(): Promise<void> {
   if (Sidebar.hasHistory && initHistory) History.load()
   if (Sidebar.hasSync && initSync) Sync.load()
 
-  updateWebReqHandlers()
+  WebReq.updateWebReqHandlers()
 
   Menu.loadCtxMenu()
   Menu.setupListeners()
 
-  Styles.setupListeners()
+  Favicons.load()
 
-  Favicons.loadFavicons()
-
-  Keybindings.loadKeybindings()
+  Keybindings.load()
   Keybindings.setupListeners()
 
   Search.init()
 
-  IPC.onDisconnected(InstanceType.editing, (id: ID) => {
+  IPC.onDisconnected(E.InstanceType.editing, (id: ID) => {
     if (Windows.id !== id) return
     if (Tabs.byId[Tabs.editableTabId]) Tabs.onOutsideEditingExit()
   })
 
-  IPC.onConnected(InstanceType.preview, () => {
+  IPC.onConnected(E.InstanceType.preview, () => {
     if (Preview.state.status === Preview.Status.Closed) {
       IPC.sendToPreview('close')
     }
@@ -159,19 +162,38 @@ async function main(): Promise<void> {
 
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 
-  window.getSideberyState = () => {
-    // prettier-ignore
-    return {
-      IPC, Info, Settings, Containers, Sidebar, Windows, Favicons,
-      Bookmarks, Tabs, DnD, Permissions, Notifications, History,
-      Sync, Search, Styles, Menu, Snapshots,
-    }
-  }
-
   if (Settings.state.previewTabs) Preview.resetMode()
 
   Info.loadPlatformInfo()
 
   Logs.info(`Init end: ${performance.now() - ts}ms`)
+
+  window.getSideberyState = () => {
+    return {
+      Windows: Utils.clone({
+        id: Windows.id,
+        incognito: Windows.incognito,
+        uniqWinId: Windows.uniqWinId,
+        focused: Windows.focused,
+        otherWindows: Windows.otherWindows,
+        reactive: Windows.reactive,
+      }),
+      Sidebar: Utils.clone({
+        activePanelId: Sidebar.activePanelId,
+        prevActivePanelId: Sidebar.prevActivePanelId,
+        prevTabsPanelId: Sidebar.prevTabsPanelId,
+        panelsById: Sidebar.panelsById,
+        panels: Sidebar.panels,
+        nav: Sidebar.nav,
+      }),
+      Tabs: Utils.clone({
+        list: Tabs.list,
+        pinned: Tabs.pinned,
+        byId: Tabs.byId,
+      }),
+      Bookmarks: Utils.clone({ reactive: Bookmarks.reactive, tree: Bookmarks.tree }),
+      Containers: Utils.clone({ reactive: Containers.reactive }),
+    }
+  }
 }
 main()

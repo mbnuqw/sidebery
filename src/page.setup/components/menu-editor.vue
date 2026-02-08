@@ -140,13 +140,12 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, onActivated } from 'vue'
-import * as Utils from 'src/utils'
+import type { MenuConf } from 'src/types'
+import * as D from 'src/defaults'
 import { translate } from 'src/dict'
-import { TABS_MENU, BOOKMARKS_MENU } from 'src/defaults'
-import { TABS_PANEL_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults'
-import { MenuConf } from 'src/types'
-import { Menu } from 'src/services/menu'
-import { SetupPage } from 'src/services/_services'
+import * as Utils from 'src/utils'
+import * as Menu from 'src/services/menu.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
 import TextInput from '../../components/text-input.vue'
 import FooterSection from './footer-section.vue'
 import Option from './menu-editor.option.vue'
@@ -400,12 +399,12 @@ function moveSelected(e: WheelEvent, type: string): void {
  * Reset tabs menu
  */
 function resetTabsMenu(): void {
-  Menu.tabsConf = Utils.cloneArray(TABS_MENU)
+  Menu.setTabsConf(Utils.cloneArray(D.TABS_MENU))
   state.tabsConf = Menu.tabsConf
   saveDebounced(250)
 }
 function resetTabsPanelMenu(): void {
-  Menu.tabsPanelConf = Utils.cloneArray(TABS_PANEL_MENU)
+  Menu.setTabsPanelConf(Utils.cloneArray(D.TABS_PANEL_MENU))
   saveDebounced(250)
   state.tabsPanelConf = Menu.tabsPanelConf
 }
@@ -414,12 +413,12 @@ function resetTabsPanelMenu(): void {
  * Reset bookmarks menu
  */
 function resetBookmarksMenu(): void {
-  Menu.bookmarksConf = Utils.cloneArray(BOOKMARKS_MENU)
+  Menu.setBookmarksConf(Utils.cloneArray(D.BOOKMARKS_MENU))
   state.bookmarksConf = Menu.bookmarksConf
   saveDebounced(250)
 }
 function resetBookmarksPanelMenu(): void {
-  Menu.bookmarksPanelConf = Utils.cloneArray(BOOKMARKS_PANEL_MENU)
+  Menu.setBookmarksPanelConf(Utils.cloneArray(D.BOOKMARKS_PANEL_MENU))
   state.bookmarksPanelConf = Menu.bookmarksPanelConf
   saveDebounced(250)
 }

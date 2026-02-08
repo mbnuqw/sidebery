@@ -1,4 +1,5 @@
-import { Google, Logs } from './_services'
+import * as Logs from 'src/services/logs'
+import * as Google from 'src/services/google'
 
 export interface GDOutputFile extends GDFile {
   kind?: string

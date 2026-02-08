@@ -1,16 +1,13 @@
 import { SidebarConfig } from './sidebar'
 import { Container } from './containers'
-
-export const enum SnapStoreMode {
-  Unchanged = -1,
-}
+import * as E from 'src/enums'
 
 export interface Snapshot {
   id: ID
   time: number
-  containers: Record<ID, Container> | SnapStoreMode.Unchanged
-  sidebar: SidebarConfig | SnapStoreMode.Unchanged
-  tabs: (SnapTab | SnapStoreMode.Unchanged)[][][]
+  containers: Record<ID, Container> | E.SnapStoreMode.Unchanged
+  sidebar: SidebarConfig | E.SnapStoreMode.Unchanged
+  tabs: (SnapTab | E.SnapStoreMode.Unchanged)[][][]
 }
 export interface NormalizedSnapshot extends Snapshot {
   containers: Record<ID, Container>
@@ -69,17 +66,6 @@ export interface SnapTabState extends SnapTab {
   isParent: boolean
   invisible: boolean
   branchLen: number
-}
-
-export const enum RemovingSnapshotResult {
-  Ok = 1,
-  Err = -1,
-}
-
-export const enum SnapOpenType {
-  CurrentPanel = 1,
-  NewWindow = 2,
-  NewPrivateWindow = 3,
 }
 
 export interface SnapExportTypes {

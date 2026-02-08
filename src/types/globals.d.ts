@@ -7,7 +7,7 @@ type DOMEvent<E extends Event, T = any> = E & {
   currentTarget: T
 }
 
-type TranslationFn = (...args: (number | string)[]) => string
+type TranslationFn = (...args: (number | string | undefined)[]) => string
 type Translations = Record<string, Record<string, TranslationFn | string>>
 
 interface MozFocusEvent extends FocusEvent {

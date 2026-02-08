@@ -1,14 +1,14 @@
 /* eslint no-console: off */
 import { NOID } from 'src/defaults'
-import { InstanceType } from 'src/types'
-import { getInstanceName } from './info.actions'
+import * as E from 'src/enums'
+import * as Info from 'src/services/info'
 
 let _type = 'unknown'
 let _winId = ''
 let _tabId = ''
 
-export function setInstanceType(type: InstanceType): void {
-  _type = getInstanceName(type)
+export function setInstanceType(type: E.InstanceType): void {
+  _type = Info.getInstanceName(type)
 }
 
 export function setWinId(id: ID): void {

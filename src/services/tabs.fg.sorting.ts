@@ -1,11 +1,11 @@
 import * as Logs from 'src/services/logs'
-import { Tabs } from 'src/services/tabs.fg'
-import { Sidebar } from './sidebar'
-import { Settings } from './settings'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Settings from 'src/services/settings'
 import { isTabsPanel } from 'src/utils'
 import { Tab } from 'src/types'
-import { Windows } from './windows'
-import { Notifications } from './notifications'
+import * as Windows from 'src/services/windows.fg'
+import * as Notifications from 'src/services/notifications.fg'
 import { translate } from 'src/dict'
 
 export const enum By {
@@ -13,6 +13,8 @@ export const enum By {
   Url = 2,
   ATime = 3,
 }
+
+export let sorting = false
 
 let stopSorting = false
 
@@ -51,7 +53,7 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
   const sortingChunks = getSortingChunks(ids).reverse()
 
   // Lock sidebar and show progress notification
-  Tabs.sorting = true
+  sorting = true
   let progressNotification
   stopSorting = false
   if (sortingChunks.length > 1 || ids.length > 2) {
@@ -118,9 +120,9 @@ export async function sort(type: By, ids: ID[], dir = 0, tree?: boolean) {
 
   // Unlock sidebar and hide progress notification
   if (progressNotification) Notifications.finishProgress(progressNotification)
-  Tabs.sorting = false
+  sorting = false
   Tabs.deferredEventHandling.forEach(cb => cb())
-  Tabs.deferredEventHandling = []
+  Tabs.clearDeferredEventHandling()
 }
 
 function getSortableLink(sortableUrls: Map<ID, string>, tab: Tab): string {

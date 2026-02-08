@@ -10,5 +10,5 @@
 
 <script lang="ts" setup>
 import { translate } from 'src/dict'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
 </script>

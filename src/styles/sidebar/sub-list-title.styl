@@ -1,0 +1,90 @@
+@import '../utils'
+
+#root
+  --slt-margin: var(--general-margin)
+  --slt-border-radius: var(--general-border-radius)
+  --slt-padding: 6px 0
+#root[data-density="compact"]
+  --slt-padding: 5px 0
+#root[data-density="loose"]
+  --slt-padding: 7px 1px
+
+.SubListTitle
+  position: relative
+  z-index: 100
+  background-color: var(--frame-bg)
+  width: 100%
+
+.SubListTitle[data-folded="false"]
+  z-index: 1000
+
+.SubListTitle .body
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  margin: 0 var(--slt-margin) var(--slt-margin)
+  width: calc(100% - var(--slt-margin) * 2)
+  border-radius: var(--slt-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--slt-border-radius)
+    opacity: 1
+.SubListTitle:hover .body:before
+  background-color: var(--frame-el-overlay-hover-bg)
+.SubListTitle:active .body:before
+  background-color: var(--frame-el-overlay-clicked-bg)
+.SubListTitle[data-folded="false"] .body
+  background-color: var(--active-el-bg)
+  box-shadow: var(--active-el-shadow)
+
+.SubListTitle .title
+  position: relative
+  justify-content: center
+  align-items: center
+  padding: var(--slt-padding)
+  margin: 0 auto 0 6px
+  font-size: rem(15)
+  font-weight: 700
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+.SubListTitle[data-folded="false"] .title
+  color: var(--active-el-fg)
+
+.SubListTitle .len
+  position: relative
+  justify-content: center
+  align-items: center
+  margin: 0 4px
+  font-size: rem(12)
+  color: var(--frame-fg)
+  transition: opacity var(--d-fast)
+  opacity: .7
+.SubListTitle:hover .len
+  opacity: .5
+.SubListTitle[data-folded="false"] .len
+  color: var(--active-el-fg)
+  opacity: 1
+
+.SubListTitle .expand
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 0 4px 0 0
+  fill: var(--frame-fg)
+  flex-shrink: 0
+  transition: transform var(--d-fast)
+  opacity: .7
+.SubListTitle[data-folded="true"] .expand
+  transform: rotateZ(-90deg)
+.SubListTitle[data-folded="false"] .expand
+  fill: var(--active-el-fg)

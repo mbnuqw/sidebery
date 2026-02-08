@@ -7,15 +7,21 @@ section(ref="el")
     label="settings.sync_name"
     :or="translate('settings.sync_name_or')"
     v-model:value="Settings.state.syncName"
+    dbg="syncName"
+    :default="DEFAULT_SETTINGS.syncName"
     @update:value="onSyncNameUpdated")
   ToggleField(
     label="settings.sync_use_ff"
     v-model:value="Settings.state.syncUseFirefox"
+    dbg="syncUseFirefox"
+    :default="DEFAULT_SETTINGS.syncUseFirefox"
     @update:value="onFFToggle"
     :note="translate('settings.sync_ff_note')")
   ToggleField(
     label="settings.sync_use_gd"
     v-model:value="Settings.state.syncUseGoogleDrive"
+    dbg="syncUseGoogleDrive"
+    :default="DEFAULT_SETTINGS.syncUseGoogleDrive"
     :loading="gdToggling"
     @update:value="onGDToggle"
     :note="translate('settings.sync_gd_note')")
@@ -23,6 +29,8 @@ section(ref="el")
     ToggleField(
       label="settings.sync_gd_api"
       v-model:value="Settings.state.syncUseGoogleDriveApi"
+      dbg="syncUseGoogleDriveApi"
+      :default="DEFAULT_SETTINGS.syncUseGoogleDriveApi"
       :note="translate('settings.sync_gd_api_note')"
       @update:value="Settings.saveDebounced(150)")
     .sub-fields(v-if="Settings.state.syncUseGoogleDriveApi")
@@ -54,6 +62,8 @@ section(ref="el")
         :or="'...'"
         :line="true"
         v-model:value="Settings.state.syncUseGoogleDriveApiClientId"
+        dbg="syncUseGoogleDriveApiClientId"
+        :default="DEFAULT_SETTINGS.syncUseGoogleDriveApiClientId"
         @update:value="Settings.saveDebounced(500)")
       .note-field
         .inline-box
@@ -78,18 +88,26 @@ section(ref="el")
   ToggleField(
     label="settings.sync_save_settings"
     v-model:value="Settings.state.syncSaveSettings"
+    dbg="syncSaveSettings"
+    :default="DEFAULT_SETTINGS.syncSaveSettings"
     @update:value="onSettingsToggle()")
   ToggleField(
     label="settings.sync_save_ctx_menu"
     v-model:value="Settings.state.syncSaveCtxMenu"
+    dbg="syncSaveCtxMenu"
+    :default="DEFAULT_SETTINGS.syncSaveCtxMenu"
     @update:value="onMenuToggle()")
   ToggleField(
     label="settings.sync_save_styles"
     v-model:value="Settings.state.syncSaveStyles"
+    dbg="syncSaveStyles"
+    :default="DEFAULT_SETTINGS.syncSaveStyles"
     @update:value="onStylesToggle()")
   ToggleField(
     label="settings.sync_save_kb"
     v-model:value="Settings.state.syncSaveKeybindings"
+    dbg="syncSaveKeybindings"
+    :default="DEFAULT_SETTINGS.syncSaveKeybindings"
     @update:value="onKbToggle()")
 
   .ctrls
@@ -99,14 +117,17 @@ section(ref="el")
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Menu } from 'src/services/menu'
-import { SetupPage } from 'src/services/_services'
+import { DEFAULT_SETTINGS } from 'src/defaults'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Sync from 'src/services/sync.fg'
+import * as Logs from 'src/services/logs'
+import * as Google from 'src/services/google'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
 import TextField from '../../components/text-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
-import { Keybindings } from 'src/services/keybindings'
-import { Google, Logs, Sync } from 'src/services/_services'
 
 const el = ref<HTMLElement | null>(null)
 const gdToggling = ref(false)

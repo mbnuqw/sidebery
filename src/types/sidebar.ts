@@ -1,11 +1,12 @@
-import { BookmarksPanelComponent, MediaState, ScrollBoxComponent } from '../types'
+import { BookmarksPanelComponent, ScrollBoxComponent } from '../types'
 import { Tab } from './tabs'
-import { Bookmark } from './bookmarks'
+import type * as Bookmarks from 'src/services/bookmarks.fg'
+import * as E from 'src/enums'
 
 export interface NavBtn {
   id: ID
-  class: NavItemClass
-  type: ButtonType
+  class: E.NavItemClass
+  type: E.ButtonType
   name?: string
   iconSVG?: string
   iconIMG?: string
@@ -18,8 +19,8 @@ export interface NavBtn {
 
 export interface NavSpace {
   id: ID
-  class: NavItemClass
-  type: SpaceType
+  class: E.NavItemClass
+  type: E.SpaceType
 }
 
 export type NavItem = Panel | NavBtn | NavSpace
@@ -29,81 +30,10 @@ export interface SidebarConfig {
   nav: ID[]
 }
 
-export const enum PanelType {
-  bookmarks = 1,
-  tabs = 2,
-  history = 4,
-  sync = 5,
-}
-
-export const enum ButtonType {
-  settings = 100,
-  add_tp = 101,
-  search = 103,
-  hidden = 104,
-  create_snapshot = 105,
-  remute_audio_tabs = 106,
-  collapse = 107,
-}
-
-export const enum SpaceType {
-  dynamic = 200,
-  static = 201,
-}
-
-export type NavItemType = PanelType | ButtonType | SpaceType
-export const NavItemTypeNames = {
-  [PanelType.bookmarks]: 'bookmarks',
-  [PanelType.tabs]: 'tabs',
-  [PanelType.history]: 'history',
-  [PanelType.sync]: 'sync',
-  [ButtonType.settings]: 'settings',
-  [ButtonType.add_tp]: 'add_tp',
-  [ButtonType.search]: 'search',
-  [ButtonType.hidden]: 'hidden',
-  [ButtonType.create_snapshot]: 'create_snapshot',
-  [ButtonType.remute_audio_tabs]: 'remute_audio_tabs',
-  [ButtonType.collapse]: 'collapse',
-  [SpaceType.dynamic]: 'dynamic',
-  [SpaceType.static]: 'static',
-}
-
-export const enum NavItemClass {
-  panel = 1,
-  btn = 2,
-  space = 3,
-}
-export const NavItemClassNames = {
-  [NavItemClass.panel]: 'panel',
-  [NavItemClass.btn]: 'btn',
-  [NavItemClass.space]: 'space',
-}
-
-export const ButtonTypes: Record<string, ButtonType> = {
-  settings: ButtonType.settings,
-  search: ButtonType.search,
-  add_tp: ButtonType.add_tp,
-  hidden: ButtonType.hidden,
-  collapse: ButtonType.collapse,
-  create_snapshot: ButtonType.create_snapshot,
-  remute_audio_tabs: ButtonType.remute_audio_tabs,
-}
-export const ButtonTypeNames = {
-  [ButtonType.settings]: 'settings',
-  [ButtonType.search]: 'search',
-  [ButtonType.add_tp]: 'add_tp',
-  [ButtonType.hidden]: 'hidden',
-  [ButtonType.create_snapshot]: 'create_snapshot',
-}
-
-export const enum ItemBoundsType {
-  Tab = 1,
-  Bookmarks = 2,
-  Header = 3,
-}
+export type NavItemType = E.PanelType | E.ButtonType | E.SpaceType
 
 export interface ItemBounds {
-  type: ItemBoundsType
+  type: E.ItemBoundsType
   id: ID
   index: number
   in: boolean
@@ -154,7 +84,7 @@ interface PanelConfigCommonProps {
 }
 
 interface PanelCommonProps {
-  class: NavItemClass.panel
+  class: E.NavItemClass.panel
   index: number
   topOffset: number
   leftOffset: number
@@ -184,7 +114,7 @@ interface PanelCommonReactiveProps {
 /// Tabs panel
 ///
 export interface TabsPanelConfig extends PanelConfigCommonProps {
-  type: PanelType.tabs
+  type: E.PanelType.tabs
   noEmpty: boolean
   newTabCtx: string
   dropTabCtx: string
@@ -196,7 +126,7 @@ export interface TabsPanelConfig extends PanelConfigCommonProps {
 }
 
 export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
-  type: PanelType.tabs
+  type: E.PanelType.tabs
   tabs: Tab[]
   pinnedTabs: Tab[]
   filteredTabs?: Tab[]
@@ -224,14 +154,14 @@ export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   allDiscarded: boolean
   newTabCtx: string
   newTabBtns: string[]
-  mediaState: MediaState
+  mediaState: E.MediaState
 }
 
 ///
 /// Bookmarks panel
 ///
 export interface BookmarksPanelConfig extends PanelConfigCommonProps {
-  type: PanelType.bookmarks
+  type: E.PanelType.bookmarks
   rootId: ID
   viewMode: string
   tempMode: boolean
@@ -240,8 +170,10 @@ export interface BookmarksPanelConfig extends PanelConfigCommonProps {
 }
 
 export interface BookmarksPanel extends PanelCommonProps, BookmarksPanelConfig {
-  type: PanelType.bookmarks
+  type: E.PanelType.bookmarks
   component?: BookmarksPanelComponent
+  bookmarks: Bookmarks.BkmNode[]
+  filteredBookmarks?: Bookmarks.BkmNode[]
 
   reactive: BookmarksPanelReactiveProps
 
@@ -250,8 +182,8 @@ export interface BookmarksPanel extends PanelCommonProps, BookmarksPanelConfig {
 }
 
 export interface BookmarksPanelReactiveProps extends PanelCommonReactiveProps {
-  bookmarks: Bookmark[]
-  filteredBookmarks?: Bookmark[]
+  bookmarkIds: ID[]
+  filteredBookmarkIds?: ID[]
   viewMode: string
   rootOffset: number
 }
@@ -260,13 +192,13 @@ export interface BookmarksPanelReactiveProps extends PanelCommonReactiveProps {
 /// History panel
 ///
 export interface HistoryPanelConfig extends PanelConfigCommonProps {
-  type: PanelType.history
+  type: E.PanelType.history
   viewMode: string
   tempMode: boolean
 }
 
 export interface HistoryPanel extends PanelCommonProps, HistoryPanelConfig {
-  type: PanelType.history
+  type: E.PanelType.history
 
   reactive: PanelCommonReactiveProps
 }
@@ -275,13 +207,13 @@ export interface HistoryPanel extends PanelCommonProps, HistoryPanelConfig {
 /// Sync panel
 ///
 export interface SyncPanelConfig extends PanelConfigCommonProps {
-  type: PanelType.sync
+  type: E.PanelType.sync
   viewMode: string
   tempMode: boolean
 }
 
 export interface SyncPanel extends PanelCommonProps, SyncPanelConfig {
-  type: PanelType.sync
+  type: E.PanelType.sync
 
   reactive: PanelCommonReactiveProps
 }
@@ -319,14 +251,9 @@ export interface TabToPanelMoveRule {
   topLvlOnly?: boolean
 }
 
-export const enum TabReopenRuleType {
-  Include = 1,
-  Exclude = 2,
-}
-
 export interface TabReopenRuleConfig {
   id: ID
-  type: TabReopenRuleType
+  type: E.TabReopenRuleType
   active: boolean
   url: string
   name?: string

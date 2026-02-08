@@ -1,8 +1,8 @@
 import { NOID } from 'src/defaults'
 import * as Utils from 'src/utils'
-import { Containers } from './containers'
-import { Settings } from './settings'
-import { Tabs } from './tabs.fg'
+import * as Containers from 'src/services/containers'
+import * as Settings from 'src/services/settings'
+import * as Tabs from 'src/services/tabs.fg'
 
 const CONTAINER_COLORS: Record<string, string> = {
   blue: '#37adff',

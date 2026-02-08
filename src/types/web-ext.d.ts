@@ -924,6 +924,7 @@ declare namespace browser {
       children?: TreeNode[]
       dateAdded?: number
       dateGroupModified?: number
+      unmodifiable?: 'managed'
       parentId?: ID
       title: string
       type: TreeNodeType
@@ -1299,6 +1300,7 @@ declare namespace browser {
     type OnInputEnteredDisposition = 'currentTab' | 'newForegroundTab' | 'newBackgroundTab'
     interface SuggestResult {
       content: string
+      deletable: boolean
       description: string
     }
 

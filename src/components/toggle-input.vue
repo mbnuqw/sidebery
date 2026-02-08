@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { translate } from 'src/dict'
-import { ToggleInputComponent } from 'src/types'
+import type { ToggleInputComponent } from 'src/types'
 
 const emit = defineEmits(['update:value'])
 const props = defineProps<{ value: boolean | null | undefined }>()

@@ -1,0 +1,758 @@
+@import '../utils'
+
+.Snapshots
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-flow: column
+  align-items: stretch
+  overflow: hidden
+  background-color: var(--setup-bg)
+
+.Snapshots .titlebar
+  position: relative
+  display: flex
+  align-items: center
+  height: 56px
+  padding: 0 16px
+  flex-shrink: 0
+  background-color: var(--setup-bg)
+  box-shadow: inset 0 -1px 0 0 var(--border)
+  z-index: 1
+
+.Snapshots .titlebar h2
+  position: relative
+  font-size: rem(24)
+  font-weight: 400
+  color: var(--toolbar-fg)
+  flex: 1 1
+
+.Snapshots .active-snapshot-section .header
+  position: relative
+  display: flex
+  height: 56px
+  flex-flow: wrap
+  justify-content: center
+  align-items: center
+  flex-wrap: nowrap
+  grid-gap: 12px
+  padding: 0 16px
+  background-color: var(--setup-bg)
+  box-shadow: inset 0 -1px 0 0 var(--border-color)
+  &[data-empty="true"]
+    height: 100%
+    &:after
+      content: '...'
+      position: absolute
+      top: 50%
+      left: 50%
+      font-size: rem(28)
+      color: var(--toolbar-fg)
+      transform: translate(-50%, -50%)
+      opacity: .5
+
+.Snapshots .active-snapshot-section .header .title
+  position: relative
+  font-size: rem(24)
+  color: var(--toolbar-fg)
+  flex: 1 1
+  white-space: nowrap
+
+.snapshot-export-opt
+  position: relative
+  box-sizing: content-box
+  display: flex
+  flex-direction: column
+  justify-content: center
+  font-size: rem(14)
+  font-weight: 600
+  color: var(--toolbar-fg)
+  transition: color var(--d-fast)
+  flex-shrink: 0
+  line-height: 30px
+  overflow: hidden
+  opacity: .7
+  white-space: nowrap
+  cursor: default
+  user-select: none
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  > .label
+    position: relative
+    box-sizing: content-box
+    display: block
+    padding: 0 8px
+    margin: 0
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  > .note
+    position: relative
+    margin-top: -4px
+    padding: 0 8px 8px
+    font-size: rem(12)
+    line-height: normal
+    font-weight: 400
+    opacity: 0.7
+  > svg
+  > img
+    position: relative
+    box-sizing: content-box
+    flex-shrink: 0
+    display: block
+    width: 16px
+    height: 16px
+    padding: 7px
+    fill: var(--toolbar-fg)
+    transition: opacity var(--d-fast)
+  > svg + p
+  > img + p
+    padding: 0 12px 0 0
+  &:hover
+    opacity: 1
+  &:hover:before
+    opacity: .1
+  &:active
+    opacity: .7
+
+.Snapshots .wrapper
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  overflow: hidden
+
+// ---
+// -- Timeline
+// -
+.Snapshots .snapshot-list-section
+  height: 100%
+  max-width: 260px
+  flex: 1 0 auto
+  z-index: 1
+  overflow: hidden
+  box-shadow: 0 0 0 1px var(--border-color)
+
+.Snapshots .snapshot-list-section .controls
+  position: relative
+  padding: 12px 16px
+  > * + *
+    margin-top: 8px
+
+.Snapshots .snapshot-list
+  position: relative
+  width: calc(100% - 16px)
+  height: 100%
+  padding: 0 8px
+  flex: 1 0 auto
+  overflow-y: auto
+  overflow-x: hidden
+  scrollbar-color: var(--scrollbar-color) #0000
+  &[data-empty="true"]:after
+    content: '...'
+    position: absolute
+    top: 50%
+    left: 50%
+    font-size: rem(28)
+    color: var(--toolbar-fg)
+    transform: translate(-50%, -50%)
+    opacity: .5
+
+.Snapshots .snapshot
+  position: relative
+  display: flex
+  align-items: center
+  padding: 8px 0 8px 8px
+  cursor: default
+  &:before
+    content: ''
+    position: absolute
+    top: 1px
+    left: 1px
+    width: calc(100% - 2px)
+    height: calc(100% - 2px)
+    border-radius: 5px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .08
+  &:active:before
+    opacity: .05
+
+  &[data-active="true"]:before
+    opacity: .1
+
+.Snapshots .snapshot .info
+.Snapshots .snapshot .content-info
+  position: relative
+  margin: 0 auto 0 0
+
+.Snapshots .snapshot .content-info
+  opacity: .7
+
+.Snapshots .snapshot .rm-btn
+  position: relative
+  flex-shrink: 0
+  width: 16px
+  height: 16px
+  padding: 8px
+  cursor: default
+  opacity: 0
+  > svg
+    position: absolute
+    width: 16px
+    height: 16px
+    fill: var(--toolbar-fg)
+.Snapshots .snapshot:hover .rm-btn
+.Snapshots .snapshot[data-active="true"] .rm-btn
+  opacity: .7
+  >svg
+    fill: var(--status-err)
+.Snapshots .snapshot .rm-btn:hover
+  opacity: 1
+.Snapshots .snapshot .rm-btn:active
+  opacity: .5
+
+.Snapshots .snapshot .sel-btn
+  position: relative
+  flex-shrink: 0
+  width: 14px
+  height: 14px
+  border-radius: 3px
+  margin: 9px
+  cursor: default
+  box-shadow: inset 0 0 0 2px var(--toolbar-fg)
+
+.Snapshots .snapshot .date-time
+  position: relative
+  font-size: rem(15)
+  color: var(--toolbar-fg)
+  padding: 0 0 2px
+
+.Snapshots .snapshot[data-type="layer"] .date-time
+  font-size: rem(12)
+  color: var(--toolbar-fg)
+
+.Snapshots .snapshot .info
+  position: relative
+  overflow: hidden
+  font-size: rem(12)
+  color: var(--toolbar-fg)
+
+.Snapshots .snapshot[data-type="layer"] .info
+  font-size: rem(12)
+  color: var(--toolbar-fg)
+
+.Snapshots .snapshot .date-time
+.Snapshots .snapshot .content-info
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.Snapshots .snapshot .window
+  position: relative
+  white-space: nowrap
+  margin: 0 auto 0 0
+
+.Snapshots .snapshot .tabs-count
+.Snapshots .snapshot .ctx-tabs-count
+  position: relative
+  font-size: rem(12)
+  margin: 0 0 0 8px
+
+.Snapshots .snapshot .tabs-count
+  color: var(--toolbar-fg)
+
+.Snapshots .snapshot .ctx-tabs-count
+  color: var(--color, var(--toolbar-fg))
+
+// ---
+// -- Active snapshot
+// -
+.Snapshots .active-snapshot-section
+  position: relative
+  display: flex
+  width: 70%
+  height: 100%
+  overflow: hidden
+  flex-flow: column
+  flex-grow: 1
+
+.Snapshots .active-snapshot-section .content
+  position: relative
+  display: flex
+  flex: 1
+  flex-flow: column
+  align-items: center
+  overflow-y: auto
+  scrollbar-color: var(--scrollbar-color) #0000
+
+// --- Window ---
+.Snapshots .windows
+  position: relative
+  display: flex
+  width: calc(100% - 32px)
+  padding: 0 16px
+  flex: 1
+  flex-flow: column
+  grid-gap: 16px 0
+
+.Snapshots .window
+  width: 100%
+  padding-top: 8px
+  &:last-of-type
+    padding-bottom: 36px
+.Snapshots .window:last-of-type
+  padding-bottom: 64px
+
+.Snapshots .drop-down-btn
+  position: relative
+  width: 24px
+  height: 24px
+  &:hover:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    background-color: var(--toolbar-fg)
+    opacity: .05
+    border-radius: 4px
+  &:active
+    opacity: .7
+
+.Snapshots .exp-icon
+  position: absolute
+  top: 4px
+  left: 4px
+  width: 16px
+  height: 16px
+  fill: var(--toolbar-fg)
+  transition: transform var(--d-fast)
+
+.Snapshots [data-folded="true"] > .drop-down-btn > .exp-icon
+  transform: rotateZ(-90deg)
+
+.Snapshots .window-bar
+  position: sticky
+  top: 0
+  height: 32px
+  display: flex
+  align-items: center
+  z-index: 3
+  background-color: var(--frame-bg)
+
+  .drop-down-btn
+    margin-right: 4px
+
+  .btn
+    font-size: rem(14)
+    padding: 3px 8px
+  .btn:not(:last-of-type)
+    margin: 0 8px 0 0
+
+.Snapshots .win-icon
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 0 8px 0 0
+  > svg
+    position: absolute
+    width: 100%
+    height: 100%
+    fill: var(--toolbar-fg)
+    opacity: .5
+
+.Snapshots .win-name
+  position: relative
+  font-size: rem(21)
+  margin: 0 8px 0 0
+  text-align: center
+  white-space: nowrap
+  color: var(--toolbar-fg)
+
+.Snapshots .win-private
+  --private-fg: #aa30fc
+
+  position: relative
+  width: 24px
+  height: 24px
+  fill: var(--private-fg)
+  margin: 0 8px 0 0
+  padding: 0 3px 0
+
+.Snapshots .win-len
+  position: relative
+  margin: 0 auto 0 0
+  padding-right: 8px
+  font-size: rem(14)
+  white-space: nowrap
+  color: var(--toolbar-fg)
+  opacity: .7
+
+.Snapshots .panels
+  display: flex
+  flex-flow: column
+  padding: 0 0 0 12px
+
+// --- Panel ---
+.Snapshots .panel
+  position: relative
+  display: flex
+  flex-flow: column
+  padding: 3px 0
+
+.Snapshots .panel-bar
+  position: sticky
+  top: 32px
+  z-index: 2
+  display: flex
+  height: 32px
+  align-items: center
+  padding: 0 8px 0 4px
+  margin: 4px 0 2px 0
+  border-radius: 5px
+  background-color: var(--frame-bg)
+  &:before
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 5px
+    opacity: .02
+  &:before
+    background-color: var(--toolbar-fg)
+  &:after
+    box-shadow: inset 0 0 0 1px var(--toolbar-fg)
+  .drop-down-btn
+    z-index: 1
+    margin-right: 4px
+
+.Snapshots .panel-bar .icon
+  position: relative
+  width: 16px
+  height: 16px
+  > img
+  > svg
+    position: absolute
+    width: 100%
+    height: 100%
+    fill: var(--color, var(--toolbar-fg))
+
+.Snapshots .panel-bar .name
+  position: relative
+  font-size: rem(18)
+  color: var(--toolbar-fg)
+  margin: 0 8px
+
+.Snapshots .panel-bar .len
+  position: relative
+  font-size: rem(14)
+  color: var(--toolbar-fg)
+  margin: 0 2px 0 auto
+  opacity: .7
+
+.Snapshots .tabs
+  display: flex
+  flex-flow: column
+  padding: 0 0 0 12px
+
+// --- Tab ---
+.Snapshots .tab
+  position: relative
+  display: flex
+  justify-content: flex-start
+  align-items: center
+  margin: 1px 0 2px
+  padding: 3px 0
+  cursor: default
+  border-radius: 3px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    // left: 30px
+    width: calc(100% - 30px)
+    height: 100%
+    border-radius: 5px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .07
+  &:active:has(.drop-down-btn:not(:hover)):before
+    opacity: .05
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: -2px
+    left: 5px
+    width: calc(100% - 10px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .05
+
+for i in 1..12
+  .Snapshots .tab[data-lvl=\"{i}\"]
+    margin-left: (12px * i)
+
+.Snapshots .tab .color-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: calc(100% - 30px)
+  height: 100%
+  border-radius: 5px
+  background-color: var(--tab-color)
+  opacity: .2
+
+.Snapshots .tab .drop-down-btn
+  position: absolute
+  margin: 0 4px
+  z-index: 1
+  transition: opacity var(--d-fast)
+.Snapshots .tab[data-folded="false"] .drop-down-btn
+  opacity: 0
+.Snapshots .tab .drop-down-btn:hover
+  opacity: 1
+.Snapshots .tab .exp-icon
+  filter: drop-shadow(0 0 1px var(--toolbar-bg))
+.Snapshots .tab .drop-down-btn:active
+  opacity: .7
+
+.Snapshots .tab .branch-len
+  position: absolute
+  right: 0
+  bottom: -2px
+  font-size: rem(9)
+  color: var(--toolbar-fg)
+
+.Snapshots .tab .link
+  position: absolute
+  top: 0
+  left: 0
+  display: block
+  z-index: 1
+  cursor: default
+  outline: none
+  border: none
+  width: calc(100% - 30px)
+  height: 100%
+
+.Snapshots .tab .icon
+  position: relative
+  display: flex
+  width: 16px
+  height: 16px
+  margin: 0 8px
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  > img
+  > svg
+    position: absolute
+    width: 100%
+    height: 100%
+    fill: var(--toolbar-fg)
+  > svg
+    opacity: .7
+  > svg.pin
+    top: 2px
+    left: 20px
+    width: 12px
+    height: 12px
+    fill: var(--toolbar-fg)
+    filter: drop-shadow(0 0 1px var(--frame-bg))
+.Snapshots .tab[data-folded="true"] .icon
+.Snapshots .tab .drop-down-btn:hover + .icon
+  opacity: .24
+
+.Snapshots .tab .title-url
+  position: relative
+  width: 100%
+  overflow: hidden
+@media screen and (min-width: 1000px)
+  .Snapshots .tab .title-url
+    display: flex
+
+.Snapshots .tab .title
+.Snapshots .tab .url
+  position: relative
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  text-decoration: none
+  outline: none
+  border: none
+
+.Snapshots .tab .title
+  font-size: rem(12)
+  color: var(--toolbar-fg)
+.Snapshots .tab[data-pinned="true"] .title
+  margin-left: 12px
+@media screen and (min-width: 1000px)
+  .Snapshots .tab .title
+    margin: 0 16px 0 0
+    flex-grow: 1
+  .Snapshots .tab[data-pinned="true"] .title
+    margin-left: 12px
+
+.Snapshots .tab .url
+  font-size: rem(11)
+  color: var(--toolbar-fg)
+  flex-shrink: 0
+  opacity: .7
+.Snapshots .tab[data-pinned="true"] .url
+    margin-left: 12px
+@media screen and (min-width: 1000px)
+  .Snapshots .tab .url
+    width: 50%
+  .Snapshots .tab[data-pinned="true"] .url
+    margin-left: 12px
+  for i in 1..12
+    .Snapshots .tab[data-lvl=\"{i}\"] .url
+      width: 'calc(50% + %s)' % (6px * i)
+
+.Snapshots .tab .checkbox
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 24px
+  height: 24px
+  flex-shrink: 0
+  margin-left: 5px
+  opacity: .7
+  &:before
+    content: ''
+    position: absolute
+    width: 16px
+    height: 16px
+    border-radius: 3px
+    box-shadow: inset 0 0 0 2px var(--toolbar-fg)
+    opacity: .7
+  &:after
+    content: ''
+    position: absolute
+    top: -1px
+    left: 10px
+    width: 8px
+    height: 14px
+    opacity: 0
+    transform: rotateZ(45deg)
+    transition: opacity var(--d-fast)
+    filter: drop-shadow(0 0 1px #000000aa)
+    box-shadow: 2px 2px 0 0 var(--status-active)
+  &:hover
+  &[data-sel="true"]
+    opacity: 1
+  &:active
+    opacity: .7
+  &[data-sel="true"]:after
+    opacity: 1
+.Snapshots .tab[data-shift-sel="true"] .checkbox:before
+  box-shadow: inset 0 0 0 2px var(--status-active)
+
+.Snapshots .tab .container-mark
+  position: absolute
+  width: 2px
+  height: calc(100% - 8px)
+  top: 4px
+  left: 0
+  background-color: var(--color)
+
+
+.Snapshots .selection-bar
+  position: absolute
+  display: flex
+  align-items: center
+  left: 0
+  bottom: 0
+  width: 100%
+  height: 36px
+  background-color: var(--frame-bg)
+  box-shadow: 0 -1px 0 0 var(--border-color)
+  opacity: 0
+  transform: translateY(100%)
+  transition: opacity var(--d-fast), transform var(--d-fast)
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    background-color: var(--toolbar-fg)
+    opacity: .03
+  &[data-active="true"]
+    opacity: 1
+    z-index: 1
+    transform: translateY(0)
+
+.Snapshots .selection-bar .close-btn
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 24px
+  height: 100%
+  margin: 0 8px 0 0
+  cursor: default
+  > svg
+    position: absolute
+    width: 12px
+    height: 12px
+    fill: var(--status-err)
+    opacity: .7
+  &:hover > svg
+    opacity: 1
+  &:active > svg
+    opacity: .5
+
+.Snapshots .selection-bar .info
+  position: relative
+  font-size: rem(16)
+  color: var(--status-active)
+  padding: 0 12px
+  margin: 0 auto 0 0
+
+.Snapshots .selection-bar .btn
+  margin: 0 8px 0 0
+  padding: 3px 8px
+  font-size: rem(14)
+
+.Snapshots .selection-bar .DropDownButton
+  margin: 0 8px 0 0
+
+.Snapshots .selection-bar .DropDownButton .body
+  padding: 3px 8px
+  font-size: rem(14)
+
+.Snapshots .placeholder
+  position: absolute
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  grid-gap: 8px 0
+  width: 100%
+  height: 100%
+  z-index: 1
+  background-color: var(--frame-bg)
+
+.Snapshots .placeholder .btn
+  padding: 6px 16px
+  font-size: rem(16)

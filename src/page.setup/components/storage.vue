@@ -53,13 +53,15 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
+import type { Stored } from 'src/types'
+import * as Store from 'src/services/storage.fg'
+import * as Settings from 'src/services/settings.fg'
 import * as Utils from 'src/utils'
-import { Stored } from 'src/types'
-import { Store } from 'src/services/storage'
-import { Settings } from 'src/services/settings'
 import * as Logs from 'src/services/logs'
+import * as Google from 'src/services/google'
+import * as Sync from 'src/services/sync.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
 import FooterSection from './footer-section.vue'
-import { Google, Sync, SetupPage } from 'src/services/_services'
 
 interface GoogleDriveFileInfo {
   id: string

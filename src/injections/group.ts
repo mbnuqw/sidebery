@@ -1,6 +1,7 @@
 import { sleep } from 'src/utils'
-import { GroupPin, GroupedTabInfo, InstanceType, GroupConfig, DstPlaceInfo } from 'src/types'
-import { GroupPageInitData } from 'src/services/tabs.bg.actions'
+import type { GroupPin, GroupedTabInfo, GroupConfig, DstPlaceInfo } from 'src/types'
+import * as E from 'src/enums'
+import { GroupPageInitData } from 'src/services/tabs.bg'
 import { getFavPlaceholder } from 'src/services/favicons'
 import { NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
@@ -41,8 +42,8 @@ function waitInitData(): Promise<void> {
 }
 
 async function main() {
-  IPC.setInstanceType(InstanceType.group)
-  Logs.setInstanceType(InstanceType.group)
+  IPC.setInstanceType(E.InstanceType.group)
+  Logs.setInstanceType(E.InstanceType.group)
 
   try {
     await Promise.all([waitDOM(), waitInitData()])
@@ -96,7 +97,7 @@ async function main() {
     return
   }
 
-  IPC.connectTo(InstanceType.bg, groupWinId, groupTabId)
+  IPC.connectTo(E.InstanceType.bg, groupWinId, groupTabId)
 
   screenshots = {}
   tabs = initData.groupInfo.tabs || []

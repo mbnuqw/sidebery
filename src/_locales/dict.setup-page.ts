@@ -1,4 +1,4 @@
-import { NUM_1_RE, NUM_234_RE } from './dict.common'
+import { NUM_1_RE, NUM_234_RE } from 'src/_locales/dict.common'
 
 export const setupPageTranslations: Translations = {
   // ---
@@ -458,7 +458,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     hu: 'További „Új lap” parancsikonok',
     pl: 'Dodatkowe skróty "Nowa karta"',
     ru: 'Дополнительные кнопки для создания новой вкладки',
-    zh_CN: '额外的"新标签页"快捷方式',
+    zh_CN: '额外的“新标签页”快捷方式',
     zh_TW: '額外的「新分頁」捷徑',
     ja: '追加の「新しいタブ」ショートカット',
   },
@@ -618,6 +618,9 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     zh_CN: '菜单',
     zh_TW: '選單',
     ja: 'メニュー',
+  },
+  'settings.nav_settings_omnibox': {
+    en: 'Address bar',
   },
   'settings.nav_settings_nav': {
     en: 'Navigation bar',
@@ -1138,7 +1141,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.copy_title_url_indent': {
     en: 'Append an indent for child tabs/bookmarks on copying',
     de: 'Beim Kopieren einen Einzug für untergeordnete Tabs/Lesezeichen anfügen',
-    fr: 'Ajouter une identation pour les onglets ou marque-pages enfants lors de la copie',
+    fr: 'Ajouter une indentation pour les onglets ou marque-pages enfants lors de la copie',
     hu: 'Behúzás hozzáfűzése a gyermek tabulátorokhoz/könyvjelzőkhöz másolásakor',
     pl: 'Dołącz wcięcie dla kart/zakładek podrzędnych podczas kopiowania',
     ru: 'Добавлять отступ для дочерних вкладок/закладок при копировании',
@@ -1181,9 +1184,14 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_templates': {
     en: 'Copy by templates',
+    de: 'Kopieren nach Vorlagen',
     fr: 'Copier avec un modèle',
+    hu: 'Másolás sablonok alapján',
+    pl: 'Kopiowanie według szablonów',
+    ru: 'Копирование по шаблонам',
     zh_CN: '通过模板复制',
     zh_TW: '透過範本複製',
+    ja: 'テンプレートによるコピー',
   },
   'settings.copy_templates_note': {
     en: `To use this feature enable "Copy by templates..." option in context menu editor or set keybindings.
@@ -1578,6 +1586,37 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     ja: 'コンテキストメニューを編集',
   },
 
+  // - Address bar (Omnibox)
+  'settings.omnibox_title': {
+    en: 'Address bar (Omnibox)',
+  },
+  'settings.omnibox_desc': {
+    en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
+  },
+  'settings.omnibox_note': {
+    en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
+
+You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
+  },
+  'settings.omnibox_cmds': {
+    en: 'Available commands:',
+  },
+  'settings.omni_reopen_in_ctr': {
+    en: 'Reopen an active tab in container...',
+  },
+  'settings.omni_switch_to_panel': {
+    en: 'Switch to panel...',
+  },
+  'settings.omni_move_to_panel': {
+    en: 'Move an active tab to panel...',
+  },
+  'settings.omni_move_to_group': {
+    en: 'Move an active tab to group...',
+  },
+  'settings.omni_cmd_prefix': {
+    en: 'Prefix:',
+  },
+
   // - Navigation bar
   // TODO: rename 'nav' to 'navbar'
   'settings.nav_title': {
@@ -1764,6 +1803,16 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_TW: '歷史子面板',
     ja: '履歴のサブパネル',
   },
+  'settings.sub_panel.sync': {
+    en: 'Sync sub-panel',
+    de: 'Synchronisierungs-Unter-Panel',
+    fr: 'Sous-panneau Synchronisation',
+    hu: 'Szinkronizálás alpanel',
+    pl: 'Podpanel synchronizacji',
+    ru: 'Подпанель синхронизации',
+    zh: '同步子面板',
+    ja: '同期サブパネル',
+  },
   'settings.nav_bar_enabled': {
     en: 'Enabled elements',
     de: 'Aktivierte Elemente',
@@ -1774,6 +1823,17 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_CN: '已启用的元素',
     zh_TW: '已啟用的元件',
     ja: '有効な要素',
+  },
+  'settings.nav_bar_enabled_inline_note': {
+    en: 'Note: "In one line" mode is enabled, so the navigation bar elements will be separated into two groups: panels (on the left) and buttons (on the right)',
+    de: 'Hinweis: Der Modus „In einer Zeile“ ist aktiviert, sodass die Elemente der Navigationsleiste in zwei Gruppen unterteilt werden: Bedienfelder (links) und Schaltflächen (rechts)',
+    fr: 'Remarque : le mode « Sur une seule ligne » est activé, les éléments de la barre de navigation seront donc séparés en deux groupes : les panneaux (à gauche) et les boutons (à droite)',
+    hu: 'Megjegyzés: Az „Egy sorban” mód engedélyezve van, így a navigációs sáv elemei két csoportra lesznek felosztva: panelek (bal oldalon) és gombok (jobb oldalon)',
+    pl: 'Uwaga: Tryb „W jednej linii” jest włączony, więc elementy paska nawigacyjnego zostaną podzielone na dwie grupy: panele (po lewej stronie) i przyciski (po prawej stronie)',
+    ru: 'Примечание: включен режим «В одной строке», поэтому элементы панели навигации будут разделены на две группы: панели (слева) и кнопки (справа)',
+    zh_CN: '注意：“单行模式”已启用，故导航栏元素将优先分为面板和按钮左右两组',
+    zh_TW: '注意：「單行模式」已啟用，故導覽列元件將優先分為面板和按鈕左右兩組',
+    ja: '注：「1行表示」モードが有効なため、ナビゲーションバーの要素は2つのグループに分けられます：パネル（左側）とボタン（右側）',
   },
   'settings.nav_bar.no_elements': {
     en: 'No elements',
@@ -1963,7 +2023,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
       `Usunąć panel "${name}"?\nWszystkie karty z tego panelu zostaną przypisane do najbliższego panelu kart.`,
     ru: name =>
       `Удалить панель "${name}"?\n Все вкладки этой панели будут присоединены к соседней панели.`,
-    zh_CN: name => `删除 "${name}" 面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。`,
+    zh_CN: name => `删除“${name}”面板吗？\n此面板的全部标签页都将分配给最近的标签页面板。`,
     zh_TW: name => `刪除「${name}」面板嗎？\n該面板的全部分頁都將分配給最靠近的分頁面板。`,
     ja: name =>
       `「${name}」パネルを削除しますか？\nこのパネルのすべてのタブは、最も近いタブパネルに割り当てられます。`,
@@ -1975,7 +2035,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     hu: name => `Törölhető a panel: „${name}”?`,
     pl: name => `Usunąć panel ${name}"?`,
     ru: name => `Удалить панель "${name}"?`,
-    zh_CN: name => `删除 "${name}" 面板吗？`,
+    zh_CN: name => `删除“${name}”面板吗？`,
     zh_TW: name => `刪除「${name}」面板嗎？`,
     ja: name => `「${name}」パネルを削除しますか？`,
   },
@@ -2054,7 +2114,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     hu: name => `Biztos törölhető a konténer: „${name}”?`,
     pl: name => `Jesteś pewny, że chcesz usunąć kontener "${name}"?`,
     ru: name => `Вы действительно хотите удалить контейнер "${name}"?`,
-    zh_CN: name => `您确定要删除 "${name}" 容器吗？`,
+    zh_CN: name => `您确定要删除“${name}”容器吗？`,
     zh_TW: name => `您確定要刪除「${name}」容器嗎？`,
     ja: name => `「${name}」コンテナを削除しますか？`,
   },
@@ -2314,6 +2374,39 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_TW: '注意：拖曳時按住 Ctrl 將保留書籤',
     ja: '注：ブックマークの移動は、ドラッグアンドドロップが有効になっている場合にのみ機能します。',
   },
+  'settings.move_tab_to_panel': {
+    en: 'Position when dropping tabs to a panel',
+    de: 'Position beim Ablegen von Tabs auf einem Panel',
+    fr: 'Position lors du dépôt des onglets sur un panneau',
+    hu: 'Pozíció a lapok panelre való ejtésekor',
+    pl: 'Pozycja przy upuszczaniu kart do panelu',
+    ru: 'Позиция при перетаскивании вкладок на панель',
+    zh_CN: '将标签页拖放到面板时的位置',
+    zh_TW: '將分頁拖放到面板時的位置',
+    ja: 'タブをパネルにドロップしたときの位置',
+  },
+  'settings.move_tab_to_panel_start': {
+    en: 'Panel start',
+    de: 'Panel-Anfang',
+    fr: 'Début du panneau',
+    hu: 'Panel eleje',
+    pl: 'Początek panelu',
+    ru: 'Начало панели',
+    zh_CN: '面板开头',
+    zh_TW: '面板開頭',
+    ja: 'パネルの先頭',
+  },
+  'settings.move_tab_to_panel_end': {
+    en: 'Panel end',
+    de: 'Panel-Ende',
+    fr: 'Fin du panneau',
+    hu: 'Panel vége',
+    pl: 'Koniec panelu',
+    ru: 'Конец панели',
+    zh_CN: '面板末尾',
+    zh_TW: '面板末尾',
+    ja: 'パネルの最後',
+  },
 
   // - Search;
   'settings.search_title': {
@@ -2413,6 +2506,12 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     zh_CN: '关闭',
     zh_TW: '關閉',
     ja: 'オフ',
+  },
+  'settings.search_tab_switch': {
+    en: 'Keep searching after switching tabs',
+  },
+  'settings.search_menu_trigger': {
+    en: 'Keep searching after triggering the context menu option',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
@@ -3259,6 +3358,17 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '使用一般規則',
     ja: '一般ルールを使用する',
   },
+  'settings.move_new_tab_parent_indent': {
+    en: 'Create and maintain a tree structure if possible',
+    de: 'Erstellen und pflegen Sie nach Möglichkeit eine Baumstruktur',
+    fr: 'Créer et maintenir une structure arborescente si possible',
+    hu: 'Ha lehetséges, hozzon létre és tartson fenn fa szerkezetet',
+    pl: 'Utwórz i zachowaj strukturę drzewa, jeśli to możliwe',
+    ru: 'Создавать и сохранять древовидную структуру, если это возможно',
+    zh_CN: '如可能，创建并维护树状结构',
+    zh_TW: '如可能，建立並維護樹狀結構',
+    ja: '可能であればツリー構造を作成し維持する',
+  },
   'settings.move_new_tab_parent_act_panel': {
     en: 'Only if panel of parent tab is active',
     de: 'Nur, wenn Panel des übergeordneten Tabs aktiv ist',
@@ -3277,8 +3387,8 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Az új lap pozíciója, amelyet a Sidebery új lap gombjával hoztunk létre',
     pl: 'Pozycja nowej karty utworzonej za pomocą przycisku nowej karty Sidebery',
     ru: 'Позиция новой вкладки, созданной с помощью кнопки новой вкладки Sidebery',
-    zh_CN: '使用Sidebery新建标签页按钮创建的标签页位置',
-    zh_TW: '使用Sidebery新分頁按鈕所建立的新分頁位置',
+    zh_CN: '由 Sidebery 新标签页按钮创建的新标签页的位置',
+    zh_TW: '由 Sidebery 新分頁按鈕建立的新分頁的位置',
     ja: 'Sideberyの新規タブボタンを使用して作成された新規タブの位置',
   },
   'settings.move_new_tab': {
@@ -3467,6 +3577,9 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '阻止卸载已固定标签页',
     zh_TW: '阻止卸載已釘選分頁',
     ja: '固定タブのアンロードを防止する',
+  },
+  'settings.pinned.no_unload_explicit': {
+    en: 'Including explicit unloading via context menu, mouse action or keybinding',
   },
 
   // - Tabs tree
@@ -4213,15 +4326,15 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '読み込まれていないネイティブタブを非表示にする',
   },
   'settings.native_highlight': {
-    en: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar',
-    de: 'Hebe native Tabs (in horizontaler Leiste oben) ebenso hervor, wie Tabs in Seitenleiste',
-    fr: 'Indiquer la sélection dans la barre d’onglets native, en plus du panneau latéral',
-    hu: 'A natív lapok (a felső, vízszintes sávon) kiemelése az oldalsáv lapjaival összhangban',
-    pl: 'Podświetl natywne karty (w górnym poziomym pasku) razem z kartami w panelu bocznym',
-    ru: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели',
-    zh_CN: '高亮显示侧边栏中选中的标签页',
-    zh_TW: '凸顯標示側邊欄中選中的分頁',
-    ja: 'ネイティブ タブ (上部の水平バー) とサイドバーのタブを強調表示します',
+    en: 'Highlight native tabs when selecting Sidebery tabs',
+    de: 'Native Tabs bei der Auswahl von Tabs in Sidebery hervorheben',
+    fr: "Mettre en surbrillance les onglets natifs lors de la sélection d'onglets dans Sidebery",
+    hu: 'A natív lapok kiemelése a Sidebery lapjaival összhangban',
+    pl: 'Podświetlaj karty natywne podczas wybierania kart Sidebery',
+    ru: 'Выделять стандартные вкладки вместе с вкладками Sidebery',
+    zh_CN: '高亮显示 Sidebery 中选中的标签页',
+    zh_TW: '凸顯標示 Sidebery 中選中的分頁',
+    ja: 'Sidebery タブを選択した際にネイティブタブを強調表示する',
   },
   'settings.native_highlight_note': {
     en: "This will also highlight the active tab, since Firefox doesn't allow you to highlight only inactive tabs",
@@ -4342,7 +4455,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: 'Az „Egyéb könyvjelzők” mappából megnyitott könyvjelző automatikus törlése',
     pl: 'Automatyczne usuwanie otwartch zakłądek z folderu "Inne Zakładki"',
     ru: 'Удалять открываемые закладки из папки "Другие закладки"',
-    zh_CN: '从"其他书签"文件夹中打开书签时自动删除',
+    zh_CN: '从“其他书签”文件夹中打开书签时自动删除',
     zh_TW: '從「其他書籤」資料夾中開啟書籤時自動刪除',
     ja: '「その他のブックマーク」フォルダからブックマークを開くと自動的に削除する',
   },
@@ -4908,6 +5021,9 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '垂直捲動以選取分頁，並在滑鼠離開後啟動它',
     ja: '垂直スクロールでタブを選択し、マウスが離れた後にアクティブ化する',
   },
+  'settings.scroll_through_tabs_glob_pin_isolate': {
+    en: 'Isolate globally pinned tabs',
+  },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
     de: 'Überspringe eingeklappte Tabs',
@@ -5362,6 +5478,17 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '释放鼠标按钮时激活标签页',
     zh_TW: '釋放滑鼠按鍵時才啟動分頁',
     ja: 'マウスボタンを離したときにタブをアクティブにする',
+  },
+  'settings.tab_close_on_mouse_up': {
+    en: 'Trigger the close button action on mouse button release',
+    de: 'Die Schließfunktion beim Loslassen der Maustaste auslösen',
+    fr: "Lancer l'action du bouton de fermeture lorsque le bouton de la souris est relâché",
+    hu: 'A bezárás gomb műveletének elindítása az egérgomb elengedésekor',
+    pl: 'Uruchamiaj akcję przycisku zamykania po zwolnieniu przycisku myszy',
+    ru: 'Запускать действие кнопки закрытия при отпускании кнопки мыши',
+    zh_CN: '释放鼠标按钮时才触发关闭标签页按钮',
+    zh_TW: '釋放滑鼠按鍵時才觸發關閉分頁按鈕',
+    ja: 'マウスボタンを離したときに閉じるボタンを起動する',
   },
   'settings.shift_selection_from_active': {
     en: 'Start shift+click selection from the active tab',
@@ -6695,7 +6822,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 - Чтобы синхронизация работала, вам нужно зайти в Firefox аккаунт
 - Чтобы быть уверенным в том, что данные загрузились на сервер синхронизации Firefox, необходимо нажать на кнопку "Синхронизировать" в настройках или в вашем профиле в главном меню`,
     zh_CN: `- Sidebery 使用 Firefox 同步，因此您需要登录到 Firefox 帐户才能运行
-- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按"立即同步"按钮（三行按钮）`,
+- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按“立即同步”按钮（三行按钮）`,
     zh_TW: `- 您需要登入 Mozilla 帳號方可運行，因為 Sidebery 使用 Firefox 同步來實作本功能
 - 要確保資料已上傳到 Firefox 同步伺服器，您需要在下列六處擇一按「立刻同步」按鈕：
   -「工具列 > 應用程式選單 > Mozilla 帳號（設定 > 同步）」
@@ -7033,7 +7160,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     hu: usedIn => `Jelenlegi parancs: „${usedIn}”`,
     pl: usedIn => `Użyte w: "${usedIn}"`,
     ru: usedIn => `Используется в: "${usedIn}"`,
-    zh_CN: usedIn => `已用于：\n  "${usedIn}"`,
+    zh_CN: usedIn => `已用于：\n  “${usedIn}”`,
     zh_TW: usedIn => `已用於：\n  「${usedIn}」`,
     ja: usedIn => `使用箇所: "${usedIn}"`,
   },
@@ -7047,6 +7174,91 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '通用',
     zh_TW: '一般',
     ja: '一般',
+  },
+  'settings.kb_select_act_note': {
+    en: `- Activate selected tab
+- Open selected bookmark
+- Fold/unfold an active tab branch or a selected bookmarks folder
+- Activate selected context-menu option
+- Activate selected panel`,
+    de: `- Aktiviere ausgewählten Tab
+- Öffne ausgewähltes Lesezeichen
+- Klappe aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein/aus
+- Aktiviere ausgewählte Kontextmenü-Option
+- Aktiviere ausgewähltes Panel`,
+    fr: `– Activer l’onglet sélectionné
+– Ouvrir le marque-page
+– Replier/déplier une branche d’onglets active ou un dossier de marque-pages sélectionné
+– Activer l'option du menu contextuel sélectionnée
+– Activer le panneau sélectionné`,
+    hu: `– A kijelölt lap aktiválása
+– A kijelölt könyvjelző megnyitása
+– Az aktív lap ágának vagy a kijelölt könyvjelzőmappának a becsukása/kinyitása
+– A környezeti menü kijelölt elemének aktiválása
+– A kijelölt panel aktiválása`,
+    pl: `- Aktywuj zaznaczoną kartę
+- Otwórz zaznaczoną zakładkę
+- Złóż/rozwiń aktywną gałąź kart lub zaznacz folder zakładek
+- Aktywuj zaznaczoną opcję menu kontekstowego
+- Aktywuj wybrany panel`,
+    ru: `- Активировать выделенную вкладку
+- Открыть выделенную закладку
+- Свернуть/развернуть ветку активной вкладки или выделенную папку закладок
+- Активировать выделенный пункт контекстного меню
+- Активировать выделенную панель`,
+    zh_CN: `- 激活选定的标签页
+- 打开选定的书签
+- 折叠/展开活动标签页分支或选定的书签文件夹
+- 激活选定的上下文菜单选项
+- 激活选定的面板`,
+    zh_TW: `- 啟動選定的分頁
+- 開啟選定的書籤
+- 折疊/展開當前分頁分支或選定的書籤資料夾
+- 啟動選定的快捷選單選項
+- 啟動選定的面板`,
+    ja: `- 選択したタブをアクティブ化する
+- 選択したブックマークを開く
+- アクティブなタブのブランチまたは選択したブックマークフォルダの折りたたみ/展開
+- 選択したコンテキストメニューオプションをアクティブ化する
+- 選択したパネルをアクティブ化する`,
+  },
+  'settings.kb_reset_selection_note': {
+    en: `- Close non-native context menu
+- Reset selection
+- Exit from search mode
+- Close sub-panel and popups`,
+    de: `- Nicht natives Kontextmenü schließen
+- Auswahl zurücksetzen
+- Suchmodus beenden
+- Unterfenster und Popups schließen`,
+    fr: `- Fermer le menu contextuel non natif
+- Réinitialiser la sélection
+- Quitter le mode recherche
+- Fermer le sous-panneau et les fenêtres contextuelles`,
+    hu: `- Nem natív helyi menü bezárása
+- Kiválasztás visszaállítása
+- Keresési módból való kilépés
+- Alpanel és felugró ablakok bezárása`,
+    pl: `- Zamknij obce menu kontekstowe
+- Zresetuj wybór
+- Wyjdź z trybu wyszukiwania
+- Zamknij podpanel i wyskakujące okienka`,
+    ru: `- Закрыть неродное контекстное меню
+- Сбросить выделение
+- Выйти из режима поиска
+- Закрыть подпанель и всплывающие окна`,
+    zh_CN: `- 关闭非原生上下文菜单
+- 取消选中
+- 退出搜索模式
+- 关闭子面板和弹出窗口`,
+    zh_TW: `- 關閉非原生上下文選單
+- 取消選取狀態
+- 退出搜尋模式
+- 關閉子面板與浮動視窗`,
+    ja: `- 非ネイティブのコンテキストメニューを閉じる
+- 選択を解除する
+- 検索モードを終了する
+- サブパネルとポップアップウィンドウを閉じる`,
   },
   'settings.kb_menu_note': {
     en: "Note: A non-native menu will open, since it's not possible to open the native menu programmatically.",
@@ -7069,6 +7281,28 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '切换面板',
     zh_TW: '切換面板',
     ja: 'パネル間の切り替え',
+  },
+  'settings.kb_loop_panels': {
+    en: 'Loop through panels',
+    de: 'Durch die Panel schalten',
+    fr: 'Boucle à travers les panneaux',
+    hu: 'Panelek áttekintése',
+    pl: 'Cyklicznie przełączać się między panelami',
+    ru: 'Циклически переключаться по панелям',
+    zh_CN: '循环遍历面板',
+    zh_TW: '循環遍歷面板',
+    ja: 'パネルを順に巡回する',
+  },
+  'settings.kb_switching_panel.ignore_hidden': {
+    en: 'Ignore hidden panels',
+    de: 'Ausgeblendete Panel ignorieren',
+    fr: 'Ignorer les panneaux masqués',
+    hu: 'Rejtett panelek figyelmen kívül hagyása',
+    pl: 'Ignoruj ukryte panele',
+    ru: 'Игнорировать скрытые панели',
+    zh_CN: '忽略隐藏面板',
+    zh_TW: '忽略隱藏面板',
+    ja: '非表示パネルを無視する',
   },
   'settings.kb_scroll_active_panel': {
     en: 'Scrolling the active panel',
@@ -7102,6 +7336,59 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '打开新标签页',
     zh_TW: '開啟新分頁',
     ja: '新しいタブを開く',
+  },
+  'settings.new_tab_in_panel_pos': {
+    en: 'Position of the new tab',
+    de: 'Position des neuen Tabs',
+    fr: 'Position du nouvel onglet',
+    hu: 'Az új lap elhelyezése',
+    pl: 'Pozycja nowej karty',
+    ru: 'Положение новой вкладки',
+    zh_CN: '新标签页位置',
+    zh_TW: '新分頁位置',
+    ja: '新しいタブの位置',
+  },
+  'settings.new_tab_in_panel_pos_general': {
+    en: 'general rule',
+    de: 'allgemeine Regel',
+    fr: 'règle générale',
+    hu: 'általános szabály',
+    pl: 'ogólna zasada',
+    ru: 'общее правило',
+    zh_CN: '通常规则',
+    zh_TW: '基本規則',
+    ja: '一般的な規則',
+  },
+  'settings.new_tab_in_panel_pos_btn': {
+    en: 'new tab button rule',
+    de: 'Regel für die Schaltfläche „Neuer Tab“',
+    fr: 'Règle du bouton « nouvel onglet »',
+    hu: '„új lap” gomb szabály',
+    pl: 'Zasada przycisku „nowa karta”',
+    ru: 'правило кнопки новой вкладки',
+    zh_CN: '“新标签页”按钮规则',
+    zh_TW: '「新分頁」按鈕規則',
+    ja: '新しいタブ」ボタンに関するルール',
+  },
+  'settings.new_tab_in_panel_pos_start': {
+    en: 'panel start',
+    de: 'Am Anfang des Panels',
+    fr: 'début du panneau',
+    hu: 'a panel elejére',
+    pl: 'Początek panelu',
+    ru: 'начало панели',
+    zh: '面板起始位置',
+    ja: 'パネルの先頭',
+  },
+  'settings.new_tab_in_panel_pos_end': {
+    en: 'panel end',
+    de: 'Am Ende des Panels',
+    fr: 'fin du panneau',
+    hu: 'a panel végére',
+    pl: 'Koniec panelu',
+    ru: 'конец панели',
+    zh: '面板末尾位置',
+    ja: 'パネルの末尾',
   },
   'settings.kb_rm': {
     en: 'Close tab(s) / Delete bookmarks',
@@ -7167,23 +7454,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '循环',
     zh_TW: '循環',
     ja: '循環',
-  },
-  'settings.kb_select_act_note': {
-    en: '- activate selected tab\n- open selected bookmark\n- fold/unfold an active tab branch or a selected bookmarks folder\n- activate selected context-menu option\n- activate selected panel',
-    de: '- Aktiviere ausgewählten Tab\n- Öffne ausgewähltes Lesezeichen\n- Klappe aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein/aus\n- Aktiviere ausgewählte Kontextmenü-Option\n- Aktiviere ausgewähltes Panel',
-    fr: `– activer l’onglet sélectionné
-– ouvrir le marque-page
-– replier/déplier une branche d’onglets active ou un dossier de marque-pages sélectionné
-– activer l'option du menu contextuel sélectionnée
-– activer le panneau sélectionné`,
-    hu: '– A kijelölt lap aktiválása\n– A kijelölt könyvjelző megnyitása\n– Az aktív lap ágának vagy a kijelölt könyvjelzőmappának a becsukása/kinyitása\n– A környezeti menü kijelölt elemének aktiválása\n– A kijelölt panel aktiválása',
-    pl: '- aktywuj zaznaczoną kartę\n- otwórz zaznaczoną zakładkę\n- złóż/rozwiń aktywną gałąź kart lub zaznacz folder zakładek\n- aktywuj zaznaczoną opcję menu kontekstowego\n- aktywuj wybrany panel',
-    ru: '- активировать выделенную вкладку\n- открыть выделенную закладку\n- свернуть/развернуть ветку активной вкладки или выделенную папку закладок\n- активировать выделенный пункт контекстного меню\n- активировать выделенную панель',
-    zh_CN:
-      '- 激活选定的标签页\n- 打开选定的书签\n- 折叠/展开活动标签页分支或选定的书签文件夹\n- 激活选定的上下文菜单选项\n- 激活选定的面板',
-    zh_TW:
-      '- 啟動選定的分頁\n- 開啟選定的書籤\n- 折疊/展開當前分頁分支或選定的書籤資料夾\n- 啟動選定的快捷選單選項\n- 啟動選定的面板',
-    ja: '- 選択したタブをアクティブ化する\n- 選択したブックマークを開く\n- アクティブなタブのブランチまたは選択したブックマークフォルダの折りたたみ/展開\n- 選択したコンテキストメニューオプションをアクティブ化する\n- 選択したパネルをアクティブ化する',
   },
   'settings.kb_unloading_tabs': {
     en: 'Unload tabs',
@@ -7503,13 +7773,13 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
       - Wybierz "/sidebery/group.html" dla frame strony grup
     - Przejrzyj kartę "Inspektor"`,
     zh_CN: `注意事项：要获取当前可用的 CSS 选择器，请使用调试器：
-  - 点击底部的 "复制开发工具 URL" 按钮
+  - 点击底部的“复制开发工具 URL”按钮
   - 用一个新标签页打开这个 URL
   - 选择要检查的框架
     - 点击调试页面右上方的矩形图标（由三个小矩形组成）
-    - 选择 "/sidebar/sidebar.html" 侧边栏框架
-    - 选择 "/sidebery/group.html" 分组页面框架
-  - 浏览 "检查" 标签页`,
+    - 选择“/sidebar/sidebar.html”侧边栏框架
+    - 选择“/sidebery/group.html”分组页面框架
+  - 浏览“检查”标签页`,
     zh_TW: `注意：要取得當前可用的 CSS 選擇器，請使用開發者工具：
   - 點選底部的「複製開發者工具 URL」按鈕
   - 使用該 URL 開啟新分頁

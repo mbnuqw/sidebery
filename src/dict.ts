@@ -15,7 +15,7 @@ function isString(r: string | TranslationFn): r is string {
   else return false
 }
 
-export function translate(id?: string, ...args: (number | string)[]): string {
+export function translate(id?: string, ...args: (number | string | undefined)[]): string {
   if (!id) return ''
 
   const record = dict[id]

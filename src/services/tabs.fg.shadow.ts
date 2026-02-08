@@ -1,39 +1,43 @@
-import { Tab } from 'src/types'
 import * as Logs from 'src/services/logs'
-import { Tabs } from 'src/services/tabs.fg'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Links from 'src/services/links'
+
+export let shadowList: browser.tabs.Tab[] = []
+export let shadowById: Partial<Record<ID, browser.tabs.Tab>> = {}
+export let shadowMode = false
+export let shadowReady = false
 
 export async function loadInShadowMode(): Promise<void> {
   setupShadowListeners()
-  Tabs.shadowMode = true
-  const tabs = (await browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT })) as Tab[]
+  shadowMode = true
+  const tabs = await browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT })
 
-  Tabs.list = tabs
+  shadowList = tabs
   for (const tab of tabs) {
-    Tabs.byId[tab.id] = tab
-    Tabs.updateUrlCounter(tab.url, 1)
+    shadowById[tab.id] = tab
+    Links.addTab(tab)
   }
 
-  Tabs.shadowReady = true
+  shadowReady = true
 
   // Call deferred event handlers
   if (Tabs.deferredEventHandling.length) {
     Logs.warn('Tabs: Deferred event handlers:', Tabs.deferredEventHandling.length)
   }
   Tabs.deferredEventHandling.forEach(cb => cb())
-  Tabs.deferredEventHandling = []
+  Tabs.clearDeferredEventHandling()
 }
 
 export function unloadShadowed(): void {
   Tabs.resetShadowListeners()
 
-  Tabs.byId = {}
-  Tabs.urlsInUse = {}
-  Tabs.list = []
-  Tabs.shadowMode = false
-  Tabs.shadowReady = false
+  shadowById = {}
+  shadowList = []
+  shadowMode = false
+  shadowReady = false
+
+  Links.rmAllTabs()
 }
 
 export function setupShadowListeners(): void {
@@ -49,7 +53,7 @@ export function setupShadowListeners(): void {
 }
 
 export function resetShadowListeners(): void {
-  browser.tabs.onCreated.removeListener(onShadowTabCreated as (tab: browser.tabs.Tab) => void)
+  browser.tabs.onCreated.removeListener(onShadowTabCreated)
   browser.tabs.onUpdated.removeListener(onShadowTabUpdated)
   browser.tabs.onRemoved.removeListener(onShadowTabRemoved)
   browser.tabs.onMoved.removeListener(onShadowTabMoved)
@@ -64,16 +68,14 @@ function onShadowTabCreated(tab: browser.tabs.Tab): void {
     Tabs.deferredEventHandling.push(() => onShadowTabCreated(tab))
     return
   }
-  Tabs.byId[tab.id] = tab as Tab
-  Tabs.list.splice(tab.index, 0, tab as Tab)
-  const len = Tabs.list.length
+  shadowById[tab.id] = tab
+  shadowList.splice(tab.index, 0, tab)
+  const len = shadowList.length
   for (let i = tab.index; i < len; i++) {
-    Tabs.list[i].index = i
+    shadowList[i].index = i
   }
 
-  Tabs.updateUrlCounter(tab.url, 1)
-
-  if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
+  Links.addTab(tab)
 }
 
 function onShadowTabUpdated(
@@ -86,18 +88,11 @@ function onShadowTabUpdated(
     Tabs.deferredEventHandling.push(() => onShadowTabUpdated(tabId, change, tab))
     return
   }
-  const targetTab = Tabs.byId[tabId]
+  const targetTab = shadowById[tabId]
   if (!targetTab) return
 
-  if (change.url) {
-    const oldUrlCount = Tabs.updateUrlCounter(targetTab.url, -1)
-    Tabs.updateUrlCounter(change.url, 1)
-
-    // Mark/Unmark open bookmarks
-    if (Settings.state.highlightOpenBookmarks) {
-      if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
-      Bookmarks.markOpenBookmarksDebounced(change.url)
-    }
+  if (change.url !== undefined && targetTab.url !== change.url) {
+    Links.updTab(targetTab, change.url)
   }
 
   Object.assign(targetTab, change)
@@ -109,26 +104,22 @@ function onShadowTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
     Tabs.deferredEventHandling.push(() => onShadowTabRemoved(tabId, info))
     return
   }
-  const targetTab = Tabs.byId[tabId]
+  const targetTab = shadowById[tabId]
   if (!targetTab) return
 
   let index = targetTab.index
-  if (targetTab !== Tabs.list[index]) index = Tabs.list.findIndex(t => t.id === tabId)
+  if (targetTab !== shadowList[index]) index = shadowList.findIndex(t => t.id === tabId)
   if (index !== -1) {
-    Tabs.list.splice(index, 1)
-    const len = Tabs.list.length
+    shadowList.splice(index, 1)
+    const len = shadowList.length
     for (let i = index; i < len; i++) {
-      Tabs.list[i].index = i
+      shadowList[i].index = i
     }
   }
 
-  delete Tabs.byId[tabId]
+  delete shadowById[tabId]
 
-  const urlCount = Tabs.updateUrlCounter(targetTab.url, -1)
-
-  if (Settings.state.highlightOpenBookmarks && !urlCount) {
-    Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
-  }
+  Links.rmTab(targetTab)
 }
 
 function onShadowTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
@@ -138,11 +129,11 @@ function onShadowTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     return
   }
 
-  const movedTab = Tabs.list.splice(info.fromIndex, 1)[0]
-  Tabs.list.splice(info.toIndex, 0, movedTab)
+  const movedTab = shadowList.splice(info.fromIndex, 1)[0]
+  shadowList.splice(info.toIndex, 0, movedTab)
 
-  for (let i = Tabs.list.length; i--; ) {
-    Tabs.list[i].index = i
+  for (let i = shadowList.length; i--; ) {
+    shadowList[i].index = i
   }
 }
 
@@ -174,8 +165,8 @@ function onShadowTabActivated(info: browser.tabs.ActiveInfo): void {
     return
   }
 
-  const prevTab = Tabs.byId[info.previousTabId]
-  const targetTab = Tabs.byId[info.tabId]
+  const prevTab = shadowById[info.previousTabId]
+  const targetTab = shadowById[info.tabId]
   if (prevTab) prevTab.active = false
   if (targetTab) targetTab.active = true
 }

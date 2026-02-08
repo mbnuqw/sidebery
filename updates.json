@@ -3,130 +3,6 @@
     "{3c078156-979c-498b-8990-85f7987dd929}": {
       "updates": [
         {
-          "version": "5.0.0rc1",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc1/sidebery-5.0.0rc1.xpi"
-        },
-        {
-          "version": "5.0.0rc2",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc2/sidebery-5.0.0rc2.xpi"
-        },
-        {
-          "version": "5.0.0rc3",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc3/sidebery-5.0.0rc3.xpi"
-        },
-        {
-          "version": "5.0.0rc4",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc4/sidebery-5.0.0rc4.xpi"
-        },
-        {
-          "version": "5.0.0rc5",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc5/sidebery-5.0.0rc5.xpi"
-        },
-        {
-          "version": "5.0.0rc5",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc5/sidebery-5.0.0rc5.xpi"
-        },
-        {
-          "version": "5.0.0.1",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0/sidebery-5.0.0.1.xpi"
-        },
-        {
-          "version": "5.1.1.1",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.1.xpi"
-        },
-        {
-          "version": "5.1.1.2",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.2.xpi"
-        },
-        {
-          "version": "5.1.1.3",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.3.xpi"
-        },
-        {
-          "version": "5.1.1.4",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.4.xpi"
-        },
-        {
-          "version": "5.1.1.5",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.5.xpi"
-        },
-        {
-          "version": "5.1.1.6",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.6.xpi"
-        },
-        {
-          "version": "5.1.1.7",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.7.xpi"
-        },
-        {
-          "version": "5.1.1.8",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.8.xpi"
-        },
-        {
-          "version": "5.1.1.9",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.9.xpi"
-        },
-        {
-          "version": "5.1.1.10",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.10.xpi"
-        },
-        {
-          "version": "5.1.1.11",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.1.1/sidebery-5.1.1.11.xpi"
-        },
-        {
-          "version": "5.2.0.1",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.1.xpi"
-        },
-        {
-          "version": "5.2.0.2",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.2.xpi"
-        },
-        {
-          "version": "5.2.0.3",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.3.xpi"
-        },
-        {
-          "version": "5.2.0.4",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.4.xpi"
-        },
-        {
-          "version": "5.2.0.5",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.5.xpi"
-        },
-        {
-          "version": "5.2.0.6",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.6.xpi"
-        },
-        {
-          "version": "5.2.0.7",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.7.xpi"
-        },
-        {
-          "version": "5.2.0.8",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.8.xpi"
-        },
-        {
-          "version": "5.2.0.9",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.9.xpi"
-        },
-        {
-          "version": "5.2.0.10",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.10.xpi"
-        },
-        {
-          "version": "5.2.0.11",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.11.xpi"
-        },
-        {
-          "version": "5.2.0.12",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.12.xpi"
-        },
-        {
-          "version": "5.2.0.13",
-          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.2.0/sidebery-5.2.0.13.xpi"
-        },
-        {
           "version": "5.3.0.1",
           "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.0/sidebery-5.3.0.1.xpi"
         },
@@ -297,6 +173,98 @@
         {
           "version": "5.3.3.29",
           "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.29.xpi"
+        },
+        {
+          "version": "5.3.3.30",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.30.xpi"
+        },
+        {
+          "version": "5.3.3.31",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.31.xpi"
+        },
+        {
+          "version": "5.3.3.32",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.32.xpi"
+        },
+        {
+          "version": "5.3.3.33",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.33.xpi"
+        },
+        {
+          "version": "5.3.3.34",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.34.xpi"
+        },
+        {
+          "version": "5.3.3.35",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.35.xpi"
+        },
+        {
+          "version": "5.3.3.36",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.36.xpi"
+        },
+        {
+          "version": "5.3.3.37",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.37.xpi"
+        },
+        {
+          "version": "5.3.3.38",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.3.3/sidebery-5.3.3.38.xpi"
+        },
+        {
+          "version": "5.4.0.1",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.1.xpi"
+        },
+        {
+          "version": "5.4.0.2",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.2.xpi"
+        },
+        {
+          "version": "5.4.0.3",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.3.xpi"
+        },
+        {
+          "version": "5.4.0.4",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.4.xpi"
+        },
+        {
+          "version": "5.4.0.5",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.5.xpi"
+        },
+        {
+          "version": "5.4.0.6",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.6.xpi"
+        },
+        {
+          "version": "5.4.0.7",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.7.xpi"
+        },
+        {
+          "version": "5.4.0.8",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.8.xpi"
+        },
+        {
+          "version": "5.4.0.9",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.9.xpi"
+        },
+        {
+          "version": "5.4.0.10",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.10.xpi"
+        },
+        {
+          "version": "5.4.0.11",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.11.xpi"
+        },
+        {
+          "version": "5.4.0.12",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.12.xpi"
+        },
+        {
+          "version": "5.4.0.13",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.13.xpi"
+        },
+        {
+          "version": "5.4.0.14",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.4.0/sidebery-5.4.0.14.xpi"
         }
       ]
     }

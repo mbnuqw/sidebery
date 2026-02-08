@@ -1,4 +1,4 @@
-import { NUM_1_RE, NUM_234_RE } from './dict.common'
+import { NUM_1_RE, NUM_234_RE } from 'src/_locales/dict.common'
 
 export const sidebarTranslations: Translations = {
   // ---
@@ -39,7 +39,7 @@ export const sidebarTranslations: Translations = {
     hu: n => `Biztosan bezárható a lap: „${n}”?`,
     pl: n => `jesteś pewnien, że chcesz zamknąć karty ${n}?`,
     ru: n =>
-      NUM_234_RE.test(n.toString())
+      NUM_234_RE.test(n?.toString() ?? '?')
         ? `Вы действительно хотите закрыть ${n} вкладки?`
         : `Вы действительно хотите закрыть ${n} вкладок?`,
     zh_CN: n => `您确定要关闭 ${n} 个标签页吗？`,
@@ -126,7 +126,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.new_tab_in_default_container_with_url': {
     en: url => `Open "${url}" in a new tab`,
     fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
-    zh_CN: url => `打开新标签页 "${url}"`,
+    zh_CN: url => `打开新标签页“${url}”`,
     zh_TW: url => `開啟新分頁「${url}」`,
     ja: url => `新しいタブで「${url}」を開く`,
   },
@@ -148,14 +148,14 @@ export const sidebarTranslations: Translations = {
     hu: name => `Új lap ebben a konténerben: „${name}”`,
     pl: name => `Otwórz nową kartę w kontenerze "${name}"`,
     ru: name => `Открыть новую вкладку в контейнере "${name}"`,
-    zh_CN: name => `在 "${name}" 容器中打开新标签页`,
+    zh_CN: name => `在“${name}”容器中打开新标签页`,
     zh_TW: name => `在「${name}」容器中開啟新分頁`,
     ja: name => `「${name}」コンテナで新しいタブを開く`,
   },
   'newTabBar.new_tab_in_container_with_url': {
     en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
     fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
-    zh_CN: (url, name) => `在 "${name}" 容器中打开新标签页 "${url}"`,
+    zh_CN: (url, name) => `在“${name}”容器中打开新标签页“${url}”`,
     zh_TW: (url, name) => `在「${name}」容器中開啟新分頁「${url}」`,
     ja: (url, name) => `「${name}」コンテナの新しいタブで「${url}」を開く`,
   },
@@ -173,14 +173,14 @@ export const sidebarTranslations: Translations = {
   'newTabBar.open_child_tab_with_url': {
     en: url => `Middle click: Open "${url}" in a child tab`,
     fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
-    zh_CN: url => `中键单击：打开子标签页 "${url}"`,
+    zh_CN: url => `中键单击：打开子标签页“${url}”`,
     zh_TW: url => `中鍵點選：開啟子分頁「${url}」`,
     ja: url => `中クリック：子タブで「${url}」を開く`,
   },
   'newTabBar.open_child_tab_in_container': {
     en: name => `Middle click: Open a child tab in "${name}" container`,
     fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
-    zh_CN: name => `中键单击：在 "${name}" 容器中打开子标签页`,
+    zh_CN: name => `中键单击：在“${name}”容器中打开子标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中開啟子分頁`,
     ja: name => `中クリック：「${name}」コンテナで子タブを開く`,
   },
@@ -188,7 +188,7 @@ export const sidebarTranslations: Translations = {
     en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
     fr: (url, name) =>
       `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
-    zh_CN: (url, name) => `中键单击：在 "${name}" 容器中打开子标签页 "${url}"`,
+    zh_CN: (url, name) => `中键单击：在“${name}”容器中打开子标签页“${url}”`,
     zh_TW: (url, name) => `中鍵點選：在「${name}」容器中開啟子分頁「${url}」`,
     ja: (url, name) => `中クリック：「${name}」コンテナの子タブで「${url}」を開く`,
   },
@@ -206,14 +206,14 @@ export const sidebarTranslations: Translations = {
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
-    zh_CN: url => `中键点击：中加载 "${url}" 于活动标签页`,
-    zh_TW: url => `中鍵點選：中載入「${url}」於當前分頁`,
+    zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
+    zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
     ja: url => `中クリック: アクティブなタブに「${url}」を読み込む`,
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
-    zh_CN: name => `中键点击：在 "${name}" 容器中重新打开活动标签页`,
+    zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟當前分頁`,
     ja: name => `中クリック: 「${name}」コンテナでアクティブタブを再度開く`,
   },
@@ -221,7 +221,7 @@ export const sidebarTranslations: Translations = {
     en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
-    zh_CN: (url, name) => `中键点击：在 "${name}" 容器中加载 "${url}" 于活动标签页`,
+    zh_CN: (url, name) => `中键点击：在“${name}”容器中加载“${url}”于活动标签页`,
     zh_TW: (url, name) => `中鍵點選：在「${name}」容器中載入「${url}」於當前分頁`,
     ja: (url, name) => `中クリック: 「${name}」コンテナでアクティブタブに「${url}」を読み込みます`,
   },
@@ -303,7 +303,7 @@ export const sidebarTranslations: Translations = {
     hu: folderName => `A lapok ebbe a mappába lesznek mentve: „${folderName}”`,
     pl: folderName => `Karty zostaną zapisane w folderze "${folderName}"`,
     ru: folderName => `Вкладки были сохранены в папке "${folderName}"`,
-    zh_CN: folderName => `标签页已保存在 "${folderName}" 文件夹中`,
+    zh_CN: folderName => `标签页已保存在“${folderName}”文件夹中`,
     zh_TW: folderName => `分頁已儲存在「${folderName}」資料夾中`,
     ja: folderName => `タブは「${folderName}」フォルダに保存されました`,
   },
@@ -484,28 +484,17 @@ export const sidebarTranslations: Translations = {
     zh_TW: '不再顯示',
     ja: '再表示しない',
   },
-  // - Session restore
-  'popup.ses_res.title': {
-    en: 'Session Restore',
-    de: 'Sitzung wiederherstellen',
-    fr: 'Restauration de session',
-    hu: 'Munkamenet visszaállítása',
-    pl: 'Przywrócenie sesji',
-    ru: 'Восстановление сеанса',
-    zh_CN: '会话恢复',
-    zh_TW: '會話還原',
-    ja: 'セッション復元',
-  },
-  'popup.ses_res.desc': {
-    en: 'Sidebery is reinitializing tabs for restored session, please wait...',
-    de: 'Sidebery initialisiert die Registerkarten für die wiederhergestellte Sitzung neu. Bitte warten Sie...',
-    fr: 'Sidebery réinitialise les onglets pour la session restaurée, veuillez patienter...',
-    hu: 'Sidebery újraindítja a visszaállított munkamenet lapjait, kérjük, várjon...',
-    pl: 'Sidebery ponownie inicjuje karty dla przywróconej sesji, proszę czekać...',
-    ru: 'Sidebery инициализирует вкладки для восстановленной сессии, пожалуйста, подождите...',
-    zh_CN: 'Sidebery正在为恢复的会话重新初始化标签页，请稍候...',
-    zh_TW: 'Sidebery 正為還原的會話重新初始化分頁，請稍候...',
-    ja: 'Sideberyは復元されたセッションのタブを再初期化中です。お待ちください...',
+  // - Processing tabs
+  'popup.proc_tabs.title': {
+    en: 'Processing tabs...',
+    de: 'Verarbeitung der Tabs...',
+    fr: 'Traitement des onglets...',
+    hu: 'Feldolgozás lapok...',
+    pl: 'Przetwarzanie karty...',
+    ru: 'Обработка вкладок...',
+    zh_CN: '正在处理标签页...',
+    zh_TW: '正在處理分頁...',
+    ja: 'タブを処理しています...',
   },
 
   // ---
@@ -1087,7 +1076,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Nie można przywrócić panelu z zakładek',
     ru: 'Невозможно восстановить панель из закладок',
     zh_CN: '无法从书签恢复面板',
-    zh_TW: '無法從書籤復原面板',
+    zh_TW: '無法從書籤回復面板',
     ja: 'ブックマークからパネルを復元できません',
   },
   'notif.restore_from_bookmarks_err.root': {
@@ -1109,7 +1098,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Panel kart został pomyślnie przywrócony',
     ru: 'Панель вкладок успешно восстановлена',
     zh_CN: '标签页面板已恢复',
-    zh_TW: '分頁面板已復原',
+    zh_TW: '分頁面板已回復',
     ja: 'タブパネルが正常に復元されました',
   },
   'notif.panel_conv': {

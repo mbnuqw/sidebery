@@ -3,12 +3,20 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{3c078156-979c-498b-8990-85f7987dd929}",
-      "strict_min_version": "128.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ],
+        "optional": [
+          "browsingActivity"
+        ]
+      }
     }
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "5.3.3",
+  "version": "5.4.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -65,6 +73,24 @@
         "windows": "F1"
       },
       "description": "__MSG_KbOpenSidebarPanel__"
+    },
+    "activate": {
+      "suggested_key": {
+        "default": "Alt+Space"
+      },
+      "description": "__MSG_KbActivate__"
+    },
+    "reset_selection": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "__MSG_KbResetSelection__"
+    },
+    "loop_panels_forwards": {
+      "description": "__MSG_KbLoopPanelsForwards__"
+    },
+    "loop_panels_backwards": {
+      "description": "__MSG_KbLoopPanelsBackwards__"
     },
     "next_panel": {
       "suggested_key": {
@@ -143,17 +169,11 @@
       },
       "description": "__MSG_KbDownShift__"
     },
-    "activate": {
-      "suggested_key": {
-        "default": "Alt+Space"
-      },
-      "description": "__MSG_KbActivate__"
+    "sel_tabs_branch": {
+      "description": "__MSG_KbSelBranch__"
     },
-    "reset_selection": {
-      "suggested_key": {
-        "default": "Alt+R"
-      },
-      "description": "__MSG_KbResetSelection__"
+    "sel_child_tabs": {
+      "description": "__MSG_KbSelChildTabs__"
     },
     "lock_selection": {
       "description": "__MSG_KbLockSel__"
@@ -395,9 +415,6 @@
     "edit_title": {
       "description": "__MSG_KbEditTitle__"
     },
-    "sel_child_tabs": {
-      "description": "__MSG_KbSelChildTabs__"
-    },
     "sort_tabs_by_title_asc": {
       "description": "__MSG_KbSortTabsByTitleAsc__"
     },
@@ -484,5 +501,8 @@
   },
   "background": {
     "page": "bg/background.html"
+  },
+  "omnibox": {
+    "keyword": "="
   }
 }

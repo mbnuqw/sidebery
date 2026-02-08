@@ -1,0 +1,100 @@
+@import '../utils'
+
+.sync-data
+  position: relative
+  width: calc(100% - 32px)
+  justify-content: center
+  align-items: flex-start
+  padding: 8px 16px
+  &:not(:first-of-type)
+    margin-top: 3px
+
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: -2px
+    left: 6px
+    width: calc(100% - 12px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+
+  &.-no-separator:after
+    display: none
+
+  &:hover:before
+    opacity: .1
+  &:active:before
+    opacity: .08
+
+.sync-title
+  position: relative
+  font-size: rem(16)
+  color: var(--toolbar-fg)
+  padding: 2px 0
+  margin: 0 0 8px
+
+.sync-list
+  position: relative
+  display: table
+  table-layout: auto
+  padding: 0 0 0 16px
+
+.sync-item
+  position: relative
+  &:before
+    content: ''
+    position: absolute
+    top: -1px
+    left: -4px
+    width: calc(100% + 5px)
+    height: calc(100% + 2px)
+    border-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:after
+    content: ''
+    position: absolute
+    top: calc(50% - 2px)
+    left: -10px
+    width: 4px
+    height: 4px
+    border-radius: 50%
+    background-color: var(--toolbar-fg)
+    opacity: .3
+  &[data-same-profile="true"]:after
+    opacity: .7
+  &:hover:before
+    opacity: .03
+
+.sync-name
+  position: relative
+  width: 100%
+  max-width: 100px
+  font-size: rem(14)
+  color: var(--toolbar-fg)
+  opacity: .7
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: 2px 8px 2px 2px
+
+.sync-info
+  position: relative
+  font-size: rem(12)
+  color: var(--toolbar-fg)
+  opacity: .7
+  white-space: nowrap
+  padding: 2px 8px
+
+.sync-item[data-same-profile="true"] .sync-name
+.sync-item[data-same-profile="true"] .sync-info
+  opacity: 1
+
+.sync-btns
+  display: flex
+
+.btn.sync-btn
+  font-size: rem(12)
+  padding: 3px 6px
+  margin-left: 4px

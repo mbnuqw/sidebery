@@ -3,11 +3,20 @@ description: Request a feature
 labels: []
 projects: []
 body:
+  - type: markdown
+    attributes:
+      value: |-
+        > [!IMPORTANT]  
+        > - Use concise, clear wording when describing the feature.
+        > - Use screenshots, schemes if they help express your ideas.
+        > - An issue written in a language other than English will be closed.
+        > - An issue containing two or more unrelated feature requests will be closed.
+        > - An issue containing AI-slop will be closed.
+        > - If you have a question, use [discussions](https://github.com/mbnuqw/sidebery/discussions).
+
   - type: textarea
     id: desc
     attributes:
       label: Description
-      description: |
-        Note: Issue containing two or more unrelated feature requests will be closed. If you have a question, use [discussions](https://github.com/mbnuqw/sidebery/discussions).
     validations:
       required: true

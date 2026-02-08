@@ -5,51 +5,73 @@ section(ref="el")
   ToggleField(
     label="settings.load_bookmarks_on_demand"
     v-model:value="Settings.state.loadBookmarksOnDemand"
+    dbg="loadBookmarksOnDemand"
+    :default="DEFAULT_SETTINGS.loadBookmarksOnDemand"
     @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.warn_on_multi_bookmark_delete"
     optLabel="settings.warn_on_multi_bookmark_delete_"
     v-model:value="Settings.state.warnOnMultiBookmarkDelete"
+    dbg="warnOnMultiBookmarkDelete"
+    :default="DEFAULT_SETTINGS.warnOnMultiBookmarkDelete"
     :opts="Settings.getOpts('warnOnMultiBookmarkDelete')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.ask_new_bookmark_place"
     v-model:value="Settings.state.askNewBookmarkPlace"
+    dbg="askNewBookmarkPlace"
+    :default="DEFAULT_SETTINGS.askNewBookmarkPlace"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.bookmarks_rm_undo_note"
     v-model:value="Settings.state.bookmarksRmUndoNote"
+    dbg="bookmarksRmUndoNote"
+    :default="DEFAULT_SETTINGS.bookmarksRmUndoNote"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.auto_close_bookmarks"
     v-model:value="Settings.state.autoCloseBookmarks"
+    dbg="autoCloseBookmarks"
+    :default="DEFAULT_SETTINGS.autoCloseBookmarks"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.auto_rm_other"
     v-model:value="Settings.state.autoRemoveOther"
+    dbg="autoRemoveOther"
+    :default="DEFAULT_SETTINGS.autoRemoveOther"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.show_bookmark_len"
     v-model:value="Settings.state.showBookmarkLen"
+    dbg="showBookmarkLen"
+    :default="DEFAULT_SETTINGS.showBookmarkLen"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.highlight_open_bookmarks"
     v-model:value="Settings.state.highlightOpenBookmarks"
+    dbg="highlightOpenBookmarks"
+    :default="DEFAULT_SETTINGS.highlightOpenBookmarks"
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
       label="settings.activate_open_bookmark_tab"
       v-model:value="Settings.state.activateOpenBookmarkTab"
+      dbg="activateOpenBookmarkTab"
+      :default="DEFAULT_SETTINGS.activateOpenBookmarkTab"
       :inactive="!Settings.state.highlightOpenBookmarks"
       @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.pin_opened_bookmarks_folder"
     v-model:value="Settings.state.pinOpenedBookmarksFolder"
+    dbg="pinOpenedBookmarksFolder"
+    :default="DEFAULT_SETTINGS.pinOpenedBookmarksFolder"
     @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.old_bookmarks_after_save"
     optLabel="settings.old_bookmarks_after_save_"
     v-model:value="Settings.state.oldBookmarksAfterSave"
+    dbg="oldBookmarksAfterSave"
+    :default="DEFAULT_SETTINGS.oldBookmarksAfterSave"
     :opts="Settings.getOpts('oldBookmarksAfterSave')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
@@ -68,13 +90,16 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, CSSProperties, computed } from 'vue'
-import { Bookmark, Stored, InstanceType } from 'src/types'
-import * as Utils from 'src/utils'
+import type { CSSProperties } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import type { NativeBkmNode, Stored } from 'src/types'
+import { DEFAULT_SETTINGS } from 'src/defaults'
+import { InstanceType } from 'src/enums'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import { Permissions } from 'src/services/permissions'
-import { SetupPage } from 'src/services/_services'
+import * as Utils from 'src/utils'
+import * as Settings from 'src/services/settings.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
 import * as IPC from 'src/services/ipc'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
@@ -100,9 +125,9 @@ const progressBarStyle = computed<CSSProperties>(() => {
  * Returns array of urls of all bookmarks
  */
 async function getBookmarkedUrls(): Promise<string[]> {
-  const bookmarksRoot = (await browser.bookmarks.getTree()) as Bookmark[]
+  const bookmarksRoot = await browser.bookmarks.getTree()
   const bookmarksUrls: string[] = []
-  const hWalk = (nodes: Bookmark[]) => {
+  const hWalk = (nodes: NativeBkmNode[]) => {
     for (let n of nodes) {
       if (n.url) bookmarksUrls.push(n.url)
       if (n.children) hWalk(n.children)

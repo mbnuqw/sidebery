@@ -49,19 +49,19 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { translate } from 'src/dict'
-import { Container, TabReopenRuleConfig, TabReopenRuleType, TabsPanel } from 'src/types'
-import { TabToPanelMoveRuleConfig } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
-import { Containers } from 'src/services/containers'
+import type * as T from 'src/types'
+import * as E from 'src/enums'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Settings from 'src/services/settings.fg'
 import TextField from './text-field.vue'
 import ToggleField from './toggle-field.vue'
 import SelectField from './select-field.vue'
-import * as Utils from 'src/utils'
-import * as Popups from 'src/services/popups'
-import { Tabs } from 'src/services/tabs.fg'
-import { Windows } from 'src/services/windows'
-import { Permissions } from 'src/services/permissions'
-import { Settings } from 'src/services/settings'
 
 interface Option {
   value: string
@@ -81,7 +81,6 @@ interface MatchOption {
 interface URLInfo {
   scheme: string
   hostParts: string[]
-  pathParts: string[]
 }
 
 const matchOptions = ref<MatchOption[] | null>(null)
@@ -137,8 +136,9 @@ function init() {
 
   const url = Popups.reactive.siteConfigPopup.url
   const urlInfo = parseURL(url)
-  const isHTTP = urlInfo.scheme.startsWith('http')
+  if (!urlInfo) return
 
+  const isHTTP = urlInfo.scheme.startsWith('http')
   const options: MatchOption[] = []
   const isCustomOptActive = urlInfo.hostParts.length <= 1 || !isHTTP
 
@@ -213,12 +213,12 @@ function findExistedRules() {
   }
 }
 
-type FindReopenRuleResult = { rule: TabReopenRuleConfig; container: Container }
+type FindReopenRuleResult = { rule: T.TabReopenRuleConfig; container: T.Container }
 function findReopenRule(url: string): FindReopenRuleResult | undefined {
   for (const container of Object.values(Containers.reactive.byId)) {
     for (const rule of container.reopenRules) {
       if (!container.reopenRulesActive) continue
-      if (rule.type === TabReopenRuleType.Exclude) continue
+      if (rule.type === E.TabReopenRuleType.Exclude) continue
       const re = parseUrlRuleRE(rule.url)
       if (re && re.test(url)) return { rule, container }
       else if (url === rule.url) return { rule, container }
@@ -226,7 +226,7 @@ function findReopenRule(url: string): FindReopenRuleResult | undefined {
   }
 }
 
-type FindMoveToPanelRuleResult = { rule: TabToPanelMoveRuleConfig; panel: TabsPanel }
+type FindMoveToPanelRuleResult = { rule: T.TabToPanelMoveRuleConfig; panel: T.TabsPanel }
 function findMoveToPanelRule(url: string): FindMoveToPanelRuleResult | undefined {
   for (const panel of Sidebar.panels) {
     if (!Utils.isTabsPanel(panel)) continue
@@ -250,17 +250,19 @@ function parseUrlRuleRE(url: string): RegExp | undefined {
   }
 }
 
-function parseURL(url: string): URLInfo {
-  const sParts = url.split('://')
-  const pParts = sParts[sParts.length - 1]?.split('/')
-  const host = pParts.shift()
-  const hostParts = host?.split('.') ?? []
-  const scheme = sParts[0]
+function parseURL(url: string): URLInfo | undefined {
+  let u
+  try {
+    u = new URL(url)
+  } catch {
+    return
+  }
+  const scheme = u.protocol.slice(0, -1)
+  const hostParts = u.host.split('.') ?? []
 
   return {
     scheme,
     hostParts,
-    pathParts: pParts,
   }
 }
 
@@ -342,10 +344,10 @@ function onSave(): void {
 
   // Create new reopening rule
   if (rContainer) {
-    const ruleConfig: TabReopenRuleConfig = {
+    const ruleConfig: T.TabReopenRuleConfig = {
       id: Utils.uid(),
       active: true,
-      type: TabReopenRuleType.Include,
+      type: E.TabReopenRuleType.Include,
       url: match,
     }
     if (!rContainer.reopenRules.length) rContainer.reopenRulesActive = true
@@ -362,7 +364,7 @@ function onSave(): void {
 
   // Create moving rule
   if (Utils.isTabsPanel(mPanel)) {
-    const ruleConfig: TabToPanelMoveRuleConfig = { id: Utils.uid(), active: true }
+    const ruleConfig: T.TabToPanelMoveRuleConfig = { id: Utils.uid(), active: true }
     ruleConfig.url = match
     ruleConfig.topLvlOnly = mPanelTopLvlOnly
     if (matchOption?.name) ruleConfig.name = matchOption.name

@@ -1,0 +1,126 @@
+vendors = official
+
+@import '../utils'
+
+@import '../vars'
+@import '../btn'
+@import '../animations'
+@import '../scroll-box'
+@import '../popup.config'
+@import '../loading-dots'
+@import '../inputs'
+@import '../popup'
+@import '../popup.new-tab-shortcuts'
+@import '../popup.tab-move-rules'
+@import '../popup.bookmarks'
+@import '../bookmark-node'
+@import '../panel-placeholder'
+@import '../popup.notifications'
+
+#root[data-toolbar-color-scheme="dark"]
+  --frame-bg: #1C1B22
+  --frame-fg: #fbfbfb
+  --frame-el-overlay-hover-bg: #ffffff16
+  --frame-el-overlay-clicked-bg: #ffffff24
+  --frame-el-overlay-selected-bg: #ffffff24
+  --frame-el-overlay-selected-border: var(--s-accent, #47cfff)
+  --toolbar-fg: #fbfbfb
+  --toolbar-fg-active: #00DDFF
+  --popup-bg: #42414D
+  --popup-fg: #fbfbfb
+  --popup-shadow: 0 0 0 1px #1C1B22, 0 1px 16px 0 #00000048
+  --border: #121212
+  --border-color: #ffffff08
+  --status-active: #2494ff
+  --btn-fg: #afb2b8
+  --scrollbar-color: #ffffff46
+  --frame-scrollbar-color: #ffffff46
+  --toolbar-scrollbar-color: #ffffff46
+#root[data-toolbar-color-scheme="light"]
+  --frame-bg: #ffffff
+  --frame-fg: #15141A
+  --frame-el-overlay-hover-bg: #00000012
+  --frame-el-overlay-clicked-bg: #0000001c
+  --frame-el-overlay-selected-bg: #00000012
+  --frame-el-overlay-selected-border: var(--s-accent, #146fd9)
+  --toolbar-fg: #15141A
+  --toolbar-fg-active: #0061E0
+  --popup-bg: #ffffff
+  --popup-fg: #15141A
+  --popup-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
+  --border: #e2e2e2
+  --border-color: #00000018
+  --status-active: #0a84ff
+  --btn-fg: #24262a
+  --scrollbar-color: #00000046
+  --frame-scrollbar-color: #00000046
+  --toolbar-scrollbar-color: #00000046
+
+
+html
+  position: relative
+  height: 100%
+  font-size: 16px
+
+body
+  position: relative
+  width: 100%
+  height: 100%
+  font-family: system-ui
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  overflow: hidden
+  padding: 0
+  margin: 0
+  a
+    text-decoration: none
+
+:focus
+  outline: none
+
+::-moz-focus-inner
+  border: 0
+
+.hidden, .hidden-assets
+  position: absolute
+  top: 0
+  left: 0
+  width: 0
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+#root_container
+  position: relative
+  width: 100%
+  height: 100%
+
+#root
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  overflow: clip
+  background-color: var(--frame-bg)
+  flex-direction: column
+  // padding-top: var(--s-top-padding, 0px)
+
+.PanelConfig .sub-fields
+  position: relative
+  grid-gap: 16px 0
+  margin: 0 0 0 24px
+  &.-disabled
+    display: flex
+    flex-wrap: wrap
+    grid-gap: 0 0
+
+.PanelConfig .ctrls
+  position: relative
+  display: flex
+  grid-gap: 8px 8px
+  flex-wrap: wrap
+  margin: 16px 16px 5px
+  &.-center
+    justify-content: center
+    align-items: center

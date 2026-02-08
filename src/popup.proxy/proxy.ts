@@ -1,7 +1,8 @@
-import { Stored, IPCheckResult, InstanceType } from 'src/types'
-import { Info } from 'src/services/info'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
+import { Stored, IPCheckResult } from 'src/types'
+import { InstanceType } from 'src/enums'
+import * as Info from 'src/services/info'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
 import * as IPC from 'src/services/ipc'
 import { SETUP_URL } from 'src/defaults'
 
@@ -18,10 +19,10 @@ void (async function () {
   initConfigInfo()
 
   // Load settings and set theme
-  await Settings.loadSettings()
+  await Settings.load()
 
   // Set theme/style
-  Styles.initColorScheme().then(() => {
+  Styles.load().then(() => {
     document.body.setAttribute('data-frame-color-scheme', Styles.reactive.frameColorScheme)
     document.body.setAttribute('data-popup-color-scheme', Styles.reactive.popupColorScheme)
     document.body.setAttribute('data-ready', 'true')

@@ -67,26 +67,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted, PropType } from 'vue'
-import * as Utils from 'src/utils'
-import { BackupData, Stored, Snapshot } from 'src/types'
-import { translate } from 'src/dict'
+import type { PropType } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import type { BackupData, Stored, Snapshot, NormalizedSnapshot } from 'src/types'
 import { DEFAULT_CONTAINER } from 'src/defaults'
-import { Info } from 'src/services/info'
-import { Store } from 'src/services/storage'
-import { Permissions } from 'src/services/permissions'
+import * as Utils from 'src/utils'
+import { translate } from 'src/dict'
+import * as Info from 'src/services/info'
+import * as Store from 'src/services/storage.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Containers from 'src/services/containers.fg'
+import * as Settings from 'src/services/settings.fg'
 import * as Logs from 'src/services/logs'
 import * as Favicons from 'src/services/favicons.fg'
-import { Menu } from 'src/services/menu'
-import { Styles } from 'src/services/styles'
-import { Snapshots } from 'src/services/snapshots'
+import * as Snapshots from 'src/services/snapshots.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Sync from 'src/services/sync.fg'
+import * as SidebarConfig from 'src/services/sidebar-config.fg'
+import * as IPC from 'src/services/ipc'
+import * as Keybindings from 'src/services/keybindings.fg'
 import ToggleField from 'src/components/toggle-field.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
-import { NormalizedSnapshot } from 'src/types/snapshots'
-import { Containers } from 'src/services/containers'
-import { Keybindings } from 'src/services/keybindings'
-import { Settings } from 'src/services/settings'
-import { IPC, SidebarConfig, Sync, SetupPage } from 'src/services/_services'
 
 const props = defineProps({
   importedData: {
@@ -542,8 +545,8 @@ async function importStyles(backup: BackupData): Promise<void> {
   if (backup.groupCSS) groupCSS = backup.groupCSS + '\n\n' + groupCSS
   groupCSS = groupCSS.trim()
 
-  if (sidebarCSS) Styles.sidebarCSS = sidebarCSS.trim()
-  if (groupCSS) Styles.groupCSS = groupCSS.trim()
+  if (sidebarCSS) Styles.setSidebarCSS(sidebarCSS.trim())
+  if (groupCSS) Styles.setGroupCSS(groupCSS.trim())
 
   await Styles.saveCustomCSS()
 }
@@ -667,7 +670,7 @@ async function importFavicons(backup: BackupData): Promise<void> {
 
   // Reload favicons in all runned instances
   SetupPage.calcStorageInfo()
-  Favicons.loadFavicons()
+  Favicons.load()
   IPC.broadcast({ action: 'reloadFavicons' })
 }
 

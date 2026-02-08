@@ -21,10 +21,10 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, nextTick } from 'vue'
 import { translate } from 'src/dict'
-import { Command } from 'src/types'
-import { Keybindings } from 'src/services/keybindings'
-import { Info } from 'src/services/info'
-import * as Popups from 'src/services/popups'
+import type { Command } from 'src/types'
+import * as Info from 'src/services/info'
+import * as Popups from 'src/services/popups.fg'
+import * as Keybindings from 'src/services/keybindings.fg'
 
 const ERR_SHOW_TIMEOUT = 2000
 
@@ -74,7 +74,7 @@ async function onKBBlur(cmd: Command) {
 
       const title = translate('settings.kb_override_popup_title')
       const noteShortcut = translate('settings.kb_override_popup_note_shortcut', newShortcut)
-      const noteUsed = translate('settings.kb_override_popup_note_used', dup.description)
+      const noteUsed = translate('settings.kb_override_popup_note_used', dup.description ?? '')
       const result = await Popups.ask({
         title: title,
         note: noteShortcut + '\n' + noteUsed,

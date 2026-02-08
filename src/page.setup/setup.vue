@@ -34,10 +34,11 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/_services'
-import { Bookmarks } from 'src/services/bookmarks'
-import { Styles } from 'src/services/styles'
+import * as Settings from 'src/services/settings.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
+import * as Popups from 'src/services/popups.fg'
 import SettingsView from './components/settings.vue'
 import MenuEditorView from './components/menu-editor.vue'
 import StylesEditorView from './components/styles-editor.vue'
@@ -51,15 +52,14 @@ import TabReopenRulesPopup from 'src/components/popup.tab-reopen-rules.vue'
 import DialogPopup from 'src/components/popup.dialog.vue'
 import Details from './components/settings.details.vue'
 import NotificationsPopup from '../sidebar/components/popup.notifications.vue'
-import * as Popups from 'src/services/popups'
 
 const animations = computed(() => (Settings.state.animations ? 'fast' : 'none'))
 
 onMounted(() => {
-  document.addEventListener('keyup', onDocumentKeyup)
+  document.addEventListener('keydown', onDocumentKeydown)
 })
 
-function onDocumentKeyup(e: KeyboardEvent): void {
+function onDocumentKeydown(e: KeyboardEvent): void {
   // Close popups
   if (e.code === 'Escape') {
     // Bookmarks popup

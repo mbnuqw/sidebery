@@ -1,27 +1,28 @@
 /* eslint no-console: off */
 import fs from 'fs'
 import path from 'path'
-import { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST, logErr } from './utils.js'
+import * as Utils from './utils.js'
 
 const COPY = {
   './src/manifest.json': {
-    path: `${ADDON_PATH}/`,
+    path: `${Utils.ADDON_PATH}/`,
     handler: handleManifest,
   },
   './src/_locales/dict.browser.json': {
-    path: `${ADDON_PATH}/_locales/`,
+    path: `${Utils.ADDON_PATH}/_locales/`,
     handler: handleLocales,
   },
-  './src/assets/logo-native-dark.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/logo-native-light.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/logo-native.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/logo.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/group-page-favicon.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/snapshot-native.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/proxy-native.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/window-native.svg': `${ADDON_PATH}/assets/`,
-  './src/assets/private-window-native.svg': `${ADDON_PATH}/assets/`,
-  [`./node_modules/vue/dist/${VUE_DIST}`]: `${ADDON_PATH}/vendor/`,
+  './src/assets/logo-native-dark.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/logo-native-light.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/logo-native.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/logo.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/group-page-favicon.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/snapshot-native.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/proxy-native.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/window-native.svg': `${Utils.ADDON_PATH}/assets/`,
+}
+if (!Utils.BUNDLE_VUE) {
+  COPY[`./node_modules/vue/dist/${Utils.VUE_DIST}`] = `${Utils.ADDON_PATH}/vendor/`
 }
 
 /**
@@ -46,11 +47,11 @@ async function copyAndWatch() {
       return e
     })
 
-  watch(
+  Utils.watch(
     tasks,
     affectedTasks => changeHandler(affectedTasks),
     (task, file) => {
-      log(`Copy: File ${file} was renamed, restart this script`)
+      Utils.log(`Copy: File ${file} was renamed, restart this script`)
       tasks.forEach(t => t.watchers.forEach(w => w.close()))
     }
   )
@@ -61,7 +62,7 @@ async function copyAndWatch() {
  */
 async function changeHandler(changedFiles) {
   for (const info of changedFiles) {
-    log(`Copy: Changed source: ${info.src}`)
+    Utils.log(`Copy: Changed source: ${info.src}`)
     await fs.promises.copyFile(info.src, info.dst)
   }
 }
@@ -116,7 +117,7 @@ async function copyEntry(info) {
   const normSrc = path.normalize(info.src)
 
   if (info.srcIsDir) {
-    for (const f of await treeToList(normSrc)) {
+    for (const f of await Utils.treeToList(normSrc)) {
       const destDir = path.normalize(f.dir.replace(normSrc, info.dst + path.sep))
 
       if (f.file) {
@@ -136,14 +137,14 @@ async function copyEntry(info) {
  * Main
  */
 function main() {
-  log('Copy: Copying')
+  Utils.log('Copy: Copying')
 
-  if (IS_DEV) {
+  if (Utils.IS_DEV) {
     copyAndWatch()
-    logOk('Copy: Watching')
+    Utils.logOk('Copy: Watching')
   } else {
     build()
-    logOk('Copy: Done')
+    Utils.logOk('Copy: Done')
   }
 }
 main()
@@ -203,7 +204,7 @@ async function handleLocales(srcPath, dstPath) {
   for (const key of Object.keys(jsonData)) {
     const dict = jsonData[key]
     if (!dict || typeof dict !== 'object') {
-      logErr(`Copy: Locales: No dictionary for: ${key}`)
+      Utils.logErr(`Copy: Locales: No dictionary for: ${key}`)
       break
     }
 

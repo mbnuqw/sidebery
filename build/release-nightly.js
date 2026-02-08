@@ -9,7 +9,7 @@ const REPO = 'sidebery'
 const BRANCH = 'v5'
 const MAX_ASSETS_COUNT = 10
 const ADDON_ID = '{3c078156-979c-498b-8990-85f7987dd929}'
-const CONSIDERED_COMMIT_PREFIXES_RE = /^(fix|feat|perf)/
+const CONSIDERED_COMMIT_PREFIXES_RE = /^(fix|feat|perf|l10n)/
 const ASSET_RE = /sidebery-(\d\d?\.\d\d?\.\d\d?\.\d?\d?\d?)\.xpi/
 
 const gitLogFlags = `--date-order --abbrev-commit --decorate --format=format:'%H::%s' ${BRANCH}`
@@ -23,6 +23,10 @@ async function main() {
   if (!process.env.GITHUB_TOKEN) throw 'No GITHUB_TOKEN'
   if (!process.env.WEB_EXT_API_KEY) throw 'No WEB_EXT_API_KEY'
   if (!process.env.WEB_EXT_API_SECRET) throw 'No WEB_EXT_API_SECRET'
+
+  // Test
+  console.log('Running tests...')
+  execSync('npm run test', { encoding: 'utf-8', stdio: 'inherit' })
 
   // Get info from manifest.json and updates.json
   console.log('Getting info from manifest.json and updates.json...')
@@ -39,7 +43,7 @@ async function main() {
   console.log('Last commit of "updates.json":', updatesLastCommit)
   const gitlogResult = execSync(`git log ${gitLogFlags}`, { encoding: 'utf-8' })
   const noChanges = !hasUsefullCommitsSinceLastUpdate(gitlogResult, updatesLastCommit)
-  if (noChanges) throw 'No changes'
+  if (noChanges) throw 'No considerable changes in git logs'
 
   // Build and sign
   console.log('Building and signing...')

@@ -1,12 +1,14 @@
 import { createApp, reactive } from 'vue'
 import Root from './sync.vue'
-import { InstanceType } from 'src/types'
-import { Info } from 'src/services/info'
-import { IPC, Logs, Sync } from 'src/services/_services'
-import { Settings } from 'src/services/settings'
-import { Styles } from 'src/services/styles'
-import { Windows } from 'src/services/windows'
-import { Notifications } from 'src/services/notifications'
+import { InstanceType } from 'src/enums'
+import * as Info from 'src/services/info'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
+import * as Sync from 'src/services/sync.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as Styles from 'src/services/styles.fg'
+import * as Notifications from 'src/services/notifications.fg'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sync)
@@ -15,18 +17,18 @@ async function main(): Promise<void> {
 
   Logs.info('Init start')
 
-  Settings.state = reactive(Settings.state)
-  Sync.initSync(reactive)
-  Styles.reactive = reactive(Styles.reactive)
-  Notifications.reactive = reactive(Notifications.reactive)
+  Settings.reactivate(reactive)
+  Sync.reactivate(reactive)
+  Styles.reactivate(reactive)
+  Notifications.reactivate(reactive)
 
   await Promise.all([
-    Settings.loadSettings().then(() => {
-      Styles.initColorScheme()
+    Settings.load().then(() => {
+      Styles.load()
       Styles.updateGlobalFontSize()
       Styles.udpateGlobalFontFamily()
     }),
-    Windows.loadWindowInfo(),
+    Windows.load(),
   ])
 
   IPC.setWinId(Windows.id)

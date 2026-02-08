@@ -31,17 +31,17 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
-import { DragItem, DragInfo, DropType, DragType, DstPlaceInfo, ItemInfo } from 'src/types'
-import { RecentlyClosedTabInfo } from 'src/types'
+import type * as T from 'src/types'
+import { DropType, DragType } from 'src/enums'
 import { translate } from 'src/dict'
-import { Menu } from 'src/services/menu'
-import * as Selection from 'src/services/selection'
-import { Settings } from 'src/services/settings'
-import { Tabs } from 'src/services/tabs.fg'
-import { Mouse } from 'src/services/mouse'
-import { Sidebar } from 'src/services/sidebar'
-import { DnD } from 'src/services/drag-and-drop'
-import { Windows } from 'src/services/windows'
+import * as Menu from 'src/services/menu.fg'
+import * as Selection from 'src/services/selection.fg'
+import * as Settings from 'src/services/settings'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Mouse from 'src/services/mouse.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Windows from 'src/services/windows.fg'
 import * as Utils from 'src/utils'
 import ScrollBox from 'src/components/scroll-box.vue'
 
@@ -58,7 +58,7 @@ onMounted(() => {
   if (Menu.isOpen) Menu.close()
 })
 
-function onTabMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
+function onTabMouseDown(e: MouseEvent, tab: T.RecentlyClosedTabInfo) {
   Mouse.setTarget('closedTab', tab.id)
 
   if (e.button === 1) {
@@ -71,7 +71,7 @@ function onTabMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
 
 let middleClickReactionTimeout: number | undefined
 
-function onTabMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
+function onTabMouseUp(e: MouseEvent, tab: T.RecentlyClosedTabInfo) {
   const sameTarget = Mouse.isTarget('closedTab', tab.id)
   Mouse.resetTarget()
 
@@ -104,13 +104,13 @@ function onTabContextMenu(e: MouseEvent) {
   e.preventDefault()
 }
 
-function onBranchMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
+function onBranchMouseDown(e: MouseEvent, tab: T.RecentlyClosedTabInfo) {
   Mouse.setTarget('closedTab.branch', tab.id)
 
   e.stopPropagation()
 }
 
-function onBranchMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
+function onBranchMouseUp(e: MouseEvent, tab: T.RecentlyClosedTabInfo) {
   const sameTarget = Mouse.isTarget('closedTab.branch', tab.id)
   Mouse.resetTarget()
 
@@ -121,12 +121,12 @@ function onBranchMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   openTabs(tab, true, true)
 }
 
-function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
+function onTabDragStart(e: DragEvent, tab: T.RecentlyClosedTabInfo) {
   Sidebar.updateBounds()
 
   // Check what to drag
   const toDrag = [tab.id]
-  const dragItems: DragItem[] = []
+  const dragItems: T.DragItem[] = []
   const uriList = []
   const links = []
   const urlTitleList = []
@@ -146,7 +146,7 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     })
   }
 
-  const dragInfo: DragInfo = {
+  const dragInfo: T.DragInfo = {
     type: DragType.Tabs,
     items: dragItems,
     windowId: Windows.id,
@@ -157,6 +157,7 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     copy: true,
   }
 
+  DnD.broadcastDragInfo(dragInfo)
   DnD.start(dragInfo, DropType.Tabs)
 
   // Set native drag info
@@ -177,8 +178,8 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
   Sidebar.closeSubPanel()
 }
 
-function getBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {
-  const branch: RecentlyClosedTabInfo[] = [rootTab]
+function getBranch(rootTab: T.RecentlyClosedTabInfo): T.RecentlyClosedTabInfo[] {
+  const branch: T.RecentlyClosedTabInfo[] = [rootTab]
 
   const startIndex = Tabs.recentlyRemoved.findIndex(t => t.id === rootTab.id)
   if (startIndex === -1) return branch
@@ -193,7 +194,7 @@ function getBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {
   return branch
 }
 
-async function openTabs(targetTab: RecentlyClosedTabInfo, inactive: boolean, branch: boolean) {
+async function openTabs(targetTab: T.RecentlyClosedTabInfo, inactive: boolean, branch: boolean) {
   if (!targetTab.isParent) branch = false
   if (branch) inactive = true
 
@@ -203,14 +204,14 @@ async function openTabs(targetTab: RecentlyClosedTabInfo, inactive: boolean, bra
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  const dst: DstPlaceInfo = {
+  const dst: T.DstPlaceInfo = {
     panelId,
     discarded: inactive,
     index: Tabs.getIndexForNewTab(panel),
     parentId: Tabs.getParentForNewTab(panel),
   }
 
-  const tabsToOpen: ItemInfo[] = []
+  const tabsToOpen: T.ItemInfo[] = []
   for (const rct of rcTabs) {
     tabsToOpen.push({
       id: rct.id,

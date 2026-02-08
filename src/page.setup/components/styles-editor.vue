@@ -59,12 +59,12 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { translate } from 'src/dict'
-import { CustomCssTarget } from 'src/types'
-import { Styles } from 'src/services/styles'
-import { Permissions } from 'src/services/permissions'
+import type { CustomCssTarget } from 'src/types'
+import * as Styles from 'src/services/styles.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Settings from 'src/services/settings.fg'
+import * as SetupPage from 'src/services/setup-page.fg'
 import StyleField from '../../components/style-field.vue'
-import { Settings } from 'src/services/settings'
-import { SetupPage } from 'src/services/_services'
 
 interface CssVar {
   active: boolean
@@ -230,7 +230,7 @@ async function getRootStyles(
     shadowLinkEl.onload = () => res(getComputedStyle(shadowedRootEl))
     shadowLinkEl.onerror = () => res(undefined)
     shadowLinkEl.setAttribute('rel', 'stylesheet')
-    shadowLinkEl.setAttribute('href', `../themes/proton/${target}.css`)
+    shadowLinkEl.setAttribute('href', `../styles/${target}.css`)
     shadow.appendChild(shadowLinkEl)
   })
 }
@@ -478,8 +478,8 @@ let applyTimeout: number | undefined
 function applyCssDebounced(delay = 1000): void {
   clearTimeout(applyTimeout)
   applyTimeout = setTimeout(() => {
-    if (state.cssTarget === 'sidebar') Styles.sidebarCSS = state.customCSS
-    else if (state.cssTarget === 'group') Styles.groupCSS = state.customCSS
+    if (state.cssTarget === 'sidebar') Styles.setSidebarCSS(state.customCSS)
+    else if (state.cssTarget === 'group') Styles.setGroupCSS(state.customCSS)
     Styles.saveCustomCSS()
   }, delay)
 }

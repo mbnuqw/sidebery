@@ -1,3 +1,5 @@
+import * as E from 'src/enums'
+
 export type NativeTab = browser.tabs.Tab
 
 export interface Tab extends NativeTab {
@@ -15,7 +17,6 @@ export interface Tab extends NativeTab {
   loading: boolean | 'ok' | 'err'
   warn: boolean
   unread?: boolean
-  proxified?: boolean
   relGroupId: ID
   dstPanelId: ID
   autoGroupped?: boolean
@@ -32,9 +33,7 @@ export interface Tab extends NativeTab {
   reopenInContainer?: string
   customTitle?: string
   customColor?: string
-  reloadOnActivation?: boolean
   moving?: boolean
-  preventAutoReopening?: boolean
   previewImg?: string
   removing?: boolean
   flashAnimationTimeout?: number
@@ -46,12 +45,9 @@ export interface Tab extends NativeTab {
   favImgEl?: HTMLImageElement
   favSvgUseEl?: SVGElement
   flashFxEl?: HTMLElement
-}
 
-export const enum TabStatus {
-  Complete = 1,
-  Loading = 2,
-  Pending = 3,
+  checkingSessionRestore?: Promise<boolean>
+  resolveSessionRestoreDetection?: (isSessionRestore: boolean) => void
 }
 
 export interface ReactiveTabProps {
@@ -62,7 +58,7 @@ export interface ReactiveTabProps {
   containerColor: string | null
   discarded: boolean
   pinned: boolean
-  status: TabStatus
+  status: E.TabStatus
   isParent: boolean
   folded: boolean
   tooltip: string
@@ -84,8 +80,19 @@ export interface ReactiveTabProps {
   preview: boolean
 }
 
-export const enum LoadSrc {
-  SessionOnly = 1,
+export interface BgTab extends NativeTab {
+  lvl?: number
+  parentId?: ID
+  panelId?: ID
+  folded?: boolean
+  customTitle?: string
+  customColor?: string
+
+  internal?: boolean
+  isGroup?: boolean
+  proxified?: boolean
+  preventAutoReopening?: boolean
+  reloadOnActivation?: boolean
 }
 
 export interface InlineTabData {
@@ -102,7 +109,6 @@ export interface TabCache {
   folded?: boolean
   ctx?: string /* only for containered tab */
   uniqWinId?: ID /* only for the first tab of window */
-  privWin?: boolean /* only for the first tab of private window */
   customTitle?: string
   customColor?: string
 

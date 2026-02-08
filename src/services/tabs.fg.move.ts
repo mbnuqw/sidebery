@@ -1,22 +1,27 @@
-import { DstPlaceInfo, ItemInfo, PanelType, SrcPlaceInfo, Tab } from 'src/types'
-import { TabToPanelMoveRule, TabToPanelMoveRuleConfig } from 'src/types'
+import * as T from 'src/types'
+import { PanelType } from 'src/enums'
 import { DEFAULT_CONTAINER_ID, MOVEID, NEWID, NOID } from 'src/defaults'
-import { Sidebar } from 'src/services/sidebar'
-import { Tabs } from 'src/services/tabs.fg'
-import { Settings } from 'src/services/settings'
-import { Windows } from 'src/services/windows'
-import { Containers } from 'src/services/containers'
-import { Bookmarks } from './bookmarks'
-import { Search } from './search'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Settings from 'src/services/settings'
+import * as Windows from 'src/services/windows.fg'
+import * as Containers from 'src/services/containers'
+import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Search from 'src/services/search.fg'
 import * as IPC from 'src/services/ipc'
-import * as Popups from 'src/services/popups'
+import * as Popups from 'src/services/popups.fg'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
+import * as Links from 'src/services/links'
+
+export let movingTabs: ID[] = []
+export const setMovingTabs = (ids: ID[]) => (movingTabs = ids)
+export let moveRules: T.TabToPanelMoveRule[] = []
 
 export async function move(
-  tabsInfo: DeepReadonly<ItemInfo[]>,
-  src: SrcPlaceInfo,
-  dst: DstPlaceInfo
+  tabsInfo: DeepReadonly<T.ItemInfo[]>,
+  src: T.SrcPlaceInfo,
+  dst: T.DstPlaceInfo
 ): Promise<void> {
   if (!tabsInfo.length) return
 
@@ -69,7 +74,7 @@ export async function move(
     if (allInWin && tabsInfo.length > 1) return
 
     Tabs.detachTabs(tabsInfo.map(t => t.id))
-    const info = Utils.cloneArray<ItemInfo>(tabsInfo)
+    const info = Utils.cloneArray<T.ItemInfo>(tabsInfo)
     const conf = { incognito: dst.incognito, tabId: MOVEID }
     if (dst.panelId) info.forEach(t => (t.panelId = dst.panelId))
     IPC.bg('createWindowWithTabs', info, conf).finally(() => Tabs.detachingTabIds.clear())
@@ -95,13 +100,13 @@ export async function move(
   }
 
   // Gather tabs by type (pinned/normal), get initial info
-  const dstTab = Tabs.list[dst.index] as Tab | undefined
+  const dstTab = Tabs.list[dst.index] as T.Tab | undefined
   const dstParent = Tabs.byId[dst.parentId]
-  const pinnedTabs: Tab[] = []
-  const normalTabs: Tab[] = []
-  let toPin: Tab[] | undefined
-  let toUnpin: Tab[] | undefined
-  let tabs: Tab[] = []
+  const pinnedTabs: T.Tab[] = []
+  const normalTabs: T.Tab[] = []
+  let toPin: T.Tab[] | undefined
+  let toUnpin: T.Tab[] | undefined
+  let tabs: T.Tab[] = []
   let isPinnedActive = false
   for (const info of tabsInfo) {
     const tab = Tabs.byId[info.id]
@@ -321,7 +326,7 @@ export async function move(
   // ---
   // Unpin tab
   if (toUnpin?.length) {
-    for (const tab of toUnpin) {
+    for (const tab of [...toUnpin].reverse()) {
       tab.unpinning = true
       await browser.tabs.update(tab.id, { pinned: false }).catch(err => {
         Logs.err('Tabs.move: Cannot unpin tab', err)
@@ -351,19 +356,22 @@ export async function move(
 
   // Reset moving tabs marks
   tabs.forEach(t => (t.moving = undefined))
-  Tabs.movingTabs = []
+  movingTabs = []
 
   // Update visibility
   if (Settings.state.hideFoldedTabs || (Settings.state.hideInact && panelIsChanged)) {
     Tabs.updateNativeTabsVisibility()
   }
+
+  // Update filtered results
+  if (Search.active) Search.search()
 }
 
 /**
  *  Move tabs to window if provided,
  * otherwise show window-choosing menu.
  */
-async function moveTabsToWin(tabIds: ID[], dst: DstPlaceInfo): Promise<void> {
+async function moveTabsToWin(tabIds: ID[], dst: T.DstPlaceInfo): Promise<void> {
   if (dst.windowId === undefined || dst.windowId === NOID) {
     if (dst.windowChooseConf) dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
     else dst.windowId = await Windows.showWindowsPopup()
@@ -408,17 +416,18 @@ async function moveTabsToWin(tabIds: ID[], dst: DstPlaceInfo): Promise<void> {
 }
 
 export async function moveToThisWin(
-  tabs: Tab[],
-  dst?: DstPlaceInfo,
+  tabs: T.Tab[],
+  dst?: T.DstPlaceInfo,
   allInWin?: boolean
 ): Promise<boolean> {
   if (!tabs || !tabs.length) return false
 
-  if (!Tabs.attachingTabs) Tabs.attachingTabs = [...tabs]
+  if (!Tabs.attachingTabs) Tabs.setAttachingTabs([...tabs])
   else Tabs.attachingTabs.push(...tabs)
 
   const probeTab = tabs[0]
   const isPinned = probeTab.pinned
+  const toPinned = dst?.pinned || (probeTab.pinned && dst?.pinned === undefined && !dst?.parentId)
   const srcWinId = probeTab.windowId
 
   let panel = Sidebar.panelsById[dst?.panelId ?? NOID]
@@ -433,14 +442,14 @@ export async function moveToThisWin(
 
   // Set index
   if (dst.index === undefined) dst.index = isPinned ? Tabs.pinned.length : indexFallback
-  if (isPinned && dst.index > Tabs.pinned.length) dst.index = Tabs.pinned.length
+  if (isPinned && toPinned && dst.index > Tabs.pinned.length) dst.index = Tabs.pinned.length
   if (dst.index < 0) dst.index = 0
 
   const index = dst.index ?? 0
   const tabIds = tabs.map(t => t.id)
   const dstParent = Tabs.byId[dst.parentId ?? NOID]
   const panelIsActive = panel.id === Sidebar.activePanelId
-  const groups: Tab[] = []
+  const groups: T.Tab[] = []
   const updatedTabIds: ID[] = []
 
   let updMediaBadges = false
@@ -450,15 +459,17 @@ export async function moveToThisWin(
   for (let i = 0; i < tabs.length; i++) {
     const tab = tabs[i]
 
-    // Pin / Unpin
-    if (!!tab.pinned !== !!dst.pinned) {
-      await browser.tabs.update(tab.id, { pinned: !!dst.pinned })
-      tab.reactive.pinned = tab.pinned = !!dst.pinned
-    }
-
     // Put this tab to the local state
     Tabs.byId[tab.id] = tab
     Tabs.list.splice(index + i, 0, tab)
+
+    // Pin / Unpin
+    if (!!tab.pinned !== !!dst.pinned) {
+      if (!dst.pinned) tab.unpinning = true
+      await browser.tabs.update(tab.id, { pinned: !!dst.pinned })
+      tab.reactive.pinned = tab.pinned = !!dst.pinned
+      if (tab.unpinning) tab.unpinning = false
+    }
 
     // Update some tab props
     if (dst.windowId !== undefined) tab.windowId = dst.windowId
@@ -580,19 +591,19 @@ export async function moveToThisWin(
 }
 
 export interface DetachedTabsInfo {
-  tabs: Tab[]
+  tabs: T.Tab[]
   allInWin: boolean
 }
 
 export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
   Tabs.sortTabIds(tabIds)
 
-  Tabs.detachingTabIds = new Set([...tabIds])
+  Tabs.setDetachingTabIds(new Set([...tabIds]))
 
   const probeTab = Tabs.byId[tabIds[0]]
   if (!probeTab) return
 
-  const detachedTabs: Tab[] = []
+  const detachedTabs: T.Tab[] = []
   const panel = Sidebar.panelsById[probeTab.panelId]
   const tabsLen = Tabs.list.length
   const toSave: ID[] = []
@@ -637,12 +648,7 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
     }
 
     // Update url counter
-    const urlCount = Tabs.updateUrlCounter(tab.url, -1)
-
-    // Update bookmarks marks
-    if (Settings.state.highlightOpenBookmarks && !urlCount) {
-      Bookmarks.unmarkOpenBookmarksDebounced(tab.url)
-    }
+    Links.rmTab(tab)
 
     // Reload related group for pinned tab
     const pinGroupTab = Tabs.byId[tab.relGroupId]
@@ -681,7 +687,7 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
   Tabs.updateSuccessionDebounced(0)
 
   // Update filtered results
-  if (Search.rawValue) Search.search()
+  if (Search.active) Search.search()
 
   // Update media badges
   if (updMediaBadges) {
@@ -723,7 +729,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
 }
 
 export function recalcMoveRules() {
-  const rules: TabToPanelMoveRule[] = []
+  const rules: T.TabToPanelMoveRule[] = []
 
   for (const panel of Sidebar.panels) {
     if (!Utils.isTabsPanel(panel)) continue
@@ -748,14 +754,14 @@ export function recalcMoveRules() {
     return bN - aN
   })
 
-  Tabs.moveRules = rules
+  moveRules = rules
 }
 
 function createMoveToPanelRule(
-  config: TabToPanelMoveRuleConfig,
+  config: T.TabToPanelMoveRuleConfig,
   panelId: ID
-): TabToPanelMoveRule | undefined {
-  const rule: TabToPanelMoveRule = { panelId }
+): T.TabToPanelMoveRule | undefined {
+  const rule: T.TabToPanelMoveRule = { panelId }
 
   // Match by container
   if (
@@ -818,13 +824,14 @@ export function moveByRule(tabId: ID, delay: number) {
   moveByRuleTimeouts.set(tabId, timeout)
 }
 
-function moveTabToPanel(tab: Tab, panelId: ID) {
+function moveTabToPanel(tab: T.Tab, panelId: ID) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
+  // TODO: why I use moveNewTabParent here? add config specifically for this case (move by rule)
   const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
   const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex
-  const src: SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
-  const dst: DstPlaceInfo = { panelId, index }
+  const src: T.SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
+  const dst: T.DstPlaceInfo = { panelId, index }
   Utils.GLOBAL_QUEUE.add(Tabs.move, [tab], src, dst)
 
   if (tab.active && Settings.state.tabsPanelSwitchActMoveAuto) {
@@ -832,7 +839,33 @@ function moveTabToPanel(tab: Tab, panelId: ID) {
   }
 }
 
-export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMoveRule | undefined {
+export function moveTabToPanelViaOmnibox(tabId: ID, panelId: ID) {
+  const tab = Tabs.byId[tabId]
+  if (!tab) return Logs.warn('Tabs.moveTabToPanelViaOmnibox: no such tab:', tabId)
+  if (tab.panelId === panelId) {
+    return Logs.warn('Tabs.moveTabToPanelViaOmnibox: same target:', panelId)
+  }
+
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) {
+    return Logs.warn('Tabs.moveTabToPanelViaOmnibox: no such tab panel:', panelId)
+  }
+
+  // TODO: make position configurable
+  const index = panel.nextTabIndex
+  const windowId = Windows.id
+
+  const src: T.SrcPlaceInfo = { windowId, pinned: tab.pinned }
+  const dst: T.DstPlaceInfo = { windowId, panelId, index }
+  Utils.GLOBAL_QUEUE.add(Tabs.move, [tab], src, dst)
+
+  if (tab.active) Sidebar.switchToPanel(panelId, true, true)
+}
+
+export function findMoveRuleBy(
+  containerId: string,
+  lvl?: number
+): T.TabToPanelMoveRule | undefined {
   for (const rule of Tabs.moveRules) {
     if (rule.urlRE || rule.urlStr) continue
     if (rule.containerId && rule.containerId !== containerId) continue
@@ -841,7 +874,7 @@ export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMov
   }
 }
 
-export function findMoveRule(tab: Tab): TabToPanelMoveRule | undefined {
+export function findMoveRule(tab: T.Tab): T.TabToPanelMoveRule | undefined {
   for (const rule of Tabs.moveRules) {
     if (rule.topLvlOnly && tab.lvl > 0) continue
 
@@ -855,4 +888,24 @@ export function findMoveRule(tab: Tab): TabToPanelMoveRule | undefined {
 
     return rule
   }
+}
+
+export async function moveTabToGroupViaOmnibox(tabInfo: T.ItemInfo, srcWinId: ID, groupTabId: ID) {
+  const groupTab = Tabs.byId[groupTabId]
+  if (!groupTab) return Logs.warn('Tabs.moveTabToGroup: no target tab:', groupTabId)
+
+  // TODO: make position configurable
+  const index = groupTab.index + (Tabs.getBranchLen(groupTabId) ?? 0) + 1
+  const panelId = groupTab.panelId
+  const windowId = Windows.id
+
+  if (!Windows.focused) browser.windows.update(Windows.id, { focused: true })
+  if (Sidebar.activePanelId !== panelId) Sidebar.switchToPanel(panelId, true, true)
+  if (groupTab.folded || groupTab.invisible) Tabs.expTabsBranch(groupTabId, false)
+
+  const src: T.SrcPlaceInfo = { windowId: srcWinId }
+  const dst: T.DstPlaceInfo = { windowId, panelId, parentId: groupTabId, index, pinned: false }
+  await Utils.GLOBAL_QUEUE.add(Tabs.move, [tabInfo], src, dst)
+
+  Tabs.scrollToTab(tabInfo.id)
 }

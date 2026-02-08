@@ -1,0 +1,33 @@
+@import './utils'
+
+.Dialog .focus-stealer
+  position: absolute
+  opacity: 0
+
+.Dialog h2
+  padding: 12px 8px 10px
+  white-space: normal
+  text-overflow: clip
+
+.Dialog .msg
+  position: relative
+  font-size: rem(15)
+  padding: 0 8px
+  color: var(--popup-fg)
+  text-align: center
+
+.Dialog .note
+  position: relative
+  font-size: rem(13)
+  padding: 0 4px 8px
+  color: var(--popup-fg)
+  opacity: .7
+
+.Dialog .ctrls[data-inline="true"]
+  flex-wrap: nowrap
+
+.Dialog .ctrls .btn
+  text-align: left
+  min-width: auto
+.Dialog .ctrls[data-centered="true"] .btn
+  text-align: center

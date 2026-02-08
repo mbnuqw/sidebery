@@ -1,16 +1,14 @@
-import { SettingsState, Container, Snapshot } from 'src/types'
-import { TabCache, FavDomain } from 'src/types'
-import { SidebarConfig, MenuConfs } from 'src/types'
+import * as T from 'src/types'
 
 export type StoredProps = (keyof Stored)[]
 
 export interface Stored {
   ver?: string
-  settings?: SettingsState
-  containers?: Record<ID, Container>
+  settings?: T.SettingsState
+  containers?: Record<ID, T.Container>
   profileID?: string
 
-  tabsDataCache?: TabCache[][]
+  tabsDataCache?: T.TabCache[][]
 
   favicons_01?: string[]
   favicons_02?: string[]
@@ -18,22 +16,25 @@ export interface Stored {
   favicons_04?: string[]
   favicons_05?: string[]
   favHashes?: number[]
-  favDomains?: Record<string, FavDomain>
+  favDomains?: Record<string, T.FavDomain>
 
-  sidebar?: SidebarConfig
+  sidebar?: T.SidebarConfig
+  lastFocusedActivePanelId?: ID
 
-  snapshots?: Snapshot[]
+  snapshots?: T.Snapshot[]
   lastSnapTime?: number
 
-  contextMenu?: MenuConfs
+  contextMenu?: T.MenuConfs
 
   sidebarCSS?: string
   groupCSS?: string
 
-  expandedBookmarkFolders?: Record<ID, Record<ID, boolean>>
+  expandedBookmarkFolders?: T.ExpandedBookmarks
   bookmarksRecentFolders?: ID[]
 
   googleDriveFileIds?: Record<string, string>
+
+  omnibox?: T.OmniboxHistory
 }
 
 export type StorageChanges = {

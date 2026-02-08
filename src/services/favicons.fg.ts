@@ -1,10 +1,10 @@
-import { DataUriImage } from 'src/types'
+import { DataUriImage, Reactivator } from 'src/types'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
-import { Tabs } from './tabs.fg'
+import * as Tabs from 'src/services/tabs.fg'
 import { SIZE, loadFaviconsData } from './favicons'
 import { getFavPlaceholder } from './favicons'
-import { Info } from './info'
+import * as Info from 'src/services/info'
 
 export * from './favicons'
 
@@ -17,13 +17,11 @@ export let reactive: FaviconsReactiveState = {
   byDomains: {},
 }
 
-let reactFn: (<T extends object>(rObj: T) => T) | undefined
-export function initFavicons(react: (rObj: object) => object) {
-  reactFn = react as <T extends object>(rObj: T) => T
-  reactive = reactFn(reactive)
+export function reactivate(r: Reactivator<FaviconsReactiveState>) {
+  reactive = r(reactive)
 }
 
-export async function loadFavicons(): Promise<void> {
+export async function load(): Promise<void> {
   let favData
   try {
     favData = await loadFaviconsData()

@@ -1,0 +1,62 @@
+@import './utils'
+
+.popup-container
+  --btn-fg: var(--popup-fg)
+
+  position: absolute
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100%
+  z-index: 10000
+  transform: translateZ(0)
+  background-color: #2228
+.popup-container.-centered
+  align-items: center
+
+.popup
+  position: relative
+  display: flex
+  flex-direction: column
+  width: 100%
+  max-width: 320px
+  max-height: calc(100vh - 64px)
+  margin: 2px 2px 62px
+  overflow: hidden
+  border-radius: var(--general-border-radius)
+  background-color: var(--popup-bg)
+  box-shadow: var(--popup-shadow)
+.popup-container.-centered .popup
+  margin: 0 2px
+
+.Setup .popup
+  max-width: 350px
+
+.popup h2
+  position: relative
+  flex-shrink: 0
+  font-size: rem(18)
+  font-weight: 700
+  color: var(--popup-fg)
+  margin: 0
+  padding: 12px 4px 10px
+  text-align: center
+
+.popup .ctrls
+  position: relative
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 2px
+  margin: 4px 0 2px
+  flex-wrap: wrap
+
+.popup .ctrls > .btn
+  min-width: max-content
+  font-size: rem(14)
+  padding: 5px 12px
+  margin: 2px
+  flex-grow: 1
+.popup .ctrls > .btn.-wide
+  min-width: auto

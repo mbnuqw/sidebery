@@ -1,5 +1,10 @@
 <template lang="pug">
-.TextField(:data-inactive="props.inactive" @click="focus")
+.TextField(
+  :data-inactive="props.inactive"
+  :data-changed="props.default !== undefined && props.default !== value"
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu")
   .body
     .label {{translate(props.label)}}
     TextInput(
@@ -22,8 +27,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { translate } from 'src/dict'
+import type { TextInputComponent } from 'src/types'
 import TextInput from './text-input.vue'
-import { TextInputComponent } from 'src/types'
 
 interface TextFieldProps {
   value: string | number
@@ -38,12 +43,35 @@ interface TextFieldProps {
   inactive?: boolean
   note?: string
   inputWidth?: string
+  dbg?: string
+  default?: string | number
 }
 
 const emit = defineEmits(['update:value', 'blur', 'keydown'])
 const props = withDefaults(defineProps<TextFieldProps>(), { padding: 0, tabindex: '0' })
 
 const inputEl = ref<TextInputComponent | null>(null)
+
+let rangeIsSelected = false
+
+function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (e.altKey && e.ctrlKey && e.button === 0) {
+    navigator.clipboard.writeText(props.dbg ?? '')
+    return
+  }
+  if (props.inactive || rangeIsSelected || getSelection()?.type === 'Range') return
+  focus()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (props.inactive || rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
+}
 
 function focus(): void {
   inputEl.value?.focus()

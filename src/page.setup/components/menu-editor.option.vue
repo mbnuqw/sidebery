@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { translate } from 'src/dict'
-import { Menu } from 'src/services/menu'
+import * as Menu from 'src/services/menu.fg'
 
 interface MenuEditorOptionProps {
   type: string

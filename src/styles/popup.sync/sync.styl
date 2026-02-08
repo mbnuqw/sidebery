@@ -1,0 +1,151 @@
+vendors = official
+
+@import '../utils'
+
+@import '../vars'
+@import '../btn'
+@import '../animations'
+@import '../scroll-box'
+@import '../loading-dots'
+@import '../panel.sync'
+@import '../panel.sync.entry'
+@import '../panel-placeholder'
+@import '../popup.notifications'
+
+// The default value of the box-sizing in sidebar document is 'border-box'
+// but in other documents it's 'content-box', so to not rewriting tons of CSS...
+*
+  box-sizing: border-box
+
+html
+  position: relative
+  height: 100%
+
+body
+  position: relative
+  width: 100%
+  height: 100%
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  padding: 0
+  margin: 0
+
+  a
+    text-decoration: none
+
+// Some default values that used in sidebar document
+html, body
+  cursor: default
+  display: flex
+  flex-direction: column
+  font-family: system-ui
+  margin: 0
+  padding: 0
+  user-select: none
+
+:focus
+  outline: none
+
+::-moz-focus-inner
+  border: 0
+
+.hidden, .hidden-assets
+  position: absolute
+  top: 0
+  left: 0
+  width: 0
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+#root_container
+  position: relative
+  width: 100%
+  height: 100%
+
+#root
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  overflow: clip
+  background-color: var(--frame-bg)
+  flex-direction: column
+  // padding-top: var(--s-top-padding, 0px)
+
+.panel
+  position: relative
+  display: flex
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  flex-direction: column
+  z-index: 10
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  &[data-pos="center"]
+    transform: translateX(0)
+    z-index: 10
+    opacity: 1
+  &[data-pos="left"]
+    transform: translateX(-50%)
+    opacity: 0
+    z-index: 0
+  &[data-pos="right"]
+    transform: translateX(50%)
+    opacity: 0
+    z-index: 0
+
+.Sync > .header
+  --header-height: 32px
+
+  position: relative
+  display: flex
+  justify-content: space-between
+  align-items: center
+  background-color: var(--toolbar-bg)
+  width: 100%
+  height: var(--header-height)
+  flex-shrink: 0
+
+.Sync > .header > .title
+  position: relative
+  margin: 0 auto
+  font-size: rem(14)
+  font-weight: 700
+  color: var(--toolbar-fg)
+
+.Sync > .header .space-filler
+.Sync > .header .header-btn
+  position: relative
+  width: var(--header-height)
+  height: var(--header-height)
+  flex-shrink: 0
+
+.Sync > .header .header-btn
+  &:before
+    content: ''
+    position: absolute
+    width: calc(var(--header-height) - 4px)
+    height: calc(var(--header-height) - 4px)
+    top: 2px
+    left: 2px
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  .icon
+    position: absolute
+    width: 16px
+    height: 16px
+    top: calc(50% - 8px)
+    left: calc(50% - 8px)
+    fill: var(--toolbar-fg)
+    opacity: .7
+  &:hover:before
+    opacity: .1
+  &:active
+    opacity: .7
+.Sync[data-syncing="true"] > .header .icon.-sync
+  opacity: 1
+  animation: syncing-animation 1s linear infinite

@@ -1,59 +1,37 @@
-import {
-  BookmarksPanelConfig,
-  HistoryPanelConfig,
-  SidebarConfig,
-  Stored,
-  SyncPanelConfig,
-  TabsPanelConfig,
-} from 'src/types'
+import * as T from 'src/types'
+import * as D from 'src/defaults'
+import { translate } from 'src/dict'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
-import { Store } from './storage'
-import {
-  BKM_ROOT_ID,
-  BOOKMARKS_PANEL_CONFIG,
-  HISTORY_PANEL_CONFIG,
-  SYNC_PANEL_CONFIG,
-  TABS_PANEL_CONFIG,
-} from 'src/defaults'
-import { translate } from 'src/dict'
-import { Settings } from './settings'
+import * as Store from 'src/services/storage'
 
-export let reactive: SidebarConfig = {
+export let reactive: T.SidebarConfig = {
   nav: [],
   panels: {},
 }
-export let SidebarConfigRState = reactive
 
-let reactFn: (<T extends object>(rObj: T) => T) | undefined
-export function initSidebarConfig(reactivate?: (rObj: object) => object) {
-  if (!reactivate) return
-  reactFn = reactivate as <T extends object>(rObj: T) => T
-  SidebarConfigRState = reactive = reactFn(reactive)
+export function reactivate(r: T.Reactivator<T.SidebarConfig>) {
+  reactive = r(reactive)
 }
 
 export async function loadSidebarConfig() {
-  const storage = await browser.storage.local.get<Stored>('sidebar')
-  if (storage.sidebar?.nav) SidebarConfigRState.nav = storage.sidebar.nav
+  const storage = await browser.storage.local.get<T.Stored>('sidebar')
+  if (storage.sidebar?.nav) reactive.nav = storage.sidebar.nav
   if (storage.sidebar?.panels) {
     // Normalize configs
     for (const conf of Object.values(storage.sidebar.panels)) {
-      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, TABS_PANEL_CONFIG)
-      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, BOOKMARKS_PANEL_CONFIG)
-      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, HISTORY_PANEL_CONFIG)
-      else if (Utils.isSyncPanel(conf)) Utils.normalizeObject(conf, SYNC_PANEL_CONFIG)
+      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, D.TABS_PANEL_CONFIG)
+      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, D.BOOKMARKS_PANEL_CONFIG)
+      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, D.HISTORY_PANEL_CONFIG)
+      else if (Utils.isSyncPanel(conf)) Utils.normalizeObject(conf, D.SYNC_PANEL_CONFIG)
     }
 
-    SidebarConfigRState.panels = storage.sidebar.panels
+    reactive.panels = storage.sidebar.panels
   }
 }
 
-export async function saveSidebarConfig(delay?: number) {
-  return Store.set({ sidebar: Utils.cloneObject(SidebarConfigRState) }, delay)
-}
-
-export function createTabsPanelConfig(conf?: Partial<TabsPanelConfig>): TabsPanelConfig {
-  const panelConf = Utils.cloneObject(TABS_PANEL_CONFIG)
+export function createTabsPanelConfig(conf?: Partial<T.TabsPanelConfig>): T.TabsPanelConfig {
+  const panelConf = Utils.cloneObject(D.TABS_PANEL_CONFIG)
 
   if (conf) Utils.updateObject(panelConf, conf, conf)
 
@@ -64,28 +42,28 @@ export function createTabsPanelConfig(conf?: Partial<TabsPanelConfig>): TabsPane
 }
 
 export function createBookmarksPanelConfig(
-  conf?: Partial<BookmarksPanelConfig>
-): BookmarksPanelConfig {
-  const panelConf = Utils.cloneObject(BOOKMARKS_PANEL_CONFIG)
+  conf?: Partial<T.BookmarksPanelConfig>
+): T.BookmarksPanelConfig {
+  const panelConf = Utils.cloneObject(D.BOOKMARKS_PANEL_CONFIG)
 
   if (conf) Utils.updateObject(panelConf, conf, conf)
 
   if (!panelConf.id) panelConf.id = Utils.uid()
   if (!panelConf.name) panelConf.name = translate('panel.bookmarks.title')
-  if (!panelConf.rootId) panelConf.rootId = BKM_ROOT_ID
+  if (!panelConf.rootId) panelConf.rootId = D.BKM_ROOT_ID
 
   return panelConf
 }
 
-export function createHistoryPanelConfig(): HistoryPanelConfig {
-  return Utils.cloneObject(HISTORY_PANEL_CONFIG)
+export function createHistoryPanelConfig(): T.HistoryPanelConfig {
+  return Utils.cloneObject(D.HISTORY_PANEL_CONFIG)
 }
 
-export function createSyncPanelConfig(): SyncPanelConfig {
-  return Utils.cloneObject(SYNC_PANEL_CONFIG)
+export function createSyncPanelConfig(): T.SyncPanelConfig {
+  return Utils.cloneObject(D.SYNC_PANEL_CONFIG)
 }
 
-export function createDefaultSidebarConfig(): SidebarConfig {
+export function createDefaultSidebarConfig(): T.SidebarConfig {
   const defaultTabsPanelConfig = createTabsPanelConfig()
 
   return {
@@ -98,20 +76,20 @@ export function setupSidebarConfigListeners() {
   Store.onKeyChange('sidebar', updateSidebarConfig)
 }
 
-export function updateSidebarConfig(newConfig?: SidebarConfig | null): void {
+export function updateSidebarConfig(newConfig?: T.SidebarConfig | null): void {
   if (!newConfig?.nav?.length) newConfig = { nav: [], panels: {} }
 
-  if (newConfig.nav) SidebarConfigRState.nav = newConfig.nav
+  if (newConfig.nav) reactive.nav = newConfig.nav
   if (newConfig.panels) {
     // Normalize configs
     for (const conf of Object.values(newConfig.panels)) {
-      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, TABS_PANEL_CONFIG)
-      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, BOOKMARKS_PANEL_CONFIG)
-      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, HISTORY_PANEL_CONFIG)
-      else if (Utils.isSyncPanel(conf)) Utils.normalizeObject(conf, SYNC_PANEL_CONFIG)
+      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, D.TABS_PANEL_CONFIG)
+      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, D.BOOKMARKS_PANEL_CONFIG)
+      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, D.HISTORY_PANEL_CONFIG)
+      else if (Utils.isSyncPanel(conf)) Utils.normalizeObject(conf, D.SYNC_PANEL_CONFIG)
     }
 
-    SidebarConfigRState.panels = newConfig.panels
+    reactive.panels = newConfig.panels
   }
 }
 

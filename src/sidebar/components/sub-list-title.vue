@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Sidebar } from 'src/services/sidebar'
+import * as Sidebar from 'src/services/sidebar.fg'
 
 const props = defineProps<{ title: string; expanded: boolean; len: number }>()
 const emit = defineEmits(['click'])

@@ -1,7 +1,6 @@
-import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig, Tab } from './types'
-import { TabsPanel, BookmarksPanel, PanelType, HistoryPanel, SyncPanel, ItemInfo } from './types'
-import { NavItemClass, SubListTitleInfo, RGBA, RGB, AnyAsyncFunc, DataUriImage } from './types'
-import { DOMAIN_RE, GROUP_URL, NOID, URL_PAGE_RE, URL_URL } from './defaults'
+import type * as T from './types'
+import * as D from './defaults'
+import * as E from './enums'
 import { translate } from './dict'
 
 // prettier-ignore
@@ -65,7 +64,7 @@ export interface FuncCtx {
 /**
  * Run function ASAP
  */
-export function asap(cb: AnyFunc, delay: number): FuncCtx {
+export function asap(cb: T.AnyFunc, delay: number): FuncCtx {
   const ctx: FuncCtx = {
     busy: false,
     func: (a: any) => {
@@ -229,7 +228,7 @@ export function dateTimeTemplate(str: string, msOrDate: number | Date): string {
  */
 export function getDomainOf(url: string): string {
   if (!url) return url
-  return DOMAIN_RE.exec(url)?.[1] ?? url
+  return D.DOMAIN_RE.exec(url)?.[1] ?? url
 }
 
 export function sameStart(a: string, b: string, limit: number) {
@@ -270,12 +269,12 @@ const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.
 const HEXA_RE =
   /^#([0-f])([0-f])([0-f])([0-f])?$|^#([0-f][0-f])([0-f][0-f])([0-f][0-f])([0-f][0-f])?$/
 const HSLA_RE = /hsla?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)[,\s]?\s*([\d.]+%?)?\)/
-export function toRGBA(color?: string | RGB | RGBA | null): RGBA | undefined {
+export function toRGBA(color?: string | T.RGB | T.RGBA | null): T.RGBA | undefined {
   if (!color) return
 
   if (Array.isArray(color)) {
     if (color[3] === undefined) color[3] = 1
-    return color as RGBA
+    return color as T.RGBA
   }
 
   const rgba = RGBA_RE.exec(color)
@@ -453,15 +452,16 @@ export function commonSubStr(strings: string[]): string {
   return out
 }
 
-async function _getStringFromDragItem(item: DataTransferItem): Promise<string> {
+export async function getStringFromDragItem(item: DataTransferItem): Promise<string> {
   return new Promise(res => item.getAsString(s => res(s)))
 }
 
 interface DragEventParseResult {
+  items?: T.ItemInfo[]
   url?: string
   text?: string
   file?: File | null
-  matchedNativeTabs?: Tab[]
+  matchedNativeTabs?: T.Tab[]
 }
 export async function parseDragEvent(
   event: DragEvent,
@@ -485,8 +485,21 @@ export async function parseDragEvent(
     else if (types.includes('text/plain')) textType = 'text/plain'
 
     for (const item of event.dataTransfer.items) {
+      // List of URL\nTitle
+      if (item.type === 'text/x-moz-url') {
+        const value = await getStringFromDragItem(item)
+        const list = value.split('\n')
+        const items = []
+        for (let i = 0; i < list.length; i += 2) {
+          const url = list[i]
+          const title = list[i + 1]
+          items.push({ id: i, url, title })
+        }
+        if (items.length) result.items = items
+      }
+
       if (!result.url && item.type === urlType) {
-        const value = await _getStringFromDragItem(item)
+        const value = await getStringFromDragItem(item)
         if (value && urlType === 'text/x-moz-url') {
           const urlAndTitle = value.split('\n')
           result.url = urlAndTitle[0]
@@ -495,12 +508,12 @@ export async function parseDragEvent(
           result.matchedNativeTabs = (await browser.tabs.query({
             highlighted: true,
             windowId: lastFocusedId,
-          })) as Tab[]
+          })) as T.Tab[]
         } else {
           result.url = value
         }
       }
-      if (!result.text && item.type === textType) result.text = await _getStringFromDragItem(item)
+      if (!result.text && item.type === textType) result.text = await getStringFromDragItem(item)
       if (!result.file && item.kind === 'file') result.file = item.getAsFile()
     }
 
@@ -518,7 +531,7 @@ export function isUrlUrl(url: string): boolean {
   return url.startsWith('m') && url.startsWith('/sidebery/url.html', 52)
 }
 
-export function createGroupUrl(name?: string, conf?: GroupConfig): string {
+export function createGroupUrl(name?: string, conf?: T.GroupConfig): string {
   let urlBase = browser.runtime.getURL('sidebery/group.html')
   if (!name) name = uid()
   if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
@@ -527,13 +540,13 @@ export function createGroupUrl(name?: string, conf?: GroupConfig): string {
 
 export function updateGroupUrlBase(url: string): string {
   const index = url.indexOf('group.html') + 10
-  const newUrl = GROUP_URL + url.slice(index)
+  const newUrl = D.GROUP_URL + url.slice(index)
   return newUrl
 }
 
 export function updatePlaceholderUrlBase(url: string): string {
   const index = url.indexOf('url.html') + 8
-  const newUrl = URL_URL + url.slice(index)
+  const newUrl = D.URL_URL + url.slice(index)
   return newUrl
 }
 
@@ -616,8 +629,8 @@ export function normalizeUrl(url?: string, title?: string): string | undefined {
     url.startsWith('blob:') ||
     url.startsWith('about:')
   ) {
-    if (title) return URL_URL + '#' + encodeURIComponent(JSON.stringify([url, title]))
-    return URL_URL + '#' + url
+    if (title) return D.URL_URL + '#' + encodeURIComponent(JSON.stringify([url, title]))
+    return D.URL_URL + '#' + url
   } else {
     return url
   }
@@ -629,7 +642,7 @@ export function normalizeUrl(url?: string, title?: string): string | undefined {
 export function denormalizeUrl(url?: string): string | undefined {
   if (!url) return url
   // Unavailable URLs
-  else if (url.startsWith('m') && URL_PAGE_RE.test(url)) {
+  else if (url.startsWith('m') && D.URL_PAGE_RE.test(url)) {
     let data = url.slice(71)
     try {
       data = decodeURIComponent(data)
@@ -643,7 +656,7 @@ export function denormalizeUrl(url?: string): string | undefined {
   else return url
 }
 
-export function recreateNormalizedObject<T extends object>(obj: T, defaults: T): T {
+export function recreateNormalizedObject<T extends object>(obj: Partial<T>, defaults: T): T {
   const result = cloneObject(defaults)
   for (const key of Object.keys(defaults) as (keyof T)[]) {
     if (obj[key] !== undefined) result[key] = obj[key]
@@ -744,11 +757,11 @@ export async function setImageSrc(img: HTMLImageElement, src: string): Promise<v
   })
 }
 
-export function isSvg(img: DataUriImage): boolean {
+export function isSvg(img: T.DataUriImage): boolean {
   return img.startsWith('data:image/svg+xml;base64,')
 }
 
-export function setSvgImageSize(svgImg: DataUriImage, w: number, h: number): string | undefined {
+export function setSvgImageSize(svgImg: T.DataUriImage, w: number, h: number): string | undefined {
   let base64 = svgImg.slice(26)
 
   let svg
@@ -769,7 +782,7 @@ export function setSvgImageSize(svgImg: DataUriImage, w: number, h: number): str
   return 'data:image/svg+xml;base64,' + base64
 }
 
-export function svgImageContainsCssMediaQueries(svgImg: DataUriImage): boolean {
+export function svgImageContainsCssMediaQueries(svgImg: T.DataUriImage): boolean {
   const base64 = svgImg.slice(26)
 
   let svgText
@@ -952,6 +965,38 @@ export async function retry(conf: RetryConfig): Promise<void> {
   })
 }
 
+interface PendingConfig<R> {
+  action: () => Promise<R>
+  check: (result: R) => boolean
+  interval: number
+  tryCount: number
+}
+
+export async function pending<R>(conf: PendingConfig<R>): Promise<R> {
+  return new Promise<R>(async (ok, meh) => {
+    let i = 0
+
+    while (true) {
+      let result
+      try {
+        result = await conf.action()
+      } catch (err) {
+        return meh(err)
+      }
+
+      if (conf.check(result)) {
+        return ok(result)
+      }
+
+      if (++i >= conf.tryCount) {
+        return ok(result)
+      }
+
+      await sleep(conf.interval)
+    }
+  })
+}
+
 /**
  * Search back then forth
  */
@@ -1015,35 +1060,35 @@ export function getShortTimestamp(ms: number, currentDate: Date): string {
   return `${hr}:${min}`
 }
 
-export function isNavBtn(item?: NavItem): item is NavBtn {
+export function isNavBtn(item?: T.NavItem): item is T.NavBtn {
   if (!item) return false
-  return (item as NavBtn).class === NavItemClass.btn
+  return (item as T.NavBtn).class === E.NavItemClass.btn
 }
-export function isNavSpace(item?: NavItem): item is NavSpace {
+export function isNavSpace(item?: T.NavItem): item is T.NavSpace {
   if (!item) return false
-  return (item as NavSpace).class === NavItemClass.space
+  return (item as T.NavSpace).class === E.NavItemClass.space
 }
-export function isNavPanel(item?: NavItem): item is Panel {
+export function isNavPanel(item?: T.NavItem): item is T.Panel {
   if (!item) return false
-  return (item as Panel).class === NavItemClass.panel
+  return (item as T.Panel).class === E.NavItemClass.panel
 }
-export function isTabsPanel(panel?: object): panel is TabsPanel {
+export function isTabsPanel(panel?: object): panel is T.TabsPanel {
   if (!panel) return false
-  return (panel as PanelConfig).type === PanelType.tabs
+  return (panel as T.PanelConfig).type === E.PanelType.tabs
 }
-export function isBookmarksPanel(panel?: object): panel is BookmarksPanel {
+export function isBookmarksPanel(panel?: object): panel is T.BookmarksPanel {
   if (!panel) return false
-  return (panel as PanelConfig).type === PanelType.bookmarks
+  return (panel as T.PanelConfig).type === E.PanelType.bookmarks
 }
-export function isHistoryPanel(panel?: PanelConfig): panel is HistoryPanel {
+export function isHistoryPanel(panel?: T.PanelConfig): panel is T.HistoryPanel {
   if (!panel) return false
-  return panel.type === PanelType.history
+  return panel.type === E.PanelType.history
 }
-export function isSyncPanel(panel?: PanelConfig): panel is SyncPanel {
+export function isSyncPanel(panel?: T.PanelConfig): panel is T.SyncPanel {
   if (!panel) return false
-  return panel.type === PanelType.sync
+  return panel.type === E.PanelType.sync
 }
-export function isSubListTitle(something: any): something is SubListTitleInfo {
+export function isSubListTitle(something: any): something is T.SubListTitleInfo {
   if (!something) return false
   if ((something as Record<string, any>).isSubListTitle) return true
   return false
@@ -1074,7 +1119,7 @@ export function findLastFrom<T>(
 interface QueueItem {
   ok: (result: any) => void
   err: (error: any) => void
-  fn: AnyAsyncFunc
+  fn: T.AnyAsyncFunc
   args: any[]
 }
 
@@ -1082,7 +1127,7 @@ export class AsyncQueue {
   private _waitingQueue = false
   private _queue: QueueItem[] = []
 
-  public async add<T extends AnyAsyncFunc>(
+  public async add<T extends T.AnyAsyncFunc>(
     fn: T,
     ...args: Parameters<T>
   ): Promise<Awaited<ReturnType<T>>> {
@@ -1173,13 +1218,13 @@ export function withoutEmptyFolders<T extends { id: ID; url?: string; parentId?:
     if (
       item.url &&
       item.parentId !== undefined &&
-      item.parentId !== NOID &&
+      item.parentId !== D.NOID &&
       !nonEmptyFolders.has(item.parentId)
     ) {
-      let parent = itemsById.get(item.parentId ?? NOID)
+      let parent = itemsById.get(item.parentId ?? D.NOID)
       while (parent) {
         nonEmptyFolders.add(parent.id)
-        parent = itemsById.get(parent.parentId ?? NOID)
+        parent = itemsById.get(parent.parentId ?? D.NOID)
       }
     }
 
@@ -1193,8 +1238,8 @@ const INDENT_RE = /^(( |\t)*)(.*)/
 const SPACES_ONLY_RE = /^ +$/
 const LINK_RE =
   /href="(?<htmlUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)"(.*?)>(?<htmlLabel>.+?)<\/a>|\[(?<mdLabel>.*?)\]\((?<mdUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)\)|(?<url>([0-9A-Za-z-]{1,63}:\/?\/?[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})*)(\/[0-9A-Za-z-._~]+)*\/?([#?][0-9A-Za-z-._~:?#@!%$&'()*+,;=]+)*)/g
-export function parseTextForItems(srcText: string): ItemInfo[] {
-  const items: ItemInfo[] = []
+export function parseTextForItems(srcText: string): T.ItemInfo[] {
+  const items: T.ItemInfo[] = []
   const parsedLines: { id: number; parentId: number; txt: string; indent: string }[] = []
 
   // Split into lines
@@ -1281,7 +1326,7 @@ export function parseTextForItems(srcText: string): ItemInfo[] {
     const lineData = parsedLines[i]
     if (!lineData) continue
 
-    const inlineLinks: ItemInfo[] = []
+    const inlineLinks: T.ItemInfo[] = []
 
     let reResult
     while ((reResult = LINK_RE.exec(lineData.txt))) {
@@ -1331,4 +1376,24 @@ export function someIter<T>(it: IteratorObject<T>, pred: (value: T) => unknown):
     if (pred(val)) return true
   }
   return false
+}
+
+export function untilElGetFocus(el: HTMLInputElement | null, cb: (el: HTMLInputElement) => void) {
+  if (!el) return
+
+  // Already focused
+  if (document.activeElement === el && document.hasFocus()) return
+
+  cb(el)
+
+  let n = 0
+  const interval = setInterval(() => {
+    n++
+    if ((document.activeElement === el && document.hasFocus()) || n > 200) {
+      clearInterval(interval)
+      return
+    }
+
+    cb(el)
+  }, 5)
 }

@@ -1,14 +1,15 @@
 import * as Utils from 'src/utils'
 import { Tab, GroupConfig, GroupInfo, GroupedTabInfo, GroupPin } from 'src/types'
+import { GroupConfigResult } from 'src/enums'
 import { GroupMsg } from 'src/injections/group.ipc'
-import { Windows } from 'src/services/windows'
-import { Settings } from 'src/services/settings'
-import { Tabs } from './tabs.fg'
-import { GroupConfigResult, Sidebar } from './sidebar'
-import * as Favicons from './favicons.fg'
-import * as IPC from './ipc'
-import * as Logs from './logs'
-import * as Popups from './popups'
+import * as Windows from 'src/services/windows.fg'
+import * as Settings from 'src/services/settings'
+import * as Tabs from 'src/services/tabs.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Favicons from 'src/services/favicons.fg'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups.fg'
 
 /**
  * Set relGroupId prop in related pinned and group tabs

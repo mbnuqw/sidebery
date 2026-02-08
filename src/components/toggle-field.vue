@@ -2,7 +2,10 @@
 .ToggleField(
   :data-inactive="props.inactive"
   :data-loading="loading"
-  @click="toggle"
+  :data-changed="props.default !== undefined && props.default !== value"
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onContextMenu"
   @keydown="onKeyDown")
   .focus-fx
   .body
@@ -20,7 +23,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { translate } from 'src/dict'
-import { ToggleInputComponent } from 'src/types'
+import type { ToggleInputComponent } from 'src/types'
 import ToggleInput from './toggle-input.vue'
 import LoadingDots from './loading-dots.vue'
 
@@ -33,11 +36,34 @@ interface ToggleFieldProps {
   loading?: boolean
   note?: string
   noteWithLinks?: string
+  dbg?: string
+  default?: any
 }
 
 const emit = defineEmits(['toggle', 'update:value'])
 const props = defineProps<ToggleFieldProps>()
 const inputComponent = ref<ToggleInputComponent | null>(null)
+
+let rangeIsSelected = false
+
+function onMouseDown(e: DOMEvent<MouseEvent>) {
+  rangeIsSelected = getSelection()?.type === 'Range'
+  if (e.detail > 1) e.preventDefault()
+}
+
+function onMouseUp(e: DOMEvent<MouseEvent>) {
+  if (e.altKey && e.ctrlKey && e.button === 0) {
+    navigator.clipboard.writeText(props.dbg ?? '')
+    return
+  }
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  toggle()
+}
+
+function onContextMenu(payload: PointerEvent) {
+  if (rangeIsSelected || getSelection()?.type === 'Range') return
+  payload.preventDefault()
+}
 
 function toggle(): void {
   if (props.inactive) return

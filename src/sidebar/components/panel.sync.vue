@@ -12,15 +12,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { translate } from 'src/dict'
-import { ScrollBoxComponent, SubPanelType } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
+import type { ScrollBoxComponent } from 'src/types'
+import { SubPanelType } from 'src/enums'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as Sync from 'src/services/sync.fg'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import SyncEntryComp from './panel.sync.entry.vue'
-import { Sync } from 'src/services/_services'
 
 const props = defineProps<{ isSubPanel?: boolean }>()
 
@@ -29,16 +30,6 @@ const state = reactive({
   expandedHistoryDays: [true],
   syncLoading: false,
   allLoaded: false,
-})
-
-onMounted(() => {
-  if (scrollBox.value) {
-    if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.Sync) {
-      Sync.state.subPanelScrollEl = scrollBox.value.getScrollBox()
-    } else {
-      Sync.state.panelScrollEl = scrollBox.value.getScrollBox()
-    }
-  }
 })
 
 // Do not render sync panel content if sync sub-panel is active

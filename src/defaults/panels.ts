@@ -1,11 +1,9 @@
 import { translate } from 'src/dict'
-import { PanelType, BookmarksPanelConfig, BookmarksPanel, MediaState } from 'src/types'
-import { TabsPanelConfig, TabsPanel, SyncPanelConfig, SyncPanel } from 'src/types'
-import { HistoryPanelConfig, HistoryPanel } from 'src/types'
-import { NavItemClass } from 'src/types/sidebar'
+import * as T from 'src/types'
+import * as E from 'src/enums'
 
-export const BOOKMARKS_PANEL_CONFIG: BookmarksPanelConfig = {
-  type: PanelType.bookmarks,
+export const BOOKMARKS_PANEL_CONFIG: T.BookmarksPanelConfig = {
+  type: E.PanelType.bookmarks,
   id: '',
   name: '',
   iconSVG: 'icon_bookmarks',
@@ -20,10 +18,10 @@ export const BOOKMARKS_PANEL_CONFIG: BookmarksPanelConfig = {
   autoConvert: false,
   srcPanelConfig: null,
 }
-export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
+export const BOOKMARKS_PANEL_STATE: T.BookmarksPanel = {
   ...BOOKMARKS_PANEL_CONFIG,
 
-  class: NavItemClass.panel,
+  class: E.NavItemClass.panel,
   index: -1,
   topOffset: 0,
   leftOffset: 0,
@@ -34,6 +32,7 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   bounds: [],
   hidden: false,
   ready: false,
+  bookmarks: [],
 
   reactive: {
     name: '',
@@ -47,15 +46,15 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
     filteredLen: undefined,
     ready: false,
 
-    bookmarks: [],
-    filteredBookmarks: undefined,
+    bookmarkIds: [],
+    filteredBookmarkIds: undefined,
     viewMode: 'tree',
     rootOffset: 0,
   },
 }
 
-export const TABS_PANEL_CONFIG: TabsPanelConfig = {
-  type: PanelType.tabs,
+export const TABS_PANEL_CONFIG: T.TabsPanelConfig = {
+  type: E.PanelType.tabs,
   id: '',
   name: '',
   color: 'toolbar',
@@ -73,7 +72,7 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
   newTabBtns: [],
   srcPanelConfig: null,
 }
-export const TABS_PANEL_STATE: TabsPanel = {
+export const TABS_PANEL_STATE: T.TabsPanel = {
   ...TABS_PANEL_CONFIG,
 
   tabs: [],
@@ -87,7 +86,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
   scrollRetainer: 0,
   allDiscarded: false,
 
-  class: NavItemClass.panel,
+  class: E.NavItemClass.panel,
   index: -1,
   topOffset: 0,
   leftOffset: 0,
@@ -120,12 +119,12 @@ export const TABS_PANEL_STATE: TabsPanel = {
     allDiscarded: false,
     newTabCtx: 'none',
     newTabBtns: [],
-    mediaState: MediaState.Silent,
+    mediaState: E.MediaState.Silent,
   },
 }
 
-export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {
-  type: PanelType.history,
+export const HISTORY_PANEL_CONFIG: T.HistoryPanelConfig = {
+  type: E.PanelType.history,
   id: 'history',
   name: translate('panel.history.title'),
   color: 'toolbar',
@@ -135,10 +134,10 @@ export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {
   skipOnSwitching: false,
   viewMode: 'history',
 }
-export const HISTORY_PANEL_STATE: HistoryPanel = {
+export const HISTORY_PANEL_STATE: T.HistoryPanel = {
   ...HISTORY_PANEL_CONFIG,
 
-  class: NavItemClass.panel,
+  class: E.NavItemClass.panel,
   index: -1,
   topOffset: 0,
   leftOffset: 0,
@@ -164,8 +163,8 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
   },
 }
 
-export const SYNC_PANEL_CONFIG: SyncPanelConfig = {
-  type: PanelType.sync,
+export const SYNC_PANEL_CONFIG: T.SyncPanelConfig = {
+  type: E.PanelType.sync,
   id: 'sync',
   name: translate('panel.sync.title'),
   color: 'toolbar',
@@ -175,10 +174,10 @@ export const SYNC_PANEL_CONFIG: SyncPanelConfig = {
   skipOnSwitching: false,
   viewMode: 'sync',
 }
-export const SYNC_PANEL_STATE: SyncPanel = {
+export const SYNC_PANEL_STATE: T.SyncPanel = {
   ...SYNC_PANEL_CONFIG,
 
-  class: NavItemClass.panel,
+  class: E.NavItemClass.panel,
   index: -1,
   topOffset: 0,
   leftOffset: 0,

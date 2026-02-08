@@ -1,0 +1,372 @@
+@import '../utils'
+
+#root
+  --ctx-menu-min-width: 160px
+  --ctx-menu-max-width: 200px
+  --ctx-menu-font: rem(14) var(--general-font-family)
+  --ctx-menu-bg: var(--popup-bg)
+  --ctx-menu-fg: var(--popup-fg)
+  --ctx-menu-border-radius: calc(var(--general-border-radius) + 1px)
+  --ctx-menu-opt-border-radius: calc(var(--general-border-radius) - var(--general-margin) + 1px)
+  --ctx-menu-padding: var(--general-margin)
+  --ctx-menu-text-opt-inner-gap: 4px
+  --ctx-menu-text-opt-height: 26px
+  --ctx-menu-icon-opt-height: 30px
+#root[data-density="compact"]
+  --ctx-menu-text-opt-inner-gap: 4px
+  --ctx-menu-text-opt-height: 24px
+  --ctx-menu-icon-opt-height: 28px
+#root[data-theme="plain"]
+  --ctx-menu-opt-border-radius: 0
+  --ctx-menu-padding: 0
+  --ctx-menu-icon-opt-height: 32px
+#root[data-theme="plain"][data-density="compact"]
+  --ctx-menu-icon-opt-height: 30px
+#root[data-theme="plain"][data-density="loose"]
+  --ctx-menu-icon-opt-height: 34px
+#root[data-popup-color-scheme="dark"]
+  --ctx-menu-shadow: 0 0 0 1px var(--s-popup-border, #ffffff16), 0 1px 16px 0 #00000048
+  --ctx-menu-separator: var(--s-popup-border, #ffffff16)
+#root[data-popup-color-scheme="light"]
+  --ctx-menu-shadow: 0 0 0 1px var(--s-popup-border, #00000016), 0 1px 16px 0 #00000032
+  --ctx-menu-separator: var(--s-popup-border, #00000016)
+
+.CtxMenu
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 1px
+  max-height: 100%
+  z-index: -1
+  opacity: 0
+  transition: opacity var(--d-swift), z-index var(--d-swift)
+  &[data-active="true"]
+    opacity: 1
+    z-index: 5000
+
+.CtxMenu .container
+  position: absolute
+  top: 0
+  bottom: 0
+  width: 100%
+  height: 0px
+
+.CtxMenu .container .scroll-container .scrollable
+  background-color: transparent
+
+.CtxMenu .box
+  position: absolute
+  display: flex
+  flex-direction: column
+  max-width: calc(100% - 24px)
+  min-width: var(--ctx-menu-min-width)
+  max-height: calc(100vh - 32px)
+  z-index: 30
+  padding: 0
+  margin: 0
+  border-radius: var(--ctx-menu-border-radius)
+  background-color: var(--frame-bg)
+  box-shadow: var(--ctx-menu-shadow)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--ctx-menu-bg)
+    border-radius: var(--ctx-menu-border-radius)
+
+.CtxMenu .inline-group
+  position: relative
+  display: flex
+  max-width: var(--ctx-menu-max-width)
+  overflow: hidden
+  flex-wrap: wrap
+  padding: var(--ctx-menu-padding)
+  &:not(:last-of-type)
+    padding-bottom: calc(var(--ctx-menu-padding) + 1px)
+    box-shadow: inset 0 -1px 0 0 var(--ctx-menu-separator)
+#root[data-theme="plain"] .CtxMenu .inline-group
+  padding-bottom: 1px
+
+.CtxMenu .icon-opt
+  position: relative
+  width: auto
+  height: var(--ctx-menu-icon-opt-height)
+  min-width: 30px
+  flex-grow: 1
+  flex-shrink: 0
+  border-radius: var(--ctx-menu-opt-border-radius)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--ctx-menu-opt-border-radius)
+    opacity: .16
+  &[data-width="3"]
+    width: 33.3%
+    flex-grow: 0
+  &[data-width="4"]
+    width: 25%
+    flex-grow: 0
+  &[data-width="wrap"]
+    width: 20%
+    flex-grow: 0
+  &:not([data-inactive="true"]):hover:before
+  &[data-selected="true"]:not([data-inactive="true"]):before
+    background-color: var(--ctx-menu-fg)
+    img
+    svg
+      opacity: 1
+  &:active
+    opacity: .7
+  img
+  svg
+    position: absolute
+    width: 16px
+    height: 16px
+    top: calc(50% - 8px)
+    left: calc(50% - 8px)
+    opacity: .8
+    fill: var(--color, var(--ctx-menu-fg))
+  .badge
+    top: calc(50% + 2px)
+    left: calc(50% - 10px)
+    width: 9px
+    height: 9px
+    opacity: 1
+    &[data-img="true"]
+      fill: var(--ctx-menu-fg)
+  .badge + .icon
+    clip-path: polygon(0% 0, 100% 0%, 100% 100%, 43.75% 100%, 43.75% 62.5%, 0% 62.5%)
+  &[data-separator="true"]
+    display: none
+  &[data-inactive="true"]
+    opacity: .3
+
+.CtxMenu .list-group
+  position: relative
+  max-width: var(--ctx-menu-max-width)
+  padding: var(--ctx-menu-padding)
+  &:not(:last-of-type)
+    padding-bottom: calc(var(--ctx-menu-padding) + 1px)
+    box-shadow: inset 0 -1px 0 0 var(--ctx-menu-separator)
+
+.CtxMenu .opt
+  position: relative
+  display: flex
+  height: var(--ctx-menu-text-opt-height)
+  font: var(--ctx-menu-font)
+  align-items: center
+  justify-content: flex-start
+  grid-gap: 0 var(--ctx-menu-text-opt-inner-gap)
+  padding: 0 var(--ctx-menu-text-opt-inner-gap) 0 var(--ctx-menu-text-opt-inner-gap)
+  white-space: pre
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--ctx-menu-opt-border-radius)
+    opacity: .16
+  &:not([data-inactive="true"]):hover:before
+  &[data-selected="true"]:not([data-inactive="true"]):before
+    background-color: var(--ctx-menu-fg)
+  &:not([data-inactive="true"]):active
+    opacity: .7
+  &[data-inactive="true"]
+    opacity: .4
+    &:before
+      opacity: .1
+  .icon-box
+    position: relative
+    width: 16px
+    height: 16px
+    flex-shrink: 0
+    // margin: auto 4px auto -3px
+    transform: translateZ(0)
+  .icon
+    position: absolute
+    top: 0
+    left: 0
+    width: 16px
+    height: 16px
+    fill: var(--color, var(--ctx-menu-fg))
+  svg.icon
+    opacity: .7
+  .badge
+    position: absolute
+    top: calc(50% + 2px)
+    left: calc(50% - 10px)
+    width: 9px
+    height: 9px
+    fill: var(--color, var(--ctx-menu-fg))
+    &[data-img="true"]
+      fill: var(--ctx-menu-fg)
+  .badge + .icon
+    clip-path: polygon(0% 0, 100% 0%, 100% 100%, 43.75% 100%, 43.75% 62.5%, 0% 62.5%)
+  .-rotate90
+    transform: rotateZ(90deg)
+  .-rotate-90
+    transform: rotateZ(-90deg)
+  .label
+    position: relative
+    overflow: hidden
+    color: var(--color, var(--ctx-menu-fg))
+    width: 100%
+    margin-left: var(--ctx-menu-text-opt-inner-gap)
+    mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+    &.-header
+      font-weight: 700
+      padding: 2px 0
+  .icon-box + .label
+    margin-left: 0
+
+// Flag button
+.CtxMenu .opt
+  --flag-btn-full-width: calc(16px + var(--ctx-menu-text-opt-inner-gap) * 2)
+.CtxMenu .flag-btn
+  position: absolute
+  display: none
+  right: var(--ctx-menu-text-opt-inner-gap)
+  height: 100%
+  width: 16px
+  flex-shrink: 0
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: calc(var(--ctx-menu-text-opt-inner-gap) * -1)
+    height: 100%
+    width: var(--flag-btn-full-width)
+.CtxMenu svg.flag-icon
+.CtxMenu img.flag-icon
+  position: absolute
+  width: 16px
+  height: 16px
+  top: calc(50% - 8px)
+  left: calc(50% - 8px)
+  fill: var(--ctx-menu-fg)
+  opacity: .7
+.CtxMenu .flag-btn[data-active="true"]
+.CtxMenu .opt:hover .flag-btn[data-active="false"]
+  display: block
+.CtxMenu .opt:has(.flag-btn[data-active="true"]) .label
+.CtxMenu .opt:has(.flag-btn):hover .label
+  mask: linear-gradient(-90deg, transparent, transparent calc(var(--flag-btn-full-width) - 6px), #000000 calc(var(--flag-btn-full-width) + 6px), #000000)
+.CtxMenu .flag-btn[data-active="false"] .flag-icon
+  opacity: .3
+.CtxMenu .flag-btn[data-active="false"]:hover .flag-icon
+  opacity: .5
+.CtxMenu .flag-btn[data-active="false"]:active .flag-icon
+  opacity: .3
+
+// Separator
+.CtxMenu .opt[data-separator="true"]
+  padding: 0
+  height: calc(var(--ctx-menu-padding) * 2 + 1px)
+  min-height: 1px
+  width: 100%
+.CtxMenu .opt[data-separator="true"]:after
+  content: ''
+  position: absolute
+  width: calc(100% + var(--ctx-menu-padding) * 2)
+  min-width: 100%
+  height: 1px
+  top: var(--ctx-menu-padding)
+  left: calc(var(--ctx-menu-padding) * -1)
+  background-color: var(--ctx-menu-separator)
+.CtxMenu .opt[data-separator="true"]:before
+.CtxMenu .opt[data-separator="true"] .icon-box
+.CtxMenu .opt[data-separator="true"] .label
+  display: none
+
+.CtxMenu .sub-menu-box
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 1
+
+.CtxMenu .sub-menu
+  position: relative
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  overflow: hidden
+  border-radius: var(--ctx-menu-border-radius)
+  background-color: var(--frame-bg)
+  box-shadow: var(--ctx-menu-shadow)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--ctx-menu-bg)
+
+.CtxMenu .scroll-box
+  position: relative
+  width: 100%
+  height: 100%
+  padding: var(--ctx-menu-padding)
+  overflow-y: auto
+  scrollbar-width: none
+  scrollbar-color: var(--popup-scrollbar-color) var(--ctx-menu-bg)
+#root[data-native-scrollbar="true"] .CtxMenu .scroll-box
+  scrollbar-width: auto
+#root[data-native-scrollbar="true"][data-native-scrollbars-thin="true"] .CtxMenu .scroll-box
+  scrollbar-width: thin
+
+// ---
+// -- Transitions
+// -
+.menu-enter-active
+.menu-leave-active
+  transition: opacity var(--d-swift)
+.menu-enter-from
+  z-index: -1
+  opacity: 0
+.menu-enter-to
+  z-index: 100
+  opacity: 1
+.menu-leave-from
+  z-index: 100
+  opacity: 1
+.menu-leave-to
+  z-index: -1
+  opacity: 0
+
+.sub-menu-enter-active
+.sub-menu-leave-active
+  pointer-events: none
+  transition: opacity var(--d-fast)
+  .sub-menu
+    transition: transform var(--d-fast)
+.sub-menu-enter-from
+  opacity: 0
+  .sub-menu
+    transform: translateX(16px)
+.sub-menu-enter-to
+  opacity: 1
+  .sub-menu
+    transform: translateX(0)
+.sub-menu-leave-from
+  opacity: 1
+  .sub-menu
+    transform: translateX(0)
+.sub-menu-leave-to
+  opacity: 0
+  .sub-menu
+    transform: translateX(16px)

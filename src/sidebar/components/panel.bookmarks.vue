@@ -7,7 +7,7 @@
   ScrollBox(ref="scrollBox")
     .bookmarks-tree(v-if="!state.unrendered && panel.reactive.viewMode === 'tree'")
       DragAndDropPointer(:panelId="panel.id" :subPanel="false")
-      BookmarkNode.root-node(v-for="node in tree" :key="node.id" :node="node" :panelId="panel.id")
+      BookmarkNode.root-node(v-for="nodeId in root" :key="nodeId" :nodeId="nodeId" :panelId="panel.id")
 
     .bookmarks-history(v-if="!state.unrendered && panel.reactive.viewMode === 'history'")
       .group(
@@ -33,23 +33,24 @@
     :isNotPerm="!Permissions.reactive.bookmarks"
     :permMsg="translate('panel.bookmarks.req_perm')"
     perm="bookmarks"
-    :isMsg="!tree.length"
+    :isMsg="!root.length"
     :msg="translate('panel.nothing')")
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
-import { Bookmark, ScrollBoxComponent, BookmarksPanel, DropType, MenuType } from 'src/types'
-import { ItemBounds, BookmarksPanelComponent, ItemBoundsType } from 'src/types'
-import { BKM_OTHER_ID } from 'src/defaults'
+import type * as T from 'src/types'
+import { DropType, MenuType, ItemBoundsType } from 'src/enums'
+import { BKM_OTHER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
-import { Settings } from 'src/services/settings'
-import * as Selection from 'src/services/selection'
-import { Menu } from 'src/services/menu'
-import { Sidebar } from 'src/services/sidebar'
-import { DnD } from 'src/services/drag-and-drop'
-import { Search } from 'src/services/search'
-import { Permissions } from 'src/services/permissions'
+import * as Settings from 'src/services/settings'
+import * as Selection from 'src/services/selection.fg'
+import * as Menu from 'src/services/menu.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Search from 'src/services/search.fg'
+import * as Permissions from 'src/services/permissions.fg'
+import * as Bookmarks from 'src/services/bookmarks.fg'
 import ScrollBox from 'src/components/scroll-box.vue'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import BookmarkCard from './bookmark-card.vue'
@@ -60,32 +61,28 @@ import DragAndDropPointer from './dnd-pointer.vue'
 interface BookmarksGroup {
   id: ID
   title: string
-  list: Bookmark[]
+  list: Bookmarks.BkmNode[]
   ctime: number
 }
 
 let scrollBoxEl: HTMLElement | undefined
 
-const props = defineProps<{ panel: BookmarksPanel }>()
+const props = defineProps<{ panel: T.BookmarksPanel }>()
 
-const scrollBox = ref<ScrollBoxComponent | null>(null)
+const scrollBox = ref<T.ScrollBoxComponent | null>(null)
 const state = reactive({
   unrendered: false,
 
   expandedHistoryGroups: [true, true],
-
-  treeScrollTop: 0,
-  historyScrollTop: 0,
-  domainsScrollTop: 0,
 })
 
 const isActive = computed<boolean>(() => props.panel.id === Sidebar.reactive.activePanelId)
-const isFiltering = computed<boolean>(() => !!Search.reactive.value)
-const tree = computed(
-  () => props.panel.reactive.filteredBookmarks ?? props.panel.reactive.bookmarks ?? []
+const isFiltering = computed<boolean>(() => Search.reactive.active)
+const root = computed(
+  () => props.panel.reactive.filteredBookmarkIds ?? props.panel.reactive.bookmarkIds ?? []
 )
 
-function bookmarksWalker(nodes: Bookmark[], list: Bookmark[]): void {
+function bookmarksWalker(nodes: Bookmarks.BkmNode[], list: Bookmarks.BkmNode[]): void {
   for (const node of nodes) {
     if (node.url && node.title) list.push(node)
     if (node.children) bookmarksWalker(node.children, list)
@@ -98,9 +95,11 @@ const history = computed((): BookmarksGroup[] => {
   let dt: Date
   let i = 0
 
-  const bookmarksList: Bookmark[] = props.panel.reactive.filteredBookmarks ?? []
-  if (!props.panel.reactive.filteredBookmarks) {
-    bookmarksWalker(props.panel.reactive.bookmarks, bookmarksList)
+  let bookmarksList: Bookmarks.BkmNode[] = []
+  if (props.panel.reactive.filteredBookmarkIds && props.panel.filteredBookmarks) {
+    bookmarksList = props.panel.filteredBookmarks
+  } else {
+    bookmarksWalker(Bookmarks.get(props.panel.reactive.bookmarkIds), bookmarksList)
     bookmarksList.sort((a, b) => (b.dateAdded ?? 0) - (a.dateAdded ?? 0))
   }
 
@@ -127,8 +126,8 @@ const history = computed((): BookmarksGroup[] => {
   return output
 })
 
-function getBounds(): ItemBounds[] {
-  const result: ItemBounds[] = []
+function getBounds(): T.ItemBounds[] {
+  const result: T.ItemBounds[] = []
   let groupIndex = 0
   let expandedGroupPadding: number | undefined
   let headerHeight = 0
@@ -259,7 +258,9 @@ onMounted(() => {
 
 function onDrop(): void {
   DnD.reactive.dstType = DropType.Bookmarks
-  if (DnD.reactive.dstParentId === -1) DnD.reactive.dstParentId = BKM_OTHER_ID
+  if (DnD.reactive.dstParentId === -1) {
+    DnD.reactive.dstParentId = props.panel.rootId === NOID ? BKM_OTHER_ID : props.panel.rootId
+  }
 }
 
 function onRightMouseUp(e: MouseEvent): void {
@@ -306,6 +307,6 @@ function toggleGroupById(id: ID): void {
   if (index !== -1) toggleHistoryGroup(null, index)
 }
 
-const publicInterface: BookmarksPanelComponent = { getBounds, toggleGroupById }
+const publicInterface: T.BookmarksPanelComponent = { getBounds, toggleGroupById }
 defineExpose(publicInterface)
 </script>

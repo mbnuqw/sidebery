@@ -19,10 +19,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Windows } from 'src/services/windows'
+import * as Windows from 'src/services/windows.fg'
+import * as Settings from 'src/services/settings'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
-import { Settings } from 'src/services/settings'
 
 const isReady = computed((): boolean => {
   if (!Windows.reactive.choosing || !Windows.reactive.choosing.length) return false

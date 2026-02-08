@@ -3,7 +3,7 @@
   ref="pointerEl"
   v-show="subPanel === Sidebar.reactive.subPanelActive"
   :style="{ '--pointer-left': `${DnD.reactive.pointerLeft}px` }"
-  :data-pointer="DndPointerModeNames[DnD.reactive.pointerMode]"
+  :data-pointer="DnD.DndPointerModeNames[DnD.reactive.pointerMode]"
   :data-hover="DnD.reactive.pointerHover"
   :data-lvl="DnD.reactive.pointerLvl")
   .arrow(
@@ -13,8 +13,8 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { DndPointerModeNames, DnD } from 'src/services/drag-and-drop'
-import { Sidebar } from 'src/services/sidebar'
+import * as DnD from 'src/services/drag-and-drop.fg'
+import * as Sidebar from 'src/services/sidebar.fg'
 
 const props = defineProps<{ panelId: ID; subPanel: boolean }>()
 

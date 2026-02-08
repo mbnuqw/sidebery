@@ -1,0 +1,144 @@
+@import '../utils'
+
+#root[data-frame-color-scheme="dark"] .PinnedTabsBar
+  --sep-opacity: .16
+#root[data-frame-color-scheme="light"] .PinnedTabsBar
+  --sep-opacity: .3
+
+.PinnedTabsBar
+  position: relative
+  display: flex
+  background-color: var(--frame-bg)
+  transition: padding var(--d-fast)
+  &[data-empty="true"]
+    display: none
+
+// Per-Panel
+#root[data-pinned-tabs-position="panel"] .PinnedTabsBar
+  width: 100%
+  height: auto
+  flex-wrap: wrap
+  flex-direction: row
+  grid-gap: var(--tabs-margin)
+  padding: 0 var(--tabs-margin) var(--tabs-margin)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
+  padding: 0 0 calc(var(--tabs-margin) + 9px)
+  grid-gap: 0
+
+// Left/Right
+#root[data-pinned-tabs-position="left"] .PinnedTabsBar
+#root[data-pinned-tabs-position="right"] .PinnedTabsBar
+  width: 100%
+  height: 100%
+  align-items: center
+  flex-shrink: 0
+  flex-grow: 0
+  flex-direction: column
+  grid-gap: var(--tabs-margin)
+
+#root[data-pinned-tabs-position="left"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
+#root[data-pinned-tabs-position="right"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 var(--tabs-margin)
+  
+// Left/Right stacked with navbar
+#root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
+#root[data-pinned-tabs-position="right"][data-nav-layout="right"] .PinnedTabsBar
+  height: auto
+#root[data-pinned-tabs-position="left"][data-nav-layout="left"][data-drag="true"] .PinnedTabsBar
+#root[data-pinned-tabs-position="right"][data-nav-layout="right"][data-drag="true"] .PinnedTabsBar
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 16px
+
+// Top
+#root[data-pinned-tabs-position="top"] .PinnedTabsBar
+  width: 100%
+  height: auto
+  flex-wrap: wrap
+  flex-direction: row
+  grid-gap: var(--tabs-margin)
+  padding: 0 var(--tabs-margin) var(--tabs-margin)
+
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar
+  padding: 0 0 calc(var(--tabs-margin) + 9px)
+  grid-gap: 0
+
+// ---
+// -- Separator
+// -
+.PinnedTabsBar:after
+  content: ''
+  position: absolute
+  display: none
+  bottom: calc(var(--tabs-margin) + 4px)
+  left: var(--tabs-margin)
+  width: calc(100% - var(--tabs-margin) * 2)
+  height: 1px
+  opacity: var(--sep-opacity)
+  background-image: linear-gradient(90deg, transparent, var(--frame-fg) 10%, var(--frame-fg) 90%, transparent)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
+  display: block
+
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
+  display: block
+
+// ---
+// -- Tab wrapper
+// -
+.PinnedTabsBar .tab-wrapper
+  position: relative
+  &:before
+    content: ''
+    position: absolute
+    top: calc(var(--tabs-margin) * -1)
+    left: calc(var(--tabs-margin) * -1)
+    width: calc(100% + var(--tabs-margin))
+    height: calc(100% + var(--tabs-margin))
+  &:after
+    content: ''
+    position: absolute
+    display: none
+    top: 0
+    left: -2px
+    width: 2px
+    height: 100%
+    z-index: 2000
+    background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
+    pointer-events: none
+    border-radius: 4px
+    box-shadow: 0 0 0 1px var(--frame-bg)
+  &[data-targeted="true"]:after
+    display: block
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
+  width: 100%
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:after
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:after
+  top: 0
+  left: 0
+  width: 100%
+  height: 2px
+
+#root[data-pinned-tabs-position="left"] .PinnedTabsBar .tab-wrapper:after
+#root[data-pinned-tabs-position="right"] .PinnedTabsBar .tab-wrapper:after
+  top: -2px
+  left: 0
+  width: 100%
+  height: 2px
+
+#root[data-drag="true"] .PinnedTabsBar[data-dnd-end="true"] .tab-wrapper:last-of-type:after
+  display: block
+  left: auto
+  right: -2px
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"]
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"]
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .PinnedTabsBar[data-dnd-end="true"] .tab-wrapper:last-of-type:after
+    display: block
+    left: auto
+    right: auto
+    top: auto
+    bottom: 0

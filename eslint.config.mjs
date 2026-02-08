@@ -91,6 +91,7 @@ export default [
       'no-async-promise-executor': 'off',
       'no-prototype-builtins': 'off',
       'no-constant-condition': ['error', { checkLoops: false }],
+      'no-unused-labels': 'off',
     },
   },
 ]
