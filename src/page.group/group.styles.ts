@@ -1,5 +1,4 @@
 import type { ParsedTheme, SrcVars } from 'src/services/styles'
-import { Stored } from 'src/types'
 import { toCSSVarName } from 'src/utils'
 
 export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
@@ -15,15 +14,6 @@ export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): vo
       rootEl.style.removeProperty(toCSSVarName('s_' + prop))
     }
   }
-}
-
-export async function loadCustomGroupCSS(): Promise<void> {
-  let stored = await browser.storage.managed.get<Stored>('groupCSS').catch(() => {})
-  if (!stored?.groupCSS) {
-    stored = await browser.storage.local.get<Stored>('groupCSS')
-  }
-
-  applyCustomCSS(stored.groupCSS)
 }
 
 /**

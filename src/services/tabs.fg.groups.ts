@@ -1,26 +1,26 @@
-import * as Utils from 'src/utils'
-import { Tab, GroupConfig, GroupInfo, GroupedTabInfo, GroupPin } from 'src/types'
+import type * as T from 'src/types'
 import { GroupConfigResult } from 'src/enums'
-import { GroupMsg } from 'src/injections/group.ipc'
+import { DEFAULT_CONTAINER_ID, NOID, PAGE_HASH_RE } from 'src/defaults'
+import * as Utils from 'src/utils'
 import * as Windows from 'src/services/windows.fg'
 import * as Settings from 'src/services/settings'
 import * as Tabs from 'src/services/tabs.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Favicons from 'src/services/favicons.fg'
-import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups.fg'
+import * as AddonIPPC from 'src/services/ippc.addon'
 
 /**
  * Set relGroupId prop in related pinned and group tabs
  */
-export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
+export function linkGroupWithPinnedTab(groupTab: T.Tab, tabs: T.Tab[]): void {
   const info = new URL(groupTab.url)
   const pin = info.searchParams.get('pin')
   if (!pin) return
 
   const [ctx, url] = pin.split('::')
-  let pinnedTab: Tab | undefined
+  let pinnedTab: T.Tab | undefined
   for (const tab of tabs) {
     if (!tab.pinned) break
     if (tab.pinned && tab.cookieStoreId === ctx && tab.url === url) {
@@ -44,7 +44,10 @@ export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
 /**
  * ...
  */
-export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab): Promise<void> {
+export async function replaceRelGroupWithPinnedTab(
+  groupTab: T.Tab,
+  pinnedTab: T.Tab
+): Promise<void> {
   await browser.tabs.move(pinnedTab.id, { index: groupTab.index - 1 })
 
   groupTab.parentId = pinnedTab.id
@@ -56,7 +59,9 @@ export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab
 /**
  * Group tabs
  */
-export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void> {
+export async function groupTabs(tabIds: ID[], conf?: T.NewGroupConfig): Promise<void> {
+  Logs.info('Tabs.groupTabs')
+
   const noConfig = !conf
   if (!conf) conf = {}
 
@@ -112,7 +117,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
     active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
-    url: Utils.createGroupUrl(conf.title, conf),
+    url: Utils.createGroupUrl(conf.title, conf?.pinnedTab?.url, conf?.pinnedTab?.cookieStoreId),
     windowId: Windows.id,
   })
 
@@ -123,7 +128,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
 
   // Move tabs if needed
   let properIndex = tabs[0].index
-  const tabsToMove: Tab[] = []
+  const tabsToMove: T.Tab[] = []
   let indexToMoveTo = -1
   for (const tab of tabs) {
     if (tab.index !== properIndex) {
@@ -136,7 +141,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   await Tabs.move(tabs, {}, dst)
 }
 
-export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupConfigResult> {
+export async function openGroupConfigPopup(config: T.NewGroupConfig): Promise<GroupConfigResult> {
   return new Promise<GroupConfigResult>(ok => {
     Popups.reactive.groupConfigPopup = {
       config,
@@ -145,7 +150,12 @@ export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupCo
   })
 }
 
-function getPinInfo(groupUrl: string): GroupPin | undefined {
+export function findGroupTabBoundToPinnedTab(pinnedTab: T.Tab): T.Tab | undefined {
+  const param = encodeURIComponent(pinnedTab.cookieStoreId + '::' + pinnedTab.url)
+  return Tabs.list.find(t => t.isGroup && t.url.lastIndexOf('pin=' + param) > -1)
+}
+
+function getPinInfo(groupUrl: string): T.GroupPin | undefined {
   if (!groupUrl.includes('pin=')) return
 
   const urlInfo = new URL(groupUrl)
@@ -167,7 +177,7 @@ function getPinInfo(groupUrl: string): GroupPin | undefined {
 /**
  * Get grouped tabs (for group page)
  */
-export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
+export async function getGroupInfo(groupTabId: ID): Promise<T.GroupInfo | null> {
   if (!Tabs.ready) await Tabs.waitForTabsReady()
   if (!Favicons.ready) await Favicons.waitForFaviconsReady()
 
@@ -177,12 +187,7 @@ export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
     return null
   }
 
-  const out: GroupInfo = {
-    id: groupTab.id,
-    index: groupTab.index,
-    len: 0,
-    tabs: [] as GroupedTabInfo[],
-  }
+  const out: T.GroupInfo = { id: groupTab.id, tabs: [] as T.GroupedTabInfo[], favicons: {} }
 
   const parentTab = Tabs.byId[groupTab.parentId]
   if (parentTab && parentTab.isGroup) {
@@ -196,27 +201,24 @@ export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
   for (let i = groupTab.index + 1; i < Tabs.list.length; i++) {
     const tab = Tabs.list[i]
     if (tab.lvl <= groupTab.lvl) break
-    out.len++
 
     if (subGroupLvl && tab.lvl > subGroupLvl) continue
     else subGroupLvl = null
     if (tab.isGroup) subGroupLvl = tab.lvl
 
-    out.tabs.push({
-      id: tab.id,
-      index: tab.index,
-      lvl: tab.lvl - groupTab.lvl - 1,
-      title: tab.customTitle ?? tab.title,
-      url: tab.url,
-      discarded: !!tab.discarded,
-      favIconUrl: tab.favIconUrl ?? '',
-    })
+    const tabInfo = getGroupedTabInfo(tab, groupTab)
+    const domain = Utils.getDomainOf(tab.url)
+    if (tabInfo.favIconUrl && domain) {
+      out.favicons[domain] = tabInfo.favIconUrl
+      delete tabInfo.favIconUrl
+    }
+    out.tabs.push(tabInfo)
   }
 
   return out
 }
 
-export function getGroupTab(tab?: Tab): Tab | undefined {
+export function getGroupTab(tab?: T.Tab): T.Tab | undefined {
   if (!tab) return
   if (!Settings.state.tabsTree && !tab.lvl) return
 
@@ -252,38 +254,93 @@ export function groupOnClosing(id: ID, title: string, active: boolean, childTabI
   }, 250)
 }
 
-export function updateGroupTab(groupTab: Tab) {
+const updateGroupChildBuf = new WeakMap<T.Tab, { childIds?: Set<ID>; timerId?: number }>()
+
+/**
+ * Update group page info. Set childId to NOID for full update.
+ */
+export function updateGroupOrItsChild(groupTab: T.Tab, childId = NOID, delay = 500): void {
+  Logs.info('tabs.fg.groups.updateGroupOrItsChild:', groupTab.id, childId, delay)
+
+  if (!groupTab.isGroup) return
+
+  let fullUpdate = childId === NOID
+  let updInfo = updateGroupChildBuf.get(groupTab)
+
+  // If the full update is already planned, mark this call as the full update too
+  if (!fullUpdate && updInfo && updInfo.timerId && !updInfo.childIds) fullUpdate = true
+
+  // Do not update if HashMessaging is used and there is lots of data
+  if (groupTab.cookieStoreId !== DEFAULT_CONTAINER_ID) {
+    const len = updInfo?.childIds?.size ?? 0
+    if (fullUpdate || len > 25) return
+  }
+
+  // Create upd info / Clear timeout
+  if (!updInfo) updateGroupChildBuf.set(groupTab, (updInfo = {}))
+  else clearTimeout(updInfo.timerId)
+
+  // On full update
+  if (fullUpdate) {
+    // Remove childIds
+    if (updInfo.childIds) delete updInfo.childIds
+  }
+
+  // On children update
+  else {
+    // Append child for deferred update
+    if (!updInfo.childIds) updInfo.childIds = new Set()
+    updInfo.childIds.add(childId)
+  }
+
+  updInfo.timerId = setTimeout(() => {
+    // Check target tab
+    if (groupTab.discarded || !Tabs.byId[groupTab.id]) {
+      delete updInfo.childIds
+      delete updInfo.timerId
+      return
+    }
+
+    // Update group children or perform a full update
+    if (updInfo.childIds) updateGroupChildren(groupTab, updInfo.childIds)
+    else updateGroup(groupTab)
+
+    delete updInfo.childIds
+    delete updInfo.timerId
+  }, delay)
+}
+
+function updateGroupChildren(groupTab: T.Tab, childIds: Iterable<ID>) {
+  const updatedTabs: T.GroupedTabInfo[] = []
+  for (const cid of childIds) {
+    const childTab = Tabs.byId[cid]
+    if (!childTab) continue
+
+    updatedTabs.push(getGroupedTabInfo(childTab, groupTab))
+  }
+  AddonIPPC.callGroupPage(groupTab, 'update', { updatedTabs })
+}
+
+function updateGroup(groupTab: T.Tab) {
   const tabsCount = Tabs.list.length
-  const tabs: GroupedTabInfo[] = []
+  const tabs: T.GroupedTabInfo[] = []
   let subGroupLvl = null
-  let len = 0
 
   for (let i = groupTab.index + 1; i < tabsCount; i++) {
     const tab = Tabs.list[i]
     if (tab.lvl <= groupTab.lvl) break
-    len++
 
     if (subGroupLvl && tab.lvl > subGroupLvl) continue
     else subGroupLvl = null
     if (tab.isGroup) subGroupLvl = tab.lvl
 
-    tabs.push({
-      id: tab.id,
-      index: tab.index,
-      lvl: tab.lvl - groupTab.lvl - 1,
-      title: tab.customTitle ?? tab.title,
-      url: tab.url,
-      discarded: !!tab.discarded,
-      favIconUrl: tab.favIconUrl ?? '',
-    })
+    tabs.push(getGroupedTabInfo(tab, groupTab))
   }
 
-  const msg: GroupMsg = {
-    index: groupTab.index,
+  const msg: T.GroupUpdMsg = {
     windowId: Windows.id,
     parentId: groupTab.parentId,
     tabs,
-    len,
   }
 
   const parentTab = Tabs.byId[groupTab.parentId]
@@ -291,103 +348,45 @@ export function updateGroupTab(groupTab: Tab) {
     msg.parentId = parentTab.id
   }
 
-  IPC.groupPage(groupTab.id, msg)
+  AddonIPPC.callGroupPage(groupTab, 'update', msg)
 }
-const updateGroupTabDebounced = Utils.debounce(updateGroupTab)
 
-export function updateActiveGroupPage(): void {
-  let activeTab = Tabs.byId[Tabs.activeId]
-  if (!activeTab) activeTab = Tabs.list.find(t => t.active)
-  if (!activeTab) return
-  if (activeTab.isGroup) {
-    updateGroupTabDebounced(256, activeTab)
+export function getGroupedTabInfo(tab: T.Tab, groupTab: T.Tab): T.GroupedTabInfo {
+  const cachedFav = Favicons.getFavicon(tab.url)
+  let favIconUrl = tab.favIconUrl ?? ''
+  if (cachedFav && tab.favIconUrl && cachedFav.length < tab.favIconUrl.length) {
+    favIconUrl = cachedFav
+  }
+
+  let title = tab.customTitle ?? tab.title
+  if (title.length > 256) title = title.slice(0, 256) + '...'
+
+  let url = tab.url
+  if (url.length > 256) url = url.slice(0, 256) + '...'
+
+  return {
+    id: tab.id,
+    url,
+    title,
+    index: tab.index - groupTab.index - 1,
+    lvl: tab.lvl - groupTab.lvl - 1,
+    discarded: !!tab.discarded,
+    favIconUrl,
   }
 }
 
-const updateGroupChildTimeouts: Record<ID, number> = {}
-export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
-  clearTimeout(updateGroupChildTimeouts[childId])
-  updateGroupChildTimeouts[childId] = setTimeout(() => {
-    const groupTab = Tabs.byId[groupId]
-    const childTab = Tabs.byId[childId]
-    if (!groupTab || groupTab.discarded || !childTab) return
-
-    const updatedTab: GroupedTabInfo = {
-      id: childTab.id,
-      index: childTab.index,
-      status: childTab.status,
-      title: childTab.title,
-      url: childTab.url,
-      lvl: childTab.lvl - groupTab.lvl - 1,
-      discarded: !!childTab.discarded,
-      favIconUrl: childTab.favIconUrl || Favicons.getFavicon(childTab.url),
-    }
-    IPC.groupPage(groupTab.id, { updatedTab })
-  }, delay)
-}
-
-function getGroupConfig(groupTabId: ID): GroupConfig | undefined {
+export async function setGroupName(groupTabId: ID, newName: string) {
+  Logs.info('Tabs.setGroupName', groupTabId, newName)
   const groupTab = Tabs.byId[groupTabId]
   if (!groupTab) return
-
-  const config = parseGroupUrl(groupTab.url)
-  if (!config) return
-
-  config.active = groupTab.active
-
-  return config
-}
-
-function parseGroupUrl(url: string): GroupConfig | undefined {
-  let urlInfo
-  try {
-    urlInfo = new URL(url)
-  } catch {
-    return
-  }
-  if (!urlInfo.hash) urlInfo.hash = ''
-
-  const config: GroupConfig = {}
-  const title = decodeURIComponent(urlInfo.hash.slice(1))
-
-  // Remove legacy "id"
-  config.title = title.split(':id:')[0]
-
-  const pin = urlInfo.searchParams.get('pin')
-  if (pin) {
-    const [container, url] = pin.split('::')
-    let pinnedTab
-    for (const tab of Tabs.list) {
-      if (!tab.pinned) break
-      if (url === tab.url && container === tab.cookieStoreId) {
-        pinnedTab = tab
-        break
-      }
-    }
-    if (pinnedTab) {
-      config.pin = pin
-      config.pinnedTab = pinnedTab
-    }
-  }
-
-  return config
-}
-
-export function setGroupName(groupTabId: ID, newName: string) {
-  const groupTab = Tabs.byId[groupTabId]
-  if (!groupTab) return
-
-  const config = getGroupConfig(groupTabId)
-  if (!config) return
 
   const isDiscarded = groupTab.discarded
-  const newUrl = Utils.createGroupUrl(newName, config)
-  browser.tabs
-    .update(groupTabId, { url: newUrl })
-    .then(() => {
-      if (!isDiscarded) return IPC.groupPage(groupTabId, { title: newName })
-    })
-    .catch(() => {
-      Logs.warn('setGroupName: Cannot update url')
-    })
+  if (!isDiscarded) {
+    await AddonIPPC.callGroupPage(groupTab, 'update', { title: newName })
+    Logs.info('Tabs.setGroupName: url after IPPC:', groupTab.url)
+  } else {
+    const newUrl = groupTab.url.replace(PAGE_HASH_RE, `#${encodeURIComponent(newName)}`)
+    if (newUrl === groupTab.url) return
+    browser.tabs.update(groupTabId, { url: newUrl }).catch(err => Logs.warn('setGroupName:', err))
+  }
 }

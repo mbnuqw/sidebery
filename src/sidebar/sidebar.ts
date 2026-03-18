@@ -2,6 +2,7 @@ import { createApp, reactive, shallowReactive } from 'vue'
 import * as E from 'src/enums'
 import * as Utils from 'src/utils'
 import * as IPC from 'src/services/ipc'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups.fg'
 import * as Favicons from 'src/services/favicons.fg'
@@ -30,6 +31,7 @@ import SidebarRoot from './sidebar.vue'
 async function main(): Promise<void> {
   Info.setInstanceType(E.InstanceType.sidebar)
   IPC.setInstanceType(E.InstanceType.sidebar)
+  IPPC.setInstanceType(E.InstanceType.sidebar)
   Logs.setInstanceType(E.InstanceType.sidebar)
 
   const ts = performance.now()
@@ -76,19 +78,14 @@ async function main(): Promise<void> {
     updWindowPreface: Windows.updWindowPreface,
   })
 
-  await Promise.all([
-    Windows.load(),
-    Settings.load(),
-    Containers.load(),
-    Permissions.load(),
-    Info.loadVersionInfo(),
-  ])
+  await Promise.all([Windows.load(), Settings.load(), Permissions.load(), Info.loadVersionInfo()])
 
   IPC.setWinId(Windows.id)
   Logs.setWinId(Windows.id)
 
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
+  IPC.connectTo(E.InstanceType.bg)
 
   // Reactivate data for vue
   Containers.reactivate(shallowReactive)
@@ -115,24 +112,22 @@ async function main(): Promise<void> {
   Settings.setupSettingsChangeListener()
   Permissions.setupListeners()
   Windows.setupWindowsListeners()
-  Containers.setupListeners()
 
   Styles.setupListeners()
   Styles.loadCustomSidebarCSS()
   Styles.load()
 
-  IPC.connectTo(E.InstanceType.bg)
-
+  await Containers.load()
   await Sidebar.loadPanels()
   Sidebar.setupListeners()
+
+  if (Sidebar.hasTabs) await Tabs.load()
+  else await Tabs.loadInShadowMode()
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
   const initSync = Utils.isSyncPanel(actPanel)
-
-  if (Sidebar.hasTabs) await Tabs.load()
-  else await Tabs.loadInShadowMode()
   if (Sidebar.hasBookmarks && initBookmarks) Bookmarks.load()
   if (Sidebar.hasHistory && initHistory) History.load()
   if (Sidebar.hasSync && initSync) Sync.load()

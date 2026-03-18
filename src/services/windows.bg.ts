@@ -198,6 +198,9 @@ export async function createWithTabs(
 
   lockedWindowsTabs[window.id] = { move: moveTabs, cache }
 
+  const bgWin = byId.get(window.id)
+  if (bgWin) bgWin.created = Date.now()
+
   Logs.info('Windows.createWithTabs: Done')
 
   return true
@@ -235,6 +238,7 @@ function onWindowCreated(nativeWin: browser.windows.Window): void {
   if (existedWin && existedWin.activeTabId !== NOID) {
     window.activeTabId = existedWin.activeTabId
   }
+  window.created = Date.now()
   byId.set(window.id, window)
 
   // TODO: test this, maybe make it lazy

@@ -48,6 +48,7 @@ section(ref="el")
       dbg="markWindowPreface"
       v-model:value="Settings.state.markWindowPreface"
       :default="DEFAULT_SETTINGS.markWindowPreface"
+      :line="true"
       :note="translate('settings.mark_window_preface_note')"
       :inactive="!Settings.state.markWindow"
       @update:value="Settings.saveDebounced(500)")
@@ -56,6 +57,7 @@ section(ref="el")
     dbg="copyTreeIndent"
     v-model:value="Settings.state.copyTreeIndent"
     :default="DEFAULT_SETTINGS.copyTreeIndent"
+    :line="true"
     :or="translate('settings.copy_title_url_indent_or')"
     @update:value="Settings.saveDebounced(500)")
   TextField.-inline(
@@ -63,6 +65,7 @@ section(ref="el")
     dbg="copyMultiBullet"
     v-model:value="Settings.state.copyMultiBullet"
     :default="DEFAULT_SETTINGS.copyMultiBullet"
+    :line="true"
     :or="translate('settings.copy_multi_bullet_or')"
     @update:value="Settings.saveDebounced(500)")
   TextField.copyTemplatesTextField(

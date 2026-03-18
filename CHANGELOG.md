@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v5.5.0 - 2026.02.08
+
 ### Added
 
 - Tabs: A setting to control switching between globally-pinned and normal tabs with mouse wheel or keybinding  
@@ -43,6 +45,7 @@
 
 ### Fixed
 
+- Keybindings: Unexpected tab flip on switching to Nth tab (resolves [#2288](https://github.com/mbnuqw/sidebery/issues/2288))
 - Context-menu: Hovered option with pin button changes the width of the popup
 - Search/tabs: Switching tabs with the mouse wheel or keybindings ignores search result  
   Switch between filtered tabs.

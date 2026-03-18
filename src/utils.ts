@@ -531,11 +531,62 @@ export function isUrlUrl(url: string): boolean {
   return url.startsWith('m') && url.startsWith('/sidebery/url.html', 52)
 }
 
-export function createGroupUrl(name?: string, conf?: T.GroupConfig): string {
-  let urlBase = browser.runtime.getURL('sidebery/group.html')
+export function createGroupUrl(name?: string, pinUrl?: string, pinCtr?: string): string {
+  let url = browser.runtime.getURL('sidebery/group.html')
   if (!name) name = uid()
-  if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
-  return urlBase + `#${encodeURIComponent(name)}`
+  if (pinUrl) {
+    if (!pinCtr) pinCtr = D.CONTAINER_ID
+    url += '?pin=' + encodeURIComponent(pinCtr + '::' + pinUrl)
+  }
+  url = url + `#${encodeURIComponent(name)}`
+  return url
+}
+
+export function createPlaceholderUrl(info: T.PlaceholderInfo): string {
+  if (isUrlUrl(info.url)) info = parsePlaceholderUrl(info.url)
+  if (info.title === undefined && info.url.startsWith('file:')) {
+    const i = info.url.lastIndexOf('/')
+    if (i !== -1) {
+      try {
+        info.title = decodeURIComponent(info.url.slice(i + 1))
+      } catch {
+        // ok
+      }
+    }
+  }
+
+  let url = D.URL_URL
+  const infoJSON = JSON.stringify(info)
+  const bytes = new TextEncoder().encode(infoJSON)
+  let binString = ''
+  for (const byte of bytes) {
+    binString += String.fromCharCode(byte)
+  }
+  url = `${url}#_${btoa(binString)}`
+  return url
+}
+
+export function parsePlaceholderUrl(url: string): T.PlaceholderInfo {
+  const reResult = D.PAGE_HASH_RE.exec(url)
+  const data = reResult?.groups?.prefix
+  if (!data) throw 'parsePlaceholderUrl: no prefix'
+  return decodePlaceholderInfo(data)
+}
+
+export function decodePlaceholderInfo(info: string): T.PlaceholderInfo {
+  if (info.startsWith('_')) {
+    const binString = atob(info.slice(1))
+    const bytes = new Uint8Array(binString.length)
+    for (let i = 0; i < binString.length; i++) {
+      bytes[i] = binString.charCodeAt(i)
+    }
+    return JSON.parse(new TextDecoder().decode(bytes)) as T.PlaceholderInfo
+  }
+  if (info.startsWith('%5B')) {
+    const [url, title] = JSON.parse(decodeURIComponent(info)) as [string, string]
+    return { url, title }
+  }
+  return { url: info }
 }
 
 export function updateGroupUrlBase(url: string): string {
@@ -550,16 +601,15 @@ export function updatePlaceholderUrlBase(url: string): string {
   return newUrl
 }
 
-export function getGroupName(url: string): string | undefined {
-  let urlInfo
+export function getGroupName(groupUrl: string): string | undefined {
+  const reResult = D.PAGE_HASH_RE.exec(groupUrl)
+  const rawTitle = reResult?.groups?.prefix
+  if (!rawTitle) return
   try {
-    urlInfo = new URL(url)
+    return decodeURIComponent(rawTitle).trim()
   } catch {
     return
   }
-  if (!urlInfo.hash) return
-
-  return decodeURIComponent(urlInfo.hash.slice(1))
 }
 
 /**
@@ -627,27 +677,36 @@ export function normalizeUrl(url?: string, title?: string): string | undefined {
     url.startsWith('file:') ||
     url.startsWith('jar:file:') ||
     url.startsWith('blob:') ||
+    url.startsWith('magnet:') ||
     url.startsWith('about:')
   ) {
-    if (title) return D.URL_URL + '#' + encodeURIComponent(JSON.stringify([url, title]))
-    return D.URL_URL + '#' + url
+    try {
+      return createPlaceholderUrl({ url, title })
+    } catch {
+      return url
+    }
   } else {
     return url
   }
 }
 
 /**
- * Convert url from Sidebery-safe to its original form
+ * Convert url from Sidebery-safe/specific to its original form
  */
 export function denormalizeUrl(url?: string): string | undefined {
   if (!url) return url
-  // Unavailable URLs
-  else if (url.startsWith('m') && D.URL_PAGE_RE.test(url)) {
-    let data = url.slice(71)
+  // Parse placeholder URL and return original url
+  else if (isUrlUrl(url)) {
     try {
-      data = decodeURIComponent(data)
-      const [url, _] = JSON.parse(data) as string[]
+      return parsePlaceholderUrl(url).url
+    } catch {
       return url
+    }
+  }
+  // Remove broadcast channel id and hash message from group page url
+  else if (isGroupUrl(url) && url.endsWith('~')) {
+    try {
+      return url.replace(D.PAGE_HASH_RE, '#$<prefix>')
     } catch {
       return url
     }
@@ -1237,7 +1296,7 @@ export function withoutEmptyFolders<T extends { id: ID; url?: string; parentId?:
 const INDENT_RE = /^(( |\t)*)(.*)/
 const SPACES_ONLY_RE = /^ +$/
 const LINK_RE =
-  /href="(?<htmlUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)"(.*?)>(?<htmlLabel>.+?)<\/a>|\[(?<mdLabel>.*?)\]\((?<mdUrl>[/0-9A-Za-z-._~:/?#@!%$&'()*+,;=]+)\)|(?<url>([0-9A-Za-z-]{1,63}:\/?\/?[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})*)(\/[0-9A-Za-z-._~]+)*\/?([#?][0-9A-Za-z-._~:?#@!%$&'()*+,;=]+)*)/g
+  /href="(?<htmlUrl>[0-9A-Za-z-]{1,63}:[\w-.~:?#@!%$&'()*+,;=]*(?:[/;:,@]+[\w-.~:?#@!%$&'()*+,;=]+)+|about:[\w-]+)"(?:.*?)>(?<htmlLabel>.*?)<\/a>|\[(?<mdLabel>.*?)\]\((?<mdUrl>[0-9A-Za-z-]{1,63}:[\w-.~:?#@!%$&'()*+,;=]*(?:[/;:,@]+[\w-.~:?#@!%$&'()*+,;=]+)+|about:[\w-]+)\)|(?<url>[0-9A-Za-z-]{1,63}:[\w-.~:?#@!%$&'()*+,;=]*(?:[/;:,@]+[\w-.~:?#@!%$&'()*+,;=]+)+|about:[\w-]+)/g
 export function parseTextForItems(srcText: string): T.ItemInfo[] {
   const items: T.ItemInfo[] = []
   const parsedLines: { id: number; parentId: number; txt: string; indent: string }[] = []
@@ -1342,10 +1401,21 @@ export function parseTextForItems(srcText: string): T.ItemInfo[] {
         url = updatePlaceholderUrlBase(url)
       }
 
+      if (!label && url.startsWith('file:')) {
+        const i = url.lastIndexOf('/')
+        if (i !== -1) {
+          try {
+            label = decodeURIComponent(url.slice(i + 1))
+          } catch {
+            // ok
+          }
+        }
+      }
+
       inlineLinks.push({
         id: lineData.id,
         parentId: lineData.parentId,
-        url,
+        url: normalizeUrl(url),
         title: label,
       })
     }

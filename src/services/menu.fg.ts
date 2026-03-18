@@ -428,10 +428,7 @@ export function getContainersRules(value?: string): (string | RegExp)[] | null {
   else return null
 }
 
-function checkCtxMenuContainer(
-  container: browser.contextualIdentities.Container,
-  rules: (string | RegExp)[]
-): boolean {
+function checkCtxMenuContainer(container: T.Container, rules: (string | RegExp)[]): boolean {
   if (!container || !rules) return false
 
   let value = false

@@ -9,16 +9,16 @@
 
   SelectField.-no-separator(
     label="container.icon_label"
-    :value="icon"
+    :value="props.conf.icon"
     :opts="CONTAINER_ICON_OPTS"
-    :color="color"
+    :color="props.conf.color"
     @update:value="updateIcon")
 
   SelectField(
     label="container.color_label"
-    :value="color"
+    :value="props.conf.color"
     :opts="COLOR_OPTS"
-    :icon="'#' + icon"
+    :icon="'#' + props.conf.icon"
     @update:value="updateColor")
 
   .InfoField
@@ -88,7 +88,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
 import { ref, computed, onMounted, nextTick } from 'vue'
 import type { Container, TextInputComponent } from 'src/types'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS, PROXY_OPTS } from 'src/defaults'
@@ -105,9 +104,7 @@ import SelectField from '../../components/select-field.vue'
 const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
 
-const props = defineProps({
-  conf: { type: Object as PropType<Container>, default: () => ({}) },
-})
+const props = defineProps<{ conf: Container }>()
 
 const rootEl = ref<HTMLElement | null>(null)
 const nameInput = ref<TextInputComponent | null>(null)
@@ -119,9 +116,6 @@ const proxyUsernameInput = ref<TextInputComponent | null>(null)
 const proxyPasswordInput = ref<TextInputComponent | null>(null)
 const userAgentInput = ref<TextInputComponent | null>(null)
 
-const name = computed((): string => props.conf.name || '')
-const icon = computed((): string => (props.conf.icon ? props.conf.icon : '#fingerprint'))
-const color = computed((): string => props.conf.color || 'blue')
 const proxied = computed((): string => props.conf.proxy?.type ?? 'direct')
 const isSomeSocks = computed((): boolean => proxied.value === 'socks' || proxied.value === 'socks4')
 const proxyHost = computed((): string => {
@@ -169,32 +163,23 @@ function onWheel(e: WheelEvent): void {
 
 let updateNameTimeout: number
 function onNameInput(value: string): void {
-  props.conf.name = value
+  props.conf.name = value.trim()
   updateNameTimeout = Utils.wait(updateNameTimeout, 321, () => updateName())
 }
 
-function updateContainer(): void {
-  if (!props.conf.name || !props.conf.id) return
-  browser.contextualIdentities.update(props.conf.id, {
-    name: props.conf.name,
-    icon: props.conf.icon,
-    color: props.conf.color,
-  })
-}
-
 function updateName(): void {
-  if (!name.value) return
-  updateContainer()
+  if (!props.conf.name) return
+  Containers.saveContainer(props.conf)
 }
 
 function updateIcon(icon: string): void {
   props.conf.icon = icon
-  updateContainer()
+  Containers.saveContainer(props.conf)
 }
 
 function updateColor(color: browser.ColorName): void {
   props.conf.color = color
-  updateContainer()
+  Containers.saveContainer(props.conf)
 }
 
 async function init(): Promise<void> {
@@ -211,8 +196,8 @@ async function checkWebDataPerm(): Promise<boolean> {
       props.conf.proxified = false
       if (props.conf.proxy) props.conf.proxy.type = 'direct'
     }
-    props.conf.userAgentActive = false
-    Containers.saveContainers()
+    if (props.conf.userAgentActive) props.conf.userAgentActive = false
+    Containers.saveContainer(props.conf)
     return Permissions.request('<all_urls>')
   }
   return true
@@ -233,7 +218,7 @@ async function switchProxy(type: browser.proxy.ProxyType): Promise<void> {
   if (type === 'direct') props.conf.proxified = false
   else props.conf.proxified = proxyHostValid.value === 'valid' && proxyPortValid.value === 'valid'
 
-  Containers.saveContainers()
+  Containers.saveContainer(props.conf)
 }
 
 function onProxyHostInput(value: string): void {
@@ -241,7 +226,7 @@ function onProxyHostInput(value: string): void {
   props.conf.proxy.host = value
   props.conf.proxified = proxyHostValid.value === 'valid' && proxyPortValid.value === 'valid'
 
-  Containers.saveContainers(500)
+  Containers.saveContainer(props.conf, 500)
 }
 
 function onProxyPortInput(value: string): void {
@@ -249,28 +234,28 @@ function onProxyPortInput(value: string): void {
   props.conf.proxy.port = value
   props.conf.proxified = proxyHostValid.value === 'valid' && proxyPortValid.value === 'valid'
 
-  Containers.saveContainers(500)
+  Containers.saveContainer(props.conf, 500)
 }
 
 function onProxyUsernameInput(value: string): void {
   if (!props.conf.id || !props.conf.proxy) return
   props.conf.proxy.username = value
 
-  Containers.saveContainers(500)
+  Containers.saveContainer(props.conf, 500)
 }
 
 function onProxyPasswordInput(value: string): void {
   if (!props.conf.id || !props.conf.proxy) return
   props.conf.proxy.password = value
 
-  Containers.saveContainers(500)
+  Containers.saveContainer(props.conf, 500)
 }
 
 function toggleProxyDns(): void {
   if (!props.conf.id || !props.conf.proxy) return
   props.conf.proxy.proxyDNS = !props.conf.proxy.proxyDNS
 
-  Containers.saveContainers()
+  Containers.saveContainer(props.conf)
 }
 
 function onFieldKeydown(
@@ -289,7 +274,7 @@ async function toggleUserAgent(): Promise<void> {
   if (!props.conf.userAgentActive && !(await checkWebDataPerm())) return
 
   props.conf.userAgentActive = !props.conf.userAgentActive
-  Containers.saveContainers()
+  Containers.saveContainer(props.conf)
   await nextTick()
 
   userAgentInput.value?.focus()
@@ -297,7 +282,7 @@ async function toggleUserAgent(): Promise<void> {
 
 function onUserAgentInput(value: string): void {
   props.conf.userAgent = value
-  Containers.saveContainers(500)
+  Containers.saveContainer(props.conf, 500)
 }
 
 function openRulesPopup() {

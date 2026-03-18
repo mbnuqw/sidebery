@@ -9,6 +9,7 @@ import * as Containers from 'src/services/containers'
 import * as Bookmarks from 'src/services/bookmarks.fg'
 import * as Search from 'src/services/search.fg'
 import * as IPC from 'src/services/ipc'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Popups from 'src/services/popups.fg'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
@@ -102,6 +103,7 @@ export async function move(
   // Gather tabs by type (pinned/normal), get initial info
   const dstTab = Tabs.list[dst.index] as T.Tab | undefined
   const dstParent = Tabs.byId[dst.parentId]
+  const srcParents: T.Tab[] = []
   const pinnedTabs: T.Tab[] = []
   const normalTabs: T.Tab[] = []
   let toPin: T.Tab[] | undefined
@@ -192,8 +194,10 @@ export async function move(
   let mediaPrevPanelId
   let srcPanelId
   for (const tab of tabs) {
+    const parentStayStill = !ids.includes(tab.parentId)
+
     // Update parentId of orphans
-    if (tab.isParent && !ids.includes(tab.parentId)) {
+    if (tab.isParent && parentStayStill) {
       const branch = Tabs.getBranch(tab, false)
       for (const child of branch) {
         if (ids.includes(child.id) || !ids.includes(child.parentId)) continue
@@ -202,6 +206,12 @@ export async function move(
         if (tab.parentId !== NOID) browser.tabs.update(child.id, { openerTabId: tab.parentId })
         else browser.tabs.update(child.id, { openerTabId: child.id })
       }
+    }
+
+    // Set src parents
+    if (tab.parentId !== NOID && parentStayStill) {
+      const p = Tabs.byId[tab.parentId]
+      if (p) srcParents.push(p)
     }
 
     // Cut tab from old index in sidebery list
@@ -311,8 +321,11 @@ export async function move(
     Tabs.autoDiscardFolded(dstParent)
   }
 
-  // Update group page
-  if (dstParent?.isGroup) Tabs.updateGroupTab(dstParent)
+  // Update group pages
+  if (dstParent?.isGroup && !dstParent.discarded) Tabs.updateGroupOrItsChild(dstParent, NOID)
+  for (const p of srcParents) {
+    if (p?.isGroup && !p.discarded) Tabs.updateGroupOrItsChild(p, NOID)
+  }
 
   tabs.forEach(t => Tabs.saveTabData(t.id))
   orphansToSave.forEach(id => Tabs.saveTabData(id))
@@ -578,13 +591,13 @@ export async function moveToThisWin(
   }
 
   // Update dst group page
-  if (dstParent && dstParent.isGroup) {
-    Tabs.updateGroupTab(dstParent)
+  if (dstParent && dstParent.isGroup && !dstParent.discarded) {
+    Tabs.updateGroupOrItsChild(dstParent, NOID)
   }
 
   // Update moved groups
   if (groups.length) {
-    groups.forEach(group => Tabs.updateGroupTab(group))
+    groups.forEach(t => !t.discarded && Tabs.updateGroupOrItsChild(t, NOID))
   }
 
   return true
@@ -663,8 +676,11 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
     // Update group page info
     const groupTab = Tabs.getGroupTab(tab)
     if (groupTab && !groupTab.discarded) {
-      IPC.groupPage(groupTab.id, { removedTab: tab.id })
+      Tabs.updateGroupOrItsChild(groupTab, NOID)
     }
+
+    // Cleanup IPPC
+    if (tab.isGroup) IPPC.reset(tab)
   }
 
   // Update/Recalc local state

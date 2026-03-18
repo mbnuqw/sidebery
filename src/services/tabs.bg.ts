@@ -7,7 +7,8 @@ import * as Containers from 'src/services/containers'
 import * as Store from 'src/services/storage.bg'
 import * as WebReq from 'src/services/web-req.bg'
 import * as Favicons from 'src/services/favicons.bg'
-import * as IPC from 'src/services/ipc'
+import * as IPC from 'src/services/ipc.bg'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Settings from 'src/services/settings'
 import * as Logs from 'src/services/logs'
 import * as Styles from 'src/services/styles.bg'
@@ -88,6 +89,7 @@ export async function reinitTabs(msg: string) {
   ready = false
   byId = {}
   cacheByWin = {}
+  IPPC.resetAll()
   for (const win of Windows.byId.values()) {
     win.tabs = []
   }
@@ -289,8 +291,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
     }
   }
 
-  if (tab.isGroup && Settings.state.omniMoveToGroup) {
-    Omnibox.updateCommandsDebounced(500)
+  if (tab.isGroup) {
+    if (Settings.state.omniMoveToGroup) Omnibox.updateCommandsDebounced(500)
+    IPPC.reset(tab)
   }
 }
 
@@ -312,12 +315,27 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   const wasGroup = !!tab.isGroup
   if (change.url) {
     const isInternal = change.url.startsWith(D.ADDON_HOST)
-    tab.internal = isInternal
-    tab.isGroup = false
-    if (isInternal) {
-      tab.isGroup = Utils.isGroupUrl(change.url)
-      if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tab.windowId, tabId)
+    const isGroup = isInternal && Utils.isGroupUrl(change.url)
+    const isPlaceholder = isInternal && Utils.isUrlUrl(change.url)
+    if (isGroup || isPlaceholder) {
+      // Broadcast channel init
+      if (
+        tab.cookieStoreId === D.DEFAULT_CONTAINER_ID &&
+        change.url.endsWith('!ch!~') &&
+        IPPC.bcInitNeeded(tab, change.url)
+      ) {
+        IPPC.initBC(tab, change.url)
+      }
+      // Hash messaging
+      else if (change.url.endsWith('!b!~')) {
+        IPPC.onHashMsg(tab, change.url)
+      }
+    } else if ((!isGroup && tab.isGroup) || (!isPlaceholder && tab.isPlaceholder)) {
+      IPPC.reset(tab)
     }
+    tab.internal = isInternal
+    tab.isGroup = isGroup
+    tab.isPlaceholder = isPlaceholder
   }
 
   if (!tab.internal && change.favIconUrl?.startsWith('data:')) {
@@ -325,16 +343,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   }
 
   Object.assign(tab, change)
-
-  // Inject group page script
-  if (
-    tab.isGroup &&
-    !tab.discarded &&
-    (change.title !== undefined || change.url || change.status === 'complete') &&
-    tab.title === D.GROUP_INITIAL_TITLE
-  ) {
-    injectGroupPageScript(tab.windowId, tabId)
-  }
 
   if (WebReq.containersProxies[tab.cookieStoreId]) {
     tab.proxified = true
@@ -611,7 +619,7 @@ export async function initInternalPageScripts(tabs: T.BgTab[]) {
 
     if (tab.internal === undefined) tab.internal = tab.url.startsWith(D.ADDON_HOST)
     const isGroup = Utils.isGroupUrl(tab.url)
-    const isUrl = Utils.isUrlUrl(tab.url)
+    const isPlaceholder = Utils.isUrlUrl(tab.url)
 
     // Wrong addon ID - update url
     if (!tab.internal && isGroup) {
@@ -623,7 +631,7 @@ export async function initInternalPageScripts(tabs: T.BgTab[]) {
       })
       continue
     }
-    if (!tab.internal && isUrl) {
+    if (!tab.internal && isPlaceholder) {
       const [_, urlUrlInfo] = tab.url.split('/url.html')
       if (!urlUrlInfo) continue
       const urlUrl = D.URL_URL + urlUrlInfo
@@ -633,56 +641,32 @@ export async function initInternalPageScripts(tabs: T.BgTab[]) {
       continue
     }
 
-    if (isGroup && !tab.discarded) injectGroupPageScript(tab.windowId, tab.id)
-    if (isUrl && !tab.discarded) injectUrlPageScript(tab.windowId, tab.id)
+    // Initialize group/placeholder page
+    if (!tab.discarded && (isGroup || isPlaceholder)) {
+      if (!tab.url.endsWith('!~')) {
+        browser.tabs.reload(tab.id).catch(() => undefined)
+      } else if (tab.cookieStoreId === D.DEFAULT_CONTAINER_ID && tab.url.endsWith('!ch!~')) {
+        IPPC.initBC(tab)
+      } else if (tab.url.endsWith('!b!~')) {
+        IPPC.onHashMsg(tab, tab.url)
+      }
+    }
   }
 }
 
-export async function injectUrlPageScript(winId: ID, tabId: ID) {
-  try {
-    browser.tabs
-      .executeScript(tabId, {
-        file: '/injections/url.js',
-        runAt: 'document_start',
-        matchAboutBlank: true,
-      })
-      .catch(err => {
-        Logs.warn('Tabs.injectUrlPageScript: Cannot inject script, tabId:', tabId, err)
-      })
-    const initData = await getUrlPageInitData(winId, tabId)
-    const initDataJson = JSON.stringify(initData)
-    browser.tabs
-      .executeScript(tabId, {
-        code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
-        runAt: 'document_start',
-        matchAboutBlank: true,
-      })
-      .catch(() => {
-        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab (if active)...')
-        const tab = Tabs.byId[tabId]
-        if (tab.active && tab.reloadOnActivation === undefined) {
-          tab.reloadOnActivation = false
-          browser.tabs.reload(tabId).catch(err => {
-            Logs.err('Tabs.injectUrlPageScript: Cannot reload tab', err)
-          })
-        } else if (!tab.discarded) {
-          tab.reloadOnActivation = true
-        }
-      })
-  } catch (err) {
-    Logs.err('Injected url-page script', err)
-  }
-}
-
-export interface UrlPageInitData {
+export interface PlaceholderPageInitData {
   theme?: (typeof D.SETTINGS_OPTIONS.theme)[number]
   parsedTheme?: Styles.ParsedTheme
   frameColorScheme?: 'dark' | 'light'
   toolbarColorScheme?: 'dark' | 'light'
   winId?: ID
   tabId?: ID
+  labels?: Record<string, string>
 }
-export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageInitData> {
+export async function getPlaceholderPageInitData(tabId: ID): Promise<PlaceholderPageInitData> {
+  const tab = Tabs.byId[tabId]
+  if (!tab) throw 'getPlaceholderPageInitData: no tab'
+  const winId = tab.windowId
   const winStyles = Styles.byWinId.get(winId) ?? (await Styles.updateWindowStyles(winId))
   return {
     theme: Settings.state.theme,
@@ -691,80 +675,43 @@ export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageI
     toolbarColorScheme: winStyles?.toolbarColorScheme,
     winId,
     tabId,
+    labels: {
+      unavailable_url: browser.i18n.getMessage('unavailable_url'),
+      page_title: browser.i18n.getMessage('page_title'),
+      original_url: browser.i18n.getMessage('original_url'),
+      copy_url: browser.i18n.getMessage('copy_url'),
+      api_limit_info: browser.i18n.getMessage('api_limit_info'),
+    },
   }
 }
 
-const injectingGroups = new Set<ID>()
+export async function getGroupPageInitData(tabId: ID): Promise<T.GroupPageInitData> {
+  const tab = Tabs.byId[tabId]
+  if (!tab) throw 'getGroupPageInitData: no tab'
+  const winId = tab.windowId
 
-export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
-  // Already injecting
-  if (injectingGroups.has(tabId)) return
-  // Already connected, therefore group is initialized
-  if (IPC.state.groupPageConnections.has(tabId)) return
-
-  injectingGroups.add(tabId)
-
-  const injecting = []
-  try {
-    const injectingScript = browser.tabs
-      .executeScript(tabId, {
-        file: '/injections/group.js',
-        runAt: 'document_start',
-        matchAboutBlank: true,
-      })
-      .catch(err => {
-        Logs.warn('Tabs.injectGroupPageScript: Cannot inject script, tabId:', tabId, err)
-      })
-    injecting.push(injectingScript)
-    const initData = await getGroupPageInitData(winId, tabId)
-    const initDataJson = JSON.stringify(initData)
-    const injectingData = browser.tabs
-      .executeScript(tabId, {
-        code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
-        runAt: 'document_start',
-        matchAboutBlank: true,
-      })
-      .catch(() => {
-        Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, reloading tab')
-        const tab = Tabs.byId[tabId]
-        if (tab.active && tab.reloadOnActivation === undefined) {
-          tab.reloadOnActivation = false
-          browser.tabs.reload(tabId).catch(err => {
-            Logs.err('Tabs.injectGroupPageScript: Cannot reload tab:', err)
-          })
-        } else if (!tab.discarded) {
-          tab.reloadOnActivation = true
-        }
-      })
-    injecting.push(injectingData)
-  } catch (err) {
-    Logs.err('Injected group-page script', err)
-  }
-
-  await Promise.all(injecting)
-
-  injectingGroups.delete(tabId)
-}
-
-export interface GroupPageInitData {
-  theme?: (typeof D.SETTINGS_OPTIONS.theme)[number]
-  parsedTheme?: Styles.ParsedTheme
-  frameColorScheme?: 'dark' | 'light'
-  toolbarColorScheme?: 'dark' | 'light'
-  groupLayout?: (typeof D.SETTINGS_OPTIONS.groupLayout)[number]
-  animations?: boolean
-  groupInfo?: T.GroupInfo | null
-  newTabPos?: 'first_child' | 'last_child'
-  winId?: ID
-  tabId?: ID
-}
-export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupPageInitData> {
   let groupInfo = null
   if (IPC.isConnected(InstanceType.sidebar, winId)) {
     groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
       Logs.err('Tabs: Cannot get tabs info for group page', err)
       return null
     })
+  } else {
+    const win = Windows.byId.get(winId)
+    // Try again if the window was created less than 5s ago
+    if (win?.created !== undefined && Date.now() - win.created < 5_000) {
+      Logs.warn('Tabs.getGroupPageInitData: No connected sidebar, wait and try again...')
+      await IPC.waitForConnection(InstanceType.sidebar, winId, 5_000).catch(() => undefined)
+      if (IPC.isConnected(InstanceType.sidebar, winId)) {
+        groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
+          Logs.err('Tabs: Cannot get tabs info for group page', err)
+          return null
+        })
+      }
+    }
+    if (!groupInfo) {
+      Logs.warn('Tabs.getGroupPageInitData: No connected sidebar, skip gathering tabs info...')
+    }
   }
 
   const winStyles = Styles.byWinId.get(winId) ?? (await Styles.updateWindowStyles(winId))
@@ -774,12 +721,21 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
     parsedTheme: winStyles?.parsedTheme,
     frameColorScheme: winStyles?.frameColorScheme,
     toolbarColorScheme: winStyles?.toolbarColorScheme,
+    customCSS: await Styles.loadCustomGroupCSS(),
     groupLayout: Settings.state.groupLayout,
     animations: Settings.state.animations,
     groupInfo,
     newTabPos: Settings.state.moveNewTabParent === 'first_child' ? 'first_child' : 'last_child',
     winId,
     tabId,
+    labels: {
+      page_url_parse_err: browser.i18n.getMessage('page_url_parse_err'),
+      group_disconnected_warn: browser.i18n.getMessage('group_disconnected_warn'),
+      group_new_tab_tooltip: browser.i18n.getMessage('group_new_tab_tooltip'),
+      group_tab_discard_tooltip: browser.i18n.getMessage('group_tab_discard_tooltip'),
+      group_tab_reload_tooltip: browser.i18n.getMessage('group_tab_reload_tooltip'),
+      group_tab_close_tooltip: browser.i18n.getMessage('group_tab_close_tooltip'),
+    },
   }
 }
 

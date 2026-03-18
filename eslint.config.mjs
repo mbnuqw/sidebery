@@ -79,7 +79,7 @@ export default [
       'vue/multi-word-component-names': 'off',
       'vue/custom-event-name-casing': 'off',
       'vue/no-mutating-props': 'off',
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       indent: ['error', 2, { SwitchCase: 1 }],
       'linebreak-style': ['error', 'unix'],
       // quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],

@@ -33,7 +33,7 @@ export interface ContainerConfigPopup {
 }
 
 export interface GroupConfigPopup {
-  config: T.GroupConfig
+  config: T.NewGroupConfig
   done: (result: E.GroupConfigResult) => void
 }
 

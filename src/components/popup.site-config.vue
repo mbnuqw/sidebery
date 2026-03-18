@@ -314,7 +314,6 @@ function onSave(): void {
   const rContainer = Containers.reactive.byId[reopenInContainerId.value]
   const mPanel = Sidebar.panelsById[moveToPanelId.value]
   const mPanelTopLvlOnly = moveToPanelTopLvlOnly.value
-  let saveContainers = false
   let savePanels = false
   let reopenTab = false
   let moveTab = false
@@ -328,7 +327,7 @@ function onSave(): void {
     const index = container.reopenRules.findIndex(r => r.id === rule.id)
     if (index !== -1) container.reopenRules.splice(index, 1)
     if (!container.reopenRules.length) container.reopenRulesActive = false
-    saveContainers = true
+    Containers.saveContainer(container, 120)
   }
 
   // Remove moving rule
@@ -357,7 +356,7 @@ function onSave(): void {
     }
     rContainer.reopenRules.push(ruleConfig)
     if (matchOption?.name) ruleConfig.name = matchOption.name
-    saveContainers = true
+    Containers.saveContainer(rContainer, 120)
 
     if (tab && tab.cookieStoreId !== rContainer.id) reopenTab = true
   }
@@ -374,7 +373,6 @@ function onSave(): void {
     if (tab && tab.panelId !== mPanel.id && !reopenTab) moveTab = true
   }
 
-  if (saveContainers) Containers.saveContainers(120)
   if (savePanels) {
     Tabs.recalcMoveRules()
     Sidebar.saveSidebar(120)

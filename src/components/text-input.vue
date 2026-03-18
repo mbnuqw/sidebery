@@ -63,9 +63,18 @@ const props = withDefaults(defineProps<TextInputProps>(), { padding: 0, tabindex
 
 const textEl = ref<HTMLInputElement | null>(null)
 const state = reactive({ isActive: false, wrongValueAnimation: false })
+let textareaMinHeight = 0
 
 onMounted(() => {
-  recalcTextHeight()
+  // Initial textarea height recalc
+  if (!props.line && textEl.value) {
+    const prevVal = textEl.value.value
+    textEl.value.style.height = '0'
+    textEl.value.value = ' '
+    textareaMinHeight = textEl.value.scrollHeight - props.padding
+    textEl.value.value = prevVal
+    textEl.value.style.height = `${textareaMinHeight}px`
+  }
 })
 
 function onFocus(): void {
@@ -104,7 +113,10 @@ function onAnimationEnd(): void {
 function recalcTextHeight(): void {
   if (!textEl.value || props.line) return
   textEl.value.style.height = '0'
-  textEl.value.style.height = `${textEl.value.scrollHeight - props.padding}px`
+
+  const h = textEl.value.scrollHeight - props.padding
+  if (h > textareaMinHeight) textEl.value.style.height = `${h}px`
+  else textEl.value.style.height = `${textareaMinHeight}px`
 }
 
 function focus(): void {

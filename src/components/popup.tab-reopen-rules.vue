@@ -164,7 +164,7 @@ async function onAdd() {
   newRuleType.value = 'include'
   newRuleURL.value = ''
 
-  Containers.saveContainers(1000)
+  Containers.saveContainer(container, 1000)
 }
 
 function onCancel(): void {
@@ -189,7 +189,7 @@ function shortcutUp(rule: ReopenRulePreview): void {
     rules.value.splice(localIndex - 1, 0, rule)
   }
 
-  Containers.saveContainers(1000)
+  Containers.saveContainer(container, 1000)
 }
 
 function shortcutDown(rule: ReopenRulePreview): void {
@@ -208,7 +208,7 @@ function shortcutDown(rule: ReopenRulePreview): void {
     rules.value.splice(localIndex + 1, 0, rule)
   }
 
-  Containers.saveContainers(1000)
+  Containers.saveContainer(container, 1000)
 }
 
 function removeRule(rule: ReopenRulePreview): void {
@@ -224,7 +224,7 @@ function removeRule(rule: ReopenRulePreview): void {
   const localIndex = rules.value.findIndex(r => r.id === rule.id)
   if (localIndex !== -1) rules.value.splice(localIndex, 1)
 
-  Containers.saveContainers(1000)
+  Containers.saveContainer(container, 1000)
 }
 
 function editRule(rule: ReopenRulePreview) {
@@ -273,7 +273,7 @@ function onSave() {
     ruleConfig.type = isIncludeRule ? E.TabReopenRuleType.Include : E.TabReopenRuleType.Exclude
     if (name) ruleConfig.name = name
     else delete ruleConfig.name
-    Containers.saveContainers(1000)
+    Containers.saveContainer(container, 1000)
   }
 
   // Update rule in local list
@@ -299,6 +299,6 @@ async function toggleRules() {
   }
 
   container.reopenRulesActive = !container.reopenRulesActive
-  Containers.saveContainers(1000)
+  Containers.saveContainer(container, 1000)
 }
 </script>

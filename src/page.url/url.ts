@@ -1,26 +1,15 @@
 /* eslint no-console: off */
 import type { ParsedTheme, SrcVars } from 'src/services/styles'
-import { UrlPageInitData } from 'src/services/tabs.bg'
-import { toCSSVarName } from 'src/utils'
-import * as Logs from 'src/services/logs'
+import type { PlaceholderPageInitData } from 'src/services/tabs.bg'
+import { decodePlaceholderInfo, toCSSVarName } from 'src/utils'
+import * as Logs from './url.logs'
+import * as IPPC from 'src/services/ippc.page'
 import { InstanceType } from 'src/enums'
+import { PAGE_HASH_RE } from 'src/defaults'
 
-function waitDOM(): Promise<void> {
-  return new Promise(res => {
-    if (document.readyState !== 'loading') res()
-    else document.addEventListener('DOMContentLoaded', () => res())
-  })
-}
-function waitInitData(): Promise<void> {
-  return new Promise((ok, err) => {
-    if (window.sideberyInitData) return ok()
-    window.onSideberyInitDataReady = ok
-    setTimeout(() => {
-      if (window.sideberyInitData) return
-      err('UrlPage: No initial data (sideberyInitData)')
-    }, 60_000)
-  })
-}
+let prefix = ''
+let url = ''
+let title = ''
 
 function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
   if (!rootEl) rootEl = document.getElementById('root') ?? undefined
@@ -38,10 +27,18 @@ function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
 }
 
 void (async () => {
-  Logs.setInstanceType(InstanceType.url)
+  try {
+    parseUrl()
+  } catch {
+    Logs.err('Cannot parse url')
+    const titleNoteEl = document.getElementById('title_note')
+    if (titleNoteEl) titleNoteEl.textContent = 'Cannot parse url...'
+    return
+  }
 
-  await Promise.all([waitDOM(), waitInitData()])
-  const initData = window.sideberyInitData as UrlPageInitData
+  document.title = title
+
+  const initData: PlaceholderPageInitData = await IPPC.init(InstanceType.url, setHash, {})
 
   if (initData.winId !== undefined) Logs.setWinId(initData.winId)
   if (initData.tabId !== undefined) Logs.setTabId(initData.tabId)
@@ -73,38 +70,24 @@ void (async () => {
   if (!copyBtnEl) return Logs.err('Cannot get element: copyBtnEl')
 
   // Translate
-  const titleLabel = browser.i18n.getMessage('unavailable_url')
+  const titleLabel = initData.labels?.unavailable_url ?? 'unavailable_url'
   if (titleLabel) titleEl.innerText = titleLabel
-  const targetTitleLabelLable = browser.i18n.getMessage('page_title')
+  const targetTitleLabelLable = initData.labels?.page_title ?? 'page_title'
   if (targetTitleLabelLable) targetTitleLabelEl.innerText = targetTitleLabelLable
-  const linkLabelLable = browser.i18n.getMessage('original_url')
+  const linkLabelLable = initData.labels?.original_url ?? 'original_url'
   if (linkLabelLable) targetLinkLabelEl.innerText = linkLabelLable
-  const copyBtnLabel = browser.i18n.getMessage('copy_url')
+  const copyBtnLabel = initData.labels?.copy_url ?? 'copy_url'
   if (copyBtnLabel) copyBtnEl.innerText = copyBtnLabel
-  const apiLimitNoteLabel = browser.i18n.getMessage('api_limit_info')
+  const apiLimitNoteLabel = initData.labels?.api_limit_info ?? 'api_limit_info'
   if (apiLimitNoteLabel) titleNoteEl.innerText = apiLimitNoteLabel
 
-  // Get data from URL
-  const hash = window.location.hash.slice(1)
-  let url: string | undefined
-  if (hash) {
-    try {
-      const jsonData = decodeURIComponent(hash)
-      const data = JSON.parse(jsonData) as string[]
-      url = decodeURI(data[0])
-      document.title = data[1]
-      targetTitleEl.innerText = data[1]
-    } catch {
-      url = decodeURI(hash)
-      document.title = hash
-      targetTitleLabelEl.remove()
-      targetTitleEl.remove()
-    }
+  // Render title and url
+  targetTitleEl.innerText = title
+  try {
+    targetLinkEl.innerText = decodeURI(url)
+  } catch {
+    targetLinkEl.innerText = url
   }
-  if (!url) return Logs.err('Cannot get url value')
-
-  // Setup link
-  targetLinkEl.innerText = url
 
   // Setup copy button
   copyBtnEl.addEventListener('click', () => {
@@ -122,3 +105,18 @@ void (async () => {
     }
   })
 })()
+
+function parseUrl() {
+  const reResult = PAGE_HASH_RE.exec(window.location.hash)
+  const data = reResult?.groups?.prefix
+  if (!data) throw 'parseUrl: no data'
+  prefix = data
+
+  const info = decodePlaceholderInfo(data)
+  url = info.url
+  if (info.title) title = info.title
+}
+
+function setHash(h: string) {
+  history.replaceState(undefined, '', `#${prefix}${h}`)
+}

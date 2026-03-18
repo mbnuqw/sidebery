@@ -1,9 +1,9 @@
-import { AnyFunc, Actions, Message, ActionsKeys, ActionsType } from 'src/types'
+import { AnyFunc, Actions, Message, ActionsKeys, ActionsType, IPCNodeInfo } from 'src/types'
 import { InstanceType } from 'src/enums'
+import { rmFromArray } from 'src/utils'
 import { NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import * as Info from 'src/services/info'
-import { GroupMsg } from 'src/injections/group.ipc'
 
 export interface PortNameData {
   srcType: InstanceType
@@ -94,6 +94,10 @@ export function setTabId(id: ID): void {
 
 export function registerActions(a: Actions): void {
   actions = a
+}
+
+export function getInfo(): IPCNodeInfo {
+  return { type: _localType, winId: _localWinId, tabId: _localTabId }
 }
 
 export function isConnected(type: InstanceType, id = NOID): boolean {
@@ -316,6 +320,7 @@ export function connectTo(
       if (connectionIsNew) {
         const handlers = connectionHandlers.get(dstType)
         if (handlers) handlers.forEach(cb => cb(connection.id))
+        triggerConnectionAwaiters(dstType, connection.id)
       }
       if (connection.pendingRequests.length) {
         const pending = connection.pendingRequests
@@ -391,15 +396,6 @@ export function panelConfigPopup<T extends InstanceType.panelConfig, A extends A
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.panelConfig, dstWinId, action, args }
   return request(msg, AutoConnectMode.WithRetry)
-}
-
-/**
- * Sends message to group page
- */
-export function groupPage(dstTabId: ID, msg: GroupMsg): void {
-  browser.tabs.sendMessage(dstTabId, msg).catch(() => {
-    /** Ignore possible errors **/
-  })
 }
 
 /**
@@ -502,7 +498,7 @@ const enum AutoConnectMode {
   On = 1,
   WithRetry = 2,
 }
-const msgsWaitingForAnswer: Map<number, MsgWaitingForAnswer> = new Map()
+const msgsWaitingForAnswer: Map<ID, MsgWaitingForAnswer> = new Map()
 let msgCounter = 1
 /**
  * Send message using port.postMessage and wait for answer
@@ -731,6 +727,7 @@ function onConnect(port: browser.runtime.Port) {
   if (connectionIsNew) {
     const handlers = connectionHandlers.get(srcType)
     if (handlers) handlers.forEach(cb => cb(connection.id))
+    triggerConnectionAwaiters(srcType, id)
   }
 
   // Listen for messages
@@ -791,6 +788,31 @@ export function onConnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
   connectionHandlers.set(type, handlers)
 }
 
+interface ConnectionAwaiter {
+  type: InstanceType
+  id: ID
+  ok: () => any
+  timer?: number
+}
+const waitingForConnection: ConnectionAwaiter[] = []
+export async function waitForConnection(t: InstanceType, winOrTabId: ID, timeout: number) {
+  return new Promise<void>((ok, meh) => {
+    const w: ConnectionAwaiter = { type: t, id: winOrTabId, ok }
+    w.timer = setTimeout(() => {
+      rmFromArray(waitingForConnection, w)
+      meh(`IPC.waitForConnection: ${Info.getInstanceName(t)}: ${winOrTabId}: timeout`)
+    }, timeout)
+    waitingForConnection.push(w)
+  })
+}
+function triggerConnectionAwaiters(t: InstanceType, winOrTabId: ID) {
+  const w = waitingForConnection.find(w => w.type === t && w.id === winOrTabId)
+  if (!w) return
+  clearTimeout(w.timer)
+  rmFromArray(waitingForConnection, w)
+  w.ok()
+}
+
 const disconnectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
 export function onDisconnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
   const handlers = disconnectionHandlers.get(type) ?? []
@@ -802,7 +824,9 @@ export function onDisconnected(type: InstanceType, cb: (winOrTabId: ID) => void)
  * Runs a registered action (service function)
  * and returns its result.
  */
-function runActionFor<T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>): any {
+export function runActionFor<T extends InstanceType, A extends keyof Actions>(
+  msg: Message<T, A>
+): any {
   if (msg.action !== undefined && actions) {
     const action = actions[msg.action] as AnyFunc
     if (action) {

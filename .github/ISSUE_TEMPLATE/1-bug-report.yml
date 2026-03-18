@@ -25,7 +25,7 @@ body:
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
+      label: Expected behavior, possible causes and additional notes
     validations:
       required: true
   - type: input

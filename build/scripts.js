@@ -4,7 +4,6 @@ import fs from 'fs'
 import esbuild from 'esbuild'
 import { parse, compileTemplate, compileScript } from '@vue/compiler-sfc'
 import { IS_DEV, ADDON_PATH, VUE_DIST, BUNDLE_VUE, KEEP_NAMES } from './utils.js'
-import { IIFE_BANNER_WITH_REINJECT_GUARD, IIFE_FOOTER } from './utils.js'
 import { treeToList, getTSConfig, colorize, watch, log, logOk, logErr } from './utils.js'
 
 const forChromium = process.argv.includes('--chromium')
@@ -13,15 +12,15 @@ const OUTPUT_DIR = ADDON_PATH
 const NORM_SRC_DIR = path.normalize(SRC_DIR)
 const TS_CONFIG = getTSConfig()
 const BUNDLES = {
-  'src/injections/group.ts': {
+  'src/page.group/group.ts': {
     format: 'esm',
-    banner: { js: IIFE_BANNER_WITH_REINJECT_GUARD },
-    footer: { js: IIFE_FOOTER },
+    splitting: false,
+    outfile: path.join(ADDON_PATH, 'sidebery', 'group.js'),
   },
-  'src/injections/url.ts': {
+  'src/page.url/url.ts': {
     format: 'esm',
-    banner: { js: IIFE_BANNER_WITH_REINJECT_GUARD },
-    footer: { js: IIFE_FOOTER },
+    splitting: false,
+    outfile: path.join(ADDON_PATH, 'sidebery', 'url.js'),
   },
   'src/injections/tab-preview.ts': { format: 'iife' },
   'src/popup.tab-preview/tab-preview.ts': true,
@@ -218,7 +217,7 @@ async function compileTSFile(file) {
       banner: conf.banner ? conf.banner : undefined,
       footer: conf.footer ? conf.footer : undefined,
       format: conf.format ? conf.format : 'esm',
-      outfile: file.outPath,
+      outfile: conf.outfile ? conf.outfile : file.outPath,
     })
     return
   } else {
@@ -352,15 +351,6 @@ async function main() {
       splitting: false,
       outdir: path.join(ADDON_PATH, 'injections'),
     })
-    // Bundled group and url scripts for injection
-    const buildingGroupAndUrlScripts = esbuild.build({
-      ...PROD_ESBUILD_BASE_CONF,
-      entryPoints: ['src/injections/group.ts', 'src/injections/url.ts'],
-      splitting: false,
-      banner: { js: IIFE_BANNER_WITH_REINJECT_GUARD },
-      footer: { js: IIFE_FOOTER },
-      outdir: path.join(ADDON_PATH, 'injections'),
-    })
     // Bundled script for preview injection (in-page)
     const buildingInjectionPreviewScript = esbuild.build({
       ...PROD_ESBUILD_BASE_CONF,
@@ -376,12 +366,27 @@ async function main() {
       splitting: false,
       outdir: path.join(ADDON_PATH, 'popup.tab-preview'),
     })
+    // Bundled script for group page script
+    const buildingGroupScript = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
+      entryPoints: ['src/page.group/group.ts'],
+      splitting: false,
+      outdir: path.join(ADDON_PATH, 'sidebery'),
+    })
+    // Bundled script for placeholder page script
+    const buildingPlaceholderScript = esbuild.build({
+      ...PROD_ESBUILD_BASE_CONF,
+      entryPoints: ['src/page.url/url.ts'],
+      splitting: false,
+      outdir: path.join(ADDON_PATH, 'sidebery'),
+    })
     await Promise.all([
       buildingSplittedScripts,
       buildingBundledScripts,
-      buildingGroupAndUrlScripts,
       buildingInjectionPreviewScript,
       buildingWindowPreviewScript,
+      buildingGroupScript,
+      buildingPlaceholderScript,
     ])
     logOk('Scripts: Done')
   }

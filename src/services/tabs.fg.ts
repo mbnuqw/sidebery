@@ -4,6 +4,7 @@ import * as D from 'src/defaults'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import * as IPC from 'src/services/ipc'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Logs from 'src/services/logs'
 import * as Settings from 'src/services/settings'
 import * as Sidebar from 'src/services/sidebar.fg'
@@ -117,6 +118,9 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
   }
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
   if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
+  if (tab.isGroup && tab.title === D.GROUP_INITIAL_TITLE) {
+    tab.title = Utils.getGroupName(tab.url) ?? ''
+  }
 
   if (tab.reactive === undefined) {
     tab.reactive = {
@@ -248,8 +252,6 @@ export async function load(src?: LoadSrc): Promise<void> {
 
   if (Tabs.shadowMode) Tabs.unloadShadowed()
 
-  Tabs.setupTabsListeners()
-
   await Utils.retry({
     action: async (again, isLastTry) => {
       try {
@@ -268,11 +270,12 @@ export async function load(src?: LoadSrc): Promise<void> {
     count: 10,
   })
 
-  Tabs.updateActiveGroupPage()
-
   // Scroll to active tab
   const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
+
+  // Update active group page
+  if (activeTab && activeTab.isGroup) Tabs.updateGroupOrItsChild(activeTab)
 
   const sessionRestoreTabOnly =
     Tabs.list.length === 1 && Tabs.list[0]?.url === 'about:sessionrestore'
@@ -334,6 +337,7 @@ export function unload(): void {
   recentlyRemoved = []
 
   Links.rmAllTabs()
+  IPPC.resetAll()
 
   tabsReinitializing = false
   removedTabs = []
@@ -389,6 +393,8 @@ async function restoreTabsState(src?: LoadSrc, ignoreLockedTabs?: boolean): Prom
 
   // Clear deferredEventHandling
   deferredEventHandling = []
+
+  if (!Tabs.listenersAreSet) Tabs.setupTabsListeners()
 
   const sessionOnly = src === LoadSrc.SessionOnly
   const results = await Promise.allSettled([
@@ -483,9 +489,9 @@ async function restoreTabsState(src?: LoadSrc, ignoreLockedTabs?: boolean): Prom
     Tabs.updateSuccessionDebounced(0)
   }
 
-  // Update group pages if tabs was moved to the new (this) window
+  // Update group pages if tabs was moved to a new (this) window
   if (tabsWasMoved) {
-    Tabs.list.forEach(t => t.isGroup && Tabs.updateGroupTab(t))
+    Tabs.list.forEach(t => t.isGroup && !t.discarded && Tabs.updateGroupOrItsChild(t))
   }
 
   Logs.info(`Tabs.restoreTabsState: Done: ${performance.now() - ts}ms`)
@@ -2654,7 +2660,7 @@ export async function copy(ids: ID[], template: T.CopyTemplate) {
     if (template.hasB) result = result.replaceAll('%B', bullet)
     if (template.hasCT) result = result.replaceAll('%CT', tab.customTitle || tab.title)
     if (template.hasT) result = result.replaceAll('%T', tab.title)
-    if (template.hasU) result = result.replaceAll('%U', tab.url)
+    if (template.hasU) result = result.replaceAll('%U', Utils.denormalizeUrl(tab.url) ?? tab.url)
     lines.push(indent.repeat(indentLvl) + result)
   }
 
@@ -2951,6 +2957,9 @@ function updateSuccession(exclude?: readonly ID[]) {
 }
 
 export function renderTitle(tab: T.Tab, forcedTitle?: string) {
+  if (tab.isGroup && tab.title === D.GROUP_INITIAL_TITLE) {
+    tab.title = Utils.getGroupName(tab.url) ?? tab.title
+  }
   if (tab.titleEl) {
     tab.titleEl.innerText = forcedTitle ?? tab.customTitle ?? tab.title
   }

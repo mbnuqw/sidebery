@@ -1,67 +1,61 @@
-import { sleep } from 'src/utils'
-import type { GroupPin, GroupedTabInfo, GroupConfig, DstPlaceInfo } from 'src/types'
-import * as E from 'src/enums'
-import { GroupPageInitData } from 'src/services/tabs.bg'
+import type * as T from 'src/types'
 import { getFavPlaceholder } from 'src/services/favicons'
-import { NOID, SETTINGS_OPTIONS } from 'src/defaults'
-import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
-import * as IPC from 'src/services/ipc'
-import * as Logs from 'src/services/logs'
-import { GroupMsg } from './group.ipc'
+import { NOID, PAGE_HASH_RE, SETTINGS_OPTIONS } from 'src/defaults'
+import { applyCustomCSS, applyThemeSrcVars } from './group.styles'
+import * as Logs from './group.logs'
+import * as IPPC from 'src/services/ippc.page'
+import { DstTreePos, InstanceType } from 'src/enums'
+import { getDomainOf } from 'src/utils'
 
-const PIN_SCREENSHOT_QUALITY = 90
-const SCREENSHOT_QUALITY = 25
-
-let tabsBoxEl: HTMLElement | null
-let newTabEl: HTMLDivElement
-let groupWinId: ID
-let groupTabId: ID
-let groupTabIndex: number
-let groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]
-let groupNewTabPos: 'first_child' | 'last_child'
-let pinTab: GroupPin | undefined
-let tabs: GroupedTabInfo[]
-let groupLen: number, groupParentId: ID | undefined
-let screenshots: Record<string, string>
-
-function waitDOM(): Promise<void> {
-  return new Promise(res => {
-    if (document.readyState !== 'loading') res()
-    else document.addEventListener('DOMContentLoaded', () => res())
-  })
-}
-function waitInitData(): Promise<void> {
-  return new Promise((ok, err) => {
-    if (window.sideberyInitData) return ok()
-    window.onSideberyInitDataReady = ok
-    setTimeout(() => {
-      if (window.sideberyInitData) return
-      err('GroupPage: No initial data (sideberyInitData)')
-    }, 60_000)
-  })
-}
+let groupTitle = ''
+let tabsBoxEl: HTMLElement | null = null
+let newTabEl: HTMLDivElement | null = null
+let groupWinId: ID = NOID
+let groupTabId: ID = NOID
+let groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number] = 'grid'
+let groupNewTabPos: 'first_child' | 'last_child' = 'last_child'
+let pinTab: T.GroupPin | undefined
+let tabs: T.GroupedTabInfo[] = []
+let groupParentId: ID | undefined
+let labels: Record<string, string>
 
 async function main() {
-  IPC.setInstanceType(E.InstanceType.group)
-  Logs.setInstanceType(E.InstanceType.group)
-
   try {
-    await Promise.all([waitDOM(), waitInitData()])
-  } catch (e) {
-    Logs.err('Group page: Initialization error:', e)
+    parseUrl()
+  } catch {
+    Logs.err('Cannot parse url')
     const warnEl = document.getElementById('disconnected_warn')
-    if (warnEl) warnEl.textContent = browser.i18n.getMessage('group_disconnected_warn')
+    if (warnEl) warnEl.textContent = 'Cannot parse url'
+    document.body.setAttribute('data-disconnected', 'true')
+    const ldEl = document.getElementById('loading_dots')
+    if (ldEl) ldEl.style.display = 'none'
+    return
+  }
+
+  // Set title of group page
+  const titleEl = document.getElementById('title') as HTMLInputElement
+  titleEl.value = groupTitle
+  document.title = groupTitle || '‎'
+
+  // Initialize communication and get initial data
+  const initData: T.GroupPageInitData = await IPPC.init(InstanceType.group, setHash, {
+    update: onGroupUpdMsg,
+  })
+  const ldEl = document.getElementById('loading_dots')
+  if (ldEl) ldEl.style.display = 'none'
+  if (!initData) {
+    Logs.err('Cannot initialize')
+    const warnEl = document.getElementById('disconnected_warn')
+    if (warnEl) warnEl.textContent = 'No initialization data'
     document.body.setAttribute('data-disconnected', 'true')
     return
   }
-  const initData = window.sideberyInitData as GroupPageInitData
 
-  groupWinId = initData.winId ?? -1
-  groupTabId = initData.tabId ?? -1
+  groupWinId = initData.winId ?? NOID
+  groupTabId = initData.tabId ?? NOID
   groupNewTabPos = initData.newTabPos ?? 'last_child'
+  labels = initData.labels ?? {}
 
-  IPC.setWinId(groupWinId)
-  IPC.setTabId(groupTabId)
   Logs.setWinId(groupWinId)
   Logs.setTabId(groupTabId)
 
@@ -75,39 +69,36 @@ async function main() {
   } else Logs.warn('Cannot set toolbar color scheme')
   if (initData.parsedTheme) applyThemeSrcVars(initData.parsedTheme)
   else Logs.warn('Cannot apply firefox theme colors')
-  loadCustomGroupCSS()
+  if (initData.customCSS) applyCustomCSS(initData.customCSS)
 
   groupLayout = initData.groupLayout ?? 'grid'
   document.body.setAttribute('data-layout', groupLayout)
   document.body.setAttribute('data-animations', initData.animations ? 'fast' : 'none')
 
-  const config = parseUrl()
-
-  // Set title of group page
-  const title = config?.title ?? ''
-  const titleEl = document.getElementById('title') as HTMLInputElement
-  titleEl.value = title
-  document.title = title || '‎'
-
   if (!initData.groupInfo) {
     Logs.warn('No group info')
     const warnEl = document.getElementById('disconnected_warn')
-    if (warnEl) warnEl.textContent = browser.i18n.getMessage('group_disconnected_warn')
+    if (warnEl) warnEl.textContent = getLabel('group_disconnected_warn')
     document.body.setAttribute('data-disconnected', 'true')
+    const ldEl = document.getElementById('loading_dots')
+    if (ldEl) ldEl.style.display = 'none'
     return
   }
 
-  IPC.connectTo(E.InstanceType.bg, groupWinId, groupTabId)
-
-  screenshots = {}
   tabs = initData.groupInfo.tabs || []
-  groupTabIndex = initData.groupInfo.index || 0
-  groupLen = initData.groupInfo.len || 0
   groupParentId = initData.groupInfo.parentId
   pinTab = initData.groupInfo.pin
 
   // Listen chagnes of title
   titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
+
+  // Set favicons for each tab
+  for (const tab of tabs) {
+    if (tab.favIconUrl) continue
+    const domain = getDomainOf(tab.url)
+    const favicon = initData.groupInfo.favicons[domain]
+    if (favicon) tab.favIconUrl = favicon
+  }
 
   if (pinTab) {
     document.body.setAttribute('data-pin', 'true')
@@ -132,31 +123,26 @@ async function main() {
   document.body.addEventListener('mousedown', e => {
     if (e.button === 2 && groupParentId !== undefined && groupParentId !== NOID) {
       e.preventDefault()
-      IPC.bg('tabsApiProxy', 'update', groupParentId, { active: true })
+      IPPC.bg('tabsApiProxy', 'update', groupParentId, { active: true })
     }
   })
 
   document.body.addEventListener('contextmenu', e => e.preventDefault())
-
-  // Set listener
-  browser.runtime.onMessage.addListener(onGroupMsg)
-
-  updateScreenshots()
 }
 
-function parseUrl(): GroupConfig | undefined {
-  let hash
-  try {
-    hash = decodeURIComponent(window.location.hash.slice(1))
-  } catch (e) {
-    Logs.err('parseUrl: Cannot decode URI component', e)
-    return
-  }
+function setHash(h: string) {
+  history.replaceState(undefined, '', `#${encodeURIComponent(groupTitle)}${h}`)
+}
 
-  const hashData = hash.split(':id:')
-  const title = hashData[0].trim()
+function parseUrl() {
+  const reResult = PAGE_HASH_RE.exec(window.location.hash)
+  const rawTitle = reResult?.groups?.prefix || ''
 
-  return { title }
+  groupTitle = decodeURIComponent(rawTitle).trim()
+}
+
+function getLabel(id: string) {
+  return labels[id] ?? id
 }
 
 let onTitleChangeTimeout: number | undefined
@@ -165,34 +151,33 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
   onTitleChangeTimeout = setTimeout(() => {
     const normTitle = e.target.value.trim()
     document.title = normTitle || '‎'
-    window.location.hash = `#${encodeURIComponent(normTitle)}`
+    history.replaceState(undefined, '', `#${encodeURIComponent(normTitle)}${IPPC.hashSuffix}`)
   }, 500)
 }
 
 /**
  * Handle group page update msg
  */
-function onGroupMsg(msg: GroupMsg) {
+export function onGroupUpdMsg(upd: T.GroupUpdMsg) {
+  if (!newTabEl) return
+
   let i
-  if (msg.index !== undefined) groupTabIndex = msg.index
-  if (msg.len !== undefined) groupLen = msg.len
-  if (msg.parentId !== undefined) groupParentId = msg.parentId
-  if (msg.title !== undefined) {
-    const normTitle = msg.title.trim()
+  if (upd.parentId !== undefined) groupParentId = upd.parentId
+  if (upd.title !== undefined) {
+    const normTitle = upd.title.trim()
     document.title = normTitle || '‎'
     const titleEl = document.getElementById('title') as HTMLInputElement | null
     if (titleEl) titleEl.value = normTitle
-    window.location.hash = `#${encodeURIComponent(normTitle)}`
+    history.replaceState(undefined, '', `#${encodeURIComponent(normTitle)}${IPPC.hashSuffix}`)
   }
-  if (msg.windowId !== undefined) {
-    groupWinId = msg.windowId
-    IPC.setWinId(groupWinId)
+  if (upd.windowId !== undefined) {
+    groupWinId = upd.windowId
     Logs.setWinId(groupWinId)
   }
 
-  if (msg.tabs !== undefined) {
-    for (i = 0; i < msg.tabs.length; i++) {
-      const newTab = msg.tabs[i]
+  if (upd.tabs !== undefined) {
+    for (i = 0; i < upd.tabs.length; i++) {
+      const newTab = upd.tabs[i]
       const oldTab = tabs[i]
       if (!oldTab) {
         createTabEl(newTab, (event: MouseEvent) => onTabClick(event, newTab))
@@ -212,8 +197,8 @@ function onGroupMsg(msg: GroupMsg) {
     }
   }
 
-  if (msg.pin) {
-    pinTab = msg.pin
+  if (upd.pin) {
+    pinTab = upd.pin
     if (pinTab) {
       document.body.setAttribute('data-pin', 'true')
       document.title = pinTab.title
@@ -221,19 +206,20 @@ function onGroupMsg(msg: GroupMsg) {
     }
   }
 
-  if (msg.createdTab) onTabCreated(msg.createdTab)
-  if (msg.updatedTab) onTabUpdated(msg.updatedTab)
-  if (msg.removedTab !== undefined) onTabRemoved(msg.removedTab)
+  if (upd.createdTab) onTabCreated(upd.createdTab)
+  if (upd.updatedTab) onTabUpdated(upd.updatedTab)
+  else if (upd.updatedTabs) upd.updatedTabs.forEach(t => onTabUpdated(t))
+  if (upd.removedTab !== undefined) onTabRemoved(upd.removedTab)
 }
 
 /**
  * Handle creating tab
  */
-async function onTabCreated(tab: GroupedTabInfo) {
+async function onTabCreated(tab: T.GroupedTabInfo) {
   createTabEl(tab, (event: MouseEvent) => onTabClick(event, tab))
-  if (!tab.el) return
+  if (!tab.el || !newTabEl) return
 
-  const index = tab.index - groupTabIndex - 1
+  const index = tab.index
   if (index === -1 || index === tabs.length) {
     newTabEl.before(tab.el)
     tabs.push(tab)
@@ -241,19 +227,15 @@ async function onTabCreated(tab: GroupedTabInfo) {
     tabs[index].el?.before(tab.el)
     tabs.splice(index, 0, tab)
   } else {
-    Logs.warn('Cannot add new tab: Wrong index')
+    Logs.warn('Cannot add new tab: Wrong index:', index)
     return
   }
-
-  groupLen++
-  await sleep(256)
-  takeScreenshot(tab, SCREENSHOT_QUALITY)
 }
 
 /**
  * Handle tab update msg
  */
-function onTabUpdated(upd: GroupedTabInfo) {
+function onTabUpdated(upd: T.GroupedTabInfo) {
   const tab = tabs.find(t => t.id === upd.id)
   if (!tab?.el) return
 
@@ -265,13 +247,9 @@ function onTabUpdated(upd: GroupedTabInfo) {
   }
 
   tab.el.title = normURL
-  tab.el.setAttribute('data-status', upd.status ?? '')
-  if (upd.status === 'complete') {
-    tab.el.setAttribute('data-fav', String(!!upd.favIconUrl))
-    if (tab.favEl) tab.favEl.style.backgroundImage = `url(${upd.favIconUrl})`
-    tab.favIconUrl = upd.favIconUrl
-    takeScreenshot(tab, SCREENSHOT_QUALITY)
-  }
+  tab.el.setAttribute('data-fav', String(!!upd.favIconUrl))
+  if (tab.favEl) tab.favEl.style.backgroundImage = `url(${upd.favIconUrl})`
+  tab.favIconUrl = upd.favIconUrl
 
   if (tab.titleEl) tab.titleEl.textContent = upd.title
   tab.title = upd.title
@@ -301,10 +279,9 @@ function onTabRemoved(id: ID) {
   if (index === -1) return
   tabs[index].el?.remove()
   tabs.splice(index, 1)
-  groupLen--
 
-  if (groupLen === 0 && window.location.search.includes('pin=')) {
-    IPC.bg('tabsApiProxy', 'remove', groupTabId)
+  if (tabs.length === 0 && window.location.search.includes('pin=')) {
+    IPPC.bg('tabsApiProxy', 'remove', groupTabId)
   }
 }
 
@@ -316,27 +293,27 @@ function createNewTabButton() {
 
   newTabEl = document.createElement('div')
   newTabEl.classList.add('new-tab')
-  newTabEl.title = browser.i18n.getMessage('group_new_tab_tooltip')
+  newTabEl.title = getLabel('group_new_tab_tooltip')
   tabsBoxEl.appendChild(newTabEl)
 
-  newTabEl.addEventListener('mousedown', (event: MouseEvent) => {
-    event.stopPropagation()
-    event.preventDefault()
-    const index = (groupNewTabPos === 'last_child' ? groupTabIndex + groupLen : groupTabIndex) + 1
+  const plusIconEl = document.createElement('div')
+  plusIconEl.classList.add('new-tab-plus')
+  newTabEl.appendChild(plusIconEl)
+
+  newTabEl.addEventListener('mousedown', (e: MouseEvent) => e.stopPropagation())
+  newTabEl.addEventListener('mouseup', e => e.stopPropagation())
+  newTabEl.addEventListener('click', () => {
+    const pos = groupNewTabPos === 'last_child' ? DstTreePos.End : DstTreePos.Start
     const newTabConf = { id: 0, url: 'about:newtab', active: true }
-    const dst: DstPlaceInfo = { windowId: groupWinId, parentId: groupTabId, index }
-    IPC.bg('openTabs', [newTabConf], dst)
-  })
-  newTabEl.addEventListener('mouseup', event => {
-    event.stopPropagation()
-    event.preventDefault()
+    const dst: T.DstPlaceInfo = { windowId: groupWinId, parentId: groupTabId, pos }
+    IPPC.bg('openTabs', [newTabConf], dst)
   })
 }
 
 /**
  * Create tab element
  */
-function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void) {
+function createTabEl(info: T.GroupedTabInfo, clickHandler: (e: MouseEvent) => void) {
   let normURL
   try {
     normURL = decodeURI(info.url)
@@ -376,7 +353,7 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
   info.titleEl.textContent = info.title
   infoEl.appendChild(info.titleEl)
 
-  info.urlEl = document.createElement('a')
+  info.urlEl = document.createElement('span')
   info.urlEl.classList.add('tab-url')
   info.urlEl.setAttribute('href', info.url)
   info.urlEl.addEventListener('click', e => e.preventDefault())
@@ -390,25 +367,25 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
 
   const discardBtnEl = createTabButton('#icon_discard', 'discard-btn', event => {
     event.stopPropagation()
-    IPC.bg('tabsApiProxy', 'discard', info.id)
+    IPPC.bg('tabsApiProxy', 'discard', info.id)
   })
-  discardBtnEl.title = browser.i18n.getMessage('group_tab_discard_tooltip')
+  discardBtnEl.title = getLabel('group_tab_discard_tooltip')
   ctrlsEl.appendChild(discardBtnEl)
 
   const reloadBtnEl = createTabButton('#icon_reload', 'reload-btn', event => {
     event.stopPropagation()
     if (event.button === 0 || event.button === 1) {
-      IPC.bg('tabsApiProxy', 'reload', info.id)
+      IPPC.bg('tabsApiProxy', 'reload', info.id)
     }
   })
-  reloadBtnEl.title = browser.i18n.getMessage('group_tab_reload_tooltip')
+  reloadBtnEl.title = getLabel('group_tab_reload_tooltip')
   ctrlsEl.appendChild(reloadBtnEl)
 
   const closeBtnEl = createTabButton('#icon_close', 'close-btn', event => {
     event.stopPropagation()
-    IPC.bg('tabsApiProxy', 'remove', info.id)
+    IPPC.bg('tabsApiProxy', 'remove', info.id)
   })
-  closeBtnEl.title = browser.i18n.getMessage('group_tab_close_tooltip')
+  closeBtnEl.title = getLabel('group_tab_close_tooltip')
   ctrlsEl.appendChild(closeBtnEl)
 
   info.el.addEventListener('mousedown', e => e.stopPropagation())
@@ -419,7 +396,7 @@ let pinnedTabEventsListeners = false
 /**
  * Create pinned tab element on the page
  */
-function updatePinnedTab(info: GroupPin, clickHandler: (e: MouseEvent) => void) {
+function updatePinnedTab(info: T.GroupPin, clickHandler: (e: MouseEvent) => void) {
   info.el = document.getElementById('pinned_tab')
   if (!info.el) return
   info.el.title = info.url
@@ -479,74 +456,22 @@ function setSvgId(svgEl: SVGElement, svgId: string) {
 }
 
 /**
- * Take screenshot of tab
- */
-async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
-  if (tab.discarded) {
-    const screen = screenshots[tab.url]
-    if (tab.bgEl && screen) tab.bgEl.style.backgroundImage = `url(${screen})`
-    else if (tab.bgEl && tab.favIconUrl) {
-      tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
-      tab.bgEl.style.filter = 'blur(8px)'
-      if (groupLayout === 'list') tab.bgEl.style.left = '-4px'
-    }
-    return
-  } else {
-    if (tab.bgEl) {
-      tab.bgEl.style.filter = 'none'
-      if (groupLayout === 'list') tab.bgEl.style.left = '0'
-    }
-  }
-
-  try {
-    const screen = (await IPC.bg('tabsApiProxy', 'captureTab', tab.id, {
-      format: 'jpeg',
-      quality,
-    })) as string
-    if (tab.bgEl) tab.bgEl.style.backgroundImage = `url(${screen})`
-    screenshots[tab.url] = screen
-  } catch {
-    const screen = screenshots[tab.url]
-    if (tab.bgEl && screen) tab.bgEl.style.backgroundImage = `url(${screen})`
-  }
-}
-
-/**
- * Update screenshots for all tabs
- */
-async function updateScreenshots() {
-  const newScreenshots: Record<string, string> = {}
-  if (pinTab) {
-    takeScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
-    await takeScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
-    newScreenshots[pinTab.url] = screenshots[pinTab.url]
-  }
-
-  for (const tab of tabs) {
-    await takeScreenshot(tab, SCREENSHOT_QUALITY)
-    newScreenshots[tab.url] = screenshots[tab.url]
-  }
-
-  screenshots = newScreenshots
-}
-
-/**
  * Handle tab click
  */
 function onTabClick(event: MouseEvent, tab?: { id: ID }) {
   if (!tab) return
   event.stopPropagation()
-  IPC.bg('tabsApiProxy', 'update', tab.id, { active: true })
+  IPPC.bg('tabsApiProxy', 'update', tab.id, { active: true })
 }
 
 /**
  * Update tab
  */
-function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
+function updateTab(oldTab: T.GroupedTabInfo, newTab: T.GroupedTabInfo) {
   const titleChanged = oldTab.title !== newTab.title
   const urlChanged = oldTab.url !== newTab.url
 
-  if (!oldTab.el) return
+  if (!oldTab.el) return Logs.warn('updateTab: no el')
 
   if (titleChanged && oldTab.titleEl) oldTab.titleEl.textContent = newTab.title
   if (urlChanged && oldTab.urlEl) {
@@ -568,8 +493,6 @@ function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
   }
 
   Object.assign(oldTab, newTab)
-
-  if (titleChanged || urlChanged) takeScreenshot(oldTab, SCREENSHOT_QUALITY)
 }
 
 void main()

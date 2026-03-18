@@ -183,6 +183,7 @@ export interface DstPlaceInfo {
   panelId?: ID
   parentId?: ID
   index?: number
+  pos?: E.DstTreePos
   inside?: boolean
   pinned?: boolean
   containerId?: string

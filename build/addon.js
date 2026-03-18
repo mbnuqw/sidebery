@@ -57,7 +57,7 @@ async function main() {
     manifestContent = JSON.stringify(manifest, undefined, '  ') + '\n'
     await fs.writeFile('./src/manifest.json', manifestContent, { encoding: 'utf-8' })
   } catch {
-    console.log('\nCannot revert changes in manifest.json')
+    console.log('\nCannot update version and update_url in manifest.json')
     return
   }
 
@@ -147,5 +147,11 @@ async function main() {
     })
   }
 }
+
+process.on('SIGINT', async () => {
+  // Wait before exit, so temporary changed files have time to revert
+  await new Promise(ok => setTimeout(ok, 1000))
+  process.exit(0)
+})
 
 await main()

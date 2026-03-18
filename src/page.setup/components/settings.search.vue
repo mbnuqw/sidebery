@@ -40,12 +40,14 @@ section(ref="el")
       v-model:value="Settings.state.searchBookmarksShortcut"
       dbg="searchBookmarksShortcut"
       :default="DEFAULT_SETTINGS.searchBookmarksShortcut"
+      :line="true"
       @update:value="Settings.saveDebounced(150)")
     TextField(
       label="settings.search.history_shortcut"
       v-model:value="Settings.state.searchHistoryShortcut"
       dbg="searchHistoryShortcut"
       :default="DEFAULT_SETTINGS.searchHistoryShortcut"
+      :line="true"
       @update:value="Settings.saveDebounced(150)")
 </template>
 

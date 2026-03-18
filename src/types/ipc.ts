@@ -1,21 +1,22 @@
-import { ItemInfo, DstPlaceInfo, Notification, PanelConfig, DragInfo, Stored } from '../types'
-import { DetachedTabsInfo } from 'src/services/tabs.fg.move'
-import { Tab, GroupInfo, TabsTreeData } from './tabs'
-import * as Tabs from 'src/services/tabs.bg'
-import * as Snapshots from 'src/services/snapshots.bg'
-import * as Favicons from 'src/services/favicons.bg'
-import * as WebReq from 'src/services/web-req.bg'
-import * as WindowsBg from 'src/services/windows.bg'
-import * as WindowsFg from 'src/services/windows.fg'
-import * as Store from 'src/services/storage.bg'
+import * as T from 'src/types'
+import type * as E from 'src/enums'
+import type { DetachedTabsInfo } from 'src/services/tabs.fg.move'
+import type * as Tabs from 'src/services/tabs.bg'
+import type * as Snapshots from 'src/services/snapshots.bg'
+import type * as Favicons from 'src/services/favicons.bg'
+import type * as WebReq from 'src/services/web-req.bg'
+import type * as WindowsBg from 'src/services/windows.bg'
+import type * as WindowsFg from 'src/services/windows.fg'
+import type * as Store from 'src/services/storage.bg'
 import type * as SyncBg from 'src/services/sync.bg'
 import type * as TabsFg from 'src/services/tabs.fg'
 import type * as SidebarBg from 'src/services/sidebar.bg'
 import type * as SidebarFg from 'src/services/sidebar.fg'
-import type * as E from 'src/enums'
+import type * as ContainersBg from 'src/services/containers.bg'
+import type * as GroupPage from 'src/page.group/group'
 
 export interface Message<T extends E.InstanceType, A extends ActionsKeys<T>> {
-  id?: number
+  id?: ID
   dstWinId?: ID
   dstTabId?: ID
   dstType?: E.InstanceType
@@ -34,8 +35,10 @@ export interface IPCNodeInfo {
 }
 
 export type BgActions = {
+  init?: any
   cacheTabsData: typeof Tabs.cacheTabsData
   getGroupPageInitData: typeof Tabs.getGroupPageInitData
+  getPlaceholderPageInitData: typeof Tabs.getPlaceholderPageInitData
   tabsApiProxy: typeof Tabs.tabsApiProxy
   getSidebarTabs: typeof Tabs.getSidebarTabs
   detachSidebarTabs: typeof Tabs.detachSidebarTabs
@@ -63,6 +66,12 @@ export type BgActions = {
   removeCachedIdFromGoogleSync: typeof SyncBg.Google.removeCachedId
   getDataFromSync: typeof SyncBg.getData
   loadSync: typeof SyncBg.load
+
+  getContainers: typeof ContainersBg.getContainers
+  setContainers: typeof ContainersBg.setContainers
+  createContainer: typeof ContainersBg.createAndSave
+  removeContainer: typeof ContainersBg.removeAndSave
+  importContainers: typeof ContainersBg.importContainers
 }
 
 export type SettingsActions = {
@@ -77,16 +86,16 @@ export type PanelConfigPopupActions = {
 }
 
 export type SidebarActions = {
-  reloadTab: (tab: Tab) => void
-  queryTab: (props: Partial<Tab>) => Tab | null
-  getTabs: (tabIds?: ID[]) => Tab[] | undefined
+  reloadTab: (tab: T.Tab) => void
+  queryTab: (props: Partial<T.Tab>) => T.Tab | null
+  getTabs: (tabIds?: ID[]) => T.Tab[] | undefined
   detachTabs: (tabIds: ID[]) => DetachedTabsInfo | undefined
-  getTabsTreeData: () => TabsTreeData
-  getActivePanelConfig: () => PanelConfig | undefined
+  getTabsTreeData: () => T.TabsTreeData
+  getActivePanelConfig: () => T.PanelConfig | undefined
   switchToPanel: typeof SidebarFg.switchToPanel
   stopDrag: () => void
-  setDragInfo: (dragInfo: DragInfo) => void
-  getGroupInfo: (groupTabId: ID) => Promise<GroupInfo | null>
+  setDragInfo: (dragInfo: T.DragInfo) => void
+  getGroupInfo: (groupTabId: ID) => Promise<T.GroupInfo | null>
   handleReopening: (tabId: ID, dstContainerId?: string) => Promise<number | undefined>
 
   loadFavicons: () => void
@@ -107,16 +116,16 @@ export type SidebarActions = {
   onOutsideEditingExit: () => void
   onOutsideEditingEnter: () => void
 
-  moveTabsToThisWin: (tabs: Tab[], dst?: DstPlaceInfo) => Promise<boolean>
-  openTabs: (items: ItemInfo[], dst: DstPlaceInfo) => Promise<boolean>
+  moveTabsToThisWin: (tabs: T.Tab[], dst?: T.DstPlaceInfo) => Promise<boolean>
+  openTabs: (items: T.ItemInfo[], dst: T.DstPlaceInfo) => Promise<boolean>
   moveTabToPanelViaOmnibox: typeof TabsFg.moveTabToPanelViaOmnibox
   moveTabToGroupViaOmnibox: typeof TabsFg.moveTabToGroupViaOmnibox
 
-  notify: (config: Notification, timeout?: number) => void
+  notify: (config: T.Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
   notifyAboutWrongProxyAuthData: (containerId: string) => void
 
-  storageChanged: (newValues: Stored) => void
+  storageChanged: (newValues: T.Stored) => void
   connectTo: (dstType: E.InstanceType, dstWinId?: ID, dstTabId?: ID) => void
 
   getSearchQuery: () => string
@@ -138,6 +147,11 @@ export type PreviewActions = {
   close: () => void
 }
 
+export type GroupPageActions = {
+  ready?: any
+  update: typeof GroupPage.onGroupUpdMsg
+}
+
 export type Actions =
   | BgActions
   | SettingsActions
@@ -146,6 +160,7 @@ export type Actions =
   | EditingPopupAction
   | PreviewActions
   | PanelConfigPopupActions
+  | GroupPageActions
 
 export type ActionsKeys<T> = T extends E.InstanceType.bg
   ? keyof BgActions
@@ -161,7 +176,9 @@ export type ActionsKeys<T> = T extends E.InstanceType.bg
             ? keyof PreviewActions
             : T extends E.InstanceType.panelConfig
               ? keyof PanelConfigPopupActions
-              : never
+              : T extends E.InstanceType.group
+                ? keyof GroupPageActions
+                : never
 
 export type ActionsType<T> = T extends E.InstanceType.bg
   ? BgActions
@@ -177,4 +194,6 @@ export type ActionsType<T> = T extends E.InstanceType.bg
             ? PreviewActions
             : T extends E.InstanceType.panelConfig
               ? PanelConfigPopupActions
-              : any
+              : T extends E.InstanceType.group
+                ? GroupPageActions
+                : any

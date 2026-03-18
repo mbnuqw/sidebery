@@ -10,6 +10,7 @@ export interface BgWindow extends browser.windows.Window {
   tabs: BgTab[]
   activeTabId: ID
   activePanelId: ID
+  created?: number
 }
 
 export interface WindowChooseOption {

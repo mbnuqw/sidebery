@@ -1,3 +1,4 @@
+import type { Stored } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as Windows from 'src/services/windows.bg'
 import * as Settings from 'src/services/settings'
@@ -93,4 +94,13 @@ export async function updateWindowStyles(
   waitingForWinStyles.delete(winId)
 
   return newWinStyles
+}
+
+export async function loadCustomGroupCSS(): Promise<string | undefined> {
+  let stored = await browser.storage.managed.get<Stored>('groupCSS').catch(() => undefined)
+  if (!stored?.groupCSS) {
+    stored = await browser.storage.local.get<Stored>('groupCSS').catch(() => undefined)
+  }
+
+  return stored?.groupCSS
 }

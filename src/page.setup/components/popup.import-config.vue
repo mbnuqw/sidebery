@@ -70,7 +70,6 @@
 import type { PropType } from 'vue'
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { BackupData, Stored, Snapshot, NormalizedSnapshot } from 'src/types'
-import { DEFAULT_CONTAINER } from 'src/defaults'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import * as Info from 'src/services/info'
@@ -78,7 +77,6 @@ import * as Store from 'src/services/storage.fg'
 import * as Permissions from 'src/services/permissions.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Styles from 'src/services/styles.fg'
-import * as Containers from 'src/services/containers.fg'
 import * as Settings from 'src/services/settings.fg'
 import * as Logs from 'src/services/logs'
 import * as Favicons from 'src/services/favicons.fg'
@@ -255,7 +253,7 @@ async function importData(): Promise<void> {
   state.importing = true
 
   let backup = Utils.cloneObject(props.importedData)
-  let containersIds: OldNewIds | undefined
+  let containersIds: IdMap | undefined
   let noErrors = true
 
   if (state.settings) {
@@ -425,41 +423,10 @@ function requestPermissions(): void {
   })
 }
 
-type OldNewIds = Record<string, string>
-async function importContainers(backup: BackupData): Promise<OldNewIds> {
+type IdMap = Record<string, string>
+async function importContainers(backup: BackupData): Promise<IdMap> {
   if (!backup.containers) throw 'No containers data'
-
-  let ffContainers = await browser.contextualIdentities.query({})
-  let storage = await browser.storage.local.get<Stored>({ containers: {} })
-  if (!storage.containers) storage.containers = {}
-
-  const oldNewContainersMap: OldNewIds = {}
-
-  for (let ctr of Object.values(Utils.cloneObject(backup.containers))) {
-    let ffCtr = ffContainers.find(c => {
-      return c.name === ctr.name && c.icon === ctr.icon && c.color === ctr.color
-    })
-
-    ctr = Utils.recreateNormalizedObject(ctr, DEFAULT_CONTAINER)
-
-    if (!ffCtr) {
-      ffCtr = await browser.contextualIdentities.create({
-        name: ctr.name,
-        color: ctr.color,
-        icon: ctr.icon,
-      })
-    }
-    if (!ffCtr) continue
-
-    oldNewContainersMap[ctr.id] = ffCtr.cookieStoreId
-    ctr.id = ffCtr.cookieStoreId
-    storage.containers[ctr.id] = ctr
-  }
-
-  Containers.updateContainers(storage.containers)
-  await Containers.saveContainers()
-
-  return oldNewContainersMap
+  return await IPC.bg('importContainers', backup.containers).catch(() => ({}))
 }
 
 async function importSettings(backup: BackupData) {
@@ -472,7 +439,7 @@ async function importSettings(backup: BackupData) {
   }
 }
 
-async function importSidebar(backup: BackupData, containersIds: OldNewIds = {}) {
+async function importSidebar(backup: BackupData, containersIds: IdMap = {}) {
   if (!backup.sidebar) return
 
   await SidebarConfig.loadSidebarConfig()
@@ -499,7 +466,7 @@ async function importSidebar(backup: BackupData, containersIds: OldNewIds = {}) 
   for (const id of nav) {
     const panel = panels[id]
     if (Utils.isTabsPanel(panel)) {
-      // Update recreated contianers ids or 'none' (if containers is not imported)
+      // Update recreated contianer ids or 'none' (if container is not imported)
       panel.newTabCtx = containersIds[panel.newTabCtx] ?? 'none'
 
       // Update container ids in moveRules

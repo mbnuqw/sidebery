@@ -41,7 +41,11 @@ void (function () {
     },
     permissions: {},
     runtime: {
-      getURL: (path: string) => 'moz-extension://blablabla/' + path,
+      getURL: (path: string) => {
+        const base = 'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579'
+        if (path.startsWith('/')) return base + path
+        else return base + '/' + path
+      },
       sendMessage: (msg: any) => MsgHandlers.map(h => h(msg)),
       getManifest: () => manifest,
       connect: (connectInfo: browser.runtime.ConnectInfo): browser.runtime.Port => {

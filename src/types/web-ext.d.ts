@@ -659,7 +659,7 @@ declare namespace browser {
 
     interface UpdateDetails {
       name?: string
-      color?: string
+      color?: ColorName
       icon?: string
     }
 

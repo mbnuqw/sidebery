@@ -1,4 +1,6 @@
-import * as E from 'src/enums'
+import type * as E from 'src/enums'
+import type * as D from 'src/defaults'
+import type { ParsedTheme } from 'src/services/styles'
 
 export type NativeTab = browser.tabs.Tab
 
@@ -40,6 +42,9 @@ export interface Tab extends NativeTab {
 
   reactive: ReactiveTabProps
   sessionData?: TabSessionData
+
+  // ch?: BroadcastChannel
+  // chId?: string
 
   titleEl?: HTMLElement
   favImgEl?: HTMLImageElement
@@ -90,9 +95,13 @@ export interface BgTab extends NativeTab {
 
   internal?: boolean
   isGroup?: boolean
+  isPlaceholder?: boolean
   proxified?: boolean
   preventAutoReopening?: boolean
   reloadOnActivation?: boolean
+
+  // ch?: BroadcastChannel
+  // chId?: string
 }
 
 export interface InlineTabData {
@@ -137,6 +146,29 @@ export interface NewTabPosition {
   unread?: boolean
 }
 
+export interface GroupPageInitData {
+  theme?: (typeof D.SETTINGS_OPTIONS.theme)[number]
+  parsedTheme?: ParsedTheme
+  frameColorScheme?: 'dark' | 'light'
+  toolbarColorScheme?: 'dark' | 'light'
+  customCSS?: string
+  groupLayout?: (typeof D.SETTINGS_OPTIONS.groupLayout)[number]
+  animations?: boolean
+  groupInfo?: GroupInfo | null
+  newTabPos?: 'first_child' | 'last_child'
+  winId?: ID
+  tabId?: ID
+  labels?: Record<string, string>
+}
+
+export interface GroupInfo {
+  id?: ID
+  tabs: GroupedTabInfo[]
+  favicons: Record<string, string>
+  parentId?: ID
+  pin?: GroupPin
+}
+
 export interface GroupedTabInfo {
   id: ID
   index: number
@@ -145,7 +177,6 @@ export interface GroupedTabInfo {
   url: string
   discarded: boolean
   favIconUrl?: string
-  status?: string
   el?: HTMLElement
   bgEl?: HTMLElement
   favEl?: HTMLElement
@@ -167,19 +198,27 @@ export interface GroupPin {
   urlEl?: HTMLElement | null
 }
 
-export interface GroupInfo {
-  id?: ID
-  index?: number
-  len: number
-  tabs: GroupedTabInfo[]
+export interface GroupUpdMsg {
+  windowId?: ID
   parentId?: ID
+  title?: string
+  tabs?: GroupedTabInfo[]
   pin?: GroupPin
+  createdTab?: GroupedTabInfo
+  updatedTab?: GroupedTabInfo
+  updatedTabs?: GroupedTabInfo[]
+  removedTab?: ID
 }
 
-export interface GroupConfig {
+export interface NewGroupUrlConfig {
+  pinUrl?: string
+  pinCtr?: string
+}
+
+export interface NewGroupConfig {
   title?: string
   active?: boolean
-  pin?: string
+  // pinParam?: string
   pinnedTab?: Tab
 }
 
@@ -193,6 +232,11 @@ export interface SavedGroup {
   url: string
   prevTab?: ID
   nextTab?: ID
+}
+
+export interface PlaceholderInfo {
+  url: string
+  title?: string
 }
 
 /**

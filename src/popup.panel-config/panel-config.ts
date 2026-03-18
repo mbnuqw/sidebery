@@ -39,22 +39,19 @@ async function main(): Promise<void> {
     connectTo: IPC.connectTo,
   })
 
-  await Promise.all([
-    Settings.load(),
-    Windows.load(),
-    Containers.load(),
-    SidebarConfig.loadSidebarConfig(),
-  ])
+  await Promise.all([Settings.load(), Windows.load(), SidebarConfig.loadSidebarConfig()])
 
   IPC.setWinId(Windows.id)
   Logs.setWinId(Windows.id)
 
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
+  IPC.connectTo(E.InstanceType.bg)
 
   const app = createApp(Root)
   app.mount('#root_container')
 
+  Containers.load()
   Styles.load()
 
   Settings.setupSettingsChangeListener()
@@ -64,7 +61,5 @@ async function main(): Promise<void> {
   Permissions.setupListeners()
 
   Favicons.load()
-
-  IPC.connectTo(E.InstanceType.bg)
 }
 main()

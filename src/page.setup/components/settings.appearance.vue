@@ -16,6 +16,7 @@ section(ref="el")
     v-model:value="Settings.state.fontFamily"
     dbg="fontFamily"
     :default="DEFAULT_SETTINGS.fontFamily"
+    :line="true"
     @update:value="Settings.saveDebounced(500)")
   ToggleField(
     label="settings.animations"

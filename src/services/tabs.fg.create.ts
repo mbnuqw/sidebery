@@ -1,5 +1,5 @@
 import { DragInfo, DstPlaceInfo, ItemInfo, Panel, Tab, TabsPanel } from 'src/types'
-import { PanelType } from 'src/enums'
+import { DstTreePos, PanelType } from 'src/enums'
 import * as D from 'src/defaults'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Tabs from 'src/services/tabs.fg'
@@ -405,6 +405,20 @@ export async function open(
   let fallbackIndex: number | undefined
   if (Utils.isTabsPanel(dstPanel)) {
     fallbackIndex = dstPanel.nextTabIndex
+  }
+
+  // Get dst index if dst.pos is set
+  if (dst.index === undefined && dst.pos !== undefined && Utils.isTabsPanel(dstPanel)) {
+    const parent = Tabs.byId[dst.parentId ?? D.NOID]
+    if (parent) {
+      if (dst.pos === DstTreePos.Start) dst.index = parent.index + 1
+      else if (dst.pos === DstTreePos.End) {
+        dst.index = parent.index + (Tabs.getBranchLen(parent.id) ?? 0) + 1
+      }
+    } else {
+      if (dst.pos === DstTreePos.Start) dst.index = dstPanel.startTabIndex
+      else if (dst.pos === DstTreePos.End) dst.index = dstPanel.nextTabIndex
+    }
   }
 
   let index: number | undefined

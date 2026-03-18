@@ -1,4 +1,4 @@
-import type { Stored, Container } from 'src/types'
+import type { Container, NewContainerConf } from 'src/types'
 import * as Utils from 'src/utils'
 import * as Store from 'src/services/storage.fg'
 import * as Logs from 'src/services/logs'
@@ -7,41 +7,102 @@ import * as Info from 'src/services/info'
 import * as Settings from 'src/services/settings'
 import * as Tabs from './tabs.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
+import * as IPC from 'src/services/ipc'
 
 import * as Containers from './containers'
 export * from 'src/services/containers'
 
 export async function load(): Promise<void> {
   Logs.info('Containers.load')
-  const storage = await browser.storage.local.get<Stored>('containers')
-  if (storage.containers) {
-    Containers.reactive.byId = storage.containers
+  const ts = performance.now()
+  setupListeners()
+
+  try {
+    Containers.reactive.byId = await IPC.bg('getContainers')
+  } catch (err) {
+    Logs.err('Containers.load: Cannot load containers:', err)
+    Containers.reactive.byId = {}
+  }
+  if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
     Menu.parseContainersRules()
   }
+
+  Logs.info('Containers.load: Done:', performance.now() - ts)
 }
 
-let saveContainersTimeout: number | undefined
-export async function saveContainers(delay?: number): Promise<void> {
-  Logs.info('Containers.fg.saveContainers')
-  clearTimeout(saveContainersTimeout)
+let creating: string | undefined
+export async function create(c: NewContainerConf) {
+  creating = c.name
+  const container = await IPC.bg('createContainer', c, IPC.getInfo()).finally(() => {
+    creating = undefined
+  })
+  Containers.reactive.byId[container.id] = container
 
-  if (!delay) {
-    return Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
-  } else {
-    saveContainersTimeout = setTimeout(() => {
-      Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
-    }, delay)
+  // Update context menu
+  if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
+    Menu.parseContainersRules()
+  }
+
+  return container
+}
+
+export async function remove(id: string) {
+  await IPC.bg('removeContainer', id, IPC.getInfo())
+  const ctr = Containers.reactive.byId[id]
+  delete Containers.reactive.byId[id]
+
+  if (Info.isSidebar && ctr) {
+    onContainerRemoved(ctr)
   }
 }
 
-export function updateContainers(newContainers?: Record<ID, Container> | null) {
-  Logs.info('Containers.fg.updateContainers')
-  clearTimeout(saveContainersTimeout)
+let saveContainerTimeout: number | undefined
+let containersToSave: Record<string, Container> = {}
+export async function saveContainer(container: Container, delay?: number) {
+  clearTimeout(saveContainerTimeout)
+
+  containersToSave[container.id] = container
+
+  if (!delay) {
+    const cts = Utils.clone(containersToSave)
+    containersToSave = {}
+    await IPC.bg('setContainers', cts, IPC.getInfo())
+  } else {
+    saveContainerTimeout = setTimeout(() => {
+      saveContainerTimeout = undefined
+      IPC.bg('setContainers', Utils.clone(containersToSave), IPC.getInfo())
+      containersToSave = {}
+    })
+  }
+}
+
+function setupListeners(): void {
+  // Handle onCreated event in sidebar, even though it will be received with
+  // Store.onKeyChange later. This is needed b/c Sidebery need to get that
+  // info ASAP to correctly handle new tabs of just created container.
+  if (Info.isSidebar) {
+    browser.contextualIdentities.onCreated.addListener(onContainerCreated)
+  }
+  Store.onKeyChange('containers', onStoredContainersUpdated)
+}
+
+function onContainerCreated(info: browser.contextualIdentities.ChangeInfo) {
+  const container = info.contextualIdentity
+  // Container is created by Sidebery (most likely), skip
+  if (creating === container.name) return
+
+  Containers.onContainerCreated(info)
+  // Other stuff will be updated/recalculated in onStoredContainersUpdated
+}
+
+export async function onStoredContainersUpdated(newContainers?: Record<ID, Container> | null) {
+  clearTimeout(saveContainerTimeout)
 
   if (!newContainers) return
   const oldContainers = Containers.reactive.byId
   Containers.reactive.byId = newContainers
 
+  // Update context menu
   if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
     Menu.parseContainersRules()
   }
@@ -61,19 +122,18 @@ export function updateContainers(newContainers?: Record<ID, Container> | null) {
       }
     }
   }
-}
 
-export function setupListeners(): void {
+  // Handle removed containers
   if (Info.isSidebar) {
-    browser.contextualIdentities.onCreated.addListener(Containers.onContainerCreated)
+    for (const id of Object.keys(oldContainers)) {
+      if (newContainers[id]) continue
+      await onContainerRemoved(oldContainers[id])
+    }
   }
-  browser.contextualIdentities.onRemoved.addListener(onContainerRemoved)
-  Store.onKeyChange('containers', updateContainers)
 }
 
-async function onContainerRemoved(info: browser.contextualIdentities.ChangeInfo): Promise<void> {
-  Logs.info('Containers.fg.onContainerRemoved:', info)
-  const id = info.contextualIdentity.cookieStoreId
+async function onContainerRemoved(ctr: Container): Promise<void> {
+  const id = ctr.id
   let moveRulesRecalcNeeded = false
 
   for (const panel of Sidebar.panels) {

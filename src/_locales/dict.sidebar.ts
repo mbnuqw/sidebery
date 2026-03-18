@@ -37,7 +37,10 @@ export const sidebarTranslations: Translations = {
         ? 'Voulez-vous vraiment fermer un onglet?'
         : `Voulez-vous vraiment fermer ${n} onglets?`,
     hu: n => `Biztosan bezárható a lap: „${n}”?`,
-    pl: n => `jesteś pewnien, że chcesz zamknąć karty ${n}?`,
+    pl: n =>
+      NUM_234_RE.test(n?.toString() ?? '?')
+        ? `Czy na pewno zamknąć ${n} karty?`
+        : `Czy na pewno zamknąć ${n} kart?`,
     ru: n =>
       NUM_234_RE.test(n?.toString() ?? '?')
         ? `Вы действительно хотите закрыть ${n} вкладки?`

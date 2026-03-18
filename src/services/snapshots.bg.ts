@@ -290,13 +290,7 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
 
     // Create new container
     if (!currentContainer) {
-      const newContainer = await Containers.create(container.name, container.color, container.icon)
-      newContainer.proxified = container.proxified
-      newContainer.proxy = container.proxy
-      newContainer.reopenRulesActive = container.reopenRulesActive
-      newContainer.reopenRules = Utils.cloneArray(container.reopenRules)
-      newContainer.userAgentActive = container.userAgentActive
-      newContainer.userAgent = container.userAgent
+      const newContainer = await Containers.create(Utils.clone(container))
       oldNewIds[container.id] = newContainer.id
     }
 

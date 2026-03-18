@@ -21,15 +21,6 @@ export function reactivate(r: Reactivator<ContainersState>) {
   reactive = r(reactive)
 }
 
-export async function create(name: string, color: string, icon: string): Promise<Container> {
-  Logs.info('Containers.create:', name, color, icon)
-  const newRawContainer = await browser.contextualIdentities.create({ name, color, icon })
-  const newContainer = Utils.recreateNormalizedObject(newRawContainer, DEFAULT_CONTAINER)
-  newContainer.id = newRawContainer.cookieStoreId
-  Containers.reactive.byId[newContainer.id] = newContainer
-  return newContainer
-}
-
 /**
  * Get Container Props ID
  */
@@ -131,7 +122,7 @@ export function sortContainers(containers: Container[]): Container[] {
 }
 
 export function onContainerCreated(info: browser.contextualIdentities.ChangeInfo): void {
-  Logs.info('Containers.onContainerCreated:', info)
+  // Logs.info('Containers.onContainerCreated:', info)
   const ffContainer = info.contextualIdentity
   const id = ffContainer.cookieStoreId
   const existedContainer = Containers.reactive.byId[id]

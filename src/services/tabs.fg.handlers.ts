@@ -4,7 +4,6 @@ import * as D from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import * as Windows from 'src/services/windows.fg'
-import * as Bookmarks from 'src/services/bookmarks.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Settings from 'src/services/settings'
@@ -12,7 +11,7 @@ import * as Sidebar from 'src/services/sidebar.fg'
 import * as Favicons from 'src/services/favicons.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Tabs from 'src/services/tabs.fg'
-import * as IPC from 'src/services/ipc'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Preview from 'src/services/tabs.fg.preview'
 import * as Search from 'src/services/search.fg'
 import * as Containers from 'src/services/containers'
@@ -24,6 +23,7 @@ const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 const NEWTAB_URL = browser.extension.inIncognitoContext ? 'about:privatebrowsing' : 'about:newtab'
 
+export let listenersAreSet = false
 export function setupTabsListeners(): void {
   if (!Sidebar.hasTabs) return
 
@@ -40,6 +40,7 @@ export function setupTabsListeners(): void {
   browser.tabs.onDetached.addListener(onTabDetached)
   browser.tabs.onAttached.addListener(onTabAttached)
   browser.tabs.onActivated.addListener(onTabActivated)
+  listenersAreSet = true
 }
 
 export function resetTabsListeners(): void {
@@ -50,6 +51,7 @@ export function resetTabsListeners(): void {
   browser.tabs.onDetached.removeListener(onTabDetached)
   browser.tabs.onAttached.removeListener(onTabAttached)
   browser.tabs.onActivated.removeListener(onTabActivated)
+  listenersAreSet = false
 }
 
 let waitForOtherReopenedTabsTimeout: number | undefined
@@ -240,6 +242,10 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   }
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
+  if (Tabs.byId[nativeTab.id]) {
+    Logs.warn('Tabs.onTabCreated: Already added', nativeTab.id)
+    return Tabs.reinitTabs()
+  }
 
   // Logs.info('Tabs.onTabCreated:', nativeTab.id, nativeTab.index, nativeTab.url, nativeTab.title)
 
@@ -247,7 +253,6 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   Selection.resetSelection()
 
   let panel, index, reopenedTabInfo, reopenedTabPanel, createGroup, autoGroupTab
-  let initialOpenerSpec = ''
   const initialOpenerId = nativeTab.openerTabId
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
@@ -266,16 +271,8 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   }
 
   // Check if opener tab is pinned
-  if (
-    Settings.state.pinnedAutoGroup &&
-    initialOpener &&
-    initialOpener.pinned &&
-    Settings.state.tabsTree
-  ) {
-    initialOpenerSpec = encodeURIComponent(initialOpener.cookieStoreId + '::' + initialOpener.url)
-    autoGroupTab = Tabs.list.find(t => {
-      return t.isGroup && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
-    })
+  if (Settings.state.pinnedAutoGroup && initialOpener?.pinned && Settings.state.tabsTree) {
+    autoGroupTab = Tabs.findGroupTabBoundToPinnedTab(initialOpener)
     if (autoGroupTab) {
       tab.openerTabId = autoGroupTab.id
       tab.autoGroupped = true
@@ -564,18 +561,8 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     if (!attached) {
       const groupTab = Tabs.getGroupTab(tab)
       if (groupTab && !groupTab.discarded) {
-        IPC.groupPage(groupTab.id, {
-          index: groupTab.index,
-          createdTab: {
-            id: tab.id,
-            index: tab.index,
-            lvl: tab.lvl - groupTab.lvl - 1,
-            title: tab.title,
-            url: tab.url,
-            discarded: !!tab.discarded,
-            favIconUrl: tab.favIconUrl,
-          },
-        })
+        const createdTab = Tabs.getGroupedTabInfo(tab, groupTab)
+        IPPC.callGroupPage(groupTab, 'update', { createdTab })
       }
     }
 
@@ -610,12 +597,7 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
 
   if (createGroup && !tab.pinned && initialOpener) {
     waitForNewTabMove().then(() => {
-      Tabs.groupTabs([tab.id], {
-        active: false,
-        title: initialOpener.title,
-        pin: initialOpenerSpec,
-        pinnedTab: initialOpener,
-      })
+      Tabs.groupTabs([tab.id], { title: initialOpener.title, pinnedTab: initialOpener })
     })
   }
 
@@ -786,8 +768,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
           panel.reactive.updated = panel.updatedTabs.length > 0
         }
       }
-      const groupTab = Tabs.getGroupTab(tab)
-      if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, nativeTab.id)
 
       if (!tab.favIconUrl && change.favIconUrl === undefined) {
         change.favIconUrl = Favicons.getFavicon(tab.url)
@@ -800,6 +780,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       if (change.discarded) browser.tabs.hide?.([tabId])
       else browser.tabs.show?.([tabId])
     }
+
+    // Update group
+    const groupTab = Tabs.getGroupTab(tab)
+    if (groupTab && !groupTab.discarded) Tabs.updateGroupOrItsChild(groupTab, nativeTab.id)
   }
 
   // Status change
@@ -831,6 +815,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     tab.internal = isInternal
     Tabs.cacheTabsData()
 
+    // Hash messaging
+    if (isGroup && tab.cookieStoreId !== D.DEFAULT_CONTAINER_ID && change.url.endsWith('!s!~')) {
+      IPPC.onHashMsg(tab, change.url)
+    }
+
     // Reset favicon (to cached)
     if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
       change.favIconUrl = Favicons.getFavicon(change.url)
@@ -840,9 +829,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     if (tab.pinned && tab.relGroupId !== undefined) {
       const groupTab = Tabs.byId[tab.relGroupId]
       if (groupTab) {
-        const pinProp = encodeURIComponent(tab.cookieStoreId + '::' + change.url)
-        const groupUrl = Utils.createGroupUrl(tab.title, { pin: pinProp })
-
+        const groupUrl = Utils.createGroupUrl(tab.title, change.url, tab.cookieStoreId)
         browser.tabs.update(groupTab.id, { url: groupUrl }).catch(err => {
           Logs.err('Tabs.onTabUpdated: Cannot reload related group page:', err)
         })
@@ -882,6 +869,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     if (Search.active && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
       Search.searchDebounced(500)
     }
+
+    // Update group
+    const groupTab = Tabs.getGroupTab(tab)
+    if (groupTab && !groupTab.discarded) Tabs.updateGroupOrItsChild(groupTab, nativeTab.id)
   }
 
   // Handle Firefox internal favicon
@@ -944,6 +935,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     if (Search.active && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
       Search.searchDebounced(500)
     }
+
+    // Update group
+    const groupTab = Tabs.getGroupTab(tab)
+    if (groupTab && !groupTab.discarded) Tabs.updateGroupOrItsChild(groupTab, nativeTab.id)
   }
 
   // Reset mediaPaused flag
@@ -1413,7 +1408,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   // Update group page info
   const groupTab = Tabs.getGroupTab(tab)
   if (groupTab && !groupTab.discarded) {
-    IPC.groupPage(groupTab.id, { removedTab: tab.id })
+    IPPC.callGroupPage(groupTab, 'update', { removedTab: tab.id })
+  }
+
+  // Cleanup IPPC
+  if (tab.isGroup) {
+    IPPC.reset(tab)
   }
 
   if (Preview.state.status === Preview.Status.Open && Preview.state.targetTabId === tabId) {

@@ -1,6 +1,7 @@
 import * as E from 'src/enums'
 import { NOID } from 'src/defaults'
 import * as IPC from 'src/services/ipc'
+import * as IPPC from 'src/services/ippc.addon'
 import * as Logs from 'src/services/logs'
 import * as Settings from 'src/services/settings.bg'
 import * as Windows from 'src/services/windows.bg'
@@ -19,8 +20,11 @@ import * as Omnibox from 'src/services/omnibox.bg'
 import * as Styles from 'src/services/styles.bg'
 
 void (async function main() {
+  markLocalStorage()
+
   Info.setInstanceType(E.InstanceType.bg)
   IPC.setInstanceType(E.InstanceType.bg)
+  IPPC.setInstanceType(E.InstanceType.bg)
   Logs.setInstanceType(E.InstanceType.bg)
 
   const ts = performance.now()
@@ -30,6 +34,7 @@ void (async function main() {
   IPC.registerActions({
     cacheTabsData: Tabs.cacheTabsData,
     getGroupPageInitData: Tabs.getGroupPageInitData,
+    getPlaceholderPageInitData: Tabs.getPlaceholderPageInitData,
     tabsApiProxy: Tabs.tabsApiProxy,
     getSidebarTabs: Tabs.getSidebarTabs,
     detachSidebarTabs: Tabs.detachSidebarTabs,
@@ -57,6 +62,12 @@ void (async function main() {
     removeCachedIdFromGoogleSync: Sync.Google.removeCachedId,
     getDataFromSync: Sync.getData,
     loadSync: Sync.load,
+
+    getContainers: Containers.getContainers,
+    setContainers: Containers.setContainers,
+    createContainer: Containers.createAndSave,
+    removeContainer: Containers.removeAndSave,
+    importContainers: Containers.importContainers,
   })
 
   // Init first-need stuff
@@ -66,7 +77,6 @@ void (async function main() {
 
   Info.saveVersion()
   Windows.setupWindowsListeners()
-  Containers.setupListeners()
   Settings.setupSettingsChangeListener()
 
   await Sidebar.load()
@@ -138,4 +148,8 @@ function initToolbarButton(): void {
     if (info && info.button === 1) browser.runtime.openOptionsPage()
     else browser.sidebarAction.toggle()
   })
+}
+
+function markLocalStorage() {
+  localStorage.setItem('sdbr', '+')
 }

@@ -89,6 +89,6 @@ export async function set(newValues: Stored, delay?: number): Promise<void> {
     storageBuf = {}
   }, delay)
 }
-export function setFromRemoteFg(newValues: Stored, srcInfo: IPCNodeInfo): void {
-  _set(newValues, srcInfo)
+export function setFromRemoteFg(newValues: Stored, srcInfo: IPCNodeInfo) {
+  return _set(newValues, srcInfo)
 }

@@ -41,10 +41,10 @@ section(ref="el")
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import type { Container } from 'src/types'
-import { DEFAULT_CONTAINER, DEFAULT_SETTINGS } from 'src/defaults'
+import { DEFAULT_SETTINGS } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import * as SetupPage from 'src/services/setup-page.fg'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups.fg'
@@ -62,19 +62,11 @@ onMounted(() => SetupPage.registerEl('settings_containers', el.value))
  */
 async function createContainer(): Promise<void> {
   let containersCount = Object.keys(Containers.reactive.byId).length
-  const newFFContainer = await browser.contextualIdentities.create({
+  const container = await Containers.create({
     name: `New Container ${containersCount + 1}`,
     color: 'blue',
     icon: 'fingerprint',
   })
-  const container = Utils.cloneObject(DEFAULT_CONTAINER)
-  container.cookieStoreId = newFFContainer.cookieStoreId
-  container.id = newFFContainer.cookieStoreId
-  container.name = newFFContainer.name
-  container.icon = newFFContainer.icon
-  container.color = newFFContainer.color
-  Containers.reactive.byId[newFFContainer.cookieStoreId] = container
-
   SetupPage.reactive.selectedContainer = container
 }
 
@@ -83,15 +75,13 @@ async function createContainer(): Promise<void> {
  */
 async function removeContainer(container: Container): Promise<void> {
   if (window.confirm(translate('settings.container_remove_confirm', container.name))) {
-    let navSaveNeeded = false
     try {
-      await browser.contextualIdentities.remove(container.id)
+      await Containers.remove(container.id)
     } catch (err) {
       return Logs.err('Cannot remove container', err)
     }
 
-    delete Containers.reactive.byId[container.id]
-
+    let navSaveNeeded = false
     for (let panelConf of Object.values(SidebarConf.reactive.panels)) {
       if (!Utils.isTabsPanel(panelConf)) continue
       if (panelConf.newTabCtx === container.id) {

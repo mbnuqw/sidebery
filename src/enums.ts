@@ -24,6 +24,11 @@ export const enum BkmType {
   Separator = 3,
 }
 
+export const enum DstTreePos {
+  Start = 1,
+  End = 2,
+}
+
 // ---
 // -- Popups
 // -

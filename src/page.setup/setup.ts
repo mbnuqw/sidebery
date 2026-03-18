@@ -53,7 +53,6 @@ async function main(): Promise<void> {
   await Promise.all([
     Windows.load(),
     Settings.load().then(() => Styles.load()),
-    Containers.load(),
     Keybindings.load(),
     Info.loadVersionInfo(),
     Info.loadCurrentTabInfo(),
@@ -65,12 +64,16 @@ async function main(): Promise<void> {
   Logs.setWinId(Windows.id)
   Logs.setTabId(Info.currentTabId)
 
+  IPC.connectTo(E.InstanceType.bg)
+  IPC.setupGlobalMessageListener()
+
   const app = createApp(Root)
   app.mount('#root_container')
   Logs.info(`Init: app.mount: ${performance.now() - ts}ms`)
 
   Settings.setupSettingsChangeListener()
 
+  await Containers.load()
   await SidebarConfig.loadSidebarConfig()
   SidebarConfig.setupSidebarConfigListeners()
   Styles.loadCustomCSS()
@@ -78,8 +81,6 @@ async function main(): Promise<void> {
   Permissions.load()
   Permissions.setupListeners()
   Favicons.load()
-  IPC.connectTo(E.InstanceType.bg)
-  IPC.setupGlobalMessageListener()
 
   SetupPage.finishInitialization()
   SetupPage.calcStorageInfo()

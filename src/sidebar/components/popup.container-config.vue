@@ -42,7 +42,7 @@ import type { TextInputComponent, Container } from 'src/types'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as SetupPage from 'src/services/setup-page.fg'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import * as Popups from 'src/services/popups.fg'
 import TextInput from 'src/components/text-input.vue'
 import SelectInput from 'src/components/select-input.vue'
@@ -86,19 +86,14 @@ async function onSave(): Promise<void> {
 
   if (!valid.value) return
 
-  let container = Containers.reactive.byId[Popups.reactive.containerConfigPopup.id]
+  let container = Containers.reactive.byId[popup.id]
   if (container) {
-    container.name = Popups.reactive.containerConfigPopup.name
-    container.icon = Popups.reactive.containerConfigPopup.icon
-    container.color = Popups.reactive.containerConfigPopup.color
-
-    await browser.contextualIdentities.update(container.id, {
-      name: Popups.reactive.containerConfigPopup.name,
-      icon: Popups.reactive.containerConfigPopup.icon,
-      color: Popups.reactive.containerConfigPopup.color,
-    })
+    if (popup.name !== container.name) container.name = popup.name
+    if (popup.icon !== container.icon) container.icon = popup.icon
+    if (popup.color !== container.color) container.color = popup.color
+    await Containers.saveContainer(container)
   } else {
-    container = await Containers.create(popup.name, popup.color, popup.icon)
+    container = await Containers.create({ name: popup.name, color: popup.color, icon: popup.icon })
   }
 
   Popups.reactive.containerConfigPopup.done(container.id)
