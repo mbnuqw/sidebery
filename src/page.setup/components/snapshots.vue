@@ -285,7 +285,7 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
       const oldNewIds: Record<ID, ID> = {}
       for (const item of items) {
         const conf: browser.tabs.CreateProperties = {
-          url: Utils.normalizeUrl(item.url, item.title),
+          url: Utils.sanitizeUrl(item.url, item.title),
           windowId: Windows.id,
           active: false,
           cookieStoreId: item.container,

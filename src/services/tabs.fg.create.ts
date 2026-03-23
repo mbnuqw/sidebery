@@ -235,7 +235,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
     } else {
       const conf: browser.tabs.CreateProperties = {
         active: Settings.state.dndActTabFromLink,
-        url: Utils.normalizeUrl(result.url),
+        url: Utils.sanitizeUrl(result.url),
         index: dst.index,
         cookieStoreId: container?.id,
         windowId: Windows.id,
@@ -472,7 +472,7 @@ export async function open(
       index: index,
       url: groupCreationNeeded
         ? Utils.createGroupUrl(item.title)
-        : Utils.normalizeUrl(item.url, item.title),
+        : Utils.sanitizeUrl(item.url, item.title),
       windowId: Windows.id,
       pinned: dst.pinned,
       active: !!item.active,

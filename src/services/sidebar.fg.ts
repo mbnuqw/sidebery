@@ -2121,7 +2121,7 @@ export async function restoreFromBookmarks(panel: T.TabsPanel, silent?: boolean)
       const firstChild = node.children[0]
       if (Bookmarks.isFolderWithURL(node)) {
         rawUrl = firstChild.url
-        info.url = Utils.normalizeUrl(firstChild.url, info.title)
+        info.url = Utils.sanitizeUrl(firstChild.url, info.title)
         usedAsParent[firstChild.id] = true
       }
 
@@ -2135,7 +2135,7 @@ export async function restoreFromBookmarks(panel: T.TabsPanel, silent?: boolean)
 
     // Set url for bookmark node
     else {
-      info.url = Utils.normalizeUrl(node.url, info.title)
+      info.url = Utils.sanitizeUrl(node.url, info.title)
     }
 
     const isPinned = info.pinned

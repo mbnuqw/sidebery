@@ -33,8 +33,8 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.5.0) |
 [Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
 [Install](https://addons.mozilla.org/firefox/downloads/file/4688454/sidebery-5.5.0.xpi) (reviewed by Mozilla)  
-**Nightly** (v5.5.0.1):
-[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.5.0/sidebery-5.5.0.1.xpi)
+**Nightly** (v5.5.0.2):
+[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.5.0/sidebery-5.5.0.2.xpi)
 > [!NOTE]
 > Nightly release is a signed build created via [github actions](https://github.com/mbnuqw/sidebery/actions/workflows/nightly-release.yml). It supports an auto-updates and is designed for testing new features. A few previous nightly releases can be found in the Assets section of the latest [release notes](https://github.com/mbnuqw/sidebery/releases).
 >

@@ -149,7 +149,7 @@ function openCachedWindow(cache: T.TabCache[]) {
   for (const cachedTab of cache) {
     items.push({
       id: cachedTab.id,
-      url: Utils.denormalizeUrl(cachedTab.url),
+      url: Utils.restoreUrl(cachedTab.url),
       title: cachedTab.customTitle ?? cachedTab.url.replace(/^https?:\/\//, ''),
       parentId: cachedTab.parentId ?? D.NOID,
       panelId: cachedTab.panelId ?? D.NOID,
@@ -316,7 +316,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   if (change.url) {
     const isInternal = change.url.startsWith(D.ADDON_HOST)
     const isGroup = isInternal && Utils.isGroupUrl(change.url)
-    const isPlaceholder = isInternal && Utils.isUrlUrl(change.url)
+    const isPlaceholder = isInternal && Utils.isPlaceholderUrl(change.url)
     if (isGroup || isPlaceholder) {
       // Broadcast channel init
       if (
@@ -619,7 +619,7 @@ export async function initInternalPageScripts(tabs: T.BgTab[]) {
 
     if (tab.internal === undefined) tab.internal = tab.url.startsWith(D.ADDON_HOST)
     const isGroup = Utils.isGroupUrl(tab.url)
-    const isPlaceholder = Utils.isUrlUrl(tab.url)
+    const isPlaceholder = Utils.isPlaceholderUrl(tab.url)
 
     // Wrong addon ID - update url
     if (!tab.internal && isGroup) {
@@ -634,7 +634,7 @@ export async function initInternalPageScripts(tabs: T.BgTab[]) {
     if (!tab.internal && isPlaceholder) {
       const [_, urlUrlInfo] = tab.url.split('/url.html')
       if (!urlUrlInfo) continue
-      const urlUrl = D.URL_URL + urlUrlInfo
+      const urlUrl = D.PLACEHOLDER_URL + urlUrlInfo
       browser.tabs.update(tab.id, { url: urlUrl }).catch(err => {
         Logs.err('Tabs.initInternalPageScripts: Cannot update url url:', err)
       })
@@ -809,7 +809,7 @@ export async function reopenTab(tab: T.BgTab, url: string, cookieStoreId?: strin
 
   await browser.tabs.create({
     windowId: tab.windowId,
-    url: Utils.normalizeUrl(url),
+    url: Utils.sanitizeUrl(url),
     cookieStoreId,
     active: tab.active,
     index,

@@ -74,7 +74,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
       if (tab.customTitle) snapTab.customTitle = tab.customTitle
       if (tab.customColor) snapTab.customColor = tab.customColor
 
-      snapTab.url = Utils.denormalizeUrl(snapTab.url) ?? snapTab.url
+      snapTab.url = Utils.restoreUrl(snapTab.url) ?? snapTab.url
       snapTabsById[tab.id] = snapTab
 
       // Check panel
@@ -432,7 +432,7 @@ async function openWindow(
 
       const tabInfo: ItemInfo = {
         id: index++,
-        url: Utils.normalizeUrl(tab.url, tab.title),
+        url: Utils.sanitizeUrl(tab.url, tab.title),
         title: tab.title,
         parentId: NOID,
         folded: tab.folded,

@@ -1,5 +1,5 @@
 import { DataUriImage, Stored } from 'src/types'
-import { FILE_RE, GROUP_PATH, IMG_RE, MUS_RE, SETUP_PATH, URL_PATH, VID_RE } from 'src/defaults'
+import * as D from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 
@@ -120,15 +120,15 @@ export function getFavPlaceholder(url?: string): string {
   if (!url) return '#icon_ff'
 
   if (url.startsWith('m')) {
-    if (url.startsWith(GROUP_PATH, 52)) return '#icon_group'
-    if (url.startsWith(URL_PATH, 52)) return '#icon_link_favicon'
-    if (url.startsWith(SETUP_PATH, 52)) return '#icon_settings'
+    if (url.startsWith(D.GROUP_PATH, 52)) return '#icon_group'
+    if (url.startsWith(D.PLACEHOLDER_PATH, 52)) return '#icon_link_favicon'
+    if (url.startsWith(D.SETUP_PATH, 52)) return '#icon_settings'
   }
 
-  if (IMG_RE.test(url)) return '#icon_img'
-  if (VID_RE.test(url)) return '#icon_vid'
-  if (MUS_RE.test(url)) return '#icon_music'
-  if (FILE_RE.test(url)) return '#icon_local_file'
+  if (D.IMG_RE.test(url)) return '#icon_img'
+  if (D.VID_RE.test(url)) return '#icon_vid'
+  if (D.MUS_RE.test(url)) return '#icon_music'
+  if (D.FILE_RE.test(url)) return '#icon_local_file'
 
   if (url.startsWith('a')) {
     if (url.startsWith('about:new')) return '#icon_ff'

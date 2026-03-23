@@ -479,7 +479,7 @@ export async function open(
   if (!visit.url) return
 
   if (useActiveTab) {
-    browser.tabs.update({ url: Utils.normalizeUrl(visit.url, visit.title) })
+    browser.tabs.update({ url: Utils.sanitizeUrl(visit.url, visit.title) })
     return
   }
 

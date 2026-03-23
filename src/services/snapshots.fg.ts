@@ -282,8 +282,8 @@ export function updateInternalUrl(url: string): string {
   if (Utils.isGroupUrl(url)) {
     const newUrl = D.GROUP_URL + url.slice(D.GROUP_URL.length)
     url = newUrl
-  } else if (Utils.isUrlUrl(url)) {
-    const newUrl = D.URL_URL + url.slice(D.URL_URL.length)
+  } else if (Utils.isPlaceholderUrl(url)) {
+    const newUrl = D.PLACEHOLDER_URL + url.slice(D.PLACEHOLDER_URL.length)
     url = newUrl
   }
   return url

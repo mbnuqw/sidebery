@@ -731,7 +731,7 @@ export async function open(
 
     if (useActiveTab) {
       // TODO: undo
-      browser.tabs.update({ url: Utils.normalizeUrl(info.url, info.title) })
+      browser.tabs.update({ url: Utils.sanitizeUrl(info.url, info.title) })
       const activeTab = Tabs.byId[Tabs.activeId]
       if (info.customColor) Tabs.setCustomColor([Tabs.activeId], info.customColor)
       else if (activeTab && activeTab.customColor) Tabs.setCustomColor([Tabs.activeId], 'toolbar')
@@ -1281,14 +1281,14 @@ export async function createFrom(
 
         // Create bookmark of parent item
         if (item.url && !D.GROUP_RE.test(item.url)) {
-          const url = Utils.denormalizeUrl(item.url)
+          const url = Utils.restoreUrl(item.url)
           await browser.bookmarks.create({ title: item.title, url, parentId: folder.id })
         }
 
         continue
       }
 
-      const url = Utils.denormalizeUrl(item.url)
+      const url = Utils.restoreUrl(item.url)
       await browser.bookmarks.create({ title: item.title, url, parentId, index })
 
       if (progress) Notifications.updateProgress(progress, n++, items.length)
@@ -1297,7 +1297,7 @@ export async function createFrom(
     for (const t of items) {
       attachTabInfoToTitle(t)
       await browser.bookmarks.create({
-        url: Utils.denormalizeUrl(t.url),
+        url: Utils.restoreUrl(t.url),
         title: t.title,
         index: dstIndex++,
         parentId: dst.parentId,
@@ -1413,7 +1413,7 @@ export async function saveToFolder(
           }
           // Create bookmark
           else {
-            const url = Utils.denormalizeUrl(item.url)
+            const url = Utils.restoreUrl(item.url)
             const createConf = { title: item.title, url, index: 0, parentId: folder.id }
             const nBookmark = await browser.bookmarks.create(createConf)
             bookmark = byId.get(nBookmark.id)
@@ -1425,7 +1425,7 @@ export async function saveToFolder(
 
       // Bookmark
       attachTabInfoToTitle(item)
-      const url = Utils.denormalizeUrl(item.url)
+      const url = Utils.restoreUrl(item.url)
       const bookmarkIndex = bookmarksList.findIndex(n => {
         return n.type === E.BkmType.Bookmark && n.title === item.title && n.url === url
       })
@@ -1469,7 +1469,7 @@ export async function saveToFolder(
       }
       // Create bookmark
       else {
-        const url = Utils.denormalizeUrl(item.url)
+        const url = Utils.restoreUrl(item.url)
         const createConf = { title: item.title, url, index, parentId: panelFolderId }
         const nBookmark = await browser.bookmarks.create(createConf)
         bookmark = byId.get(nBookmark.id)

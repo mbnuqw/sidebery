@@ -62,7 +62,7 @@ export async function createWithTabs(
   // Normalize urls
   if (!moveTabs) {
     for (const info of tabsInfo) {
-      info.url = Utils.normalizeUrl(info.url, info.title)
+      info.url = Utils.sanitizeUrl(info.url, info.title)
     }
   }
 

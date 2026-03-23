@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import * as Utils from './utils'
-import { URL_URL } from 'src/defaults'
+import { PLACEHOLDER_URL } from 'src/defaults'
 
 describe('Utils.createGroupUrl()', () => {
   test('just name', () => {
@@ -30,14 +30,15 @@ describe('Utils.createPlaceholderUrl(), Utils.parsePlaceholderUrl()', () => {
   test('decode legacy', () => {
     const srcUrl = 'file:///home/m/sidebery-snapshot-2026.02.08-13.46.05.json'
     const srcTitle = '123'
-    const placeholderUrl = URL_URL + '#' + encodeURIComponent(JSON.stringify([srcUrl, srcTitle]))
+    const placeholderUrl =
+      PLACEHOLDER_URL + '#' + encodeURIComponent(JSON.stringify([srcUrl, srcTitle]))
     const info = Utils.parsePlaceholderUrl(placeholderUrl)
     expect(info.url).toBe(srcUrl)
     expect(info.title).toBe(srcTitle)
   })
   test('decode legacy without title', () => {
     const srcUrl = 'file:///path/to/file.pdf'
-    const placeholderUrl = URL_URL + '#' + srcUrl
+    const placeholderUrl = PLACEHOLDER_URL + '#' + srcUrl
     const info = Utils.parsePlaceholderUrl(placeholderUrl)
     expect(info.url).toBe(srcUrl)
   })
@@ -61,16 +62,16 @@ describe('Utils.createPlaceholderUrl(), Utils.parsePlaceholderUrl()', () => {
   })
 })
 
-describe('Utils.denormalizeUrl()', () => {
+describe('Utils.restoreUrl()', () => {
   test('group page url', () => {
     const sUrl =
       'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#New%20Tab'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(sUrl)
   })
   test('group page url with empty title', () => {
     const sUrl = 'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(sUrl)
   })
   test('group page url (+chId)', () => {
@@ -78,27 +79,27 @@ describe('Utils.denormalizeUrl()', () => {
       'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#New%20Tab~!PpBA2ocRL1ry!ch!~'
     const eUrl =
       'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#New%20Tab'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(eUrl)
   })
   test('group page url (+chId) with empty title', () => {
     const sUrl =
       'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#~!PpBA2ocRL1ry!ch!~'
     const eUrl = 'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(eUrl)
   })
   test('group page url (+hash msg)', () => {
     const sUrl =
       'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#123~!+.0.syPdgQdGolHy!p!b!~'
     const eUrl = 'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579/sidebery/group.html#123'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(eUrl)
   })
   test('placeholder page url (+chId)', () => {
     const origUrl = 'file:///abc/cba/123.json'
     const sUrl = Utils.createPlaceholderUrl({ url: origUrl }) + '~!PpBA2ocRL1ry!ch!~'
-    const rUrl = Utils.denormalizeUrl(sUrl)
+    const rUrl = Utils.restoreUrl(sUrl)
     expect(rUrl).toBe(origUrl)
   })
 })
@@ -132,11 +133,11 @@ file:///some/path/to/File%20Name.json
 <a href="about:config">one two</a>
 [hey](not link)`
     const items = Utils.parseTextForItems(input)
-    expect(Utils.isUrlUrl(items[0].url ?? '')).toBe(true)
+    expect(Utils.isPlaceholderUrl(items[0].url ?? '')).toBe(true)
     expect(items[0].title).toBe('File Name.json')
-    expect(Utils.isUrlUrl(items[1].url ?? '')).toBe(true)
+    expect(Utils.isPlaceholderUrl(items[1].url ?? '')).toBe(true)
     expect(items[1].title).toBe('1 2 3')
-    expect(Utils.isUrlUrl(items[2].url ?? '')).toBe(true)
+    expect(Utils.isPlaceholderUrl(items[2].url ?? '')).toBe(true)
     expect(items[2].title).toBe('one two')
     expect(items[3].url).toBe(undefined)
     expect(items[3].title).toBe('[hey](not link)')

@@ -167,7 +167,7 @@ async function openTab(tab: SnapTabState): Promise<void> {
     }
   } else {
     const conf: browser.tabs.CreateProperties = {
-      url: Utils.normalizeUrl(Snapshots.updateInternalUrl(tab.url), tab.title),
+      url: Utils.sanitizeUrl(Snapshots.updateInternalUrl(tab.url), tab.title),
       windowId: Windows.id,
       active: false,
       cookieStoreId: tab.containerId ?? CONTAINER_ID,

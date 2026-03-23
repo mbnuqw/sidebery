@@ -162,44 +162,6 @@ export function reactivateTab(tab: T.Tab) {
   tab.reactive = reactFn(tab.reactive)
 }
 
-function createReactiveProps(tab: T.Tab): T.ReactiveTabProps {
-  const rProps: T.ReactiveTabProps = {
-    active: tab.active,
-    mediaAudible: tab.audible ?? false,
-    mediaMuted: tab.mutedInfo?.muted ?? false,
-    mediaPaused: tab.mediaPaused,
-    containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
-    discarded: tab.discarded ?? false,
-    pinned: tab.pinned,
-    status: getStatus(tab),
-    isParent: tab.isParent,
-    folded: tab.folded,
-    tooltip: Settings.state.forceUpdTooltip ? getTooltip(tab) : '',
-    customTitleEdit: false,
-    customColor: tab.customColor ?? null,
-    url: tab.url,
-    lvl: tab.lvl,
-    branchLen: 0,
-    sel: tab.sel,
-    selLock: tab.selLock,
-    warn: tab.warn,
-    notificationBadgeCount: null,
-    updated: tab.updated,
-    unread: !!tab.unread,
-    flash: false,
-    branchColor: null,
-    color: null,
-    isGroup: tab.isGroup,
-    preview: false,
-  }
-
-  if (reactFn) return reactFn(rProps)
-  else {
-    Logs.warn('Tabs.createReactiveProps: No reactFn')
-    return rProps
-  }
-}
-
 export function updateNotificationBadgeCountTabs(): void {
   const regexp = new RegExp(Settings.state.tabsNotificationBadgeRegExpPattern)
   for (const tab of Tabs.list) {
@@ -2660,7 +2622,7 @@ export async function copy(ids: ID[], template: T.CopyTemplate) {
     if (template.hasB) result = result.replaceAll('%B', bullet)
     if (template.hasCT) result = result.replaceAll('%CT', tab.customTitle || tab.title)
     if (template.hasT) result = result.replaceAll('%T', tab.title)
-    if (template.hasU) result = result.replaceAll('%U', Utils.denormalizeUrl(tab.url) ?? tab.url)
+    if (template.hasU) result = result.replaceAll('%U', Utils.restoreUrl(tab.url) ?? tab.url)
     lines.push(indent.repeat(indentLvl) + result)
   }
 
