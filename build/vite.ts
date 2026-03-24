@@ -2,7 +2,6 @@ import path from 'node:path'
 import { build, defineConfig, mergeConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { IS_DEV, ADDON_PATH, KEEP_NAMES, BUNDLE_VUE, logErr } from './utils.js'
-import { IIFE_BANNER_WITH_REINJECT_GUARD, IIFE_FOOTER } from './utils.js'
 import { log, logOk } from './utils.js'
 
 if (IS_DEV) {
@@ -114,10 +113,10 @@ async function main() {
   const groupInjection = defineConfig({
     build: {
       rollupOptions: {
-        input: { 'injections/group': 'src/injections/group.ts' },
+        input: { 'page.group/group': 'src/page.group/group.ts' },
         output: {
-          banner: IIFE_BANNER_WITH_REINJECT_GUARD,
-          footer: IIFE_FOOTER,
+          splitting: false,
+          outfile: path.join(ADDON_PATH, 'sidebery', 'group.js'),
         },
       },
     },
@@ -128,10 +127,10 @@ async function main() {
   const urlInjection = defineConfig({
     build: {
       rollupOptions: {
-        input: { 'injections/url': 'src/injections/url.ts' },
+        input: { 'page.url/url': 'src/page.url/url.ts' },
         output: {
-          banner: IIFE_BANNER_WITH_REINJECT_GUARD,
-          footer: IIFE_FOOTER,
+          splitting: false,
+          outfile: path.join(ADDON_PATH, 'sidebery', 'url.js'),
         },
       },
     },
