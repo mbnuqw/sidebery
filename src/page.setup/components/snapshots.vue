@@ -19,12 +19,12 @@
               svg: use(href="#icon_trash")
 
         .temporary-snapshots-section
-          .temp-section-header {{translate('snapshot.temporary_snapshots_header')}}
           .controls
             .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
             .btn
               .label {{translate('snapshot.btn_import_snapshot')}}
               input(type="file" accept="application/json" @input="importSnapshot")
+          .temp-section-header {{translate('snapshot.temporary_snapshots_header')}}
 
           .snapshot(
             v-for="snapshot in temporarySnapshots"
