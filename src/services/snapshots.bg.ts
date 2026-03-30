@@ -491,6 +491,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
   while (index--) {
     const snapshot = snapshots[index]
     if (!snapshot) continue
+    if (snapshot.permanent) continue
 
     sizeAccum += new Blob([JSON.stringify(snapshot)]).size
 
@@ -508,11 +509,96 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
 
   index++
 
-  const normSnapshot = getNormalizedSnapshot(snapshots, index)
-  if (normSnapshot) snapshots[index] = normSnapshot
+  if (index === 0) return
+
+  // Find the first non-permanent snapshot at or after the cutoff
+  let firstNonPermIndex = index
+  while (firstNonPermIndex < snapshots.length && snapshots[firstNonPermIndex]?.permanent) {
+    firstNonPermIndex++
+  }
+  if (firstNonPermIndex >= snapshots.length) return
+
+  // Normalize the first kept non-permanent snapshot while the full chain is still intact
+  const normSnapshot = getNormalizedSnapshot(snapshots, firstNonPermIndex)
+  if (normSnapshot) snapshots[firstNonPermIndex] = normSnapshot
   else return
 
-  return snapshots.slice(index)
+  // Keep all permanent snapshots plus all snapshots from firstNonPermIndex onward
+  const result: Snapshot[] = []
+  for (let i = 0; i < snapshots.length; i++) {
+    const snap = snapshots[i]
+    if (!snap) continue
+    if (snap.permanent || i >= firstNonPermIndex) result.push(snap)
+  }
+  return result
+}
+
+export async function makeSnapshotPermanent(id: ID): Promise<RemovingSnapshotResult> {
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(['snapshots'])
+  } catch (err) {
+    Logs.err('makeSnapshotPermanent: Cannot get snapshots', err)
+    return RemovingSnapshotResult.Err
+  }
+  if (!stored.snapshots) return RemovingSnapshotResult.Err
+
+  const index = stored.snapshots.findIndex(s => s.id === id)
+  if (index === -1) return RemovingSnapshotResult.Err
+
+  const normSnapshot = getNormalizedSnapshot(stored.snapshots, index)
+  if (!normSnapshot) return RemovingSnapshotResult.Err
+  normSnapshot.permanent = true
+  stored.snapshots[index] = normSnapshot
+
+  // Normalize the next non-permanent snapshot since it may have had Unchanged deps on this one
+  const nextSnapshot = stored.snapshots[index + 1]
+  if (nextSnapshot && !nextSnapshot.permanent) {
+    const normNext = getNormalizedSnapshot(stored.snapshots, index + 1)
+    if (normNext) stored.snapshots[index + 1] = normNext
+  }
+
+  await Store.set({ snapshots: stored.snapshots })
+  return RemovingSnapshotResult.Ok
+}
+
+export async function makeSnapshotTemporary(id: ID): Promise<RemovingSnapshotResult> {
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(['snapshots'])
+  } catch (err) {
+    Logs.err('makeSnapshotTemporary: Cannot get snapshots', err)
+    return RemovingSnapshotResult.Err
+  }
+  if (!stored.snapshots) return RemovingSnapshotResult.Err
+
+  const snapshot = stored.snapshots.find(s => s.id === id)
+  if (!snapshot) return RemovingSnapshotResult.Err
+
+  delete snapshot.permanent
+
+  await Store.set({ snapshots: stored.snapshots })
+  return RemovingSnapshotResult.Ok
+}
+
+export async function renameSnapshot(id: ID, title: string): Promise<RemovingSnapshotResult> {
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(['snapshots'])
+  } catch (err) {
+    Logs.err('renameSnapshot: Cannot get snapshots', err)
+    return RemovingSnapshotResult.Err
+  }
+  if (!stored.snapshots) return RemovingSnapshotResult.Err
+
+  const snapshot = stored.snapshots.find(s => s.id === id)
+  if (!snapshot) return RemovingSnapshotResult.Err
+
+  if (title) snapshot.title = title
+  else delete snapshot.title
+
+  await Store.set({ snapshots: stored.snapshots })
+  return RemovingSnapshotResult.Ok
 }
 
 export async function removeSnapshot(id: ID): Promise<RemovingSnapshotResult> {

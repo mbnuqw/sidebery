@@ -5,6 +5,8 @@ import * as E from 'src/enums'
 export interface Snapshot {
   id: ID
   time: number
+  permanent?: boolean
+  title?: string
   containers: Record<ID, Container> | E.SnapStoreMode.Unchanged
   sidebar: SidebarConfig | E.SnapStoreMode.Unchanged
   tabs: (SnapTab | E.SnapStoreMode.Unchanged)[][][]

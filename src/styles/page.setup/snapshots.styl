@@ -132,6 +132,49 @@
   overflow: hidden
 
 // ---
+// -- Permanent snapshots section
+// -
+.Snapshots .permanent-snapshots-section
+  padding-bottom: 4px
+  margin-bottom: 4px
+  border-bottom: 1px solid var(--border-color)
+
+.Snapshots .perm-section-header
+  position: relative
+  font-size: rem(10)
+  font-weight: 700
+  color: var(--toolbar-fg)
+  opacity: .45
+  padding: 8px 8px 4px
+  text-transform: uppercase
+  letter-spacing: .06em
+  user-select: none
+
+.Snapshots .snapshot[data-permanent="true"]:before
+  opacity: .12
+
+.Snapshots .title-input
+  background: none
+  border: none
+  border-bottom: 1px solid transparent
+  outline: none
+  color: var(--toolbar-fg)
+  font-size: rem(15)
+  width: 100%
+  cursor: default
+  padding: 0
+  font-family: inherit
+  &:focus
+    cursor: text
+    border-bottom-color: var(--toolbar-fg)
+
+.Snapshots .active-snapshot-section .header .title .title-input
+  font-size: rem(24)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+// ---
 // -- Timeline
 // -
 .Snapshots .snapshot-list-section

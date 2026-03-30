@@ -10,6 +10,7 @@ import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Windows from 'src/services/windows.fg'
 import * as Containers from 'src/services/containers.fg'
+import { RemovingSnapshotResult } from 'src/enums'
 
 import { getNormalizedSnapshot, GLOB_PINNED_ID } from 'src/services/snapshots'
 export * from 'src/services/snapshots'
@@ -266,6 +267,18 @@ export async function getStoredSnapshots() {
 
 export async function addSnapshot(snapshot: T.NormalizedSnapshot): Promise<void> {
   return await IPC.bg('addSnapshot', snapshot)
+}
+
+export async function makeSnapshotPermanent(id: ID): Promise<RemovingSnapshotResult> {
+  return await IPC.bg('makeSnapshotPermanent', id)
+}
+
+export async function makeSnapshotTemporary(id: ID): Promise<RemovingSnapshotResult> {
+  return await IPC.bg('makeSnapshotTemporary', id)
+}
+
+export async function renameSnapshot(id: ID, title: string): Promise<RemovingSnapshotResult> {
+  return await IPC.bg('renameSnapshot', id, title)
 }
 
 export function updateInternalUrls(snapshot: T.NormalizedSnapshot): void {
