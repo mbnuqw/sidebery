@@ -153,8 +153,12 @@ const state = reactive({
 
 const titleInputRef = ref<HTMLInputElement | null>(null)
 
-const permanentSnapshots = computed<T.SnapshotState[]>(() => state.snapshots.filter(s => s.permanent))
-const temporarySnapshots = computed<T.SnapshotState[]>(() => state.snapshots.filter(s => !s.permanent))
+const permanentSnapshots = computed<T.SnapshotState[]>(() =>
+  state.snapshots.filter(s => s.permanent)
+)
+const temporarySnapshots = computed<T.SnapshotState[]>(() =>
+  state.snapshots.filter(s => !s.permanent)
+)
 
 const selectedTabsLen = computed<number>(() => {
   if (!state.activeSnapshot) return 0
