@@ -576,6 +576,7 @@ export async function makeSnapshotTemporary(id: ID): Promise<RemovingSnapshotRes
   if (!snapshot) return RemovingSnapshotResult.Err
 
   delete snapshot.permanent
+  delete snapshot.title
 
   await Store.set({ snapshots: stored.snapshots })
   return RemovingSnapshotResult.Ok

@@ -7856,6 +7856,10 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Permanent Snapshots',
     ru: 'Постоянные снепшоты',
   },
+  'snapshot.temporary_snapshots_header': {
+    en: 'Temporary Snapshots',
+    ru: 'Временные снепшоты',
+  },
   'snapshot.window_title': {
     en: 'Window',
     de: 'Fenster',
