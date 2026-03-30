@@ -519,18 +519,21 @@ function importSnapshot(importEvent: Event) {
 
 async function doMakePermanent(snapshot: T.SnapshotState | null): Promise<void> {
   if (!snapshot) return
-  await Snapshots.makeSnapshotPermanent(snapshot.id)
+  const result = await Snapshots.makeSnapshotPermanent(snapshot.id)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot makeSnapshotPermanent')
 }
 
 async function doMakeTemporary(snapshot: T.SnapshotState | null): Promise<void> {
   if (!snapshot) return
-  await Snapshots.makeSnapshotTemporary(snapshot.id)
+  const result = await Snapshots.makeSnapshotTemporary(snapshot.id)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot makeSnapshotTemporary')
 }
 
 async function onRenameSnapshot(snapshot: T.SnapshotState, event: Event): Promise<void> {
   const title = (event.target as HTMLInputElement).value.trim()
   snapshot.title = title || undefined
-  await Snapshots.renameSnapshot(snapshot.id, title)
+  const result = await Snapshots.renameSnapshot(snapshot.id, title)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot renameSnapshot')
 }
 
 async function onRenameActiveSnapshot(event: Event): Promise<void> {

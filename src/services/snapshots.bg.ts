@@ -551,13 +551,6 @@ export async function makeSnapshotPermanent(id: ID): Promise<RemovingSnapshotRes
   normSnapshot.permanent = true
   stored.snapshots[index] = normSnapshot
 
-  // Normalize the next non-permanent snapshot since it may have had Unchanged deps on this one
-  const nextSnapshot = stored.snapshots[index + 1]
-  if (nextSnapshot && !nextSnapshot.permanent) {
-    const normNext = getNormalizedSnapshot(stored.snapshots, index + 1)
-    if (normNext) stored.snapshots[index + 1] = normNext
-  }
-
   await Store.set({ snapshots: stored.snapshots })
   return RemovingSnapshotResult.Ok
 }
