@@ -167,6 +167,7 @@
     height: 100%
     border-radius: var(--tabs-border-radius)
     z-index: 1
+    pointer-events: none
 
 .Tab:hover .body:before
   background-color: var(--frame-el-overlay-hover-bg)
@@ -314,6 +315,12 @@
 // ---
 // -- Favicon
 // -
+.Tab .fav-anchor
+  display: flex
+  align-items: center
+  flex-shrink: 0
+  position: relative
+
 .Tab .fav
   position: relative
   width: 16px
@@ -323,8 +330,11 @@
   z-index: 10
   transform: translateZ(0)
 
-.Tab[data-pin="false"] .fav
-  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
+.Tab[data-pin="false"] .fav-anchor
+  // Padding extends the hit area to match the visual highlight box.
+  // Margins reduced by same amounts so flex layout spacing is unchanged.
+  padding: calc((var(--tabs-height) - 16px) / 2 - 2px) var(--tabs-inner-gap)
+  margin: 0 0 0 2px
   z-index: 20
 
 .Tab .fav-icon
@@ -337,6 +347,13 @@
   transition: opacity var(--d-fast)
 .Tab img.fav-icon
   display: none
+.Tab .fav-icon.-anchor-hover
+  opacity: 0
+  pointer-events: none
+.Tab[data-anchored-away="true"] .fav-anchor:hover .fav-icon:not(.-anchor-hover)
+  opacity: 0
+.Tab[data-anchored-away="true"] .fav-anchor:hover .fav-icon.-anchor-hover
+  opacity: 1
 
 .Tab .fav svg
   opacity: .7
@@ -690,33 +707,60 @@
 .Tab[data-anchored-away="true"]:hover .body:before
   background-color: initial
 
-.Tab[data-anchored-away="true"] .fav:hover
-  cursor: pointer
+// Permanent highlight covering favicon + reset indicator for all anchored tabs
+.Tab[data-anchored="true"] .fav-anchor
   &:before
+    content: ''
+    position: absolute
+    inset: 0
+    border-radius: var(--tabs-border-radius)
+    background-color: var(--frame-el-overlay-clicked-bg)
+    z-index: -1
+
+// Hover effects for anchored-away tabs — all driven by .fav-anchor:hover
+.Tab[data-anchored-away="true"] .fav-anchor:hover
+  cursor: pointer
+  flex-grow: 1
+  // Hide permanent highlight background on hover
+  &:before
+    background-color: transparent
+  // Extra highlight on favicon area
+  .fav:after
     content: ''
     position: absolute
     inset: -4px
     border-radius: 4px
-    background-color: var(--frame-el-overlay-hover-bg)
+    background-color: var(--frame-el-overlay-selected-bg)
     z-index: -1
+  // Show "Back to" title
+  .title.-anchor-back
+    display: flex
+  // Fade out indicator (opacity keeps layout so hover area stays stable; no flicker)
+  .anchor-reset-indicator
+    opacity: 0
+    pointer-events: none
+
+// Hide title box on hover (Back to title is shown inside .fav-anchor instead)
+.Tab[data-anchored-away="true"] .fav-anchor:hover ~ .t-box
+  display: none
 
 // Reset indicator between favicon and title
 .Tab .anchor-reset-indicator
   flex-shrink: 0
-  font-size: 11px
+  font: var(--tabs-font)
   padding: 0 2px 0 4px
   opacity: 0.6
   color: var(--tabs-normal-fg)
-  pointer-events: none
 
-// "Back to" title when hovering favicon of anchored-away tab
-.Tab .title.-anchor-back
-  display: flex
+// "Back to" title inside .fav-anchor — hidden by default, shown on hover
+.Tab .fav-anchor .title.-anchor-back
+  display: none
+  flex-grow: 1
+  margin-left: var(--tabs-inner-gap)
   align-items: center
   gap: 0.25em
   overflow: hidden
   white-space: nowrap
-  text-overflow: ellipsis
   .back-to-prefix
     font-weight: normal
     flex-shrink: 0
