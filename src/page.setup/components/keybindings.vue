@@ -65,6 +65,7 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs_act")
     KeybindingField(:keybinding="Keybindings.reactive.byName.flatten_tabs")
     KeybindingField(:keybinding="Keybindings.reactive.byName.edit_title")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.toggle_anchor_tab")
 
   section
     h2 {{translate('settings.kb_tabs_open')}}

@@ -266,6 +266,7 @@ function onCmd(name: string): void {
   else if (name === 'group_tabs_act') onKeyGroupTabs(true)
   else if (name === 'flatten_tabs') onKeyFlattenTabs()
   else if (name === 'edit_title') onKeyEditTitle()
+  else if (name === 'toggle_anchor_tab') onKeyToggleAnchorTab()
   else if (name === 'sel_child_tabs') onKeySelChildTabs()
   else if (name === 'sort_tabs_by_title_asc') onKeySortTabs(SortBy.Title, 1)
   else if (name === 'sort_tabs_by_title_des') onKeySortTabs(SortBy.Title, -1)
@@ -1528,6 +1529,12 @@ function onKeyPinTabs() {
 
   if (firstTab.pinned) Tabs.unpinTabs(ids)
   else Tabs.pinTabs(ids)
+}
+
+function onKeyToggleAnchorTab() {
+  const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
+  if (!ids.length) return
+  Tabs.toggleAnchorTabs(ids)
 }
 
 function onKeyHidePanel() {

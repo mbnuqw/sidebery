@@ -707,6 +707,15 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     zh_TW: '已釘選分頁',
     ja: 'ピン留めされたタブ',
   },
+  'settings.nav_settings_anchor_tabs': {
+    en: 'Anchor tabs',
+  },
+  'settings.anchor_tabs_reset_indicator': {
+    en: 'Reset indicator',
+  },
+  'settings.anchor_tabs_reset_indicator_note': {
+    en: 'Accepts text and emojis',
+  },
   'settings.nav_settings_tabs_tree': {
     en: 'Tabs tree',
     de: 'Tab-Baum',

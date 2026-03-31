@@ -683,6 +683,49 @@
 
 
 // ---
+// -- Anchor tabs
+// -
+
+// Anchored-away: restrict hover highlight to favicon area only
+.Tab[data-anchored-away="true"]:hover .body:before
+  background-color: initial
+
+.Tab[data-anchored-away="true"] .fav:hover
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    inset: -4px
+    border-radius: 4px
+    background-color: var(--frame-el-overlay-hover-bg)
+    z-index: -1
+
+// Reset indicator between favicon and title
+.Tab .anchor-reset-indicator
+  flex-shrink: 0
+  font-size: 11px
+  padding: 0 2px 0 4px
+  opacity: 0.6
+  color: var(--tabs-normal-fg)
+  pointer-events: none
+
+// "Back to" title when hovering favicon of anchored-away tab
+.Tab .title.-anchor-back
+  display: flex
+  align-items: center
+  gap: 0.25em
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  .back-to-prefix
+    font-weight: normal
+    flex-shrink: 0
+  .back-to-title
+    font-weight: bold
+    overflow: hidden
+    text-overflow: ellipsis
+
+// ---
 // -- Keyframes
 // -
 @keyframes appearing-animation

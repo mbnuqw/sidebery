@@ -35,6 +35,8 @@ export interface Tab extends NativeTab {
   reopenInContainer?: string
   customTitle?: string
   customColor?: string
+  anchorUrl?: string
+  anchorTitle?: string
   moving?: boolean
   removing?: boolean
   flashAnimationTimeout?: number
@@ -77,6 +79,8 @@ export interface ReactiveTabProps {
   branchColor: string | null
   customColor: string | null
   isGroup: boolean
+  anchored: boolean
+  anchoredAway: boolean
 }
 
 export interface BgTab extends NativeTab {
@@ -111,6 +115,8 @@ export interface TabCache {
   uniqWinId?: ID /* only for the first tab of window */
   customTitle?: string
   customColor?: string
+  anchorUrl?: string
+  anchorTitle?: string
 
   index?: number
   isMissedGroup?: boolean

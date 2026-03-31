@@ -310,6 +310,18 @@ section(ref="el")
         :default="DEFAULT_SETTINGS.pinnedNoUnloadExplicit"
         @update:value="Settings.saveDebounced(150)")
 
+  .wrapper(ref="anchorTabsEl")
+    .sub-title: .text {{translate('settings.nav_settings_anchor_tabs')}}
+    TextField.-inline.-no-separator(
+      label="settings.anchor_tabs_reset_indicator"
+      or="\\"
+      :note="translate('settings.anchor_tabs_reset_indicator_note')"
+      v-model:value="Settings.state.anchorTabsResetIndicator"
+      dbg="anchorTabsResetIndicator"
+      :default="DEFAULT_SETTINGS.anchorTabsResetIndicator"
+      :line="true"
+      @update:value="Settings.saveDebounced(500)")
+
   .wrapper(ref="tabsTreeEl")
     .sub-title: .text {{translate('settings.nav_settings_tabs_tree')}}
     ToggleField.-no-separator(
@@ -665,10 +677,12 @@ import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
+import TextField from 'src/components/text-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 const newTabPosEl = ref<HTMLElement | null>(null)
 const pinTabsEl = ref<HTMLElement | null>(null)
+const anchorTabsEl = ref<HTMLElement | null>(null)
 const tabsTreeEl = ref<HTMLElement | null>(null)
 const tabsColorEl = ref<HTMLElement | null>(null)
 const tabsPreviewEl = ref<HTMLElement | null>(null)
@@ -793,6 +807,7 @@ onMounted(() => {
   SetupPage.registerEl('settings_tabs', el.value)
   SetupPage.registerEl('settings_new_tab_position', newTabPosEl.value)
   SetupPage.registerEl('settings_pinned_tabs', pinTabsEl.value)
+  SetupPage.registerEl('settings_anchor_tabs', anchorTabsEl.value)
   SetupPage.registerEl('settings_tabs_tree', tabsTreeEl.value)
   SetupPage.registerEl('settings_tabs_colorization', tabsColorEl.value)
   SetupPage.registerEl('settings_tabs_preview', tabsPreviewEl.value)

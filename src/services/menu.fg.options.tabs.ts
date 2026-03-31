@@ -260,6 +260,17 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
   },
 
+  anchor: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab) return
+    return {
+      label: translate('menu.tab.' + (firstTab.anchorUrl ? 'unanchor' : 'anchor')),
+      icon: 'icon_undo',
+      onClick: firstTab.anchorUrl ? () => Tabs.unanchorTabs(selected) : () => Tabs.anchorTabs(selected),
+    }
+  },
+
   reload: () => {
     return {
       label: translate('menu.tab.reload'),

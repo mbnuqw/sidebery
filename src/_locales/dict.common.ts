@@ -1933,6 +1933,12 @@ export const commonTranslations: Translations = {
     zh_TW: '取消釘選分頁',
     ja: 'ピン留め解除',
   },
+  'menu.tab.anchor': {
+    en: 'Anchor',
+  },
+  'menu.tab.unanchor': {
+    en: 'Unanchor',
+  },
   'menu.tab.duplicate': {
     en: 'Duplicate',
     de: 'Duplizieren',

@@ -20,6 +20,7 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
+  :data-anchored-away="tab.reactive.anchoredAway"
   :title="tab.reactive.tooltip"
   :draggable="!tab.reactive.customTitleEdit"
   @dragstart="onDragStart"
@@ -34,7 +35,12 @@
     .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(ref="flashFxEl")
     .unread-mark(v-if="tab.reactive.unread")
-    .fav(@dragstart.stop.prevent)
+    .fav(
+      @dragstart.stop.prevent
+      @mouseenter="onFavMouseEnter"
+      @mouseleave="onFavMouseLeave"
+      @mousedown.stop="onFavMouseDown"
+      @mouseup.stop="onFavMouseUp")
       img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
       svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
       .exp(
@@ -54,6 +60,8 @@
       svg.audio-icon.-loud: use(href="#icon_loud_badge")
       svg.audio-icon.-mute: use(href="#icon_mute_badge")
       svg.audio-icon.-pause: use(href="#icon_pause_12")
+    .anchor-reset-indicator(v-if="tab.reactive.anchoredAway && !iconOnly && !favHovered")
+      | {{Settings.state.anchorTabsResetIndicator}}
     .t-box(v-if="!iconOnly")
       input.custom-title-input(
         v-if="tab.reactive.customTitleEdit"
@@ -65,7 +73,10 @@
         tabindex="-1"
         @blur="onCustomTitleBlur"
         @keydown="onCustomTitlteKD")
-      .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
+      .title(ref="titleEl" v-show="!(tab.reactive.anchoredAway && favHovered)") {{tab.customTitle ?? tab.title}}
+      .title.-anchor-back(v-if="tab.reactive.anchoredAway && favHovered")
+        span.back-to-prefix Back to
+        span.back-to-title {{tab.anchorTitle}}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
       draggable="true"
@@ -107,6 +118,7 @@ const titleEl = ref<HTMLElement | null>(null)
 const favImgEl = ref<HTMLImageElement | null>(null)
 const favSvgUseEl = ref<SVGElement | null>(null)
 const flashFxEl = ref<HTMLElement | null>(null)
+const favHovered = ref(false)
 
 const tabColor = computed<string>(() => {
   if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
@@ -397,6 +409,27 @@ function longClickFeedback(e: MouseEvent) {
   if (!noop) Tabs.triggerFlashAnimation(tab)
 
   return !noop
+}
+
+function onFavMouseEnter(): void {
+  if (tab.reactive.anchoredAway) favHovered.value = true
+}
+
+function onFavMouseLeave(): void {
+  favHovered.value = false
+}
+
+function onFavMouseDown(e: MouseEvent): void {
+  if (tab.reactive.anchoredAway && e.button === 0) return
+  onMouseDown(e)
+}
+
+function onFavMouseUp(e: MouseEvent): void {
+  if (tab.reactive.anchoredAway && e.button === 0) {
+    Tabs.returnToAnchor(tab.id)
+    return
+  }
+  onMouseUp(e)
 }
 
 function onMouseUp(e: MouseEvent): void {

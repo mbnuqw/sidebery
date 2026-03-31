@@ -153,6 +153,8 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
       branchColor: null,
       color: null,
       isGroup: tab.isGroup,
+      anchored: false,
+      anchoredAway: false,
     }
   }
 
@@ -504,6 +506,12 @@ function restoreTab(
     tab.reactive.folded = tab.folded = !!props.folded
     if (props.customTitle) tab.customTitle = props.customTitle
     if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+    if (props.anchorUrl) {
+      tab.anchorUrl = props.anchorUrl
+      tab.anchorTitle = props.anchorTitle
+      tab.reactive.anchored = true
+      tab.reactive.anchoredAway = tab.url !== props.anchorUrl
+    }
   } else {
     Logs.warn(`Tabs.restoreTab: no props for: "${tab.id} i${tab.index} url${tab.url}"`)
   }
@@ -730,6 +738,8 @@ export function cacheTabsData(delay = 300): void {
       if (tab.cookieStoreId !== D.CONTAINER_ID) info.ctx = tab.cookieStoreId
       if (tab.customTitle) info.customTitle = tab.customTitle
       if (tab.customColor) info.customColor = tab.customColor
+      if (tab.anchorUrl) info.anchorUrl = tab.anchorUrl
+      if (tab.anchorTitle) info.anchorTitle = tab.anchorTitle
       data.push(info)
     }
 
@@ -1238,6 +1248,48 @@ export function repinTabs(tabIds: ID[]): void {
       Logs.err('Tabs.repinTabs: Cannot repin tab:', err)
     })
   }
+}
+
+/**
+ * Anchor tabs
+ */
+export function anchorTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.anchorUrl = tab.url
+    tab.anchorTitle = tab.customTitle ?? tab.title
+    tab.reactive.anchored = true
+    tab.reactive.anchoredAway = false
+  }
+  Tabs.cacheTabsData()
+}
+
+export function unanchorTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.anchorUrl = undefined
+    tab.anchorTitle = undefined
+    tab.reactive.anchored = false
+    tab.reactive.anchoredAway = false
+  }
+  Tabs.cacheTabsData()
+}
+
+export function toggleAnchorTabs(tabIds: ID[]): void {
+  const firstTab = Tabs.byId[tabIds[0]]
+  if (!firstTab) return
+  if (firstTab.anchorUrl) unanchorTabs(tabIds)
+  else anchorTabs(tabIds)
+}
+
+export function returnToAnchor(tabId: ID): void {
+  const tab = Tabs.byId[tabId]
+  if (!tab?.anchorUrl) return
+  browser.tabs.update(tabId, { url: tab.anchorUrl }).catch(err => {
+    Logs.err('Tabs.returnToAnchor: Cannot navigate to anchor URL:', err)
+  })
 }
 
 /**

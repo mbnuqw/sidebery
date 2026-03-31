@@ -133,6 +133,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   pinnedNoUnloadExplicit: true,
   pinnedForcedDiscard: false,
 
+  // Anchor tabs
+  anchorTabsResetIndicator: '\\',
+
   // Tabs tree
   tabsTree: true,
   tabsTreeLimit: 'none',

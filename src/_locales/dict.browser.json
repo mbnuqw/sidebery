@@ -423,6 +423,17 @@
     "zh_CN": "编辑标题",
     "zh_TW": "編輯標題"
   },
+  "KbToggleAnchorTab": {
+    "en": "Toggle anchor tab",
+    "de": "Anker-Tab umschalten",
+    "fr": "Basculer l'onglet ancré",
+    "hu": "Horgonylap váltása",
+    "pl": "Przełącz zakotwiczoną kartę",
+    "ru": "Переключить закреплённую вкладку",
+    "zh_CN": "切换锚定标签页",
+    "zh_TW": "切換錨定分頁",
+    "ja": "アンカータブを切り替え"
+  },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
     "de": "Öffne neuen Tab im aktiven Panel",
