@@ -42,7 +42,7 @@
       .fav(@dragstart.stop.prevent)
         img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
         svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
-        svg.fav-icon.-anchor-hover: use(href="#icon_undo")
+        svg.fav-icon.-anchor-hover(v-if="tab.reactive.anchored"): use(href="#icon_undo")
         .exp(
           v-if="tab.reactive.isParent"
           @dblclick.prevent.stop
