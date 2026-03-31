@@ -915,7 +915,7 @@ export function onDragMove(e: DragEvent): void {
     if (y > slot.end) path[slot.lvl] = slot
 
     // Skip
-    if (!lvlChanged && (y > slot.end || y < slot.start)) continue
+    if (!lvlChanged && (y > slot.end || y < slot.start - 1)) continue
 
     // Between
     if (slot.in ? y < slot.top : y < slot.center) {
@@ -972,7 +972,9 @@ export function onDragMove(e: DragEvent): void {
           DnD.reactive.dstParentId = parentSlot?.id ?? D.NOID
         }
       }
-      break
+      if (y !== slot.start - 1) {
+        break
+      }
     }
 
     // Inside
