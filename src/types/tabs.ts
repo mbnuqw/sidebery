@@ -129,6 +129,8 @@ export interface TabSessionData {
   folded: boolean
   customTitle?: string
   customColor?: string
+  anchorUrl?: string
+  anchorTitle?: string
 }
 
 export interface ActiveTabsHistory {
