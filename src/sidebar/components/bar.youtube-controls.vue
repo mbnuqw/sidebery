@@ -5,7 +5,7 @@
       :data-disabled="!tab"
       @click="onPrev"
       :title="translate('bar.youtube.prev')")
-      svg: use(href="#icon_arrow_down")
+      svg: use(href="#icon_chevron_left")
     .tool-btn(
       :data-disabled="!tab"
       @click="onPlayPause"
@@ -16,7 +16,7 @@
       :data-disabled="!tab"
       @click="onNext"
       :title="translate('bar.youtube.next')")
-      svg: use(href="#icon_arrow_down")
+      svg: use(href="#icon_chevron_right")
     .tool-btn(
       :data-disabled="!tab"
       @click="onMuteToggle"
@@ -29,6 +29,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { translate } from 'src/dict'
+import * as Tabs from 'src/services/tabs.fg'
 import * as YouTube from 'src/services/youtube.fg'
 
 const tab = computed(() => YouTube.getTargetTab())
@@ -38,8 +39,8 @@ const isPaused = computed(() => {
   if (!t) return true
   if (t.reactive.mediaPaused || t.mediaPaused) return true
   if (t.reactive.mediaAudible || t.audible) return false
-  // Active-tab fallback: treat as playing unless Sidebery marked paused (muted YouTube, etc.)
-  if (t.reactive.active) return false
+  // Active-tab fallback (muted YouTube, etc.): `reactive.active` can lag `Tabs.activeId`
+  if (t.id === Tabs.activeId || t.reactive.active) return false
   return true
 })
 
@@ -71,10 +72,3 @@ function onNext(): void {
 }
 </script>
 
-<style lang="stylus">
-/* Layout lives in sidebar.styl (dock + row); keep only icon rotation here */
-.YouTubeControlsBar .tool-btn:first-child > svg
-  transform: rotate(90deg)
-.YouTubeControlsBar .tool-btn:nth-child(3) > svg
-  transform: rotate(-90deg)
-</style>
