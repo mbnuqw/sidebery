@@ -6,7 +6,6 @@ import * as Logs from 'src/services/logs'
 import * as Permissions from 'src/services/permissions.fg'
 
 export interface YouTubeReactiveState {
-  /** Bumped when native `tabs.query({ audible })` result may have changed */
   probeTick: number
 }
 
@@ -16,14 +15,12 @@ export function reactivate(r: Reactivator<YouTubeReactiveState>): void {
   reactive = r(reactive)
 }
 
-/** Last tab id from `browser.tabs.query({ audible: true })` that matched YouTube */
 let nativeAudibleYtTabId: ID = NOID
 let probeTimeout: number | undefined
 let probeInterval: number | undefined
 let listenersBound = false
 
-/** Resolved URL for matching (native `url` is authoritative; reactive mirrors updates). */
-export function tabUrl(t: Tab): string {
+function tabUrl(t: Tab): string {
   return t.url || t.reactive.url || ''
 }
 
@@ -73,7 +70,7 @@ async function refreshNativeAudibleYouTubeTabId(): Promise<void> {
       reactive.probeTick++
     }
   } catch (err) {
-    Logs.err('YouTube.refreshNativeAudibleYouTubeTabId:', err)
+    Logs.err('YouTube: audible probe failed', err)
   }
 }
 
@@ -85,10 +82,7 @@ function scheduleNativeAudibleProbe(): void {
   }, 80) as unknown as number
 }
 
-/**
- * Register `tabs` listeners so we mirror Firefox’s `audible` flag (Sidebery’s
- * batched `onUpdated` can miss or lag vs `tabs.query`).
- */
+/** Sync audible YouTube tab id from Firefox (Sidebery tab updates can lag). */
 export function setupYouTubeBarListeners(): void {
   if (listenersBound) return
   listenersBound = true
@@ -102,25 +96,16 @@ export function setupYouTubeBarListeners(): void {
       scheduleNativeAudibleProbe()
     }
   }
-  const onActivated = (): void => {
-    scheduleNativeAudibleProbe()
-  }
-
   browser.tabs.onUpdated.addListener(onUpdated)
-  browser.tabs.onActivated.addListener(onActivated)
+  browser.tabs.onActivated.addListener(scheduleNativeAudibleProbe)
   void refreshNativeAudibleYouTubeTabId()
 
   probeInterval = setInterval(() => {
     void refreshNativeAudibleYouTubeTabId()
-  }, 2000) as unknown as number
+  }, 3000) as unknown as number
 }
 
-/**
- * 1) Audible YouTube tab from `tabs.query` (authoritative in Firefox).
- * 2) Audible per Sidebery reactive state.
- * 3) Paused-by-Sidebery YouTube tab.
- * 4) Current window active tab if it is a YouTube playback URL.
- */
+/** Resolve target: native audible match, then Sidebery state, then active-tab fallback. */
 export function getTargetTab(): Tab | undefined {
   for (const t of Tabs.list) {
     void t.reactive.mediaAudible
@@ -172,7 +157,7 @@ export function mute(): void {
   const tab = getTargetTab()
   if (!tab) return
   browser.tabs.update(tab.id, { muted: true }).catch(err => {
-    Logs.err('YouTube.mute: Cannot mute tab:', err)
+    Logs.err('YouTube: mute tab failed', err)
   })
 }
 
@@ -180,7 +165,7 @@ export function unmute(): void {
   const tab = getTargetTab()
   if (!tab) return
   browser.tabs.update(tab.id, { muted: false }).catch(err => {
-    Logs.err('YouTube.unmute: Cannot unmute tab:', err)
+    Logs.err('YouTube: unmute tab failed', err)
   })
 }
 
@@ -202,7 +187,7 @@ export async function prevVideo(): Promise<void> {
       runAt: 'document_idle',
     })
     .catch(err => {
-      Logs.err('YouTube.prevVideo: executeScript failed:', err)
+      Logs.err('YouTube: prev executeScript failed', err)
     })
 }
 
@@ -216,6 +201,6 @@ export async function nextVideo(): Promise<void> {
       runAt: 'document_idle',
     })
     .catch(err => {
-      Logs.err('YouTube.nextVideo: executeScript failed:', err)
+      Logs.err('YouTube: next executeScript failed', err)
     })
 }

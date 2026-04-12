@@ -15,13 +15,6 @@ export const sidebarTranslations: Translations = {
     zh_TW: '搜尋...',
     ja: '検索...',
   },
-  'bar.youtube.no_playing': {
-    en: 'No YouTube tab is playing or paused here',
-    de: 'Kein YouTube-Tab spielt oder pausiert',
-    fr: 'Aucun onglet YouTube en lecture ou en pause',
-    ru: 'Нет вкладки YouTube с воспроизведением или паузой',
-    ja: '再生中・一時停止中の YouTube タブがありません',
-  },
   'bar.youtube.prev': {
     en: 'Previous video',
     de: 'Vorheriges Video',

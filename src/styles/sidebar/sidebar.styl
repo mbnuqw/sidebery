@@ -183,7 +183,7 @@ body
   bottom: auto
   left: auto
 
-// YouTube controls: single horizontal row above the bottom tool strip
+// YouTube controls (row above bottom tool strip)
 .SidebarBottomDock .YouTubeControlsBar
   position: relative
   width: 100%
@@ -201,7 +201,6 @@ body
   box-sizing: border-box
   grid-gap: var(--general-margin)
   padding: var(--general-margin)
-  padding-bottom: calc(var(--general-margin) * 0.75)
 
 // Override .Sidebar .tool-btn { width: 100% } so four buttons stay on one row
 .SidebarBottomDock .YouTubeControlsBar .tool-btn
@@ -211,14 +210,6 @@ body
   max-width: none
   &:after
     display: none
-
-.SidebarBottomDock .YouTubeControlsBar-hint
-  padding: 0 var(--general-margin) var(--general-margin)
-  font-size: calc(var(--general-font-size, 12px) * 0.92)
-  color: var(--toolbar-fg)
-  opacity: .55
-  text-align: center
-  line-height: 1.25
 
 .BottomBar
   position: absolute

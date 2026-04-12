@@ -1,5 +1,5 @@
 <template lang="pug">
-.YouTubeControlsBar(:data-disabled="!tab")
+.YouTubeControlsBar
   .YouTubeControlsBar-inner
     .tool-btn(
       :data-disabled="!tab"
@@ -23,7 +23,6 @@
       :title="tab && muted ? translate('bar.youtube.unmute') : translate('bar.youtube.mute')")
       svg(v-if="tab && muted"): use(href="#icon_mute")
       svg(v-else): use(href="#icon_loud")
-  .YouTubeControlsBar-hint(v-if="!tab") {{ translate('bar.youtube.no_playing') }}
 </template>
 
 <script lang="ts" setup>
@@ -39,7 +38,6 @@ const isPaused = computed(() => {
   if (!t) return true
   if (t.reactive.mediaPaused || t.mediaPaused) return true
   if (t.reactive.mediaAudible || t.audible) return false
-  // Active-tab fallback (muted YouTube, etc.): `reactive.active` can lag `Tabs.activeId`
   if (t.id === Tabs.activeId || t.reactive.active) return false
   return true
 })
