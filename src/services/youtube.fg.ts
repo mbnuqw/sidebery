@@ -3,17 +3,44 @@ import * as Tabs from 'src/services/tabs.fg'
 import * as Logs from 'src/services/logs'
 import * as Permissions from 'src/services/permissions.fg'
 
+/** Resolved URL for matching (native `url` is authoritative; reactive mirrors updates). */
+export function tabUrl(t: Tab): string {
+  return t.url || t.reactive.url || ''
+}
+
 function isYouTubePlaybackUrl(url: string | undefined): boolean {
-  if (!url) return false
+  if (!url || url.startsWith('about:')) return false
+  try {
+    const u = new URL(url)
+    const h = u.hostname.toLowerCase()
+    if (h === 'youtu.be') return true
+    if (h === 'music.youtube.com') return true
+    if (h === 'm.youtube.com' || h.endsWith('.youtube.com') || h === 'youtube.com') {
+      const p = u.pathname
+      return (
+        p.startsWith('/watch') ||
+        p.startsWith('/shorts/') ||
+        p.startsWith('/live/') ||
+        p.startsWith('/embed/')
+      )
+    }
+  } catch {
+    /* ignore */
+  }
   return (
-    url.includes('youtube.com/watch') ||
     url.includes('youtu.be/') ||
-    url.includes('youtube.com/shorts/')
+    url.includes('youtube.com/watch') ||
+    url.includes('youtube.com/shorts/') ||
+    url.includes('youtube.com/live/') ||
+    url.includes('youtube.com/embed/') ||
+    url.includes('music.youtube.com/watch')
   )
 }
 
 /**
- * Prefer the tab that is currently audible; otherwise any matching paused YouTube tab.
+ * 1) Audible YouTube tab (watch / shorts / live / embed / music / youtu.be).
+ * 2) Paused-by-Sidebery YouTube tab.
+ * 3) Active YouTube tab on a playback URL (covers muted video and delayed `audible` in Firefox).
  */
 export function getTargetTab(): Tab | undefined {
   for (const t of Tabs.list) {
@@ -21,22 +48,20 @@ export function getTargetTab(): Tab | undefined {
     void t.reactive.mediaPaused
     void t.reactive.mediaMuted
     void t.reactive.url
+    void t.reactive.active
   }
 
+  const urlOk = (t: Tab) => !t.discarded && isYouTubePlaybackUrl(tabUrl(t))
+
   const audible = Tabs.list.find(
-    t =>
-      isYouTubePlaybackUrl(t.reactive.url) &&
-      (t.reactive.mediaAudible || t.audible) &&
-      !t.discarded
+    t => urlOk(t) && (t.reactive.mediaAudible || t.audible === true)
   )
   if (audible) return audible
 
-  return Tabs.list.find(
-    t =>
-      isYouTubePlaybackUrl(t.reactive.url) &&
-      (t.reactive.mediaPaused || t.mediaPaused) &&
-      !t.discarded
-  )
+  const paused = Tabs.list.find(t => urlOk(t) && (t.reactive.mediaPaused || t.mediaPaused))
+  if (paused) return paused
+
+  return Tabs.list.find(t => urlOk(t) && t.reactive.active) ?? undefined
 }
 
 export function isTargetMuted(tab: Tab): boolean {

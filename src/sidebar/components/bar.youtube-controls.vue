@@ -36,7 +36,11 @@ const tab = computed(() => YouTube.getTargetTab())
 const isPaused = computed(() => {
   const t = tab.value
   if (!t) return true
-  return t.reactive.mediaPaused || t.mediaPaused || !t.reactive.mediaAudible
+  if (t.reactive.mediaPaused || t.mediaPaused) return true
+  if (t.reactive.mediaAudible || t.audible) return false
+  // Active-tab fallback: treat as playing unless Sidebery marked paused (muted YouTube, etc.)
+  if (t.reactive.active) return false
+  return true
 })
 
 const muted = computed(() => {
@@ -68,67 +72,9 @@ function onNext(): void {
 </script>
 
 <style lang="stylus">
-.YouTubeControlsBar
-  position: relative
-  width: 100%
-  flex-shrink: 0
-  z-index: 9
-  border-top: 1px solid var(--s-darker-border-color, var(--border, transparent))
-  background-color: var(--frame-bg)
-
-.YouTubeControlsBar-inner
-  display: flex
-  width: 100%
-  grid-gap: var(--general-margin)
-  padding: var(--general-margin)
-  padding-top: calc(var(--general-margin) * 0.75)
-
-.YouTubeControlsBar .tool-btn
-  position: relative
-  display: flex
-  justify-content: center
-  align-items: center
-  width: 100%
-  min-width: var(--bottom-bar-height)
-  height: var(--bottom-bar-height)
-  border-radius: var(--general-border-radius)
-  background-color: var(--frame-el-bg)
-  box-shadow: var(--frame-el-shadow)
-  transition: opacity var(--d-fast)
-  > svg
-    position: relative
-    width: 16px
-    height: 16px
-    fill: var(--frame-fg)
-    opacity: .7
-  &:first-child > svg
-    transform: rotate(90deg)
-  &:nth-child(3) > svg
-    transform: rotate(-90deg)
-  &:before
-    content: ''
-    position: absolute
-    width: 100%
-    height: 100%
-    border-radius: var(--general-border-radius)
-  &:hover
-    > svg
-      opacity: 1
-    &:before
-      background-color: var(--frame-el-overlay-hover-bg)
-  &:active:before
-    background-color: var(--frame-el-overlay-clicked-bg)
-  &[data-disabled="true"]
-    pointer-events: none
-    box-shadow: none
-    > svg
-      opacity: .3
-
-.YouTubeControlsBar-hint
-  padding: 0 var(--general-margin) var(--general-margin)
-  font-size: calc(var(--general-font-size, 12px) * 0.92)
-  color: var(--toolbar-fg)
-  opacity: .55
-  text-align: center
-  line-height: 1.25
+/* Layout lives in sidebar.styl (dock + row); keep only icon rotation here */
+.YouTubeControlsBar .tool-btn:first-child > svg
+  transform: rotate(90deg)
+.YouTubeControlsBar .tool-btn:nth-child(3) > svg
+  transform: rotate(-90deg)
 </style>

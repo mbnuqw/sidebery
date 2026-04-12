@@ -183,6 +183,43 @@ body
   bottom: auto
   left: auto
 
+// YouTube controls: single horizontal row above the bottom tool strip
+.SidebarBottomDock .YouTubeControlsBar
+  position: relative
+  width: 100%
+  flex-shrink: 0
+  z-index: 11
+  background-color: var(--frame-bg)
+  border-bottom: 1px solid var(--s-darker-border-color, var(--border, transparent))
+
+.SidebarBottomDock .YouTubeControlsBar-inner
+  display: flex
+  flex-direction: row
+  flex-wrap: nowrap
+  align-items: center
+  width: 100%
+  box-sizing: border-box
+  grid-gap: var(--general-margin)
+  padding: var(--general-margin)
+  padding-bottom: calc(var(--general-margin) * 0.75)
+
+// Override .Sidebar .tool-btn { width: 100% } so four buttons stay on one row
+.SidebarBottomDock .YouTubeControlsBar .tool-btn
+  flex: 1 1 0
+  width: auto
+  min-width: var(--bottom-bar-height)
+  max-width: none
+  &:after
+    display: none
+
+.SidebarBottomDock .YouTubeControlsBar-hint
+  padding: 0 var(--general-margin) var(--general-margin)
+  font-size: calc(var(--general-font-size, 12px) * 0.92)
+  color: var(--toolbar-fg)
+  opacity: .55
+  text-align: center
+  line-height: 1.25
+
 .BottomBar
   position: absolute
   display: flex

@@ -75,6 +75,7 @@
 
       Transition(name="bottom-bar")
         .SidebarBottomDock(v-if="(bottomBar || showYouTubeBar) && Utils.isTabsPanel(activePanel)")
+          YouTubeControlsBar(v-if="showYouTubeBar")
           .BottomBar(
             v-if="bottomBar"
             @dragover.prevent.stop=""
@@ -101,7 +102,6 @@
               @click="Sidebar.openSubPanel(E.SubPanelType.Sync, activePanel)")
               .dnd-layer(data-dnd-type="sspb")
               svg: use(href="#icon_sync")
-          YouTubeControlsBar(v-if="showYouTubeBar")
 
       SubPanel
 
