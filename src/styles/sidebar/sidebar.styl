@@ -168,6 +168,21 @@ body
 // ---
 // -- Bottom bar
 // -
+.SidebarBottomDock
+  position: absolute
+  display: flex
+  flex-direction: column
+  width: 100%
+  bottom: 0
+  left: 0
+  flex-shrink: 0
+  z-index: 10
+
+.SidebarBottomDock .BottomBar
+  position: relative
+  bottom: auto
+  left: auto
+
 .BottomBar
   position: absolute
   display: flex
@@ -177,6 +192,9 @@ body
   z-index: 10
   grid-gap: var(--general-margin)
   padding: var(--general-margin)
+
+#root[data-new-tab-btns="true"] .SidebarBottomDock .BottomBar
+  padding-top: 0
 
 #root[data-new-tab-btns="true"] .BottomBar
   padding-top: 0

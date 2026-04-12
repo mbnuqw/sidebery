@@ -85,6 +85,12 @@ section(
       dbg="subPanelSync"
       :default="DEFAULT_SETTINGS.subPanelSync"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sub_panel.youtube"
+      v-model:value="Settings.state.subPanelYouTube"
+      dbg="subPanelYouTube"
+      :default="DEFAULT_SETTINGS.subPanelYouTube"
+      @update:value="Settings.saveDebounced(150)")
 
   InfoField(
     label="settings.nav_bar_enabled"

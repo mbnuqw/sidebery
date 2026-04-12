@@ -155,8 +155,14 @@
   flex-shrink: 0
   height: calc(var(--bottom-bar-height) + var(--general-margin)*2)
 
+.TabsPanel .bottom-bar-space[data-rows="2"]
+  height: calc((var(--bottom-bar-height) + var(--general-margin)*2) * 2)
+
 #root[data-new-tab-btns="true"] .TabsPanel .bottom-bar-space
   height: calc(var(--bottom-bar-height) + var(--general-margin))
+
+#root[data-new-tab-btns="true"] .TabsPanel .bottom-bar-space[data-rows="2"]
+  height: calc((var(--bottom-bar-height) + var(--general-margin)) * 2)
 
 .TabsPanel .tab-preview
   position: relative
