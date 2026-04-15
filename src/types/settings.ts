@@ -50,6 +50,7 @@ export interface SettingsState {
   subPanelBookmarks: boolean
   subPanelHistory: boolean
   subPanelSync: boolean
+  subPanelYouTube: boolean
 
   // Group page
   groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]

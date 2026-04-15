@@ -74,32 +74,34 @@
           :panel="panel")
 
       Transition(name="bottom-bar")
-        .BottomBar(
-          v-if="bottomBar && Utils.isTabsPanel(activePanel)"
-          @dragover.prevent.stop=""
-          :data-drop-target-bookmarks="DnD.reactive.dstType === E.DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id"
-          :data-drop-target-sync="DnD.reactive.dstType === E.DropType.SyncSubPanelBtn")
-          .tool-btn(
-            v-if="Settings.state.subPanelRecentlyClosedBar"
-            :data-disabled="!Tabs.reactive.recentlyRemovedLen"
-            @click="Sidebar.openSubPanel(E.SubPanelType.RecentlyClosedTabs, activePanel)")
-            svg: use(href="#icon_trash")
-          .tool-btn.-bookmarks(
-            v-if="Settings.state.subPanelBookmarks"
-            @dragleave="onBSPBDragLeave"
-            @click="Sidebar.openSubPanel(E.SubPanelType.Bookmarks, activePanel)")
-            .dnd-layer(data-dnd-type="bspb")
-            svg: use(href="#icon_bookmarks")
-          .tool-btn(
-            v-if="Settings.state.subPanelHistory"
-            @click="Sidebar.openSubPanel(E.SubPanelType.History, activePanel)")
-            svg: use(href="#icon_clock")
-          .tool-btn.-sync(
-            v-if="Settings.state.subPanelSync"
-            @dragleave="onSSPBDragLeave"
-            @click="Sidebar.openSubPanel(E.SubPanelType.Sync, activePanel)")
-            .dnd-layer(data-dnd-type="sspb")
-            svg: use(href="#icon_sync")
+        .SidebarBottomDock(v-if="(bottomBar || showYouTubeBar) && Utils.isTabsPanel(activePanel)")
+          YouTubeControlsBar(v-if="showYouTubeBar")
+          .BottomBar(
+            v-if="bottomBar"
+            @dragover.prevent.stop=""
+            :data-drop-target-bookmarks="DnD.reactive.dstType === E.DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id"
+            :data-drop-target-sync="DnD.reactive.dstType === E.DropType.SyncSubPanelBtn")
+            .tool-btn(
+              v-if="Settings.state.subPanelRecentlyClosedBar"
+              :data-disabled="!Tabs.reactive.recentlyRemovedLen"
+              @click="Sidebar.openSubPanel(E.SubPanelType.RecentlyClosedTabs, activePanel)")
+              svg: use(href="#icon_trash")
+            .tool-btn.-bookmarks(
+              v-if="Settings.state.subPanelBookmarks"
+              @dragleave="onBSPBDragLeave"
+              @click="Sidebar.openSubPanel(E.SubPanelType.Bookmarks, activePanel)")
+              .dnd-layer(data-dnd-type="bspb")
+              svg: use(href="#icon_bookmarks")
+            .tool-btn(
+              v-if="Settings.state.subPanelHistory"
+              @click="Sidebar.openSubPanel(E.SubPanelType.History, activePanel)")
+              svg: use(href="#icon_clock")
+            .tool-btn.-sync(
+              v-if="Settings.state.subPanelSync"
+              @dragleave="onSSPBDragLeave"
+              @click="Sidebar.openSubPanel(E.SubPanelType.Sync, activePanel)")
+              .dnd-layer(data-dnd-type="sspb")
+              svg: use(href="#icon_sync")
 
       SubPanel
 
@@ -156,6 +158,7 @@ import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
 import SiteConfigPopup from '../components/popup.site-config.vue'
 import ProcessingTabsPopup from './components/popup.processing-tabs.vue'
 import SubPanel from './components/sub-panel.vue'
+import YouTubeControlsBar from './components/bar.youtube-controls.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -175,6 +178,8 @@ let bottomBar =
   Settings.state.subPanelBookmarks ||
   Settings.state.subPanelHistory ||
   Settings.state.subPanelSync
+
+const showYouTubeBar = computed(() => Settings.state.subPanelYouTube)
 
 function recalcStaticVars() {
   animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'

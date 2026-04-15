@@ -1813,6 +1813,17 @@ You can also set prefixes for each command type for faster navigation. Starting 
     zh: '同步子面板',
     ja: '同期サブパネル',
   },
+  'settings.sub_panel.youtube': {
+    en: 'YouTube playback controls (tabs panel)',
+    de: 'YouTube-Wiedergabesteuerung (Tab-Panel)',
+    fr: 'Contrôles de lecture YouTube (panneau d’onglets)',
+    hu: 'YouTube lejátszásvezérlők (lap panel)',
+    pl: 'Sterowanie odtwarzaniem YouTube (panel kart)',
+    ru: 'Элементы управления воспроизведением YouTube (панель вкладок)',
+    zh_CN: 'YouTube 播放控制（标签页面板）',
+    zh_TW: 'YouTube 播放控制（分頁面板）',
+    ja: 'YouTube 再生コントロール（タブパネル）',
+  },
   'settings.nav_bar_enabled': {
     en: 'Enabled elements',
     de: 'Aktivierte Elemente',

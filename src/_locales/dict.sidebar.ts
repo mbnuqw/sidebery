@@ -15,6 +15,48 @@ export const sidebarTranslations: Translations = {
     zh_TW: '搜尋...',
     ja: '検索...',
   },
+  'bar.youtube.prev': {
+    en: 'Previous video',
+    de: 'Vorheriges Video',
+    fr: 'Vidéo précédente',
+    ru: 'Предыдущее видео',
+    ja: '前の動画',
+  },
+  'bar.youtube.next': {
+    en: 'Next video',
+    de: 'Nächstes Video',
+    fr: 'Vidéo suivante',
+    ru: 'Следующее видео',
+    ja: '次の動画',
+  },
+  'bar.youtube.play': {
+    en: 'Play',
+    de: 'Wiedergeben',
+    fr: 'Lecture',
+    ru: 'Воспроизвести',
+    ja: '再生',
+  },
+  'bar.youtube.pause': {
+    en: 'Pause',
+    de: 'Pause',
+    fr: 'Pause',
+    ru: 'Пауза',
+    ja: '一時停止',
+  },
+  'bar.youtube.mute': {
+    en: 'Mute tab',
+    de: 'Tab stummschalten',
+    fr: 'Couper le son de l’onglet',
+    ru: 'Отключить звук вкладки',
+    ja: 'タブをミュート',
+  },
+  'bar.youtube.unmute': {
+    en: 'Unmute tab',
+    de: 'Tab-Stummschaltung aufheben',
+    fr: 'Réactiver le son de l’onglet',
+    ru: 'Включить звук вкладки',
+    ja: 'ミュート解除',
+  },
 
   // ---
   // -- Confirm dialogs

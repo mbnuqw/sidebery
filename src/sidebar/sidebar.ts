@@ -26,6 +26,7 @@ import * as Snapshots from 'src/services/snapshots.fg'
 import * as Sync from 'src/services/sync.fg'
 import * as Keybindings from 'src/services/keybindings.fg'
 import * as WebReq from 'src/services/web-req.fg'
+import * as YouTube from 'src/services/youtube.fg'
 import SidebarRoot from './sidebar.vue'
 
 async function main(): Promise<void> {
@@ -95,6 +96,7 @@ async function main(): Promise<void> {
   Favicons.reactivate(reactive)
   Bookmarks.reactivate(reactive)
   Tabs.reactivate(reactive)
+  YouTube.reactivate(reactive)
   DnD.reactivate(reactive)
   Permissions.reactivate(reactive)
   Notifications.reactivate(reactive)
@@ -123,6 +125,8 @@ async function main(): Promise<void> {
 
   if (Sidebar.hasTabs) await Tabs.load()
   else await Tabs.loadInShadowMode()
+
+  YouTube.setupYouTubeBarListeners()
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
