@@ -1934,7 +1934,7 @@ export const commonTranslations: Translations = {
     ja: 'ピン留め解除',
   },
   'menu.tab.anchor': {
-    en: 'Anchor',
+    en: 'Bind URL',
     de: 'Ankern',
     fr: 'Ancrer',
     hu: 'Horgonyzás',
@@ -1945,7 +1945,7 @@ export const commonTranslations: Translations = {
     ja: 'アンカー設定',
   },
   'menu.tab.unanchor': {
-    en: 'Unanchor',
+    en: 'Unbind URL',
     de: 'Anker entfernen',
     fr: 'Désancrer',
     hu: 'Horgony eltávolítása',

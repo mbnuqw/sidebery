@@ -708,7 +708,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ピン留めされたタブ',
   },
   'settings.nav_settings_anchor_tabs': {
-    en: 'Anchor tabs',
+    en: 'Bind URL tabs',
     de: 'Anker-Tabs',
     fr: 'Onglets ancrés',
     hu: 'Horgonyzott lapok',
