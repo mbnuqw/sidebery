@@ -5,7 +5,7 @@
   "ExtDesc": {
     "en": "Tabs tree, bookmarks and history in a highly configurable sidebar.",
     "de": "Baumstruktur der Tabs, Lesezeichen und Verlauf in einer hochgradig konfigurierbaren Seitenleiste.",
-    "fr": "Arborescence d’onglets, marque-pages et historique dans un panneau latéral hautement configurable.",
+    "fr": "Arborescence d’onglets, marque-pages et historique dans une barre latérale hautement configurable.",
     "hu": "Böngészőlapok fanézetben, könyvjelzők és előzmények egy nagymértékben személyre szabható oldalsávon.",
     "pl": "Drzewo kart, zakładki i historia w bogato konfiguralnym panelu bocznym.",
     "ru": "Древовидные вкладки, закладки и история на настраиваемой боковой панели.",
@@ -28,7 +28,7 @@
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
     "de": "Öffne/Schließe Seitenleiste",
-    "fr": "Ouvrir/fermer le panneau latéral",
+    "fr": "Ouvrir/fermer la barre latérale",
     "hu": "Az oldalsáv megnyitása/bezárása",
     "pl": "Otwórz/Zamknij panel boczny",
     "ru": "Открыть/Закрыть панель",
@@ -470,7 +470,7 @@
   "KbRm": {
     "en": "Close selected or active tab / Delete selected bookmarks",
     "de": "Ausgewählte Elemente oder aktiven Tab entfernen",
-    "fr": "Fermer l’onglet selectionné ou actif / Supprimer les marque-pages sélectionnés",
+    "fr": "Fermer l’onglet sélectionné ou actif / Supprimer les marque-pages sélectionnés",
     "hu": "A kijelölt (vagy aktív) lap bezárása / A kijelölt könyvjelző törlése",
     "pl": "Zamknij zaznaczoną lub aktywną kartę / Usuń zaznczone zakładki",
     "ru": "Закрыть выбранную или активную вкладку / Удалить выбранные закладки",
@@ -1427,7 +1427,7 @@
   "group_disconnected_warn": {
     "en": "Cannot connect to the sidebar...",
     "de": "Keine Verbindung zur Seitenleiste möglich...",
-    "fr": "Impossible de se connecter au panneau latéral…",
+    "fr": "Impossible de se connecter à la barre latérale…",
     "hu": "Nem sikerült kapcsolódni az oldalsávhoz…",
     "pl": "Niemożna połączyć do bocznego panelu...",
     "ru": "Невозможно подключиться к боковой панели...",

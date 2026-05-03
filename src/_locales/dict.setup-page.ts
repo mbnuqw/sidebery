@@ -621,6 +621,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
+    fr: 'Barre d’adresse',
   },
   'settings.nav_settings_nav': {
     en: 'Navigation bar',
@@ -1097,7 +1098,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.update_sidebar_title': {
     en: "Use active panel's name as sidebar title",
     de: 'Name des aktiven Panels als Seitenleistenname verwenden',
-    fr: 'Utiliser le nom du panneau actif comme titre du panneau latéral',
+    fr: 'Utiliser le nom du panneau actif comme titre de la barre latérale',
     hu: 'Az oldalsáv neve mindig egyezzen meg az aktív panel nevével',
     pl: 'Używaj nazwy aktywnego panelu jako tytuł panelu bocznego',
     ru: 'Использовать имя активной панели в качестве заголовка боковой панели',
@@ -1108,7 +1109,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.mark_window': {
     en: "Add preface to the browser window's title if Sidebery sidebar is active",
     de: 'Präfix dem Fensternamen des Browsers voranstellen, wenn die Sidebery-Seitenleiste geöffnet ist',
-    fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand le panneau latéral Sidebery est actif',
+    fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand la barre latérale Sidebery est actif',
     hu: 'Az ablak címében előtag jelzi, ha a Sidebery oldalsáv aktív',
     pl: 'Dodaj przedrostek do tytułu okna przeglądarki jeśli panel boczny Sidebery jest aktywny',
     ru: 'Добавлять префикс к заголовку окна, если боковая панель Sidebery активна',
@@ -1589,32 +1590,43 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   // - Address bar (Omnibox)
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
+    fr: 'Barre d’adresse (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
+    fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
   },
   'settings.omnibox_note': {
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
 
 You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
+    fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
+
+Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
+    fr: 'Commandes disponibles:',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
+    fr: 'Réouvrir un onglet actif dans un contenur…',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
+    fr: 'Basculer vers le panneau…',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
+    fr: 'Déplacer un onglet actif vers le panneau…',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
+    fr: 'Déplacer un onglet actif vers le groupe…',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
+    fr: 'Préfixe:',
   },
 
   // - Navigation bar
@@ -2267,7 +2279,7 @@ You can also set prefixes for each command type for faster navigation. Starting 
   'settings.dnd_outside': {
     en: 'Action on drag-and-drop to the outside of sidebar',
     de: 'Aktion beim Ziehen und Ablegen aus der Seitenleiste heraus',
-    fr: 'Action lors d’un glisser-déposer hors de le panneau latéral',
+    fr: 'Action lors d’un glisser-déposer hors de la barre latérale',
     hu: 'Az oldalsávon kívülre történő húzás művelete',
     pl: 'Akcja po przeniesieniu i opuszczeniu na zewnątrz panelu bocznego',
     ru: 'Действие при перетаскивании за пределы боковой панели',
@@ -2509,9 +2521,11 @@ You can also set prefixes for each command type for faster navigation. Starting 
   },
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
+    fr: 'Continuer à chercher après avoir changé d’onglet',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
+    fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
@@ -2678,7 +2692,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.switch_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
     de: 'Wenn der Mauszeiger die Seitenleiste verließ',
-    fr: 'si la souris sort du panneau latéral',
+    fr: 'si la souris sort de la barre latérale',
     hu: 'ha az egér elhagyja az oldalsávot',
     pl: 'jeśli myszka została na panelu bocznym',
     ru: 'если мышь покинула боковую панель',
@@ -3406,7 +3420,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.pinned_tabs_position_panel': {
     en: 'in panel - top',
     de: 'Im Panel - Oben',
-    fr: 'en haut du panneau',
+    fr: 'Dans le panneau – en haut',
     hu: 'a panelon – fent',
     pl: 'w panelu - góra',
     ru: 'на панели - сверху',
@@ -3417,7 +3431,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.pinned_tabs_position_top': {
     en: 'globally - top',
     de: 'Global - Oben',
-    fr: 'en haut de tous les panneaux',
+    fr: 'Globale – en haut',
     hu: 'globálisan – fent',
     pl: 'globalnie - góra',
     ru: 'глобально - вверху',
@@ -3428,7 +3442,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.pinned_tabs_position_left': {
     en: 'globally - left',
     de: 'Global - Links',
-    fr: 'à gauche de tous les panneaux',
+    fr: 'Globale – à gauche',
     hu: 'globálisan – balra',
     pl: 'globalnie - lewo',
     ru: 'глобально - слева',
@@ -3439,7 +3453,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.pinned_tabs_position_right': {
     en: 'globally - right',
     de: 'Global - Rechts',
-    fr: 'à droite de tous les panneaux',
+    fr: 'Globale – à droite',
     hu: 'globálisan – jobbra',
     pl: 'globalnie - prawo',
     ru: 'глобально - справа',
@@ -3471,6 +3485,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
+    fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
   },
 
   // - Tabs tree
@@ -3931,7 +3946,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_mode_i': {
     en: 'popup in sidebar',
     de: 'Seitenleisten-Popup',
-    fr: 'popup de barre latérale',
+    fr: 'popup dans la barre latérale',
     hu: 'oldalsávos felugró',
     pl: 'popup w panelu',
     ru: 'попап в боковой панели',
@@ -3942,7 +3957,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_mode_p': {
     en: 'popup in page',
     de: 'Popup auf der Seite',
-    fr: 'dans une popup dans la page',
+    fr: 'popup dans la page',
     hu: 'az oldalon felbukkanó ablakban',
     pl: 'wyskakujące okienko w stronie',
     ru: 'попап на странице',
@@ -3986,7 +4001,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_inline_height': {
     en: 'Max preview height in sidebar (px, 0 = auto)',
     de: 'Max. Vorschauhöhe in der Seitenleiste (px, 0 = auto)',
-    fr: `Hauteur max de l'aperçu dans la barre latérale (px, 0 = auto)`,
+    fr: 'Hauteur max de l’aperçu dans la barre latérale (px, 0 = auto)',
     hu: 'Előnézet max. magassága az oldalsávban (px, 0 = auto)',
     pl: 'Maks. wysokość podglądu w panelu bocznym (px, 0 = auto)',
     ru: 'Макс. высота предпросмотра в боковой панели (px, 0 = авто)',
@@ -4030,7 +4045,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs.preview_side': {
     en: 'Sidebar side (needed to correctly calculate position of the popup)',
     de: 'Position der Seitenleiste (Wird benötigt, um die Position des Popups korrekt zu berechnen)',
-    fr: 'Position du panneau latéral (requis pour calculer correctement la position de la popup)',
+    fr: 'Position de la barre latérale (requise pour calculer correctement la position de la popup)',
     hu: 'Az oldalsáv oldala (a felbukkanó ablakok elhelyezése miatt szükséges)',
     pl: 'Strona panelu bocznego (potrzebna aby poprawnie obliczyć pozycję wyskakującego okienka)',
     ru: 'Сторона боковой панели (необходимо для правильного расчета положения всплывающего окна)',
@@ -4881,6 +4896,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
+    fr: 'Isoler les onglets épinglés globalement',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
@@ -7045,7 +7061,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 - Aktiviere ausgewählte Kontextmenü-Option
 - Aktiviere ausgewähltes Panel`,
     fr: `– Activer l’onglet sélectionné
-– Ouvrir le marque-page
+– Ouvrir le marque-page sélectionné
 – Replier/déplier une branche d’onglets active ou un dossier de marque-pages sélectionné
 – Activer l'option du menu contextuel sélectionnée
 – Activer le panneau sélectionné`,
@@ -7092,7 +7108,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     fr: `- Fermer le menu contextuel non natif
 - Réinitialiser la sélection
 - Quitter le mode recherche
-- Fermer le sous-panneau et les fenêtres contextuelles`,
+- Fermer le sous-panneau et les popups`,
     hu: `- Nem natív helyi menü bezárása
 - Kiválasztás visszaállítása
 - Keresési módból való kilépés
@@ -7407,7 +7423,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'styles.css_sidebar': {
     en: 'Sidebar',
     de: 'Seitenleiste',
-    fr: 'Panneau latéral',
+    fr: 'Barre latérale',
     hu: 'Oldalsáv',
     pl: 'Panel boczny',
     ru: 'Боковая панель',
@@ -7611,7 +7627,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   – Cliquer sur le bouton “Copier l’URL des outils de développement” dans la barre en bas de la page
   – Sélectionner une iframe à inspecter
     – Cliquer sur l’icone rectangulaire avec les trois sections dans le coin en haut à droite de la page du debuggeur
-    – Sélectionner “/sidebar/sidebar.html” pour l’iframe du panneau latéral
+    – Sélectionner “/sidebar/sidebar.html” pour l’iframe de la barre latérale
     – Sélectionner “/sidebery/group.html” pour l’iframe de la page de groupe
   – Explorer l’onglet “Inspecteur”`,
     hu: `MEGJEGYZÉS: A rendelkezésre álló CSS-kiválasztókat a hibakeresővel lehet megtudni:

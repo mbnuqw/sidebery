@@ -2469,7 +2469,7 @@ export const commonTranslations: Translations = {
   'menu.common.conf_in_sidebar': {
     en: 'Configure panel in sidebar',
     de: 'Panel in der Seitenleiste konfigurieren',
-    fr: 'Configurer le panneau dans le panneau latéral',
+    fr: 'Configurer le panneau dans la barre latérale',
     hu: 'Panelbeállítások az oldalsávon',
     pl: 'Konfiguruj panel w panelu bocznym',
     ru: 'Быстрые настройки панели',
@@ -2797,21 +2797,27 @@ export const commonTranslations: Translations = {
   // -
   'omnibox.default_suggestion': {
     en: 'Choose the command (default is the first one):',
+    fr: 'Choisir la commande (la première est celle par défaut)',
   },
   'omnibox.reopen_in_ctr': {
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
+    fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
+    fr: 'Conteneur par défaut',
   },
   'omnibox.move_to_panel': {
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
+    fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
   },
   'omnibox.switch_to_panel': {
     en: panelName => `⮞ Switch to "${panelName}" panel`,
+    fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
   },
   'omnibox.move_to_tab': {
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
+    fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
   },
 }
 
