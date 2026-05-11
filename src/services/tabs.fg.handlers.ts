@@ -1799,8 +1799,29 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
         autoFold.push(t)
       }
     }
+    // ==========================================
+    // SORT
+    // ==========================================
+    autoFold.sort((a, b) => {
+      let aMax = a.lastAccessed
+      let bMax = b.lastAccessed
+      if (a.childLastAccessed) aMax = Math.max(a.lastAccessed, a.childLastAccessed)
+      if (a.lastExpanded) aMax = Math.max(aMax, a.lastExpanded)
+      if (b.childLastAccessed) bMax = Math.max(b.lastAccessed, b.childLastAccessed)
+      if (b.lastExpanded) bMax = Math.max(bMax, b.lastExpanded)
+      return aMax - bMax
+    })
 
+    // ==========================================
+    // autoFoldTabsExcept
+    // ==========================================
+    const except = Settings.state.autoFoldTabsExcept
+    if (Settings.state.autoFoldTabsExcept !== 'none') {
+      autoFold = autoFold.slice(0, -Settings.state.autoFoldTabsExcept)
+    }
+    // ==========================================
     // Fold tabs
+    // ==========================================
     for (const t of autoFold) {
       Tabs.foldTabsBranch(t.id)
     }
