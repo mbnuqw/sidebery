@@ -1765,6 +1765,47 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
+  // ==========================================
+  // Auto fold on tab activation
+  // ==========================================
+  if (Settings.state.autoFoldTabs && !DnD.reactive.isStarted) {
+    let autoFold: T.Tab[] = []
+    // Collect all parent branches of active tab
+    // so they won't be folded
+    const activeBranchIds: ID[] = []
+    let parentId = tab.parentId
+    while (parentId !== -1) {
+      activeBranchIds.push(parentId)
+      const parent = Tabs.byId[parentId]
+      if (!parent) break
+      parentId = parent.parentId
+    }
+
+    for (const t of Tabs.list) {
+      // Skip current tab
+      if (t.id === tab.id) continue
+      // Skip pinned tabs
+      if (t.pinned) continue
+      // Only parent tabs can be folded
+      if (!t.isParent) continue
+      // Skip already folded tabs
+      if (t.folded) continue
+      // Same panel only
+      if (t.panelId !== tab.panelId) continue
+      // Don't fold active branch
+      if (activeBranchIds.includes(t.id)) continue
+      // Fold branches on same level
+      if (t.lvl === tab.lvl) {
+        autoFold.push(t)
+      }
+    }
+
+    // Fold tabs
+    for (const t of autoFold) {
+      Tabs.foldTabsBranch(t.id)
+    }
+  }
+
   if (Settings.state.scrollPanelAfterSwitchingTab !== 'no' && !tab.pinned) {
     if (Settings.state.scrollPanelAfterSwitchingTab === 'mouseleave' && Mouse.mouseIn) {
       Sidebar.setScrollOnMouseLeaveState(true)
