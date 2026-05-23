@@ -36,27 +36,21 @@
     .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(ref="flashFxEl")
     .unread-mark(v-if="tab.reactive.unread")
-    .fav-anchor(
-      @mousedown.stop="onFavMouseDown"
-      @mouseup.stop="onFavMouseUp")
-      .fav(@dragstart.stop.prevent)
-        img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
-        svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
-        .exp(
-          v-if="tab.reactive.isParent"
-          @dblclick.prevent.stop
-          @mousedown.stop="onExpandMouseDown"
-          @mouseup="onExpandMouseUp")
-          svg.exp-icon: use(href="#icon_expand")
-        .badge
-        .progress-spinner(v-if="Settings.state.animations")
-        svg.progress-spinner(v-else): use(href="#icon_hourglass")
-        .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
-        .bind-mark(v-if="tab.reactive.anchored")
-          svg.bind-mark-icon: use(:href="tab.reactive.anchoredAway ? '#icon_undo' : '#icon_home'")
-      .title.-anchor-back(v-if="tab.reactive.anchoredAway && !iconOnly")
-        span.back-to-prefix Back to
-        span.back-to-title {{tab.anchorTitle}}
+    .fav(@dragstart.stop.prevent)
+      img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
+      svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
+      .exp(
+        v-if="tab.reactive.isParent"
+        @dblclick.prevent.stop
+        @mousedown.stop="onExpandMouseDown"
+        @mouseup="onExpandMouseUp")
+        svg.exp-icon: use(href="#icon_expand")
+      .badge
+      .progress-spinner(v-if="Settings.state.animations")
+      svg.progress-spinner(v-else): use(href="#icon_hourglass")
+      .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
+      .bind-mark(v-if="tab.reactive.anchored")
+        svg.bind-mark-icon: use(:href="tab.reactive.anchoredAway ? '#icon_undo' : '#icon_home'")
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
@@ -421,19 +415,6 @@ function longClickFeedback(e: MouseEvent) {
   if (!noop) Tabs.triggerFlashAnimation(tab)
 
   return !noop
-}
-
-function onFavMouseDown(e: MouseEvent): void {
-  if (tab.reactive.anchoredAway && e.button === 0) return
-  onMouseDown(e)
-}
-
-function onFavMouseUp(e: MouseEvent): void {
-  if (tab.reactive.anchoredAway && e.button === 0) {
-    Tabs.returnToAnchor(tab.id)
-    return
-  }
-  onMouseUp(e)
 }
 
 function onMouseUp(e: MouseEvent): void {

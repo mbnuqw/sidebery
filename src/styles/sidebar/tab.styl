@@ -315,12 +315,6 @@
 // ---
 // -- Favicon
 // -
-.Tab .fav-anchor
-  display: flex
-  align-items: center
-  flex-shrink: 0
-  position: relative
-
 .Tab .fav
   position: relative
   width: 16px
@@ -330,11 +324,8 @@
   z-index: 10
   transform: translateZ(0)
 
-.Tab[data-pin="false"] .fav-anchor
-  // Padding extends the hit area to match the visual highlight box.
-  // Margins reduced by same amounts so flex layout spacing is unchanged.
-  padding: calc((var(--tabs-height) - 16px) / 2 - 2px) var(--tabs-inner-gap)
-  margin: 0 0 0 2px
+.Tab[data-pin="false"] .fav
+  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
   z-index: 20
 
 .Tab .fav-icon
@@ -720,46 +711,6 @@
 
 .Tab[data-active="true"] .bind-mark-icon
   fill: var(--tabs-activated-fg)
-
-// Anchored-away: restrict hover highlight to the favicon area only
-.Tab[data-anchored-away="true"]:hover .body:before
-  background-color: initial
-
-// Hover over an anchored-away tab reveals the "Back to <title>" affordance and
-// a pointer cursor; clicking the favicon area returns to the bound URL.
-.Tab[data-anchored-away="true"] .fav-anchor:hover
-  cursor: pointer
-  flex-grow: 1
-  .fav:after
-    content: ''
-    position: absolute
-    inset: -4px
-    border-radius: 4px
-    background-color: var(--frame-el-overlay-selected-bg)
-    z-index: -1
-  .title.-anchor-back
-    display: flex
-
-// Hide the normal title while the "Back to" affordance is shown
-.Tab[data-anchored-away="true"] .fav-anchor:hover ~ .t-box
-  display: none
-
-// "Back to" title inside .fav-anchor — hidden by default, shown on hover
-.Tab .fav-anchor .title.-anchor-back
-  display: none
-  flex-grow: 1
-  margin-left: var(--tabs-inner-gap)
-  align-items: center
-  gap: 0.25em
-  overflow: hidden
-  white-space: nowrap
-  .back-to-prefix
-    font-weight: normal
-    flex-shrink: 0
-  .back-to-title
-    font-weight: bold
-    overflow: hidden
-    text-overflow: ellipsis
 
 // ---
 // -- Keyframes
