@@ -50,7 +50,7 @@
       svg.progress-spinner(v-else): use(href="#icon_hourglass")
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
       .bind-mark(v-if="tab.reactive.anchored")
-        svg.bind-mark-icon: use(:href="tab.reactive.anchoredAway ? '#icon_undo' : '#icon_home'")
+        svg.bind-mark-icon: use(href="#icon_home")
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
