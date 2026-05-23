@@ -131,9 +131,6 @@ export interface SettingsState {
   pinnedNoUnloadExplicit: boolean
   pinnedForcedDiscard: boolean
 
-  // Anchor tabs
-  anchorTabsResetIndicator: string
-
   // Tabs tree
   tabsTree: boolean
   groupOnOpen?: boolean // DEPR

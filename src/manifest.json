@@ -415,8 +415,11 @@
     "edit_title": {
       "description": "__MSG_KbEditTitle__"
     },
-    "toggle_anchor_tab": {
-      "description": "__MSG_KbToggleAnchorTab__"
+    "toggle_bind_url": {
+      "description": "__MSG_KbToggleBindUrl__"
+    },
+    "return_to_bound_url": {
+      "description": "__MSG_KbReturnToBoundUrl__"
     },
     "sort_tabs_by_title_asc": {
       "description": "__MSG_KbSortTabsByTitleAsc__"

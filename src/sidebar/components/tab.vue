@@ -36,28 +36,20 @@
     .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(ref="flashFxEl")
     .unread-mark(v-if="tab.reactive.unread")
-    .fav-anchor(
-      @mousedown.stop="onFavMouseDown"
-      @mouseup.stop="onFavMouseUp")
-      .fav(@dragstart.stop.prevent)
-        img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
-        svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
-        svg.fav-icon.-anchor-hover(v-if="tab.reactive.anchored"): use(href="#icon_undo")
-        .exp(
-          v-if="tab.reactive.isParent"
-          @dblclick.prevent.stop
-          @mousedown.stop="onExpandMouseDown"
-          @mouseup.stop="onExpandMouseUp")
-          svg.exp-icon: use(href="#icon_expand")
-        .badge
-        .progress-spinner(v-if="Settings.state.animations")
-        svg.progress-spinner(v-else): use(href="#icon_hourglass")
-        .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
-      .title.-anchor-back(v-if="tab.reactive.anchoredAway")
-        span.back-to-prefix Back to
-        span.back-to-title {{tab.anchorTitle}}
-      .anchor-reset-indicator(v-if="tab.reactive.anchoredAway && !iconOnly")
-        | {{Settings.state.anchorTabsResetIndicator}}
+    .fav(@dragstart.stop.prevent)
+      img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
+      svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
+      .exp(
+        v-if="tab.reactive.isParent"
+        @dblclick.prevent.stop
+        @mousedown.stop="onExpandMouseDown"
+        @mouseup="onExpandMouseUp")
+        svg.exp-icon: use(href="#icon_expand")
+      .badge
+      .progress-spinner(v-if="Settings.state.animations")
+      svg.progress-spinner(v-else): use(href="#icon_hourglass")
+      .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
+      .bind-mark(v-if="tab.reactive.anchored")
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
@@ -351,6 +343,12 @@ function onMouseDown(e: MouseEvent): void {
       } else if (Settings.state.tabPinnedMiddleClick === 'unpin') {
         Tabs.unpinTabs([tab.id])
         return
+      } else if (Settings.state.tabPinnedMiddleClick === 'toggle_bind_url') {
+        Tabs.toggleAnchorTabs(selectedTabs)
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'return_to_bound') {
+        Tabs.returnToAnchor(tab.id)
+        return
       }
     }
 
@@ -368,6 +366,10 @@ function onMouseDown(e: MouseEvent): void {
         Tabs.duplicateTabs([tab.id])
       } else if (Settings.state.tabMiddleClick === 'dup_child') {
         Tabs.duplicateTabs([tab.id], true)
+      } else if (Settings.state.tabMiddleClick === 'toggle_bind_url') {
+        Tabs.toggleAnchorTabs(selectedTabs)
+      } else if (Settings.state.tabMiddleClick === 'return_to_bound') {
+        Tabs.returnToAnchor(tab.id)
       }
     }
   }
@@ -403,24 +405,15 @@ function longClickFeedback(e: MouseEvent) {
   else if (action === 'new_after') Tabs.createTabAfter(tab.id)
   else if (action === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
   else if (action === 'edit_title' && !tab.pinned) Tabs.editTabTitle([tab.id])
-  else noop = true
+  else if (action === 'toggle_bind_url') Tabs.toggleAnchorTabs([tab.id])
+  else if (action === 'return_to_bound') {
+    if (tab.anchorUrl && tab.url !== tab.anchorUrl) Tabs.returnToAnchor(tab.id)
+    else noop = true
+  } else noop = true
 
   if (!noop) Tabs.triggerFlashAnimation(tab)
 
   return !noop
-}
-
-function onFavMouseDown(e: MouseEvent): void {
-  if (tab.reactive.anchoredAway && e.button === 0) return
-  onMouseDown(e)
-}
-
-function onFavMouseUp(e: MouseEvent): void {
-  if (tab.reactive.anchoredAway && e.button === 0) {
-    Tabs.returnToAnchor(tab.id)
-    return
-  }
-  onMouseUp(e)
 }
 
 function onMouseUp(e: MouseEvent): void {
@@ -535,6 +528,8 @@ function onDoubleClick(): void {
     if (shouldBeConvertedToGroup()) convertToGroup()
     else Tabs.removeTabs([tab.id])
   } else if (dc === 'edit_title') Tabs.editTabTitle([tab.id])
+  else if (dc === 'toggle_bind_url') Tabs.toggleAnchorTabs([tab.id])
+  else if (dc === 'return_to_bound') Tabs.returnToAnchor(tab.id)
 }
 
 function onDragStart(e: DragEvent): void {

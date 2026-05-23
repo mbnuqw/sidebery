@@ -260,7 +260,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
   },
 
-  anchor: () => {
+  bind_url: () => {
     const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
     if (!firstTab) return
@@ -270,6 +270,17 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: firstTab.anchorUrl
         ? () => Tabs.unanchorTabs(selected)
         : () => Tabs.anchorTabs(selected),
+    }
+  },
+
+  return_to_bound: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab?.anchorUrl || firstTab.url === firstTab.anchorUrl) return
+    return {
+      label: translate('menu.tab.return_to_bound'),
+      icon: 'icon_undo',
+      onClick: () => Tabs.returnToAnchor(firstTab.id),
     }
   },
 

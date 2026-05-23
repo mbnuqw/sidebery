@@ -1955,6 +1955,17 @@ export const commonTranslations: Translations = {
     zh_TW: '取消錨定',
     ja: 'アンカー解除',
   },
+  'menu.tab.return_to_bound': {
+    en: 'Return to bound URL',
+    de: 'Zur gebundenen URL zurück',
+    fr: 'Revenir à l’URL liée',
+    hu: 'Vissza a kötött URL-hez',
+    pl: 'Wróć do powiązanego URL',
+    ru: 'Вернуться к привязанному URL',
+    zh_CN: '返回绑定的网址',
+    zh_TW: '返回綁定的網址',
+    ja: 'バインドされたURLに戻る',
+  },
   'menu.tab.duplicate': {
     en: 'Duplicate',
     de: 'Duplizieren',
