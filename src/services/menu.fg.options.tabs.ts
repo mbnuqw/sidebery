@@ -266,7 +266,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     if (!firstTab) return
     return {
       label: translate('menu.tab.' + (firstTab.anchorUrl ? 'unanchor' : 'anchor')),
-      icon: 'icon_undo',
+      icon: firstTab.anchorUrl ? 'icon_home' : 'icon_undo',
       onClick: firstTab.anchorUrl
         ? () => Tabs.unanchorTabs(selected)
         : () => Tabs.anchorTabs(selected),
