@@ -1955,6 +1955,17 @@ export const commonTranslations: Translations = {
     zh_TW: '卸載分頁',
     ja: 'アンロード',
   },
+  'menu.tab.discard_other': {
+    en: 'Unload other tabs',
+    de: 'Andere Tabs entladen',
+    fr: 'Décharger les autres onglets',
+    hu: 'A többi lap kisöprése',
+    pl: 'Uśpij inne karty',
+    ru: 'Выгрузить другие вкладки',
+    zh_CN: '卸载其他标签页',
+    zh_TW: '卸載其他分頁',
+    ja: '他のタブをアンロード',
+  },
   'menu.tab.edit_title': {
     en: 'Edit title',
     de: 'Titel bearbeiten',

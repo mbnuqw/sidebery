@@ -309,6 +309,33 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return option
   },
 
+  discardOtherTabs: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.discard_other'),
+      icon: 'icon_discard',
+      onClick: () => {
+        const ids = Selection.ids()
+        const firstTab = Tabs.byId[ids[0]]
+        if (!firstTab) return
+        const panel = Sidebar.panelsById[firstTab.panelId]
+        if (!Utils.isTabsPanel(panel)) return
+        const tabIds: ID[] = []
+        panel.tabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
+        if (tabIds.length) Tabs.discardTabs(tabIds)
+      },
+    }
+
+    const tabId = Selection.getFirst()
+    const tab = Tabs.byId[tabId]
+    if (!tab || tab.pinned) option.inactive = true
+    if (tab) {
+      const panel = Sidebar.panelsById[tab.panelId]
+      if (!panel || panel.reactive.len === 1) option.inactive = true
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   group: () => {
     const option: MenuOption = {
       label: translate('menu.tab.group'),

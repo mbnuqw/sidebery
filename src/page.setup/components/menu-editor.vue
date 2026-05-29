@@ -174,6 +174,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
   mute: 'menu.tab.mute',
   duplicate: 'menu.tab.duplicate',
   discard: 'menu.tab.discard',
+  discardOtherTabs: 'menu.tab.discard_other',
   dedupeTabs: 'menu.dedupe',
   copyTabsUrls: 'menu.copy_urls',
   copyTabsTitles: 'menu.copy_titles',
