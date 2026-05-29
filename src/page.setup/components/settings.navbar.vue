@@ -241,7 +241,7 @@ const availableBtns = computed<Btn[]>(() => {
   // prettier-ignore
   const ids = [
     'tabs_panel', 'bookmarks_panel', 'history', 'sync', 'sp', 'sd', 'hdn', 'search',
-    'add_tp', 'create_snapshot', 'collapse', 'remute_audio_tabs', 'settings',
+    'add_tp', 'create_snapshot', 'collapse', 'expand', 'remute_audio_tabs', 'settings',
   ]
 
   for (const id of ids) {

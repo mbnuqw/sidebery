@@ -711,6 +711,9 @@ export const sidebarTranslations: Translations = {
     zh_TW: '全部折疊',
     ja: 'すべて折りたたむ',
   },
+  'nav.btn_expand': {
+    en: 'Expand all',
+  },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
     de: 'Mittelklick: Schließe Tabs',

@@ -119,6 +119,7 @@ const NavItemTypeNames = {
   [E.ButtonType.create_snapshot]: 'create_snapshot',
   [E.ButtonType.remute_audio_tabs]: 'remute_audio_tabs',
   [E.ButtonType.collapse]: 'collapse',
+  [E.ButtonType.expand]: 'expand',
   [E.SpaceType.dynamic]: 'dynamic',
   [E.SpaceType.static]: 'static',
 }

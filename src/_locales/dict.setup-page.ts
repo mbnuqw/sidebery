@@ -1988,6 +1988,9 @@ You can also set prefixes for each command type for faster navigation. Starting 
     zh_TW: '折疊全部',
     ja: 'すべて折りたたむ',
   },
+  'settings.nav_bar_btn_expand': {
+    en: 'Expand all',
+  },
   'settings.nav_bar_btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
     de: 'Stumm-/Lautschalten hörbarer Tabs',

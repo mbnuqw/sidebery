@@ -68,6 +68,7 @@ export const BTN_ICONS: Record<string, string> = {
   add_tp: 'icon_add_tabs_panel',
   search: 'icon_search',
   collapse: 'icon_collapse_all',
+  expand: 'icon_expand_all',
   create_snapshot: 'icon_snapshot',
   remute_audio_tabs: 'icon_mute',
 }

@@ -856,6 +856,7 @@ export function recalcPanels(): void {
     if (id === 'create_snapshot') continue
     if (id === 'remute_audio_tabs') continue
     if (id === 'collapse') continue
+    if (id === 'expand') continue
     if (id === 'hdn') continue
 
     const panel = panelsById[id]
