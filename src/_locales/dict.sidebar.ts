@@ -713,6 +713,14 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_expand': {
     en: 'Expand all',
+    de: 'Alle ausklappen',
+    fr: 'Déplier tout',
+    hu: 'Minden ág megnyitása',
+    pl: 'Rozwiń wszystko',
+    ru: 'Развернуть все',
+    zh_CN: '全部展开',
+    zh_TW: '全部展開',
+    ja: 'すべて展開する',
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
