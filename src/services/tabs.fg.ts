@@ -1825,10 +1825,9 @@ export function foldAllInactiveBranches(tabs: T.Tab[] = []): void {
   }
 }
 
-export function expAllBranches(panel: T.TabsPanel): void {
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (tab && tab.isParent && tab.folded) {
+export function expAllBranches(tabs: T.Tab[] = []): void {
+  for (const tab of tabs) {
+    if (tab.isParent && tab.folded) {
       expTabsBranch(tab.id, true, true)
     }
   }

@@ -800,7 +800,12 @@ function expandAll(): void {
   if (!activePanel) return
 
   if (Utils.isTabsPanel(activePanel)) {
-    Tabs.expAllBranches(activePanel)
+    const tabs: T.Tab[] = []
+    for (const rTab of activePanel.tabs) {
+      const tab = Tabs.byId[rTab.id]
+      if (tab && tab.lvl === 0) tabs.push(tab)
+    }
+    Tabs.expAllBranches(tabs)
   } else if (Utils.isBookmarksPanel(activePanel)) {
     Bookmarks.expandAllBookmarks(activePanel.id)
   }
