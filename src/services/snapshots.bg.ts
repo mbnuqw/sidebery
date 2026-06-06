@@ -499,6 +499,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
     normLimit = limit * 1024
   }
 
+  const encoder = new TextEncoder()
   let index = snapshots.length
   let accum = 0
   let sizeAccum = 0
@@ -506,7 +507,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
     const snapshot = snapshots[index]
     if (!snapshot) continue
 
-    sizeAccum += new Blob([JSON.stringify(snapshot)]).size
+    sizeAccum += encoder.encode(JSON.stringify(snapshot)).length
 
     if (unit === 'snap') {
       accum++
