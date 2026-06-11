@@ -820,9 +820,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       IPPC.onHashMsg(tab, change.url)
     }
 
-    // Handle anchor tab URL change
-    if (tab.anchorUrl) {
-      tab.reactive.anchoredAway = change.url !== tab.anchorUrl
+    // Handle bound tab URL change
+    if (tab.boundUrl) {
+      tab.reactive.boundAway = change.url !== tab.boundUrl
     }
 
     // Reset favicon (to cached)

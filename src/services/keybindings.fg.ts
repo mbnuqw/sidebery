@@ -1535,13 +1535,13 @@ function onKeyPinTabs() {
 function onKeyToggleBindUrl() {
   const ids = Selection.isTabs() ? Selection.ids() : [Tabs.activeId]
   if (!ids.length) return
-  Tabs.toggleAnchorTabs(ids)
+  Tabs.toggleBindTabs(ids)
 }
 
 function onKeyReturnToBoundUrl() {
   const tabId = Selection.isTabs() ? Selection.getFirst() : Tabs.activeId
   if (tabId === NOID) return
-  Tabs.returnToAnchor(tabId)
+  Tabs.returnToBound(tabId)
 }
 
 function onKeyHidePanel() {

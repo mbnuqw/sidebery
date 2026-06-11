@@ -34,8 +34,8 @@ export class MTab implements Tab {
   reopenInContainer?: string | undefined
   customTitle?: string | undefined
   customColor?: string | undefined
-  anchorUrl?: string | undefined
-  anchorTitle?: string | undefined
+  boundUrl?: string | undefined
+  boundTitle?: string | undefined
   moving?: boolean | undefined
   previewImg?: string | undefined
   removing?: boolean | undefined
@@ -66,8 +66,8 @@ export class MTab implements Tab {
     branchColor: null,
     customColor: null,
     isGroup: false,
-    anchored: false,
-    anchoredAway: false,
+    bound: false,
+    boundAway: false,
   }
   sessionData?: TabSessionData | undefined
   titleEl?: HTMLElement | undefined

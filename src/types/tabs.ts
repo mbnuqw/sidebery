@@ -35,8 +35,8 @@ export interface Tab extends NativeTab {
   reopenInContainer?: string
   customTitle?: string
   customColor?: string
-  anchorUrl?: string
-  anchorTitle?: string
+  boundUrl?: string
+  boundTitle?: string
   moving?: boolean
   removing?: boolean
   flashAnimationTimeout?: number
@@ -79,8 +79,8 @@ export interface ReactiveTabProps {
   branchColor: string | null
   customColor: string | null
   isGroup: boolean
-  anchored: boolean
-  anchoredAway: boolean
+  bound: boolean
+  boundAway: boolean
 }
 
 export interface BgTab extends NativeTab {
@@ -115,8 +115,8 @@ export interface TabCache {
   uniqWinId?: ID /* only for the first tab of window */
   customTitle?: string
   customColor?: string
-  anchorUrl?: string
-  anchorTitle?: string
+  boundUrl?: string
+  boundTitle?: string
 
   index?: number
   isMissedGroup?: boolean
@@ -129,8 +129,8 @@ export interface TabSessionData {
   folded: boolean
   customTitle?: string
   customColor?: string
-  anchorUrl?: string
-  anchorTitle?: string
+  boundUrl?: string
+  boundTitle?: string
 }
 
 export interface ActiveTabsHistory {
