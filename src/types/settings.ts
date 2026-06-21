@@ -174,8 +174,6 @@ export interface SettingsState {
   previewTabsSide: (typeof SETTINGS_OPTIONS.previewTabsSide)[number]
   previewTabsDelay: number
   previewTabsFollowMouse: boolean
-  previewTabsWinOffsetY: number
-  previewTabsWinOffsetX: number
   previewTabsInPageOffsetY: number
   previewTabsInPageOffsetX: number
   previewTabsCropRight: number

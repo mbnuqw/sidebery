@@ -36,15 +36,11 @@ export interface Tab extends NativeTab {
   customTitle?: string
   customColor?: string
   moving?: boolean
-  previewImg?: string
   removing?: boolean
   flashAnimationTimeout?: number
 
   reactive: ReactiveTabProps
   sessionData?: TabSessionData
-
-  // ch?: BroadcastChannel
-  // chId?: string
 
   titleEl?: HTMLElement
   favImgEl?: HTMLImageElement
@@ -82,7 +78,6 @@ export interface ReactiveTabProps {
   branchColor: string | null
   customColor: string | null
   isGroup: boolean
-  preview: boolean
 }
 
 export interface BgTab extends NativeTab {
@@ -99,9 +94,6 @@ export interface BgTab extends NativeTab {
   proxified?: boolean
   preventAutoReopening?: boolean
   reloadOnActivation?: boolean
-
-  // ch?: BroadcastChannel
-  // chId?: string
 }
 
 export interface InlineTabData {

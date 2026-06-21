@@ -23,7 +23,6 @@ const BUNDLES = {
     outfile: path.join(ADDON_PATH, 'sidebery', 'url.js'),
   },
   'src/injections/tab-preview.ts': { format: 'iife' },
-  'src/popup.tab-preview/tab-preview.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?(\.ts)?"/g
 const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
@@ -359,13 +358,6 @@ async function main() {
       format: 'iife',
       outdir: path.join(ADDON_PATH, 'injections'),
     })
-    // Bundled script for preview popup (window)
-    const buildingWindowPreviewScript = esbuild.build({
-      ...PROD_ESBUILD_BASE_CONF,
-      entryPoints: ['src/popup.tab-preview/tab-preview.ts'],
-      splitting: false,
-      outdir: path.join(ADDON_PATH, 'popup.tab-preview'),
-    })
     // Bundled script for group page script
     const buildingGroupScript = esbuild.build({
       ...PROD_ESBUILD_BASE_CONF,
@@ -384,7 +376,6 @@ async function main() {
       buildingSplittedScripts,
       buildingBundledScripts,
       buildingInjectionPreviewScript,
-      buildingWindowPreviewScript,
       buildingGroupScript,
       buildingPlaceholderScript,
     ])

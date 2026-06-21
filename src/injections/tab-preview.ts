@@ -70,7 +70,7 @@ function waitInitData(): Promise<void> {
 
 async function updatePreview(tabId: ID, title: string, url: string, unloaded: boolean) {
   if (state.titleEl) state.titleEl.innerText = title
-  if (state.urlEl) state.urlEl.innerText = decodeURL(url)
+  if (state.urlEl) state.urlEl.innerText = url
 
   state.tabId = tabId
   state.unloaded = unloaded
@@ -82,14 +82,6 @@ async function updatePreview(tabId: ID, title: string, url: string, unloaded: bo
     if (state.tabId === tabId) setPreview(preview)
   } else {
     setPreview('')
-  }
-}
-
-function decodeURL(url: string): string {
-  try {
-    return decodeURI(url)
-  } catch (err) {
-    return url
   }
 }
 

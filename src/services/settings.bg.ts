@@ -14,6 +14,11 @@ import * as Logs from 'src/services/logs'
 import * as Settings from 'src/services/settings'
 export * from 'src/services/settings'
 
+export async function load() {
+  await Settings.load()
+  if (Settings.initSaveNeeded) saveSettings()
+}
+
 export async function saveSettings(): Promise<void> {
   Logs.info('Settings.saveSettings')
 

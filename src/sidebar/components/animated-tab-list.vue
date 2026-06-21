@@ -123,6 +123,7 @@ onUpdated(() => {
         const dy = prevTop - top
 
         el.style.transform = `translateY(${dy}px)`
+        el.style.pointerEvents = 'none'
         el.style.transitionDuration = '0s'
       }
     }
@@ -132,10 +133,9 @@ onUpdated(() => {
     if (moveAnimated.length) {
       for (const el of moveAnimated) {
         el.style.transform = ''
+        el.style.pointerEvents = ''
         el.style.transitionDuration = ''
       }
-
-      forceUpdateHoverState(moveAnimated[moveAnimated.length - 1])
     }
 
     if (added.length) {
@@ -148,26 +148,6 @@ onUpdated(() => {
 
   prevPositions.clear()
 })
-
-let waitingTransitionEnd: { el: HTMLElement; cb: () => void } | undefined
-function forceUpdateHoverState(el: HTMLElement) {
-  if (waitingTransitionEnd) {
-    waitingTransitionEnd.el.removeEventListener('transitionend', waitingTransitionEnd.cb)
-  }
-
-  const cb = () => {
-    el.removeEventListener('transitionend', cb)
-    waitingTransitionEnd = undefined
-
-    window.requestAnimationFrame(() => {
-      el.style.left = '-1px'
-      forceReflow()
-      el.style.left = ''
-    })
-  }
-  el.addEventListener('transitionend', cb)
-  waitingTransitionEnd = { el, cb }
-}
 
 function forceReflow() {
   document.body.offsetHeight

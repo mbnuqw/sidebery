@@ -20,6 +20,7 @@ declare namespace browser {
   type ColorName =
     | 'blue'
     | 'turquoise'
+    | 'cyan'
     | 'green'
     | 'yellow'
     | 'orange'
@@ -27,6 +28,7 @@ declare namespace browser {
     | 'pink'
     | 'purple'
     | 'toolbar'
+    | 'gray'
 
   /**
    * Runtime
@@ -199,6 +201,7 @@ declare namespace browser {
    */
   namespace tabs {
     const TAB_ID_NONE = -1
+    const SPLIT_VIEW_ID_NONE = -1
 
     interface Tab {
       active: boolean
@@ -223,6 +226,7 @@ declare namespace browser {
       openerTabId?: ID
       pinned: boolean
       sessionId?: string
+      splitViewId?: number
       status?: string
       successorTabId?: ID
       title: string
@@ -383,14 +387,15 @@ declare namespace browser {
       audible?: boolean
       discarded?: boolean
       favIconUrl?: string
+      groupId?: ID
       hidden?: boolean
       isArticle?: boolean
       mutedInfo?: MutedInfo
       pinned?: boolean
+      splitViewId?: number
       status?: string
       title?: string
       url?: string
-      groupId?: ID
     }
 
     type UpdateProp =
@@ -398,15 +403,16 @@ declare namespace browser {
       | 'audible'
       | 'discarded'
       | 'favIconUrl'
+      | 'groupId'
       | 'hidden'
       | 'isArticle'
       | 'mutedInfo'
       | 'pinned'
+      | 'splitViewId'
       | 'sharingState'
       | 'status'
       | 'title'
       | 'url'
-      | 'groupId'
 
     interface ExtraParameters {
       urls?: string[]

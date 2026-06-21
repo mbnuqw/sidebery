@@ -108,6 +108,7 @@ interface PanelCommonReactiveProps {
   len: number
   filteredLen?: number
   ready: boolean
+  pos: 'l' | 'r' | 'c' | 'lc' | 'rc' | 'h'
 }
 
 ///

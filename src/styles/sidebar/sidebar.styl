@@ -151,19 +151,52 @@ body
   height: 100%
   flex-direction: column
   z-index: 10
-  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
-  &[data-pos="center"]
+  // allow-discrete doesn't work correctly with display - disappearing animation
+  // wont work, but that's bearable
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1882408
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast), display var(--d-fast) allow-discrete
+  &[data-pos="c"]
+  &[data-pos="lc"]
+  &[data-pos="rc"]
+    display: flex
     transform: translateX(0)
     z-index: 10
     opacity: 1
-  &[data-pos="left"]
+  &[data-pos="l"]
+    display: none
     transform: translateX(-50%)
     opacity: 0
     z-index: 0
-  &[data-pos="right"]
+    pointer-events: none
+  &[data-pos="r"]
+    display: none
     transform: translateX(50%)
     opacity: 0
     z-index: 0
+    pointer-events: none
+  &[data-pos="h"]
+    display: none
+    opacity: 0
+    z-index: 0
+
+@css{
+@starting-style {
+  .panel[data-pos="c"] {
+    z-index: 10;
+    opacity: 1;
+  }
+  .panel[data-pos="lc"] {
+    z-index: 0;
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  .panel[data-pos="rc"] {
+    z-index: 0;
+    opacity: 0;
+    transform: translateX(50%);
+  }
+}
+}
 
 // ---
 // -- Bottom bar
@@ -346,12 +379,12 @@ body
   opacity: 1
   z-index: 1000
 for i in 1..16
-  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .TabsPanel[data-pos="c"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .TabsPanel[data-pos="c"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--tabs-indent) * %s + var(--tabs-margin)))" % i
 for i in 1..16
-  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .BookmarksPanel[data-pos="c"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .BookmarksPanel[data-pos="c"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
 for i in 1..16
   .BookmarksSubPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
@@ -415,6 +448,83 @@ for i in 1..16
   z-index: 10000
 .CtxMenu .sel-len-teleported
   top: -11px
+
+// ---
+// -- In-sidebar tab preview
+// -
+.tab-preview
+  position: absolute
+  width: calc(100% - var(--tabs-margin) * 2)
+  margin: 0 var(--tabs-margin)
+  z-index: 4000
+  pointer-events: none
+  transition: display var(--d-fast) allow-discrete, transform var(--d-fast), opacity var(--d-fast)
+  &[data-margin="true"]
+    margin-top: var(--tabs-margin)
+  .preview-body
+    position: relative
+    width: 100%
+    max-height: 33vh
+    overflow: hidden
+    background-color: var(--toolbar-bg)
+    border-radius: var(--tabs-border-radius)
+    transition: transform var(--d-fast)
+    box-shadow: 0 1px 5px -1px #00000064, 0 0 0 1px #00000008
+    &:after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      border-radius: var(--tabs-border-radius)
+      box-shadow: inset 0 0 0 1px #ffffff08
+  .preview-title
+    position: relative
+    max-width: 100%
+    margin: 4px 5px 5px
+    overflow: hidden
+    font-size: rem(11)
+    line-height: 1.2em
+    word-break: break-word
+  .preview-url
+    position: relative
+    margin: 4px 5px 5px
+    overflow: hidden
+    font-size: rem(11)
+    line-height: 1.2em
+    word-break: break-word
+    opacity: .7
+  .preview-title + .preview-url
+    margin-top: -2px
+  &[data-onet="true"] .preview-title
+  &[data-oneu="true"] .preview-url
+    text-overflow: ellipsis
+    white-space: nowrap
+  &[data-onet="false"] .preview-title
+  &[data-oneu="false"] .preview-url
+    display: -webkit-box
+    -webkit-box-orient: vertical
+  &[data-onet="false"] .preview-title
+    -webkit-line-clamp: var(--t-lines)
+  &[data-oneu="false"] .preview-url
+    -webkit-line-clamp: var(--u-lines)
+  .preview-img
+    position: relative
+    display: block
+    width: calc(100% + var(--r-crop))
+    max-height: var(--max-h)
+    object-fit: cover
+    object-position: top
+    border-bottom-left-radius: var(--tabs-border-radius)
+    border-bottom-right-radius: var(--tabs-border-radius)
+  div + .preview
+    margin-top: 5px
+  &.-above .preview-body
+    transform: translateY(calc(-100% - var(--tabs-margin)))
+@starting-style
+  .tab-preview
+    opacity: 0
 
 // ---
 // -- Animations

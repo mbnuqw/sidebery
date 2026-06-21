@@ -1,16 +1,8 @@
 import path from 'node:path'
 import { build, defineConfig, mergeConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { IS_DEV, ADDON_PATH, KEEP_NAMES, BUNDLE_VUE, logErr } from './utils.js'
-import { IIFE_BANNER_WITH_REINJECT_GUARD, IIFE_FOOTER } from './utils.js'
+import { IS_DEV, ADDON_PATH } from './utils.js'
 import { log, logOk } from './utils.js'
-
-if (IS_DEV) {
-  throw logErr('Vite is too slow for dev builds (and dev server is useless for addons) ┐(´ー｀)┌')
-}
-if (!BUNDLE_VUE) {
-  throw logErr('Not bundling Vue is not supported right now')
-}
 
 const ROOT_DIR = path.resolve(import.meta.dirname, '..')
 
@@ -25,40 +17,27 @@ const base = defineConfig({
       src: path.resolve(ROOT_DIR, 'src'),
     },
   },
-  esbuild: {
-    minifyIdentifiers: !KEEP_NAMES,
-  },
   build: {
-    minify: 'esbuild',
+    watch: IS_DEV ? { buildDelay: 100 } : null,
+    minify: !IS_DEV,
     assetsDir: '',
     target: 'esnext',
     outDir: ADDON_PATH,
     emptyOutDir: false,
     reportCompressedSize: false,
     chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      external: BUNDLE_VUE ? undefined : ['vue'],
+    rolldownOptions: {
       preserveEntrySignatures: false,
-      treeshake: 'smallest',
+      treeshake: true,
       input: {},
       output: {
-        generatedCode: 'es2015',
         strict: true,
-        compact: true,
-        freeze: false,
         entryFileNames: '[name].js',
         chunkFileNames: 'chunk-[hash].js',
       },
     },
   },
 })
-
-if (KEEP_NAMES && BUNDLE_VUE && base.resolve?.alias) {
-  ;(base.resolve.alias as any)['vue'] = path.resolve(
-    ROOT_DIR,
-    'node_modules/vue/dist/vue.runtime.esm-browser.prod.js'
-  )
-}
 
 const visualizerConfig = {
   emitFile: true,
@@ -99,7 +78,7 @@ async function main() {
   // Isolated scripts for injecting
   const mediaInjections = defineConfig({
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         input: {
           'injections/play-media': 'src/injections/play-media.ts',
           'injections/pause-media': 'src/injections/pause-media.ts',
@@ -113,11 +92,12 @@ async function main() {
   // Isolated group script for injection with re-inject guards
   const groupInjection = defineConfig({
     build: {
-      rollupOptions: {
-        input: { 'injections/group': 'src/injections/group.ts' },
+      rolldownOptions: {
+        input: { 'page.group/group': 'src/page.group/group.ts' },
         output: {
-          banner: IIFE_BANNER_WITH_REINJECT_GUARD,
-          footer: IIFE_FOOTER,
+          codeSplitting: false,
+          dir: path.join(ADDON_PATH, 'sidebery'),
+          entryFileNames: 'group.js',
         },
       },
     },
@@ -127,11 +107,12 @@ async function main() {
   // Isolated url script for injection with re-inject guards
   const urlInjection = defineConfig({
     build: {
-      rollupOptions: {
-        input: { 'injections/url': 'src/injections/url.ts' },
+      rolldownOptions: {
+        input: { 'page.url/url': 'src/page.url/url.ts' },
         output: {
-          banner: IIFE_BANNER_WITH_REINJECT_GUARD,
-          footer: IIFE_FOOTER,
+          codeSplitting: false,
+          dir: path.join(ADDON_PATH, 'sidebery'),
+          entryFileNames: 'url.js',
         },
       },
     },
@@ -141,7 +122,7 @@ async function main() {
   // Isolated script for preview injection (in-page)
   const inpagePreviewInjection = defineConfig({
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         input: { 'injections/tab-preview': 'src/injections/tab-preview.ts' },
         output: { format: 'iife' },
       },
@@ -152,7 +133,7 @@ async function main() {
   // Isolated script for preview popup (window)
   const windowPreviewScript = defineConfig({
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         input: { 'popup.tab-preview/tab-preview': 'src/popup.tab-preview/tab-preview.ts' },
       },
     },

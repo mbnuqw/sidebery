@@ -1084,18 +1084,6 @@ export function findNear<T>(list: T[], index: number, cb: (v: T) => boolean): T 
   return result
 }
 
-export function normalizeColor(color?: string): browser.ColorName {
-  if (color === 'blue') return 'blue'
-  if (color === 'turquoise') return 'turquoise'
-  if (color === 'green') return 'green'
-  if (color === 'yellow') return 'yellow'
-  if (color === 'orange') return 'orange'
-  if (color === 'red') return 'red'
-  if (color === 'pink') return 'pink'
-  if (color === 'purple') return 'purple'
-  return 'toolbar'
-}
-
 export function getShortTimestamp(ms: number, currentDate: Date): string {
   const dt = new Date(ms)
 

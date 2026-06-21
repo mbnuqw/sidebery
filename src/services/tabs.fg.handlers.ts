@@ -31,7 +31,7 @@ export function setupTabsListeners(): void {
   browser.tabs.onUpdated.addListener(onTabUpdated, {
     // prettier-ignore
     properties: [
-      'audible', 'discarded', 'favIconUrl', 'hidden',
+      'audible', 'discarded', 'favIconUrl', 'splitViewId', 'hidden',
       'mutedInfo', 'pinned', 'status', 'title', 'url',
     ],
   })
@@ -256,6 +256,12 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   const initialOpenerId = nativeTab.openerTabId
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
+  const isSplt =
+    tab.active &&
+    tab.splitViewId !== undefined &&
+    tab.splitViewId !== browser.tabs.SPLIT_VIEW_ID_NONE &&
+    tab.url === 'about:blank' &&
+    tab.title === 'about:opentabs'
 
   // Stop if multiple tabs were open and data querying is started
   let notSessionRestore
@@ -282,7 +288,7 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   }
 
   // Check if tab is reopened
-  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false && !attached) {
+  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false && !attached && !isSplt) {
     const prevPosIndex = Tabs.removedTabs.findIndex(t => t.title === tab.title)
     reopenedTabInfo = Tabs.removedTabs[prevPosIndex]
     if (reopenedTabInfo) {
@@ -384,6 +390,27 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
       // or move as configured for new tabs
       else {
         index = Tabs.getIndexForNewTab(panel, tab)
+      }
+    }
+  }
+
+  // Do not move split view tab chooser
+  else if (isSplt) {
+    // Get panel
+    panel = Tabs.getPanelForNewTab(tab)
+    if (!panel) return Logs.err('Cannot handle splitInit tab: Cannot find target panel')
+
+    index = tab.index
+    const prevTab = Tabs.list[index - 1]
+    if (prevTab) {
+      tab.openerTabId = prevTab.parentId
+      // Outdent the branch
+      if (prevTab.isParent) {
+        for (const t of Tabs.getBranch(prevTab)) {
+          if (t.parentId === prevTab.id) t.parentId = prevTab.parentId
+          t.lvl--
+          t.reactive.lvl = t.lvl
+        }
       }
     }
   }
@@ -1416,7 +1443,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     IPPC.reset(tab)
   }
 
-  if (Preview.state.status === Preview.Status.Open && Preview.state.targetTabId === tabId) {
+  if (Preview.state.targetTabId === tabId) {
     Preview.resetTargetTab(tabId)
   }
 }

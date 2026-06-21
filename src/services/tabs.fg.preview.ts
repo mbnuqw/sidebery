@@ -1,5 +1,5 @@
-import { ADDON_HOST, NOID } from 'src/defaults'
-import { InstanceType } from 'src/enums'
+import type { Tab } from 'src/types'
+import { NOID } from 'src/defaults'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Tabs from 'src/services/tabs.fg'
 import * as Styles from 'src/services/styles.fg'
@@ -21,8 +21,7 @@ export const enum Status {
 
 export const enum Mode {
   Nope = 0,
-  Inline = 1,
-  Window = 2,
+  InSidebar = 1,
   InPage = 3,
 }
 
@@ -34,31 +33,27 @@ export const state = {
   popupWinId: NOID,
   targetTabId: NOID,
 
-  mouseEnterTimeout: undefined as number | undefined,
-  mouseLeaveTimeout: undefined as number | undefined,
+  openTimeout: undefined as number | undefined,
+  closeTimeout: undefined as number | undefined,
 }
 
-const approxFFToolbarsHeight = 70
+const DEFERRED_CLOSE_DELAY = 36
+const TOOLTIP_UPD_DELAY = 64
+const TITLE_MAX_LEN = 2_000
+const URL_MAX_LEN = 2_000
+const URL_DECODE_MAX_LEN = 5_000
+
 const inlinePreviewConf = {
   format: 'jpeg' as const,
   quality: 90,
   scale: window.devicePixelRatio / 2,
 }
-
-let currentWinWidth = 0
-let currentWinHeight = 0
-let currentWinY = 0
-let currentWinX = 0
-let currentWinOffsetY = 0
-let currentWinOffsetX = 0
 let deadOnArrival = false
-let listening = false
 let tooltipUpdTimeout: number | undefined = undefined
 
 function dbgStr() {
   let m = state.mode === Mode.Nope ? 'Nope' : 'Inline'
-  if (state.mode === Mode.Window) m = 'Window'
-  else if (state.mode === Mode.InPage) m = 'InPage'
+  if (state.mode === Mode.InPage) m = 'InPage'
 
   let s = state.status === Status.Closed ? 'Closed' : 'Closing'
   if (state.status === Status.Open) s = 'Open'
@@ -67,85 +62,172 @@ function dbgStr() {
   return `mode: ${m}, status: ${s}`
 }
 
-export function setTargetTab(tabId: ID, y: number) {
-  clearTimeout(state.mouseEnterTimeout)
+export function setTargetTab(tabId: ID) {
+  clearTimeout(state.openTimeout)
   if (Settings.state.previewTabsFollowMouse) {
-    clearTimeout(state.mouseLeaveTimeout)
+    clearTimeout(state.closeTimeout)
   }
 
+  const tab = Tabs.byId[tabId]
   state.targetTabId = tabId
 
   // Start timeout to...
-  if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.size) {
+  if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.size && tab) {
     // Update default tooltip
     clearTimeout(tooltipUpdTimeout)
     tooltipUpdTimeout = setTimeout(() => {
       const tab = Tabs.byId[tabId]
       if (tab) {
+        const noText = !Settings.state.previewTabsTitle && !Settings.state.previewTabsUrl
         if (
           (Settings.state.previewTabsMode === 'p' && state.mode === Mode.Nope) ||
-          (state.mode === Mode.Inline && tab.discarded)
+          (state.mode === Mode.InSidebar && noText && tab.discarded)
         ) {
           tab.reactive.tooltip = Tabs.getTooltip(tab)
         } else {
           tab.reactive.tooltip = ''
         }
       }
-    }, 64)
+    }, TOOLTIP_UPD_DELAY)
 
-    // Show preview in inline mode
-    if (state.mode === Mode.Inline) {
-      state.mouseEnterTimeout = setTimeout(() => {
-        state.mouseEnterTimeout = undefined
-        showPreviewInline(state.targetTabId)
-      }, Settings.state.previewTabsDelay)
-      return
+    // Show/Update preview in sidebar
+    if (state.mode === Mode.InSidebar) {
+      if (Settings.state.previewTabsFollowMouse && state.status === Status.Open) {
+        if (sPreviewEl) setSPreviewPosition(sPreviewEl, tab)
+        state.openTimeout = setTimeout(() => {
+          state.openTimeout = undefined
+          updateSPreview(state.targetTabId)
+        }, 128)
+      } else {
+        state.openTimeout = setTimeout(() => {
+          state.openTimeout = undefined
+          showSPreview(tab)
+        }, Settings.state.previewTabsDelay)
+      }
     }
 
-    // Update popup
-    if (Settings.state.previewTabsFollowMouse && state.status === Status.Open) {
-      state.mouseEnterTimeout = setTimeout(() => {
-        state.mouseEnterTimeout = undefined
-        updatePreviewPopup(state.targetTabId)
-      }, 128)
-      return
-    }
-
-    // Show preview popup
-    if (state.status === Status.Closed) {
-      state.mouseEnterTimeout = setTimeout(() => {
-        state.mouseEnterTimeout = undefined
-        showPreview(state.targetTabId, Mouse.y)
-      }, Settings.state.previewTabsDelay)
-      return
+    // Show/Update preview in page
+    else if (state.mode === Mode.InPage) {
+      if (Settings.state.previewTabsFollowMouse && state.status === Status.Open) {
+        state.openTimeout = setTimeout(() => {
+          state.openTimeout = undefined
+          updatePPreview(state.targetTabId)
+        }, 128)
+      } else {
+        state.openTimeout = setTimeout(() => {
+          state.openTimeout = undefined
+          showPPreview(tab, Mouse.y)
+        }, Settings.state.previewTabsDelay)
+      }
     }
   }
 }
 
-export function resetTargetTab(tabId: ID) {
-  clearTimeout(state.mouseEnterTimeout)
-  clearTimeout(state.mouseLeaveTimeout)
+export function resetTargetTab(tabId: ID, closeDelay = DEFERRED_CLOSE_DELAY) {
+  clearTimeout(state.openTimeout)
+  clearTimeout(state.closeTimeout)
 
   if (tabId === undefined || tabId === state.targetTabId) {
     state.targetTabId = NOID
   }
 
-  state.mouseEnterTimeout = undefined
+  state.openTimeout = undefined
 
-  if (state.mode !== Mode.Inline) {
-    state.mouseLeaveTimeout = setTimeout(() => {
-      closePreviewPopup()
-    }, 36)
+  state.closeTimeout = setTimeout(() => {
+    if (state.mode === Mode.InSidebar) {
+      closeSPreview()
+    } else {
+      closePPreview()
+    }
+  }, closeDelay)
+}
+
+export function closePreview() {
+  clearTimeout(state.openTimeout)
+  clearTimeout(state.closeTimeout)
+
+  if (state.mode === Mode.InSidebar) return closeSPreview()
+  else if (state.mode === Mode.InPage) return closePPreview()
+}
+
+export function resetMode() {
+  if (state.status !== Status.Closed) closePreview()
+
+  if (Settings.state.previewTabsMode === 'i') state.mode = Mode.InSidebar
+  else if (Settings.state.previewTabsMode === 'p') state.mode = Mode.InPage
+  else state.mode = Mode.Nope
+
+  state.modeFallback = false
+}
+
+function trimTitle(t: string) {
+  return t.length > TITLE_MAX_LEN ? t.slice(0, TITLE_MAX_LEN) + '…' : t
+}
+
+function trimUrl(u: string) {
+  return u.length > URL_MAX_LEN ? u.slice(0, URL_MAX_LEN) + '…' : u
+}
+
+function tryDecodeUrl(url: string): string {
+  if (url.length > URL_DECODE_MAX_LEN) return url
+  try {
+    return decodeURI(url)
+  } catch (err) {
+    return url
+  }
+}
+
+// ---
+// -- Preview in page
+// -
+
+async function showPPreview(tab: Tab, y?: number) {
+  if (deadOnArrival) {
+    deadOnArrival = false
+    closePPreview()
+  }
+
+  state.status = Status.Opening
+  const result = await injectPPreview(tab.id, y)
+  if (result?.[0]) {
+    state.status = Status.Open
+
+    if (deadOnArrival || tab.invisible) {
+      deadOnArrival = false
+      closePPreview()
+    }
+
+    return
+  } else if (deadOnArrival) {
+    state.status = Status.Closed
+    deadOnArrival = false
+    if (IPC.state.previewConnection) IPC.sendToPreview('close')
+    return
+  }
+
+  state.status = Status.Closed
+  state.modeFallback = true
+
+  if (Settings.state.previewTabsPageModeFallback === 'n') {
+    state.mode = Mode.Nope
+    // Set default tooltip
+    tab.reactive.tooltip = Tabs.getTooltip(tab)
+    return
+  }
+
+  if (Settings.state.previewTabsPageModeFallback === 'i') {
+    state.mode = Mode.InSidebar
+    return showSPreview(tab)
   }
 }
 
 let cancelInjecting: (() => void) | undefined
 
-async function injectTabPreview(tabId: ID, y?: number) {
+async function injectPPreview(tabId: ID, y?: number) {
   const activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab) return
 
-  const initData = getTabPreviewInitData(tabId, y)
+  const initData = getPPreviewInitData(tabId, y)
   const initDataJson = JSON.stringify(initData)
   const injectingData = browser.tabs
     .executeScript(activeTab.id, {
@@ -175,7 +257,7 @@ async function injectTabPreview(tabId: ID, y?: number) {
   return results?.[0]
 }
 
-function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
+function getPPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
   const tab = Tabs.byId[tabId]
   const isFrameDark = Styles.reactive.frameColorScheme === 'dark'
   const isToolbarDark = Styles.reactive.toolbarColorScheme === 'dark'
@@ -187,8 +269,8 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
     hfg: Styles.parsedTheme?.vars.toolbar_fg ?? (isToolbarDark ? '#eee' : '#111'),
     tabId: tabId,
     winId: Windows.id,
-    title: tab?.title ?? '---',
-    url: tab?.url ?? '---',
+    title: trimTitle(tab?.title ?? '---'),
+    url: trimUrl(tryDecodeUrl(tab?.url ?? '---')),
     y: y ?? 0,
     dpr: window.devicePixelRatio,
     sh: Sidebar.height,
@@ -203,233 +285,26 @@ function getTabPreviewInitData(tabId: ID, y?: number): TabPreviewInitData {
   }
 }
 
-async function showPreview(tabId: ID, y?: number) {
-  const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible) return
-
-  // Inline
-  if (state.mode === Mode.Inline) {
-    return showPreviewInline(tabId)
-  }
-
-  // In page popup
-  else if (state.mode === Mode.InPage) {
-    state.status = Status.Opening
-    const result = await injectTabPreview(tabId, y)
-    if (result?.[0]) {
-      state.status = Status.Open
-
-      if (deadOnArrival || tab.invisible) {
-        deadOnArrival = false
-        closePreviewPopup()
-      }
-
-      return
-    } else if (deadOnArrival) {
-      state.status = Status.Closed
-      deadOnArrival = false
-      if (IPC.state.previewConnection) IPC.sendToPreview('close')
-      return
-    }
-
-    state.status = Status.Closed
-    state.modeFallback = true
-
-    if (Settings.state.previewTabsPageModeFallback === 'n') {
-      state.mode = Mode.Nope
-      // Set default tooltip
-      tab.reactive.tooltip = Tabs.getTooltip(tab)
-      return
-    }
-
-    if (Settings.state.previewTabsPageModeFallback === 'i') {
-      state.mode = Mode.Inline
-      return showPreviewInline(tabId)
-    }
-
-    if (Windows.focused && Settings.state.previewTabsPageModeFallback === 'w') {
-      state.mode = Mode.Window
-      return showPreviewPopupWindow(tabId, y)
-    }
-  }
-
-  // Popup window
-  else if (Windows.focused && state.mode === Mode.Window) {
-    return showPreviewPopupWindow(tabId, y)
-  }
+export function setPPreviewPosition(y: number) {
+  if (IPC.state.previewConnection) IPC.sendToPreview('setY', y)
 }
 
-export function closePreview() {
-  clearTimeout(state.mouseEnterTimeout)
-  clearTimeout(state.mouseLeaveTimeout)
-
-  if (state.mode === Mode.Inline) return closePreviewInline()
-  else if (state.mode === Mode.InPage || state.mode === Mode.Window) return closePreviewPopup()
-}
-
-export function resetMode() {
-  if (state.status !== Status.Closed) closePreview()
-
-  if (Settings.state.previewTabsMode === 'i') state.mode = Mode.Inline
-  else if (Settings.state.previewTabsMode === 'p') state.mode = Mode.InPage
-  else state.mode = Mode.Window
-
-  state.modeFallback = false
-}
-
-export async function showPreviewPopupWindow(tabId: ID, y?: number) {
-  const tab = Tabs.byId[tabId]
-  if (!tab || tab.invisible) return
-
-  state.status = Status.Opening
-
-  const currentWindow = await browser.windows.getCurrent({ populate: false })
-  currentWinWidth = currentWindow.width ?? 0
-  currentWinHeight = currentWindow.height ?? 0
-  currentWinY = currentWindow.top ?? 0
-  currentWinX = currentWindow.left ?? 0
-
-  if (currentWinWidth === 0 || currentWinHeight === 0) {
-    state.status = Status.Closed
-    return
-  }
-
-  if (!listening) setupPopupDisconnectionListener()
-
-  currentWinOffsetY = 0
-  currentWinOffsetX = 0
-
-  const previewWidth = Settings.state.previewTabsPopupWidth
-  const previewData: Record<string, string> = {
-    bg: Styles.parsedTheme?.vars.frame_bg ?? '',
-    fg: Styles.parsedTheme?.vars.frame_fg ?? '',
-    hbg: Styles.parsedTheme?.vars.toolbar_bg ?? '',
-    hfg: Styles.parsedTheme?.vars.toolbar_fg ?? '',
-    tabId: tab.id.toString(),
-    winId: Windows.id.toString(),
-    title: tab.title,
-    url: tab.url,
-    tMax: Settings.state.previewTabsTitle.toString(),
-    uMax: Settings.state.previewTabsUrl.toString(),
-  }
-
-  const pageWidth = currentWinWidth - Sidebar.width
-  const approxPageHeight = currentWinHeight - approxFFToolbarsHeight
-
-  // Calc preview height
-  let previewHeight = Math.round((approxPageHeight / pageWidth) * previewWidth)
-  if (previewHeight > previewWidth) previewHeight = previewWidth
-  previewData.ph = previewHeight.toString()
-
-  // Calc preview scale
-  const w = pageWidth / previewWidth
-  const h = currentWinHeight / previewHeight
-  let scale = (window.devicePixelRatio / Math.min(w, h)) * 1.5
-  if (scale > window.devicePixelRatio) scale = window.devicePixelRatio
-
-  // Append height of header to previewHeight
-  if (Settings.state.previewTabsTitle > 0) previewHeight += 22
-  if (Settings.state.previewTabsUrl > 0) previewHeight += 18
-
-  previewData.scale = String(scale)
-
-  if (tab.discarded) {
-    previewData.off = 'y'
-    previewHeight = 0
-  }
-
-  const params = new URLSearchParams(previewData).toString()
-  const top = (currentWinY ?? 0) + (y ?? 0) + Settings.state.previewTabsWinOffsetY
-  const left = getPopupX()
-  const previewWindow = await browser.windows.create({
-    allowScriptsToClose: true,
-    focused: true,
-    top,
-    left,
-    width: previewWidth,
-    height: previewHeight,
-    incognito: false,
-    state: 'normal',
-    type: 'popup',
-    url: `/popup.tab-preview/tab-preview.html?${params}`,
-    // For userChrome modificatoins with `#main-window[titlepreface='Tab Preview‎']`
-    titlePreface: 'Tab Preview‎',
-  })
-  if (previewWindow.id === undefined) {
-    state.status = Status.Closed
-    return
-  }
-
-  state.popupWinId = previewWindow.id
-  state.status = Status.Open
-
-  if (deadOnArrival || tab.invisible) {
-    deadOnArrival = false
-    closePreviewPopup()
-    return
-  }
-
-  let updPosition = false
-  let updSize = false
-
-  // Get differences between defined and actual size
-  const dw = (previewWindow.width ?? previewWidth) - previewWidth
-  const dh = (previewWindow.height ?? previewHeight) - previewHeight
-  if (dw !== 0 || dh !== 0) updSize = true
-
-  // Get differences between defined and actual position
-  const dt = (previewWindow.top ?? top) - top
-  const dl = (previewWindow.left ?? left) - left
-
-  // Preserve discrepancy if small
-  if (Math.abs(dt) < 30 && Math.abs(dl) < 5) {
-    currentWinOffsetY = dt
-    currentWinOffsetX = dl
-  }
-  // or try to update preview position
-  else {
-    updPosition = true
-  }
-
-  if (updSize) {
-    await browser.windows.update(previewWindow.id, {
-      width: previewWidth,
-      height: previewHeight,
-    })
-  }
-  if (updPosition) {
-    await browser.windows.update(previewWindow.id, {
-      top,
-      left,
-    })
-  }
-}
-
-export function setPreviewPopupPosition(y: number) {
-  if (state.popupWinId !== NOID) {
-    browser.windows.update(state.popupWinId, {
-      top: currentWinY + y + Settings.state.previewTabsWinOffsetY + currentWinOffsetY,
-      left: getPopupX(),
-    })
-  } else if (IPC.state.previewConnection) {
-    IPC.sendToPreview('setY', y)
-  }
-}
-
-export function updatePreviewPopup(tabId: ID) {
+export function updatePPreview(tabId: ID) {
   if (state.status !== Status.Open) return
 
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
   if (IPC.state.previewConnection) {
-    IPC.sendToPreview('updatePreview', tabId, tab.title, tab.url, !!tab.discarded)
+    const title = trimTitle(tab.title)
+    const url = trimUrl(tryDecodeUrl(tab.url))
+    IPC.sendToPreview('updatePreview', tabId, title, url, !!tab.discarded)
   } else {
-    closePreviewPopup()
+    closePPreview()
   }
 }
 
-export async function closePreviewPopup() {
+export async function closePPreview() {
   if (state.status === Status.Opening) {
     deadOnArrival = true
     if (cancelInjecting) cancelInjecting()
@@ -441,127 +316,132 @@ export async function closePreviewPopup() {
     if (state.popupWinId !== NOID) await browser.windows.remove(state.popupWinId)
     else if (Settings.state.previewTabsMode === 'p' && IPC.state.previewConnection) {
       IPC.sendToPreview('close')
+    } else {
+      Tabs.reactive.inlinePreviewImg = ''
     }
     state.popupWinId = NOID
     state.status = Status.Closed
   }
 }
 
-function getPopupX() {
-  if (Settings.state.previewTabsSide === 'right') {
-    return currentWinX + Sidebar.width + Settings.state.previewTabsWinOffsetX + currentWinOffsetX
-  } else {
-    return (
-      currentWinX +
-      currentWinWidth -
-      Sidebar.width -
-      Settings.state.previewTabsPopupWidth -
-      Settings.state.previewTabsWinOffsetX +
-      currentWinOffsetX
-    )
+// ---
+// -- Preview in sidebar
+// -
+
+let sPreviewTabId = NOID
+async function showSPreview(tab: Tab) {
+  if (deadOnArrival) {
+    deadOnArrival = false
+    closeSPreview()
+    return
   }
-}
 
-export function setupPopupDisconnectionListener() {
-  const checkPart = ADDON_HOST.slice(50, 52) + '/p'
+  if (sPreviewTabId === tab.id) return
+  if (!sPreviewEl) return
 
-  IPC.onDisconnected(InstanceType.preview, async () => {
-    if (!Settings.state.previewTabs) return
-
-    const recentlyClosedItems = await browser.sessions.getRecentlyClosed({ maxResults: 3 })
-    for (const rc of recentlyClosedItems) {
-      if (!rc.window?.sessionId) continue
-      if (rc.window.tabs?.length === 1) {
-        const url = rc.window.tabs[0].url
-        if (url.startsWith(checkPart, 50)) browser.sessions.forgetClosedWindow(rc.window.sessionId)
-      }
-    }
-  })
-  listening = true
-}
-
-let inlinePreviewTabId = NOID
-export async function showPreviewInline(tabId: ID) {
-  if (inlinePreviewTabId === tabId) return
-
-  const tab = Tabs.byId[tabId]
-  if (!tab || tab.discarded) return
+  const noText = !Settings.state.previewTabsTitle && !Settings.state.previewTabsUrl
+  if (noText && tab.discarded) return resetTargetTab(tab.id)
 
   state.status = Status.Opening
 
-  const currentWindow = await browser.windows.getCurrent({ populate: false })
-  const pageWidth = (currentWindow.width ?? 0) - Sidebar.width
-  const pageHeight = (currentWindow.height ?? 0) - approxFFToolbarsHeight
+  sPreviewEl.style.setProperty('--t-lines', Settings.state.previewTabsTitle.toString())
+  sPreviewEl.style.setProperty('--u-lines', Settings.state.previewTabsUrl.toString())
 
-  if (pageWidth <= 0) return
+  setSPreviewPosition(sPreviewEl, tab)
 
-  // Calc preview scale
-  const w = pageWidth / Sidebar.width
-  inlinePreviewConf.scale = (window.devicePixelRatio / w) * 1.5
+  Tabs.reactive.inlinePreviewTitle = trimTitle(tab.title)
+  Tabs.reactive.inlinePreviewUrl = trimUrl(tryDecodeUrl(tab.url))
 
-  if (inlinePreviewConf.scale > window.devicePixelRatio) {
-    inlinePreviewConf.scale = window.devicePixelRatio
+  let preview = ''
+  if (!tab.discarded) {
+    const currentWindow = await browser.windows.getCurrent({ populate: false })
+    const pageWidth = (currentWindow.width ?? 0) - Sidebar.width
+
+    if (pageWidth <= 0) return
+
+    // Calc preview scale
+    const w = pageWidth / Sidebar.width
+    inlinePreviewConf.scale = (window.devicePixelRatio / w) * 1.5
+
+    if (inlinePreviewConf.scale > window.devicePixelRatio) {
+      inlinePreviewConf.scale = window.devicePixelRatio
+    }
+
+    preview = await browser.tabs.captureTab(tab.id, inlinePreviewConf).catch(() => '')
   }
 
-  const preview = await browser.tabs.captureTab(tabId, inlinePreviewConf).catch(() => '')
-  const prevTabId = inlinePreviewTabId
-
-  inlinePreviewTabId = tabId
+  sPreviewTabId = tab.id
   state.status = Status.Open
 
   if (deadOnArrival) {
     deadOnArrival = false
-    closePreviewInline()
+    closeSPreview()
     return
   }
 
-  let previewHeight = Settings.state.previewTabsInlineHeight
-  if (Settings.state.previewTabsInlineHeight === 0) {
-    previewHeight = Math.round((pageHeight / pageWidth) * Sidebar.width)
-    if (previewHeight > Sidebar.width) previewHeight = Sidebar.width
-  }
-  document.body.style.setProperty('--tabs-inline-preview-height', `${previewHeight}px`)
-
-  const prevTab = Tabs.byId[prevTabId]
-  if (prevTab) prevTab.reactive.preview = false
-
-  if (tab.pinned) {
-    if (prevTab && !prevTab.pinned) {
-      Tabs.reactive.inlinePreviewTabId = NOID
-    }
-
-    Tabs.reactive.inlinePreviewPinnedImg = `url("${preview}")`
-  } else {
-    if (prevTab && prevTab.pinned) Tabs.reactive.inlinePreviewPinnedImg = ''
-
-    tab.previewImg = `url("${preview}")`
-    tab.reactive.preview = true
-    Tabs.reactive.inlinePreviewTabId = tabId
-  }
+  Tabs.reactive.inlinePreviewImg = preview
+  Tabs.reactive.inlinePreview = true
 }
 
-export function closePreviewInline() {
+async function updateSPreview(tabId: ID) {
+  if (!sPreviewEl) return
+
+  const noText = !Settings.state.previewTabsTitle && !Settings.state.previewTabsUrl
+  const tab = Tabs.byId[tabId]
+  if (!tab || (noText && tab.discarded)) return resetTargetTab(tabId, 250)
+  sPreviewTabId = tabId
+
+  Tabs.reactive.inlinePreviewTitle = trimTitle(tab.title)
+  Tabs.reactive.inlinePreviewUrl = trimUrl(tryDecodeUrl(tab.url))
+
+  let preview = ''
+  if (!tab.discarded) {
+    preview = await browser.tabs.captureTab(tabId, inlinePreviewConf).catch(() => '')
+  }
+  if (state.status === Status.Closed || state.status === Status.Closing) return
+  if (sPreviewTabId !== tabId) return
+  Tabs.reactive.inlinePreviewImg = preview
+}
+
+function setSPreviewPosition(popupEl: HTMLElement, tab: Tab) {
+  const el = document.getElementById(`tab${tab.id}`)
+  if (!el) return
+
+  const tb = el.getBoundingClientRect()
+  const hq = Sidebar.height - (Sidebar.height >> 2)
+  const maxH =
+    Settings.state.previewTabsInlineHeight > 0
+      ? `${Settings.state.previewTabsInlineHeight}px`
+      : '100vh'
+  const rCrop = `${Settings.state.previewTabsCropRight}px`
+  if (tb.bottom <= hq) {
+    popupEl.style.transform = `translateY(${tb.bottom}px)`
+    popupEl.classList.remove('-above')
+  } else {
+    popupEl.style.transform = `translateY(${tb.top}px)`
+    popupEl.classList.add('-above')
+  }
+  popupEl.style.setProperty('--max-h', maxH)
+  popupEl.style.setProperty('--r-crop', rCrop)
+  popupEl.setAttribute('data-margin', (!Settings.state.pinnedTabsList && tab.pinned).toString())
+}
+
+let sPreviewEl: HTMLElement | null = null
+export function registerSPreviewEl(el: HTMLElement | null) {
+  sPreviewEl = el
+}
+
+export function closeSPreview() {
   if (state.status === Status.Opening) {
     deadOnArrival = true
     return
   }
 
-  const tab = Tabs.byId[inlinePreviewTabId]
-  if (!tab) {
-    Tabs.reactive.inlinePreviewPinnedImg = ''
-    Tabs.reactive.inlinePreviewTabId = NOID
-    inlinePreviewTabId = NOID
-    state.status = Status.Closed
-    return
-  }
+  Tabs.reactive.inlinePreview = false
+  Tabs.reactive.inlinePreviewImg = ''
+  Tabs.reactive.inlinePreviewTitle = ''
+  Tabs.reactive.inlinePreviewUrl = ''
 
-  if (tab.pinned) {
-    Tabs.reactive.inlinePreviewPinnedImg = ''
-  } else {
-    Tabs.reactive.inlinePreviewTabId = NOID
-    tab.reactive.preview = false
-  }
-
-  inlinePreviewTabId = NOID
+  sPreviewTabId = NOID
   state.status = Status.Closed
 }

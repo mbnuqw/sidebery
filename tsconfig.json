@@ -10,12 +10,10 @@
     "module": "ESNext",
     "removeComments": true,
     "preserveConstEnums": false,
-    "types": [],
     "outDir": "./addon",
-    "baseUrl": ".",
     "jsx": "preserve",
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["./src/*"]
     },
     "skipDefaultLibCheck": true
   },

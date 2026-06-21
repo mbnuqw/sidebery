@@ -597,7 +597,6 @@ section(ref="el")
       :allowNegative="false"
       :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'i'"
       @update:value="Settings.saveDebounced(500)")
-
     SelectField(
       label="settings.tabs.preview_side"
       optLabel="settings.tabs.preview_side_"
@@ -612,26 +611,8 @@ section(ref="el")
       v-model:value="Settings.state.previewTabsFollowMouse"
       dbg="previewTabsFollowMouse"
       :default="DEFAULT_SETTINGS.previewTabsFollowMouse"
-      :inactive="!Settings.state.previewTabs || Settings.state.previewTabsMode === 'i'"
+      :inactive="!Settings.state.previewTabs"
       @update:value="Settings.saveDebounced(150)")
-    NumField.-inline(
-      label="settings.tabs.preview_win_offset_y"
-      v-model:value="Settings.state.previewTabsWinOffsetY"
-      dbg="previewTabsWinOffsetY"
-      :default="DEFAULT_SETTINGS.previewTabsWinOffsetY"
-      :allowNegative="true"
-      :or="0"
-      :inactive="!Settings.state.previewTabs || (Settings.state.previewTabsMode !== 'w' && Settings.state.previewTabsPageModeFallback !== 'w')"
-      @update:value="Settings.saveDebounced(500)")
-    NumField.-inline(
-      label="settings.tabs.preview_win_offset_x"
-      v-model:value="Settings.state.previewTabsWinOffsetX"
-      dbg="previewTabsWinOffsetX"
-      :default="DEFAULT_SETTINGS.previewTabsWinOffsetX"
-      :allowNegative="true"
-      :or="0"
-      :inactive="!Settings.state.previewTabs || (Settings.state.previewTabsMode !== 'w' && Settings.state.previewTabsPageModeFallback !== 'w')"
-      @update:value="Settings.saveDebounced(500)")
     NumField.-inline(
       label="settings.tabs.preview_in_page_offset_y"
       v-model:value="Settings.state.previewTabsInPageOffsetY"

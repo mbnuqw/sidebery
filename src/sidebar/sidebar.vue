@@ -51,6 +51,16 @@
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
+  .tab-preview(
+    v-if="inlinePreview"
+    v-show="Tabs.reactive.inlinePreview"
+    ref="tprvw"
+    :data-onet="Settings.state.previewTabsTitle === 1"
+    :data-oneu="Settings.state.previewTabsUrl === 1")
+    .preview-body
+      .preview-title(v-if="Settings.state.previewTabsTitle > 0") {{Tabs.reactive.inlinePreviewTitle}}
+      .preview-url(v-if="Settings.state.previewTabsUrl > 0") {{Tabs.reactive.inlinePreviewUrl}}
+      img.preview-img(v-if="Tabs.reactive.inlinePreviewImg" :src="Tabs.reactive.inlinePreviewImg")
 
   .top-horizontal-box(v-if="navBarHorizontal")
     NavigationBar.-top
@@ -70,7 +80,7 @@
           v-for="(panel, i) in panels"
           :key="panel.id"
           :is="getPanelComponent(panel)"
-          :data-pos="getPanelPos(i, panel.id)"
+          :data-pos="panel.reactive.pos"
           :panel="panel")
 
       Transition(name="bottom-bar")
@@ -115,7 +125,7 @@
 
 <script lang="ts" setup>
 import type { Component } from 'vue'
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
 import type { Panel } from 'src/types'
 import * as E from 'src/enums'
 import * as Settings from 'src/services/settings'
@@ -124,6 +134,7 @@ import * as Styles from 'src/services/styles.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Tabs from 'src/services/tabs.fg'
+import * as TabPreview from 'src/services/tabs.fg.preview'
 import * as Mouse from 'src/services/mouse.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Bookmarks from 'src/services/bookmarks.fg'
@@ -159,6 +170,7 @@ import SubPanel from './components/sub-panel.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
+const tabPreviewEl = useTemplateRef<HTMLElement>('tprvw')
 const rrc = ref(0)
 
 let animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
@@ -175,6 +187,9 @@ let bottomBar =
   Settings.state.subPanelBookmarks ||
   Settings.state.subPanelHistory ||
   Settings.state.subPanelSync
+let inlinePreview =
+  Settings.state.previewTabs &&
+  (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')
 
 function recalcStaticVars() {
   animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
@@ -191,9 +206,13 @@ function recalcStaticVars() {
     Settings.state.subPanelBookmarks ||
     Settings.state.subPanelHistory ||
     Settings.state.subPanelSync
+  inlinePreview =
+    Settings.state.previewTabs &&
+    (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')
 }
 
 Sidebar.setReMountSidebarFn(() => {
+  Sidebar.resetPanelsPos()
   Sidebar.rememberActivePanelScrollPosition()
   recalcStaticVars()
   rrc.value++
@@ -216,6 +235,7 @@ const panels = computed<Panel[]>(() => {
 function updSidebarEls() {
   if (panelBoxEl.value) Sidebar.setPanelsBoxEl(panelBoxEl.value)
   if (rootEl.value) Sidebar.registerRootEl(rootEl.value)
+  if (inlinePreview) TabPreview.registerSPreviewEl(tabPreviewEl.value)
   Sidebar.recalcElementSizes()
   Sidebar.recalcSidebarSize()
   Sidebar.restoreActivePanelScrollPosition()
@@ -410,16 +430,6 @@ function onMouseUp(e: MouseEvent): void {
     }
     Menu.open(type, e.clientX, e.clientY)
   }
-}
-
-type PanelPosition = 'left' | 'center' | 'right'
-function getPanelPos(i: number, panelId: ID): PanelPosition {
-  if (panelId === Sidebar.reactive.activePanelId) return 'center'
-  if (i === -1) return 'right'
-
-  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
-  if (activePanel && i > activePanel.index) return 'right'
-  else return 'left'
 }
 
 let onBSPBDragLeaveTimeout: number | undefined

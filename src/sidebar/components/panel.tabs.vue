@@ -11,19 +11,7 @@
   ScrollBox(ref="scrollBox" :preScroll="D.PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     AnimatedTabList(:panel="panel")
-      .tab-preview(
-        v-if="Tabs.reactive.inlinePreviewPinnedImg"
-        :style="{ '--bgi': Tabs.reactive.inlinePreviewPinnedImg }")
-      template(
-        v-if="Settings.state.previewTabs && (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')"
-        v-for="id in panel.reactive.visibleTabIds"
-        :key="id")
-        TabComponent(:tabId="id")
-        .tab-preview(
-          v-if="Tabs.reactive.inlinePreviewTabId === id"
-          :style="{ '--bgi': Tabs.byId[id]?.previewImg }")
-      template(v-else)
-        TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
+      TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")

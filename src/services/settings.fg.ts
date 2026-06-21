@@ -127,6 +127,8 @@ export function updateSettings(settings?: SettingsState | null): void {
   const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
   const previewTabs = prev.previewTabs !== next.previewTabs
   const previewTabsMode = prev.previewTabsMode !== next.previewTabsMode
+  const previewTabsModeFallback =
+    prev.previewTabsPageModeFallback !== next.previewTabsPageModeFallback
   const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
   const tabsUnreadMark = prev.tabsUnreadMark !== next.tabsUnreadMark
   const copyTemplates = prev.copyTemplates !== next.copyTemplates
@@ -142,7 +144,7 @@ export function updateSettings(settings?: SettingsState | null): void {
     Tabs.list.forEach(t => (t.reactive.unread = t.unread = false))
   }
 
-  if (previewTabs || previewTabsMode) {
+  if (previewTabs || previewTabsMode || previewTabsModeFallback) {
     Preview.resetMode()
   }
 

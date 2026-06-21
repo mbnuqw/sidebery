@@ -45,6 +45,7 @@ export const BOOKMARKS_PANEL_STATE: T.BookmarksPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
 
     bookmarkIds: [],
     filteredBookmarkIds: undefined,
@@ -109,6 +110,7 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
     len: 0,
     filteredLen: undefined,
     ready: true,
+    pos: 'h',
 
     visibleTabIds: [],
     pinnedTabIds: [],
@@ -160,6 +162,7 @@ export const HISTORY_PANEL_STATE: T.HistoryPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
   },
 }
 
@@ -200,6 +203,7 @@ export const SYNC_PANEL_STATE: T.SyncPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
   },
 }
 

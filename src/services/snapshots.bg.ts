@@ -122,6 +122,14 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     return
   }
 
+  // Keep legacy color names
+  // TMP just for couple of versions (v153 is ESR)
+  for (const container of Object.values(stored.containers)) {
+    if (container.color === 'cyan') container.color = 'turquoise'
+    if (container.color === 'gray') container.color = 'toolbar'
+  }
+  // ---TMP
+
   const currentSnapshot: NormalizedSnapshot = {
     id: Math.random().toString(36).replace('0.', Date.now().toString(36)),
     time: Date.now(),
@@ -284,8 +292,15 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
   const oldNewIds: Record<string, string> = {}
 
   for (const container of Object.values(snapshot.containers)) {
+    let sColor = container.color
+    if (sColor === 'turquoise') sColor = 'cyan'
+    if (sColor === 'toolbar') sColor = 'gray'
+
     const currentContainer = currentContainers.find(c => {
-      return c.name === container.name && c.icon === container.icon && c.color === container.color
+      let lColor = c.color
+      if (lColor === 'turquoise') lColor = 'cyan'
+      if (lColor === 'toolbar') lColor = 'gray'
+      return c.name === container.name && c.icon === container.icon && lColor === sColor
     })
 
     // Create new container

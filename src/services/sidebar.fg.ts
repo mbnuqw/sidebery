@@ -75,9 +75,27 @@ export let reactive: SidebarReactiveState = {
 export let activePanelId = D.NOID
 export const setActivePanelId = (id: ID) => {
   if (activePanelId === id) return
+  const prevId = activePanelId
   reactive.activePanelId = activePanelId = id
   IPC.bg('setActivePanelId', Windows.id, id)
   saveActivePanelDebounced(1000)
+
+  const panel = panelsById[id]
+  const prevPanel = panelsById[prevId]
+  if (panel && prevPanel) {
+    if (panel.index > prevPanel.index) {
+      panel.reactive.pos = 'rc'
+      prevPanel.reactive.pos = 'l'
+    } else if (panel.index < prevPanel.index) {
+      panel.reactive.pos = 'lc'
+      prevPanel.reactive.pos = 'r'
+    } else {
+      panel.reactive.pos = 'c'
+      prevPanel.reactive.pos = 'h'
+    }
+  } else if (panel) {
+    panel.reactive.pos = 'c'
+  }
 }
 export let prevActivePanelId = D.NOID
 export let prevTabsPanelId = D.NOID
@@ -2858,4 +2876,11 @@ export function resetOrCancelInteraction() {
 
   // Site config popup
   if (Popups.reactive.siteConfigPopup) Popups.closeSiteConfigPopup()
+}
+
+export function resetPanelsPos() {
+  for (const panel of panels) {
+    if (panel.id === activePanelId) panel.reactive.pos = 'c'
+    else panel.reactive.pos = 'h'
+  }
 }

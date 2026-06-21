@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+
+## v5.5.2 - 2026.04.15
+
+### Fixed
+
+- Search: fix CJK query clearing issue by removing global flag from regex (by [@llc0930](https://github.com/llc0930): [#2385](https://github.com/mbnuqw/sidebery/issues/2385))
+- Drag and drop: wrong position on fast dnd (resolves [#2359](https://github.com/mbnuqw/sidebery/issues/2359)) (resolves [#2383](https://github.com/mbnuqw/sidebery/issues/2383))  
+- Setup-page: unexpected multiline TextInputs
+- Broken group and placeholder pages (resolves [#2356](https://github.com/mbnuqw/sidebery/issues/2356))  
+- Correctly handle "magnet:..." links
+- More reliable initialization process of containers
+- More reliable initialization process of tabs
+- Tabs: incorrect handling of redundant onTabCreated event: Reinit tabs in such cases  
+
+### Localization
+
+- pl: fix `confirm.tabs_close` plurals, misc typo fixes (by [@rom4nik](https://github.com/rom4nik): [#2351](https://github.com/mbnuqw/sidebery/issues/2351))  
+
+
 ## v5.5.0 - 2026.02.08
 
 ### Added

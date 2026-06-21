@@ -7,6 +7,7 @@ import * as Tabs from 'src/services/tabs.fg'
 const CONTAINER_COLORS: Record<string, string> = {
   blue: '#37adff',
   turquoise: '#00c79a',
+  cyan: '#00c79a',
   green: '#51cd00',
   yellow: '#ffcb00',
   orange: '#ff9f00',

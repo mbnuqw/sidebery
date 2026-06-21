@@ -21,7 +21,6 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
-  :data-preview="tab.reactive.preview"
   :title="tab.reactive.tooltip"
   :draggable="!tab.reactive.customTitleEdit"
   @dragstart="onDragStart"
@@ -223,14 +222,14 @@ function onMouseDown(e: MouseEvent): void {
   Mouse.setTarget('tab', tab.id)
 
   if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.openTimeout)
 
     if (
       Preview.state.mode === Preview.Mode.InPage ||
-      (Preview.state.mode !== Preview.Mode.Inline &&
+      (Preview.state.mode !== Preview.Mode.InSidebar &&
         Preview.state.status === Preview.Status.Opening)
     ) {
-      Preview.closePreviewPopup()
+      Preview.closePPreview()
     }
   }
 
@@ -532,11 +531,11 @@ function onDragStart(e: DragEvent): void {
   Sidebar.updateBounds()
 
   if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
-    clearTimeout(Preview.state.mouseLeaveTimeout)
+    clearTimeout(Preview.state.openTimeout)
+    clearTimeout(Preview.state.closeTimeout)
 
-    if (Preview.state.mode === Preview.Mode.Inline) Preview.closePreviewInline()
-    else Preview.closePreviewPopup()
+    if (Preview.state.mode === Preview.Mode.InSidebar) Preview.closeSPreview()
+    else Preview.closePPreview()
   }
 
   // Check what to drag
@@ -616,7 +615,7 @@ function onMouseEnter(e: MouseEvent) {
   }
 
   if (Settings.state.previewTabs) {
-    Preview.setTargetTab(props.tabId, e.clientY)
+    Preview.setTargetTab(tab.id)
   } else if (!Settings.state.forceUpdTooltip) {
     updateTooltipDebounced()
   }
@@ -624,7 +623,7 @@ function onMouseEnter(e: MouseEvent) {
 
 function onMouseLeave(): void {
   if (Settings.state.previewTabs) {
-    Preview.resetTargetTab(props.tabId)
+    Preview.resetTargetTab(tab.id)
   } else {
     clearTimeout(updateTooltipDebouncedTimeout)
   }
@@ -664,7 +663,7 @@ let updateTooltipDebouncedTimeout: number | undefined
 function updateTooltipDebounced() {
   clearTimeout(updateTooltipDebouncedTimeout)
   updateTooltipDebouncedTimeout = setTimeout(() => {
-    Tabs.updateTooltip(props.tabId)
+    Tabs.updateTooltip(tab.id)
   }, Settings.state.updTooltipDelay)
 }
 
@@ -706,13 +705,13 @@ function onExpandMouseDown(): void {
   Mouse.setTarget('tab.expand', tab.id)
 
   if (Settings.state.previewTabs) {
-    clearTimeout(Preview.state.mouseEnterTimeout)
+    clearTimeout(Preview.state.openTimeout)
 
     if (
-      Preview.state.mode !== Preview.Mode.Inline &&
+      Preview.state.mode !== Preview.Mode.InSidebar &&
       Preview.state.status === Preview.Status.Opening
     ) {
-      Preview.closePreviewPopup()
+      Preview.closePPreview()
     }
   }
 }

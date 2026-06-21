@@ -60,7 +60,7 @@
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
-  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
 
   padding-left: calc(var(--tabs-indent) * 16)
   &[data-lvl="0"]
@@ -143,19 +143,6 @@
 // -
 #root[data-search="true"] .Tab
   padding-left: 0
-
-// ---
-// -- Inline preview overlay
-// -
-.Tab[data-preview="true"]
-  z-index: 30
-  &:before
-    content: ''
-    position: absolute
-    top: 100%
-    left: 0
-    width: 100%
-    height: var(--tabs-inline-preview-height)
 
 // ---
 // -- Body

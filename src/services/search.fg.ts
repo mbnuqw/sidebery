@@ -345,7 +345,7 @@ export function searchDebounced(delay: number, q?: string) {
 
 let lowerCaseQuery = ''
 let beforeSwitchingPanelId: ID | undefined
-const regexCJK = /[\u4E00-\u9FFF,\u3400-\u4DBF,\u3040-\u312F,\uAC00-\uD7A3]/g
+const regexCJK = /[\u4E00-\u9FFF,\u3400-\u4DBF,\u3040-\u312F,\uAC00-\uD7A3]/
 export function search(q?: string): void {
   const ts = performance.now()
 

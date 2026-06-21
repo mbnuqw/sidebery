@@ -7,6 +7,7 @@ import * as Logs from 'src/services/logs'
 export let state = Utils.cloneObject(DEFAULT_SETTINGS)
 
 export let updateWinPrefaceOnPanelSwitch = false
+export let initSaveNeeded = false
 export let copyTemplates: CopyTemplate[] = []
 
 export let rmChildTabsFolded = false
@@ -59,6 +60,16 @@ export async function load(): Promise<void> {
   // Try to keep previous behavior with moveNewTabParent === 'default' and groupOnOpen
   if (groupOnOpen && state.moveNewTabParent === 'default') {
     state.moveNewTabParentIndent = true
+  }
+
+  // Handle removed 'window' tab preview option
+  if ((state.previewTabsMode as any) === 'w') {
+    state.previewTabsMode = 'p'
+    initSaveNeeded = true
+  }
+  if ((state.previewTabsPageModeFallback as any) === 'w') {
+    state.previewTabsPageModeFallback = 'i'
+    initSaveNeeded = true
   }
 
   parsePrefaceTemplate()

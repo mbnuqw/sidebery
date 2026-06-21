@@ -909,15 +909,27 @@ export function onDragMove(e: DragEvent): void {
     return
   }
 
-  for (let slot, i = 0; i < boundsLen; i++) {
+  for (let prevSlot, slot, i = 0; i < boundsLen; i++) {
+    prevSlot = bounds[i - 1]
     slot = bounds[i]
 
     if (y > slot.end) path[slot.lvl] = slot
 
-    // Skip
-    if (!lvlChanged && (y > slot.end || y < slot.start)) continue
+    // Skip slots outside the target range if lvl was not changed.
+    // Target range:
+    // ...
+    // - prevSlot-center
+    // - prevSlot-bottom <-- start of the target range (inclusive)
+    // - slot-start/prevSlot-end
+    // - slot-top
+    // - slot-center
+    // - slot-bottom     <-- end of the target range (exclusive)
+    // - nextSlot-start/slot-end
+    // - nextSlot-top
+    // ...
+    if (!lvlChanged && (y < prevSlot?.bottom || y >= slot.bottom)) continue
 
-    // Between
+    // Between (before)
     if (slot.in ? y < slot.top : y < slot.center) {
       if (i === 0) dropPos = -12
       else dropPos = slot.start - 12
@@ -925,7 +937,6 @@ export function onDragMove(e: DragEvent): void {
         resetTabActivateTimeout()
         pointerPos = dropPos
         pointerEl.style.transform = `translateY(${pointerPos}px)`
-        const prevSlot = bounds[i - 1]
         if (!prevSlot) {
           DnD.reactive.pointerLvl = 0
           DnD.reactive.pointerMode = DndPointerMode.Between

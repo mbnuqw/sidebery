@@ -40,12 +40,18 @@ export function parseCPID(cpid: string): browser.contextualIdentities.CreateDeta
     return
   }
   if (!result || result.length !== 3) return
-
-  return {
+  const info = {
     name: result[0],
     icon: result[1],
     color: result[2] as browser.ColorName,
   }
+  // Keep legacy color names
+  // TMP just for couple of versions (v153 is ESR)
+  if (info.color === 'cyan') info.color = 'turquoise'
+  if (info.color === 'gray') info.color = 'toolbar'
+  // ---TMP
+
+  return info
 }
 
 export function findUnique(
@@ -53,9 +59,16 @@ export function findUnique(
 ): Container | undefined {
   if (!props) return
 
+  let pColor = props.color
+  if (pColor === 'turquoise') pColor = 'cyan'
+  if (pColor === 'toolbar') pColor = 'gray'
+
   let container: Container | undefined
   for (const ctr of Object.values(Containers.reactive.byId)) {
-    if (ctr.name === props.name && ctr.icon === props.icon && ctr.color === props.color) {
+    let cColor = ctr.color
+    if (cColor === 'turquoise') cColor = 'cyan'
+    if (cColor === 'toolbar') cColor = 'gray'
+    if (ctr.name === props.name && ctr.icon === props.icon && cColor === pColor) {
       if (!container) container = ctr
       else {
         container = undefined
