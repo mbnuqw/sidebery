@@ -19,7 +19,7 @@ const props = defineProps<{ panel: TabsPanel }>()
 const show = computed<boolean>(
   () =>
     Settings.state.tabsTree &&
-    Settings.state.tabsStickyHierarchy &&
+    Settings.state.stickyAncestorTabs &&
     !Search.reactive.active &&
     props.panel.reactive.stickyTabIds.length > 0
 )

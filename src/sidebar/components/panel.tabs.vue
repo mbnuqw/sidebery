@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
 // (move/indent/outdent, add/remove, fold/expand) and feature toggling. The deep watch
 // catches in-place reorders of the visible list, not just length changes.
 watch(
-  [() => props.panel.reactive.visibleTabIds, () => Settings.state.tabsStickyHierarchy],
+  [() => props.panel.reactive.visibleTabIds, () => Settings.state.stickyAncestorTabs],
   () => scheduleStickyUpdate(),
   { deep: true }
 )

@@ -3623,44 +3623,44 @@ Available parameters:
     zh_TW: '無',
     ja: 'なし',
   },
-  'settings.sticky_tabs_hierarchy': {
-    en: 'Sticky tabs hierarchy',
-    de: 'Fixierte Tab-Hierarchie',
-    fr: 'Hiérarchie d’onglets fixe',
-    hu: 'Rögzített laphierarchia',
-    pl: 'Przypięta hierarchia kart',
-    ru: 'Закреплённая иерархия вкладок',
-    zh_CN: '固定标签页层级',
-    zh_TW: '固定分頁階層',
-    ja: 'タブ階層を固定表示',
+  'settings.sticky_ancestor_tabs': {
+    en: 'Sticky ancestor tabs',
+    de: 'Fixierte übergeordnete Tabs',
+    fr: 'Onglets ancêtres fixes',
+    hu: 'Rögzített felmenő lapok',
+    pl: 'Przypięte karty nadrzędne',
+    ru: 'Закреплённые вкладки-предки',
+    zh_CN: '固定祖先标签页',
+    zh_TW: '固定祖先分頁',
+    ja: '先祖タブを固定表示',
   },
-  'settings.sticky_tabs_hierarchy_limit': {
-    en: 'Sticky hierarchy depth limit',
-    de: 'Maximale Anzahl fixierter Ebenen',
-    fr: 'Limite de profondeur de la hiérarchie fixe',
-    hu: 'A rögzített hierarchia mélységkorlátja',
-    pl: 'Limit głębokości przypiętej hierarchii',
-    ru: 'Максимум закреплённых уровней',
-    zh_CN: '固定层级深度上限',
-    zh_TW: '固定階層深度上限',
-    ja: '固定する階層の深さ制限',
+  'settings.sticky_ancestor_tabs_limit': {
+    en: 'Sticky ancestor tabs depth limit',
+    de: 'Maximale Tiefe der fixierten übergeordneten Tabs',
+    fr: 'Limite de profondeur des onglets ancêtres fixes',
+    hu: 'A rögzített felmenő lapok mélységkorlátja',
+    pl: 'Limit głębokości przypiętych kart nadrzędnych',
+    ru: 'Максимальная глубина закреплённых вкладок-предков',
+    zh_CN: '固定祖先标签页深度上限',
+    zh_TW: '固定祖先分頁深度上限',
+    ja: '固定する先祖タブの深さ制限',
   },
-  'settings.sticky_tabs_hierarchy_limit_1': {
+  'settings.sticky_ancestor_tabs_limit_1': {
     en: '1',
   },
-  'settings.sticky_tabs_hierarchy_limit_2': {
+  'settings.sticky_ancestor_tabs_limit_2': {
     en: '2',
   },
-  'settings.sticky_tabs_hierarchy_limit_3': {
+  'settings.sticky_ancestor_tabs_limit_3': {
     en: '3',
   },
-  'settings.sticky_tabs_hierarchy_limit_4': {
+  'settings.sticky_ancestor_tabs_limit_4': {
     en: '4',
   },
-  'settings.sticky_tabs_hierarchy_limit_5': {
+  'settings.sticky_ancestor_tabs_limit_5': {
     en: '5',
   },
-  'settings.sticky_tabs_hierarchy_limit_none': {
+  'settings.sticky_ancestor_tabs_limit_none': {
     en: 'none',
     de: 'Unbegrenzt',
     fr: 'aucun',

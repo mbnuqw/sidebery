@@ -111,7 +111,7 @@ export function calcStickyTabs(panel: TabsPanel): void {
     if (reactive.stickyTabIds.length) reactive.stickyTabIds = []
   }
 
-  if (!Settings.state.tabsTree || !Settings.state.tabsStickyHierarchy || !panel.scrollEl) {
+  if (!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs || !panel.scrollEl) {
     return reset()
   }
 
@@ -151,7 +151,7 @@ export function calcStickyTabs(panel: TabsPanel): void {
   }
 
   // Apply the depth cap (keep the deepest N ancestors, closest to the active tab).
-  const limit = Settings.state.tabsStickyHierarchyLimit
+  const limit = Settings.state.stickyAncestorTabsLimit
   let result = sticky
   if (typeof limit === 'number' && sticky.length > limit) {
     result = sticky.slice(sticky.length - limit)
