@@ -136,6 +136,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Tabs tree
   tabsTree: true,
   tabsTreeLimit: 'none',
+  tabsStickyHierarchy: false,
+  tabsStickyHierarchyLimit: 3,
   autoFoldTabs: false,
   autoFoldTabsExcept: 'none',
   autoExpandTabs: false,
@@ -336,6 +338,7 @@ export const SETTINGS_OPTIONS = {
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'], // DEPR
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
+  tabsStickyHierarchyLimit: [1, 2, 3, 4, 5, 'none'],
   previewTabsMode: ['i', 'p'],
   previewTabsPageModeFallback: ['i', 'n'],
   previewTabsSide: ['right', 'left'],

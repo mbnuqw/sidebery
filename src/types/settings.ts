@@ -137,6 +137,8 @@ export interface SettingsState {
   tabsTree: boolean
   groupOnOpen?: boolean // DEPR
   tabsTreeLimit: (typeof SETTINGS_OPTIONS.tabsTreeLimit)[number]
+  tabsStickyHierarchy: boolean
+  tabsStickyHierarchyLimit: (typeof SETTINGS_OPTIONS.tabsStickyHierarchyLimit)[number]
   autoFoldTabs: boolean
   autoFoldTabsExcept: (typeof SETTINGS_OPTIONS.autoFoldTabsExcept)[number]
   autoExpandTabs: boolean

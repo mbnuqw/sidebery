@@ -1,0 +1,26 @@
+@import '../utils'
+
+// Zero-height sticky anchor pinned to the top of the scroll viewport.
+// Its rows overflow downward as an overlay, so they take no flow space
+// (no layout shift) and align automatically with the scrollable content.
+.StickyTabs
+  position: sticky
+  top: 0
+  left: 0
+  width: 100%
+  height: 0
+  z-index: 1000
+
+.StickyTabs > .Tab.-sticky
+  z-index: 1000
+  cursor: pointer
+  background-color: var(--frame-bg)
+  transition: none
+
+// Don't draw tree-connector lines between stacked sticky rows.
+.StickyTabs > .Tab.-sticky .body:after
+  display: none
+
+// Separator shadow under the lowest sticky row, against the scrolling list.
+.StickyTabs > .Tab.-sticky:last-child
+  box-shadow: 0 6px 8px -6px #00000060

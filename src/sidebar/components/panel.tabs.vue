@@ -9,6 +9,7 @@
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="D.PRE_SCROLL")
+    StickyTabs(:panel="panel")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     AnimatedTabList(:panel="panel")
       TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
@@ -30,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { translate } from 'src/dict'
 import type { ScrollBoxComponent, TabsPanel } from 'src/types'
 import * as E from 'src/enums'
@@ -50,6 +51,7 @@ import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
 import DragAndDropPointer from './dnd-pointer.vue'
 import AnimatedTabList from './animated-tab-list.vue'
+import StickyTabs from './sticky-tabs.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
@@ -59,13 +61,43 @@ const bottomBarSpaceNeeded =
   Settings.state.subPanelHistory
 let scrollBoxEl: HTMLElement | null = null
 
+let stickyRafId = 0
+function scheduleStickyUpdate(): void {
+  if (stickyRafId) return
+  stickyRafId = requestAnimationFrame(() => {
+    stickyRafId = 0
+    Tabs.calcStickyTabs(props.panel)
+  })
+}
+
 onMounted(() => {
   if (scrollBox.value) {
     Sidebar.setPanelScrollBox(props.panel.id, scrollBox.value)
     scrollBoxEl = scrollBox.value.getScrollBox()
-    if (scrollBoxEl) Sidebar.setPanelEls(props.panel.id, { scrollBox: scrollBoxEl })
+    if (scrollBoxEl) {
+      Sidebar.setPanelEls(props.panel.id, { scrollBox: scrollBoxEl })
+      scrollBoxEl.addEventListener('scroll', scheduleStickyUpdate, { passive: true })
+    }
   }
+  scheduleStickyUpdate()
 })
+
+onBeforeUnmount(() => {
+  if (scrollBoxEl) scrollBoxEl.removeEventListener('scroll', scheduleStickyUpdate)
+  if (stickyRafId) cancelAnimationFrame(stickyRafId)
+})
+
+// The sticky hierarchy is the active tab's ancestors that have scrolled above the
+// viewport top, so it must update on scroll (listener above). Active-tab switches are
+// recomputed from the activation handler (activeId isn't reactive); this watch covers
+// structure changes that can re-parent the active tab or change ancestor row positions
+// (move/indent/outdent, add/remove, fold/expand) and feature toggling. The deep watch
+// catches in-place reorders of the visible list, not just length changes.
+watch(
+  [() => props.panel.reactive.visibleTabIds, () => Settings.state.tabsStickyHierarchy],
+  () => scheduleStickyUpdate(),
+  { deep: true }
+)
 
 function onDrop(): void {
   DnD.reactive.dstType = E.DropType.Tabs

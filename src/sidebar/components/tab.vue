@@ -1,6 +1,7 @@
 <template lang="pug">
 .Tab(
-  :id="'tab' + tab.id"
+  :id="sticky ? undefined : 'tab' + tab.id"
+  :class="{ '-sticky': sticky }"
   :data-pin="!!iconOnly"
   :data-active="tab.reactive.active"
   :data-loading="tab.reactive.status === TabStatus.Loading"
@@ -100,7 +101,7 @@ import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import * as Preview from 'src/services/tabs.fg.preview'
 
-const props = defineProps<{ tabId: ID }>()
+const props = defineProps<{ tabId: ID; sticky?: boolean }>()
 const tab = Tabs.byId[props.tabId] as Tab
 const iconOnly =
   tab.pinned &&
@@ -129,6 +130,14 @@ const tabColor = computed<string>(() => {
 })
 
 onMounted(() => {
+  // Sticky clones are a second view of the same tab. They must not overwrite the
+  // shared element refs on the tab object (those drive the real row's favicon/title/
+  // flash updates), so render the favicon into the clone's own elements instead.
+  if (props.sticky) {
+    Tabs.renderFaviconInto(tab, favImgEl.value ?? undefined, favSvgUseEl.value ?? undefined)
+    return
+  }
+
   if (titleEl.value) tab.titleEl = titleEl.value
   if (favImgEl.value) tab.favImgEl = favImgEl.value
   if (favSvgUseEl.value) tab.favSvgUseEl = favSvgUseEl.value
@@ -739,6 +748,12 @@ function onExpandMouseUp(e: MouseEvent): void {
 }
 
 function onError(): void {
+  // For a sticky clone, fall back to the placeholder locally without mutating the
+  // shared tab (which would affect the real row).
+  if (props.sticky) {
+    Tabs.renderFaviconInto(tab, undefined, favSvgUseEl.value ?? undefined)
+    return
+  }
   tab.favIconUrl = undefined
   Tabs.renderFavicon(tab)
 }

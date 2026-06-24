@@ -115,6 +115,7 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
     visibleTabIds: [],
     pinnedTabIds: [],
     badge: false,
+    stickyTabIds: [],
     selNewTab: false,
     scrollRetainerHeight: 0,
     empty: true,

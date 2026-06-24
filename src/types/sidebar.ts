@@ -148,6 +148,7 @@ export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   visibleTabIds: ID[]
   pinnedTabIds: ID[]
   badge: boolean
+  stickyTabIds: ID[]
   selNewTab: boolean
   scrollRetainerHeight: number
   empty: boolean

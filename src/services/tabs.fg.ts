@@ -2922,8 +2922,14 @@ export function renderTitle(tab: T.Tab, forcedTitle?: string) {
 }
 
 export function renderFavicon(tab: T.Tab) {
-  const imgEl = tab.favImgEl
-  const svgUseEl = tab.favSvgUseEl
+  renderFaviconInto(tab, tab.favImgEl, tab.favSvgUseEl)
+}
+
+export function renderFaviconInto(
+  tab: T.Tab,
+  imgEl?: HTMLImageElement,
+  svgUseEl?: SVGElement
+): void {
   if (tab.favIconUrl && imgEl) {
     // Set img
     imgEl.src = tab.favIconUrl
