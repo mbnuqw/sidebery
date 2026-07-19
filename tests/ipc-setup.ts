@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 vi.mock('src/services/ipc', () => {
   return {
     connectTo: () => {},
-    sidebar: () => {},
+    sidebar: vi.fn(),
     sendToSidebar: () => {},
     sidebars: () => {},
     sendToSidebars: () => {},
@@ -20,6 +20,7 @@ vi.mock('src/services/ipc', () => {
     broadcast: () => {},
     onConnected: () => {},
     onDisconnected: () => {},
+    isConnected: vi.fn(),
     disconnectFrom: () => {},
   }
 })
