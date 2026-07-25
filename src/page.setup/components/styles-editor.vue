@@ -179,7 +179,13 @@ function recalcGroups(vars: CssVar[]): void {
       key = key.replace('bg', 'background')
       key = key.replace('fg', 'foreground')
       key = key.replace('btn', 'button')
-      v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
+      const dictKey = `styles.var_label.${v.key}`
+      const translatedLabel = translate(dictKey)
+      if (translatedLabel && translatedLabel !== dictKey) {
+        v.label = translatedLabel
+      } else {
+        v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
+      }
       group.vars.push(v)
     } else {
       let key = v.key
@@ -188,7 +194,13 @@ function recalcGroups(vars: CssVar[]): void {
       key = key.replace('bg', 'background')
       key = key.replace('fg', 'foreground')
       key = key.replace('btn', 'button')
-      v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
+      const dictKey = `styles.var_label.${v.key}`
+      const translatedLabel = translate(dictKey)
+      if (translatedLabel && translatedLabel !== dictKey) {
+        v.label = translatedLabel
+      } else {
+        v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
+      }
       commonGroup.vars.push(v)
     }
   }
