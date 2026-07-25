@@ -251,36 +251,42 @@ export const commonTranslations: Translations = {
   'sync.tabs_title': {
     en: 'Tabs',
     fr: 'Onglets',
+    ru: 'Вкладки',
     zh_CN: '标签页',
     zh_TW: '分頁',
   },
   'sync.ctx_menu_title': {
     en: 'Context menu',
     fr: 'Menu contextuel',
+    ru: 'Контекстное меню',
     zh_CN: '上下文菜单',
     zh_TW: '快捷選單',
   },
   'sync.settings_title': {
     en: 'Settings',
     fr: 'Paramètres',
+    ru: 'Настройки',
     zh_CN: '设置',
     zh_TW: '設定',
   },
   'sync.style_title': {
     en: 'Styles',
     fr: 'Styles',
+    ru: 'Стили',
     zh_CN: '样式',
     zh_TW: '樣式',
   },
   'sync.keybindings_title': {
     en: 'Keybindings',
     fr: 'Raccourcis',
+    ru: 'Горячие клавиши',
     zh_CN: '按键绑定',
     zh_TW: '按鍵綁定',
   },
   'sync.unknown_title': {
     en: 'Unknown',
     fr: 'Inconnu',
+    ru: 'Неизвестно',
     zh: '未知',
   },
   'sync.err.google_entries': {
@@ -363,24 +369,28 @@ export const commonTranslations: Translations = {
   'sync.success.import_keyboard': {
     en: 'Keybindings have been successfully imported',
     fr: 'Les raccourcis ont été importés avec succès',
+    ru: 'Горячие клавиши успешно импортированы',
     zh_CN: '按键绑定已成功导入',
     zh_TW: '按鍵綁定已成功匯入',
   },
   'sync.success.import_menu': {
     en: 'Context menu has been successfully imported',
     fr: 'Le menu contextuel a été importé avec succès',
+    ru: 'Контекстное меню успешно импортировано',
     zh_CN: '上下文菜单已成功导入',
     zh_TW: '快捷選單已成功匯入',
   },
   'sync.success.import_settings': {
     en: 'Settings have been successfully imported',
     fr: 'Les paramètres ont été importés avec succès',
+    ru: 'Настройки успешно импортированы',
     zh_CN: '设置已成功导入',
     zh_TW: '設定已成功匯入',
   },
   'sync.success.import_styles': {
     en: 'Styles have been successfully imported',
     fr: 'Les styles ont été importés avec succès',
+    ru: 'Стили успешно импортированы',
     zh_CN: '样式已成功导入',
     zh_TW: '樣式已成功匯入',
   },
@@ -1088,6 +1098,7 @@ export const commonTranslations: Translations = {
     ja: 'スナップショットを作成',
   },
   'menu.browserAction.reopen_cached_win_first': {
+    ru: '',
     en: tabsCount => {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
@@ -1097,10 +1108,12 @@ export const commonTranslations: Translations = {
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Open cached window',
+    ru: 'Открыть кэшированное окно',
     zh_CN: '打开已缓存窗口',
     zh_TW: '開啟已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
+    ru: '',
     en: (tabsCount, panelsCount) => {
       const t = tabsCount === 1 ? 'tab' : 'tabs'
       const p = panelsCount === 1 ? 'panel' : 'panels'
@@ -2396,6 +2409,7 @@ export const commonTranslations: Translations = {
     ja: 'テンプレートによるコピー...',
   },
   'menu.copy_by_template': {
+    ru: '',
     en: name => 'Copy ' + name,
     fr: name => `Copier ${name}`,
     zh_CN: name => '复制 ' + name,
@@ -2782,12 +2796,14 @@ export const commonTranslations: Translations = {
   'notif.open_private_windows_err': {
     en: 'Cannot open window',
     fr: 'Impossible d’ouvrir la fenêtre',
+    ru: 'Нельзя открыть окно',
     zh_CN: '无法打开窗口',
     zh_TW: '無法開啟視窗',
   },
   'notif.open_private_windows_err_details': {
     en: 'Extension does not have permission for incognito mode',
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
+    ru: 'У расширения нет разрешения на работу в приватных окнах',
     zh_CN: '扩展没有在隐私窗口中运行的权限',
     zh_TW: '擴充套件沒有於隱私視窗中執行的權限',
   },
@@ -2798,20 +2814,25 @@ export const commonTranslations: Translations = {
   'omnibox.default_suggestion': {
     en: 'Choose the command (default is the first one):',
     fr: 'Choisir la commande (la première est celle par défaut)',
+    ru: 'Выберите команду (по умолчанию первая в списке):',
   },
   'omnibox.reopen_in_ctr': {
+    ru: '',
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
     fr: 'Conteneur par défaut',
+    ru: 'Стандартный контейнер',
   },
   'omnibox.move_to_panel': {
+    ru: '',
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
   },
   'omnibox.switch_to_panel': {
+    ru: '',
     en: panelName => `⮞ Switch to "${panelName}" panel`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
   },
