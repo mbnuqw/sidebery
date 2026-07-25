@@ -29,9 +29,12 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 
 ## Install
 
+- **Firefox Addon**: [SessionPaw - Tabs Outliner на Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/sessionpaw-tabs-outliner/)
+- **GitHub Release**: [Последний релиз на GitHub](https://github.com/Nikitamce/SessionPaw/releases/latest)
+
 **Stable**:
-[Release page](https://github.com/mbnuqw/sidebery/releases/latest) |
-[Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) (reviewed by Mozilla)  
+[Release page](https://github.com/Nikitamce/SessionPaw/releases/latest) |
+[Addon page](https://addons.mozilla.org/en-US/firefox/addon/sessionpaw-tabs-outliner/)
 **Nightly** (v5.6.0.1):
 [Install](https://github.com/mbnuqw/sidebery/releases/download/v5.6.0/sidebery-5.6.0.1.xpi)
 > [!NOTE]
