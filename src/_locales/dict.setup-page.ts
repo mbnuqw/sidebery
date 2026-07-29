@@ -1606,7 +1606,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
-    ru: 'Используйте адресную строку браузера для быстрого вызова некоторых команд Sidebery.',
+    ru: 'Используйте адресную строку (она же Omniox) для быстрого вызова некоторых команд Sidebery.',
   },
   'settings.omnibox_note': {
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
