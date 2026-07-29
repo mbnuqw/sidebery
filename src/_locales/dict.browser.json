@@ -1,6 +1,7 @@
 {
   "ExtName": {
-    "en": "Sidebery"
+    "en": "Sidebery",
+    "ru": "Sidebery"
   },
   "ExtDesc": {
     "en": "Tabs tree, bookmarks and history in a highly configurable sidebar.",

@@ -1098,7 +1098,11 @@ export const commonTranslations: Translations = {
     ja: 'スナップショットを作成',
   },
   'menu.browserAction.reopen_cached_win_first': {
-    ru: '',
+    ru: tabsCount => {
+      if (NUM_1_RE.test(tabsCount.toString())) return `Открыть кэшированное окно (${tabsCount} вкладка)`
+      if (NUM_234_RE.test(tabsCount.toString())) return `Открыть кэшированное окно (${tabsCount} вкладки)`
+      return `Открыть кэшированное окно (${tabsCount} вкладок)`
+    },
     en: tabsCount => {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
@@ -1113,7 +1117,16 @@ export const commonTranslations: Translations = {
     zh_TW: '開啟已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
-    ru: '',
+    ru: (tabsCount, panelsCount) => {
+      let t = 'вкладок'
+      if (NUM_1_RE.test(tabsCount.toString())) t = 'вкладка'
+      else if (NUM_234_RE.test(tabsCount.toString())) t = 'вкладки'
+
+      let p = 'панелях'
+      if (NUM_1_RE.test(panelsCount.toString())) p = 'панели'
+
+      return `${tabsCount} ${t} в ${panelsCount} ${p}`
+    },
     en: (tabsCount, panelsCount) => {
       const t = tabsCount === 1 ? 'tab' : 'tabs'
       const p = panelsCount === 1 ? 'panel' : 'panels'
@@ -2409,7 +2422,7 @@ export const commonTranslations: Translations = {
     ja: 'テンプレートによるコピー...',
   },
   'menu.copy_by_template': {
-    ru: '',
+    ru: name => `Копировать ${name}`,
     en: name => 'Copy ' + name,
     fr: name => `Copier ${name}`,
     zh_CN: name => '复制 ' + name,
@@ -2817,7 +2830,7 @@ export const commonTranslations: Translations = {
     ru: 'Выберите команду (по умолчанию первая в списке):',
   },
   'omnibox.reopen_in_ctr': {
-    ru: '',
+    ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
   },
@@ -2827,16 +2840,17 @@ export const commonTranslations: Translations = {
     ru: 'Стандартный контейнер',
   },
   'omnibox.move_to_panel': {
-    ru: '',
+    ru: panelName => `↔ Переместить активную вкладку в панель "${panelName}"`,
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
   },
   'omnibox.switch_to_panel': {
-    ru: '',
+    ru: panelName => `⮞ Переключиться на панель "${panelName}"`,
     en: panelName => `⮞ Switch to "${panelName}" panel`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
   },
   'omnibox.move_to_tab': {
+    ru: tabTitle => `↕ Переместить активную вкладку в группу: "${tabTitle}"`,
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
     fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
   },
