@@ -129,6 +129,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.new_tab_in_default_container_with_url': {
     en: url => `Open "${url}" in a new tab`,
     fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
+    ru: url => `Открыть "${url}" в новой вкладке`,
     zh_CN: url => `打开新标签页“${url}”`,
     zh_TW: url => `開啟新分頁「${url}」`,
     ja: url => `新しいタブで「${url}」を開く`,
@@ -158,6 +159,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.new_tab_in_container_with_url': {
     en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
     fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
+    ru: (url, name) => `Открыть "${url}" в новой вкладке в контейнере "${name}"`,
     zh_CN: (url, name) => `在“${name}”容器中打开新标签页“${url}”`,
     zh_TW: (url, name) => `在「${name}」容器中開啟新分頁「${url}」`,
     ja: (url, name) => `「${name}」コンテナの新しいタブで「${url}」を開く`,
@@ -176,6 +178,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.open_child_tab_with_url': {
     en: url => `Middle click: Open "${url}" in a child tab`,
     fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
+    ru: url => `Средняя кнопка мыши: Открыть "${url}" в дочерней вкладке`,
     zh_CN: url => `中键单击：打开子标签页“${url}”`,
     zh_TW: url => `中鍵點選：開啟子分頁「${url}」`,
     ja: url => `中クリック：子タブで「${url}」を開く`,
@@ -183,6 +186,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.open_child_tab_in_container': {
     en: name => `Middle click: Open a child tab in "${name}" container`,
     fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
+    ru: name => `Средняя кнопка мыши: Открыть дочернюю вкладку в контейнере "${name}"`,
     zh_CN: name => `中键单击：在“${name}”容器中打开子标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中開啟子分頁`,
     ja: name => `中クリック：「${name}」コンテナで子タブを開く`,
@@ -191,6 +195,8 @@ export const sidebarTranslations: Translations = {
     en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
     fr: (url, name) =>
       `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
+    ru: (url, name) =>
+      `Средняя кнопка мыши: Открыть "${url}" в дочерней вкладке в контейнере "${name}"`,
     zh_CN: (url, name) => `中键单击：在“${name}”容器中打开子标签页“${url}”`,
     zh_TW: (url, name) => `中鍵點選：在「${name}」容器中開啟子分頁「${url}」`,
     ja: (url, name) => `中クリック：「${name}」コンテナの子タブで「${url}」を開く`,
@@ -209,6 +215,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
+    ru: url => `Средняя кнопка мыши: Загрузить "${url}" в активной вкладке`,
     zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
     zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
     ja: url => `中クリック: アクティブなタブに「${url}」を読み込む`,
@@ -216,6 +223,7 @@ export const sidebarTranslations: Translations = {
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
+    ru: name => `Средняя кнопка мыши: Переоткрыть активную вкладку в контейнере "${name}"`,
     zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟當前分頁`,
     ja: name => `中クリック: 「${name}」コンテナでアクティブタブを再度開く`,
@@ -224,6 +232,8 @@ export const sidebarTranslations: Translations = {
     en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
+    ru: (url, name) =>
+      `Средняя кнопка мыши: Загрузить "${url}" в активной вкладке в контейнере "${name}"`,
     zh_CN: (url, name) => `中键点击：在“${name}”容器中加载“${url}”于活动标签页`,
     zh_TW: (url, name) => `中鍵點選：在「${name}」容器中載入「${url}」於當前分頁`,
     ja: (url, name) => `中クリック: 「${name}」コンテナでアクティブタブに「${url}」を読み込みます`,
