@@ -8379,7 +8379,7 @@ Available parameters:
     - Select "/sidebar/sidebar.html" for sidebar frame
     - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
-    ru: `ПРИМЕЧАНИЕ: Чтобы получить доступные селекторы CSS, используйте отладчик:
+    ru: `ПРИМЕЧАНИЕ: Чтобы получить текущие доступные селекторы CSS, используйте отладчик:
   - Нажмите кнопку "Копировать URL отладчика" в нижней панели
   - Откройте новую вкладку с этим URL
   - Выберите фрейм для инспекции
