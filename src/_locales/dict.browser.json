@@ -1315,7 +1315,7 @@
     "pl": "Sortuj karty w aktywnym panelu po tytule (z-A)",
     "zh_TW": "依名稱排序當前面板的分頁 (z-A)",
     "ja": "アクティブパネルのタブをタイトルでソート（z-A）",
-    "ru": "Сортировать вкладки активной панели по названию (Я-А)"
+    "ru": "Сортировать вкладки активной панели по названию (я-А)"
   },
   "KbSortPanelTabsByTrlAsc": {
     "en": "Sort tabs of the active panel by URL (A-z)",
