@@ -1207,7 +1207,9 @@ Templates are written per line in the form "Template name:Template" (without quo
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
     fr: `Pour utiliser cette fonctionnalité, activez l’option “Copier avec un modèle” dans l’éditeur de menus contextuels ou définissez un raccourci clavier.
     Les modèles s’écrivent un par ligne sous la forme “Nom du modèle:Modèle” (sans les guillemets).`,
-    ru: `Чтобы использовать эту функцию, включите параметр "Копировать по шаблонам..." в редакторе контекстного меню или задайте горячие клавиши.\nШаблоны записываются построчно в формате "Название шаблона:Шаблон" (без кавычек).\nДоступные переменные: %B - маркер списка (bullet); %CT - кастомный заголовок или заголовок; %T - заголовок; %U - URL`,
+    ru: `Чтобы использовать эту функцию, включите параметр "Копировать по шаблонам..." в редакторе контекстного меню или задайте горячие клавиши.
+Шаблоны записываются построчно в формате "Название шаблона:Шаблон" (без кавычек).
+Доступные переменные: %B - маркер списка (bullet); %CT - кастомный заголовок или заголовок; %T - заголовок; %U - URL`,
     zh_CN: `要使用此功能，请在菜单编辑器中启用“通过模板复制...”选项或设置快捷键。
 模板以“名称:内容”（不带引号）的格式逐行编写。
 可用变量：%B - 列表标记（项目符号）；%CT - 自定义标题或标题；%T - 标题；%U - 网址
