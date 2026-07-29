@@ -1615,7 +1615,8 @@ You can also set prefixes for each command type for faster navigation. Starting 
     fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
 
 Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
-    ru: `Чтобы начать, фокусируйте адресную строку (Ctrl+L / Cmd+L), затем введите "=" и пробел, после чего начните вводить имя целевого контейнера/панели/группы (без учета регистра). Выберите нужную команду из списка или нажмите Enter, чтобы использовать первую.\n\nВы также можете задать префиксы для каждого типа команд для более быстрой навигации. Начало вашего запроса (после "=" и пробела) с любых символов из настроенного префикса даст командам этого типа более высокий приоритет.`,
+    ru: `Чтобы начать, активируйте адресную строку (Ctrl+L / Cmd+L), затем введите "=" и пробел, после чего начните вводить имя целевого контейнера/панели/группы (без учета регистра). Выберите нужную команду из списка или нажмите Enter, чтобы использовать первую.
+Вы также можете задать префиксы для каждого типа команд для более быстрой навигации. Начало вашего запроса (после "=" и пробела) с любых символов из настроенного префикса даст командам этого типа более высокий приоритет.`,
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
