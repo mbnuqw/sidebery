@@ -1245,7 +1245,7 @@
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (A-z)",
     "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (A-z)",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（A-z）",
-    "ru": "Сортировать выбранные или соседние вкладки по названию (А-Я)"
+    "ru": "Сортировать выбранные или соседние вкладки по названию (А-я)"
   },
   "KbSortTabsByTitleDes": {
     "en": "Sort selected tabs or siblings of the active tab by title (z-A)",
