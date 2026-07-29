@@ -2220,6 +2220,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'キーを押した状態で',
   },
   'settings.dnd_mod_alt': {
+    ru: 'alt',
     en: 'alt',
     de: 'Alt',
     fr: 'alt',
@@ -2228,6 +2229,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Alt',
   },
   'settings.dnd_mod_shift': {
+    ru: 'shift',
     en: 'shift',
     de: 'Umschalttaste',
     fr: 'maj',
@@ -2236,6 +2238,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Shift',
   },
   'settings.dnd_mod_ctrl': {
+    ru: 'ctrl',
     en: 'ctrl',
     de: 'Strg',
     fr: 'ctrl',
@@ -3637,6 +3640,7 @@ Available parameters:
     ja: '固定タブのアンロードを防止する',
   },
   'settings.pinned.no_unload_explicit': {
+    ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
   },
@@ -3665,18 +3669,23 @@ Available parameters:
     ja: 'タブツリーの深さ制限',
   },
   'settings.tabs_tree_limit_1': {
+    ru: '1',
     en: '1',
   },
   'settings.tabs_tree_limit_2': {
+    ru: '2',
     en: '2',
   },
   'settings.tabs_tree_limit_3': {
+    ru: '3',
     en: '3',
   },
   'settings.tabs_tree_limit_4': {
+    ru: '4',
     en: '4',
   },
   'settings.tabs_tree_limit_5': {
+    ru: '5',
     en: '5',
   },
   'settings.tabs_tree_limit_none': {
@@ -3771,18 +3780,23 @@ Available parameters:
     ja: '開いているブランチの最大数',
   },
   'settings.auto_fold_tabs_except_1': {
+    ru: '1',
     en: '1',
   },
   'settings.auto_fold_tabs_except_2': {
+    ru: '2',
     en: '2',
   },
   'settings.auto_fold_tabs_except_3': {
+    ru: '3',
     en: '3',
   },
   'settings.auto_fold_tabs_except_4': {
+    ru: '4',
     en: '4',
   },
   'settings.auto_fold_tabs_except_5': {
+    ru: '5',
     en: '5',
   },
   'settings.auto_fold_tabs_except_none': {
@@ -4106,6 +4120,7 @@ Available parameters:
     ja: '色の生成元',
   },
   'settings.colorize_branches_src_url': {
+    ru: 'URL',
     en: 'URL',
     fr: 'l’URL',
     zh_TW: '網址',
@@ -4723,24 +4738,31 @@ Available parameters:
     ja: 'フォントサイズ',
   },
   'settings.font_size_xxs': {
+    ru: 'XXS',
     en: 'XXS',
   },
   'settings.font_size_xs': {
+    ru: 'XS',
     en: 'XS',
   },
   'settings.font_size_s': {
+    ru: 'S',
     en: 'S',
   },
   'settings.font_size_m': {
+    ru: 'M',
     en: 'M',
   },
   'settings.font_size_l': {
+    ru: 'L',
     en: 'L',
   },
   'settings.font_size_xl': {
+    ru: 'XL',
     en: 'XL',
   },
   'settings.font_size_xxl': {
+    ru: 'XXL',
     en: 'XXL',
   },
   'settings.font_family': {
@@ -4920,6 +4942,7 @@ Available parameters:
     ja: '自動: ダーク/ライト',
   },
   'settings.color_scheme_ff': {
+    ru: 'Firefox',
     en: 'firefox',
     de: 'Firefox',
     fr: 'Firefox',
@@ -6376,9 +6399,11 @@ Available parameters:
     ja: '自動エクスポート形式',
   },
   'settings.snap_auto_export_type_json': {
+    ru: 'json',
     en: 'json',
   },
   'settings.snap_auto_export_type_md': {
+    ru: 'md',
     en: 'md',
   },
   'settings.snap_auto_export_type_both': {
@@ -6407,6 +6432,7 @@ Available parameters:
   // Although the translated name is displayed,
   // the default saved snapshot file name is always the same.
   'settings.snap_export_path_ph': {
+    ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_export_path_note': {
@@ -6658,36 +6684,43 @@ Available parameters:
     ja: '上級ユーザー向け。制限を超えたためにデフォルト キーがブロックされた場合。',
   },
   'settings.sync_gd_api_link': {
+    ru: 'Ссылка',
     en: 'Link',
     fr: 'Lien',
     zh_CN: '链接',
     zh_TW: '鏈結',
   },
   'settings.sync_gd_api_proj': {
+    ru: '1. Создайте проект Google Cloud:',
     en: '1. Create a Google Cloud project:',
     fr: '1. Créer un project Google Cloud:',
     zh_CN: '1. 创建 Google Cloud 项目：',
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
+    ru: '- Целевая аудитория: Внешняя (External)',
     en: '- Audience: External',
     fr: '– Audience: Externe',
     zh_CN: '- 受众群体：外部',
     zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
+    ru: '2. Включите Google Drive API:',
     en: '2. Enable Drive API:',
     fr: '2. Activer l’API Drive:',
     zh_CN: '2. 启用“Google Drive API”：',
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
+    ru: '3. Создайте учетные данные (Client ID):',
     en: '3. Create a Client:',
     fr: '3. Créer un Client:',
     zh_CN: '3. 创建客户端：',
     zh_TW: '3. 建立用戶端：',
   },
   'settings.sync_gd_api_cli_sub': {
+    ru: `- Тип приложения: Веб-приложение (Web application)
+- Разрешенные URI перенаправления:`,
     en: `- Type: Web application
 - Authorized redirect URIs:`,
     fr: `– Type: Application Web
