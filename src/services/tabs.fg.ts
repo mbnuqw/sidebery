@@ -1477,8 +1477,7 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
 
-    const url = new URL(tab.url)
-    const domain = url.hostname.split('.').slice(-2).join('.')
+    const domain = Utils.getDomainOf(tab.url)
 
     if (!domain) {
       Notifications.notify({
