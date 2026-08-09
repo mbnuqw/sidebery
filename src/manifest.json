@@ -31,6 +31,7 @@
   "permissions": [
     "activeTab",
     "tabs",
+    "publicSuffix",
     "contextualIdentities",
     "cookies",
     "storage",
