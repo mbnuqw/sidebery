@@ -838,9 +838,7 @@ export function moveByRule(tabId: ID, delay: number) {
 function moveTabToPanel(tab: T.Tab, panelId: ID) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
-  // TODO: why I use moveNewTabParent here? add config specifically for this case (move by rule)
-  const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
-  const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex
+  const index = Tabs.getIndexForNewTab(panel, {})
   const src: T.SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
   const dst: T.DstPlaceInfo = { panelId, index }
   Utils.GLOBAL_QUEUE.add(Tabs.move, [tab], src, dst)
