@@ -226,17 +226,8 @@ export function dateTimeTemplate(str: string, msOrDate: number | Date): string {
 /**
  * Get domain of the url
  */
-const nativeGetDomain = typeof browser !== 'undefined' ? browser.publicSuffix?.getDomain : null
-
 export function getDomainOf(url: string): string {
   if (!url) return url
-  if (nativeGetDomain) {
-    try {
-      const host = new URL(url).hostname
-      const domain = host ? nativeGetDomain(host) : null
-      if (domain) return domain
-    } catch {}
-  }
   return D.DOMAIN_RE.exec(url)?.[1] ?? url
 }
 
