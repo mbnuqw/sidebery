@@ -1463,7 +1463,7 @@ declare namespace browser {
       allowUnknownSuffix?: boolean
     }
     function getDomain(hostname: string, options?: GetDomainOptions): string | null
-    function getKnownSuffix(hostname: string): string
+    function getKnownSuffix(hostname: string): string | null
     function isKnownSuffix(hostname: string): boolean
   }
 }
