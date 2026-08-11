@@ -1453,4 +1453,17 @@ declare namespace browser {
     function getRedirectURL(): string
     function launchWebAuthFlow(details: LaunchWebAuthDetails): Promise<string>
   }
+
+  namespace publicSuffix {
+    type DomainEncoding = 'punycode' | 'display'
+    interface GetDomainOptions {
+      encoding?: DomainEncoding
+      allowIPAddress?: boolean
+      allowPlainSuffix?: boolean
+      allowUnknownSuffix?: boolean
+    }
+    function getDomain(hostname: string, options?: GetDomainOptions): string
+    function getKnownSuffix(hostname: string): string
+    function isKnownSuffix(hostname: string): boolean
+  }
 }
