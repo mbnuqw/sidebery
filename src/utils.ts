@@ -224,11 +224,11 @@ export function dateTimeTemplate(str: string, msOrDate: number | Date): string {
 }
 
 /**
- * Get domain of the url
+ * Get hostname of the url
  */
-export function getDomainOf(url: string): string {
+export function getHostname(url: string): string {
   if (!url) return url
-  return D.DOMAIN_RE.exec(url)?.[1] ?? url
+  return D.HOSTNAME_RE.exec(url)?.[1] ?? url
 }
 
 /**

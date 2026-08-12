@@ -116,7 +116,7 @@ const btns = computed<NewTabBtn[]>(() => {
       part = part.trim()
 
       // Url?
-      const domain = D.DOMAIN_RE.exec(part)?.[1]
+      const domain = D.HOSTNAME_RE.exec(part)?.[1]
       if (domain) {
         btn.url = part
         btn.domain = domain

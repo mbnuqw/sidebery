@@ -5,7 +5,7 @@ import { applyCustomCSS, applyThemeSrcVars } from './group.styles'
 import * as Logs from './group.logs'
 import * as IPPC from 'src/services/ippc.page'
 import { DstTreePos, InstanceType } from 'src/enums'
-import { getDomainOf } from 'src/utils'
+import { getHostname } from 'src/utils'
 
 let groupTitle = ''
 let tabsBoxEl: HTMLElement | null = null
@@ -95,7 +95,7 @@ async function main() {
   // Set favicons for each tab
   for (const tab of tabs) {
     if (tab.favIconUrl) continue
-    const domain = getDomainOf(tab.url)
+    const domain = getHostname(tab.url)
     const favicon = initData.groupInfo.favicons[domain]
     if (favicon) tab.favIconUrl = favicon
   }

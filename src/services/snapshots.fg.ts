@@ -149,7 +149,7 @@ export function parseSnapshot(
           id: tabsCount,
           containerIcon: container?.icon,
           containerColor: container?.color,
-          domain: Utils.getDomainOf(tab.url),
+          domain: Utils.getHostname(tab.url),
           iconSVG: Favicons.getFavPlaceholder(tab.url),
           sel: false,
           folded: !!tab.folded,

@@ -136,7 +136,7 @@ function onMoreClick() {
 function onFavMouseDown(e: MouseEvent, visit: Visit): void {
   if (!visit.url) return
 
-  const domain = Utils.getDomainOf(visit.url)
+  const domain = Utils.getHostname(visit.url)
   if (domain === visit.url) return
 
   Selection.resetSelection()

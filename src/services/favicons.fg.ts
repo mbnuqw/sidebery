@@ -47,7 +47,7 @@ export async function load(): Promise<void> {
     for (const tab of Tabs.list) {
       if (tab?.internal) continue
       if (tab?.favIconUrl) continue
-      const domain = Utils.getDomainOf(tab.url)
+      const domain = Utils.getHostname(tab.url)
       const favicon = reactive.byDomains[domain]
       if (favicon) {
         tab.favIconUrl = favicon
@@ -75,11 +75,11 @@ export function set(domain: string, icon: string): void {
 }
 
 export function getFavicon(url: string): string {
-  return reactive.byDomains[Utils.getDomainOf(url)] || ''
+  return reactive.byDomains[Utils.getHostname(url)] || ''
 }
 
 export function getIcon(url: string): string {
-  return reactive.byDomains[Utils.getDomainOf(url)] || getFavPlaceholder(url)
+  return reactive.byDomains[Utils.getHostname(url)] || getFavPlaceholder(url)
 }
 
 // ---

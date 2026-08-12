@@ -61,7 +61,7 @@
 import { ref, computed } from 'vue'
 import { translate } from 'src/dict'
 import type { Container } from 'src/types'
-import { DEFAULT_CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
+import { DEFAULT_CONTAINER_ID, HOSTNAME_RE } from 'src/defaults'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Windows from 'src/services/windows.fg'
 import * as Containers from 'src/services/containers'
@@ -96,7 +96,7 @@ const newShortcutURL = ref('')
 const editing = ref<ID | null>(null)
 
 const addBtnActive = computed<boolean>(() => {
-  const urlIsValid = !!newShortcutURL.value && DOMAIN_RE.test(newShortcutURL.value)
+  const urlIsValid = !!newShortcutURL.value && HOSTNAME_RE.test(newShortcutURL.value)
   const containerIsValid = newShortcutContainerId.value !== 'none'
   return urlIsValid || containerIsValid
 })
@@ -129,7 +129,7 @@ const shortcuts = computed<NewTabShortcut[]>(() => {
       part = part.trim()
 
       // Url?
-      const domain = DOMAIN_RE.exec(part)?.[1]
+      const domain = HOSTNAME_RE.exec(part)?.[1]
       if (domain) {
         shortcut.url = part
         const favicon = Favicons.reactive.byDomains[domain]

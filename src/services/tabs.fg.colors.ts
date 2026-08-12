@@ -37,7 +37,7 @@ export function colorizeTab(tabId: ID): void {
 
   let srcStr, color
   if (Settings.state.colorizeTabsSrc === 'domain') {
-    srcStr = Utils.getDomainOf(tab.url)
+    srcStr = Utils.getHostname(tab.url)
     color = Utils.colorFromString(srcStr, 60)
   } else {
     const container = Containers.reactive.byId[tab.cookieStoreId]
@@ -65,7 +65,7 @@ export function colorizeBranch(rootId: ID): void {
   if (Settings.state.colorizeTabsBranchesSrc === 'url') {
     srcStr = rootTab.url
   } else {
-    srcStr = Utils.getDomainOf(rootTab.url)
+    srcStr = Utils.getHostname(rootTab.url)
   }
 
   const color = Utils.colorFromString(srcStr, 60)

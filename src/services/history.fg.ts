@@ -75,7 +75,7 @@ export function createVisit(
 
   let domain
   if (itemDomain) domain = itemDomain
-  else domain = Utils.getDomainOf(nItem.url)
+  else domain = Utils.getHostname(nItem.url)
 
   let decodedUrl
   if (itemDecodedUrl) decodedUrl = itemDecodedUrl

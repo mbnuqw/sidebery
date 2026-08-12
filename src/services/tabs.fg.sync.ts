@@ -27,7 +27,7 @@ export async function sync(ids: ID[]) {
     if (!tab) continue
 
     const sTab: Sync.Google.SyncedTab = { id: tabId, title: tab.title, url: tab.url }
-    const domain = Utils.getDomainOf(sTab.url)
+    const domain = Utils.getHostname(sTab.url)
     const favicon = Favicons.reactive.byDomains[domain]
     if (domain) sTab.domain = domain
     if (favicon && domain) favicons[domain] = favicon
