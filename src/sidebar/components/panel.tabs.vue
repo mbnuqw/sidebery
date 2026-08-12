@@ -9,19 +9,16 @@
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="D.PRE_SCROLL")
-    StickyTabs(:panel="panel")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
+    StickyTabs.-top(:stickyTabIds="panel.reactive.stickyTabIdsTop")
     AnimatedTabList(:panel="panel")
       TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
-      NewTabBar(
-        v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
-        :panel="panel")
+      NewTabBar(v-if="Settings.newTabBarPositionAfterTabs" :panel="panel")
       .tab-space-filler(:style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }")
       .bottom-space(:key="-9999999")
 
-  NewTabBar(
-    v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
-    :panel="panel")
+  NewTabBar(v-if="Settings.newTabBarPositionBottom" :panel="panel")
+  StickyTabs.-bottom(v-if="!Settings.state.showNewTabBtns" :stickyTabIds="panel.reactive.stickyTabIdsBottom")
 
   .bottom-bar-space(v-if="bottomBarSpaceNeeded")
 
@@ -31,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { translate } from 'src/dict'
 import type { ScrollBoxComponent, TabsPanel } from 'src/types'
 import * as E from 'src/enums'
@@ -86,18 +83,6 @@ onBeforeUnmount(() => {
   if (scrollBoxEl) scrollBoxEl.removeEventListener('scroll', scheduleStickyUpdate)
   if (stickyRafId) cancelAnimationFrame(stickyRafId)
 })
-
-// The sticky hierarchy is the active tab's ancestors that have scrolled above the
-// viewport top, so it must update on scroll (listener above). Active-tab switches are
-// recomputed from the activation handler (activeId isn't reactive); this watch covers
-// structure changes that can re-parent the active tab or change ancestor row positions
-// (move/indent/outdent, add/remove, fold/expand) and feature toggling. The deep watch
-// catches in-place reorders of the visible list, not just length changes.
-watch(
-  [() => props.panel.reactive.visibleTabIds, () => Settings.state.stickyAncestorTabs],
-  () => scheduleStickyUpdate(),
-  { deep: true }
-)
 
 function onDrop(): void {
   DnD.reactive.dstType = E.DropType.Tabs

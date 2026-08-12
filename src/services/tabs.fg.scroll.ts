@@ -1,10 +1,10 @@
-import { TabsPanel } from 'src/types'
+import { Tab, TabsPanel } from 'src/types'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Settings from 'src/services/settings'
 import * as Tabs from 'src/services/tabs.fg'
-import { PRE_SCROLL } from 'src/defaults'
+import { NOID, PRE_SCROLL } from 'src/defaults'
 
 export let blockedScrollPosition = false
 
@@ -97,68 +97,105 @@ export function resetScrollRetainer(panel: TabsPanel) {
   blockedScrollPosition = false
 }
 
-/**
- * Recalculate the sticky tab hierarchy: the ancestor chain of the active tab, but only
- * the ancestors whose row has scrolled above the top of the viewport (so an ancestor
- * stops being sticky once it's visible in the list again), capped by the configured
- * depth limit. Pinned only on the panel that contains the active tab. Writes the result
- * to `panel.reactive.stickyTabIds` (only when it actually changes).
- */
+const stickyBranch: Tab[] = []
+const stickyTopOffsets: (number | undefined)[] = []
+let prevStickyTabsTopLen = 0
+let prevStickyTabsTopLimit = 0
+let prevStickyTabsBottomLen = 0
+let prevStickyTabsActId = NOID
+
 export function calcStickyTabs(panel: TabsPanel): void {
-  const reactive = panel.reactive
-
-  const reset = () => {
-    if (reactive.stickyTabIds.length) reactive.stickyTabIds = []
-  }
-
-  if (!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs || !panel.scrollEl) {
-    return reset()
+  if (!Settings.state.tabsTree || !Settings.stickyTabs || !panel.scrollEl) {
+    return resetStickyTabs(panel)
   }
 
   const activeTab = Tabs.byId[Tabs.activeId]
-  if (!activeTab || activeTab.pinned || activeTab.panelId !== panel.id) return reset()
-
-  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
-  if (tabFullHeight <= 0) return reset()
-
-  // Build the ancestor chain (root-most first) of the active tab via parentId.
-  const ancestors: ID[] = []
-  let parent = Tabs.byId[activeTab.parentId]
-  let guard = 0
-  while (parent && guard++ < 256) {
-    ancestors.unshift(parent.id)
-    parent = Tabs.byId[parent.parentId]
+  if (!activeTab || activeTab.pinned || activeTab.panelId !== panel.id) {
+    return resetStickyTabs(panel)
   }
 
-  // Keep only ancestors that are hidden: either scrolled above the viewport top, or
-  // covered by the sticky rows already pinned above them. Each sticky row we add pushes
-  // the cutoff down by one row height (it hides the tab beneath it), so the bottom of
-  // the accumulated sticky stack is the real cutoff. Ancestors are ordered root -> active
-  // with increasing row position, so stop at the first one still fully visible below the
-  // stack.
-  const visibleIds = reactive.visibleTabIds
+  const reactive = panel.reactive
   const scrollTop = panel.scrollEl.scrollTop
-  const sticky: ID[] = []
-  let stackBottom = 0 // viewport-Y of the bottom of the accumulated sticky stack
-  for (const id of ancestors) {
-    const idx = visibleIds.indexOf(id)
-    if (idx === -1) continue
-    const rowViewportTop = idx * tabFullHeight - scrollTop
-    if (rowViewportTop < stackBottom) {
-      sticky.push(id)
-      stackBottom += tabFullHeight
-    } else break
+  const scrollBottom = panel.scrollEl.offsetHeight + scrollTop
+  const ntbbHeight = Settings.newTabBarPositionAfterTabs ? (panel.ntbbEl?.offsetHeight ?? 0) : 0
+  const stack = Settings.stickyAncestorTabsLayoutCol
+  const limit = Settings.stickyAncestorTabsLimit + (Settings.state.stickyActiveTab ? 1 : 0)
+  let topLimit = limit
+  let topLen = 0
+  let bottomLen = 0
+  let top: ID[] | undefined
+  let bottom: ID[] | undefined
+  let guard = Settings.state.stickyAncestorTabs ? 16 : 1
+  let topOffset = 0
+  let bottomOffset = 0
+  let tab = Settings.state.stickyActiveTab ? activeTab : Tabs.byId[activeTab.parentId]
+  while (tab && guard-- > 0 && bottomLen < limit) {
+    if (
+      tab.el &&
+      scrollBottom <
+        tab.el.offsetTop +
+          (stack ? (bottomOffset += tab.el.offsetHeight) : tab.el.offsetHeight) +
+          ntbbHeight
+    ) {
+      bottomLen++
+      if (!bottom) bottom = [tab.id]
+      else bottom.unshift(tab.id)
+      tab = Tabs.byId[tab.parentId]
+      continue
+    }
+    stickyBranch.push(tab)
+    tab = Tabs.byId[tab.parentId]
+  }
+  topLimit = limit >= bottomLen ? limit - bottomLen : 0
+  for (let i = stickyBranch.length; i-- > 0;) {
+    tab = stickyBranch[i]
+    if (!tab.el) continue
+    if (scrollTop > tab.el.offsetTop - topOffset) {
+      topLen++
+      if (stack) {
+        const h = tab.el.offsetHeight
+        topOffset += h
+        stickyTopOffsets[i] = h
+        if (topLen >= topLimit) topOffset -= stickyTopOffsets.pop() ?? 0
+      }
+      if (!top) top = [tab.id]
+      else top.push(tab.id)
+    }
+  }
+  stickyTopOffsets.length = 0
+  stickyBranch.length = 0
+
+  if (prevStickyTabsBottomLen !== bottomLen || prevStickyTabsActId !== Tabs.activeId) {
+    prevStickyTabsBottomLen = bottomLen
+    if (bottom) reactive.stickyTabIdsBottom = bottom
+    else reactive.stickyTabIdsBottom.length = 0
   }
 
-  // Apply the depth cap (keep the deepest N ancestors, closest to the active tab).
-  const limit = Settings.state.stickyAncestorTabsLimit
-  let result = sticky
-  if (typeof limit === 'number' && sticky.length > limit) {
-    result = sticky.slice(sticky.length - limit)
+  if (
+    prevStickyTabsTopLen !== topLen ||
+    prevStickyTabsTopLimit !== topLimit ||
+    prevStickyTabsActId !== Tabs.activeId
+  ) {
+    prevStickyTabsTopLimit = topLimit
+    prevStickyTabsTopLen = topLen
+    if (top && topLimit) {
+      if (topLen > topLimit) reactive.stickyTabIdsTop = top.slice(-topLimit)
+      else reactive.stickyTabIdsTop = top
+    } else {
+      reactive.stickyTabIdsTop.length = 0
+    }
   }
 
-  // Skip the reactive write when nothing changed.
-  const cur = reactive.stickyTabIds
-  if (cur.length === result.length && cur.every((id, i) => id === result[i])) return
-  reactive.stickyTabIds = result
+  prevStickyTabsActId = Tabs.activeId
+}
+
+function resetStickyTabs(panel: TabsPanel) {
+  prevStickyTabsTopLen = 0
+  if (panel.reactive.stickyTabIdsTop.length) {
+    panel.reactive.stickyTabIdsTop.length = 0
+  }
+  prevStickyTabsBottomLen = 0
+  if (panel.reactive.stickyTabIdsBottom.length) {
+    panel.reactive.stickyTabIdsBottom.length = 0
+  }
 }

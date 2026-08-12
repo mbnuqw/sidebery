@@ -333,6 +333,13 @@ section(ref="el")
       :opts="Settings.getOpts('tabsTreeLimit')"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
+      label="settings.sticky_active_tab"
+      dbg="stickyActiveTab"
+      v-model:value="Settings.state.stickyActiveTab"
+      :default="DEFAULT_SETTINGS.stickyActiveTab"
+      :inactive="!Settings.state.tabsTree"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
       label="settings.sticky_ancestor_tabs"
       dbg="stickyAncestorTabs"
       v-model:value="Settings.state.stickyAncestorTabs"
@@ -348,6 +355,15 @@ section(ref="el")
         :default="DEFAULT_SETTINGS.stickyAncestorTabsLimit"
         :inactive="!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs"
         :opts="Settings.getOpts('stickyAncestorTabsLimit')"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.sticky_ancestor_tabs_layout"
+        optLabel="settings.sticky_ancestor_tabs_layout_"
+        dbg="stickyAncestorTabsLayout"
+        v-model:value="Settings.state.stickyAncestorTabsLayout"
+        :default="DEFAULT_SETTINGS.stickyAncestorTabsLayout"
+        :inactive="!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs"
+        :opts="Settings.getOpts('stickyAncestorTabsLayout')"
         @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.auto_fold_tabs"

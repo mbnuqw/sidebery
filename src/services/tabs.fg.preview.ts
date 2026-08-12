@@ -31,6 +31,7 @@ export const state = {
   modeFallback: false,
 
   targetTabId: NOID,
+  sticky: false,
 
   openTimeout: undefined as number | undefined,
   closeTimeout: undefined as number | undefined,
@@ -61,7 +62,7 @@ function dbgStr() {
   return `mode: ${m}, status: ${s}, targetTabId: ${state.targetTabId}, doa: ${deadOnArrival}`
 }
 
-export function setTargetTab(tabId: ID) {
+export function setTargetTab(tabId: ID, sticky: boolean) {
   clearTimeout(state.openTimeout)
   if (Settings.state.previewTabsFollowMouse) {
     clearTimeout(state.closeTimeout)
@@ -69,6 +70,7 @@ export function setTargetTab(tabId: ID) {
 
   const tab = Tabs.byId[tabId]
   state.targetTabId = tabId
+  state.sticky = sticky
 
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.size && tab) {
@@ -130,6 +132,7 @@ export function resetTargetTab(tabId: ID, closeDelay = DEFERRED_CLOSE_DELAY) {
     state.targetTabId = NOID
   }
 
+  state.sticky = false
   state.openTimeout = undefined
 
   state.closeTimeout = setTimeout(() => {
@@ -401,7 +404,7 @@ async function updateSPreview(tabId: ID) {
 }
 
 function setSPreviewPosition(popupEl: HTMLElement, tab: Tab) {
-  const el = document.getElementById(`tab${tab.id}`)
+  const el = document.getElementById(state.sticky ? `stickytab${tab.id}` : `tab${tab.id}`)
   if (!el) return
 
   const tb = el.getBoundingClientRect()

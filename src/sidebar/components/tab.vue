@@ -1,7 +1,7 @@
 <template lang="pug">
 .Tab(
-  :id="sticky ? undefined : 'tab' + tab.id"
-  :class="{ '-sticky': sticky }"
+  ref="tabEl"
+  :id="(sticky ? 'stickytab' : 'tab') + tab.id"
   :data-pin="!!iconOnly"
   :data-active="tab.reactive.active"
   :data-loading="tab.reactive.status === TabStatus.Loading"
@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, useTemplateRef } from 'vue'
 import type { DragInfo, DragItem, Tab } from 'src/types'
 import { TabStatus, DragType, DropType, MenuType } from 'src/enums'
 import * as Settings from 'src/services/settings'
@@ -109,6 +109,7 @@ const iconOnly =
     Settings.state.pinnedTabsPosition === 'left' ||
     Settings.state.pinnedTabsPosition === 'right')
 
+const tabEl = useTemplateRef('tabEl')
 const titleEl = ref<HTMLElement | null>(null)
 const favImgEl = ref<HTMLImageElement | null>(null)
 const favSvgUseEl = ref<SVGElement | null>(null)
@@ -146,6 +147,7 @@ onMounted(() => {
   if (tab.url !== 'about:blank') {
     Tabs.renderFavicon(tab)
   }
+  if (!props.sticky) tab.el = tabEl.value ?? undefined
 })
 
 function shouldBeConvertedToGroup(): boolean {
@@ -624,7 +626,7 @@ function onMouseEnter(e: MouseEvent) {
   }
 
   if (Settings.state.previewTabs) {
-    Preview.setTargetTab(tab.id)
+    Preview.setTargetTab(tab.id, props.sticky)
   } else if (!Settings.state.forceUpdTooltip) {
     updateTooltipDebounced()
   }

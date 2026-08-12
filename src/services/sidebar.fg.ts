@@ -513,6 +513,8 @@ function recalcVisibleTabsInPanel(panelId: ID) {
     }
     panel.reactive.visibleTabIds = visibleTabIds
   }
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 export function addToVisibleTabs(panelId: ID, tab: T.Tab) {
@@ -536,6 +538,8 @@ export function addToVisibleTabs(panelId: ID, tab: T.Tab) {
   if (index === -1) return recalcVisibleTabsInPanel(panelId)
 
   panel.reactive.visibleTabIds.splice(index - invisibleShift, 0, tabId)
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
@@ -545,6 +549,8 @@ export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
   const visibleTabIds = panel.reactive.visibleTabIds
   const index = visibleTabIds.indexOf(tabId)
   if (index !== -1) visibleTabIds.splice(index, 1)
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 const checkDiscardedTabsInPanelTimeouts = new Map<ID, number>()

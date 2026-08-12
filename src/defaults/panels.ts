@@ -86,6 +86,7 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
   nextTabIndex: -1,
   scrollRetainer: 0,
   allDiscarded: false,
+  ntbbEl: null,
 
   class: E.NavItemClass.panel,
   index: -1,
@@ -115,7 +116,8 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
     visibleTabIds: [],
     pinnedTabIds: [],
     badge: false,
-    stickyTabIds: [],
+    stickyTabIdsTop: [],
+    stickyTabIdsBottom: [],
     selNewTab: false,
     scrollRetainerHeight: 0,
     empty: true,

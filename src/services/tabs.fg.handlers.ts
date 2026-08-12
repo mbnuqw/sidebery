@@ -1732,9 +1732,8 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  // Update the sticky tab hierarchy (ancestors of the active tab) for this panel,
-  // and clear it on the panel the active tab just left.
-  if (Settings.state.stickyAncestorTabs) {
+  // Update sticky tabs
+  if (Settings.stickyTabs) {
     Tabs.calcStickyTabs(panel)
     if (prevActive && prevActive.panelId !== panel.id) {
       const prevPanel = Sidebar.panelsById[prevActive.panelId]

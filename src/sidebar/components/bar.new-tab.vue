@@ -1,8 +1,10 @@
 <template lang="pug">
 .new-tab-btns(
+  ref="ntbbEl"
   tabindex="-1"
   :data-new-tab-bar-position="Settings.state.newTabBarPosition"
   :data-sel="panel.reactive.selNewTab")
+  StickyTabs.-bottom(:stickyTabIds="panel.reactive.stickyTabIdsBottom")
   .new-tab-btn(
     :title="defaultBtn.tooltip"
     :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
@@ -36,7 +38,7 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, onMounted, useTemplateRef } from 'vue'
 import type { DragInfo, Container, DstPlaceInfo, ItemInfo, Tab, TabsPanel } from 'src/types'
 import { MenuType, DragType, DropType } from 'src/enums'
 import * as D from 'src/defaults'
@@ -54,6 +56,7 @@ import * as IPC from 'src/services/ipc'
 import * as Windows from 'src/services/windows.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
+import StickyTabs from 'src/sidebar/components/sticky-tabs.vue'
 
 interface NewTabBtn {
   id: string
@@ -71,6 +74,8 @@ interface NewTabBtn {
 const props = defineProps({
   panel: { type: Object as PropType<TabsPanel>, required: true },
 })
+
+const ntbbEl = useTemplateRef('ntbbEl')
 
 const defaultBtn = computed<NewTabBtn>(() => {
   const btn: NewTabBtn = { id: 'default' }
@@ -153,6 +158,10 @@ const btns = computed<NewTabBtn[]>(() => {
   }
 
   return btns
+})
+
+onMounted(() => {
+  if (ntbbEl.value) props.panel.ntbbEl = ntbbEl.value
 })
 
 function createTooltip(btn: NewTabBtn): string {

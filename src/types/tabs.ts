@@ -41,6 +41,7 @@ export interface Tab extends NativeTab {
   removing?: boolean
   flashAnimationTimeout?: number
   lastActivity?: number
+  el?: HTMLElement
 
   reactive: ReactiveTabProps
   sessionData?: TabSessionData

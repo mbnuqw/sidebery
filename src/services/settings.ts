@@ -10,6 +10,9 @@ export let updateWinPrefaceOnPanelSwitch = false
 export let initSaveNeeded = false
 export let copyTemplates: CopyTemplate[] = []
 
+export let newTabBarPositionAfterTabs = false
+export let newTabBarPositionBottom = false
+
 export let rmChildTabsFolded = false
 export let rmChildTabsAll = false
 export let rmChildTabsNone = false
@@ -18,6 +21,11 @@ export let activateAfterClosingNone = false
 export let activateAfterClosingNext = false
 export let activateAfterClosingPrev = false
 export let activateAfterClosingPrevAct = false
+
+export let stickyTabs = false
+export let stickyAncestorTabsLimit = 16
+export let stickyAncestorTabsLayoutCol = false
+export let stickyAncestorTabsLayoutRow = false
 
 export function reactivate(r: Reactivator<SettingsState>) {
   state = r(state)
@@ -100,6 +108,9 @@ export async function load(): Promise<void> {
 }
 
 export function updPrecalcSettings() {
+  newTabBarPositionAfterTabs = state.showNewTabBtns && state.newTabBarPosition === 'after_tabs'
+  newTabBarPositionBottom = state.showNewTabBtns && state.newTabBarPosition === 'bottom'
+
   rmChildTabsFolded = state.rmChildTabs === 'folded'
   rmChildTabsAll = state.rmChildTabs === 'all'
   rmChildTabsNone = state.rmChildTabs === 'none'
@@ -108,6 +119,12 @@ export function updPrecalcSettings() {
   activateAfterClosingNext = state.activateAfterClosing === 'next'
   activateAfterClosingPrev = state.activateAfterClosing === 'prev'
   activateAfterClosingPrevAct = state.activateAfterClosing === 'prev_act'
+
+  stickyTabs = state.stickyActiveTab || state.stickyAncestorTabs
+  stickyAncestorTabsLimit =
+    typeof state.stickyAncestorTabsLimit === 'number' ? state.stickyAncestorTabsLimit : 16
+  stickyAncestorTabsLayoutCol = state.stickyAncestorTabsLayout === 'col'
+  stickyAncestorTabsLayoutRow = state.stickyAncestorTabsLayout === 'row'
 }
 
 export function resetSettings(): void {

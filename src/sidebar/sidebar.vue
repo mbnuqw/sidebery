@@ -24,6 +24,7 @@
   :data-colorized-branches="Settings.state.colorizeTabsBranches"
   :data-syncing="Sync.reactive.syncing"
   :data-new-tab-btns="Settings.state.showNewTabBtns"
+  :data-sticky-tabs-layout="Settings.state.stickyAncestorTabsLayout"
   @dragend="DnD.onDragEnd"
   @dragenter="DnD.onDragEnter"
   @dragleave="DnD.onDragLeave"

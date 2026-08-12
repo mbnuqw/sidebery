@@ -138,6 +138,7 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
   nextTabIndex: number
   scrollRetainer: number
   allDiscarded: boolean
+  ntbbEl: HTMLElement | null
 
   reactive: TabsPanelReactiveProps
 
@@ -148,7 +149,8 @@ export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   visibleTabIds: ID[]
   pinnedTabIds: ID[]
   badge: boolean
-  stickyTabIds: ID[]
+  stickyTabIdsTop: ID[]
+  stickyTabIdsBottom: ID[]
   selNewTab: boolean
   scrollRetainerHeight: number
   empty: boolean
