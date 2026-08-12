@@ -108,6 +108,7 @@ interface PanelCommonReactiveProps {
   len: number
   filteredLen?: number
   ready: boolean
+  pos: 'l' | 'r' | 'c' | 'lc' | 'rc' | 'h'
 }
 
 ///
@@ -130,13 +131,14 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
   tabs: Tab[]
   pinnedTabs: Tab[]
   filteredTabs?: Tab[]
-  updatedTabs: ID[]
+  urgentTabIds: Set<ID>
   selNewTab: boolean
   startTabIndex: number
   endTabIndex: number
   nextTabIndex: number
   scrollRetainer: number
   allDiscarded: boolean
+  ntbbEl: HTMLElement | null
 
   reactive: TabsPanelReactiveProps
 
@@ -146,8 +148,9 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
 export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   visibleTabIds: ID[]
   pinnedTabIds: ID[]
-
-  updated: boolean
+  badge: boolean
+  stickyTabIdsTop: ID[]
+  stickyTabIdsBottom: ID[]
   selNewTab: boolean
   scrollRetainerHeight: number
   empty: boolean

@@ -207,7 +207,7 @@ export async function getGroupInfo(groupTabId: ID): Promise<T.GroupInfo | null> 
     if (tab.isGroup) subGroupLvl = tab.lvl
 
     const tabInfo = getGroupedTabInfo(tab, groupTab)
-    const domain = Utils.getDomainOf(tab.url)
+    const domain = Utils.getHostname(tab.url)
     if (tabInfo.favIconUrl && domain) {
       out.favicons[domain] = tabInfo.favIconUrl
       delete tabInfo.favIconUrl

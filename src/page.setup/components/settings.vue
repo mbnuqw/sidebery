@@ -10,7 +10,7 @@
   SearchSection
   TabsSection
   BookmarksSection
-  HistorySection
+  //- HistorySection
   AppearanceSection
   MouseSection
   SnapshotsSection
@@ -42,7 +42,7 @@ import DndSection from './settings.dnd.vue'
 import SearchSection from './settings.search.vue'
 import TabsSection from './settings.tabs.vue'
 import BookmarksSection from './settings.bookmarks.vue'
-import HistorySection from './settings.history.vue'
+// import HistorySection from './settings.history.vue'
 import AppearanceSection from './settings.appearance.vue'
 import MouseSection from './settings.mouse.vue'
 import SnapshotsSection from './settings.snapshots.vue'

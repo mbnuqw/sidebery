@@ -10,6 +10,9 @@ export let updateWinPrefaceOnPanelSwitch = false
 export let initSaveNeeded = false
 export let copyTemplates: CopyTemplate[] = []
 
+export let newTabBarPositionAfterTabs = false
+export let newTabBarPositionBottom = false
+
 export let rmChildTabsFolded = false
 export let rmChildTabsAll = false
 export let rmChildTabsNone = false
@@ -19,10 +22,10 @@ export let activateAfterClosingNext = false
 export let activateAfterClosingPrev = false
 export let activateAfterClosingPrevAct = false
 
-export let tabsUpdateMarkAll = false
-export let tabsUpdateMarkPin = false
-export let tabsUpdateMarkNorm = false
-export let tabsUpdateMarkNone = false
+export let stickyTabs = false
+export let stickyAncestorTabsLimit = 16
+export let stickyAncestorTabsLayoutCol = false
+export let stickyAncestorTabsLayoutRow = false
 
 export function reactivate(r: Reactivator<SettingsState>) {
   state = r(state)
@@ -47,6 +50,7 @@ export async function load(): Promise<void> {
   }
 
   Utils.normalizeObject(storedManaged.settings, storedLocal.settings)
+  const tabsUpdateMark = storedManaged.settings.tabsUpdateMark
   const groupOnOpen = storedManaged.settings.groupOnOpen
   Utils.normalizeObject(storedManaged.settings, DEFAULT_SETTINGS)
   Utils.updateObject(state, storedManaged.settings, state)
@@ -62,6 +66,28 @@ export async function load(): Promise<void> {
     state.moveNewTabParentIndent = true
   }
 
+  // TMP
+  // Handle deprecated tabsUpdateMark
+  if (tabsUpdateMark !== undefined) {
+    if (tabsUpdateMark === 'none') {
+      state.tabsBadge = false
+    } else if (tabsUpdateMark === 'norm') {
+      state.tabsBadgeRules = state.tabsBadgeRules.replace(
+        'minUrlAge:5000; urgent',
+        'minUrlAge:5000; urgent; normal'
+      )
+    } else if (tabsUpdateMark === 'pin') {
+      state.tabsBadgeRules = state.tabsBadgeRules.replace(
+        'minUrlAge:5000; urgent',
+        'minUrlAge:5000; urgent; pinned'
+      )
+    }
+    delete state.tabsUpdateMark
+    delete state.tabsUpdateMarkFirst
+    initSaveNeeded = true
+  }
+
+  // TMP
   // Handle removed 'window' tab preview option
   if ((state.previewTabsMode as any) === 'w') {
     state.previewTabsMode = 'p'
@@ -82,6 +108,9 @@ export async function load(): Promise<void> {
 }
 
 export function updPrecalcSettings() {
+  newTabBarPositionAfterTabs = state.showNewTabBtns && state.newTabBarPosition === 'after_tabs'
+  newTabBarPositionBottom = state.showNewTabBtns && state.newTabBarPosition === 'bottom'
+
   rmChildTabsFolded = state.rmChildTabs === 'folded'
   rmChildTabsAll = state.rmChildTabs === 'all'
   rmChildTabsNone = state.rmChildTabs === 'none'
@@ -91,10 +120,11 @@ export function updPrecalcSettings() {
   activateAfterClosingPrev = state.activateAfterClosing === 'prev'
   activateAfterClosingPrevAct = state.activateAfterClosing === 'prev_act'
 
-  tabsUpdateMarkAll = state.tabsUpdateMark === 'all'
-  tabsUpdateMarkPin = state.tabsUpdateMark === 'pin'
-  tabsUpdateMarkNorm = state.tabsUpdateMark === 'norm'
-  tabsUpdateMarkNone = state.tabsUpdateMark === 'none'
+  stickyTabs = state.stickyActiveTab || state.stickyAncestorTabs
+  stickyAncestorTabsLimit =
+    typeof state.stickyAncestorTabsLimit === 'number' ? state.stickyAncestorTabsLimit : 16
+  stickyAncestorTabsLayoutCol = state.stickyAncestorTabsLayout === 'col'
+  stickyAncestorTabsLayoutRow = state.stickyAncestorTabsLayout === 'row'
 }
 
 export function resetSettings(): void {

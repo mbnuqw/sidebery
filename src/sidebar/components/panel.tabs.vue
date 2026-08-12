@@ -10,17 +10,15 @@
   PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="D.PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
+    StickyTabs.-top(:stickyTabIds="panel.reactive.stickyTabIdsTop")
     AnimatedTabList(:panel="panel")
       TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
-      NewTabBar(
-        v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
-        :panel="panel")
+      NewTabBar(v-if="Settings.newTabBarPositionAfterTabs" :panel="panel")
       .tab-space-filler(:style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }")
       .bottom-space(:key="-9999999")
 
-  NewTabBar(
-    v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
-    :panel="panel")
+  NewTabBar(v-if="Settings.newTabBarPositionBottom" :panel="panel")
+  StickyTabs.-bottom(v-if="!Settings.state.showNewTabBtns" :stickyTabIds="panel.reactive.stickyTabIdsBottom")
 
   .bottom-bar-space(v-if="bottomBarSpaceNeeded")
 
@@ -30,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { translate } from 'src/dict'
 import type { ScrollBoxComponent, TabsPanel } from 'src/types'
 import * as E from 'src/enums'
@@ -50,6 +48,7 @@ import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
 import DragAndDropPointer from './dnd-pointer.vue'
 import AnimatedTabList from './animated-tab-list.vue'
+import StickyTabs from './sticky-tabs.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
@@ -59,12 +58,30 @@ const bottomBarSpaceNeeded =
   Settings.state.subPanelHistory
 let scrollBoxEl: HTMLElement | null = null
 
+let stickyRafId = 0
+function scheduleStickyUpdate(): void {
+  if (stickyRafId) return
+  stickyRafId = requestAnimationFrame(() => {
+    stickyRafId = 0
+    Tabs.calcStickyTabs(props.panel)
+  })
+}
+
 onMounted(() => {
   if (scrollBox.value) {
     Sidebar.setPanelScrollBox(props.panel.id, scrollBox.value)
     scrollBoxEl = scrollBox.value.getScrollBox()
-    if (scrollBoxEl) Sidebar.setPanelEls(props.panel.id, { scrollBox: scrollBoxEl })
+    if (scrollBoxEl) {
+      Sidebar.setPanelEls(props.panel.id, { scrollBox: scrollBoxEl })
+      scrollBoxEl.addEventListener('scroll', scheduleStickyUpdate, { passive: true })
+    }
   }
+  scheduleStickyUpdate()
+})
+
+onBeforeUnmount(() => {
+  if (scrollBoxEl) scrollBoxEl.removeEventListener('scroll', scheduleStickyUpdate)
+  if (stickyRafId) cancelAnimationFrame(stickyRafId)
 })
 
 function onDrop(): void {

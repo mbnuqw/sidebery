@@ -45,6 +45,7 @@ export const BOOKMARKS_PANEL_STATE: T.BookmarksPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
 
     bookmarkIds: [],
     filteredBookmarkIds: undefined,
@@ -78,13 +79,14 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
   tabs: [],
   pinnedTabs: [],
   filteredTabs: undefined,
-  updatedTabs: [],
+  urgentTabIds: new Set(),
   selNewTab: false,
   startTabIndex: -1,
   endTabIndex: -1,
   nextTabIndex: -1,
   scrollRetainer: 0,
   allDiscarded: false,
+  ntbbEl: null,
 
   class: E.NavItemClass.panel,
   index: -1,
@@ -109,10 +111,13 @@ export const TABS_PANEL_STATE: T.TabsPanel = {
     len: 0,
     filteredLen: undefined,
     ready: true,
+    pos: 'h',
 
     visibleTabIds: [],
     pinnedTabIds: [],
-    updated: false,
+    badge: false,
+    stickyTabIdsTop: [],
+    stickyTabIdsBottom: [],
     selNewTab: false,
     scrollRetainerHeight: 0,
     empty: true,
@@ -160,6 +165,7 @@ export const HISTORY_PANEL_STATE: T.HistoryPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
   },
 }
 
@@ -200,6 +206,7 @@ export const SYNC_PANEL_STATE: T.SyncPanel = {
     len: 0,
     filteredLen: undefined,
     ready: false,
+    pos: 'h',
   },
 }
 
@@ -210,4 +217,5 @@ export const NAV_BTNS_IDS: ID[] = [
   'create_snapshot',
   'remute_audio_tabs',
   'collapse',
+  'expand',
 ]

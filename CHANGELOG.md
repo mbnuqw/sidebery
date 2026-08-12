@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+---
+
+## v5.6.1 - 2026.07.16
+
+### Fixed
+
+- Tabs: Broken initialization in Firefox versions prior to v149 (resolves [#2430](https://github.com/mbnuqw/sidebery/issues/2430))
+
+
+## v5.6.0 - 2026.07.16
+
+### Added
+
+- Tabs: Configurable badges (co-authored by [@cnnrro](https://github.com/cnnrro): [#2262](https://github.com/mbnuqw/sidebery/issues/2262))  
+
+### Fixed
+
+- Tabs: Suboptimal "tabs reload limit" logic and pending-mark styles  
+- History: Redundant and potentially harmful setting "Load history on demand"  
+  Always load the history service on demand. Previously, if this setting
+  was disabled, the history service might never unload, handling all
+  visits and title change events and wasting CPU time.
+- History: Incorrect updating of titles  
+- Snapshots: Group/placeholder URLs are not migrated to a new profile
+- Renamed container colors are not handled properly  
+  - Add 'cyan' alias for 'turquoise' and 'gray' for 'toolbar'
+  - Keep old color names for snapshots and bookmarks (temporary)
+- Tab preview:  
+  - Removed the window-mode as it doesn't work correctly anyway.  
+  - Changed "in-sidebar" mode from inline to popup-like preview.  
+
+### Localization
+
+- Update French translation (by [@ariasuni](https://github.com/ariasuni): [#2396](https://github.com/mbnuqw/sidebery/issues/2396))
+
+### Performance Improvements
+
+- History: Improved handling of title change events  
+  Optimizes performance when a large number of tabs frequently change their titles. Configurable via hidden `historyTitleUpdInterval` pref (ms, 0 - off, small values might cause performance issues).
+- Inactive panels are no longer rendered  
+  Note: Due to https://bugzilla.mozilla.org/show_bug.cgi?id=1882408, the disappearing (leave) part of animation on panel switch will not work.  
+
 
 ## v5.5.2 - 2026.04.15
 

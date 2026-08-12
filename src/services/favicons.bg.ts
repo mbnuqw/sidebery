@@ -108,7 +108,7 @@ export function saveFavicon(url: string, base64icon: string): void {
   saveFaviconTimeouts[url] = setTimeout(async () => {
     delete saveFaviconTimeouts[url]
 
-    const domain = Utils.getDomainOf(url)
+    const domain = Utils.getHostname(url)
     if (!domain) return
 
     const domainInfo: FavDomain | undefined = domainsInfo[domain]

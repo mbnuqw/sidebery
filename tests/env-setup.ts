@@ -40,6 +40,10 @@ void (function () {
       onRequest: {},
     },
     permissions: {},
+    publicSuffix: {
+      getDomain: () => 'example.com',
+      getKnownSuffix: () => 'com',
+    },
     runtime: {
       getURL: (path: string) => {
         const base = 'moz-extension://c02055a8-a7a3-4076-bb5c-8d913619f579'

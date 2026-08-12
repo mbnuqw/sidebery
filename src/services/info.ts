@@ -24,6 +24,7 @@ export let isPanelConfig = false
 export let majorVersion: number | undefined = undefined
 export let prevMajorVersion: number | undefined = undefined
 export let prevVersion: string | undefined = undefined
+export let browserInfo: browser.runtime.BrowserInfo | undefined
 
 export let currentTabId = NOID
 
@@ -50,6 +51,15 @@ export async function loadVersionInfo(): Promise<void> {
     prevVersion = stored.ver
   }
   majorVersion = getMajVer(reactive.addonVer)
+}
+
+export async function loadBrowserInfo() {
+  browserInfo = await browser.runtime.getBrowserInfo()
+}
+
+export function ffVersionLowerThan(v: string) {
+  if (!browserInfo?.version) return false
+  return browserInfo?.version < v
 }
 
 export function setInstanceType(t: InstanceType): void {

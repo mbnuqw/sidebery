@@ -19,6 +19,7 @@ vendors = official
 @import '../popup.new-tab-shortcuts'
 
 @import './tab'
+@import './sticky-tabs'
 @import './bookmark-card'
 @import './bar.pinned-tabs'
 @import './bar.navigation'
@@ -151,19 +152,52 @@ body
   height: 100%
   flex-direction: column
   z-index: 10
-  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
-  &[data-pos="center"]
+  // allow-discrete doesn't work correctly with display - disappearing animation
+  // wont work, but that's bearable
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1882408
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast), display var(--d-fast) allow-discrete
+  &[data-pos="c"]
+  &[data-pos="lc"]
+  &[data-pos="rc"]
+    display: flex
     transform: translateX(0)
     z-index: 10
     opacity: 1
-  &[data-pos="left"]
+  &[data-pos="l"]
+    display: none
     transform: translateX(-50%)
     opacity: 0
     z-index: 0
-  &[data-pos="right"]
+    pointer-events: none
+  &[data-pos="r"]
+    display: none
     transform: translateX(50%)
     opacity: 0
     z-index: 0
+    pointer-events: none
+  &[data-pos="h"]
+    display: none
+    opacity: 0
+    z-index: 0
+
+@css{
+@starting-style {
+  .panel[data-pos="c"] {
+    z-index: 10;
+    opacity: 1;
+  }
+  .panel[data-pos="lc"] {
+    z-index: 0;
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  .panel[data-pos="rc"] {
+    z-index: 0;
+    opacity: 0;
+    transform: translateX(50%);
+  }
+}
+}
 
 // ---
 // -- Bottom bar
@@ -346,12 +380,12 @@ body
   opacity: 1
   z-index: 1000
 for i in 1..16
-  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .TabsPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .TabsPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--tabs-indent) * %s + var(--tabs-margin)))" % i
 for i in 1..16
-  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .BookmarksPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .BookmarksPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
 for i in 1..16
   .BookmarksSubPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before

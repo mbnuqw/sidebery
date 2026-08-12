@@ -99,22 +99,27 @@ section(ref="el")
     v-model:value="Settings.state.tabsUnreadMark"
     :default="DEFAULT_SETTINGS.tabsUnreadMark"
     @update:value="Settings.saveDebounced(150)")
-  SelectField(
-    label="settings.tabs_update_mark"
-    optLabel="settings.tabs_update_mark_"
-    dbg="tabsUpdateMark"
-    v-model:value="Settings.state.tabsUpdateMark"
-    :default="DEFAULT_SETTINGS.tabsUpdateMark"
-    :opts="Settings.getOpts('tabsUpdateMark')"
-    :folded="true"
+  ToggleField(
+    label="settings.tabs_badge"
+    dbg="tabsBadge"
+    v-model:value="Settings.state.tabsBadge"
+    :default="DEFAULT_SETTINGS.tabsBadge"
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
-    ToggleField(
-      label="settings.tabs_update_mark_first"
-      dbg="tabsUpdateMarkFirst"
-      v-model:value="Settings.state.tabsUpdateMarkFirst"
-      :default="DEFAULT_SETTINGS.tabsUpdateMarkFirst"
-      @update:value="Settings.saveDebounced(150)")
+    TextField.tabsBadgeRulesField(
+      ref="badgeRulesEl"
+      label="settings.tabs_badge_rules"
+      dbg="tabsBadgeRules"
+      v-model:value="Settings.state.tabsBadgeRules"
+      or="---"
+      input-width="66"
+      :valid="tabsBadgeRulesValid"
+      :padding="12"
+      :inactive="!Settings.state.tabsBadge"
+      :default="DEFAULT_SETTINGS.tabsBadgeRules"
+      :fnote="translate('settings.tabs_badge_rules_note')"
+      @update:value="onTabsBadgeRulesUpdate"
+      @blur="onTabsBadgeRulesBlur")
   CountField.-inline(
     label="settings.tabs_reload_limit"
     dbg="tabsReloadLimit"
@@ -327,6 +332,39 @@ section(ref="el")
       :inactive="!Settings.state.tabsTree"
       :opts="Settings.getOpts('tabsTreeLimit')"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sticky_active_tab"
+      dbg="stickyActiveTab"
+      v-model:value="Settings.state.stickyActiveTab"
+      :default="DEFAULT_SETTINGS.stickyActiveTab"
+      :inactive="!Settings.state.tabsTree"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sticky_ancestor_tabs"
+      dbg="stickyAncestorTabs"
+      v-model:value="Settings.state.stickyAncestorTabs"
+      :default="DEFAULT_SETTINGS.stickyAncestorTabs"
+      :inactive="!Settings.state.tabsTree"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      SelectField(
+        label="settings.sticky_ancestor_tabs_limit"
+        optLabel="settings.sticky_ancestor_tabs_limit_"
+        dbg="stickyAncestorTabsLimit"
+        v-model:value="Settings.state.stickyAncestorTabsLimit"
+        :default="DEFAULT_SETTINGS.stickyAncestorTabsLimit"
+        :inactive="!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs"
+        :opts="Settings.getOpts('stickyAncestorTabsLimit')"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.sticky_ancestor_tabs_layout"
+        optLabel="settings.sticky_ancestor_tabs_layout_"
+        dbg="stickyAncestorTabsLayout"
+        v-model:value="Settings.state.stickyAncestorTabsLayout"
+        :default="DEFAULT_SETTINGS.stickyAncestorTabsLayout"
+        :inactive="!Settings.state.tabsTree || !Settings.state.stickyAncestorTabs"
+        :opts="Settings.getOpts('stickyAncestorTabsLayout')"
+        @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.auto_fold_tabs"
       :inactive="!Settings.state.tabsTree"
@@ -655,17 +693,20 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, useTemplateRef } from 'vue'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
+import type { TextInputComponent } from 'src/types'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
 import * as Settings from 'src/services/settings.fg'
 import * as Permissions from 'src/services/permissions.fg'
 import * as SetupPage from 'src/services/setup-page.fg'
+import * as Tabs from 'src/services/tabs.fg'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import NumField from '../../components/num-field.vue'
-import TextField from 'src/components/text-field.vue'
+import TextField from '../../components/text-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 const newTabPosEl = ref<HTMLElement | null>(null)
@@ -674,6 +715,7 @@ const tabsTreeEl = ref<HTMLElement | null>(null)
 const tabsColorEl = ref<HTMLElement | null>(null)
 const tabsPreviewEl = ref<HTMLElement | null>(null)
 const nativeTabsEl = ref<HTMLElement | null>(null)
+const badgeRulesEl = useTemplateRef<TextInputComponent>('badgeRulesEl')
 
 const newTabPosRelativeToActiveTab = computed<boolean>(() => {
   return (
@@ -790,6 +832,33 @@ async function togglePreviewTabs() {
   Settings.saveDebounced(150)
 }
 
+const tabsBadgeRulesValid = ref('')
+const validateTabsBadgeRulesDebounced = Utils.debounce(validateTabsBadgeRules)
+function validateTabsBadgeRules(value: string) {
+  for (const rule of value.trim().split('\n')) {
+    try {
+      Tabs.parseBadgeRegexpRule(rule)
+    } catch (err) {
+      if (err === 'no rule') continue
+      tabsBadgeRulesValid.value = 'invalid'
+      return false
+    }
+  }
+  tabsBadgeRulesValid.value = ''
+  return true
+}
+function onTabsBadgeRulesUpdate(value: string): void {
+  Settings.state.tabsBadgeRules = value
+  Settings.saveDebounced(500)
+  validateTabsBadgeRulesDebounced(100, value)
+}
+
+function onTabsBadgeRulesBlur(): void {
+  if (tabsBadgeRulesValid.value === 'invalid') {
+    badgeRulesEl.value?.error()
+  }
+}
+
 onMounted(() => {
   SetupPage.registerEl('settings_tabs', el.value)
   SetupPage.registerEl('settings_new_tab_position', newTabPosEl.value)
@@ -798,5 +867,8 @@ onMounted(() => {
   SetupPage.registerEl('settings_tabs_colorization', tabsColorEl.value)
   SetupPage.registerEl('settings_tabs_preview', tabsPreviewEl.value)
   SetupPage.registerEl('settings_tabs_native', nativeTabsEl.value)
+
+  badgeRulesEl.value?.recalcTextHeight()
+  validateTabsBadgeRules(Settings.state.tabsBadgeRules)
 })
 </script>

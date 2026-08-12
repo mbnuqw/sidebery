@@ -1,10 +1,11 @@
 import path from 'node:path'
 import { build, defineConfig, mergeConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import type { RolldownWatcher } from 'rolldown'
 import { IS_DEV, ADDON_PATH } from './utils.js'
 import { log, logOk } from './utils.js'
-
-const ROOT_DIR = path.resolve(import.meta.dirname, '..')
+// import { visualizer } from 'rollup-plugin-visualizer'
+// import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer'
 
 const base = defineConfig({
   appType: 'custom',
@@ -12,13 +13,10 @@ const base = defineConfig({
   define: {},
   clearScreen: false,
   cacheDir: process.env.SIDEBERY_CACHE_DIR || 'node_modules/.vite',
-  resolve: {
-    alias: {
-      src: path.resolve(ROOT_DIR, 'src'),
-    },
-  },
+  logLevel: 'warn',
   build: {
-    watch: IS_DEV ? { buildDelay: 100 } : null,
+    modulePreload: false,
+    watch: IS_DEV ? { buildDelay: 32 } : null,
     minify: !IS_DEV,
     assetsDir: '',
     target: 'esnext',
@@ -26,6 +24,7 @@ const base = defineConfig({
     emptyOutDir: false,
     reportCompressedSize: false,
     chunkSizeWarningLimit: 1000,
+    sourcemap: IS_DEV ? 'inline' : false,
     rolldownOptions: {
       preserveEntrySignatures: false,
       treeshake: true,
@@ -39,15 +38,16 @@ const base = defineConfig({
   },
 })
 
-const visualizerConfig = {
-  emitFile: true,
-  filename: 'stats.html',
-  open: false,
-  template: 'treemap',
-} as const
+// const visualizerConfig: PluginVisualizerOptions = {
+//   emitFile: true,
+//   filename: 'stats.html',
+//   open: false,
+//   template: 'markdown',
+// }
 
 async function main() {
   log('Scripts: Building')
+  let firstBuild = true
 
   const buildTasks = []
 
@@ -130,18 +130,18 @@ async function main() {
   })
   buildTasks.push(build(mergeConfig(base, inpagePreviewInjection, true)))
 
-  // Isolated script for preview popup (window)
-  const windowPreviewScript = defineConfig({
-    build: {
-      rolldownOptions: {
-        input: { 'popup.tab-preview/tab-preview': 'src/popup.tab-preview/tab-preview.ts' },
-      },
-    },
-  })
-  buildTasks.push(build(mergeConfig(base, windowPreviewScript, true)))
+  const buildResults = await Promise.all(buildTasks)
 
-  await Promise.all(buildTasks)
-
-  logOk('Scripts: Done')
+  if (!IS_DEV) logOk('Scripts: Done')
+  else {
+    let building = 0
+    for (const r of buildResults as RolldownWatcher[]) {
+      r.on('event', e => {
+        if (e.code === 'START' && building++ === 0 && !firstBuild) log('Scripts: Building')
+        if (e.code === 'END' && --building === 0) logOk('Scripts: Watching')
+        if (firstBuild) firstBuild = false
+      })
+    }
+  }
 }
 main()

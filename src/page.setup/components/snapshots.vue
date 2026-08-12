@@ -248,9 +248,14 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
         if (!tab.sel) continue
         ids[tab.id] = true
 
+        let url: string | undefined = tab.url
+        if (Utils.isGroupUrl(url)) url = Utils.updateGroupUrlBase(url)
+        else if (Utils.isPlaceholderUrl(url)) url = Utils.updatePlaceholderUrlBase(url)
+        else url = Utils.sanitizeUrl(url, tab.title)
+
         const item: T.ItemInfo = {
           id: tab.id,
-          url: tab.url,
+          url,
           customTitle: tab.customTitle,
           customColor: tab.customColor,
           title: tab.title,
@@ -285,7 +290,7 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
       const oldNewIds: Record<ID, ID> = {}
       for (const item of items) {
         const conf: browser.tabs.CreateProperties = {
-          url: Utils.sanitizeUrl(item.url, item.title),
+          url: item.url,
           windowId: Windows.id,
           active: false,
           cookieStoreId: item.container,

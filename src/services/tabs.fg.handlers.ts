@@ -18,6 +18,7 @@ import * as Containers from 'src/services/containers'
 import * as Mouse from 'src/services/mouse.fg'
 import * as Popups from 'src/services/popups.fg'
 import * as Links from 'src/services/links'
+import * as Info from 'src/services/info.fg'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -27,14 +28,17 @@ export let listenersAreSet = false
 export function setupTabsListeners(): void {
   if (!Sidebar.hasTabs) return
 
+  // prettier-ignore
+  const updProps: browser.tabs.UpdateProp[] = [
+    'audible', 'discarded', 'favIconUrl', 'splitViewId', 'hidden',
+    'mutedInfo', 'pinned', 'status', 'title', 'url',
+  ]
+  if (Info.ffVersionLowerThan('149')) {
+    Utils.rmFromArray(updProps, 'splitViewId')
+  }
+
   browser.tabs.onCreated.addListener(onTabCreated)
-  browser.tabs.onUpdated.addListener(onTabUpdated, {
-    // prettier-ignore
-    properties: [
-      'audible', 'discarded', 'favIconUrl', 'hidden',
-      'mutedInfo', 'pinned', 'status', 'title', 'url',
-    ],
-  })
+  browser.tabs.onUpdated.addListener(onTabUpdated, { properties: updProps })
   browser.tabs.onRemoved.addListener(onTabRemoved)
   browser.tabs.onMoved.addListener(onTabMoved)
   browser.tabs.onDetached.addListener(onTabDetached)
@@ -256,6 +260,12 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   const initialOpenerId = nativeTab.openerTabId
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
+  const isSplt =
+    tab.active &&
+    tab.splitViewId !== undefined &&
+    tab.splitViewId !== browser.tabs.SPLIT_VIEW_ID_NONE &&
+    tab.url === 'about:blank' &&
+    tab.title === 'about:opentabs'
 
   // Stop if multiple tabs were open and data querying is started
   let notSessionRestore
@@ -282,7 +292,7 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   }
 
   // Check if tab is reopened
-  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false && !attached) {
+  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false && !attached && !isSplt) {
     const prevPosIndex = Tabs.removedTabs.findIndex(t => t.title === tab.title)
     reopenedTabInfo = Tabs.removedTabs[prevPosIndex]
     if (reopenedTabInfo) {
@@ -384,6 +394,27 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
       // or move as configured for new tabs
       else {
         index = Tabs.getIndexForNewTab(panel, tab)
+      }
+    }
+  }
+
+  // Do not move split view tab chooser
+  else if (isSplt) {
+    // Get panel
+    panel = Tabs.getPanelForNewTab(tab)
+    if (!panel) return Logs.err('Cannot handle splitInit tab: Cannot find target panel')
+
+    index = tab.index
+    const prevTab = Tabs.list[index - 1]
+    if (prevTab) {
+      tab.openerTabId = prevTab.parentId
+      // Outdent the branch
+      if (prevTab.isParent) {
+        for (const t of Tabs.getBranch(prevTab)) {
+          if (t.parentId === prevTab.id) t.parentId = prevTab.parentId
+          t.lvl--
+          t.reactive.lvl = t.lvl
+        }
       }
     }
   }
@@ -637,6 +668,10 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   if (Sidebar.reactive.hiddenPanelsPopup) {
     Sidebar.closeHiddenPanelsPopup(true)
   }
+
+  if (Tabs.badgeRulesEnabled && tab.discarded) {
+    Tabs.updateBadge(tab)
+  }
 }
 
 const NEW_TAB_MOVE_DELAY = 200
@@ -734,6 +769,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   }
 
   // Logs.info('Tabs.onTabUpdated:', tabId, Object.keys(change))
+  let ts
 
   // Discarded
   if (change.discarded !== undefined) {
@@ -760,13 +796,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       if (mediaStateChanged) {
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
-      if (tab.updated) {
-        tab.reactive.updated = tab.updated = false
-        const panel = Sidebar.panelsById[tab.panelId]
-        if (Utils.isTabsPanel(panel) && panel.updatedTabs.length) {
-          Utils.rmFromArray(panel.updatedTabs, tab.id)
-          panel.reactive.updated = panel.updatedTabs.length > 0
-        }
+      if (tab.badgeUrgent) {
+        Tabs.resetUrgencyAndValuelessBadge(tab)
+        Tabs.propagateBadgeUrgency(tab)
       }
 
       if (!tab.favIconUrl && change.favIconUrl === undefined) {
@@ -788,7 +820,14 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Status change
   if (change.status !== undefined) {
-    if (change.status === 'complete' && nativeTab.url[0] !== 'a') {
+    const complete = change.status === 'complete'
+    if (complete && !tab.active) {
+      if (ts === undefined) ts = Date.now()
+      tab.lastActivity = ts
+    } else {
+      tab.lastActivity = undefined
+    }
+    if (complete && nativeTab.url[0] !== 'a') {
       if (Settings.state.animations && change.status !== tab.status) {
         Tabs.triggerFlashAnimation(tab)
       }
@@ -806,78 +845,86 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Url
   let branchColorizationNeeded = false
-  if (change.url !== undefined && change.url !== tab.url) {
-    const isInternal = change.url.startsWith(D.ADDON_HOST)
-    const isGroup = isInternal && Utils.isGroupUrl(change.url)
-    if (tab.isGroup !== isGroup) {
-      tab.reactive.isGroup = tab.isGroup = isGroup
-    }
-    tab.internal = isInternal
-    Tabs.cacheTabsData()
+  if (change.url !== undefined) {
+    if (change.url !== tab.url) {
+      const isInternal = change.url.startsWith(D.ADDON_HOST)
+      const isGroup = isInternal && Utils.isGroupUrl(change.url)
+      if (tab.isGroup !== isGroup) {
+        tab.reactive.isGroup = tab.isGroup = isGroup
+      }
+      tab.internal = isInternal
+      Tabs.cacheTabsData()
 
-    // Hash messaging
-    if (isGroup && tab.cookieStoreId !== D.DEFAULT_CONTAINER_ID && change.url.endsWith('!s!~')) {
-      IPPC.onHashMsg(tab, change.url)
-    }
+      // Hash messaging
+      if (isGroup && tab.cookieStoreId !== D.DEFAULT_CONTAINER_ID && change.url.endsWith('!s!~')) {
+        IPPC.onHashMsg(tab, change.url)
+      }
 
-    // Handle bound tab URL change
-    if (tab.boundUrl) {
-      tab.reactive.boundAway = change.url !== tab.boundUrl
-    }
+      // Handle bound tab URL change
+      if (tab.boundUrl) {
+        tab.reactive.boundAway = change.url !== tab.boundUrl
+      }
 
-    // Reset favicon (to cached)
-    if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
-      change.favIconUrl = Favicons.getFavicon(change.url)
-    }
+      // Reset favicon (to cached)
+      if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
+        change.favIconUrl = Favicons.getFavicon(change.url)
+      }
 
-    // Update URL of the linked group page (for pinned tab)
-    if (tab.pinned && tab.relGroupId !== undefined) {
-      const groupTab = Tabs.byId[tab.relGroupId]
-      if (groupTab) {
-        const groupUrl = Utils.createGroupUrl(tab.title, change.url, tab.cookieStoreId)
-        browser.tabs.update(groupTab.id, { url: groupUrl }).catch(err => {
-          Logs.err('Tabs.onTabUpdated: Cannot reload related group page:', err)
+      // Update URL of the linked group page (for pinned tab)
+      if (tab.pinned && tab.relGroupId !== undefined) {
+        const groupTab = Tabs.byId[tab.relGroupId]
+        if (groupTab) {
+          const groupUrl = Utils.createGroupUrl(tab.title, change.url, tab.cookieStoreId)
+          browser.tabs.update(groupTab.id, { url: groupUrl }).catch(err => {
+            Logs.err('Tabs.onTabUpdated: Cannot reload related group page:', err)
+          })
+        }
+      }
+
+      // Reset pause state
+      if (tab.mediaPaused) {
+        Tabs.checkPausedMedia(tabId).then(stillPaused => {
+          if (stillPaused === null || stillPaused) return
+          tab.mediaPaused = false
+          tab.reactive.mediaPaused = false
+          Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
         })
       }
+
+      // Re-color tab
+      if (Settings.state.colorizeTabs) {
+        Tabs.colorizeTabDebounced(tabId, 120)
+      }
+
+      // Check if branch re-colorization is needed
+      if (Settings.state.colorizeTabsBranches) {
+        branchColorizationNeeded = tab.isParent && tab.lvl === 0
+        if (tab.lvl === 0) tab.reactive.branchColor = null
+      }
+
+      // Check if tab should be moved to another panel
+      if (Tabs.moveRules.length && !tab.pinned && change.url !== 'about:blank') {
+        Tabs.moveByRule(tabId, 120)
+      }
+
+      // Update url counter
+      Links.updTab(tab, change.url)
+
+      // Update filtered results
+      if (Search.active && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
+        Search.searchDebounced(500)
+      }
+
+      // Update group
+      const groupTab = Tabs.getGroupTab(tab)
+      if (groupTab && !groupTab.discarded) Tabs.updateGroupOrItsChild(groupTab, nativeTab.id)
     }
 
-    // Reset pause state
-    if (tab.mediaPaused) {
-      Tabs.checkPausedMedia(tabId).then(stillPaused => {
-        if (stillPaused === null || stillPaused) return
-        tab.mediaPaused = false
-        tab.reactive.mediaPaused = false
-        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
-      })
+    // Set url update timestamp
+    if (!tab.internal) {
+      if (ts === undefined) ts = Date.now()
+      tab.lastActivity = ts
     }
-
-    // Re-color tab
-    if (Settings.state.colorizeTabs) {
-      Tabs.colorizeTabDebounced(tabId, 120)
-    }
-
-    // Check if branch re-colorization is needed
-    if (Settings.state.colorizeTabsBranches) {
-      branchColorizationNeeded = tab.isParent && tab.lvl === 0
-      if (tab.lvl === 0) tab.reactive.branchColor = null
-    }
-
-    // Check if tab should be moved to another panel
-    if (Tabs.moveRules.length && !tab.pinned && change.url !== 'about:blank') {
-      Tabs.moveByRule(tabId, 120)
-    }
-
-    // Update url counter
-    Links.updTab(tab, change.url)
-
-    // Update filtered results
-    if (Search.active && Sidebar.activePanelId === tab.panelId && !Sidebar.subPanelActive) {
-      Search.searchDebounced(500)
-    }
-
-    // Update group
-    const groupTab = Tabs.getGroupTab(tab)
-    if (groupTab && !groupTab.discarded) Tabs.updateGroupOrItsChild(groupTab, nativeTab.id)
   }
 
   // Handle Firefox internal favicon
@@ -892,41 +939,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   // Handle title change
   if (change.title !== undefined) {
     if (change.title.startsWith(EXT_HOST)) change.title = tab.title
-
-    // Mark tab with updated title
-    if (
-      !tab.updated && // Tab is not updated
-      !nativeTab.active && // Tab is inactive
-      !tab.internal && //  Tab is not internal
-      !tab.discarded && // Tab is loaded
-      // Check settings
-      (Settings.tabsUpdateMarkAll ||
-        (Settings.tabsUpdateMarkPin && tab.pinned) ||
-        (Settings.tabsUpdateMarkNorm && !tab.pinned)) &&
-      // Tab is inactive for more than 5s
-      Date.now() - nativeTab.lastAccessed > 5000 &&
-      // Current url is the same as previous
-      tab.url === nativeTab.url
-    ) {
-      // Check if this title update is the first for current URL
-      const ok = Settings.state.tabsUpdateMarkFirst
-        ? !URL_HOST_PATH_RE.test(nativeTab.title)
-        : !URL_HOST_PATH_RE.test(tab.title) && !URL_HOST_PATH_RE.test(nativeTab.title)
-      if (ok) {
-        const panel = Sidebar.panelsById[tab.panelId]
-        tab.updated = true
-        tab.reactive.updated = true
-        if (
-          Utils.isTabsPanel(panel) &&
-          (!nativeTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-          panel.updatedTabs &&
-          !panel.updatedTabs.includes(tabId)
-        ) {
-          panel.updatedTabs.push(tabId)
-          panel.reactive.updated = true
-        }
-      }
-    }
 
     // Reset custom title
     if (tab.isGroup && tab.active && change.title !== D.GROUP_INITIAL_TITLE) {
@@ -1088,17 +1100,24 @@ function updTabsReactiveProps() {
 }
 
 function updTabReactiveProps(change: browser.tabs.ChangeInfo, tab: Tab) {
+  const tChange = change.title !== undefined
+  const uChange = change.url !== undefined
+  const dChange = change.discarded !== undefined
+  const pChange = change.pinned !== undefined
   if (change.audible !== undefined) tab.reactive.mediaAudible = change.audible
-  if (change.discarded !== undefined) tab.reactive.discarded = change.discarded
+  if (dChange) tab.reactive.discarded = change.discarded as boolean
   if (change.favIconUrl !== undefined) {
     if (tab.internal) tab.favIconUrl = undefined
     Tabs.renderFavicon(tab)
   }
   if (change.mutedInfo?.muted !== undefined) tab.reactive.mediaMuted = change.mutedInfo.muted
-  if (change.pinned !== undefined) tab.reactive.pinned = change.pinned
+  if (pChange) tab.reactive.pinned = change.pinned as boolean
   if (change.status !== undefined) tab.reactive.status = Tabs.getStatus(tab)
-  if (change.title !== undefined) Tabs.renderTitle(tab)
-  if (change.url !== undefined) tab.reactive.url = change.url
+  if (tChange) Tabs.renderTitle(tab)
+  if (uChange) tab.reactive.url = change.url as string
+  if (!tab.internal && (tChange || uChange || dChange || pChange)) {
+    Tabs.updateBadge(tab, change)
+  }
 }
 
 let recentlyRemovedChildParentMap: Record<ID, ID> | null = null
@@ -1342,10 +1361,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     Tabs.createTabInPanel(panel, { active: false })
   }
 
-  // Remove updated flag
-  if (panel.updatedTabs.length) {
-    Utils.rmFromArray(panel.updatedTabs, tabId)
-    panel.reactive.updated = panel.updatedTabs.length > 0
+  // Recalc urgency for ancestors
+  if (tab.badgeUrgent) {
+    Tabs.propagateBadgeUrgency(tab, false)
   }
 
   // Update media badges
@@ -1419,7 +1437,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     IPPC.reset(tab)
   }
 
-  if (Preview.state.status === Preview.Status.Open && Preview.state.targetTabId === tabId) {
+  if (Preview.state.targetTabId === tabId) {
     Preview.resetTargetTab(tabId)
   }
 }
@@ -1491,6 +1509,9 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   const maxIndex = Math.max(info.fromIndex, info.toIndex)
   Tabs.updateTabsIndexes(minIndex, maxIndex + 1)
 
+  // Remove badge urgency from old ancestors / panel
+  if (tab.badgeUrgent) Tabs.propagateBadgeUrgency(tab, false)
+
   // Update tab's panel id
   let srcPanel
   let dstPanel
@@ -1540,6 +1561,9 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
       }
     }
   }
+
+  // Add badge urgency to new ancestors / panel
+  if (tab.badgeUrgent) Tabs.propagateBadgeUrgency(tab)
 
   if (srcPanel) Sidebar.recalcVisibleTabs(srcPanel.id)
   if (dstPanel && dstPanel !== srcPanel) Sidebar.recalcVisibleTabs(dstPanel.id)
@@ -1681,11 +1705,14 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     return
   }
 
-  // Update previous active tab and store his id
+  const ts = Date.now()
+
+  // Update previous active tab and store its id
   const prevActive = Tabs.byId[Tabs.activeId]
   if (prevActive) {
     prevActive.reactive.active = prevActive.active = false
     Tabs.writeActiveTabsHistory(prevActive, tab)
+    prevActive.lastActivity = ts
 
     // Hide previously active tab if needed
     const hideFolded = Settings.state.hideFoldedTabs
@@ -1699,24 +1726,33 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
 
   tab.reactive.active = tab.active = true
-  if (Settings.state.tabsUpdateMark !== 'none') {
-    tab.reactive.updated = tab.updated = false
-  }
+
   if (Settings.state.tabsUnreadMark) {
     tab.reactive.unread = tab.unread = false
   }
-  tab.lastAccessed = Date.now()
+  tab.lastAccessed = ts
+  tab.lastActivity = undefined
   Tabs.setActiveId(info.tabId)
 
   const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
+  // Update sticky tabs
+  if (Settings.stickyTabs) {
+    Tabs.calcStickyTabs(panel)
+    if (prevActive && prevActive.panelId !== panel.id) {
+      const prevPanel = Sidebar.panelsById[prevActive.panelId]
+      if (Utils.isTabsPanel(prevPanel)) Tabs.calcStickyTabs(prevPanel)
+    }
+  }
+
   // Update succession
   Tabs.updateSuccessionDebounced(0)
 
-  if (panel.updatedTabs.length) {
-    Utils.rmFromArray(panel.updatedTabs, tab.id)
-    panel.reactive.updated = panel.updatedTabs.length > 0
+  // Update badges
+  if (tab.badgeUrgent) {
+    Tabs.resetUrgencyAndValuelessBadge(tab)
+    Tabs.propagateBadgeUrgency(tab)
   }
 
   // Switch to activated tab's panel

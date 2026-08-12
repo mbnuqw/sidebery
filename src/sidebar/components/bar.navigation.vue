@@ -115,6 +115,7 @@ const ButtonTypes: Record<string, E.ButtonType> = {
   add_tp: E.ButtonType.add_tp,
   hidden: E.ButtonType.hidden,
   collapse: E.ButtonType.collapse,
+  expand: E.ButtonType.expand,
   create_snapshot: E.ButtonType.create_snapshot,
   remute_audio_tabs: E.ButtonType.remute_audio_tabs,
 }
@@ -246,6 +247,7 @@ const nav = computed<Nav | undefined>(() => {
         id === 'search' ||
         id === 'add_tp' ||
         id === 'collapse' ||
+        id === 'expand' ||
         id === 'create_snapshot' ||
         id === 'remute_audio_tabs'
       ) {
@@ -578,6 +580,7 @@ async function onNavMouseDown(e: MouseEvent, item: T.NavItem) {
     }
 
     if (item.type === E.ButtonType.collapse) collapseAll()
+    if (item.type === E.ButtonType.expand) expandAll()
 
     if (item.type === E.ButtonType.add_tp) addTabsPanel(true)
   }
@@ -618,6 +621,7 @@ function onNavMouseUp(e: MouseEvent, item: T.NavItem, inHiddenBar?: boolean) {
     if (isCreateSnapshot) return Snapshots.createSnapshot()
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
     if (item.type === E.ButtonType.collapse) collapseAll()
+    if (item.type === E.ButtonType.expand) expandAll()
 
     if (isSwitchingPanel) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
@@ -788,6 +792,22 @@ function collapseAll(): void {
   // Bookmarks
   else if (Utils.isBookmarksPanel(activePanel)) {
     Bookmarks.collapseAllBookmarks(activePanel.id)
+  }
+}
+
+function expandAll(): void {
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (!activePanel) return
+
+  if (Utils.isTabsPanel(activePanel)) {
+    const tabs: T.Tab[] = []
+    for (const rTab of activePanel.tabs) {
+      const tab = Tabs.byId[rTab.id]
+      if (tab && tab.lvl === 0) tabs.push(tab)
+    }
+    Tabs.expAllBranches(tabs)
+  } else if (Utils.isBookmarksPanel(activePanel)) {
+    Bookmarks.expandAllBookmarks(activePanel.id)
   }
 }
 </script>

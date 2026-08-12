@@ -115,7 +115,8 @@ export function updateSettings(settings?: SettingsState | null): void {
   const colorizeTabsBranchesChanged = prev.colorizeTabsBranches !== next.colorizeTabsBranches
   const colorizeTabsBranchesSrcChanged =
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
-  const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
+  const tabsBadgeChanged = prev.tabsBadge !== next.tabsBadge
+  const tabsBadgeRulesChanged = prev.tabsBadgeRules !== next.tabsBadgeRules
   const navTabsPanelMidClickAction =
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
   const navBookmarksPanelMidClickAction =
@@ -128,6 +129,9 @@ export function updateSettings(settings?: SettingsState | null): void {
   const markWindowPreface = prev.markWindowPreface !== next.markWindowPreface
   const tabsUnreadMark = prev.tabsUnreadMark !== next.tabsUnreadMark
   const copyTemplates = prev.copyTemplates !== next.copyTemplates
+  const stickyAncestorTabs = prev.stickyAncestorTabs !== next.stickyAncestorTabs
+  const stickyAncestorTabsLimit = prev.stickyAncestorTabsLimit !== next.stickyAncestorTabsLimit
+  const stickyAncestorTabsLayout = prev.stickyAncestorTabsLayout !== next.stickyAncestorTabsLayout
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
@@ -217,16 +221,10 @@ export function updateSettings(settings?: SettingsState | null): void {
     Tabs.colorizeTabs()
   }
 
-  if (tabsUpdateMarkChanged && next.tabsUpdateMark === 'none') {
-    for (const tab of Tabs.list) {
-      tab.reactive.updated = tab.updated = false
-    }
-    for (const panel of Sidebar.panels) {
-      if (Utils.isTabsPanel(panel)) {
-        panel.updatedTabs = []
-        panel.reactive.updated = false
-      }
-    }
+  if (tabsBadgeChanged || tabsBadgeRulesChanged) {
+    Tabs.resetBadges()
+    Tabs.parseBadgeRegexpRules()
+    Tabs.updateBadges()
   }
 
   if (markWindowPreface) Settings.parsePrefaceTemplate()
@@ -234,6 +232,13 @@ export function updateSettings(settings?: SettingsState | null): void {
   if (Info.isSidebar && copyTemplates) Settings.parseCopyTemplates()
 
   Search.parseShortcuts()
+
+  if (stickyAncestorTabs || stickyAncestorTabsLimit || stickyAncestorTabsLayout) {
+    const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (Utils.isTabsPanel(actPanel)) {
+      Tabs.calcStickyTabs(actPanel)
+    }
+  }
 }
 
 export function resetSettings(): void {

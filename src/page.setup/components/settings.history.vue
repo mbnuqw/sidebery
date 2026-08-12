@@ -2,12 +2,12 @@
 section(ref="el")
   h2 {{translate('settings.history_title')}}
   span.header-shadow
-  ToggleField(
-    label="settings.load_history_on_demand"
-    v-model:value="Settings.state.loadHistoryOnDemand"
-    dbg="loadHistoryOnDemand"
-    :default="DEFAULT_SETTINGS.loadHistoryOnDemand"
-    @update:value="Settings.saveDebounced(150)")
+  //- ToggleField(
+  //-   label="settings.load_history_on_demand"
+  //-   v-model:value="Settings.state.loadHistoryOnDemand"
+  //-   dbg="loadHistoryOnDemand"
+  //-   :default="DEFAULT_SETTINGS.loadHistoryOnDemand"
+  //-   @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

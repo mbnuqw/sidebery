@@ -119,6 +119,7 @@ const NavItemTypeNames = {
   [E.ButtonType.create_snapshot]: 'create_snapshot',
   [E.ButtonType.remute_audio_tabs]: 'remute_audio_tabs',
   [E.ButtonType.collapse]: 'collapse',
+  [E.ButtonType.expand]: 'expand',
   [E.SpaceType.dynamic]: 'dynamic',
   [E.SpaceType.static]: 'static',
 }
@@ -133,7 +134,7 @@ const bookmarksBadge =
 
 const isUpdated = computed<boolean>(() => {
   if (Utils.isTabsPanel(props.item)) {
-    return Sidebar.reactive.activePanelId !== props.item.id && props.item.reactive.updated
+    return Sidebar.reactive.activePanelId !== props.item.id && props.item.reactive.badge
   }
   return false
 })

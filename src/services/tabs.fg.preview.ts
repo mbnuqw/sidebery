@@ -30,8 +30,8 @@ export const state = {
   mode: Mode.Nope,
   modeFallback: false,
 
-  popupWinId: NOID,
   targetTabId: NOID,
+  sticky: false,
 
   openTimeout: undefined as number | undefined,
   closeTimeout: undefined as number | undefined,
@@ -52,17 +52,17 @@ let deadOnArrival = false
 let tooltipUpdTimeout: number | undefined = undefined
 
 function dbgStr() {
-  let m = state.mode === Mode.Nope ? 'Nope' : 'Inline'
-  if (state.mode === Mode.InPage) m = 'InPage'
+  let m = state.mode === Mode.Nope ? 'Nope' : 'Sidebar'
+  if (state.mode === Mode.InPage) m = 'Page'
 
   let s = state.status === Status.Closed ? 'Closed' : 'Closing'
   if (state.status === Status.Open) s = 'Open'
   else if (state.status === Status.Opening) s = 'Opening'
 
-  return `mode: ${m}, status: ${s}`
+  return `mode: ${m}, status: ${s}, targetTabId: ${state.targetTabId}, doa: ${deadOnArrival}`
 }
 
-export function setTargetTab(tabId: ID) {
+export function setTargetTab(tabId: ID, sticky: boolean) {
   clearTimeout(state.openTimeout)
   if (Settings.state.previewTabsFollowMouse) {
     clearTimeout(state.closeTimeout)
@@ -70,6 +70,7 @@ export function setTargetTab(tabId: ID) {
 
   const tab = Tabs.byId[tabId]
   state.targetTabId = tabId
+  state.sticky = sticky
 
   // Start timeout to...
   if (!Menu.isOpen && !Mouse.multiSelectionMode && !Selection.selected.size && tab) {
@@ -131,6 +132,7 @@ export function resetTargetTab(tabId: ID, closeDelay = DEFERRED_CLOSE_DELAY) {
     state.targetTabId = NOID
   }
 
+  state.sticky = false
   state.openTimeout = undefined
 
   state.closeTimeout = setTimeout(() => {
@@ -182,6 +184,11 @@ function tryDecodeUrl(url: string): string {
 // -
 
 async function showPPreview(tab: Tab, y?: number) {
+  if (deadOnArrival) {
+    deadOnArrival = false
+    closePPreview()
+  }
+
   state.status = Status.Opening
   const result = await injectPPreview(tab.id, y)
   if (result?.[0]) {
@@ -308,13 +315,11 @@ export async function closePPreview() {
 
   if (state.status === Status.Open) {
     state.status = Status.Closing
-    if (state.popupWinId !== NOID) await browser.windows.remove(state.popupWinId)
-    else if (Settings.state.previewTabsMode === 'p' && IPC.state.previewConnection) {
+    if (Settings.state.previewTabsMode === 'p' && IPC.state.previewConnection) {
       IPC.sendToPreview('close')
     } else {
       Tabs.reactive.inlinePreviewImg = ''
     }
-    state.popupWinId = NOID
     state.status = Status.Closed
   }
 }
@@ -325,6 +330,12 @@ export async function closePPreview() {
 
 let sPreviewTabId = NOID
 async function showSPreview(tab: Tab) {
+  if (deadOnArrival) {
+    deadOnArrival = false
+    closeSPreview()
+    return
+  }
+  if (state.mode !== Mode.InSidebar) return
   if (sPreviewTabId === tab.id) return
   if (!sPreviewEl) return
 
@@ -393,7 +404,7 @@ async function updateSPreview(tabId: ID) {
 }
 
 function setSPreviewPosition(popupEl: HTMLElement, tab: Tab) {
-  const el = document.getElementById(`tab${tab.id}`)
+  const el = document.getElementById(state.sticky ? `stickytab${tab.id}` : `tab${tab.id}`)
   if (!el) return
 
   const tb = el.getBoundingClientRect()

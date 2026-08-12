@@ -19,12 +19,15 @@
       :valid="props.valid"
       :width="props.inputWidth"
       @update:value="emit('update:value', $event)"
+      @blur="onBlur"
       @keydown="emit('keydown', $event)")
   .note(v-if="props.note") {{props.note}}
+  .fnote(v-if="props.fnote")
+    component(v-for="(b, i) in fnoteParts" :key="i" :is="b[0]" :class="b[1]") {{b[2]}}
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { translate } from 'src/dict'
 import type { TextInputComponent } from 'src/types'
 import TextInput from './text-input.vue'
@@ -41,17 +44,74 @@ interface TextFieldProps {
   label?: string
   inactive?: boolean
   note?: string
+  fnote?: string
   inputWidth?: string
   dbg?: string
   default?: string | number
 }
 
-const emit = defineEmits(['update:value', 'keydown'])
+const emit = defineEmits(['update:value', 'blur', 'keydown'])
 const props = withDefaults(defineProps<TextFieldProps>(), { padding: 0, tabindex: '0' })
 
 const inputEl = ref<TextInputComponent | null>(null)
 
 let rangeIsSelected = false
+
+const fnoteParts = computed(() => {
+  const parts: [string, string | null, string | undefined][] = []
+  if (!props.fnote) return parts
+
+  const re = /(```|`|^- |\n)/g
+  const rawParts = props.fnote.split(re)
+  let mlineCodeBlock = false
+  let mlineCodeBlockContent = []
+  let inlineCodeBlock = false
+  for (const rawPart of rawParts) {
+    if (!rawPart) continue
+    // Multiline code
+    if (rawPart === '```' && !mlineCodeBlock) {
+      mlineCodeBlock = true
+      continue
+    }
+    if (mlineCodeBlock) {
+      if (rawPart === '```') {
+        mlineCodeBlock = false
+        parts.push(['code', 'multiline', mlineCodeBlockContent.join('').trim()])
+        continue
+      }
+      mlineCodeBlockContent.push(rawPart)
+      continue
+    }
+    // Inline code
+    if (rawPart === '`' && !inlineCodeBlock) {
+      inlineCodeBlock = true
+      continue
+    }
+    if (inlineCodeBlock) {
+      if (rawPart === '`') {
+        inlineCodeBlock = false
+        continue
+      }
+      parts.push(['code', 'inline', rawPart])
+      continue
+    }
+    // New line
+    if (rawPart === '\n') {
+      if (mlineCodeBlock || inlineCodeBlock) continue
+      if (parts[parts.length - 1]?.[0] === 'code') continue
+      parts.push(['br', null, undefined])
+      continue
+    }
+    // Inline text
+    if (parts[parts.length - 1]?.[0] === 'br' && rawPart.startsWith('- ')) {
+      parts.push(['span', 'list-item', rawPart.replace('- ', '   ')])
+    } else {
+      parts.push(['span', '', rawPart])
+    }
+  }
+
+  return parts
+})
 
 function onMouseDown(e: DOMEvent<MouseEvent>) {
   rangeIsSelected = getSelection()?.type === 'Range'
@@ -74,6 +134,10 @@ function onContextMenu(payload: PointerEvent) {
 
 function focus(): void {
   inputEl.value?.focus()
+}
+
+function onBlur(): void {
+  if (inputEl.value) emit('blur', inputEl.value)
 }
 
 function error() {

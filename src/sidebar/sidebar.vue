@@ -24,6 +24,7 @@
   :data-colorized-branches="Settings.state.colorizeTabsBranches"
   :data-syncing="Sync.reactive.syncing"
   :data-new-tab-btns="Settings.state.showNewTabBtns"
+  :data-sticky-tabs-layout="Settings.state.stickyAncestorTabsLayout"
   @dragend="DnD.onDragEnd"
   @dragenter="DnD.onDragEnter"
   @dragleave="DnD.onDragLeave"
@@ -80,7 +81,7 @@
           v-for="(panel, i) in panels"
           :key="panel.id"
           :is="getPanelComponent(panel)"
-          :data-pos="getPanelPos(i, panel.id)"
+          :data-pos="panel.reactive.pos"
           :panel="panel")
 
       Transition(name="bottom-bar")
@@ -134,7 +135,6 @@ import * as Styles from 'src/services/styles.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Tabs from 'src/services/tabs.fg'
-import * as TabPreview from 'src/services/tabs.fg.preview'
 import * as Mouse from 'src/services/mouse.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Bookmarks from 'src/services/bookmarks.fg'
@@ -212,6 +212,7 @@ function recalcStaticVars() {
 }
 
 Sidebar.setReMountSidebarFn(() => {
+  Sidebar.resetPanelsPos()
   Sidebar.rememberActivePanelScrollPosition()
   recalcStaticVars()
   rrc.value++
@@ -234,7 +235,7 @@ const panels = computed<Panel[]>(() => {
 function updSidebarEls() {
   if (panelBoxEl.value) Sidebar.setPanelsBoxEl(panelBoxEl.value)
   if (rootEl.value) Sidebar.registerRootEl(rootEl.value)
-  if (inlinePreview) TabPreview.registerSPreviewEl(tabPreviewEl.value)
+  if (inlinePreview) Preview.registerSPreviewEl(tabPreviewEl.value)
   Sidebar.recalcElementSizes()
   Sidebar.recalcSidebarSize()
   Sidebar.restoreActivePanelScrollPosition()
@@ -429,16 +430,6 @@ function onMouseUp(e: MouseEvent): void {
     }
     Menu.open(type, e.clientX, e.clientY)
   }
-}
-
-type PanelPosition = 'left' | 'center' | 'right'
-function getPanelPos(i: number, panelId: ID): PanelPosition {
-  if (panelId === Sidebar.reactive.activePanelId) return 'center'
-  if (i === -1) return 'right'
-
-  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
-  if (activePanel && i > activePanel.index) return 'right'
-  else return 'left'
 }
 
 let onBSPBDragLeaveTimeout: number | undefined

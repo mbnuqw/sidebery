@@ -978,6 +978,18 @@ export function collapseAllBookmarks(panelId: ID): void {
 }
 
 /**
+ * Expand all bookmarks folders
+ */
+export function expandAllBookmarks(panelId: ID): void {
+  const expanded: Record<ID, boolean> = {}
+  for (const [id, node] of Bookmarks.byId) {
+    if (node.children) expanded[id] = true
+  }
+  Bookmarks.reactive.expanded[panelId] = expanded
+  saveBookmarksTree()
+}
+
+/**
  * Sort bookmarks
  */
 export async function sortBookmarks(

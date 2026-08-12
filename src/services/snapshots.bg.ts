@@ -122,6 +122,14 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     return
   }
 
+  // Keep legacy color names
+  // TMP just for couple of versions (v153 is ESR)
+  for (const container of Object.values(stored.containers)) {
+    if (container.color === 'cyan') container.color = 'turquoise'
+    if (container.color === 'gray') container.color = 'toolbar'
+  }
+  // ---TMP
+
   const currentSnapshot: NormalizedSnapshot = {
     id: Math.random().toString(36).replace('0.', Date.now().toString(36)),
     time: Date.now(),
@@ -284,8 +292,15 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
   const oldNewIds: Record<string, string> = {}
 
   for (const container of Object.values(snapshot.containers)) {
+    let sColor = container.color
+    if (sColor === 'turquoise') sColor = 'cyan'
+    if (sColor === 'toolbar') sColor = 'gray'
+
     const currentContainer = currentContainers.find(c => {
-      return c.name === container.name && c.icon === container.icon && c.color === container.color
+      let lColor = c.color
+      if (lColor === 'turquoise') lColor = 'cyan'
+      if (lColor === 'toolbar') lColor = 'gray'
+      return c.name === container.name && c.icon === container.icon && lColor === sColor
     })
 
     // Create new container
@@ -430,9 +445,14 @@ async function openWindow(
     for (const tab of panel) {
       if (tab.panelId === GLOB_PINNED_ID) tab.panelId = NOID
 
+      let url: string | undefined = tab.url
+      if (Utils.isGroupUrl(url)) url = Utils.updateGroupUrlBase(url)
+      else if (Utils.isPlaceholderUrl(url)) url = Utils.updatePlaceholderUrlBase(url)
+      else url = Utils.sanitizeUrl(url, tab.title)
+
       const tabInfo: ItemInfo = {
         id: index++,
-        url: Utils.sanitizeUrl(tab.url, tab.title),
+        url,
         title: tab.title,
         parentId: NOID,
         folded: tab.folded,
@@ -444,12 +464,6 @@ async function openWindow(
       tabsInfoByLvl[tab.lvl ?? 0] = tabInfo
 
       if (tab.pinned) tabInfo.pinned = true
-
-      if (Utils.isGroupUrl(tab.url)) {
-        const index = tab.url.indexOf('group.html') + 10
-        const newUrl = GROUP_URL + tab.url.slice(index)
-        tabInfo.url = newUrl
-      }
 
       if (tab.lvl) {
         const parent = tabsInfoByLvl[tab.lvl - 1]
@@ -465,6 +479,9 @@ async function openWindow(
 
   await Windows.createWithTabs(items, { incognito: incognito })
 }
+
+const sizeCalcBuffer = new Uint8Array(MAX_SIZE_LIMIT * 1024 + 4)
+const sizeCalcEncoder = new TextEncoder()
 
 function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
   if (snapshots.length <= MIN_LIMITING_COUNT) return
@@ -492,7 +509,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
     const snapshot = snapshots[index]
     if (!snapshot) continue
 
-    sizeAccum += new Blob([JSON.stringify(snapshot)]).size
+    sizeAccum += sizeCalcEncoder.encodeInto(JSON.stringify(snapshot), sizeCalcBuffer).written
 
     if (unit === 'snap') {
       accum++

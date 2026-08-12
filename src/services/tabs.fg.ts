@@ -17,6 +17,7 @@ import * as Notifications from 'src/services/notifications.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Favicons from 'src/services/favicons.fg'
 import * as Links from 'src/services/links'
+import * as Preview from 'src/services/tabs.fg.preview'
 
 import * as Tabs from 'src/services/tabs.fg'
 
@@ -31,6 +32,7 @@ export * from 'src/services/tabs.fg.move'
 export * from 'src/services/tabs.fg.create'
 export * from 'src/services/tabs.fg.media'
 export * from 'src/services/tabs.fg.sorting'
+export * from 'src/services/tabs.fg.badge'
 
 export interface TabsReactiveState {
   pinnedIds: ID[]
@@ -110,7 +112,8 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
   if (tab.relGroupId === undefined) tab.relGroupId = D.NOID
   if (tab.lvl === undefined) tab.lvl = 0
   if (tab.sel === undefined) tab.sel = false
-  if (tab.updated === undefined) tab.updated = false
+  if (tab.badge === undefined) tab.badge = false
+  if (tab.badgeUrgent === undefined) tab.badgeUrgent = false
   if (tab.loading === undefined) tab.loading = false
   if (tab.status === undefined) tab.status = 'complete'
   if (tab.warn === undefined) tab.warn = false
@@ -147,7 +150,11 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
       sel: tab.sel,
       selLock: tab.selLock,
       warn: tab.warn,
-      updated: tab.updated,
+      badge: false,
+      badgeUrgent: false,
+      badgeBg: null,
+      badgeFg: null,
+      hasUrgentDescendant: false,
       unread: !!tab.unread,
       flash: false,
       branchColor: null,
@@ -217,6 +224,7 @@ export async function load(src?: LoadSrc): Promise<void> {
 
   Tabs.updateNativeTabsVisibility()
   if (!sessionRestoreTabOnly) Tabs.cacheTabsData(1000)
+  const dts = Date.now()
   Tabs.list.forEach(t => {
     Links.addTab(t)
 
@@ -226,6 +234,9 @@ export async function load(src?: LoadSrc): Promise<void> {
 
     // Recalc branch length for folded (invisible) parent tabs
     if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
+
+    // Set default timestamps
+    t.lastActivity = dts
   })
 
   for (const panel of Sidebar.panels) {
@@ -239,6 +250,8 @@ export async function load(src?: LoadSrc): Promise<void> {
 
   if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
   if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
+  if (Settings.state.tabsBadge) Tabs.parseBadgeRegexpRules()
+  if (Tabs.badgeRulesEnabled) Tabs.updateBadges()
 
   ready = true
 
@@ -991,7 +1004,7 @@ const RELOADING_QUEUE: T.Tab[] = []
 const CHECK_INTERVAL = 300
 const MAX_CHECK_COUNT = 35
 export function reloadTabs(tabIds: ID[] = []): void {
-  if (!Settings.state.tabsReloadLimit || typeof Settings.state.tabsReloadLimit !== 'number') {
+  if (Settings.state.tabsReloadLimit >= tabIds.length) {
     for (const id of tabIds) {
       const tab = Tabs.byId[id]
       if (tab) reloadTab(tab)
@@ -999,13 +1012,14 @@ export function reloadTabs(tabIds: ID[] = []): void {
     return
   }
 
+  let limit = Settings.state.tabsReloadLimit
   const tabs = []
   for (const tabId of tabIds) {
     let tab = Tabs.byId[tabId]
     if (!tab) continue
 
     if (!RELOADING_QUEUE.includes(tab)) {
-      tab.reactive.status = TabStatus.Pending
+      if (--limit < 0) tab.reactive.status = TabStatus.Pending
       tab.status = 'pending'
       tab.reloadingChecks = 1
       tabs.push(tab)
@@ -1515,8 +1529,8 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
 
-    const url = new URL(tab.url)
-    const domain = url.hostname.split('.').slice(-2).join('.')
+    const hostname = Utils.getHostname(tab.url)
+    const domain = Utils.getDomain(hostname, true, 1)
 
     if (!domain) {
       Notifications.notify({
@@ -1835,6 +1849,14 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
   // Update succession
   if (rootTab.active) Tabs.updateSuccessionDebounced(0)
 
+  // Close in-sidebar preview
+  if (
+    Preview.state.status === Preview.Status.Open &&
+    Preview.state.mode === Preview.Mode.InSidebar
+  ) {
+    Preview.closePreview()
+  }
+
   saveTabData(rootTabId)
   cacheTabsData()
 }
@@ -1873,6 +1895,14 @@ export function foldAllInactiveBranches(tabs: T.Tab[] = []): void {
     tab = tabs[i]
     if (tab.isParent && !tab.folded && !activeBranch.includes(tab.id)) {
       foldTabsBranch(tab.id)
+    }
+  }
+}
+
+export function expAllBranches(tabs: T.Tab[] = []): void {
+  for (const tab of tabs) {
+    if (tab.isParent && tab.folded) {
+      expTabsBranch(tab.id, true, true)
     }
   }
 }
@@ -2952,8 +2982,14 @@ export function renderTitle(tab: T.Tab, forcedTitle?: string) {
 }
 
 export function renderFavicon(tab: T.Tab) {
-  const imgEl = tab.favImgEl
-  const svgUseEl = tab.favSvgUseEl
+  renderFaviconInto(tab, tab.favImgEl, tab.favSvgUseEl)
+}
+
+export function renderFaviconInto(
+  tab: T.Tab,
+  imgEl?: HTMLImageElement,
+  svgUseEl?: SVGElement
+): void {
   if (tab.favIconUrl && imgEl) {
     // Set img
     imgEl.src = tab.favIconUrl

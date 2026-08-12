@@ -97,8 +97,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   askNewBookmarkPlace: true,
   tabsRmUndoNote: true,
   tabsUnreadMark: false,
-  tabsUpdateMark: 'all',
-  tabsUpdateMarkFirst: true,
+  tabsBadge: true,
+  tabsBadgeRules: 'minIdleTime:5000; urgent',
   tabsReloadLimit: 5,
   tabsReloadLimitNotif: true,
   showNewTabBtns: true,
@@ -136,6 +136,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Tabs tree
   tabsTree: true,
   tabsTreeLimit: 'none',
+  stickyActiveTab: false,
+  stickyAncestorTabs: false,
+  stickyAncestorTabsLimit: 3,
+  stickyAncestorTabsLayout: 'col',
   autoFoldTabs: false,
   autoFoldTabsExcept: 'none',
   autoExpandTabs: false,
@@ -170,7 +174,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   previewTabsTitle: 2,
   previewTabsUrl: 1,
   previewTabsSide: 'right',
-  previewTabsDelay: 500,
+  previewTabsDelay: 450,
   previewTabsFollowMouse: true,
   previewTabsInPageOffsetY: 0,
   previewTabsInPageOffsetX: 0,
@@ -196,7 +200,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   oldBookmarksAfterSave: 'ask',
 
   // History
-  loadHistoryOnDemand: true,
+  // loadHistoryOnDemand: true,
+  historyTitleUpdInterval: 1_100,
 
   // Appearance
   fontSize: 'm',
@@ -332,9 +337,11 @@ export const SETTINGS_OPTIONS = {
   historyMidClickAction: ['open_in_new', 'forget_visit'],
   tabRmBtn: ['always', 'hover', 'none'],
   activateAfterClosing: ['prev_act', 'next', 'prev', 'none'],
-  tabsUpdateMark: ['all', 'pin', 'norm', 'none'],
+  tabsUpdateMark: ['all', 'pin', 'norm', 'none'], // DEPR
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
+  stickyAncestorTabsLimit: [1, 2, 3, 4, 5, 'none'],
+  stickyAncestorTabsLayout: ['col', 'row'],
   previewTabsMode: ['i', 'p'],
   previewTabsPageModeFallback: ['i', 'n'],
   previewTabsSide: ['right', 'left'],

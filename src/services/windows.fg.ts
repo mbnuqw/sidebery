@@ -169,10 +169,6 @@ function onWindowCreated(window: browser.windows.Window): void {
 }
 
 function onWindowRemoved(windowId: ID): void {
-  if (Preview.state.popupWinId === windowId) {
-    Preview.state.popupWinId = NOID
-    Preview.state.status = Preview.Status.Closed
-  }
   if (windowId === id || !otherWindows) return
   const index = otherWindows.findIndex(w => w.id === windowId)
   if (index >= 0) otherWindows.splice(index, 1)

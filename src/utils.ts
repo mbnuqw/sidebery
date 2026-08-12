@@ -224,11 +224,43 @@ export function dateTimeTemplate(str: string, msOrDate: number | Date): string {
 }
 
 /**
- * Get domain of the url
+ * Get hostname of the url
  */
-export function getDomainOf(url: string): string {
+export function getHostname(url: string): string {
   if (!url) return url
-  return D.DOMAIN_RE.exec(url)?.[1] ?? url
+  return D.HOSTNAME_RE.exec(url)?.[1] ?? url
+}
+
+/**
+ * Get domain of the hostname
+ */
+export function getDomain(hostname: string, withPubSuffix: boolean, depth: number): string {
+  if (!withPubSuffix && depth === 0) return ''
+  if (withPubSuffix && depth === -1) return hostname
+  if (withPubSuffix && depth === 1) {
+    try {
+      const result = browser.publicSuffix?.getDomain(hostname)
+      if (result) return result
+    } catch {
+      // noop
+    }
+  }
+  let pubSuffix
+  try {
+    pubSuffix = browser.publicSuffix?.getKnownSuffix(hostname) ?? undefined
+  } catch {
+    // noop
+  }
+  let s = pubSuffix ? hostname.length - pubSuffix.length - 1 : hostname.lastIndexOf('.')
+  let e = withPubSuffix ? hostname.length : s
+  if (e < 0) e = 0
+  if (depth < 0) depth = 127
+  while (s > 0 && depth-- > 0) {
+    s = hostname.lastIndexOf('.', s - 1)
+  }
+  if (s < -1) s = -1
+  else if (s > e) s = e - 1
+  return hostname.slice(s + 1, e)
 }
 
 export function sameStart(a: string, b: string, limit: number) {
@@ -713,7 +745,7 @@ export function restoreUrl(url?: string): string | undefined {
 }
 
 export function recreateNormalizedObject<T extends object>(obj: Partial<T>, defaults: T): T {
-  const result = cloneObject(defaults)
+  const result = structuredClone(defaults)
   for (const key of Object.keys(defaults) as (keyof T)[]) {
     if (obj[key] !== undefined) result[key] = obj[key]
   }
@@ -721,7 +753,7 @@ export function recreateNormalizedObject<T extends object>(obj: Partial<T>, defa
 }
 
 export function normalizeObject<T extends object>(obj: T, defaults: T): void {
-  const clonedDefaults = cloneObject(defaults)
+  const clonedDefaults = structuredClone(defaults)
   for (const key of Object.keys(clonedDefaults) as (keyof T)[]) {
     if (obj[key] === undefined) obj[key] = clonedDefaults[key]
   }
@@ -1082,18 +1114,6 @@ export function findNear<T>(list: T[], index: number, cb: (v: T) => boolean): T 
   }
 
   return result
-}
-
-export function normalizeColor(color?: string): browser.ColorName {
-  if (color === 'blue') return 'blue'
-  if (color === 'turquoise') return 'turquoise'
-  if (color === 'green') return 'green'
-  if (color === 'yellow') return 'yellow'
-  if (color === 'orange') return 'orange'
-  if (color === 'red') return 'red'
-  if (color === 'pink') return 'pink'
-  if (color === 'purple') return 'purple'
-  return 'toolbar'
 }
 
 export function getShortTimestamp(ms: number, currentDate: Date): string {

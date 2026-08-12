@@ -109,6 +109,7 @@ export const enum ButtonType {
   create_snapshot = 105,
   remute_audio_tabs = 106,
   collapse = 107,
+  expand = 108,
 }
 
 export const enum SpaceType {

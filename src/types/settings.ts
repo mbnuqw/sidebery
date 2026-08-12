@@ -95,8 +95,10 @@ export interface SettingsState {
   activateAfterClosingNoDiscarded: boolean
   tabsRmUndoNote: boolean
   tabsUnreadMark: boolean
-  tabsUpdateMark: (typeof SETTINGS_OPTIONS.tabsUpdateMark)[number]
-  tabsUpdateMarkFirst: boolean
+  tabsUpdateMark?: (typeof SETTINGS_OPTIONS.tabsUpdateMark)[number] // DEPR
+  tabsUpdateMarkFirst?: boolean // DEPR
+  tabsBadge: boolean
+  tabsBadgeRules: string
   tabsReloadLimit: number
   tabsReloadLimitNotif: boolean
   showNewTabBtns: boolean
@@ -135,6 +137,10 @@ export interface SettingsState {
   tabsTree: boolean
   groupOnOpen?: boolean // DEPR
   tabsTreeLimit: (typeof SETTINGS_OPTIONS.tabsTreeLimit)[number]
+  stickyActiveTab: boolean
+  stickyAncestorTabs: boolean
+  stickyAncestorTabsLimit: (typeof SETTINGS_OPTIONS.stickyAncestorTabsLimit)[number]
+  stickyAncestorTabsLayout: (typeof SETTINGS_OPTIONS.stickyAncestorTabsLayout)[number]
   autoFoldTabs: boolean
   autoFoldTabsExcept: (typeof SETTINGS_OPTIONS.autoFoldTabsExcept)[number]
   autoExpandTabs: boolean
@@ -196,7 +202,8 @@ export interface SettingsState {
   oldBookmarksAfterSave: (typeof SETTINGS_OPTIONS.oldBookmarksAfterSave)[number]
 
   // History
-  loadHistoryOnDemand: boolean
+  // loadHistoryOnDemand: boolean
+  historyTitleUpdInterval: number
 
   // Appearance
   fontSize: (typeof SETTINGS_OPTIONS.fontSize)[number]

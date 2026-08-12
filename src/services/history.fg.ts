@@ -31,6 +31,7 @@ export let filtered: T.Visit[] | undefined = undefined
 export const setFiltered = (f: T.Visit[]) => (filtered = f)
 export const clearFiltered = () => (filtered = undefined)
 export let byId: Record<ID, T.Visit> = {}
+const lastVisitsByNHIID = new Map<string, T.Visit>()
 
 export let ready = false
 export const setReadyState = (r: boolean) => (ready = r)
@@ -74,7 +75,7 @@ export function createVisit(
 
   let domain
   if (itemDomain) domain = itemDomain
-  else domain = Utils.getDomainOf(nItem.url)
+  else domain = Utils.getHostname(nItem.url)
 
   let decodedUrl
   if (itemDecodedUrl) decodedUrl = itemDecodedUrl
@@ -154,6 +155,7 @@ export function unload(): void {
   allLoaded = false
   visits = []
   byId = {}
+  lastVisitsByNHIID.clear()
 
   const historyPanel = Sidebar.panelsById.history
   if (historyPanel) historyPanel.reactive.ready = historyPanel.ready = false
@@ -292,6 +294,7 @@ export async function normalizeHistory(
         if (before !== undefined && vVisit.time > before) continue
         normalized.push(vVisit)
         History.byId[vVisit.id] = vVisit
+        if (!lastVisitsByNHIID.has(item.id)) lastVisitsByNHIID.set(item.id, vVisit)
       }
     } else {
       if (!iVisit) continue
@@ -300,6 +303,7 @@ export async function normalizeHistory(
       if (before !== undefined && iVisit.time > before) continue
       normalized.push(iVisit)
       History.byId[iVisit.id] = iVisit
+      if (!lastVisitsByNHIID.has(item.id)) lastVisitsByNHIID.set(item.id, iVisit)
     }
   }
 
@@ -382,6 +386,7 @@ function onVisit(item: T.NativeHistoryItem): void {
 
   History.visits.unshift(visit)
   History.byId[visit.id] = visit
+  lastVisitsByNHIID.set(item.id, visit)
 
   if (sortNeeded) {
     History.visits.sort((a, b) => b.time - a.time)
@@ -411,9 +416,13 @@ function onRemoved(info: browser.history.RemoveDetails): void {
   if (!Search.active) reactive.days = History.recalcDays()
 }
 
+const changesBuf = new Map<T.Visit, string>()
 function onTitleChange(info: browser.history.TitleChangeDetails): void {
-  const visit = History.visits.find(v => v.id.startsWith(info.id))
-  if (visit) {
+  const visit = lastVisitsByNHIID.get(info.id)
+  if (!visit) return
+  if (Settings.state.historyTitleUpdInterval > 0) {
+    changesBuf.set(visit, info.title)
+  } else {
     visit.reactive.title = visit.title = info.title
     visit.reactive.tooltip = visit.tooltip = visit.title + '\n---\n' + visit.decodedUrl
     if (visit.noTitle) {
@@ -423,11 +432,36 @@ function onTitleChange(info: browser.history.TitleChangeDetails): void {
   }
 }
 
+function updateVisitTitle(title: string, visit: T.Visit) {
+  visit.reactive.title = visit.title = title
+  visit.reactive.tooltip = visit.tooltip = visit.title + '\n---\n' + visit.decodedUrl
+  if (visit.noTitle) {
+    visit.noTitle = false
+    if (!Search.active) recalcToday()
+  }
+}
+
+let titleUpdateInterval: number | undefined
+function startTitleChangeIntervalDebouncer() {
+  titleUpdateInterval = setInterval(() => {
+    if (!changesBuf.size) return
+    changesBuf.forEach(updateVisitTitle)
+    changesBuf.clear()
+  }, Settings.state.historyTitleUpdInterval)
+}
+
+function stopTitleChangeIntervalDebouncer() {
+  clearInterval(titleUpdateInterval)
+}
+
 export function setupListeners(): void {
   if (!browser.history) return
   browser.history.onVisited.addListener(onVisit)
   browser.history.onVisitRemoved.addListener(onRemoved)
   browser.history.onTitleChanged.addListener(onTitleChange)
+  if (Settings.state.historyTitleUpdInterval > 0) {
+    startTitleChangeIntervalDebouncer()
+  }
 }
 
 export function resetListeners(): void {
@@ -435,6 +469,7 @@ export function resetListeners(): void {
   browser.history.onVisited.removeListener(onVisit)
   browser.history.onVisitRemoved.removeListener(onRemoved)
   browser.history.onTitleChanged.removeListener(onTitleChange)
+  stopTitleChangeIntervalDebouncer()
 }
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }

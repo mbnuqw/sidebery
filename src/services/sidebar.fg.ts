@@ -75,9 +75,27 @@ export let reactive: SidebarReactiveState = {
 export let activePanelId = D.NOID
 export const setActivePanelId = (id: ID) => {
   if (activePanelId === id) return
+  const prevId = activePanelId
   reactive.activePanelId = activePanelId = id
   IPC.bg('setActivePanelId', Windows.id, id)
   saveActivePanelDebounced(1000)
+
+  const panel = panelsById[id]
+  const prevPanel = panelsById[prevId]
+  if (panel && prevPanel) {
+    if (panel.index > prevPanel.index) {
+      panel.reactive.pos = 'rc'
+      prevPanel.reactive.pos = 'l'
+    } else if (panel.index < prevPanel.index) {
+      panel.reactive.pos = 'lc'
+      prevPanel.reactive.pos = 'r'
+    } else {
+      panel.reactive.pos = 'c'
+      prevPanel.reactive.pos = 'h'
+    }
+  } else if (panel) {
+    panel.reactive.pos = 'c'
+  }
 }
 export let prevActivePanelId = D.NOID
 export let prevTabsPanelId = D.NOID
@@ -495,6 +513,8 @@ function recalcVisibleTabsInPanel(panelId: ID) {
     }
     panel.reactive.visibleTabIds = visibleTabIds
   }
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 export function addToVisibleTabs(panelId: ID, tab: T.Tab) {
@@ -518,6 +538,8 @@ export function addToVisibleTabs(panelId: ID, tab: T.Tab) {
   if (index === -1) return recalcVisibleTabsInPanel(panelId)
 
   panel.reactive.visibleTabIds.splice(index - invisibleShift, 0, tabId)
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
@@ -527,6 +549,8 @@ export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
   const visibleTabIds = panel.reactive.visibleTabIds
   const index = visibleTabIds.indexOf(tabId)
   if (index !== -1) visibleTabIds.splice(index, 1)
+
+  if (activePanelId === panelId) requestAnimationFrame(() => Tabs.calcStickyTabs(panel))
 }
 
 const checkDiscardedTabsInPanelTimeouts = new Map<ID, number>()
@@ -856,6 +880,7 @@ export function recalcPanels(): void {
     if (id === 'create_snapshot') continue
     if (id === 'remute_audio_tabs') continue
     if (id === 'collapse') continue
+    if (id === 'expand') continue
     if (id === 'hdn') continue
 
     const panel = panelsById[id]
@@ -2725,16 +2750,6 @@ export function updateMediaStateOfPanel(panelId: ID, tab?: T.Tab) {
   else if (Tabs.ready) panel.reactive.mediaState = E.MediaState.Silent
 }
 
-export function updateUpdatedStateOfPanel(panel?: T.Panel) {
-  if (!Utils.isTabsPanel(panel)) return
-
-  const updatedTabIds: ID[] = []
-  panel.pinnedTabs.forEach(t => t.updated && updatedTabIds.push(t.id))
-  panel.tabs.forEach(t => t.updated && updatedTabIds.push(t.id))
-  panel.updatedTabs = updatedTabIds
-  panel.reactive.updated = updatedTabIds.length > 0
-}
-
 export function getRecentTabsPanelId(): ID {
   let panelId = activePanelId
   let panel: T.Panel | undefined = panelsById[panelId]
@@ -2858,4 +2873,11 @@ export function resetOrCancelInteraction() {
 
   // Site config popup
   if (Popups.reactive.siteConfigPopup) Popups.closeSiteConfigPopup()
+}
+
+export function resetPanelsPos() {
+  for (const panel of panels) {
+    if (panel.id === activePanelId) panel.reactive.pos = 'c'
+    else panel.reactive.pos = 'h'
+  }
 }

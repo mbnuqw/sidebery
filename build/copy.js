@@ -21,9 +21,6 @@ const COPY = {
   './src/assets/proxy-native.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/window-native.svg': `${Utils.ADDON_PATH}/assets/`,
 }
-if (!Utils.BUNDLE_VUE) {
-  COPY[`./node_modules/vue/dist/${Utils.VUE_DIST}`] = `${Utils.ADDON_PATH}/vendor/`
-}
 
 /**
  * ...

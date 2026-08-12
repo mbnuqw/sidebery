@@ -711,6 +711,17 @@ export const sidebarTranslations: Translations = {
     zh_TW: '全部折疊',
     ja: 'すべて折りたたむ',
   },
+  'nav.btn_expand': {
+    en: 'Expand all',
+    de: 'Alle ausklappen',
+    fr: 'Déplier tout',
+    hu: 'Minden ág megnyitása',
+    pl: 'Rozwiń wszystko',
+    ru: 'Развернуть все',
+    zh_CN: '全部展开',
+    zh_TW: '全部展開',
+    ja: 'すべて展開する',
+  },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
     de: 'Mittelklick: Schließe Tabs',
@@ -1255,11 +1266,33 @@ export const sidebarTranslations: Translations = {
     zh: 'Cookie 已清除',
     ja: 'Cookie がクリアされました',
   },
+  'notif.switch_to_tab': {
+    en: 'Switch to tab',
+    de: 'Zu Tab wechseln',
+    fr: `Passer à l'onglet`,
+    hu: 'Váltás a lapra',
+    pl: 'Przełącz na kartę',
+    ru: 'Перейти на вкладку',
+    zh_CN: '切换到标签页',
+    zh_TW: '切換至分頁',
+    ja: 'タブに切り替える',
+  },
 
   // ---
   // -- Colors
   // -
   'colors.toolbar': {
+    en: 'Default',
+    de: 'Standard',
+    fr: 'Par défaut',
+    hu: 'alapértelmezett',
+    pl: 'Domyślny',
+    ru: 'Стандартный',
+    zh_CN: '默认',
+    zh_TW: '預設',
+    ja: 'デフォルト',
+  },
+  'colors.gray': {
     en: 'Default',
     de: 'Standard',
     fr: 'Par défaut',
@@ -1291,6 +1324,17 @@ export const sidebarTranslations: Translations = {
     zh_CN: '青绿色',
     zh_TW: '青綠色',
     ja: 'ターコイズ',
+  },
+  'colors.cyan': {
+    en: 'Cyan',
+    de: 'Cyan',
+    fr: 'Cyan',
+    hu: 'cián',
+    pl: 'Cyjan',
+    ru: 'Циан',
+    zh_CN: '青色',
+    zh_TW: '青色',
+    ja: 'シアン',
   },
   'colors.green': {
     en: 'Green',

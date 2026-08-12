@@ -78,7 +78,13 @@ async function main(): Promise<void> {
     updWindowPreface: Windows.updWindowPreface,
   })
 
-  await Promise.all([Windows.load(), Settings.load(), Permissions.load(), Info.loadVersionInfo()])
+  await Promise.all([
+    Windows.load(),
+    Settings.load(),
+    Permissions.load(),
+    Info.loadVersionInfo(),
+    Info.loadBrowserInfo(),
+  ])
 
   IPC.setWinId(Windows.id)
   Logs.setWinId(Windows.id)
@@ -126,7 +132,7 @@ async function main(): Promise<void> {
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
-  const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
+  const initHistory = Utils.isHistoryPanel(actPanel)
   const initSync = Utils.isSyncPanel(actPanel)
   if (Sidebar.hasBookmarks && initBookmarks) Bookmarks.load()
   if (Sidebar.hasHistory && initHistory) History.load()

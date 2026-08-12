@@ -86,7 +86,7 @@ export let reactive: SetupPageReactiveState = {
     { active: false, name: 'settings_tabs_preview', lvl: 2 },
     { active: false, name: 'settings_tabs_native', lvl: 2 },
     { active: false, name: 'settings_bookmarks', lvl: 1 },
-    { active: false, name: 'settings_history', lvl: 1 },
+    // { active: false, name: 'settings_history', lvl: 1 },
     { active: false, name: 'settings_appearance', lvl: 1 },
     { active: false, name: 'settings_mouse', lvl: 1 },
     { active: false, name: 'settings_mouse_nav', lvl: 2 },

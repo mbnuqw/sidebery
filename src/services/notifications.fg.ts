@@ -23,7 +23,9 @@ export function err(title: string, details?: string): Notification {
 }
 
 export function notify(config: Notification, timeout = 5555): Notification {
-  const id = Utils.uid()
+  const id = config.id ?? Utils.uid()
+  const existedNotification = reactive.list.find(n => n.id === id)
+  if (existedNotification) return existedNotification
   config.id = id
   if (!config.lvl) config.lvl = 'info'
   if (!config.timeout) config.timeout = timeout

@@ -8,6 +8,9 @@
   --tabs-indent: 10px
   --tabs-font: rem(15) var(--general-font-family)
   --tabs-count-font: rem(9) var(--general-font-family)
+  --tabs-badge-min-size: 6px
+  --tabs-badge-value-padding: 0px 3px
+  --tabs-badge-value-font: rem(8) var(--general-font-family)
   --tabs-border-radius: var(--general-border-radius)
   --tabs-inner-gap: 5px
   --tabs-close-btn-margin: 2px
@@ -39,9 +42,15 @@
 #root[data-frame-color-scheme="dark"]
   --tabs-progress-bg: #ffffff16
   --tabs-lvl-opacity: .16
+  --tabs-notification-badge-dot-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-fg: #ffffff
 #root[data-frame-color-scheme="light"]
   --tabs-progress-bg: #00000016
   --tabs-lvl-opacity: .3
+  --tabs-notification-badge-dot-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-bg: rgb(217, 83, 79)
+  --tabs-notification-badge-count-fg: #ffffff
 
 .Tab
   position: relative
@@ -51,7 +60,7 @@
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
-  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
 
   padding-left: calc(var(--tabs-indent) * 16)
   &[data-lvl="0"]
@@ -406,6 +415,22 @@
   opacity: 1
   transform: rotateZ(-90deg)
 
+.Tab[data-urgent-descendant="true"] .fav .exp:before
+  content: ''
+  position: absolute
+  left: 9px
+  top: 9px
+  width: 6px
+  height: 6px
+  background-color: var(--badge-urgent-bg)
+  box-shadow: 0 0 0 1px var(--frame-bg)
+  opacity: 0
+  clip-path: polygon(0% 0, 100% 0, 50% 50%)
+  transition: opacity var(--d-fast)
+
+.Tab[data-folded="true"] .fav .exp:before
+  opacity: 1
+
 // ---
 // -- Progress spinner
 // -
@@ -437,35 +462,55 @@
   animation: rotating-animation .5s infinite linear
 
 // ---
-// -- Update / highlight badge
+// -- Badge
 // -
 .Tab .badge
+  position: absolute
+  min-height: var(--tabs-badge-min-size)
+  min-width: var(--tabs-badge-min-size)
+  right: 0
+  top: 0
+  font: var(--tabs-badge-value-font)
+  line-height: 1.6
+  color: var(--fg, var(--badge-fg))
+  background-color: var(--bg, var(--badge-bg))
+  padding: var(--tabs-badge-value-padding)
+  border-radius: 9999px
+  box-shadow: 0 0 0 1px var(--frame-bg)
+  transform: translate(50%, -50%)
+  z-index: 1
+  pointer-events: none
+  white-space: nowrap
+  &[data-urgent="true"]
+    color: var(--fg, var(--badge-urgent-fg))
+    background-color: var(--bg, var(--badge-urgent-bg))
+
+.Tab[data-pin="true"] .badge
+  max-width: calc(100% + 8px)
+  text-overflow: ellipsis
+  overflow: hidden
+  transform: translate(3px, -50%)
+
+.Tab[data-pin="true"][data-audible="true"] .badge
+.Tab[data-pin="true"][data-muted="true"] .badge
+.Tab[data-pin="true"][data-paused="true"] .badge
+  display: none
+
+// ---
+// -- Pending mark
+// -
+.Tab .pending-mark
   position: absolute
   width: 6px
   height: 6px
   right: -1px
   bottom: -1px
   border-radius: 50%
-  background-color: var(--status-notice)
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm), background-color var(--d-norm)
-
-.Tab:not([data-loading="true"])[data-updated="true"] .badge
-.Tab:not([data-loading="true"])[data-pending="true"] .badge
-.Tab[data-loading="ok"] .badge
-.Tab[data-loading="err"] .badge
-  opacity: 1
-  transform: scale(1, 1)
-
-.Tab:not([data-loading="true"])[data-pending="true"] .badge
   background-color: var(--tabs-normal-fg)
-
-.Tab[data-loading="ok"] .badge
-  background-color: var(--status-ok)
-
-.Tab[data-loading="err"] .badge
-  background-color: var(--status-err)
+  opacity: 0
+  transition: opacity var(--d-norm)
+.Tab[data-loading="false"][data-pending="true"] .pending-mark
+  opacity: 1
 
 // ---
 // -- Count of descendants

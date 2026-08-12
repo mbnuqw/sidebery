@@ -103,7 +103,7 @@ export async function move(
   // Gather tabs by type (pinned/normal), get initial info
   const dstTab = Tabs.list[dst.index] as T.Tab | undefined
   const dstParent = Tabs.byId[dst.parentId]
-  const srcParents: T.Tab[] = []
+  const srcParents = new Set<T.Tab>()
   const pinnedTabs: T.Tab[] = []
   const normalTabs: T.Tab[] = []
   let toPin: T.Tab[] | undefined
@@ -185,12 +185,12 @@ export async function move(
 
   const ids = tabs.map(t => t.id)
   const orphansToSave: ID[] = []
+  let urgentTabs: T.Tab[] | undefined
   let dstIndexIncluded = -1
   let prevIndex = 0
   let panelIsChanged = false
   let isActive = false
   let isMediaActive = false
-  let isUpdated = false
   let mediaPrevPanelId
   let srcPanelId
   for (const tab of tabs) {
@@ -211,7 +211,7 @@ export async function move(
     // Set src parents
     if (tab.parentId !== NOID && parentStayStill) {
       const p = Tabs.byId[tab.parentId]
-      if (p) srcParents.push(p)
+      if (p) srcParents.add(p)
     }
 
     // Cut tab from old index in sidebery list
@@ -226,6 +226,13 @@ export async function move(
     // Get dstIndex if target tab included in moving tabs list
     if (dstTab && dstTab.id === tab.id) dstIndexIncluded = index
 
+    // Remove badge urgency from old ancestors / panel
+    if (tab.badgeUrgent) {
+      if (!urgentTabs) urgentTabs = [tab]
+      else urgentTabs.push(tab)
+      Tabs.propagateBadgeUrgency(tab, false)
+    }
+
     // Update panelId
     if (dst.panelId !== undefined && tab.panelId !== dst.panelId) {
       if (!panelIsChanged) panelIsChanged = true
@@ -236,9 +243,6 @@ export async function move(
         isMediaActive = true
         mediaPrevPanelId = tab.panelId
       }
-
-      // Check if the "updated" state of the panels needs to be updated
-      if (!isUpdated && tab.updated) isUpdated = true
 
       tab.panelId = dst.panelId
     }
@@ -274,13 +278,10 @@ export async function move(
     Sidebar.updateMediaStateOfPanelDebounced(100, dst.panelId)
   }
 
-  // Recalc "updated" badge of panels
-  if (isUpdated) {
-    if (srcPanelId) {
-      Sidebar.updateUpdatedStateOfPanel(Sidebar.panelsById[srcPanelId])
-    }
-    if (dst.panelId && dst.panelId !== srcPanelId) {
-      Sidebar.updateUpdatedStateOfPanel(Sidebar.panelsById[dst.panelId])
+  // Add badge urgency to new ancestors / panel
+  if (urgentTabs) {
+    for (const tab of urgentTabs) {
+      Tabs.propagateBadgeUrgency(tab)
     }
   }
 
@@ -321,7 +322,7 @@ export async function move(
     Tabs.autoDiscardFolded(dstParent)
   }
 
-  // Update group pages
+  // Update group pages and recalc urgency of source parent tabs
   if (dstParent?.isGroup && !dstParent.discarded) Tabs.updateGroupOrItsChild(dstParent, NOID)
   for (const p of srcParents) {
     if (p?.isGroup && !p.discarded) Tabs.updateGroupOrItsChild(p, NOID)
@@ -463,7 +464,6 @@ export async function moveToThisWin(
   const dstParent = Tabs.byId[dst.parentId ?? NOID]
   const panelIsActive = panel.id === Sidebar.activePanelId
   const groups: T.Tab[] = []
-  const updatedTabIds: ID[] = []
 
   let updMediaBadges = false
   let updNativeTabsVisibility = Settings.state.hideInact && !panelIsActive
@@ -506,6 +506,8 @@ export async function moveToThisWin(
     if (tab.isParent && !tabs.find(t => t.parentId === tab.id)) {
       tab.reactive.isParent = tab.isParent = false
       tab.reactive.folded = tab.folded = false
+      if (tab.urgentTabIds?.size) tab.reactive.hasUrgentDescendant = false
+      tab.urgentTabIds?.clear()
     }
 
     // Check if media badges recalc is needed
@@ -513,9 +515,9 @@ export async function moveToThisWin(
       updMediaBadges = true
     }
 
-    // Collect ids of tabs with updated title
-    if (tab.updated) {
-      updatedTabIds.push(tab.id)
+    // Propagate urgency
+    if (tab.badgeUrgent) {
+      Tabs.propagateBadgeUrgency(tab)
     }
 
     // Set tab to activate
@@ -561,12 +563,6 @@ export async function moveToThisWin(
   Tabs.updateTabsTree()
   Sidebar.recalcTabsPanels()
   if (!probeTab.pinned) Sidebar.recalcVisibleTabs(panel.id)
-
-  // Recalc updated flag
-  if (Utils.isTabsPanel(panel) && updatedTabIds.length) {
-    panel.updatedTabs.push(...updatedTabIds)
-    panel.reactive.updated = panel.updatedTabs.length > 0
-  }
 
   // Save new tabs data / cache
   tabs.forEach(tab => Tabs.saveTabData(tab.id, true))
@@ -681,6 +677,11 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
 
     // Cleanup IPPC
     if (tab.isGroup) IPPC.reset(tab)
+
+    // Recalc urgency for ancestors
+    if (tab.badgeUrgent) {
+      Tabs.propagateBadgeUrgency(tab, false)
+    }
   }
 
   // Update/Recalc local state
@@ -689,12 +690,6 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
   Sidebar.recalcTabsPanels()
   if (!probeTab.pinned) Sidebar.recalcVisibleTabs(panel.id)
   if (toSave.length) toSave.forEach(id => Tabs.saveTabData(id))
-
-  // Remove updated flag
-  if (Utils.isTabsPanel(panel) && panel.updatedTabs.length) {
-    panel.updatedTabs = panel.updatedTabs.filter(id => !tabIds.includes(id))
-    panel.reactive.updated = panel.updatedTabs.length > 0
-  }
 
   // Save new tabs cache
   Tabs.cacheTabsData()

@@ -59,7 +59,11 @@ export class MTab implements Tab {
     sel: false,
     selLock: false,
     warn: false,
-    updated: false,
+    badge: false,
+    badgeUrgent: false,
+    badgeBg: null,
+    badgeFg: null,
+    hasUrgentDescendant: false,
     unread: false,
     flash: false,
     color: null,
@@ -104,6 +108,12 @@ export class MTab implements Tab {
   url: string = 'about:newtab'
   windowId: ID = 1
   groupId?: ID | undefined
+  splitViewId?: number | undefined
+  badge: boolean = false
+  badgeUrgent: boolean = false
+  lastActivity?: number | undefined
+  urgentTabIds?: Set<ID> | undefined
+  el?: HTMLElement | undefined
 
   constructor(ptab?: Partial<Tab>) {
     if (ptab) {
