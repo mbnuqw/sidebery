@@ -502,7 +502,6 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
     normLimit = limit * 1024
   }
 
-  const encoder = new TextEncoder()
   let index = snapshots.length
   let accum = 0
   let sizeAccum = 0
