@@ -232,12 +232,12 @@ export function getHostname(url: string): string {
 }
 
 /**
- * Get domains of the url
+ * Get domain of the hostname
  */
-export function getDomain(hostname: string, withPubSuffix: boolean, domains: number): string {
-  if (!withPubSuffix && domains === 0) return ''
-  if (withPubSuffix && domains === -1) return hostname
-  if (withPubSuffix && domains === 1) {
+export function getDomain(hostname: string, withPubSuffix: boolean, depth: number): string {
+  if (!withPubSuffix && depth === 0) return ''
+  if (withPubSuffix && depth === -1) return hostname
+  if (withPubSuffix && depth === 1) {
     try {
       const result = browser.publicSuffix?.getDomain(hostname)
       if (result) return result
@@ -254,8 +254,8 @@ export function getDomain(hostname: string, withPubSuffix: boolean, domains: num
   let s = pubSuffix ? hostname.length - pubSuffix.length - 1 : hostname.lastIndexOf('.')
   let e = withPubSuffix ? hostname.length : s
   if (e < 0) e = 0
-  if (domains < 0) domains = 127
-  while (s > 0 && domains-- > 0) {
+  if (depth < 0) depth = 127
+  while (s > 0 && depth-- > 0) {
     s = hostname.lastIndexOf('.', s - 1)
   }
   if (s < -1) s = -1
