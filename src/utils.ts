@@ -231,6 +231,38 @@ export function getDomainOf(url: string): string {
   return D.DOMAIN_RE.exec(url)?.[1] ?? url
 }
 
+/**
+ * Get domains of the url
+ */
+export function getDomain(hostname: string, withPubSuffix: boolean, domains: number): string {
+  if (!withPubSuffix && domains === 0) return ''
+  if (withPubSuffix && domains === -1) return hostname
+  if (withPubSuffix && domains === 1) {
+    try {
+      const result = browser.publicSuffix?.getDomain(hostname)
+      if (result) return result
+    } catch {
+      // noop
+    }
+  }
+  let pubSuffix
+  try {
+    pubSuffix = browser.publicSuffix?.getKnownSuffix(hostname) ?? undefined
+  } catch {
+    // noop
+  }
+  let s = pubSuffix ? hostname.length - pubSuffix.length - 1 : hostname.lastIndexOf('.')
+  let e = withPubSuffix ? hostname.length : s
+  if (e < 0) e = 0
+  if (domains < 0) domains = 127
+  while (s > 0 && domains-- > 0) {
+    s = hostname.lastIndexOf('.', s - 1)
+  }
+  if (s < -1) s = -1
+  else if (s > e) s = e - 1
+  return hostname.slice(s + 1, e)
+}
+
 export function sameStart(a: string, b: string, limit: number) {
   const aLen = a.length
   const bLen = b.length
