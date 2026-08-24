@@ -43,6 +43,7 @@ import * as Sidebar from 'src/services/sidebar.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Windows from 'src/services/windows.fg'
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 import ScrollBox from 'src/components/scroll-box.vue'
 
 const state = reactive({
@@ -204,40 +205,55 @@ async function openTabs(targetTab: T.RecentlyClosedTabInfo, inactive: boolean, b
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  const dst: T.DstPlaceInfo = {
-    panelId,
-    discarded: inactive,
-    index: Tabs.getIndexForNewTab(panel),
-    parentId: Tabs.getParentForNewTab(panel),
+  // Try to restore tabs via browser.sessions.restore() to preserve navigation history
+  let restoredViaSession = false
+  if (!branch) {
+    restoredViaSession = await restoreViaSession(targetTab, inactive)
+  } else {
+    // For branches, try to restore each tab individually via sessions
+    const sessionResults = await Promise.all(rcTabs.map(rct => restoreViaSession(rct, true)))
+    restoredViaSession = sessionResults.some(r => r)
+
+    // Fallback: open tabs that couldn't be restored via session
+    const failedTabs = rcTabs.filter((_, i) => !sessionResults[i])
+    if (failedTabs.length > 0) {
+      const dst: T.DstPlaceInfo = {
+        panelId,
+        discarded: true,
+        index: Tabs.getIndexForNewTab(panel),
+        parentId: Tabs.getParentForNewTab(panel),
+      }
+      const tabsToOpen: T.ItemInfo[] = failedTabs.map(rct => ({
+        id: rct.id,
+        title: rct.title,
+        url: rct.url,
+        container: rct.containerId,
+        parentId: rct.parentId,
+      }))
+      await Tabs.open(tabsToOpen, dst)
+    }
   }
 
-  const tabsToOpen: T.ItemInfo[] = []
-  for (const rct of rcTabs) {
-    tabsToOpen.push({
+  // Fallback for single tab: use Tabs.open() if session restore failed
+  if (!branch && !restoredViaSession) {
+    const dst: T.DstPlaceInfo = {
+      panelId,
+      discarded: inactive,
+      index: Tabs.getIndexForNewTab(panel),
+      parentId: Tabs.getParentForNewTab(panel),
+    }
+    const tabsToOpen: T.ItemInfo[] = rcTabs.map(rct => ({
       id: rct.id,
       title: rct.title,
       url: rct.url,
       container: rct.containerId,
       parentId: rct.parentId,
-    })
+    }))
+    if (!inactive && tabsToOpen.length) tabsToOpen[0].active = true
+    await Tabs.open(tabsToOpen, dst)
   }
-  if (!inactive && tabsToOpen.length) tabsToOpen[0].active = true
 
-  await Tabs.open(tabsToOpen, dst)
-
-  // Trigger flash animation
-  // const els = []
-  // for (const tab of tabs) {
-  //   const id = `rmt${tab.id}`
-  //   const tabEl = document.getElementById(id)
-  //   if (!tabEl) continue
-  //   tabEl.setAttribute('data-flash', 'true')
-  //   els.push(tabEl)
-  // }
-  // await Utils.sleep(500)
-  // els.forEach(el => el.removeAttribute('data-flash'))
-
-  // Or remove from list
+  // Remove from list
   if (rcTabs.length === 1) tabsBranch.forEach(t => t.lvl--)
   for (const tab of rcTabs) {
     const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.id)
@@ -247,5 +263,32 @@ async function openTabs(targetTab: T.RecentlyClosedTabInfo, inactive: boolean, b
   if (!Tabs.recentlyRemoved.length) Sidebar.closeSubPanel()
 
   Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
+}
+
+/**
+ * Try to restore a recently closed tab via browser.sessions.restore(),
+ * which preserves the tab's full navigation history.
+ * Returns true if the tab was successfully restored via session.
+ */
+async function restoreViaSession(
+  tab: T.RecentlyClosedTabInfo,
+  inactive: boolean
+): Promise<boolean> {
+  try {
+    const recentlyClosed = await browser.sessions.getRecentlyClosed({ maxResults: 25 })
+
+    const match = recentlyClosed.find(
+      session => session.tab?.url === tab.url && session.tab?.sessionId
+    )
+
+    if (match?.tab?.sessionId) {
+      await browser.sessions.restore(match.tab.sessionId)
+      return true
+    }
+  } catch (err) {
+    Logs.err('ClosedTabs.restoreViaSession: Failed to restore tab via session:', err)
+  }
+
+  return false
 }
 </script>
