@@ -7982,6 +7982,26 @@ Available parameters:
     zh_TW: '刪除',
     ja: 'スナップショットを削除',
   },
+  'snapshot.btn_make_permanent': {
+    en: 'Make snapshot permanent',
+    ru: 'Сделать снепшот постоянным',
+  },
+  'snapshot.btn_make_temporary': {
+    en: 'Make snapshot temporary',
+    ru: 'Сделать снепшот временным',
+  },
+  'snapshot.confirm_delete_permanent': {
+    en: 'Are you sure you want to delete this permanent snapshot?',
+    ru: 'Вы уверены, что хотите удалить этот постоянный снепшот?',
+  },
+  'snapshot.permanent_snapshots_header': {
+    en: 'Permanent Snapshots',
+    ru: 'Постоянные снепшоты',
+  },
+  'snapshot.temporary_snapshots_header': {
+    en: 'Temporary Snapshots',
+    ru: 'Временные снепшоты',
+  },
   'snapshot.window_title': {
     en: 'Window',
     de: 'Fenster',
