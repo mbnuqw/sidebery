@@ -112,7 +112,14 @@ function onKD(e: KeyboardEvent): void {
   }
 }
 
-function onInput(e: Event) {
+function onInput(e: InputEvent) {
+  // Ignore text entered during composition, before the real text is committed.
+  // For example, when using an Input Method Editor for typing Japanese, you enter temporary
+  // latin characters that you convert into the appropriate kanas or kanjis, and then validate.
+  // Also, on some systems, the usual dead keys work like that.
+  // https://developer.mozilla.org/en-US/docs/Web/API/InputEvent/isComposing
+  if (e.isComposing) return
+
   const rawQuery = (e.target as HTMLInputElement | null)?.value ?? ''
 
   if (Settings.state.searchInputTimeout > 0) {
