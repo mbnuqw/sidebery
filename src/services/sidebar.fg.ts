@@ -129,7 +129,6 @@ export let height = 0
 export let scrollAreaRightX = 0
 export let scrollAreaLeftX = 0
 export let panelsTop = 0
-export let tabHeight = 0
 export let tabMargin = 0
 export let bookmarkHeight = 0
 export let folderHeight = 0
@@ -319,9 +318,6 @@ export function recalcElementSizes(): void {
 
   const nbmRaw = compStyle.getPropertyValue('--nav-btn-margin')
   reactive.navBtnMargin = Utils.parseCSSNum(nbmRaw.trim())[0]
-
-  const thRaw = compStyle.getPropertyValue('--tabs-height')
-  tabHeight = Utils.parseCSSNum(thRaw.trim())[0]
 
   const tmRaw = compStyle.getPropertyValue('--tabs-margin')
   tabMargin = Utils.parseCSSNum(tmRaw.trim())[0]
@@ -722,22 +718,15 @@ export function updateBounds(): void {
 function calcTabsBounds(panel: T.TabsPanel): T.ItemBounds[] {
   // Logs.info('Sidebar.calcTabsBounds', panel.id)
   const result: T.ItemBounds[] = []
-  const th = tabHeight
   const tm = tabMargin
-  if (th === 0) return result
-  const half = th >> 1
-  const marginA = Math.floor(tm / 2)
-  const marginB = Math.ceil(tm / 2)
-  const insideA = (half >> 1) + marginB + 2
-  const insideB = (half >> 1) + marginB - 2
-
-  let overallHeight = -marginA
-  const tabs = panel?.filteredTabs ?? Tabs.list
-  const filtered = !!panel?.filteredTabs
-  for (const tab of tabs) {
-    if ((!filtered && tab.invisible) || tab.pinned) continue
-    if (tab.panelId !== panel.id) continue
-
+  const ids = panel.reactive.visibleTabIds
+  for (const id of ids) {
+    const tab = Tabs.byId[id]
+    if (!tab?.el) continue
+    const ot = tab.el.offsetTop
+    const oh = tab.el.offsetHeight - tm
+    const hh = oh >> 1
+    const hq = hh >> 1
     result.push({
       type: E.ItemBoundsType.Tab,
       id: tab.id,
@@ -746,14 +735,12 @@ function calcTabsBounds(panel: T.TabsPanel): T.ItemBounds[] {
       lvl: tab.lvl,
       folded: tab.folded,
       parent: tab.parentId,
-      start: overallHeight,
-      top: overallHeight + insideA,
-      center: overallHeight + marginA + half,
-      bottom: overallHeight + marginA + half + insideB,
-      end: overallHeight + th + tm,
+      start: ot,
+      top: ot + hq,
+      center: ot + hh,
+      bottom: ot + hh + hq,
+      end: ot + oh,
     })
-
-    overallHeight += th + tm
   }
   return result
 }
