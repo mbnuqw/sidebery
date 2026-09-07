@@ -6,8 +6,6 @@ import * as Settings from 'src/services/settings'
 import * as Tabs from 'src/services/tabs.fg'
 import { NOID, PRE_SCROLL } from 'src/defaults'
 
-export let blockedScrollPosition = false
-
 const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
 export function scrollToTab(id: ID, smooth?: boolean): void {
   const panel = Sidebar.panelsById[Sidebar.activePanelId]
@@ -47,55 +45,6 @@ export function scrollToTab(id: ID, smooth?: boolean): void {
   }
 }
 export const scrollToTabDebounced = Utils.debounce(scrollToTab)
-
-export function incrementScrollRetainer(panel: TabsPanel, count: number): void {
-  if (!panel.scrollEl) return
-
-  const scrollTop = panel.scrollEl.scrollTop
-  if (scrollTop === 0) return
-
-  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
-
-  if (panel.scrollRetainer === 0) {
-    const scrollHeight = panel.scrollEl.offsetHeight
-    const scrollableHeight = panel.scrollEl.scrollHeight
-    const changedHeight = count * tabFullHeight
-
-    const dy = scrollableHeight - scrollHeight - scrollTop - changedHeight
-    if (dy >= 0) return
-
-    panel.scrollRetainer = count
-    panel.reactive.scrollRetainerHeight = Math.abs(dy)
-    blockedScrollPosition = true
-  } else {
-    panel.scrollRetainer += count
-    panel.reactive.scrollRetainerHeight += count * tabFullHeight
-    blockedScrollPosition = true
-  }
-}
-
-export function decrementScrollRetainer(panel: TabsPanel, count = 1): void {
-  if (panel.scrollRetainer <= 0) {
-    blockedScrollPosition = false
-    return
-  }
-
-  const scrollRetainerHeight = panel.reactive.scrollRetainerHeight
-  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
-  let decrHeight = count * tabFullHeight
-  if (decrHeight > scrollRetainerHeight) decrHeight = scrollRetainerHeight
-
-  panel.scrollRetainer -= count
-  if (panel.scrollRetainer < 0) panel.scrollRetainer = 0
-  panel.reactive.scrollRetainerHeight -= decrHeight
-  blockedScrollPosition = true
-}
-
-export function resetScrollRetainer(panel: TabsPanel) {
-  panel.scrollRetainer = 0
-  panel.reactive.scrollRetainerHeight = 0
-  blockedScrollPosition = false
-}
 
 const stickyBranch: Tab[] = []
 const stickyTopOffsets: (number | undefined)[] = []

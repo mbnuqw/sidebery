@@ -135,6 +135,7 @@ export let bookmarkHeight = 0
 export let folderHeight = 0
 export let separatorHeight = 0
 export let bookmarkMargin = 0
+export let transitionDurNorm = 0
 export let switchingLock = false
 export let switchOnMouseLeave = false
 export const setSwitchOnMouseLeaveState = (s: boolean) => (switchOnMouseLeave = s)
@@ -336,6 +337,11 @@ export function recalcElementSizes(): void {
 
   const bmRaw = compStyle.getPropertyValue('--bookmarks-margin')
   bookmarkMargin = Utils.parseCSSNum(bmRaw.trim())[0]
+
+  const tdNormRaw = compStyle.getPropertyValue('--d-norm')
+  const [tdNormVal, tdNormUnit] = Utils.parseCSSNum(tdNormRaw.trim())
+  transitionDurNorm = tdNormVal
+  if (tdNormUnit === 's') transitionDurNorm *= 1000
 }
 let recalcElementSizesTimeout: number | undefined
 export function recalcElementSizesDebounced(delay = 500): void {

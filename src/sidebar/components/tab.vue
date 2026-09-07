@@ -147,7 +147,10 @@ onMounted(() => {
   if (tab.url !== 'about:blank') {
     Tabs.renderFavicon(tab)
   }
-  if (!props.sticky) tab.el = tabEl.value ?? undefined
+  if (!props.sticky) {
+    tab.el = tabEl.value ?? undefined
+    if (tab.el) tab.el.__sdbr_tabId = tab.id
+  }
 })
 
 function shouldBeConvertedToGroup(): boolean {

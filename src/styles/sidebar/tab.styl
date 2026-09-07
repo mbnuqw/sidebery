@@ -60,7 +60,7 @@
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
-  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
+  transition: transform var(--d-norm), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
 
   padding-left: calc(var(--tabs-indent) * 16)
   &[data-lvl="0"]
@@ -123,6 +123,9 @@
 
   &[data-active="true"]
     z-index: 20
+
+  &[data-active="true"]:has(+ .new-tab-btns)
+    z-index: 30
 
 .Tab.-hidden
   opacity: 0

@@ -351,10 +351,6 @@ export async function removeTabs(
     })
   }
 
-  if (!Selection.isSet() && visibleLen > 0) {
-    Tabs.incrementScrollRetainer(panel, lastTabToo ? visibleLen - 1 : visibleLen)
-  }
-
   // Reverse removing order (needed for reopening)
   toRemove.reverse()
 

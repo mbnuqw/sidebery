@@ -4,24 +4,16 @@
   @contextmenu.stop="onNavCtxMenu"
   @mousedown="onMouseDown"
   @mouseup.right="onRightMouseUp"
-  @mouseleave="onMouseLeave"
   @dblclick="onDoubleClick"
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="D.PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     StickyTabs.-top(:stickyTabIds="panel.reactive.stickyTabIdsTop")
-    AnimatedTabList(:panel="panel")
-      TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
-      NewTabBar(v-if="Settings.newTabBarPositionAfterTabs" :panel="panel")
-      .tab-space-filler(:style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }")
-      .bottom-space(:key="-9999999")
-
+    TabList(:panel="panel")
   NewTabBar(v-if="Settings.newTabBarPositionBottom" :panel="panel")
   StickyTabs.-bottom(v-if="!Settings.state.showNewTabBtns" :stickyTabIds="panel.reactive.stickyTabIdsBottom")
-
   .bottom-bar-space(v-if="bottomBarSpaceNeeded")
-
   PanelPlaceholder(
     :isMsg="Search.reactive.active && panel.reactive.filteredLen === 0"
     :msg="translate('panel.nothing_found')")
@@ -43,11 +35,10 @@ import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Search from 'src/services/search.fg'
 import PinnedTabsBar from './bar.pinned-tabs.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
-import TabComponent from './tab.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
 import DragAndDropPointer from './dnd-pointer.vue'
-import AnimatedTabList from './animated-tab-list.vue'
+import TabList from './tab-list.vue'
 import StickyTabs from './sticky-tabs.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
@@ -217,7 +208,6 @@ function onDoubleClick(e: MouseEvent) {
 }
 
 const onWheel = Mouse.getWheelDebouncer(E.WheelDirection.Vertical, (e: WheelEvent) => {
-  if (e.deltaY !== 0 && Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
 
@@ -248,8 +238,4 @@ const onWheel = Mouse.getWheelDebouncer(E.WheelDirection.Vertical, (e: WheelEven
     }
   }
 })
-
-function onMouseLeave() {
-  if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
-}
 </script>

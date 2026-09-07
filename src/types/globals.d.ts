@@ -23,6 +23,15 @@ interface Window {
   getSideberyState?: () => any
 }
 
+interface HTMLElement {
+  __sdbr_index?: number
+  __sdbr_deltaIndex?: number
+  __sdbr_prevOffsetTop?: number
+  __sdbr_sr?: boolean
+  __sdbr_tabId?: ID
+  __sdbr_ntbb?: boolean
+}
+
 type DeepReadonly<T> = {
   readonly [P in keyof T]: DeepReadonly<T[P]>
 }

@@ -161,7 +161,10 @@ const btns = computed<NewTabBtn[]>(() => {
 })
 
 onMounted(() => {
-  if (ntbbEl.value) props.panel.ntbbEl = ntbbEl.value
+  if (ntbbEl.value) {
+    ntbbEl.value.__sdbr_ntbb = true
+    props.panel.ntbbEl = ntbbEl.value
+  }
 })
 
 function createTooltip(btn: NewTabBtn): string {

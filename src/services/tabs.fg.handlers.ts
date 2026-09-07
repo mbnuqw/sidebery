@@ -659,8 +659,6 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     deferredActivationHandling.cb = null
   }
 
-  if (panel) Tabs.decrementScrollRetainer(panel)
-
   if (attached && (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted)) {
     Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
   }

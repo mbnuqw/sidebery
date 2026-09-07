@@ -1681,7 +1681,6 @@ export function foldTabsBranch(rootTabId: ID): void {
   Sidebar.recalcVisibleTabs(rootTab.panelId)
 
   rootTab.reactive.branchLen = len
-  Tabs.incrementScrollRetainer(panel, len)
 
   if (Settings.state.discardFolded) {
     Tabs.autoDiscardFolded(rootTab)
@@ -1760,7 +1759,6 @@ export function expTabsBranch(rootTabId: ID, noRecursive?: boolean, noAutoFold?:
   }
 
   if (!rootTab.invisible) Sidebar.recalcVisibleTabs(rootTab.panelId)
-  if (!rootTab.invisible && count) Tabs.decrementScrollRetainer(panel, count)
 
   // Auto fold
   if (Settings.state.autoFoldTabs) {
