@@ -126,7 +126,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   autoScrollToNewTab: true,
 
   // Pinned tabs
-  pinnedTabsPosition: 'panel',
+  pinnedTabsPosition: 'top',
   pinnedTabsList: false,
   pinnedAutoGroup: false,
   pinnedNoUnload: false,
