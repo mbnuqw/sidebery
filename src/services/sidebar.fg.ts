@@ -2426,7 +2426,6 @@ export async function convertToBookmarksPanel(
     bookmarksPanelConfig.autoConvert = panel.srcPanelConfig.autoConvert
   }
   let bookmarksPanel = createBookmarksPanel(bookmarksPanelConfig)
-  if (panel.srcPanelConfig) bookmarksPanel.id = panel.srcPanelConfig.id
   bookmarksPanel = addPanel(index, bookmarksPanel, true)
 
   // Preserve tree state (folded/expanded folders)
@@ -2438,6 +2437,7 @@ export async function convertToBookmarksPanel(
 
   recalcPanels()
   recalcBookmarksPanels()
+  Tabs.recalcMoveRules()
   saveSidebar(500)
 
   if (isActive) activatePanel(bookmarksPanel.id, false)
@@ -2517,10 +2517,10 @@ export async function convertToTabsPanel(
     tabsPanelConfig.newTabBtns = Utils.clone(bookmarksPanel.srcPanelConfig.newTabBtns)
   }
   let tabsPanel = createTabsPanel(tabsPanelConfig)
-  if (bookmarksPanel.srcPanelConfig) tabsPanel.id = bookmarksPanel.srcPanelConfig.id
   tabsPanel = addPanel(index, tabsPanel, true)
   recalcPanels()
   recalcTabsPanels()
+  Tabs.recalcMoveRules()
 
   if (isActive) activatePanel(tabsPanel.id, false)
   if (isFirstTabsPanel) await Tabs.load()
