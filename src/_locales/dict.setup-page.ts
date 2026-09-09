@@ -3219,6 +3219,21 @@ Available parameters:
     zh_TW: '分頁切換間的最小延遲（毫秒）',
     ja: 'タブ切り替え間の最小遅延（ミリ秒）',
   },
+  'settings.sticky_active_tab': {
+    en: 'Sticky active tab',
+  },
+  'settings.tabs_title_lines_max': {
+    en: 'Max count of title lines',
+  },
+  'settings.tabs_title_lines_br': {
+    en: 'Break the title by',
+  },
+  'settings.tabs_title_lines_br_w': {
+    en: 'words',
+  },
+  'settings.tabs_title_lines_br_c': {
+    en: 'characters',
+  },
 
   // - New tab position
   'settings.move_new_tab_pin': {
@@ -3633,9 +3648,6 @@ Available parameters:
     zh_CN: '无',
     zh_TW: '無',
     ja: 'なし',
-  },
-  'settings.sticky_active_tab': {
-    en: 'Sticky active tab',
   },
   'settings.sticky_ancestor_tabs': {
     en: 'Sticky ancestor tabs of the active tab',

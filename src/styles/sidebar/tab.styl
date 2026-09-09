@@ -14,7 +14,7 @@
   --tabs-border-radius: var(--general-border-radius)
   --tabs-inner-gap: 5px
   --tabs-close-btn-margin: 2px
-  --tabs-audio-btn-width: 22px
+  --tabs-audio-btn-size: 22px
   --tabs-normal-bg: var(--frame-el-bg)
   --tabs-normal-fg: var(--frame-fg)
   --tabs-activated-bg: var(--active-el-bg)
@@ -24,6 +24,10 @@
   --tabs-activated-color-layer-opacity: .3
   --tabs-discarded-favicon-opacity: .48
   --tabs-discarded-title-opacity: .56
+
+  --tabs-body-padding: 2px
+  --tabs-title-line-height: 20px
+  --tabs-title-padding-vert: 3px
 #root[data-density="compact"]
   --tabs-pinned-height: 28px
   --tabs-pinned-width: 28px
@@ -31,7 +35,11 @@
   --tabs-indent: 8px
   --tabs-inner-gap: 4px
   --tabs-close-btn-margin: 1px
-  --tabs-audio-btn-width: 20px
+  --tabs-audio-btn-size: 20px
+
+  --tabs-body-padding: 2px
+  --tabs-title-line-height: 18px
+  --tabs-title-padding-vert: 3px
 #root[data-density="loose"]
   --tabs-pinned-height: 32px
   --tabs-pinned-width: 32px
@@ -39,6 +47,10 @@
   --tabs-indent: 12px
   --tabs-inner-gap: 6px
   --tabs-close-btn-margin: 3px
+
+  --tabs-body-padding: 2px
+  --tabs-title-line-height: 22px
+  --tabs-title-padding-vert: 3px
 #root[data-frame-color-scheme="dark"]
   --tabs-progress-bg: #ffffff16
   --tabs-lvl-opacity: .16
@@ -53,14 +65,22 @@
   --tabs-notification-badge-count-fg: #ffffff
 
 .Tab
+  --tabs-close-btn-max-width: calc(var(--tabs-title-line-height) + var(--tabs-title-padding-vert) * 2 - var(--tabs-close-btn-margin))
+  --tabs-fav-margin: calc((var(--tabs-title-line-height) + var(--tabs-title-padding-vert) * 2 - 16px) / 2)
+  --tabs-audio-margin: calc((var(--tabs-title-line-height) + var(--tabs-title-padding-vert) * 2 - var(--tabs-audio-btn-size)) / 2)
+  --tabs-title-indent: calc(17px + var(--tabs-fav-margin))
+  --tabs-title-indent-audio: calc(15px + var(--tabs-audio-btn-size))
+  --tabs-title-max-height: calc(var(--tabs-title-line-height) * var(--tabs-title-lines-max) + var(--tabs-title-padding-vert) * 2)
+
   position: relative
-  contain: size layout style
+  contain: layout style
   width: calc(100% - var(--tabs-margin) * 2)
-  height: calc(var(--tabs-height) + var(--tabs-margin))
+  // height: calc(var(--tabs-height) + var(--tabs-margin))
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
   transition: transform var(--d-norm), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
+  // outline: 1px solid #0f03; outline-offset: -1px;
 
   padding-left: calc(var(--tabs-indent) * 16)
   &[data-lvl="0"]
@@ -152,22 +172,24 @@
 // -
 .Tab .body
   position: relative
-  display: flex
+  // display: flex
   width: 100%
-  height: 100%
-  align-items: center
+  // height: 100%
+  padding: 2px
   transition: opacity var(--d-fast), transform var(--d-fast)
   border-radius: var(--tabs-border-radius)
   background-color: var(--tabs-normal-bg)
   box-shadow: var(--frame-el-shadow)
+  // outline: 1px solid #0f03; outline-offset: -1px;
   &:after
     content: ''
     position: absolute
     display: none
-    top: calc(-20% - var(--tabs-margin))
+    top: calc(-4px - var(--tabs-margin))
+    // top: calc(-20% - var(--tabs-margin))
     left: calc(var(--tabs-indent) / -2)
     width: 1px
-    height: calc(var(--tabs-height) + var(--tabs-margin))
+    height: calc(100% + var(--tabs-margin))
     opacity: var(--tabs-lvl-opacity)
     background-color: var(--tabs-normal-fg)
   &:before
@@ -267,61 +289,61 @@
   box-shadow: inset 0 0 0 1px #0003
 
 // ---
-// -- Audio
+// -- Flash animation
 // -
-#root .Tab
-  --tabs-pinned-audio-btn-width: 16px
-  --tabs-pinned-audio-btn-height: 16px
-#root[data-density="compact"] .Tab
-  --tabs-pinned-audio-btn-width: 14px
-  --tabs-pinned-audio-btn-height: 14px
-
-.Tab .audio
+.Tab .flash-fx
   position: absolute
-  z-index: 1
-
-.Tab .audio-icon
-  position: absolute
-  top: calc(50% - 6px)
-  left: calc(50% - 6px)
-  width: 12px
-  height: 12px
-  fill: var(--tabs-normal-fg)
-  transition: opacity var(--d-fast)
-  opacity: 0
-
-.Tab[data-pin="false"][data-active="true"] .audio-icon
-  fill: var(--tabs-activated-fg)
-
-.Tab[data-pin="false"] .audio
   top: 0
-  left: calc(18px + var(--tabs-inner-gap))
-  width: calc(var(--tabs-audio-btn-width) + 2px)
+  left: 0
+  width: 100%
   height: 100%
-  animation: appearing-animation var(--d-norm)
-.Tab[data-pin="true"] .audio
-  top: 0
-  right: 0
-  width: var(--tabs-pinned-audio-btn-width)
-  height: var(--tabs-pinned-audio-btn-height)
-  border-radius: calc(var(--tabs-border-radius) - 1px)
-  background-color: var(--frame-bg)
-  box-shadow: inset 0 0 0 1px #0003
+  border-radius: var(--tabs-border-radius)
+  overflow: hidden
+  opacity: 0
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    background-image: linear-gradient(90deg, #00000000, var(--tabs-normal-fg))
+    transform: translateX(-100%)
+.Tab[data-active="true"] .flash-fx:before
+  background-image: linear-gradient(90deg, #00000000, var(--tabs-activated-fg))
+.Tab .flash-fx[data-run="true"]
+  animation: flash-box-animation .4s
+  &:before
+    animation: flash-progress-animation .4s
 
-.Tab[data-audible="true"] .audio
-.Tab[data-muted="true"] .audio
-.Tab[data-paused="true"] .audio
-  opacity: 1
-  z-index: 21
-  &:hover
-    opacity: .7
-  &:active
-    opacity: .5
+// ---
+// -- Unread mark
+// -
+.Tab .unread-mark
+  position: absolute
+  left: 0
+  bottom: 0
+  width: 6px
+  height: 6px
+  border-bottom-left-radius: 2px
+  overflow: hidden
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 12px
+    height: 10px
+    transform: rotateZ(45deg)
+    transform-origin: 0 0
+    background-color: var(--tabs-normal-fg)
 
-.Tab[data-audible="true"]:not([data-muted="true"]):not([data-paused="true"]) svg.-loud
-.Tab[data-muted="true"]:not([data-paused="true"]) svg.-mute
-.Tab[data-paused="true"] svg.-pause
-  opacity: 1
+// ---
+// -- Main row
+// -
+.Tab .main
+  position: relative
+  width: 100%
 
 // ---
 // -- Favicon
@@ -334,10 +356,14 @@
   opacity: 1
   z-index: 10
   transform: translateZ(0)
+  // outline: 1px solid #0f03; outline-offset: -1px;
 
 .Tab[data-pin="false"] .fav
-  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
+  position: absolute
+  margin: var(--tabs-fav-margin) 0 var(--tabs-fav-margin) var(--tabs-fav-margin)
   z-index: 20
+.Tab[data-pin="true"] .fav
+  margin: var(--tabs-fav-margin)
 
 .Tab .fav-icon
   position: absolute
@@ -351,7 +377,7 @@
   display: none
 
 .Tab .fav svg
-  opacity: .7
+  opacity: .8
 
 .Tab[data-active="true"] .fav-icon
   fill: var(--tabs-activated-fg)
@@ -534,59 +560,103 @@
   opacity: 0
 
 // ---
-// -- Flash animation
+// -- Audio
 // -
-.Tab .flash-fx
+#root .Tab
+  --tabs-pinned-audio-btn-width: 16px
+  --tabs-pinned-audio-btn-height: 16px
+#root[data-density="compact"] .Tab
+  --tabs-pinned-audio-btn-width: 14px
+  --tabs-pinned-audio-btn-height: 14px
+
+.Tab .audio
   position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  border-radius: var(--tabs-border-radius)
-  overflow: hidden
-  opacity: 0
-  &:before
+  z-index: 1
+  &:hover:before
     content: ''
     position: absolute
-    width: 100%
-    height: 100%
-    top: 0
-    left: 0
-    background-image: linear-gradient(90deg, #00000000, var(--tabs-normal-fg))
-    transform: translateX(-100%)
-.Tab[data-active="true"] .flash-fx:before
-  background-image: linear-gradient(90deg, #00000000, var(--tabs-activated-fg))
-.Tab .flash-fx[data-run="true"]
-  animation: flash-box-animation .4s
-  &:before
-    animation: flash-progress-animation .4s
+    width: calc(var(--tabs-audio-btn-size) - 4px)
+    height: calc(var(--tabs-audio-btn-size) - 4px)
+    top: 2px
+    left: 2px
+    border-radius: var(--tabs-border-radius)
+    background-color: var(--tabs-activated-fg)
+    opacity: .1
+
+.Tab .audio-icon
+  position: absolute
+  top: calc(50% - 6px)
+  left: calc(50% - 6px)
+  width: 12px
+  height: 12px
+  fill: var(--tabs-normal-fg)
+  transition: opacity var(--d-fast)
+  opacity: 0
+
+.Tab[data-pin="false"][data-active="true"] .audio-icon
+  fill: var(--tabs-activated-fg)
+
+.Tab[data-pin="false"] .audio
+  top: var(--tabs-audio-margin)
+  margin-left: calc(16px + var(--tabs-fav-margin))
+  width: var(--tabs-audio-btn-size)
+  height: var(--tabs-audio-btn-size)
+  animation: appearing-animation var(--d-norm)
+.Tab[data-pin="true"] .audio
+  top: 0
+  right: 0
+  width: var(--tabs-pinned-audio-btn-width)
+  height: var(--tabs-pinned-audio-btn-height)
+  border-radius: calc(var(--tabs-border-radius) - 1px)
+  background-color: var(--frame-bg)
+  box-shadow: inset 0 0 0 1px #0003
+
+.Tab[data-audible="true"] .audio
+.Tab[data-muted="true"] .audio
+.Tab[data-paused="true"] .audio
+  opacity: 1
+  z-index: 21
+  &:hover
+    opacity: .7
+  &:active
+    opacity: .5
+
+.Tab[data-audible="true"]:not([data-muted="true"]):not([data-paused="true"]) svg.-loud
+.Tab[data-muted="true"]:not([data-paused="true"]) svg.-mute
+.Tab[data-paused="true"] svg.-pause
+  opacity: 1
 
 // ---
 // -- Title box
 // -
 .Tab .t-box
-  --audio-btn-offset: calc(var(--tabs-audio-btn-width) - var(--tabs-inner-gap))
+  --audio-btn-offset: calc(var(--tabs-audio-btn-size) - var(--tabs-inner-gap))
   --close-btn-offset: calc(var(--tabs-height) - var(--tabs-close-btn-margin) * 2)
 
   position: relative
   width: 100%
   margin: 0 2px 0 0
+  max-height: var(--tabs-title-max-height)
   overflow: hidden
   z-index: 1
-  mask: linear-gradient(-90deg, transparent, #000000 8px, #000000)
+  mask-image: linear-gradient(-90deg, transparent, #000000 8px, #000000)
+  mask-repeat: no-repeat
 
 #root[data-tabs-close-btn="always"] .Tab .t-box
 #root[data-tabs-close-btn="hover"] .Tab:hover .t-box
-  mask: linear-gradient(
+  mask-image: linear-gradient(
     -90deg,
     transparent,
     transparent var(--close-btn-offset),
     #000000 calc(var(--close-btn-offset) + 12px),
     #000000)
 
+#root[data-tabs-multiline-title="true"] .Tab .t-box
+  mask-image: none
+
 .Tab[data-edit="true"] .t-box
   margin: 0 6px 0 0
-  mask: none
+  mask-image: none
 
 // ---
 // -- Custom title input
@@ -616,15 +686,29 @@
   position: relative
   font: var(--tabs-font)
   color: var(--tabs-normal-fg)
-  padding: 0 1px
-  white-space: nowrap
-  overflow: hidden
+  padding: var(--tabs-title-padding-vert) 2px var(--tabs-title-padding-vert) var(--tabs-fav-margin)
+  line-height: var(--tabs-title-line-height)
+  max-height: var(--tabs-title-max-height)
+  overflow: clip
+  text-indent: var(--tabs-title-indent)
   transition: transform var(--d-fast)
+#root[data-tabs-multiline-title="true"] .Tab .title
+  display: -webkit-box
+  white-space: wrap
+  -webkit-line-clamp: var(--tabs-title-lines-max)
+  -webkit-box-orient: vertical
+#root[data-tabs-multiline-title="false"] .Tab .title
+  white-space: nowrap
+#root[data-tabs-title-br="w"] .Tab .title
+  word-break: break-word
+  // text-wrap: balance
+#root[data-tabs-title-br="c"] .Tab .title
+  word-break: break-all
 
 .Tab[data-audible="true"] .t-box .title
 .Tab[data-muted="true"] .t-box .title
 .Tab[data-paused="true"] .t-box .title
-  transform: translateX(var(--audio-btn-offset))
+  text-indent: var(--tabs-title-indent-audio)
 
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
@@ -677,6 +761,7 @@
   right: var(--tabs-close-btn-margin)
   height: calc(100% - var(--tabs-close-btn-margin) * 2)
   aspect-ratio: 1 / 1
+  max-width: var(--tabs-close-btn-max-width)
   z-index: 20
   opacity: 0
   border-radius: calc(var(--tabs-border-radius) - var(--tabs-close-btn-margin))
@@ -707,28 +792,8 @@
 #root[data-tabs-close-btn="hover"] .Tab:hover .close
   opacity: 1
 
-// ---
-// -- Unread mark
-// -
-.Tab .unread-mark
-  position: absolute
-  left: 0
-  bottom: 0
-  width: 6px
-  height: 6px
-  border-bottom-left-radius: 2px
-  overflow: hidden
-  &:before
-    content: ''
-    position: absolute
-    top: 0
-    left: 0
-    width: 12px
-    height: 10px
-    transform: rotateZ(45deg)
-    transform-origin: 0 0
-    background-color: var(--tabs-normal-fg)
-
+#root[data-tabs-close-btn="always"] .Tab .t-box
+  padding-right: var(--tabs-close-btn-max-width)
 
 // ---
 // -- Keyframes

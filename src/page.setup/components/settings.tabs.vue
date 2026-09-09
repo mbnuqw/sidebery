@@ -194,6 +194,24 @@ section(ref="el")
     v-model:value="Settings.state.stickyActiveTab"
     :default="DEFAULT_SETTINGS.stickyActiveTab"
     @update:value="Settings.saveDebounced(150)")
+  NumField.-inline(
+    label="settings.tabs_title_lines_max"
+    dbg="tabsTitleLinesMax"
+    v-model:value="Settings.state.tabsTitleLinesMax"
+    :default="DEFAULT_SETTINGS.tabsTitleLinesMax"
+    :or="1"
+    :min-value="1"
+    @update:value="Settings.saveDebounced(500)")
+  .sub-fields
+    SelectField(
+      label="settings.tabs_title_lines_br"
+      optLabel="settings.tabs_title_lines_br_"
+      dbg="tabsTitleLinesBr"
+      v-model:value="Settings.state.tabsTitleLinesBr"
+      :default="DEFAULT_SETTINGS.tabsTitleLinesBr"
+      :inactive="Settings.state.tabsTitleLinesMax < 2"
+      :opts="Settings.getOpts('tabsTitleLinesBr')"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="newTabPosEl")
     .sub-title: .text {{translate('settings.nav_settings_new_tab_position')}}

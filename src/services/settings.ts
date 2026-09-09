@@ -27,6 +27,9 @@ export let stickyAncestorTabsLimit = 16
 export let stickyAncestorTabsLayoutCol = false
 export let stickyAncestorTabsLayoutRow = false
 
+export let tabsMultiLineTitle = false
+export let tabsTitleLinesMax = 1
+
 export function reactivate(r: Reactivator<SettingsState>) {
   state = r(state)
 }
@@ -129,6 +132,10 @@ export function updPrecalcSettings() {
   }
   stickyAncestorTabsLayoutCol = state.stickyAncestorTabsLayout === 'col'
   stickyAncestorTabsLayoutRow = state.stickyAncestorTabsLayout === 'row'
+
+  tabsTitleLinesMax = state.tabsTitleLinesMax
+  if (tabsTitleLinesMax < 1) tabsTitleLinesMax = 1
+  tabsMultiLineTitle = tabsTitleLinesMax > 1
 }
 
 export function resetSettings(): void {

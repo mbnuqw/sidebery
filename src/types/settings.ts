@@ -113,6 +113,9 @@ export interface SettingsState {
   forceDiscard: boolean
   tabUpdDelay: number
   forceUpdTooltip: boolean
+  stickyActiveTab: boolean
+  tabsTitleLinesMax: number
+  tabsTitleLinesBr: (typeof SETTINGS_OPTIONS.tabsTitleLinesBr)[number]
 
   // New tab position
   moveNewTabPin: (typeof SETTINGS_OPTIONS.moveNewTabPin)[number]
@@ -137,7 +140,6 @@ export interface SettingsState {
   tabsTree: boolean
   groupOnOpen?: boolean // DEPR
   tabsTreeLimit: (typeof SETTINGS_OPTIONS.tabsTreeLimit)[number]
-  stickyActiveTab: boolean
   stickyAncestorTabs: boolean
   stickyAncestorTabsLimit: (typeof SETTINGS_OPTIONS.stickyAncestorTabsLimit)[number]
   stickyAncestorTabsLayout: (typeof SETTINGS_OPTIONS.stickyAncestorTabsLayout)[number]
