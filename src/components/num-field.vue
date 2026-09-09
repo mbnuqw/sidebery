@@ -45,6 +45,7 @@ interface NumFieldProps {
   allowNegative?: boolean
   note?: string
   maxValue?: number
+  minValue?: number
   dbg?: string
   default?: number | string
   defaultUnit?: string
@@ -108,9 +109,13 @@ function valueFilter(e: Event): number | void {
     target.value = '-'
     return
   }
-  let val = parseInt(raw)
-  if (isNaN(val) || (!props.allowNegative && val < 0)) return 0
+  return limitTheValue(parseInt(raw))
+}
+
+function limitTheValue(val: number) {
+  if (isNaN(val) || (!props.allowNegative && val < 0)) val = 0
   if (props.maxValue !== undefined && val > props.maxValue) val = props.maxValue
+  if (props.minValue !== undefined && val < props.minValue) val = props.minValue
   return val
 }
 
@@ -139,13 +144,13 @@ function onKD(e: KeyboardEvent) {
   let val
   if (typeof props.value === 'string') val = parseInt(props.value)
   else val = props.value
-  if (isNaN(val)) return
+  if (isNaN(val)) val = 0
 
   if (e.key === 'ArrowUp') {
-    emit('update:value', val + 1)
+    emit('update:value', limitTheValue(val + 1))
   } else if (e.key === 'ArrowDown') {
     if (val <= 0) return
-    emit('update:value', val - 1)
+    emit('update:value', limitTheValue(val - 1))
   }
 }
 </script>
