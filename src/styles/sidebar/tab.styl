@@ -75,12 +75,10 @@
   position: relative
   contain: layout style
   width: calc(100% - var(--tabs-margin) * 2)
-  // height: calc(var(--tabs-height) + var(--tabs-margin))
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
   transition: transform var(--d-norm), opacity var(--d-fast), padding var(--d-fast), pointer-events var(--d-fast) linear allow-discrete
-  // outline: 1px solid #0f03; outline-offset: -1px;
 
   padding-left: calc(var(--tabs-indent) * 16)
   &[data-lvl="0"]
@@ -172,21 +170,17 @@
 // -
 .Tab .body
   position: relative
-  // display: flex
   width: 100%
-  // height: 100%
   padding: 2px
   transition: opacity var(--d-fast), transform var(--d-fast)
   border-radius: var(--tabs-border-radius)
   background-color: var(--tabs-normal-bg)
   box-shadow: var(--frame-el-shadow)
-  // outline: 1px solid #0f03; outline-offset: -1px;
   &:after
     content: ''
     position: absolute
     display: none
     top: calc(-4px - var(--tabs-margin))
-    // top: calc(-20% - var(--tabs-margin))
     left: calc(var(--tabs-indent) / -2)
     width: 1px
     height: calc(100% + var(--tabs-margin))
@@ -356,7 +350,6 @@
   opacity: 1
   z-index: 10
   transform: translateZ(0)
-  // outline: 1px solid #0f03; outline-offset: -1px;
 
 .Tab[data-pin="false"] .fav
   position: absolute
@@ -651,7 +644,7 @@
     #000000 calc(var(--close-btn-offset) + 12px),
     #000000)
 
-#root[data-tabs-multiline-title="true"] .Tab .t-box
+#root[data-tabs-multiline-title="true"] .AnimatedTabList .Tab .t-box
   mask-image: none
 
 .Tab[data-edit="true"] .t-box
@@ -690,18 +683,16 @@
   line-height: var(--tabs-title-line-height)
   max-height: var(--tabs-title-max-height)
   overflow: clip
+  white-space: nowrap
   text-indent: var(--tabs-title-indent)
   transition: transform var(--d-fast)
-#root[data-tabs-multiline-title="true"] .Tab .title
+#root[data-tabs-multiline-title="true"] .AnimatedTabList .Tab .title
   display: -webkit-box
   white-space: wrap
   -webkit-line-clamp: var(--tabs-title-lines-max)
   -webkit-box-orient: vertical
-#root[data-tabs-multiline-title="false"] .Tab .title
-  white-space: nowrap
 #root[data-tabs-title-br="w"] .Tab .title
   word-break: break-word
-  // text-wrap: balance
 #root[data-tabs-title-br="c"] .Tab .title
   word-break: break-all
 
