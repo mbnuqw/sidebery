@@ -121,7 +121,7 @@ export function updPrecalcSettings() {
   activateAfterClosingPrevAct = state.activateAfterClosing === 'prev_act'
 
   stickyTabs = state.stickyActiveTab || (state.tabsTree && state.stickyAncestorTabs)
-  if (state.tabsTree) {
+  if (state.tabsTree && state.stickyAncestorTabs) {
     stickyAncestorTabsLimit =
       typeof state.stickyAncestorTabsLimit === 'number' ? state.stickyAncestorTabsLimit : 16
   } else {
