@@ -1,5 +1,5 @@
 <template lang="pug">
-.AnimatedTabList(ref="rootEl" @mouseleave="onMouseLeave")
+.TabList(ref="rootEl" @mouseleave="onMouseLeave")
   TabComponent(v-for="id in panel.reactive.visibleTabIds" :key="id" :tabId="id")
   NewTabBar(v-if="Settings.newTabBarPositionAfterTabs" :panel="panel")
   .scroll-retainer(ref="srEl")
