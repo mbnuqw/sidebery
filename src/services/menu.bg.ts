@@ -25,6 +25,7 @@ export function createSettingsMenu(): void {
 function onMenuClicked(info: browser.menus.OnClickData): void {
   if (info.menuItemId === 'open_settings') browser.runtime.openOptionsPage()
   else if (info.menuItemId === 'create_snapshot') SnapshotsBg.createSnapshot()
+  else TabsBg.openCachedWindowFromMenu(info.menuItemId)
 }
 
 function onMenuHiddenBg(): void {

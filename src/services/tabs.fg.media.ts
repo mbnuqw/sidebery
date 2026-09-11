@@ -208,7 +208,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
             ...injectionConfig,
             target: {
               tabId: tab.id,
-              allFrames: true
+              allFrames: true,
             },
           })
           .then(results => {
@@ -234,7 +234,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
           ...injectionConfig,
           target: {
             tabId: tab.id,
-            allFrames: true
+            allFrames: true,
           },
         })
         .then(results => {
@@ -272,15 +272,17 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
       if (tab.mediaPaused && tab.panelId === panel.id) {
         tab.reactive.mediaPaused = tab.mediaPaused = false
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
-        browser.scripting.executeScript({
-          ...injectionConfig,
-          target: {
-            tabId: tab.id,
-            allFrames: true
-          },
-        }).catch(err => {
-          Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script (pinned):', err)
-        })
+        browser.scripting
+          .executeScript({
+            ...injectionConfig,
+            target: {
+              tabId: tab.id,
+              allFrames: true,
+            },
+          })
+          .catch(err => {
+            Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script (pinned):', err)
+          })
       }
     }
   }
@@ -289,15 +291,17 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (tab.mediaPaused) {
       tab.reactive.mediaPaused = tab.mediaPaused = false
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
-      browser.scripting.executeScript({
-        ...injectionConfig,
-        target: {
-          tabId: tab.id,
-          allFrames: true
-        },
-      }).catch(err => {
-        Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
-      })
+      browser.scripting
+        .executeScript({
+          ...injectionConfig,
+          target: {
+            tabId: tab.id,
+            allFrames: true,
+          },
+        })
+        .catch(err => {
+          Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
+        })
     }
   }
 }
@@ -335,7 +339,7 @@ export async function pauseAllAudibleTabsMedia(): Promise<void> {
           ...injectionConfig,
           target: {
             tabId: tab.id,
-            allFrames: true
+            allFrames: true,
           },
         })
         .then(results => {
@@ -368,15 +372,17 @@ export async function playAllPausedTabsMedia(): Promise<void> {
     if (tab.mediaPaused) {
       tab.reactive.mediaPaused = tab.mediaPaused = false
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
-      browser.scripting.executeScript({
-        ...injectionConfig,
-        target: {
-          tabId: tab.id,
-          allFrames: true
-        },
-      }).catch(err => {
-        Logs.err('Tabs.playAllPausedTabsMedia: Cannot exec script:', err)
-      })
+      browser.scripting
+        .executeScript({
+          ...injectionConfig,
+          target: {
+            tabId: tab.id,
+            allFrames: true,
+          },
+        })
+        .catch(err => {
+          Logs.err('Tabs.playAllPausedTabsMedia: Cannot exec script:', err)
+        })
     }
   }
 }
