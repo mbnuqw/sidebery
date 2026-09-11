@@ -632,7 +632,7 @@ export async function movePanelTabsToThisWin(
     Logs.warn('Tabs.movePanelTabsToThisWin: Cannot detach tabs from the source sidebar')
   }
 
-  // Fallback: the source sidebar is not connected (mirrors Tabs.move:56-66)
+  // Fallback: the source sidebar is not connected (mirrors Tabs.move)
   if (!externalTabs) {
     const winNativeTabs = await browser.tabs.query({ windowId: srcWinId })
     externalTabs = []

@@ -44,6 +44,11 @@ export interface DragAndDropState {
   dstParentId: ID
   dstPin: boolean
   dstPanelId: ID
+  // Which side of the nav item at dstIndex to insert at. Nav-item hover only
+  // resolves a target element, not a position within it (dragenter fires once
+  // per element) - this tracks which half of that element the cursor is over,
+  // so a single, lone nav item can still be a drop target on either side.
+  dstNavSide: 'before' | 'after'
 
   dragTooltipTitle: string
   dragTooltipInfo: string
@@ -61,6 +66,7 @@ export let reactive: DragAndDropState = {
   dstParentId: D.NOID,
   dstPanelId: D.NOID,
   dstPin: false,
+  dstNavSide: 'before',
   dragTooltipTitle: '',
   dragTooltipInfo: '',
 }
@@ -208,6 +214,7 @@ export function reset(): void {
   reactive.dstPanelId = D.NOID
   reactive.dstPin = false
   reactive.dstParentId = D.NOID
+  reactive.dstNavSide = 'before'
 
   reactive.isStarted = false
 
@@ -443,6 +450,19 @@ function isNativeTabs(event: DragEvent): boolean {
   return event.dataTransfer.types.includes('text/x-moz-text-internal')
 }
 
+// Nav items only resolve as a drop target as a whole element (dragenter fires
+// once per element, not per pixel), so without this a lone/single nav item can
+// only ever be a drop target on whichever side its raw array index happens to
+// put it relative to the dragged item - never the other side. Splitting by
+// cursor position against the element's own midpoint fixes that for both the
+// initial dragenter and any further movement within the same element.
+function computeNavItemSide(e: DragEvent, rect: DOMRect): 'before' | 'after' {
+  if (Settings.state.navBarLayout === 'vertical') {
+    return e.clientY < rect.top + rect.height / 2 ? 'before' : 'after'
+  }
+  return e.clientX < rect.left + rect.width / 2 ? 'before' : 'after'
+}
+
 function isContainerChanged(): boolean {
   // Check private container
   if (DnD.srcIncognito !== Windows.incognito) return true
@@ -617,6 +637,10 @@ export function onDragEnter(e: DragEvent): void {
         if (id === 'add_tp') DnD.reactive.dstPanelId = id
       }
       DnD.reactive.dstIndex = Sidebar.reactive.nav.indexOf(id)
+      DnD.reactive.dstNavSide = computeNavItemSide(
+        e,
+        (e.target as HTMLElement).getBoundingClientRect()
+      )
 
       const srcIsNav =
         DnD.srcType === E.DragType.NavItem ||
@@ -634,6 +658,10 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstType = E.DropType.TabsPanel
     DnD.reactive.dstPanelId = id
     DnD.reactive.dstIndex = Sidebar.reactive.nav.indexOf(id)
+    DnD.reactive.dstNavSide = computeNavItemSide(
+      e,
+      (e.target as HTMLElement).getBoundingClientRect()
+    )
   }
 
   // Close hidden panels bar
@@ -690,6 +718,18 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstPanelId = panelId ?? D.NOID
     DnD.reactive.dstPin = false
   }
+}
+
+// Live update of which side of a nav item is targeted, so moving the cursor
+// within the same (possibly lone) nav item - without leaving and re-entering
+// it - still updates the before/after indicator and the eventual drop index.
+export function onNavItemDragOver(e: DragEvent, id: ID): void {
+  if (!DnD.reactive.isStarted) return
+  if (Sidebar.reactive.nav[DnD.reactive.dstIndex] !== id) return
+  DnD.reactive.dstNavSide = computeNavItemSide(
+    e,
+    (e.currentTarget as HTMLElement).getBoundingClientRect()
+  )
 }
 
 export function onDragLeave(e: DragEvent): void {
@@ -1115,6 +1155,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const srcNavIndex = DnD.srcIndex
   const dragPanelId = DnD.srcPanelId
   const isCopy = DnD.dropMode === 'copy'
+  const dstNavSide = DnD.reactive.dstNavSide
   const isFromOtherWin =
     src.windowId !== undefined && src.windowId !== D.NOID && src.windowId !== Windows.id
 
@@ -1369,7 +1410,14 @@ export async function onDrop(e: DragEvent): Promise<void> {
     (toTabsPanel || toBookmarksPanel || toNav) &&
     srcNavIndex !== -1
   ) {
-    Sidebar.moveNavItem(srcNavIndex, dst.index ?? 0)
+    // dst.index is the raw index of the hovered item itself (nav.indexOf), not
+    // an insertion gap. Turn it into one using which side was hovered, then
+    // adjust for the source's own removal shifting everything after it back
+    // by one (standard splice-move arithmetic - see Sidebar.moveNavItem).
+    const rawHoveredIndex = dst.index ?? 0
+    const gapIndex = dstNavSide === 'after' ? rawHoveredIndex + 1 : rawHoveredIndex
+    const finalNavIndex = gapIndex > srcNavIndex ? gapIndex - 1 : gapIndex
+    Sidebar.moveNavItem(srcNavIndex, finalNavIndex)
   }
 
   // Native to tabs
