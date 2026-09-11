@@ -687,7 +687,7 @@ function onNavDragStart(e: DragEvent, item: T.NavItem) {
   if (isTabsPanel || isBookmarksPanel) Sidebar.updateBounds()
   Selection.selectNavItem(item.id)
 
-  const contentList = []
+  const contentList: (string | undefined)[] = []
   const dragItems: T.DragItem[] = []
   const dragInfo: T.DragInfo = {
     type: dndType,
@@ -702,11 +702,12 @@ function onNavDragStart(e: DragEvent, item: T.NavItem) {
 
   if (Utils.isTabsPanel(panel)) {
     dragInfo.panelId = panel.id
-    for (const tab of panel.tabs) {
+
+    const addItem = (tab: T.Tab, pinned: boolean): void => {
       contentList.push(tab.title)
       contentList.push(tab.url)
       contentList.push('')
-      dragItems.push({
+      const dragItem: T.DragItem = {
         id: tab.id,
         url: tab.url,
         title: tab.title,
@@ -715,8 +716,18 @@ function onNavDragStart(e: DragEvent, item: T.NavItem) {
         customColor: tab.customColor,
         customTitle: tab.customTitle,
         folded: tab.folded,
-      })
+      }
+      if (pinned) dragItem.pinned = true
+      dragItems.push(dragItem)
     }
+
+    // Panel-scoped pinned tabs belong to the panel, so they're a part of the
+    // drag payload too (globally-pinned tabs are not). Keep them first so a
+    // moved/copied/reopened batch preserves a valid pinned-then-normal order.
+    if (Settings.state.pinnedTabsPosition === 'panel') {
+      for (const tab of panel.pinnedTabs) addItem(tab, true)
+    }
+    for (const tab of panel.tabs) addItem(tab, false)
   } else {
     dragItems.push({ id: item.id })
   }

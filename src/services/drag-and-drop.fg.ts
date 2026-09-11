@@ -1109,6 +1109,15 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const src = getSrcInfo()
   const dst = getDstInfo()
 
+  // Snapshot before any awaiting below: window A's onDragEnd schedules
+  // resetOther() -> broadcasts 'stopDrag' after 150ms, which runs
+  // onExternalStop() -> DnD.reset() here and zeroes srcIndex/dropMode.
+  const srcNavIndex = DnD.srcIndex
+  const dragPanelId = DnD.srcPanelId
+  const isCopy = DnD.dropMode === 'copy'
+  const isFromOtherWin =
+    src.windowId !== undefined && src.windowId !== D.NOID && src.windowId !== Windows.id
+
   if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
   if ((toTabs && !DnD.reactive.dstPin) || toBookmarks) {
     if (toTabs && Sidebar.subPanelActive && Sidebar.subPanels.bookmarks) {
@@ -1206,11 +1215,16 @@ export async function onDrop(e: DragEvent): Promise<void> {
 
   // Tabs to tabs
   if ((fromTabs && toTabs) || (fromTabs && toTabsPanel) || (fromTabsPanel && toTabs)) {
+    // A TabsPanel drag payload can now carry the panel's pinned tabs (see
+    // bar.navigation.vue). Dropping onto a tab list would unpin them here
+    // (getDstInfo sets dst.pinned=false for DropType.Tabs), which this
+    // gesture never did before - keep them out.
+    const tabsToMove = fromTabsPanel ? dndItems.filter(i => !i.pinned) : dndItems
     const reopenNeeded = isContainerChanged()
 
-    if (DnD.dropMode === 'copy') await Tabs.open(dndItems, dst)
-    else if (reopenNeeded) await Tabs.reopen(dndItems, dst)
-    else await Tabs.move(dndItems, src, dst)
+    if (DnD.dropMode === 'copy') await Tabs.open(tabsToMove, dst)
+    else if (reopenNeeded) await Tabs.reopen(tabsToMove, dst)
+    else await Tabs.move(tabsToMove, src, dst)
   }
 
   // Tabs to bookmarks
@@ -1309,12 +1323,53 @@ export async function onDrop(e: DragEvent): Promise<void> {
     Tabs.open(dndItems, dst)
   }
 
+  // TabsPanel from another window onto this window's nav bar.
+  // Panels are global config (SidebarConfig.nav/panels), so "move the panel
+  // here" means "move that panel's tabs into this window's instance of the
+  // same panel". The hovered nav button only decides the new nav order below,
+  // never the landing panel.
+  const toNavBar = toTabsPanel || toBookmarksPanel || toSync || toNav
+  if (fromTabsPanel && isFromOtherWin && toNavBar) {
+    const srcPanel = Sidebar.panelsById[dragPanelId]
+    if (Utils.isTabsPanel(srcPanel) && dndItems.length) {
+      // Before the move: makes the result visible, un-hides the panel if it's
+      // hidden in this window (activatePanel -> showPanel), and makes
+      // moveToThisWin's `panelIsActive` true so a moved active tab actually
+      // gets activated here.
+      Sidebar.activatePanel(srcPanel.id)
+
+      const pinnedItems = dndItems.filter(i => i.pinned)
+      const normalItems = dndItems.filter(i => !i.pinned)
+      const crossIncognito = DnD.srcIncognito !== Windows.incognito
+
+      if (isCopy || crossIncognito) {
+        // Tabs can't cross the private/normal boundary with browser.tabs.move,
+        // and 'copy' means leave the originals alone - both are create-here
+        // operations. dropTabCtx is deliberately not consulted: these tabs are
+        // already legitimately in the panel, re-containerising them on a plain
+        // move would needlessly throw away their session.
+        const base: T.DstPlaceInfo = { panelId: srcPanel.id }
+        if (crossIncognito) base.containerId = D.CONTAINER_ID
+        const openFn = isCopy ? Tabs.open : Tabs.reopen
+        if (pinnedItems.length) await openFn(pinnedItems, { ...base, pinned: true })
+        if (normalItems.length) await openFn(normalItems, { ...base, pinned: false })
+      } else if (src.windowId !== undefined) {
+        await Tabs.movePanelTabsToThisWin(
+          src.windowId,
+          dndItems.map(i => i.id),
+          srcPanel.id
+        )
+      }
+    }
+  }
+
   // NavItem to NavItem
   if (
     (fromTabsPanel || fromBookmarksPanel || fromNav) &&
-    (toTabsPanel || toBookmarksPanel || toNav)
+    (toTabsPanel || toBookmarksPanel || toNav) &&
+    srcNavIndex !== -1
   ) {
-    Sidebar.moveNavItem(DnD.srcIndex, dst.index ?? 0)
+    Sidebar.moveNavItem(srcNavIndex, dst.index ?? 0)
   }
 
   // Native to tabs
