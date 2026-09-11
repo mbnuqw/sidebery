@@ -318,15 +318,6 @@ declare namespace browser {
       active?: boolean
     }
 
-    interface ExecuteOpts {
-      allFrames?: boolean
-      code?: string
-      file?: string
-      frameId?: number
-      matchAboutBlank?: boolean
-      runAt?: 'document_start' | 'document_end' | 'document_idle'
-    }
-
     interface GroupOpts {
       // The tab ID or list of tab IDs to add to the specified group.
       tabIds: ID | ID[]
@@ -358,7 +349,6 @@ declare namespace browser {
     function getCurrent(): Promise<Tab>
     function saveAsPDF(pageSettings: PageSettings): Promise<SavePDFResult>
     function duplicate(tabId: ID, opts?: DuplOpts): Promise<Tab>
-    function executeScript(tabId: ID, opts: ExecuteOpts): Promise<any[]>
     function warmup(tabId: ID): Promise<void>
     /**
      * Adds one or more tabs to a specified group, or if no group is specified,
@@ -530,7 +520,7 @@ declare namespace browser {
   /**
    * Browser action button
    */
-  namespace browserAction {
+  namespace action {
     type BrowserActionButton = 0 | 1
 
     interface PopupDetails {
@@ -595,7 +585,7 @@ declare namespace browser {
    */
   namespace menus {
     // prettier-ignore
-    type ContextType = 'all' | 'audio' | 'bookmark' | 'browser_action'
+    type ContextType = 'all' | 'audio' | 'bookmark' | 'action'
     | 'editable' | 'frame' | 'image' | 'link' | 'page' | 'page_action'
     | 'password' | 'selection' | 'tab' | 'tools_menu' | 'video'
 
@@ -639,6 +629,14 @@ declare namespace browser {
     function overrideContext(contextOptions: ContextOptions): void
 
     const onHidden: EventTarget<HiddenListener>
+
+    interface OnClickData {
+      button?: number
+      menuItemId: string
+    }
+    type ClickListener = (info: OnClickData, tab: tabs.Tab) => void
+
+    const onClicked: EventTarget<ClickListener>
   }
 
   /**
@@ -1458,5 +1456,34 @@ declare namespace browser {
     function getDomain(hostname: string, options?: GetDomainOptions): string | null
     function getKnownSuffix(hostname: string): string | null
     function isKnownSuffix(hostname: string): boolean
+  }
+
+  namespace scripting {
+    interface InjectionTarget {
+      allFrames?: boolean
+      frameIds?: number[]
+      tabId: ID
+    }
+
+    type ExecutionWorld = 'ISOLATED' | 'MAIN'
+
+    interface InjectDetails<Args extends unknown[] = unknown[], Result = unknown> {
+      args?: Args
+      files?: string[]
+      func?: (...args: Args) => Result
+      injectImmediately?: boolean
+      target: InjectionTarget
+      world?: ExecutionWorld
+    }
+
+    interface InjectionResult<T> {
+      frameId: number
+      result?: T
+      error?: unknown // unsupported by chrome
+    }
+
+    function executeScript<Args extends unknown[], Result>(
+      details: InjectDetails<Args, Result>
+    ): Promise<InjectionResult<Result>[]>
   }
 }

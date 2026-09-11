@@ -109,8 +109,7 @@ export function createOpenFromCacheMenu() {
       id: 'reopen_cached_win',
       title: translate('menu.browserAction.reopen_cached_win_first', winCache.length),
       icons: { '16': 'assets/window-native.svg' },
-      onclick: () => openCachedWindow(winCache),
-      contexts: ['browser_action'],
+      contexts: ['action'],
     })
   }
 
@@ -120,7 +119,7 @@ export function createOpenFromCacheMenu() {
       id: 'reopen_cached_wins',
       title: translate('menu.browserAction.reopen_cached_wins'),
       icons: { '16': 'assets/window-native.svg' },
-      contexts: ['browser_action'],
+      contexts: ['action'],
     })
 
     for (let i = 0; i < _tabsDataCache.length; i++) {
@@ -137,11 +136,24 @@ export function createOpenFromCacheMenu() {
         parentId,
         title: translate('menu.browserAction.reopen_cached_win', winCache.length, panelIds.size),
         icons: { '16': 'assets/window-native.svg' },
-        onclick: () => openCachedWindow(winCache),
-        contexts: ['browser_action'],
+        contexts: ['action'],
       })
     }
   }
+}
+
+export function openCachedWindowFromMenu(menuItemId: string): void {
+  if (!_tabsDataCache) return
+  if (menuItemId === 'reopen_cached_win') {
+    const winCache = _tabsDataCache[0]
+    if (winCache) openCachedWindow(winCache)
+    return
+  }
+
+  const index = Number(menuItemId.match(/^reopen_cached_win_(\d+)$/)?.[1])
+  if (!Number.isInteger(index)) return
+  const winCache = _tabsDataCache[index]
+  if (winCache) openCachedWindow(winCache)
 }
 
 function openCachedWindow(cache: T.TabCache[]) {

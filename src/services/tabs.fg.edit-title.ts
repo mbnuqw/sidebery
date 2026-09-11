@@ -107,11 +107,11 @@ function openEditingPopup(value: string, placeholder?: string) {
   url.searchParams.set('winId', Windows.id.toString())
   url.searchParams.set('value', value)
   if (placeholder) url.searchParams.set('placeholder', placeholder)
-  browser.browserAction.setPopup({ popup: url.toString() })
-  browser.browserAction.openPopup()
+  browser.action.setPopup({ popup: url.toString() })
+  browser.action.openPopup()
 
   // Reset browser action
-  setTimeout(() => browser.browserAction.setPopup({ popup: null }), 500)
+  setTimeout(() => browser.action.setPopup({ popup: null }), 500)
 }
 
 export function getEditingValue() {
