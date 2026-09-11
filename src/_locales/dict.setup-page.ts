@@ -5797,6 +5797,12 @@ Available parameters:
     zh_TW: '編輯標題',
     ja: 'タイトルを編集',
   },
+  'settings.tab_action_toggle_bind_url': {
+    en: 'bind/unbind URL',
+  },
+  'settings.tab_action_return_to_bound': {
+    en: 'return to bound URL',
+  },
   'settings.tab_action_none': {
     en: 'none',
     de: 'Nichts',

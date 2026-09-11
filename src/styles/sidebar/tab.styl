@@ -179,6 +179,7 @@
     height: 100%
     border-radius: var(--tabs-border-radius)
     z-index: 1
+    pointer-events: none
 
 .Tab:hover .body:before
   background-color: var(--frame-el-overlay-hover-bg)
@@ -729,6 +730,39 @@
     transform-origin: 0 0
     background-color: var(--tabs-normal-fg)
 
+
+// ---
+// -- Bind URL tabs
+// -
+
+// Marker at the bottom-left corner of the favicon. Shows the "home" icon when
+// the tab is on its bound URL and the "undo" icon once it has navigated away.
+.Tab .bind-mark
+  position: absolute
+  left: -3px
+  bottom: -3px
+  width: 11px
+  height: 11px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 50%
+  background-color: var(--frame-bg)
+  pointer-events: none
+  z-index: 12
+  animation: appearing-animation var(--d-norm)
+
+.Tab .bind-mark-icon
+  width: 9px
+  height: 9px
+  fill: var(--tabs-normal-fg)
+
+.Tab[data-active="true"] .bind-mark-icon
+  fill: var(--tabs-activated-fg)
+
+// Navigated away from the bound URL — highlight the marker with the accent
+.Tab[data-bound-away="true"] .bind-mark-icon
+  fill: var(--accent)
 
 // ---
 // -- Keyframes

@@ -260,6 +260,28 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
   },
 
+  bind_url: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab) return
+    return {
+      label: translate('menu.tab.' + (firstTab.boundUrl ? 'unbind_url' : 'bind_url')),
+      icon: 'icon_home',
+      onClick: firstTab.boundUrl ? () => Tabs.unbindTabs(selected) : () => Tabs.bindTabs(selected),
+    }
+  },
+
+  return_to_bound: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab?.boundUrl || firstTab.url === firstTab.boundUrl) return
+    return {
+      label: translate('menu.tab.return_to_bound'),
+      icon: 'icon_undo',
+      onClick: () => Tabs.returnToBound(firstTab.id),
+    }
+  },
+
   reload: () => {
     return {
       label: translate('menu.tab.reload'),
