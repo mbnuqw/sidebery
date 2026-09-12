@@ -69,7 +69,7 @@
     "src": "./src"
   },
   "browserslist": [
-    "Firefox >= 140"
+    "Firefox >= 153"
   ],
   "sideEffects": false
 }
