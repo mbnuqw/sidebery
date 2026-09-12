@@ -62,16 +62,28 @@
         svg.audio-icon.-mute: use(href="#icon_mute_badge")
         svg.audio-icon.-pause: use(href="#icon_pause_12")
       .t-box(v-if="!iconOnly")
-        input.custom-title-input(
-          v-if="tab.reactive.customTitleEdit"
-          :value="tab.customTitle"
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          tabindex="-1"
-          @blur="onCustomTitleBlur"
-          @keydown="onCustomTitlteKD")
+        template(v-if="tab.reactive.customTitleEdit")
+          input.custom-title-input(
+            v-if="!Settings.tabsMultiLineTitle"
+            :value="tab.customTitle"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            tabindex="-1"
+            @blur="onCustomTitleBlur"
+            @keydown="onCustomTitlteKD")
+          textarea.custom-title-input(
+            v-else
+            :value="tab.customTitle"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            tabindex="-1"
+            @scroll.passive="onCustomTitleScroll"
+            @blur="onCustomTitleBlur"
+            @keydown="onCustomTitlteKD")
         .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
@@ -767,8 +779,31 @@ function onError(): void {
   Tabs.renderFavicon(tab)
 }
 
+let scrollFrameId: number | undefined
+let mlttadown = false
+function onCustomTitleScroll(e: Event) {
+  if (scrollFrameId !== undefined) return
+
+  scrollFrameId = requestAnimationFrame(() => {
+    scrollFrameId = undefined
+    if (!tabEl.value) return
+    const titleInputEl = e.target as HTMLInputElement
+    if (mlttadown && titleInputEl.scrollTop === 0) {
+      mlttadown = false
+      tabEl.value.classList.remove('-mlttadown')
+    } else if (!mlttadown) {
+      mlttadown = true
+      tabEl.value.classList.add('-mlttadown')
+    }
+  })
+}
+
 function onCustomTitleBlur(e: Event) {
   const titleInputEl = e.target as HTMLInputElement
+  tabEl.value?.classList.remove('-mlttadown')
+  if (scrollFrameId) cancelAnimationFrame(scrollFrameId)
+  scrollFrameId = undefined
+  mlttadown = false
 
   Tabs.setEditableTabId(NOID)
   tab.customTitle = titleInputEl.value

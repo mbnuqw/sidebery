@@ -648,7 +648,7 @@
   mask-image: none
 
 .Tab[data-edit="true"] .t-box
-  margin: 0 6px 0 0
+  margin: 0 2px 0 0
   mask-image: none
 
 // ---
@@ -657,20 +657,43 @@
 .Tab .custom-title-input
   position: relative
   display: block
-  width: 100%
-  padding: 0 1px
-  margin: 0
+  padding: var(--tabs-title-padding-vert) 2px var(--tabs-title-padding-vert) var(--tabs-fav-margin)
   font: var(--tabs-font)
+  line-height: var(--tabs-title-line-height)
   color: var(--tabs-normal-fg)
   background-color: transparent
   appearance: none
   border: none
+.Tab input.custom-title-input
+  width: calc(100% - var(--tabs-title-indent))
+  margin: 0 0 0 var(--tabs-title-indent)
+.Tab textarea.custom-title-input
+  margin: 0
+  field-sizing: content
+  min-height: unset
+  max-height: var(--tabs-title-max-height)
+  text-indent: var(--tabs-title-indent)
+  resize: none
+  scroll-padding-top: var(--tabs-title-padding-vert)
+  scroll-padding-bottom: var(--tabs-title-padding-vert)
+  scrollbar-width: none
+#root[data-tabs-title-br="w"] textarea.custom-title-input
+  word-break: break-word
+#root[data-tabs-title-br="c"] textarea.custom-title-input
+  word-break: break-all
 
-.Tab[data-audible="true"] .t-box .custom-title-input
-.Tab[data-muted="true"] .t-box .custom-title-input
-.Tab[data-paused="true"] .t-box .custom-title-input
-  width: calc(100% - var(--audio-btn-offset))
-  margin: 0 0 0 var(--audio-btn-offset)
+.Tab[data-audible="true"] .t-box input.custom-title-input
+.Tab[data-muted="true"] .t-box input.custom-title-input
+.Tab[data-paused="true"] .t-box input.custom-title-input
+  margin: 0 0 0 var(--tabs-title-indent-audio)
+  width: calc(100% - var(--tabs-title-indent-audio))
+.Tab[data-audible="true"] .t-box textarea.custom-title-input
+.Tab[data-muted="true"] .t-box textarea.custom-title-input
+.Tab[data-paused="true"] .t-box textarea.custom-title-input
+  text-indent: var(--tabs-title-indent-audio)
+.Tab.-mlttadown .fav
+.Tab.-mlttadown .audio
+  opacity: 0
 
 // ---
 // -- Title
@@ -704,7 +727,7 @@
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
 
-.Tab[data-edit="true"] .title
+#root .Tab[data-edit="true"] .body .t-box .title
   display: none
 
 // ---
