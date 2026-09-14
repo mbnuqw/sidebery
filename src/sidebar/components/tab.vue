@@ -21,6 +21,8 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
+  :data-bound="tab.reactive.bound"
+  :data-bound-away="tab.reactive.boundAway"
   :title="tab.reactive.tooltip"
   :draggable="!tab.reactive.customTitleEdit"
   @dragstart="onDragStart"
@@ -53,6 +55,8 @@
       .progress-spinner(v-if="Settings.state.animations")
       svg.progress-spinner(v-else): use(href="#icon_hourglass")
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
+      .bind-mark(v-if="tab.reactive.bound")
+        svg.bind-mark-icon: use(href="#icon_home")
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
@@ -359,6 +363,12 @@ function onMouseDown(e: MouseEvent): void {
       } else if (Settings.state.tabPinnedMiddleClick === 'unpin') {
         Tabs.unpinTabs([tab.id])
         return
+      } else if (Settings.state.tabPinnedMiddleClick === 'toggle_bind_url') {
+        Tabs.toggleBindTabs(selectedTabs)
+        return
+      } else if (Settings.state.tabPinnedMiddleClick === 'return_to_bound') {
+        Tabs.returnToBound(tab.id)
+        return
       }
     }
 
@@ -376,6 +386,10 @@ function onMouseDown(e: MouseEvent): void {
         Tabs.duplicateTabs([tab.id])
       } else if (Settings.state.tabMiddleClick === 'dup_child') {
         Tabs.duplicateTabs([tab.id], true)
+      } else if (Settings.state.tabMiddleClick === 'toggle_bind_url') {
+        Tabs.toggleBindTabs(selectedTabs)
+      } else if (Settings.state.tabMiddleClick === 'return_to_bound') {
+        Tabs.returnToBound(tab.id)
       }
     }
   }
@@ -411,7 +425,11 @@ function longClickFeedback(e: MouseEvent) {
   else if (action === 'new_after') Tabs.createTabAfter(tab.id)
   else if (action === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
   else if (action === 'edit_title' && !tab.pinned) Tabs.editTabTitle([tab.id])
-  else noop = true
+  else if (action === 'toggle_bind_url') Tabs.toggleBindTabs([tab.id])
+  else if (action === 'return_to_bound') {
+    if (tab.boundUrl && tab.url !== tab.boundUrl) Tabs.returnToBound(tab.id)
+    else noop = true
+  } else noop = true
 
   if (!noop) Tabs.triggerFlashAnimation(tab)
 
@@ -533,6 +551,8 @@ function onDoubleClick(): void {
     if (shouldBeConvertedToGroup()) convertToGroup()
     else Tabs.removeTabs([tab.id])
   } else if (dc === 'edit_title') Tabs.editTabTitle([tab.id])
+  else if (dc === 'toggle_bind_url') Tabs.toggleBindTabs([tab.id])
+  else if (dc === 'return_to_bound') Tabs.returnToBound(tab.id)
 }
 
 function onDragStart(e: DragEvent): void {

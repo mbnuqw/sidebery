@@ -35,6 +35,8 @@ export const TABS_MENU: MenuConf = [
   },
   'separator-2',
   'pin',
+  'bind_url',
+  'return_to_bound',
   'duplicate',
   'discard',
   'copyTabsUrls',

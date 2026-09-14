@@ -160,6 +160,8 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
       branchColor: null,
       color: null,
       isGroup: tab.isGroup,
+      bound: false,
+      boundAway: false,
     }
   }
 
@@ -517,6 +519,12 @@ function restoreTab(
     tab.reactive.folded = tab.folded = !!props.folded
     if (props.customTitle) tab.customTitle = props.customTitle
     if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+    if (props.boundUrl) {
+      tab.boundUrl = props.boundUrl
+      tab.boundTitle = props.boundTitle
+      tab.reactive.bound = true
+      tab.reactive.boundAway = tab.url !== props.boundUrl
+    }
   } else {
     Logs.warn(`Tabs.restoreTab: no props for: "${tab.id} i${tab.index} url${tab.url}"`)
   }
@@ -743,6 +751,8 @@ export function cacheTabsData(delay = 300): void {
       if (tab.cookieStoreId !== D.CONTAINER_ID) info.ctx = tab.cookieStoreId
       if (tab.customTitle) info.customTitle = tab.customTitle
       if (tab.customColor) info.customColor = tab.customColor
+      if (tab.boundUrl) info.boundUrl = tab.boundUrl
+      if (tab.boundTitle) info.boundTitle = tab.boundTitle
       data.push(info)
     }
 
@@ -1254,6 +1264,48 @@ export function repinTabs(tabIds: ID[]): void {
       Logs.err('Tabs.repinTabs: Cannot repin tab:', err)
     })
   }
+}
+
+/**
+ * Bind tabs to their current URL
+ */
+export function bindTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.boundUrl = tab.url
+    tab.boundTitle = tab.customTitle ?? tab.title
+    tab.reactive.bound = true
+    tab.reactive.boundAway = false
+  }
+  Tabs.cacheTabsData()
+}
+
+export function unbindTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.boundUrl = undefined
+    tab.boundTitle = undefined
+    tab.reactive.bound = false
+    tab.reactive.boundAway = false
+  }
+  Tabs.cacheTabsData()
+}
+
+export function toggleBindTabs(tabIds: ID[]): void {
+  const firstTab = Tabs.byId[tabIds[0]]
+  if (!firstTab) return
+  if (firstTab.boundUrl) unbindTabs(tabIds)
+  else bindTabs(tabIds)
+}
+
+export function returnToBound(tabId: ID): void {
+  const tab = Tabs.byId[tabId]
+  if (!tab?.boundUrl) return
+  browser.tabs.update(tabId, { url: tab.boundUrl }).catch(err => {
+    Logs.err('Tabs.returnToBound: Cannot navigate to bound URL:', err)
+  })
 }
 
 /**

@@ -423,6 +423,12 @@
     "zh_CN": "编辑标题",
     "zh_TW": "編輯標題"
   },
+  "KbToggleBindUrl": {
+    "en": "Bind/unbind tab URL"
+  },
+  "KbReturnToBoundUrl": {
+    "en": "Return to bound URL"
+  },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
     "de": "Öffne neuen Tab im aktiven Panel",
