@@ -1,6 +1,8 @@
 @import '../utils'
 
 .ClosedTabsSubPanel
+  --closed-tab-height: 30px
+  --closed-tab-fav-margin-hor: 5px
   position: relative
   display: flex
   flex-direction: column
@@ -9,6 +11,12 @@
   padding-top: var(--general-margin)
   overflow: hidden
   min-height: 100px
+#root[data-density="compact"] .ClosedTabsSubPanel
+  --closed-tab-height: 28px
+  --closed-tab-fav-margin-hor: 4px
+#root[data-density="loose"] .ClosedTabsSubPanel
+  --closed-tab-height: 32px
+  --closed-tab-fav-margin-hor: 6px
 
 .ClosedTabsSubPanel .closed-tabs-container
   position: relative
@@ -32,7 +40,7 @@
 .ClosedTabsSubPanel .closed-tab
   position: relative
   width: calc(100% - var(--tabs-margin) * 2)
-  height: calc(var(--tabs-height) + var(--tabs-margin))
+  height: calc(var(--closed-tab-height) + var(--tabs-margin))
   margin: 0 var(--tabs-margin)
   padding-bottom: var(--tabs-margin)
   z-index: 10
@@ -90,7 +98,7 @@
     top: calc(-20% - var(--tabs-margin))
     left: calc(var(--tabs-indent) / -2)
     width: 1px
-    height: calc(var(--tabs-height) + var(--tabs-margin))
+    height: calc(var(--closed-tab-height) + var(--tabs-margin))
     opacity: var(--tabs-lvl-opacity)
     background-color: var(--frame-fg)
   &:before
@@ -134,49 +142,13 @@
   background-color: transparent
   background-image: linear-gradient(0deg, var(--frame-fg) 0, var(--frame-fg) 80%, transparent 80%, transparent)
 
-.ClosedTabsSubPanel .closed-tab .flash-fx
-  position: absolute
-  display: none
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  border-radius: var(--tabs-border-radius)
-  overflow: hidden
-  opacity: 1
-  animation: flash-box-animation .4s
-  &:before
-    content: ''
-    position: absolute
-    width: 100%
-    height: 100%
-    top: 0
-    left: 0
-    background-image: linear-gradient(90deg, #00000000, var(--frame-fg))
-    transform: translateX(-100%)
-    animation: flash-progress-animation .4s
-.ClosedTabsSubPanel .closed-tab[data-flash="true"] .flash-fx
-  display: block
-
-@keyframes flash-box-animation
-  0%
-    opacity: .8
-  100%
-    opacity: 0
-
-@keyframes flash-progress-animation
-  0%
-    transform: translateX(-100%)
-  100%
-    transform: translateX(5px)
-
 .ClosedTabsSubPanel .closed-tab .fav
   position: relative
   width: 16px
   height: 16px
   flex-shrink: 0
   opacity: 1
-  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
+  margin: 0 var(--closed-tab-fav-margin-hor) 0 calc(var(--closed-tab-fav-margin-hor) + 2px)
   z-index: 20
   > svg
     opacity: .7
@@ -213,8 +185,8 @@
   justify-content: center
   align-items: center
   margin: 0 1px 0 0
-  width: calc(var(--tabs-height) - 2px)
-  height: calc(var(--tabs-height) - 2px)
+  width: calc(var(--closed-tab-height) - 2px)
+  height: calc(var(--closed-tab-height) - 2px)
   flex-shrink: 0
   z-index: 2
   border-radius: calc(var(--general-border-radius) - 1px)

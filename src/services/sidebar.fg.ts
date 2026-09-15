@@ -130,6 +130,7 @@ export let scrollAreaRightX = 0
 export let scrollAreaLeftX = 0
 export let panelsTop = 0
 export let tabMargin = 0
+export let tabMinHeight = 0
 export let bookmarkHeight = 0
 export let folderHeight = 0
 export let separatorHeight = 0
@@ -344,6 +345,14 @@ export function recalcElementSizesDebounced(delay = 500): void {
   clearTimeout(recalcElementSizesTimeout)
   recalcElementSizesTimeout = setTimeout(recalcElementSizes, delay)
 }
+
+export function recalcMinTabHeight() {
+  const tabEl = document.getElementsByClassName('Tab')?.[0]
+  const tabCompStyle = tabEl ? getComputedStyle(tabEl) : undefined
+  const tmhRaw = tabCompStyle?.minHeight
+  tabMinHeight = tmhRaw ? Utils.parseCSSNum(tmhRaw)[0] : 0
+}
+export const recalcMinTabHeightDebounced = Utils.debounce(recalcMinTabHeight)
 
 export function recalcSidebarSize(): void {
   setTimeout(() => {

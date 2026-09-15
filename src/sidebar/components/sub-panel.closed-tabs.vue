@@ -15,7 +15,6 @@
         @mouseup="onTabMouseUp($event, rmt)"
         @contextmenu="onTabContextMenu")
         .body
-          .flash-fx
           .fav(@dragstart.stop.prevent)
             svg.fav-icon(v-if="!rmt.favIconUrl"): use(:href="rmt.favPlaceholder")
             img.fav-icon(v-if="rmt.favIconUrl" :src="rmt.favIconUrl" draggable="false")

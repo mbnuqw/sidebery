@@ -114,8 +114,8 @@
 
 #root[data-sticky-tabs-layout="row"] .StickyTabs .Tab:not(:last-of-type)
   margin-right: 0
-  max-width: var(--tabs-height)
-  min-width: var(--tabs-height)
+  max-width: var(--tabs-min-height)
+  min-width: var(--tabs-min-height)
   .close
   .exp
   .t-box
@@ -125,7 +125,14 @@
   &[data-audible="true"]
   &[data-muted="true"]
   &[data-paused="true"]
-    max-width: calc(var(--tabs-height) + 16px)
+    max-width: calc(var(--tabs-min-height) + var(--tabs-audio-btn-size) - 4px)
+  .ctx
+    top: auto
+    right: auto
+    bottom: 1px
+    left: calc(50% - 8px)
+    width: 16px
+    height: 2px
 
 #root[data-sticky-tabs-layout="row"] .StickyTabs .Tab:last-of-type
-  min-width: calc(var(--tabs-height) * 2)
+  min-width: calc(var(--tabs-min-height) * 2)

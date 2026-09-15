@@ -35,43 +35,56 @@
     .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(ref="flashFxEl")
     .unread-mark(v-if="tab.reactive.unread")
-    .fav(@dragstart.stop.prevent)
-      img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
-      svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
-      .exp(
-        v-if="tab.reactive.isParent"
-        @dblclick.prevent.stop
-        @mousedown.stop="onExpandMouseDown"
-        @mouseup="onExpandMouseUp")
-        svg.exp-icon: use(href="#icon_expand")
-      .badge(
-        v-if="tab.reactive.badge || tab.reactive.badgeUrgent"
-        :data-urgent="tab.reactive.badgeUrgent"
-        :style="{ '--bg': tab.reactive.badgeBg ?? '', '--fg': tab.reactive.badgeFg ?? '' }")
-        template(v-if="tab.reactive.badge !== true") {{tab.reactive.badge}}
-      .pending-mark
-      .progress-spinner(v-if="Settings.state.animations")
-      svg.progress-spinner(v-else): use(href="#icon_hourglass")
-      .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
-    .audio(
-      v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
-      @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
-      @mouseup.stop="onAudioMouseUp($event, tab)")
-      svg.audio-icon.-loud: use(href="#icon_loud_badge")
-      svg.audio-icon.-mute: use(href="#icon_mute_badge")
-      svg.audio-icon.-pause: use(href="#icon_pause_12")
-    .t-box(v-if="!iconOnly")
-      input.custom-title-input(
-        v-if="tab.reactive.customTitleEdit"
-        :value="tab.customTitle"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        tabindex="-1"
-        @blur="onCustomTitleBlur"
-        @keydown="onCustomTitlteKD")
-      .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
+    .main-row
+      .fav(@dragstart.stop.prevent)
+        img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
+        svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
+        .exp(
+          v-if="tab.reactive.isParent"
+          @dblclick.prevent.stop
+          @mousedown.stop="onExpandMouseDown"
+          @mouseup="onExpandMouseUp")
+          svg.exp-icon: use(href="#icon_expand")
+        .badge(
+          v-if="tab.reactive.badge || tab.reactive.badgeUrgent"
+          :data-urgent="tab.reactive.badgeUrgent"
+          :style="{ '--bg': tab.reactive.badgeBg ?? '', '--fg': tab.reactive.badgeFg ?? '' }")
+          template(v-if="tab.reactive.badge !== true") {{tab.reactive.badge}}
+        .pending-mark
+        .progress-spinner(v-if="Settings.state.animations")
+        svg.progress-spinner(v-else): use(href="#icon_hourglass")
+        .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
+      .audio(
+        v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
+        @mousedown.stop.prevent="onAudioMouseDown($event, tab)"
+        @mouseup.stop="onAudioMouseUp($event, tab)")
+        svg.audio-icon.-loud: use(href="#icon_loud_badge")
+        svg.audio-icon.-mute: use(href="#icon_mute_badge")
+        svg.audio-icon.-pause: use(href="#icon_pause_12")
+      .t-box(v-if="!iconOnly")
+        template(v-if="tab.reactive.customTitleEdit")
+          input.custom-title-input(
+            v-if="!Settings.tabsMultiLineTitle"
+            :value="tab.customTitle"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            tabindex="-1"
+            @blur="onCustomTitleBlur"
+            @keydown="onCustomTitlteKD")
+          textarea.custom-title-input(
+            v-else
+            :value="tab.customTitle"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            tabindex="-1"
+            @scroll.passive="onCustomTitleScroll"
+            @blur="onCustomTitleBlur"
+            @keydown="onCustomTitlteKD")
+        .title(ref="titleEl") {{tab.customTitle ?? tab.title}}
     .close(
       v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
       draggable="true"
@@ -151,6 +164,8 @@ onMounted(() => {
     tab.el = tabEl.value ?? undefined
     if (tab.el) tab.el.__sdbr_tabId = tab.id
   }
+
+  if (!Sidebar.tabMinHeight) Sidebar.recalcMinTabHeight()
 })
 
 function shouldBeConvertedToGroup(): boolean {
@@ -766,8 +781,31 @@ function onError(): void {
   Tabs.renderFavicon(tab)
 }
 
+let scrollFrameId: number | undefined
+let mlttadown = false
+function onCustomTitleScroll(e: Event) {
+  if (scrollFrameId !== undefined) return
+
+  scrollFrameId = requestAnimationFrame(() => {
+    scrollFrameId = undefined
+    if (!tabEl.value) return
+    const titleInputEl = e.target as HTMLInputElement
+    if (mlttadown && titleInputEl.scrollTop === 0) {
+      mlttadown = false
+      tabEl.value.classList.remove('-mlttadown')
+    } else if (!mlttadown) {
+      mlttadown = true
+      tabEl.value.classList.add('-mlttadown')
+    }
+  })
+}
+
 function onCustomTitleBlur(e: Event) {
   const titleInputEl = e.target as HTMLInputElement
+  tabEl.value?.classList.remove('-mlttadown')
+  if (scrollFrameId) cancelAnimationFrame(scrollFrameId)
+  scrollFrameId = undefined
+  mlttadown = false
 
   Tabs.setEditableTabId(NOID)
   tab.customTitle = titleInputEl.value

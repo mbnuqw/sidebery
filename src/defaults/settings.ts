@@ -113,6 +113,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   forceDiscard: true,
   tabUpdDelay: 150,
   forceUpdTooltip: false,
+  stickyActiveTab: false,
+  tabsTitleLinesMax: 1,
+  tabsTitleLinesBr: 'w',
 
   // New tab position
   moveNewTabPin: 'start',
@@ -136,7 +139,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Tabs tree
   tabsTree: true,
   tabsTreeLimit: 'none',
-  stickyActiveTab: false,
   stickyAncestorTabs: false,
   stickyAncestorTabsLimit: 3,
   stickyAncestorTabsLayout: 'col',
@@ -310,6 +312,7 @@ export const SETTINGS_OPTIONS = {
   ],
   navBookmarksPanelMidClickAction: ['convert', 'none'],
   tabsUrlInTooltip: ['full', 'stripped', 'none'],
+  tabsTitleLinesBr: ['w', 'c'],
   groupLayout: ['grid', 'list'],
   hScrollAction: ['switch_panels', 'switch_act_tabs', 'none'],
   scrollThroughTabs: ['panel', 'global', 'psp', 'psg', 'none'],

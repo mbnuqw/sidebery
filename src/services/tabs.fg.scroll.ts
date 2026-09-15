@@ -83,7 +83,9 @@ export function calcStickyTabs(panel: TabsPanel): void {
       !tab.removing &&
       scrollBottom <
         tab.el.offsetTop +
-          (stack ? (bottomOffset += tab.el.offsetHeight) : tab.el.offsetHeight) +
+          (stack
+            ? (bottomOffset += Sidebar.tabMinHeight + Sidebar.tabMargin)
+            : Sidebar.tabMinHeight + Sidebar.tabMargin) +
           ntbbHeight
     ) {
       bottomLen++
@@ -102,7 +104,7 @@ export function calcStickyTabs(panel: TabsPanel): void {
     if (scrollTop > tab.el.offsetTop - topOffset) {
       topLen++
       if (stack) {
-        const h = tab.el.offsetHeight
+        const h = Sidebar.tabMinHeight + Sidebar.tabMargin
         topOffset += h
         stickyTopOffsets[i] = h
         if (topLen >= topLimit) topOffset -= stickyTopOffsets.pop() ?? 0

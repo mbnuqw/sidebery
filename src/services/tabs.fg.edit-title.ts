@@ -40,7 +40,7 @@ export async function editTabTitle(tabIds: ID[]) {
   await Utils.sleep(1)
 
   inputEl.focus()
-  inputEl.select()
+  inputEl.setSelectionRange(0, inputEl.value.length, 'backward')
 }
 
 export function saveCustomTitle(tabId: ID) {

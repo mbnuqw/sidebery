@@ -39,35 +39,6 @@ To get currently available css-selectors use debugger:
 
 <br>
 
-## Tabs multiline titles
-
-![Tabs multiline titles](./assets/tabs-multiline-titles.png)
-
-- Set custom css:
-
-```css
-#root {
-  --tabs-height: 36px !important;
-  --tabs-title-padding: 8px;
-  --tabs-font-size: .8rem;
-  --tabs-title-lines: 2;
-}
-
-.Tab .t-box {
-  align-items: center;
-  max-height: calc(var(--tabs-height) - var(--tabs-title-padding));
-  overflow: hidden;
-}
-
-.Tab .title {
-  font-size: var(--tabs-font-size);
-  white-space: pre-wrap;
-  line-height: calc((var(--tabs-height) - var(--tabs-title-padding)) / var(--tabs-title-lines));
-}
-```
-
-<br>
-
 ## Vertical panel labels
 
 ![Vertical panel labels](./assets/vert-nav-labels.png)
