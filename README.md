@@ -118,6 +118,8 @@ create folder `chrome` with file `userChrome.css`.
     }
     #sidebar-box {
       padding: 0 !important;
+      border-radius: 0 !important;
+      border: none !important;
     }
     #sidebar-box #sidebar {
       box-shadow: none !important;
