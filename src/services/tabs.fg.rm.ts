@@ -301,8 +301,8 @@ export async function removeTabs(
 
   const tabsInfo = Tabs.getTabsInfo(toRemove, true)
 
-  if (Tabs.removingTabs && Tabs.removingTabs.length) {
-    removingTabs = [...Tabs.removingTabs, ...toRemove]
+  if (removingTabs && removingTabs.length) {
+    removingTabs = [...removingTabs, ...toRemove]
   } else {
     removingTabs = [...toRemove]
   }
