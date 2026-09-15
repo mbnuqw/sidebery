@@ -285,7 +285,6 @@ export async function removeTabs(
 
   // Set tabs to be removed
   const parents: Record<ID, ID> = {}
-  const lastTabToo = panel.tabs[panel.tabs.length - 1]?.id === tabs[count - 1]?.id
   let visibleLen = 0
   let activeTab: Tab | undefined
 
