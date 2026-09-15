@@ -320,6 +320,10 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
       }
     }
     index = tab.index
+    if (panel) {
+      if (index > panel.nextTabIndex) index = panel.nextTabIndex
+      else if (index < panel.startTabIndex) index = panel.startTabIndex
+    }
     tab.openerTabId = position.parent
     if (position.unread !== undefined) tab.unread = position.unread
     delete Tabs.newTabsPosition[tab.index]
