@@ -468,9 +468,9 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   if (panel && tab.index !== index) {
     handleNewTabMove(tab)
   }
-  // If the prev newtab move already scheduled defer it to be sure that
+  // If the prev newtab move already scheduled, defer it to be sure that
   // sidebery consumed all batched newtab events.
-  else if (handleNewTabMoveTimeout !== undefined) {
+  else if (newTabMoveInProgress) {
     handleNewTabMove()
   }
 
@@ -681,6 +681,7 @@ const NEW_TAB_MOVE_DELAY = 200
 let handleNewTabMoveTimeout: number | undefined
 let newTabToMove: Tab | undefined
 let waitingNewTabMove: (() => void)[] = []
+let newTabMoveInProgress = false
 
 function handleNewTabMove(newTab?: Tab) {
   // Change the target tab only if the newTab is set.
@@ -691,12 +692,14 @@ function handleNewTabMove(newTab?: Tab) {
       // Reset the previous new tab to sort all tabs
       newTabToMove = undefined
     }
-    // There is no new tab and timeout is not started
-    else if (handleNewTabMoveTimeout === undefined) {
+    // There is no new tab and no movement is in progress
+    else if (!newTabMoveInProgress) {
       // Set tab to move as this is the first new tab in a while (NEW_TAB_MOVE_DELAY)
       newTabToMove = newTab
     }
   }
+
+  newTabMoveInProgress = true
 
   clearTimeout(handleNewTabMoveTimeout)
   handleNewTabMoveTimeout = setTimeout(() => {
@@ -712,10 +715,8 @@ function handleNewTabMove(newTab?: Tab) {
     }
 
     const tab = newTabToMove
-    newTabToMove = undefined
-
     if (!tab) {
-      Tabs.sortNativeTabs()
+      Tabs.sortNativeTabs().finally(() => (newTabMoveInProgress = false))
     } else {
       tab.moving = true
       Utils.GLOBAL_QUEUE.add(browser.tabs.move, tab.id, { index: tab.index })
@@ -723,6 +724,8 @@ function handleNewTabMove(newTab?: Tab) {
           Logs.err('Tabs.handleNewTabMove: Cannot move the tab to the correct position:', err)
         })
         .finally(() => {
+          newTabMoveInProgress = false
+          newTabToMove = undefined
           tab.moving = undefined
 
           if (waitingNewTabMove.length) {
