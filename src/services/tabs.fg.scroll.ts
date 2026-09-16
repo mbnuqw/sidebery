@@ -66,6 +66,7 @@ export function calcStickyTabs(panel: TabsPanel): void {
   const reactive = panel.reactive
   const scrollTop = panel.scrollEl.scrollTop
   const scrollBottom = panel.scrollEl.offsetHeight + scrollTop
+  if (scrollBottom === scrollTop) return
   const ntbbHeight = Settings.newTabBarPositionAfterTabs ? (panel.ntbbEl?.offsetHeight ?? 0) : 0
   const stack = Settings.stickyAncestorTabsLayoutCol
   const limit = Settings.stickyAncestorTabsLimit + (Settings.state.stickyActiveTab ? 1 : 0)
