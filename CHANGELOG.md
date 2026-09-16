@@ -2,7 +2,50 @@
 
 ## Unreleased
 
----
+### Added
+
+- Tabs: multiline titles  
+  BREAKING CHANGE (for custom styles (in Sidebery) users):
+  - Removed `--tabs-height` CSS var: Use `--tabs-padding`, `--tabs-title-line-height`, `--tabs-title-padding-top`, `--tabs-title-padding-bottom` vars to configure tab height. Additionally, `--tabs-title-padding-top`, `--tabs-title-padding-bottom` vars can be used to shift the text of title up or down.
+  - Removed `--tabs-inner-gap` CSS var: The internal space between sub-elements of tab is calculated from the new above-mentioned vars now.
+  - Added `.main-row` wrapper for `.fav`, `.audio` and `.t-box` elements in `.Tab > .body`
+  Note: for some features to work correctly, the `.Tab` element must have the `min-height` property.
+- 'Unload other tabs' tab menu option (by [@the-nelsonator](https://github.com/the-nelsonator): [#2411](https://github.com/mbnuqw/sidebery/issues/2411))  
+- 'Expand all' navbar element (by [@the-nelsonator](https://github.com/the-nelsonator): [#2412](https://github.com/mbnuqw/sidebery/issues/2412))  
+- Sticky active and ancestor tabs (co-authored by [@the-nelsonator](https://github.com/the-nelsonator): [#2424](https://github.com/mbnuqw/sidebery/issues/2424))  
+
+### Changed
+- Make pinned tabs global by default (for new users)
+
+### Fixed
+
+- Tabs: desynced order on fast opening new tabs  
+- Tabs: false-positive bottom sticky tabs bar
+- Unsafe index usage in onTabCreated  
+- Enabling sticky active tab activates sticky ancestor tabs too
+- Broken panels/tabs when converting panels and applying snapshot in some cases  
+- Sticky NTB doesn't stick on scroll
+- Incorrect panel activation on converting tabPanel <-> bkmPanel
+- Multi-select doesn't work in bookmarks sub-panel sometimes  
+  Properly update subPanel.bookmarks so bounds of this temp panel
+  will update correctly.
+- Search: placeholder doesn't disappear during text composition
+- Ignore text entered into search bar when compositing (by [@ariasuni](https://github.com/ariasuni): [#2450](https://github.com/mbnuqw/sidebery/issues/2450))
+- Dnd: wrong dst index on drag and drop from sub-panel sometimes
+- Incorrect animation of sticky new-tab-bar when switching panel
+- Sticky tabs: allow sticky active tab in non-tree mode  
+  plus, some minor perf opts and refactoring
+- Tab styles: uncentered favicon and close button border radius
+- Sticky tabs: tab in transitory removing state shown as sticky
+- Tab: the tab is being selected before close (multipleMiddleClose: true)
+- Tests: tab mock type
+
+### Performance Improvements
+
+- Some micro optimizations
+- Snapshots: use TextEncoder instead of new Blob to fix heavy GC lag (by [@llc0930](https://github.com/llc0930): [#2441](https://github.com/mbnuqw/sidebery/issues/2441))  
+
+
 
 ## v5.6.1 - 2026.07.16
 
