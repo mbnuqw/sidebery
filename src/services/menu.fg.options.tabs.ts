@@ -540,7 +540,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       opts.push({
         label: title,
         color: color.color as browser.ColorName,
-        icon: color.value === 'toolbar' ? 'icon_none' : 'circle',
+        icon: color.value === 'toolbar' ? 'icon_none' : 'circle_filled',
         onClick: () => Tabs.setCustomColor(selected, color.value),
       })
     }
