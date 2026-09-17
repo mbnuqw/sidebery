@@ -2761,9 +2761,11 @@ export async function paste(dst: T.DstPlaceInfo) {
 export function triggerFlashAnimation(tab: T.Tab): void {
   if (tab.flashAnimationTimeout) return
   if (tab.flashFxEl) tab.flashFxEl.setAttribute('data-run', 'true')
+  if (tab.stickyFlashFxEl) tab.stickyFlashFxEl.setAttribute('data-run', 'true')
   tab.flashAnimationTimeout = setTimeout(() => {
     tab.flashAnimationTimeout = undefined
     if (tab.flashFxEl) tab.flashFxEl.setAttribute('data-run', 'false')
+    if (tab.stickyFlashFxEl) tab.stickyFlashFxEl.setAttribute('data-run', 'false')
   }, 1000)
 }
 
@@ -2924,34 +2926,69 @@ export function renderTitle(tab: T.Tab, forcedTitle?: string) {
   if (tab.titleEl) {
     tab.titleEl.innerText = forcedTitle ?? tab.customTitle ?? tab.title
   }
+  if (tab.stickyTitleEl) {
+    tab.stickyTitleEl.innerText = forcedTitle ?? tab.customTitle ?? tab.title
+  }
   if (Settings.state.forceUpdTooltip) {
     updateTooltip(tab.id)
   }
 }
 
 export function renderFavicon(tab: T.Tab) {
-  renderFaviconInto(tab, tab.favImgEl, tab.favSvgUseEl)
+  const imgEl = tab.favImgEl
+  const svgUseEl = tab.favSvgUseEl
+  const stickyImgEl = tab.stickyFavImgEl
+  const stickySvgUseEl = tab.stickyFavSvgUseEl
+
+  if (tab.favIconUrl) {
+    if (imgEl) {
+      // Set img
+      imgEl.src = tab.favIconUrl
+      // Show img
+      if (imgEl.style) imgEl.style.display = 'block'
+      // Hide svg
+      if (svgUseEl?.parentElement) svgUseEl.parentElement.style.display = 'none'
+    }
+    if (stickyImgEl) {
+      stickyImgEl.src = tab.favIconUrl
+      if (stickyImgEl.style) stickyImgEl.style.display = 'block'
+      if (stickySvgUseEl?.parentElement) stickySvgUseEl.parentElement.style.display = 'none'
+    }
+  } else {
+    let icon
+    if (svgUseEl?.parentElement) {
+      // Set svg
+      icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+      svgUseEl.setAttribute('href', icon)
+      // Show svg
+      svgUseEl.parentElement.style.display = 'block'
+      // Hide img
+      if (imgEl?.style) imgEl.style.display = 'none'
+    }
+    if (stickySvgUseEl?.parentElement) {
+      if (!icon) icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+      stickySvgUseEl.setAttribute('href', icon)
+      stickySvgUseEl.parentElement.style.display = 'block'
+      if (stickyImgEl?.style) stickyImgEl.style.display = 'none'
+    }
+  }
 }
 
-export function renderFaviconInto(
-  tab: T.Tab,
-  imgEl?: HTMLImageElement,
-  svgUseEl?: SVGElement
-): void {
-  if (tab.favIconUrl && imgEl) {
+export function renderStickyFavicon(tab: T.Tab, placeholder: boolean) {
+  const stickyImgEl = tab.stickyFavImgEl
+  const stickySvgUseEl = tab.stickyFavSvgUseEl
+
+  if (tab.favIconUrl && stickyImgEl && !placeholder) {
     // Set img
-    imgEl.src = tab.favIconUrl
+    stickyImgEl.src = tab.favIconUrl
     // Show img
-    if (imgEl.style) imgEl.style.display = 'block'
+    if (stickyImgEl.style) stickyImgEl.style.display = 'block'
     // Hide svg
-    if (svgUseEl?.parentElement) svgUseEl.parentElement.style.display = 'none'
-  } else if (svgUseEl?.parentElement) {
-    // Set svg
+    if (stickySvgUseEl?.parentElement) stickySvgUseEl.parentElement.style.display = 'none'
+  } else if (stickySvgUseEl?.parentElement) {
     const icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
-    svgUseEl.setAttribute('href', icon)
-    // Show svg
-    svgUseEl.parentElement.style.display = 'block'
-    // Hide img
-    if (imgEl) imgEl.style.display = 'none'
+    stickySvgUseEl.setAttribute('href', icon)
+    stickySvgUseEl.parentElement.style.display = 'block'
+    if (stickyImgEl?.style) stickyImgEl.style.display = 'none'
   }
 }

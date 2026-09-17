@@ -386,7 +386,7 @@ declare namespace browser {
       attention?: boolean
       audible?: boolean
       discarded?: boolean
-      favIconUrl?: string
+      favIconUrl?: string | null
       groupId?: ID
       hidden?: boolean
       isArticle?: boolean

@@ -74,6 +74,10 @@ export class MTab implements Tab {
   favImgEl?: HTMLImageElement | undefined
   favSvgUseEl?: SVGElement | undefined
   flashFxEl?: HTMLElement | undefined
+  stickyTitleEl?: HTMLElement
+  stickyFavImgEl?: HTMLImageElement
+  stickyFavSvgUseEl?: SVGElement
+  stickyFlashFxEl?: HTMLElement
   checkingSessionRestore?: Promise<boolean> | undefined
   resolveSessionRestoreDetection?: ((isSessionRestore: boolean) => void) | undefined
   active: boolean = false

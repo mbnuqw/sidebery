@@ -37,7 +37,7 @@
     .unread-mark(v-if="tab.reactive.unread")
     .main-row
       .fav(@dragstart.stop.prevent)
-        img.fav-icon(ref="favImgEl" @error="onError" draggable="false")
+        img.fav-icon(ref="favImgEl" @error="onImgFavError" draggable="false")
         svg.fav-icon: use(ref="favSvgUseEl" href="#icon_ff")
         .exp(
           v-if="tab.reactive.isParent"
@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, useTemplateRef } from 'vue'
+import { computed, onMounted, useTemplateRef, onUnmounted } from 'vue'
 import type { DragInfo, DragItem, Tab } from 'src/types'
 import { TabStatus, DragType, DropType, MenuType } from 'src/enums'
 import * as Settings from 'src/services/settings'
@@ -123,10 +123,10 @@ const iconOnly =
     Settings.state.pinnedTabsPosition === 'right')
 
 const tabEl = useTemplateRef('tabEl')
-const titleEl = ref<HTMLElement | null>(null)
-const favImgEl = ref<HTMLImageElement | null>(null)
-const favSvgUseEl = ref<SVGElement | null>(null)
-const flashFxEl = ref<HTMLElement | null>(null)
+const titleEl = useTemplateRef('titleEl')
+const favImgEl = useTemplateRef('favImgEl')
+const favSvgUseEl = useTemplateRef('favSvgUseEl')
+const flashFxEl = useTemplateRef('flashFxEl')
 
 const tabColor = computed<string>(() => {
   if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
@@ -144,11 +144,12 @@ const tabColor = computed<string>(() => {
 })
 
 onMounted(() => {
-  // Sticky clones are a second view of the same tab. They must not overwrite the
-  // shared element refs on the tab object (those drive the real row's favicon/title/
-  // flash updates), so render the favicon into the clone's own elements instead.
   if (props.sticky) {
-    Tabs.renderFaviconInto(tab, favImgEl.value ?? undefined, favSvgUseEl.value ?? undefined)
+    if (titleEl.value) tab.stickyTitleEl = titleEl.value
+    if (favImgEl.value) tab.stickyFavImgEl = favImgEl.value
+    if (favSvgUseEl.value) tab.stickyFavSvgUseEl = favSvgUseEl.value
+    if (flashFxEl.value) tab.stickyFlashFxEl = flashFxEl.value
+    if (tab.url !== 'about:blank') Tabs.renderStickyFavicon(tab, false)
     return
   }
 
@@ -166,6 +167,15 @@ onMounted(() => {
   }
 
   if (!Sidebar.tabMinHeight) Sidebar.recalcMinTabHeight()
+})
+
+onUnmounted(() => {
+  if (props.sticky) {
+    tab.stickyTitleEl = undefined
+    tab.stickyFavImgEl = undefined
+    tab.stickyFavSvgUseEl = undefined
+    tab.stickyFlashFxEl = undefined
+  }
 })
 
 function shouldBeConvertedToGroup(): boolean {
@@ -770,11 +780,9 @@ function onExpandMouseUp(e: MouseEvent): void {
   }
 }
 
-function onError(): void {
-  // For a sticky clone, fall back to the placeholder locally without mutating the
-  // shared tab (which would affect the real row).
+function onImgFavError(): void {
   if (props.sticky) {
-    Tabs.renderFaviconInto(tab, undefined, favSvgUseEl.value ?? undefined)
+    Tabs.renderStickyFavicon(tab, true)
     return
   }
   tab.favIconUrl = undefined
