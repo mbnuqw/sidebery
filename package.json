@@ -34,7 +34,6 @@
   "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-vue": "6.0.9",
-    "@vue/compiler-sfc": "3.5.42",
     "@vue/language-plugin-pug": "3.3.11",
     "esbuild": "0.28.2",
     "eslint": "10.10.0",
