@@ -11,3 +11,4 @@ build/*
 /.devenv/
 /.direnv/
 .idea
+.thinktank
