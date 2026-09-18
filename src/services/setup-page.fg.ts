@@ -434,6 +434,13 @@ export async function getDbgDetails(): Promise<T.DbgInfo> {
   }
 
   try {
+    const s = await browser.storage.local.get<Record<string, any>>('domainTreesLogs')
+    if (s.domainTreesLogs) dbg.domainTreesLogs = s.domainTreesLogs.slice(-50)
+  } catch {
+    // ignore
+  }
+
+  try {
     const nativeBookmarks = await browser.bookmarks.getTree()
     let bookmarksCount = 0
     let foldersCount = 0

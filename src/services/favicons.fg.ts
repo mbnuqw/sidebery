@@ -54,6 +54,9 @@ export async function load(): Promise<void> {
         Tabs.renderFavicon(tab)
       }
     }
+    if (Tabs.DomainTrees?.updateAllDomainTreesFavicons) {
+      Tabs.DomainTrees.updateAllDomainTreesFavicons()
+    }
   }
 
   ready = true

@@ -206,6 +206,11 @@ export async function removeTabs(
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
+  if (!silent) {
+    const ok = await Tabs.DomainTrees.checkGuardedPlaceholderClose(tabIds)
+    if (!ok) return
+  }
+
   Tabs.sortTabIds(tabIds)
 
   const rmChildTabsFolded = Settings.rmChildTabsFolded && !Search.active

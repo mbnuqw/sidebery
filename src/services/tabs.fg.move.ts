@@ -368,9 +368,17 @@ export async function move(
     })
   }
 
-  // Reset moving tabs marks
-  tabs.forEach(t => (t.moving = undefined))
-  movingTabs = []
+  // Reset moving tabs marks after a delay so that asynchronous browser.tabs.onMoved
+  // events can be consumed cleanly by onTabMoved without triggering index mismatch errors.
+  setTimeout(() => {
+    tabs.forEach(t => {
+      if (t.moving) t.moving = undefined
+    })
+    for (const id of ids) {
+      const idx = Tabs.movingTabs.indexOf(id)
+      if (idx !== -1) Tabs.movingTabs.splice(idx, 1)
+    }
+  }, 1000)
 
   // Update visibility
   if (Settings.state.hideFoldedTabs || (Settings.state.hideInact && panelIsChanged)) {
@@ -379,6 +387,14 @@ export async function move(
 
   // Update filtered results
   if (Search.active) Search.search()
+
+  if (Settings.state.domainTrees) {
+    for (const p of srcParents) {
+      if (p && (p.isGroup || Tabs.DomainTrees?.isDomainTreeGroup(p))) {
+        Tabs.DomainTrees.checkEmptyPlaceholder(p.id)
+      }
+    }
+  }
 }
 
 /**

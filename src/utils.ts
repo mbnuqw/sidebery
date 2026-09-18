@@ -297,6 +297,25 @@ export function colorFromString(str: string, minLightness = 50): string {
   return `hsl(${(h % 181) * 2}deg, ${(s % 6) * 5 + 60}%, ${(l % 3) * 10 + minLightness}%)`
 }
 
+/**
+ * Generate a vibrant, strong HSL color from string (higher saturation, rich lightness)
+ */
+export function vibrantColorFromString(str: string): string {
+  let h = 0
+  let s = 0
+  for (let pcc, cc, i = 1; i < str.length; i += 2) {
+    cc = str.charCodeAt(i)
+    pcc = str.charCodeAt(i - 1)
+    h += pcc + cc
+    s += pcc
+  }
+
+  const hue = (h % 181) * 2
+  const sat = 88 + (s % 3) * 4
+  const light = 48
+  return `hsl(${hue}deg, ${sat}%, ${light}%)`
+}
+
 const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.]+%?)?\)/
 const HEXA_RE =
   /^#([0-f])([0-f])([0-f])([0-f])?$|^#([0-f][0-f])([0-f][0-f])([0-f][0-f])([0-f][0-f])?$/
@@ -1518,3 +1537,4 @@ export function untilElGetFocus(el: HTMLInputElement | null, cb: (el: HTMLInputE
     cb(el)
   }, 5)
 }
+
