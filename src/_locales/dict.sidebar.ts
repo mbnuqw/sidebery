@@ -49,6 +49,9 @@ export const sidebarTranslations: Translations = {
     zh_TW: n => `您確定要關閉 ${n} 個分頁嗎？`,
     ja: n => `本当に${n}個のタブを閉じますか？`,
   },
+  'confirm.domain_tree_close': {
+    en: (domain, n) => `Close "${domain}" domain tree and its ${n} tabs?`,
+  },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',
     de: 'Möchten Sie die gewählten Lesezeichen wirklich löschen?',

@@ -3999,6 +3999,53 @@ Available parameters:
     ja: '他のタブの前にグループを並べ替える',
   },
 
+  // - Domain trees
+  'settings.nav_settings_domain_trees': {
+    en: 'Domain Trees (Inline Panels)',
+  },
+  'settings.domain_trees': {
+    en: 'Auto-group tabs by domain into inline trees',
+  },
+  'settings.domain_trees_universal': {
+    en: 'Auto-group any domain with 2 or more tabs',
+  },
+  'settings.domain_tree_auto_fold': {
+    en: 'Auto-fold domain trees',
+  },
+  'settings.domain_tree_confirm_close': {
+    en: 'Confirm before closing domain tree placeholder',
+  },
+  'settings.domain_tree_rules': {
+    en: 'Domain tree rules',
+  },
+  'settings.domain_tree_new_tab_position': {
+    en: 'Position of new tabs in domain tree',
+  },
+  'settings.domain_tree_new_tab_position_first_child': {
+    en: 'Top of tree (first child)',
+  },
+  'settings.domain_tree_new_tab_position_last_child': {
+    en: 'Bottom of tree (last child)',
+  },
+  'settings.domain_tree_rules_note': {
+    en: 'Specify domain rules (e.g. "Media: youtube|youtu.be|spotify|bandcamp" or "youtube.com|youtu.be"). One rule per line.',
+  },
+  'settings.domain_trees_recalc': {
+    en: 'Group open tabs now',
+  },
+  'settings.domain_trees_view_logs': {
+    en: 'View domain trees logs',
+  },
+  'settings.domain_trees_copy_logs': {
+    en: 'Copy domain trees logs',
+  },
+  'settings.domain_trees_clear_logs': {
+    en: 'Clear logs',
+  },
+  'settings.domain_trees_logs_copied': {
+    en: 'Domain trees logs copied to clipboard',
+  },
+
   // - Tabs colorization
   'settings.colorize_tabs': {
     en: 'Colorize tabs',
