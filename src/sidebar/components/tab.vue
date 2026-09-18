@@ -15,6 +15,8 @@
   :data-urgent-descendant="tab.reactive.hasUrgentDescendant"
   :data-lvl="tab.reactive.lvl"
   :data-group="tab.reactive.isGroup"
+  :data-domain-group="isDomainGroup"
+  :data-named-domain-group="isNamedDomainGroup"
   :data-parent="tab.reactive.isParent"
   :data-folded="tab.reactive.folded"
   :data-color="tab.reactive.containerColor"
@@ -128,8 +130,18 @@ const favImgEl = useTemplateRef('favImgEl')
 const favSvgUseEl = useTemplateRef('favSvgUseEl')
 const flashFxEl = useTemplateRef('flashFxEl')
 
+const isDomainGroup = computed(() => !!tab.reactive.isGroup && Tabs.isDomainTreeGroup(tab))
+const isNamedDomainGroup = computed(() => !!tab.reactive.isGroup && Tabs.isNamedDomainTree(tab))
+
 const tabColor = computed<string>(() => {
   if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
+  if (
+    isNamedDomainGroup.value &&
+    (Settings.state.colorizeTabs || Settings.state.colorizeTabsBranches)
+  ) {
+    const key = Tabs.getDomainTreeKey(tab) || tab.title || ''
+    return Utils.vibrantColorFromString(key)
+  }
   if (
     Settings.state.colorizeTabsBranches &&
     tab.reactive.branchColor &&
@@ -735,6 +747,16 @@ function activate(): void {
   if (Search.active && !Settings.state.searchTabSwitch) {
     Search.stop()
     Selection.resetSelection()
+  }
+
+  if (Settings.state.domainTrees && Tabs.DomainTrees?.isDomainTreeGroup(tab)) {
+    const targetChild = Tabs.DomainTrees.getLastActiveChild(tab)
+    if (targetChild) {
+      if (tab.folded) Tabs.expTabsBranch(tab.id)
+      activating = true
+      browser.tabs.update(targetChild.id, { active: true })
+      return
+    }
   }
 
   if (tab.id !== Tabs.activeId) {
