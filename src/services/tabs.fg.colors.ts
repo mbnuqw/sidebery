@@ -36,7 +36,12 @@ export function colorizeTab(tabId: ID): void {
   if (!tab) return
 
   let srcStr, color
-  if (Settings.state.colorizeTabsSrc === 'domain') {
+  if (Tabs.isDomainTreeGroup(tab)) {
+    srcStr = Tabs.getDomainTreeKey(tab) || tab.title || 'group'
+    color = Tabs.isNamedDomainTree(tab)
+      ? Utils.vibrantColorFromString(srcStr)
+      : Utils.colorFromString(srcStr, 60)
+  } else if (Settings.state.colorizeTabsSrc === 'domain') {
     srcStr = Utils.getHostname(tab.url)
     color = Utils.colorFromString(srcStr, 60)
   } else {
@@ -62,13 +67,17 @@ export function colorizeBranch(rootId: ID): void {
   if (!rootTab || rootTab.lvl > 0) return
 
   let srcStr
-  if (Settings.state.colorizeTabsBranchesSrc === 'url') {
+  if (Tabs.isDomainTreeGroup(rootTab)) {
+    srcStr = Tabs.getDomainTreeKey(rootTab) || rootTab.title || 'group'
+  } else if (Settings.state.colorizeTabsBranchesSrc === 'url') {
     srcStr = rootTab.url
   } else {
     srcStr = Utils.getHostname(rootTab.url)
   }
 
-  const color = Utils.colorFromString(srcStr, 60)
+  const color = Tabs.isNamedDomainTree(rootTab)
+    ? Utils.vibrantColorFromString(srcStr)
+    : Utils.colorFromString(srcStr, 60)
   rootTab.reactive.branchColor = color
 
   for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {

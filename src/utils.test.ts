@@ -293,3 +293,14 @@ describe('Utils.clone()', () => {
     expect(clone.set.size).toBe(2)
   })
 })
+
+describe('Utils.normalizeDiacritics()', () => {
+  test('strips diacritics / accents from characters', () => {
+    expect(Utils.normalizeDiacritics('programação')).toBe('programacao')
+    expect(Utils.normalizeDiacritics('Vídeo')).toBe('Video')
+    expect(Utils.normalizeDiacritics('café')).toBe('cafe')
+    expect(Utils.normalizeDiacritics('über')).toBe('uber')
+    expect(Utils.normalizeDiacritics('crème brûlée')).toBe('creme brulee')
+    expect(Utils.normalizeDiacritics('plain text')).toBe('plain text')
+  })
+})

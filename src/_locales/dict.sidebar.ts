@@ -15,6 +15,13 @@ export const sidebarTranslations: Translations = {
     zh_TW: '搜尋...',
     ja: '検索...',
   },
+  'bar.search.tabs_placeholder': {
+    en: 'Search tabs... (F8)',
+    ru: 'Поиск вкладок... (F8)',
+    zh_CN: '搜索标签页... (F8)',
+    zh_TW: '搜尋分頁... (F8)',
+    ja: 'タブを検索... (F8)',
+  },
 
   // ---
   // -- Confirm dialogs
@@ -48,6 +55,9 @@ export const sidebarTranslations: Translations = {
     zh_CN: n => `您确定要关闭 ${n} 个标签页吗？`,
     zh_TW: n => `您確定要關閉 ${n} 個分頁嗎？`,
     ja: n => `本当に${n}個のタブを閉じますか？`,
+  },
+  'confirm.domain_tree_close': {
+    en: (domain, n) => `Close "${domain}" domain tree and its ${n} tabs?`,
   },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',

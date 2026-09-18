@@ -16,7 +16,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "5.6.1",
+  "version": "5.6.2",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -315,6 +315,9 @@
       "description": "__MSG_KbMoveTabsToPanelEnd__"
     },
     "search": {
+      "suggested_key": {
+        "default": "F8"
+      },
       "description": "__MSG_KbSearch__"
     },
     "switch_to_parent_tab": {

@@ -147,6 +147,7 @@ export interface NewTabPosition {
   parent: ID
   panel: ID
   unread?: boolean
+  isDTGroup?: boolean
 }
 
 export interface GroupPageInitData {

@@ -50,6 +50,7 @@ export interface SettingsState {
   subPanelBookmarks: boolean
   subPanelHistory: boolean
   subPanelSync: boolean
+  subPanelTabSearch: boolean
 
   // Group page
   groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]
@@ -160,6 +161,14 @@ export interface SettingsState {
   ignoreFoldedParent: boolean
   showNewGroupConf: boolean
   sortGroupsFirst: boolean
+
+  // Domain trees
+  domainTrees: boolean
+  domainTreesUniversal: boolean
+  domainTreeRules: DomainTreeRuleConfig[]
+  domainTreeNewTabPosition: (typeof SETTINGS_OPTIONS.domainTreeNewTabPosition)[number]
+  domainTreeAutoFold: boolean
+  domainTreeConfirmClose: boolean
 
   // Tabs colorization
   colorizeTabs: boolean
@@ -301,4 +310,11 @@ export interface SettingsState {
   selectCyclic: boolean
   loopPanelsIgnoreHidden: boolean
   kbNewTabInPanelPos: (typeof SETTINGS_OPTIONS.newTabInPanelPos)[number]
+}
+
+export interface DomainTreeRuleConfig {
+  id: ID
+  active: boolean
+  name?: string
+  url: string
 }

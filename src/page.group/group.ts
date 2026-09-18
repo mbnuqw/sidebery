@@ -100,6 +100,8 @@ async function main() {
     if (favicon) tab.favIconUrl = favicon
   }
 
+  updateDomainFavicon()
+
   if (pinTab) {
     document.body.setAttribute('data-pin', 'true')
     document.title = pinTab.title
@@ -230,6 +232,8 @@ async function onTabCreated(tab: T.GroupedTabInfo) {
     Logs.warn('Cannot add new tab: Wrong index:', index)
     return
   }
+
+  updateDomainFavicon()
 }
 
 /**
@@ -269,6 +273,8 @@ function onTabUpdated(upd: T.GroupedTabInfo) {
 
   tab.el.setAttribute('data-lvl', String(upd.lvl))
   tab.lvl = upd.lvl
+
+  updateDomainFavicon()
 }
 
 /**
@@ -280,8 +286,49 @@ function onTabRemoved(id: ID) {
   tabs[index].el?.remove()
   tabs.splice(index, 1)
 
+  updateDomainFavicon()
+
   if (tabs.length === 0 && window.location.search.includes('pin=')) {
     IPPC.bg('tabsApiProxy', 'remove', groupTabId)
+  }
+}
+
+function updateDomainFavicon() {
+  if (!window.location.search.includes('dt=') || !tabs.length) return
+  const domainCounts = new Map<string, { count: number; favicon?: string }>()
+  for (const tab of tabs) {
+    const domain = getHostname(tab.url)
+    if (!domain) continue
+    let entry = domainCounts.get(domain)
+    if (!entry) {
+      entry = { count: 0 }
+      domainCounts.set(domain, entry)
+    }
+    entry.count++
+    if (!entry.favicon && tab.favIconUrl) {
+      entry.favicon = tab.favIconUrl
+    }
+  }
+
+  const sorted = Array.from(domainCounts.entries()).sort((a, b) => b[1].count - a[1].count)
+  let bestFav: string | undefined
+  for (const [, { favicon }] of sorted) {
+    if (favicon) {
+      bestFav = favicon
+      break
+    }
+  }
+  if (!bestFav) {
+    for (const tab of tabs) {
+      if (tab.favIconUrl) {
+        bestFav = tab.favIconUrl
+        break
+      }
+    }
+  }
+  if (bestFav) {
+    const iconEl = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null
+    if (iconEl && iconEl.href !== bestFav) iconEl.href = bestFav
   }
 }
 

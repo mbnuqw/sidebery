@@ -41,8 +41,16 @@ void (function () {
     },
     permissions: {},
     publicSuffix: {
-      getDomain: () => 'example.com',
-      getKnownSuffix: () => 'com',
+      getDomain: (h?: string) => {
+        if (!h) return ''
+        const parts = h.split('.')
+        return parts.length >= 2 ? parts.slice(-2).join('.') : h
+      },
+      getKnownSuffix: (h?: string) => {
+        if (!h) return ''
+        const parts = h.split('.')
+        return parts.length >= 1 ? parts[parts.length - 1] : ''
+      },
     },
     runtime: {
       getURL: (path: string) => {
