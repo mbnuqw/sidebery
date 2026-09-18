@@ -669,11 +669,23 @@ declare namespace browser {
       icon?: string
     }
 
+    interface ColorInfo {
+      color: string
+      colorCode: string
+    }
+
+    interface IconInfo {
+      icon: string
+      iconUrl: string
+    }
+
     function query(details: QueryDetails): Promise<Container[]>
     function get(id: string): Promise<Container>
     function create(details: CreateDetails): Promise<Container>
     function update(id: string, details: UpdateDetails): Promise<Container>
     function remove(id: string): Promise<Container>
+    function getSupportedColors(): Promise<ColorInfo[]>
+    function getSupportedIcons(): Promise<IconInfo[]>
 
     interface ChangeInfo {
       contextualIdentity: Container
