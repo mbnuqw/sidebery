@@ -346,6 +346,7 @@ export function searchDebounced(delay: number, q?: string) {
   searchTimeout = setTimeout(() => search(q), delay)
 }
 
+export let queryTokens: string[] = []
 let lowerCaseQuery = ''
 let beforeSwitchingPanelId: ID | undefined
 const regexCJK = /[\u4E00-\u9FFF,\u3400-\u4DBF,\u3040-\u312F,\uAC00-\uD7A3]/
@@ -360,6 +361,8 @@ export function search(q?: string): void {
     if (query === q) return
     query = q
     lowerCaseQuery = q.toLowerCase()
+    const normalized = Utils.normalizeDiacritics(lowerCaseQuery)
+    queryTokens = normalized.trim().split(/\s+/).filter(Boolean)
 
     const v = !!q
     if (active !== v) reactive.active = active = v
@@ -458,21 +461,49 @@ export function check(str?: string): boolean {
   if (str === undefined) {
     return false
   }
-  str = str.toLowerCase()
-  return str.includes(lowerCaseQuery)
+  if (!queryTokens.length) return true
+  const norm = Utils.normalizeDiacritics(str.toLowerCase())
+  for (let i = 0; i < queryTokens.length; i++) {
+    if (!norm.includes(queryTokens[i])) return false
+  }
+  return true
 }
 
 let inputEl: HTMLInputElement | undefined
+let bottomInputEl: HTMLInputElement | undefined
+
 export function registerInputEl(el: HTMLInputElement): void {
   inputEl = el
 }
 
+export function registerBottomInputEl(el: HTMLInputElement | undefined): void {
+  bottomInputEl = el
+}
+
 export function focus(): void {
-  if (inputEl) inputEl.focus({ preventScroll: true })
+  if (bottomInputEl && (Settings.state.subPanelTabSearch || !inputEl)) {
+    bottomInputEl.focus({ preventScroll: true })
+  } else if (inputEl) {
+    inputEl.focus({ preventScroll: true })
+  }
+}
+
+export function focusBottomBar(): void {
+  if (bottomInputEl) {
+    bottomInputEl.focus({ preventScroll: true })
+    bottomInputEl.select()
+  } else if (inputEl) {
+    inputEl.focus({ preventScroll: true })
+  }
+}
+
+export function isBottomBarFocused(): boolean {
+  return !!bottomInputEl && document.activeElement === bottomInputEl
 }
 
 function blur() {
   if (inputEl) inputEl.blur()
+  if (bottomInputEl) bottomInputEl.blur()
 }
 
 export function toggleBar(): void {
