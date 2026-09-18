@@ -1825,6 +1825,13 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: '同步子面板',
     ja: '同期サブパネル',
   },
+  'settings.sub_panel.tab_search': {
+    en: 'Tab search bar',
+    ru: 'Поиск вкладок',
+    zh_CN: '标签页搜索栏',
+    zh_TW: '分頁搜尋列',
+    ja: 'タブ検索バー',
+  },
   'settings.nav_bar_enabled': {
     en: 'Enabled elements',
     de: 'Aktivierte Elemente',
