@@ -46,7 +46,9 @@ const scrollBox = ref<ScrollBoxComponent | null>(null)
 const bottomBarSpaceNeeded =
   Settings.state.subPanelRecentlyClosedBar ||
   Settings.state.subPanelBookmarks ||
-  Settings.state.subPanelHistory
+  Settings.state.subPanelHistory ||
+  Settings.state.subPanelSync ||
+  Settings.state.subPanelTabSearch
 let scrollBoxEl: HTMLElement | null = null
 
 let stickyRafId = 0

@@ -15,6 +15,13 @@ export const sidebarTranslations: Translations = {
     zh_TW: '搜尋...',
     ja: '検索...',
   },
+  'bar.search.tabs_placeholder': {
+    en: 'Search tabs... (F8)',
+    ru: 'Поиск вкладок... (F8)',
+    zh_CN: '搜索标签页... (F8)',
+    zh_TW: '搜尋分頁... (F8)',
+    ja: 'タブを検索... (F8)',
+  },
 
   // ---
   // -- Confirm dialogs

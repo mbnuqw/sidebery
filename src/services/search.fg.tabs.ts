@@ -5,7 +5,43 @@ import * as Selection from 'src/services/selection.fg'
 import * as Search from 'src/services/search.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Settings from 'src/services/settings'
+import * as Containers from 'src/services/containers.fg'
 import * as Logs from 'src/services/logs'
+
+const tabSearchCache = new WeakMap<Tab, { key: string; str: string }>()
+
+export function getTabSearchStr(tab: Tab): string {
+  const cacheKey = `${tab.title}|${tab.customTitle ?? ''}|${tab.url}|${tab.cookieStoreId ?? ''}`
+  const cached = tabSearchCache.get(tab)
+  if (cached && cached.key === cacheKey) return cached.str
+
+  let decodedUrl = ''
+  try {
+    decodedUrl = decodeURIComponent(tab.url)
+  } catch {
+    decodedUrl = tab.url
+  }
+
+  let containerName = ''
+  if (tab.cookieStoreId && Containers.reactive.byId[tab.cookieStoreId]) {
+    containerName = Containers.reactive.byId[tab.cookieStoreId]?.name ?? ''
+  }
+
+  const raw = `${tab.title} ${tab.customTitle ?? ''} ${tab.url} ${decodedUrl !== tab.url ? decodedUrl : ''} ${containerName}`
+  const str = Utils.normalizeDiacritics(raw.toLowerCase())
+  tabSearchCache.set(tab, { key: cacheKey, str })
+  return str
+}
+
+export function checkTab(tab: Tab, tokens: string[]): boolean {
+  if (!tokens.length) return true
+  const str = getTabSearchStr(tab)
+  for (let i = 0; i < tokens.length; i++) {
+    const token = Utils.normalizeDiacritics(tokens[i])
+    if (!str.includes(token)) return false
+  }
+  return true
+}
 
 let prevActivePanelId: ID | undefined
 export function onTabsSearch(activePanel: Panel): void {
@@ -27,10 +63,11 @@ export function onTabsSearch(activePanel: Panel): void {
       }
       if (!tabs) tabs = activePanel.tabs
 
+      const tokens = Search.queryTokens
       const filtered: Tab[] = []
       const filteredIds: ID[] = []
       for (const tab of tabs) {
-        if (Search.check(tab.title) || Search.check(tab.customTitle) || Search.check(tab.url)) {
+        if (checkTab(tab, tokens)) {
           filtered.push(tab)
           filteredIds.push(tab.id)
         }
@@ -128,10 +165,9 @@ export function onTabsSearchSelectAll(panel: TabsPanel): void {
 }
 
 function findInAnotherPanel(): void {
+  const tokens = Search.queryTokens
   const firstMatch = Tabs.list.find(t => {
-    return (
-      !t.pinned && (Search.check(t.title) || Search.check(t.customTitle) || Search.check(t.url))
-    )
+    return !t.pinned && checkTab(t, tokens)
   })
   if (!firstMatch) return
 

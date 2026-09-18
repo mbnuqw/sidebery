@@ -1538,3 +1538,12 @@ export function untilElGetFocus(el: HTMLInputElement | null, cb: (el: HTMLInputE
   }, 5)
 }
 
+const DIACRITICS_RE = /[\u0300-\u036f]/g
+
+/**
+ * Strips diacritics / accents from a string for fast and robust searching.
+ */
+export function normalizeDiacritics(str: string): string {
+  return str.normalize('NFD').replace(DIACRITICS_RE, '')
+}
+
