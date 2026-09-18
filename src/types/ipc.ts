@@ -120,6 +120,9 @@ export type SidebarActions = {
   openTabs: (items: T.ItemInfo[], dst: T.DstPlaceInfo) => Promise<boolean>
   moveTabToPanelViaOmnibox: typeof TabsFg.moveTabToPanelViaOmnibox
   moveTabToGroupViaOmnibox: typeof TabsFg.moveTabToGroupViaOmnibox
+  recalcDomainTrees: (panelId?: ID) => Promise<void>
+  getDomainTreesLogs: () => Promise<string>
+  clearDomainTreesLogs: () => Promise<void>
 
   notify: (config: T.Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void

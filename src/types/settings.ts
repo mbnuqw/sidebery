@@ -161,6 +161,14 @@ export interface SettingsState {
   showNewGroupConf: boolean
   sortGroupsFirst: boolean
 
+  // Domain trees
+  domainTrees: boolean
+  domainTreesUniversal: boolean
+  domainTreeRules: DomainTreeRuleConfig[]
+  domainTreeNewTabPosition: (typeof SETTINGS_OPTIONS.domainTreeNewTabPosition)[number]
+  domainTreeAutoFold: boolean
+  domainTreeConfirmClose: boolean
+
   // Tabs colorization
   colorizeTabs: boolean
   colorizeTabsSrc: (typeof SETTINGS_OPTIONS.colorizeTabsSrc)[number]
@@ -301,4 +309,11 @@ export interface SettingsState {
   selectCyclic: boolean
   loopPanelsIgnoreHidden: boolean
   kbNewTabInPanelPos: (typeof SETTINGS_OPTIONS.newTabInPanelPos)[number]
+}
+
+export interface DomainTreeRuleConfig {
+  id: ID
+  active: boolean
+  name?: string
+  url: string
 }

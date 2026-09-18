@@ -160,6 +160,14 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showNewGroupConf: true,
   sortGroupsFirst: true,
 
+  // Domain trees
+  domainTrees: false,
+  domainTreesUniversal: true,
+  domainTreeRules: [],
+  domainTreeNewTabPosition: 'last_child',
+  domainTreeAutoFold: true,
+  domainTreeConfirmClose: true,
+
   // Tabs colorization
   colorizeTabs: false,
   colorizeTabsSrc: 'domain',
@@ -386,4 +394,5 @@ export const SETTINGS_OPTIONS = {
   switchPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
   scrollPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
   newTabInPanelPos: ['general', 'btn', 'start', 'end'],
+  domainTreeNewTabPosition: ['first_child', 'last_child'],
 } as const

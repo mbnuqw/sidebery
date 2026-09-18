@@ -236,6 +236,7 @@ export interface DbgInfo {
   windows?: DbgWindow[] | string
   contextMenu?: MenuConfs | string
   bookmarks?: DbgBookmarks | string
+  domainTreesLogs?: any
 }
 
 interface DbgPermissions {
