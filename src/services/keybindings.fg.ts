@@ -236,7 +236,17 @@ function onCmd(name: string): void {
   else if (name === 'move_tabs_to_panel_end') onKeyMoveTabsInPanel('end', true)
   else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
   else if (name === 'search') {
-    Search.start()
+    if (Settings.state.subPanelTabSearch) {
+      const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+      if (!Utils.isTabsPanel(actPanel)) {
+        const tabsPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
+        if (tabsPanel) Sidebar.activatePanel(tabsPanel.id)
+      }
+      if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
+      Search.focusBottomBar()
+    } else {
+      Search.start()
+    }
   } else if (name === 'switch_to_parent_tab') {
     Tabs.activateParent(Selection.ids()[0])
   } else if (name === 'switch_to_last_tab') {

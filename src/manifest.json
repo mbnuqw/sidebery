@@ -315,6 +315,9 @@
       "description": "__MSG_KbMoveTabsToPanelEnd__"
     },
     "search": {
+      "suggested_key": {
+        "default": "F8"
+      },
       "description": "__MSG_KbSearch__"
     },
     "switch_to_parent_tab": {
