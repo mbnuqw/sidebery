@@ -599,6 +599,69 @@ export async function moveToThisWin(
   return true
 }
 
+/**
+ * Pull all tabs of a panel from another window into this window's instance of
+ * the same (global) panel.
+ *
+ * Pinned and normal tabs are moved in two passes because `moveToThisWin` applies
+ * a single `dst.pinned` to the whole batch. The detach itself is a single IPC
+ * round-trip so `allInWin` stays correct for the whole set and the second pass
+ * can't clobber `Tabs.detachingTabIds` while the first pass' native move is
+ * still in flight (that set is replaced, not merged, on each `detachTabs` call).
+ */
+export async function movePanelTabsToThisWin(
+  srcWinId: ID,
+  tabIds: ID[],
+  dstPanelId: ID
+): Promise<void> {
+  if (!tabIds.length) return
+  if (srcWinId === NOID || srcWinId === Windows.id) return
+
+  const dstPanel = Sidebar.panelsById[dstPanelId]
+  if (!Utils.isTabsPanel(dstPanel)) {
+    return Logs.warn('Tabs.movePanelTabsToThisWin: no dst tabs panel', dstPanelId)
+  }
+
+  let externalTabs: T.Tab[] | undefined
+  let allInWin = false
+  try {
+    const info = await IPC.bg('detachSidebarTabs', srcWinId, tabIds)
+    externalTabs = info?.tabs
+    allInWin = !!info?.allInWin
+  } catch {
+    Logs.warn('Tabs.movePanelTabsToThisWin: Cannot detach tabs from the source sidebar')
+  }
+
+  // Fallback: the source sidebar is not connected (mirrors Tabs.move)
+  if (!externalTabs) {
+    const winNativeTabs = await browser.tabs.query({ windowId: srcWinId })
+    externalTabs = []
+    for (const id of tabIds) {
+      const nativeTab = winNativeTabs.find(t => t.id === id)
+      if (!nativeTab) continue
+      const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
+      tab.panelId = dstPanelId
+      externalTabs.push(tab)
+    }
+    allInWin = winNativeTabs.length > 0 && winNativeTabs.length === externalTabs.length
+  }
+  if (!externalTabs.length) return
+
+  const pinned = externalTabs.filter(t => t.pinned)
+  const normal = externalTabs.filter(t => !t.pinned)
+
+  // dst.index is intentionally left undefined - moveToThisWin derives the right
+  // one per batch (Tabs.pinned.length / panel.nextTabIndex) at run time.
+  // allInWin (window-closing logic) applies to the last non-empty batch only.
+  if (pinned.length) {
+    const isLast = !normal.length
+    await Tabs.moveToThisWin(pinned, { panelId: dstPanelId, pinned: true }, isLast && allInWin)
+  }
+  if (normal.length) {
+    await Tabs.moveToThisWin(normal, { panelId: dstPanelId, pinned: false }, allInWin)
+  }
+}
+
 export interface DetachedTabsInfo {
   tabs: T.Tab[]
   allInWin: boolean
@@ -688,7 +751,7 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
   Tabs.updateTabsIndexes()
   Tabs.updateTabsTree()
   Sidebar.recalcTabsPanels()
-  if (!probeTab.pinned) Sidebar.recalcVisibleTabs(panel.id)
+  if (detachedTabs.some(t => !t.pinned)) Sidebar.recalcVisibleTabs(panel.id)
   if (toSave.length) toSave.forEach(id => Tabs.saveTabData(id))
 
   // Save new tabs cache
