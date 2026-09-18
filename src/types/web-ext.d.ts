@@ -104,10 +104,12 @@ declare namespace browser {
     function reload(): void
 
     type MessageListener = <I, O>(msg: I) => Promise<O>
+    type ExternalMessageListener = (msg: unknown, sender: Sender) => unknown
     type ConnectListener = (port: Port) => void
     type UpdateAvailableListener = (details: UpdateDetails) => void
 
     const onMessage: PortEventTarget
+    const onMessageExternal: EventTarget<ExternalMessageListener>
     const onConnect: PortEventTarget
     const onUpdateAvailable: EventTarget<UpdateAvailableListener>
   }

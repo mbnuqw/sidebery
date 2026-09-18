@@ -26,6 +26,7 @@ import * as Snapshots from 'src/services/snapshots.fg'
 import * as Sync from 'src/services/sync.fg'
 import * as Keybindings from 'src/services/keybindings.fg'
 import * as WebReq from 'src/services/web-req.fg'
+import * as ExternalApi from 'src/services/external-api.fg'
 import SidebarRoot from './sidebar.vue'
 
 async function main(): Promise<void> {
@@ -38,6 +39,7 @@ async function main(): Promise<void> {
   Logs.info('Init start')
 
   IPC.registerActions({
+    externalApiRequest: ExternalApi.handleIpcRequest,
     reloadTab: Tabs.reloadTab,
     queryTab: Tabs.queryTab,
     getTabs: Tabs.getTabs,

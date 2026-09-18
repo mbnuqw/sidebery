@@ -20,6 +20,12 @@ export type * from './types/windows'
 export type * from './types/styles'
 export type * from './types/bookmarks'
 export type * from './types/history'
+export type * from './types/external-api'
+export {
+  EXTERNAL_API_MESSAGE_TYPE,
+  EXTERNAL_API_VERSION,
+  ExternalApiRequestError,
+} from './types/external-api'
 
 export interface ConfirmDialog {
   type: E.ConfirmationType

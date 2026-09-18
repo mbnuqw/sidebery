@@ -18,6 +18,7 @@ import * as WebReq from 'src/services/web-req.bg'
 import * as Sync from 'src/services/sync.bg'
 import * as Omnibox from 'src/services/omnibox.bg'
 import * as Styles from 'src/services/styles.bg'
+import * as ExternalApi from 'src/services/external-api.bg'
 
 void (async function main() {
   markLocalStorage()
@@ -73,6 +74,7 @@ void (async function main() {
   // Init first-need stuff
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
+  ExternalApi.setupListener()
   await Promise.all([Windows.load(), Containers.load(), Settings.load(), Info.loadVersionInfo()])
 
   Info.saveVersion()
