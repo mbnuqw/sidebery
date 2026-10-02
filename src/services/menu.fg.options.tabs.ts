@@ -22,6 +22,25 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     onClick: () => Tabs.undoRmTab(),
   }),
 
+  recentlyClosedTabs: () => {
+    const sub: MenuOption[] = Tabs.recentlyRemoved.slice(0, 15).map(rmt => ({
+      label: rmt.title || rmt.url,
+      tooltip: rmt.url,
+      img: rmt.favIconUrl,
+      icon: rmt.favIconUrl ? undefined : rmt.favPlaceholder?.replace(/^#/, ''),
+      onClick: () => Tabs.reopenRecentlyRemoved(rmt, false, false),
+      onAltClick: () => Tabs.reopenRecentlyRemoved(rmt, true, true),
+    }))
+    const option: MenuOption = {
+      label: translate('menu.tab.recently_closed'),
+      icon: 'icon_undo',
+      sub,
+      inactive: sub.length === 0,
+    }
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   moveToNewWin: () => {
     return {
       label: translate(`menu.tab.move_to_new_${Windows.incognito ? 'priv_window' : 'window'}`),

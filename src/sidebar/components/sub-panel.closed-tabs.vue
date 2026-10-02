@@ -177,74 +177,10 @@ function onTabDragStart(e: DragEvent, tab: T.RecentlyClosedTabInfo) {
   Sidebar.closeSubPanel()
 }
 
-function getBranch(rootTab: T.RecentlyClosedTabInfo): T.RecentlyClosedTabInfo[] {
-  const branch: T.RecentlyClosedTabInfo[] = [rootTab]
-
-  const startIndex = Tabs.recentlyRemoved.findIndex(t => t.id === rootTab.id)
-  if (startIndex === -1) return branch
-
-  for (let i = startIndex + 1; i < Tabs.recentlyRemoved.length; i++) {
-    const tab = Tabs.recentlyRemoved[i]
-    if (!tab) break
-    if (rootTab.lvl >= tab.lvl) break
-    branch.push(tab)
-  }
-
-  return branch
-}
+const getBranch = Tabs.getRecentlyRemovedBranch
 
 async function openTabs(targetTab: T.RecentlyClosedTabInfo, inactive: boolean, branch: boolean) {
-  if (!targetTab.isParent) branch = false
-  if (branch) inactive = true
-
-  const tabsBranch = getBranch(targetTab)
-  const rcTabs = branch ? tabsBranch : [targetTab]
-  const panelId = Sidebar.activePanelId
-  const panel = Sidebar.panelsById[panelId]
-  if (!Utils.isTabsPanel(panel)) return
-
-  const dst: T.DstPlaceInfo = {
-    panelId,
-    discarded: inactive,
-    index: Tabs.getIndexForNewTab(panel),
-    parentId: Tabs.getParentForNewTab(panel),
-  }
-
-  const tabsToOpen: T.ItemInfo[] = []
-  for (const rct of rcTabs) {
-    tabsToOpen.push({
-      id: rct.id,
-      title: rct.title,
-      url: rct.url,
-      container: rct.containerId,
-      parentId: rct.parentId,
-    })
-  }
-  if (!inactive && tabsToOpen.length) tabsToOpen[0].active = true
-
-  await Tabs.open(tabsToOpen, dst)
-
-  // Trigger flash animation
-  // const els = []
-  // for (const tab of tabs) {
-  //   const id = `rmt${tab.id}`
-  //   const tabEl = document.getElementById(id)
-  //   if (!tabEl) continue
-  //   tabEl.setAttribute('data-flash', 'true')
-  //   els.push(tabEl)
-  // }
-  // await Utils.sleep(500)
-  // els.forEach(el => el.removeAttribute('data-flash'))
-
-  // Or remove from list
-  if (rcTabs.length === 1) tabsBranch.forEach(t => t.lvl--)
-  for (const tab of rcTabs) {
-    const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.id)
-    if (index !== -1) Tabs.recentlyRemoved.splice(index, 1)
-  }
-
+  await Tabs.reopenRecentlyRemoved(targetTab, inactive, branch)
   if (!Tabs.recentlyRemoved.length) Sidebar.closeSubPanel()
-
-  Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
 }
 </script>

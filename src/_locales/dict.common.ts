@@ -1472,6 +1472,9 @@ export const commonTranslations: Translations = {
     ja: 'パネルを削除',
   },
   // - Tab
+  'menu.tab.recently_closed': {
+    en: 'Recently closed tabs',
+  },
   'menu.tab.undo': {
     en: 'Undo close tab',
     de: 'Geschlossenen Tab wiederherstellen',

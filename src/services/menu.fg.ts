@@ -163,7 +163,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
     for (const block of blocks) {
       for (const opt of block.opts) {
         if (opt.sub && opt.sub.length && opt.label) {
-          const parentId = createNativeSubMenuOption(opt.label, nodeType)
+          const parentId = createNativeSubMenuOption(opt, nodeType)
           for (const subOpt of opt.sub) {
             createNativeOption(nodeType, subOpt, parentId)
           }
@@ -307,6 +307,16 @@ function getBase64SVGIcon(icon: string, rgbColor: string): string | undefined {
   }
 }
 
+function getNativeOptionIcon(option: T.MenuOption): string | undefined {
+  if (!Settings.state.ctxMenuRenderIcons) return
+  if (option.img) return option.img
+  if (option.icon) {
+    const alpha = option.inactive ? '64' : 'ff'
+    const rgbColor = option.color ? D.RGB_COLORS[option.color] : '#686868' + alpha
+    return getBase64SVGIcon(option.icon, rgbColor)
+  }
+}
+
 function createNativeOption(
   ctx: browser.menus.ContextType,
   option: T.MenuOption,
@@ -318,17 +328,7 @@ function createNativeOption(
     return
   }
 
-  let icon
-  if (Settings.state.ctxMenuRenderIcons) {
-    if (option.img) {
-      icon = option.img
-    } else if (option.icon) {
-      const alpha = option.inactive ? '64' : 'ff'
-      const rgbColor = option.color ? D.RGB_COLORS[option.color] : '#686868' + alpha
-
-      icon = getBase64SVGIcon(option.icon, rgbColor)
-    }
-  }
+  const icon = getNativeOptionIcon(option)
 
   const optProps: browser.menus.CreateProperties = {
     type: 'normal',
@@ -350,14 +350,16 @@ function createNativeOption(
   browser.menus.create(optProps)
 }
 
-function createNativeSubMenuOption(title: string, ctx?: browser.menus.ContextType): string {
+function createNativeSubMenuOption(option: T.MenuOption, ctx?: browser.menus.ContextType): string {
   if (!ctx) ctx = 'all'
   const optProps: browser.menus.CreateProperties = {
     type: 'normal',
     contexts: [ctx],
     viewTypes: ['sidebar'],
-    title: title,
+    title: option.label,
   }
+  const icon = getNativeOptionIcon(option)
+  if (icon) optProps.icons = { '16': icon }
   return browser.menus.create(optProps)
 }
 

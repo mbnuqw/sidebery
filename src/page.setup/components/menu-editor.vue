@@ -159,6 +159,7 @@ interface MenuEditorGroup {
 
 const TABS_MENU_OPTS: Record<string, string> = {
   undoRmTab: 'menu.tab.undo',
+  recentlyClosedTabs: 'menu.tab.recently_closed',
   pin: 'menu.tab.pin',
   reload: 'menu.tab.reload',
   bookmark: 'menu.tab.bookmark',

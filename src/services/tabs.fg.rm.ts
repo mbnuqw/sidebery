@@ -1,4 +1,4 @@
-import { ItemInfo, RecentlyClosedTabInfo, Tab } from 'src/types'
+import { DstPlaceInfo, ItemInfo, RecentlyClosedTabInfo, Tab } from 'src/types'
 import { ConfirmationType } from 'src/enums'
 import { NOID } from 'src/defaults'
 import { translate } from 'src/dict'
@@ -515,4 +515,61 @@ export async function undoRmTab(): Promise<void> {
     const session = closed.find(c => c.tab)
     if (session && session.tab?.sessionId) await browser.sessions.restore(session.tab.sessionId)
   }
+}
+
+export function getRecentlyRemovedBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {
+  const branch: RecentlyClosedTabInfo[] = [rootTab]
+
+  const startIndex = Tabs.recentlyRemoved.findIndex(t => t.id === rootTab.id)
+  if (startIndex === -1) return branch
+
+  for (let i = startIndex + 1; i < Tabs.recentlyRemoved.length; i++) {
+    const tab = Tabs.recentlyRemoved[i]
+    if (!tab) break
+    if (rootTab.lvl >= tab.lvl) break
+    branch.push(tab)
+  }
+
+  return branch
+}
+
+export async function reopenRecentlyRemoved(
+  targetTab: RecentlyClosedTabInfo,
+  inactive: boolean,
+  branch: boolean
+): Promise<void> {
+  if (!targetTab.isParent) branch = false
+  if (branch) inactive = true
+
+  const tabsBranch = getRecentlyRemovedBranch(targetTab)
+  const rcTabs = branch ? tabsBranch : [targetTab]
+  const panelId = Sidebar.activePanelId
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const dst: DstPlaceInfo = {
+    panelId,
+    discarded: inactive,
+    index: Tabs.getIndexForNewTab(panel),
+    parentId: Tabs.getParentForNewTab(panel),
+  }
+
+  const tabsToOpen: ItemInfo[] = rcTabs.map(rct => ({
+    id: rct.id,
+    title: rct.title,
+    url: rct.url,
+    container: rct.containerId,
+    parentId: rct.parentId,
+  }))
+  if (!inactive && tabsToOpen.length) tabsToOpen[0].active = true
+
+  await Tabs.open(tabsToOpen, dst)
+
+  if (rcTabs.length === 1) tabsBranch.forEach(t => t.lvl--)
+  for (const tab of rcTabs) {
+    const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.id)
+    if (index !== -1) Tabs.recentlyRemoved.splice(index, 1)
+  }
+
+  Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
 }
