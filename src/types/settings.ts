@@ -160,6 +160,7 @@ export interface SettingsState {
   ignoreFoldedParent: boolean
   showNewGroupConf: boolean
   sortGroupsFirst: boolean
+  allowMovingToParentTabs: boolean
 
   // Tabs colorization
   colorizeTabs: boolean

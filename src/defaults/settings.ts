@@ -159,6 +159,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   ignoreFoldedParent: false,
   showNewGroupConf: true,
   sortGroupsFirst: true,
+  allowMovingToParentTabs: true,
 
   // Tabs colorization
   colorizeTabs: false,

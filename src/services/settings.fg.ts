@@ -165,6 +165,8 @@ export function updateSettings(settings?: SettingsState | null): void {
       tab.parentId = -1
       tab.reactive.lvl = tab.lvl = 0
     }
+    Tabs.parentTabIds.clear()
+    Tabs.invalidateGroupsStruct()
     Sidebar.recalcVisibleTabs()
   }
 

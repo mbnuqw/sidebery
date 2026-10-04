@@ -509,6 +509,13 @@ section(ref="el")
       dbg="sortGroupsFirst"
       :default="DEFAULT_SETTINGS.sortGroupsFirst"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.allow_moving_to_parent_tabs"
+      :inactive="!Settings.state.tabsTree"
+      v-model:value="Settings.state.allowMovingToParentTabs"
+      dbg="allowMovingToParentTabs"
+      :default="DEFAULT_SETTINGS.allowMovingToParentTabs"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper(ref="tabsColorEl")
     .sub-title: .text {{translate('settings.nav_settings_tabs_colorization')}}

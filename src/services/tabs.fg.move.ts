@@ -483,6 +483,7 @@ export async function moveToThisWin(
       tab.reactive.pinned = tab.pinned = !!dst.pinned
       if (tab.unpinning) tab.unpinning = false
     }
+    if (tab.isGroup && !tab.pinned) Tabs.registerGroupTab(tab.id)
 
     // Update some tab props
     if (dst.windowId !== undefined) tab.windowId = dst.windowId
@@ -508,6 +509,7 @@ export async function moveToThisWin(
       tab.reactive.folded = tab.folded = false
       if (tab.urgentTabIds?.size) tab.reactive.hasUrgentDescendant = false
       tab.urgentTabIds?.clear()
+      Tabs.syncParentTabFlag(tab)
     }
 
     // Check if media badges recalc is needed
@@ -650,6 +652,8 @@ export function detachTabs(tabIds: ID[]): DetachedTabsInfo | undefined {
     // Remove from local state
     delete Tabs.byId[id]
     Tabs.list.splice(tab.index, 1)
+    if (tab.isGroup) Tabs.unregisterGroupTab(id)
+    Tabs.unregisterParentTab(id)
 
     // Check if media badges recalc is needed
     if (!updMediaBadges && (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted)) {
@@ -899,6 +903,39 @@ export function findMoveRule(tab: T.Tab): T.TabToPanelMoveRule | undefined {
 
     return rule
   }
+}
+
+/**
+ * Move tabs (selection) into an existing group, from the "Move to" context
+ * menu. Mirrors `moveTabToGroupViaOmnibox` below, but for a selection of
+ * tabs already in this window.
+ */
+export async function moveToGroup(
+  items: DeepReadonly<T.ItemInfo[]>,
+  src: T.SrcPlaceInfo,
+  groupTabId: ID
+): Promise<void> {
+  const groupTab = Tabs.byId[groupTabId]
+  if (!groupTab) return Logs.warn('Tabs.moveToGroup: no target tab:', groupTabId)
+  if (!items.length) return
+
+  const asFirstChild = Settings.state.moveNewTabParent === 'first_child'
+  const index = asFirstChild
+    ? groupTab.index + 1
+    : groupTab.index + (Tabs.getBranchLen(groupTabId) ?? 0) + 1
+
+  if (groupTab.folded || groupTab.invisible) Tabs.expTabsBranch(groupTabId, false)
+
+  const dst: T.DstPlaceInfo = {
+    windowId: Windows.id,
+    panelId: groupTab.panelId,
+    parentId: groupTabId,
+    index,
+    pinned: false,
+  }
+  await Utils.GLOBAL_QUEUE.add(Tabs.move, items, src, dst)
+
+  Tabs.scrollToTab(items[0].id)
 }
 
 export async function moveTabToGroupViaOmnibox(tabInfo: T.ItemInfo, srcWinId: ID, groupTabId: ID) {

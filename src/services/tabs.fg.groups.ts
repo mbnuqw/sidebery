@@ -390,3 +390,145 @@ export async function setGroupName(groupTabId: ID, newName: string) {
     browser.tabs.update(groupTabId, { url: newUrl }).catch(err => Logs.warn('setGroupName:', err))
   }
 }
+
+// ---
+// -- Groups index (for "Move to" menu)
+// -
+
+/**
+ * Nested group structure for one panel, built from `groupTabIds`
+ * rather than by scanning `Tabs.list` on every use.
+ */
+export interface GroupNode {
+  id: ID
+  kids: GroupNode[]
+}
+
+/** Ids of all group tabs of this window (any panel, excluding pinned) */
+export const groupTabIds = new Set<ID>()
+
+/**
+ * Ids of all "parent" tabs of this window (tabs with `isParent === true`,
+ * any panel, excluding pinned) - a superset that includes group tabs with
+ * children too. Only meaningful while `Settings.state.tabsTree` is on,
+ * since `tab.isParent` is only maintained then. Used as "Move to"
+ * destinations alongside groups when `Settings.state.allowMovingToParentTabs`
+ * is on - see `getGroupsStruct`.
+ */
+export const parentTabIds = new Set<ID>()
+
+let groupsStructRev = 0
+let groupsStructCacheRev = -1
+let groupsStructCache: Map<string, GroupNode[]> = new Map()
+
+/**
+ * (Re)build `groupTabIds`/`parentTabIds` from scratch, e.g. after restoring
+ * tabs state.
+ */
+export function resetGroupsIndex(tabs: T.Tab[]): void {
+  groupTabIds.clear()
+  parentTabIds.clear()
+  for (const tab of tabs) {
+    if (tab.isGroup && !tab.pinned) groupTabIds.add(tab.id)
+  }
+  invalidateGroupsStruct()
+}
+
+export function registerGroupTab(tabId: ID): void {
+  if (groupTabIds.has(tabId)) return
+  groupTabIds.add(tabId)
+  invalidateGroupsStruct()
+}
+
+export function unregisterGroupTab(tabId: ID): void {
+  if (!groupTabIds.has(tabId)) return
+  groupTabIds.delete(tabId)
+  invalidateGroupsStruct()
+}
+
+/**
+ * Sync `parentTabIds` with one tab's current `isParent` flag.
+ */
+export function syncParentTabFlag(tab: T.Tab): void {
+  if (tab.isParent) {
+    if (!parentTabIds.has(tab.id)) {
+      parentTabIds.add(tab.id)
+      invalidateGroupsStruct()
+    }
+  } else if (parentTabIds.delete(tab.id)) {
+    invalidateGroupsStruct()
+  }
+}
+
+/**
+ * Sync `parentTabIds` with `Tabs.list[fromIndex..toIndex)`'s current
+ * `isParent` flags, e.g. after `updateTabsTree` settles that range.
+ */
+export function syncParentTabsRange(fromIndex: number, toIndex: number): void {
+  for (let i = fromIndex; i < toIndex; i++) {
+    const tab = Tabs.list[i]
+    if (tab) syncParentTabFlag(tab)
+  }
+}
+
+export function unregisterParentTab(tabId: ID): void {
+  if (parentTabIds.delete(tabId)) invalidateGroupsStruct()
+}
+
+/**
+ * Mark the cached nested group structures as stale, without touching
+ * `groupTabIds`/`parentTabIds` themselves (e.g. after a move/sort that only
+ * changed order).
+ */
+export function invalidateGroupsStruct(): void {
+  groupsStructRev++
+}
+
+/**
+ * Get the nested tree of group tabs (as `GroupNode`s) for one panel, in tab
+ * order. When `includeParentTabs` is on, plain (non-group) parent tabs are
+ * merged in too, and can anchor nesting just like a group. Cached until the
+ * next structural change.
+ */
+export function getGroupsStruct(panelId: ID, includeParentTabs: boolean): GroupNode[] {
+  if (groupsStructCacheRev !== groupsStructRev) {
+    groupsStructCache = new Map()
+    groupsStructCacheRev = groupsStructRev
+  }
+
+  const cacheKey = `${panelId}:${includeParentTabs ? 1 : 0}`
+  const cached = groupsStructCache.get(cacheKey)
+  if (cached) return cached
+
+  const candidateIds = new Set(groupTabIds)
+  if (includeParentTabs) {
+    for (const id of parentTabIds) candidateIds.add(id)
+  }
+
+  const panelTabs: T.Tab[] = []
+  for (const id of candidateIds) {
+    const tab = Tabs.byId[id]
+    if (!tab || tab.pinned || tab.panelId !== panelId) continue
+    panelTabs.push(tab)
+  }
+  panelTabs.sort((a, b) => a.index - b.index)
+
+  const nodesById = new Map<ID, GroupNode>()
+  for (const tab of panelTabs) nodesById.set(tab.id, { id: tab.id, kids: [] })
+
+  const roots: GroupNode[] = []
+  for (const tab of panelTabs) {
+    const node = nodesById.get(tab.id)
+    if (!node) continue
+
+    let parent = Tabs.byId[tab.parentId]
+    while (parent && !candidateIds.has(parent.id)) parent = Tabs.byId[parent.parentId]
+
+    const parentNode = parent ? nodesById.get(parent.id) : undefined
+    if (parentNode) parentNode.kids.push(node)
+    else roots.push(node)
+  }
+
+  groupsStructCache.set(cacheKey, roots)
+  return roots
+}

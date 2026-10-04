@@ -498,6 +498,8 @@ export function recalcTabsPanels(reset?: boolean): void {
     Tabs.setPinned(pinnedTabs)
     Tabs.reactive.pinnedIds = pinnedTabIds
   }
+
+  Tabs.invalidateGroupsStruct()
 }
 
 export function recalcVisibleTabs(panelId?: ID) {

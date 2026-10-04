@@ -182,9 +182,11 @@
   &:not([data-inactive="true"]):active
     opacity: .7
   &[data-inactive="true"]
-    opacity: .4
     &:before
       opacity: .1
+    > .icon-box
+    > .label
+      opacity: .4
   .icon-box
     position: relative
     width: 16px
@@ -269,6 +271,41 @@
 .CtxMenu .flag-btn[data-active="false"]:active .flag-icon
   opacity: .3
 
+// Sub-menu button
+.CtxMenu .sub-btn
+  position: absolute
+  display: block
+  right: var(--ctx-menu-text-opt-inner-gap)
+  height: 100%
+  width: 16px
+  flex-shrink: 0
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 2px
+    left: calc(var(--ctx-menu-text-opt-inner-gap) * -1)
+    height: calc(100% - 4px)
+    width: var(--flag-btn-full-width)
+    border-radius: var(--ctx-menu-opt-border-radius)
+  &:hover:before
+    background-color: var(--ctx-menu-fg)
+    opacity: .16
+  svg.sub-icon
+    position: absolute
+    width: 16px
+    height: 16px
+    top: calc(50% - 8px)
+    left: calc(50% - 8px)
+    opacity: .5
+    fill: var(--color, var(--ctx-menu-fg))
+  &:hover svg.sub-icon
+    opacity: .8
+  &:active svg.sub-icon
+    opacity: .5
+.CtxMenu .opt:has(.sub-btn) .label
+  mask: linear-gradient(-90deg, transparent, transparent calc(var(--flag-btn-full-width) - 6px), #000000 calc(var(--flag-btn-full-width) + 6px), #000000)
+
 // Separator
 .CtxMenu .opt[data-separator="true"]
   padding: 0
@@ -287,6 +324,7 @@
 .CtxMenu .opt[data-separator="true"]:before
 .CtxMenu .opt[data-separator="true"] .icon-box
 .CtxMenu .opt[data-separator="true"] .label
+.CtxMenu .opt[data-separator="true"] .sub-btn
   display: none
 
 .CtxMenu .sub-menu-box

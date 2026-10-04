@@ -4,16 +4,16 @@
     .box.tick(ref="tickEl" :style="state.tickPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
-          .sub-menu-box(v-if="state.sub")
+          .sub-menu-box(v-if="currentSub" :key="state.subStack.length")
             .sub-menu
               .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
                     svg.icon.-rotate90: use(href="#icon_expand")
-                  .label.-header {{state.sub.name}}
+                  .label.-header {{currentSub.name}}
                 .opt(:data-separator="true")
                 .opt(
-                  v-for="opt in state.sub.opts"
+                  v-for="opt in currentSub.opts"
                   :data-selected="isSelected(opt)"
                   :data-separator="opt.type === 'separator'"
                   :data-inactive="opt.inactive"
@@ -26,6 +26,11 @@
                     img.icon(v-if="opt.img" :src="opt.img")
                     svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
+                  .sub-btn(
+                    v-if="opt.sub"
+                    @mousedown.stop=""
+                    @mouseup.stop="openSubMenu(opt)")
+                    svg.sub-icon.-rotate-90: use(href="#icon_expand")
         div(v-for="group in state.tickBlocks" :class="`${group.type}-group`")
           .icon-opt(
             v-if="group.type === 'inline'"
@@ -56,8 +61,11 @@
               img.icon(v-if="opt.img" :src="opt.img")
               svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
             .label {{opt.label}}
-            .icon-box(v-if="opt.sub")
-              svg.icon.-rotate-90: use(href="#icon_expand")
+            .sub-btn(
+              v-if="opt.sub"
+              @mousedown.stop=""
+              @mouseup.stop="openSubMenu(opt)")
+              svg.sub-icon.-rotate-90: use(href="#icon_expand")
             .flag-btn(
               v-if="opt.flag?.icon"
               :data-active="!!opt.flag.active"
@@ -69,16 +77,16 @@
     .box.tack(ref="tackEl" :style="state.tackPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
-          .sub-menu-box(v-if="state.sub")
+          .sub-menu-box(v-if="currentSub" :key="state.subStack.length")
             .sub-menu
               .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
                     svg.icon.-rotate90: use(href="#icon_expand")
-                  .label.-header {{state.sub.name}}
+                  .label.-header {{currentSub.name}}
                 .opt(:data-separator="true")
                 .opt(
-                  v-for="opt in state.sub.opts"
+                  v-for="opt in currentSub.opts"
                   :data-selected="isSelected(opt)"
                   :data-separator="opt.type === 'separator'"
                   :data-inactive="opt.inactive"
@@ -91,6 +99,11 @@
                     img.icon(v-if="opt.img" :src="opt.img")
                     svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
+                  .sub-btn(
+                    v-if="opt.sub"
+                    @mousedown.stop=""
+                    @mouseup.stop="openSubMenu(opt)")
+                    svg.sub-icon.-rotate-90: use(href="#icon_expand")
         div(v-for="group in state.tackBlocks" :class="`${group.type}-group`")
           .icon-opt(
             v-if="group.type === 'inline'"
@@ -122,8 +135,11 @@
               img.icon(v-if="opt.img" :src="opt.img")
               svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
             .label {{opt.label}}
-            .icon-box(v-if="opt.sub")
-              svg.icon.-rotate-90: use(href="#icon_expand")
+            .sub-btn(
+              v-if="opt.sub"
+              @mousedown.stop=""
+              @mouseup.stop="openSubMenu(opt)")
+              svg.sub-icon.-rotate-90: use(href="#icon_expand")
             .flag-btn(
               v-if="opt.flag?.icon"
               :data-active="!!opt.flag.active"
@@ -158,7 +174,7 @@ const state = reactive({
   tackPosStyle: { transform: 'translateY(0px) translateX(0px)', bottom: '' },
 
   selected: -1,
-  sub: null as T.MenuBlock | null,
+  subStack: [] as T.MenuBlock[],
 })
 
 const isActive = computed((): boolean => state.tickActive || state.tackActive)
@@ -167,6 +183,9 @@ const tickAll = computed((): T.MenuOption[] => {
 })
 const tackAll = computed((): T.MenuOption[] => {
   return state.tackBlocks.reduce<T.MenuOption[]>((a, v) => a.concat(v.opts), [])
+})
+const currentSub = computed((): T.MenuBlock | null => {
+  return state.subStack[state.subStack.length - 1] ?? null
 })
 
 onMounted(() => {
@@ -214,7 +233,7 @@ onMounted(() => {
   Menu.onClose(() => {
     state.tickActive = false
     state.tackActive = false
-    state.sub = null
+    state.subStack = []
   })
 })
 
@@ -269,7 +288,7 @@ function selectOption(dir: number): void {
   if (!dir) return
 
   let opts
-  if (state.sub) opts = state.sub.opts
+  if (currentSub.value) opts = currentSub.value.opts
   else opts = state.tickActive ? tickAll.value : tackAll.value
 
   if (state.selected < 0) {
@@ -296,7 +315,7 @@ function activateOption(opt?: T.MenuOption, altMode?: boolean): boolean | undefi
   if (!opt) {
     if (state.selected < 0) return
     let opts
-    if (state.sub) opts = state.sub.opts
+    if (currentSub.value) opts = currentSub.value.opts
     else opts = state.tickActive ? tickAll.value : tackAll.value
     opt = opts[state.selected]
     if (!opt) return
@@ -304,9 +323,14 @@ function activateOption(opt?: T.MenuOption, altMode?: boolean): boolean | undefi
   if (opt.inactive) return false
   if (altMode && opt.onAltClick) opt.onAltClick()
   if (!altMode && opt.onClick) opt.onClick()
-  if (opt.sub) {
+  // Descend into submenu only if the option has no direct action of its own
+  // (e.g. "Move to" / "Reopen in" containers). Options with both `onClick`
+  // and `sub` (e.g. "Move to <panel>" rows that also list that panel's
+  // groups) run their action and close the menu; use the dedicated
+  // sub-menu button to descend instead.
+  if (opt.sub && !opt.onClick) {
     state.selected = -1
-    state.sub = { type: 'list', name: opt.label, opts: opt.sub }
+    pushSubMenu(opt)
     return false
   }
   Menu.close()
@@ -317,8 +341,18 @@ function activateOption(opt?: T.MenuOption, altMode?: boolean): boolean | undefi
   return true
 }
 
+function pushSubMenu(opt: T.MenuOption): void {
+  if (!opt.sub) return
+  state.subStack.push({ type: 'list', name: opt.label, opts: opt.sub })
+}
+
+function openSubMenu(opt: T.MenuOption): void {
+  state.selected = -1
+  pushSubMenu(opt)
+}
+
 function closeSubMenu(): void {
-  state.sub = null
+  state.subStack.pop()
 }
 
 function getX(menuWidth: number, x: number): number {
@@ -344,7 +378,7 @@ function btnWidth(opts: T.MenuOption[]): string {
 
 function isSelected(opt: T.MenuOption): boolean {
   let opts
-  if (state.sub) opts = state.sub.opts
+  if (currentSub.value) opts = currentSub.value.opts
   else opts = state.tickActive ? tickAll.value : tackAll.value
   return opts[state.selected] === opt
 }

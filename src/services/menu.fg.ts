@@ -161,16 +161,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
 
   if (Settings.state.ctxMenuNative && !customForced) {
     for (const block of blocks) {
-      for (const opt of block.opts) {
-        if (opt.sub && opt.sub.length && opt.label) {
-          const parentId = createNativeSubMenuOption(opt.label, nodeType)
-          for (const subOpt of opt.sub) {
-            createNativeOption(nodeType, subOpt, parentId)
-          }
-        } else {
-          createNativeOption(nodeType, opt)
-        }
-      }
+      createNativeOptions(nodeType, block.opts)
     }
 
     resetNativeMenu(120)
@@ -307,6 +298,33 @@ function getBase64SVGIcon(icon: string, rgbColor: string): string | undefined {
   }
 }
 
+/**
+ * Recursively build native (Firefox) menu items from a list of options,
+ * so `opt.sub` can nest arbitrarily deep (e.g. Move to -> Panel -> Group ->
+ * Subgroup -> ...). Firefox's native submenu headers are not clickable, so
+ * if an option has both `onClick` and `sub` (e.g. a "Move to <panel>" row
+ * that also lists that panel's groups) its own action is added as the
+ * first item of its submenu, followed by a separator.
+ */
+function createNativeOptions(
+  ctx: browser.menus.ContextType,
+  opts: T.MenuOption[],
+  parentId?: string
+): void {
+  for (const opt of opts) {
+    if (opt.sub && opt.sub.length && opt.label) {
+      const subParentId = createNativeSubMenuOption(opt.label, ctx, parentId)
+      if (opt.onClick) {
+        createNativeOption(ctx, opt, subParentId)
+        browser.menus.create({ type: 'separator', contexts: [ctx], parentId: subParentId })
+      }
+      createNativeOptions(ctx, opt.sub, subParentId)
+    } else {
+      createNativeOption(ctx, opt, parentId)
+    }
+  }
+}
+
 function createNativeOption(
   ctx: browser.menus.ContextType,
   option: T.MenuOption,
@@ -350,7 +368,11 @@ function createNativeOption(
   browser.menus.create(optProps)
 }
 
-function createNativeSubMenuOption(title: string, ctx?: browser.menus.ContextType): string {
+function createNativeSubMenuOption(
+  title: string,
+  ctx?: browser.menus.ContextType,
+  parentId?: string
+): string {
   if (!ctx) ctx = 'all'
   const optProps: browser.menus.CreateProperties = {
     type: 'normal',
@@ -358,6 +380,7 @@ function createNativeSubMenuOption(title: string, ctx?: browser.menus.ContextTyp
     viewTypes: ['sidebar'],
     title: title,
   }
+  if (parentId) optProps.parentId = parentId
   return browser.menus.create(optProps)
 }
 

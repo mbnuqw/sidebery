@@ -3998,6 +3998,17 @@ Available parameters:
     zh_TW: '排序時將群組列於其他分頁前',
     ja: '他のタブの前にグループを並べ替える',
   },
+  'settings.allow_moving_to_parent_tabs': {
+    en: 'Allow moving to parent tabs',
+    de: 'Verschieben zu übergeordneten Tabs erlauben',
+    fr: 'Autoriser le déplacement vers les onglets parents',
+    hu: 'Áthelyezés engedélyezése szülőlapokra',
+    pl: 'Zezwalaj na przenoszenie do kart nadrzędnych',
+    ru: 'Разрешить перемещение к родительским вкладкам',
+    zh_CN: '允许移动到父标签页',
+    zh_TW: '允許移動到父分頁',
+    ja: '親タブへの移動を許可する',
+  },
 
   // - Tabs colorization
   'settings.colorize_tabs': {

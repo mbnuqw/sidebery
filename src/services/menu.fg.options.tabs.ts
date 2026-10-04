@@ -15,6 +15,68 @@ import * as Popups from 'src/services/popups.fg'
 import * as TabsSorting from 'src/services/tabs.fg.sorting'
 import * as TabsSync from 'src/services/tabs.fg.sync'
 
+/**
+ * Ids of tabs that cannot be a "Move to <group>" destination: the selected
+ * tabs themselves, and every tab in their branches (a tab cannot be moved
+ * into its own, or a selected, subtree).
+ */
+function getExcludedGroupIds(): Set<ID> {
+  const excluded = new Set<ID>()
+  for (const id of Selection.ids()) {
+    const tab = Tabs.byId[id]
+    if (!tab) continue
+    excluded.add(id)
+    const branchLen = Tabs.getBranchLen(id) ?? 0
+    for (let i = tab.index + 1; i <= tab.index + branchLen; i++) {
+      const branchTab = Tabs.list[i]
+      if (branchTab) excluded.add(branchTab.id)
+    }
+  }
+  return excluded
+}
+
+/**
+ * Turn a nested `Tabs.GroupNode[]` structure into "Move to" menu options,
+ * dropping excluded groups/parent-tabs (and their whole sub-tree) along the
+ * way. A node may be an actual group tab or, when
+ * `Settings.state.allowMovingToParentTabs` is on, a plain parent tab -
+ * distinguished here by `tab.isGroup` for icon purposes only, everything
+ * else (label, color, move target) is generic over either kind.
+ */
+function groupNodesToMoveOpts(
+  nodes: Tabs.GroupNode[],
+  excluded: Set<ID>,
+  probeTab: Tab
+): MenuOption[] {
+  const opts: MenuOption[] = []
+
+  for (const node of nodes) {
+    if (excluded.has(node.id)) continue
+    const tab = Tabs.byId[node.id]
+    if (!tab) continue
+
+    const kids = node.kids.length ? groupNodesToMoveOpts(node.kids, excluded, probeTab) : []
+
+    const opt: MenuOption = {
+      label: tab.customTitle ?? tab.title,
+      icon: tab.isGroup ? 'icon_group' : 'icon_tab',
+      img: tab.isGroup ? undefined : tab.favIconUrl,
+      badge: 'icon_move_badge',
+      onClick: () => {
+        const items = Selection.getTabsInfo(true)
+        const src = { windowId: Windows.id, panelId: probeTab.panelId, pinned: probeTab.pinned }
+        Tabs.moveToGroup(items, src, node.id)
+      },
+    }
+    if (tab.customColor) opt.color = tab.customColor as browser.ColorName
+    if (kids.length) opt.sub = kids
+
+    opts.push(opt)
+  }
+
+  return opts
+}
+
 export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   undoRmTab: () => ({
     label: translate('menu.tab.undo'),
@@ -68,22 +130,42 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const probeTab = Tabs.byId[Selection.getFirst()]
     if (!probeTab || (probeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel')) return
 
+    const excludedGroupIds = getExcludedGroupIds()
+
     for (const panel of Sidebar.panels) {
       if (!Utils.isTabsPanel(panel)) continue
-      if (probeTab.panelId === panel.id) continue
 
-      opts.push({
+      const isOwnPanel = probeTab.panelId === panel.id
+      const groupStruct = Tabs.getGroupsStruct(panel.id, Settings.state.allowMovingToParentTabs)
+      const groupOpts = groupNodesToMoveOpts(groupStruct, excludedGroupIds, probeTab)
+
+      // Own panel is only shown (inactive, with its groups as a sub-menu)
+      // when it has groups to move into - otherwise keep today's behavior
+      // of omitting it entirely.
+      if (isOwnPanel && !groupOpts.length) continue
+      if (isOwnPanel && !Settings.state.ctxMenuRenderInact) continue
+
+      const opt: MenuOption = {
         label: translate('menu.tab.move_to_panel_') + panel.name,
         icon: panel.iconSVG,
         img: panel.iconIMG,
         badge: 'icon_move_badge',
         color: panel.color,
-        onClick: () => {
+      }
+
+      if (isOwnPanel) {
+        opt.inactive = true
+      } else {
+        opt.onClick = () => {
           const items = Selection.getTabsInfo(true)
           const src = { windowId: Windows.id, panelId: probeTab.panelId, pinned: probeTab.pinned }
           Tabs.move(items, src, { panelId: panel.id, index: panel.nextTabIndex })
-        },
-      })
+        }
+      }
+
+      if (groupOpts.length) opt.sub = groupOpts
+
+      opts.push(opt)
     }
 
     if (opts.length) return opts
