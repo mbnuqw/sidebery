@@ -8,6 +8,7 @@ import * as Tabs from 'src/services/tabs.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
 import * as Preview from 'src/services/tabs.fg.preview'
 import * as Search from 'src/services/search.fg'
+import * as Info from 'src/services/info'
 
 import * as Mouse from 'src/services/mouse.fg'
 
@@ -217,6 +218,10 @@ export function stopLongClick(): void {
 }
 
 let clickLock = false
+export function isCmdOrCtrl(e: MouseEvent): boolean {
+  return e.ctrlKey || (Info.reactive.os === 'mac' && e.metaKey)
+}
+
 export function isLocked(): boolean {
   return clickLock
 }

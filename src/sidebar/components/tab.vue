@@ -280,7 +280,7 @@ function onMouseDown(e: MouseEvent): void {
 
   // Left
   if (e.button === 0) {
-    if (e.ctrlKey) {
+    if (Mouse.isCmdOrCtrl(e)) {
       if (!(tab.sel || tab.selLock)) {
         const noSel = !Selection.isSet()
 
@@ -453,7 +453,7 @@ function onMouseUp(e: MouseEvent): void {
   if (tab.reactive.customTitleEdit) return
 
   if (e.button === 0) {
-    const withoutMods = !e.ctrlKey && !e.shiftKey
+    const withoutMods = !Mouse.isCmdOrCtrl(e) && !e.shiftKey
     if (sameTarget) {
       if (withoutMods) Selection.resetSelection()
       if (Settings.state.activateOnMouseUp && withoutMods) activate()
@@ -492,7 +492,7 @@ function onMouseUp(e: MouseEvent): void {
       }
     }
   } else if (e.button === 2) {
-    if (e.ctrlKey || e.shiftKey) return
+    if (Mouse.isCmdOrCtrl(e) || e.shiftKey) return
 
     const inMultiSelectionMode = Mouse.multiSelectionMode
     Mouse.stopMultiSelection()
@@ -512,7 +512,7 @@ function onCtxMenu(e: MouseEvent): void {
   if (
     Mouse.isLocked() ||
     !Settings.state.ctxMenuNative ||
-    e.ctrlKey ||
+    Mouse.isCmdOrCtrl(e) ||
     e.shiftKey ||
     Mouse.longClickApplied
   ) {
@@ -522,7 +522,7 @@ function onCtxMenu(e: MouseEvent): void {
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !(tab.sel || tab.selLock)) {
+  if (!Mouse.isCmdOrCtrl(e) && !e.shiftKey && !(tab.sel || tab.selLock)) {
     Selection.resetSelection()
   }
 
@@ -774,7 +774,7 @@ function onExpandMouseUp(e: MouseEvent): void {
   }
 
   // Select whole branch and show menu
-  if (e.button === 2 && !e.ctrlKey && !e.shiftKey && sameTarget) {
+  if (e.button === 2 && !Mouse.isCmdOrCtrl(e) && !e.shiftKey && sameTarget) {
     Selection.resetSelection()
     Selection.selectTabsBranch(tab)
   }
