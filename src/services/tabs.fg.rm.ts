@@ -311,7 +311,7 @@ export async function removeTabs(
   Tabs.rememberRemoved(tabs)
 
   // No-empty panels
-  if (count === panel.reactive.len && panel.noEmpty) {
+  if (count === panel.reactive.len && panel.noEmpty && !Sidebar.convertingPanelLock) {
     Tabs.createTabInPanel(panel)
   }
 

@@ -1063,7 +1063,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     const actualPanel = Sidebar.panelsById[tab.panelId]
 
     if (Utils.isTabsPanel(actualPanel) && !actualPanel.reactive.len) {
-      if (actualPanel.noEmpty) {
+      if (actualPanel.noEmpty && !Sidebar.convertingPanelLock) {
         Tabs.createTabInPanel(actualPanel)
       }
     }
@@ -1362,7 +1362,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   else Sidebar.removeFromVisibleTabs(panel.id, tabId)
 
   // No-empty
-  if (!tab.pinned && panel.noEmpty && !panel.reactive.len) {
+  if (!tab.pinned && panel.noEmpty && !panel.reactive.len && !Sidebar.convertingPanelLock) {
     Tabs.createTabInPanel(panel, { active: false })
   }
 
