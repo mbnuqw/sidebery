@@ -324,7 +324,7 @@ function createNativeOption(
       icon = option.img
     } else if (option.icon) {
       const alpha = option.inactive ? '64' : 'ff'
-      const rgbColor = option.color ? D.RGB_COLORS[option.color] : '#686868' + alpha
+      const rgbColor = (option.colorCode ?? '#686868') + alpha
 
       icon = getBase64SVGIcon(option.icon, rgbColor)
     }

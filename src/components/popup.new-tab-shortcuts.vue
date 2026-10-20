@@ -8,7 +8,7 @@
         :key="shortcut.id"
         :data-edit="shortcut.id === editing"
         @click="editShortcut(shortcut)")
-        .container-box(v-if="shortcut.container" :data-color="shortcut.containerColor")
+        .container-box(v-if="shortcut.container" :data-container-color="shortcut.containerColor")
           .icon-box
             svg.icon: use(:href="shortcut.containerIcon")
           .container {{shortcut.container}}

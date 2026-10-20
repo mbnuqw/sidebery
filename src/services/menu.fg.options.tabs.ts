@@ -9,7 +9,7 @@ import * as Selection from 'src/services/selection.fg'
 import * as Settings from 'src/services/settings'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Menu from 'src/services/menu.fg'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups.fg'
 import * as TabsSorting from 'src/services/tabs.fg.sorting'
@@ -78,6 +78,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         img: panel.iconIMG,
         badge: 'icon_move_badge',
         color: panel.color,
+        colorCode: D.RGB_COLORS[panel.color],
         onClick: () => {
           const items = Selection.getTabsInfo(true)
           const src = { windowId: Windows.id, panelId: probeTab.panelId, pinned: probeTab.pinned }
@@ -182,7 +183,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         label: translate('menu.tab.reopen_in_') + c.name,
         icon: c.icon,
         badge: 'icon_reopen',
-        color: c.color,
+        containerColor: c.color,
+        colorCode: Containers.colorsByName[c.color],
         onClick: () => Tabs.reopenInContainer(Selection.ids(), c.id),
       })
     }
@@ -241,7 +243,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       opts.push({
         label: translate('menu.tab.open_in_') + c.name,
         icon: c.icon,
-        color: c.color,
+        containerColor: c.color,
+        colorCode: Containers.colorsByName[c.color],
         onClick: () => Tabs.openInContainer(Selection.ids(), c.id),
       })
     }
@@ -539,7 +542,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       const title = translate('colors.' + color.color)
       opts.push({
         label: title,
-        color: color.color as browser.ColorName,
+        color: color.color,
+        colorCode: D.RGB_COLORS[color.color],
         icon: color.value === 'toolbar' ? 'icon_none' : 'circle_filled',
         onClick: () => Tabs.setCustomColor(selected, color.value),
       })

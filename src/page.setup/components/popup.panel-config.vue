@@ -30,7 +30,7 @@
     v-if="!isTabsOrBookmarks"
     label="panel.color_label"
     :value="color"
-    :opts="D.COLOR_OPTS"
+    :opts="D.PANEL_COLOR_OPTS"
     :icon="'#' + iconSVG"
     @update:value="setColor")
 
@@ -443,7 +443,7 @@ function setIcon(value: string): void {
   SidebarConf.saveSidebarConfig(250)
 }
 
-function setColor(value: browser.ColorName): void {
+function setColor(value: string): void {
   props.conf.color = value
   if (props.conf.iconIMG) recolorCustomIcon()
   SidebarConf.saveSidebarConfig(250)

@@ -12,7 +12,7 @@ section(ref="el")
     .card(
       v-for="(container, id) in Containers.sortContainers(Object.values(Containers.reactive.byId))"
       :key="container.id"
-      :data-color="container.color")
+      :data-container-color="container.color")
       .card-body(@click="SetupPage.reactive.selectedContainer = container")
         .card-icon: svg: use(:href="'#' + container.icon")
         .card-name {{container.name}}

@@ -15,7 +15,7 @@
       :title="`${t.title}\n---\n${t.url}`"
       :data-lvl="t.lvl"
       :data-parent="t.isParent"
-      :data-color="t.containerColor"
+      :data-container-color="t.containerColor"
       @dragstart="onTabDragStart($event, t, entry)"
       @mousedown="onTabMouseDown($event, t, entry)"
       @mouseup="onTabMouseUp($event, t, entry)")

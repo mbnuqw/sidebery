@@ -6,7 +6,7 @@ import * as Sidebar from 'src/services/sidebar.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Tabs from 'src/services/tabs.fg'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import { tabsMenuOptions } from './menu.fg.options.tabs'
 import { bookmarksMenuOptions } from './menu.fg.options.bookmarks'
 import { historyMenuOptions } from './menu.fg.options.history'
@@ -149,7 +149,8 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       opts.push({
         label: c.name,
         icon: c.icon,
-        color: c.color,
+        containerColor: c.color,
+        colorCode: Containers.colorsByName[c.color],
         flag: {
           active: panel.newTabBtns.includes(c.name),
           icon: '#icon_pin',

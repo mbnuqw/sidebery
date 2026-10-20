@@ -23,7 +23,9 @@ export interface MenuOption {
   icon?: string
   img?: string
   badge?: string
-  color?: browser.ColorName
+  color?: string
+  colorCode?: string
+  containerColor?: string
   inactive?: boolean
   sub?: MenuOption[]
   flag?: MenuOptionFlag

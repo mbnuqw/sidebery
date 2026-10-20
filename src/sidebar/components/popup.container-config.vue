@@ -17,14 +17,14 @@
       SelectInput.input(
         v-model:value="Popups.reactive.containerConfigPopup.icon"
         :opts="CONTAINER_ICON_OPTS"
-        :color="Popups.reactive.containerConfigPopup.color"
+        :containerColor="Popups.reactive.containerConfigPopup.color"
       )
 
     .field
       .field-label {{translate('popup.common.color_label')}}
       SelectInput.input(
         v-model:value="Popups.reactive.containerConfigPopup.color"
-        :opts="COLOR_OPTS"
+        :opts="Containers.colorOptions"
         :icon="'#' + Popups.reactive.containerConfigPopup.icon"
       )
 

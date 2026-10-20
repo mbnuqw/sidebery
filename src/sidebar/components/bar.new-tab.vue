@@ -7,7 +7,7 @@
   StickyTabs.-bottom(:stickyTabIds="panel.reactive.stickyTabIdsBottom")
   .new-tab-btn(
     :title="defaultBtn.tooltip"
-    :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
+    :data-container-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, defaultBtn)"
     @mouseup="onNewTabMouseUp($event, defaultBtn)"
     @dragstart="onDragStart($event, defaultBtn)"
@@ -22,7 +22,7 @@
     :title="btn.tooltip"
     :data-br="!btn.title"
     :data-wide="btn.wide"
-    :data-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
+    :data-container-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, btn)"
     @mouseup="onNewTabMouseUp($event, btn)"
     @dragstart="onDragStart($event, btn)"

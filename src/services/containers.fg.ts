@@ -12,13 +12,22 @@ import * as IPC from 'src/services/ipc'
 import * as Containers from './containers'
 export * from 'src/services/containers'
 
+let colors: browser.contextualIdentities.ColorInfo[] = []
+export let colorsByName: Record<string, string> = {}
+export const colorOptions: { value: string; containerColor: string }[] = []
+
 export async function load(): Promise<void> {
   Logs.info('Containers.load')
   const ts = performance.now()
   setupListeners()
 
   try {
-    Containers.reactive.byId = await IPC.bg('getContainers')
+    const [containersByIdFromBg, supportedColors] = await Promise.all([
+      IPC.bg('getContainers'),
+      browser.contextualIdentities.getSupportedColors(),
+    ])
+    Containers.reactive.byId = containersByIdFromBg
+    colors = supportedColors
   } catch (err) {
     Logs.err('Containers.load: Cannot load containers:', err)
     Containers.reactive.byId = {}
@@ -27,7 +36,30 @@ export async function load(): Promise<void> {
     Menu.parseContainersRules()
   }
 
+  setColorOptionsForSelect()
+  setContainerColorsCSSVars()
+
   Logs.info('Containers.load: Done:', performance.now() - ts)
+}
+
+function setContainerColorsCSSVars() {
+  const sheetyStyle = new CSSStyleSheet()
+
+  for (const colorInfo of colors) {
+    const rule = `[data-container-color="${colorInfo.color}"] { --color: ${colorInfo.colorCode} }`
+    sheetyStyle.insertRule(rule, 0)
+  }
+
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheetyStyle]
+}
+
+export function setColorOptionsForSelect() {
+  colorOptions.length = 0
+  colorsByName = {}
+  for (const colorInfo of colors) {
+    colorOptions.push({ value: colorInfo.color, containerColor: colorInfo.color })
+    colorsByName[colorInfo.color] = colorInfo.colorCode
+  }
 }
 
 let creating: string | undefined

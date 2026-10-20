@@ -28,7 +28,7 @@ export interface ContainerConfigPopup {
   id: ID
   name: string
   icon: string
-  color: browser.ColorName
+  color: string
   done: (result: ID | null) => void
 }
 

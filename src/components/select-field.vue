@@ -19,6 +19,7 @@
       :opts="props.opts"
       :noneOpt="props.noneOpt"
       :color="props.color"
+      :containerColor="props.containerColor"
       :icon="props.icon"
       :folded="folded"
       :preSelected="preSelected"
@@ -49,6 +50,7 @@ interface SelectFieldProps {
   optLabel?: string
   opts: readonly InputOption[]
   color?: string
+  containerColor?: string
   icon?: string
   noneOpt?: string | number
   note?: string

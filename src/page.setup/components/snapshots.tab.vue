@@ -8,14 +8,14 @@
   :data-sel="tab.sel"
   :data-lvl="tab.lvl"
   :data-pinned="tab.pinned"
-  :data-color="tab.containerColor"
+  :data-container-color="tab.containerColor"
   :data-shift-sel="viewerState.mouseUpShiftTabId === tab.id"
   @click.stop.prevent=""
   @dragstart="onTabDragStart"
   @mousedown="onTabMouseDown($event, tab)"
   @mouseup.stop.prevent="onTabMouseUp($event, tab)")
   .container-mark(v-if="tab.containerIcon")
-  .color-layer(v-if="tab.customColor" :style="{ '--tab-color': RGB_COLORS[tab.customColor as browser.ColorName] }")
+  .color-layer(v-if="tab.customColor" :style="{ '--tab-color': RGB_COLORS[tab.customColor] }")
   .drop-down-btn(
     v-if="tab.isParent"
     @click="Snapshots.foldBranchInViewer(index, panel.tabs)"

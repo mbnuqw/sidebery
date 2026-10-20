@@ -17,7 +17,7 @@
   :data-group="tab.reactive.isGroup"
   :data-parent="tab.reactive.isParent"
   :data-folded="tab.reactive.folded"
-  :data-color="tab.reactive.containerColor"
+  :data-container-color="tab.reactive.containerColor"
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"
   :data-edit="tab.reactive.customTitleEdit"
@@ -129,7 +129,7 @@ const favSvgUseEl = useTemplateRef('favSvgUseEl')
 const flashFxEl = useTemplateRef('flashFxEl')
 
 const tabColor = computed<string>(() => {
-  if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
+  if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as string]
   if (
     Settings.state.colorizeTabsBranches &&
     tab.reactive.branchColor &&

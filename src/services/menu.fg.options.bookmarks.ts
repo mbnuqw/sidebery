@@ -1,12 +1,12 @@
 import { isBookmarksPanel, isTabsPanel } from 'src/utils'
-import { BKM_OTHER_ID, BKM_ROOT_ID, CONTAINER_ID, NOID } from 'src/defaults'
+import { BKM_ROOT_ID, CONTAINER_ID, RGB_COLORS } from 'src/defaults'
 import { MenuOption } from 'src/types'
 import { BkmType } from 'src/enums'
 import { translate } from 'src/dict'
 import * as Settings from 'src/services/settings'
 import * as Windows from 'src/services/windows.fg'
 import * as Selection from 'src/services/selection.fg'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import * as Bookmarks from 'src/services/bookmarks.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
@@ -76,6 +76,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
         icon: p.iconSVG,
         img: p.iconIMG,
         color: p.color,
+        colorCode: RGB_COLORS[p.color],
         inactive: allSeparators,
         onClick: () => Bookmarks.open(Selection.ids(), { panelId: p.id }),
       })
@@ -109,7 +110,8 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
         opts.push({
           label: translate('menu.bookmark.open_in_') + c.name,
           icon: c.icon,
-          color: c.color,
+          containerColor: c.color,
+          colorCode: Containers.colorsByName[c.color],
           inactive: allSeparators,
           onClick: () => Bookmarks.open(Selection.ids(), { containerId: c.id }),
         })

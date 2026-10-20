@@ -9,7 +9,7 @@
         :data-edit="rule.id === editing"
         :data-active="rule.active"
         @click="editRule(rule)")
-        .container-box(v-if="rule.containerId" :data-color="rule.containerColor")
+        .container-box(v-if="rule.containerId" :data-container-color="rule.containerColor")
           .icon-box
             svg.icon: use(:href="rule.containerIcon")
           .container {{rule.containerName}}

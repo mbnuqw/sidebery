@@ -24,7 +24,7 @@
       .field-label {{translate('popup.common.color_label')}}
       SelectInput.input(
         v-model:value="Popups.reactive.panelConfigPopup.config.color"
-        :opts="COLOR_OPTS"
+        :opts="PANEL_COLOR_OPTS"
         :icon="'#' + Popups.reactive.panelConfigPopup.config.iconSVG"
       )
 
@@ -42,7 +42,7 @@ import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups.fg'
 import { translate } from 'src/dict'
 import * as Sidebar from 'src/services/sidebar.fg'
-import { PANEL_ICON_OPTS, COLOR_OPTS } from 'src/defaults'
+import { PANEL_ICON_OPTS, PANEL_COLOR_OPTS } from 'src/defaults'
 import * as SidebarConfig from 'src/services/sidebar-config'
 import * as Settings from 'src/services/settings'
 import TextInput from 'src/components/text-input.vue'

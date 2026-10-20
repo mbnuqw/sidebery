@@ -1,11 +1,12 @@
 <template lang="pug">
-.SelectInput(ref="rootEl" :data-color="props.color" :data-folded="folded")
+.SelectInput(ref="rootEl" :data-color="props.color" :data-container-color="props.containerColor" :data-folded="folded")
   .focus-el(ref="focusEl" tabindex="-1")
   template(v-if="folded && activeOpt")
     .opt(
       :title="getTooltip(activeOpt)"
       :data-none="((activeOpt as InputObjOpt).value ?? activeOpt) === props.noneOpt"
-      :data-color="getOptColor(activeOpt) ?? false"
+      :data-color="!(activeOpt as InputObjOpt).containerColor ? (activeOpt as InputObjOpt).color ?? false : undefined"
+      :data-container-color="(activeOpt as InputObjOpt).containerColor"
       data-active="true")
       svg(v-if="((activeOpt as InputObjOpt).icon || props.icon)?.startsWith('#')")
         use(:href="(activeOpt as InputObjOpt).icon || props.icon")
@@ -23,7 +24,8 @@
               :id="'opt' + ((opt as InputObjOpt).value ?? opt)"
               :title="getTooltip(opt)"
               :data-none="((opt as InputObjOpt).value ?? opt) === props.noneOpt"
-              :data-color="getOptColor(opt) ?? false"
+              :data-color="!(opt as InputObjOpt).containerColor ? (opt as InputObjOpt).color ?? false : undefined"
+              :data-container-color="(opt as InputObjOpt).containerColor"
               :data-active="((opt as InputObjOpt).value ?? opt) === preSelected"
               @mouseup.stop="select(opt)")
               svg(v-if="((opt as InputObjOpt).icon || props.icon)?.startsWith('#')")
@@ -36,7 +38,8 @@
       v-for="opt in props.opts"
       :title="getTooltip(opt)"
       :data-none="((opt as InputObjOpt).value ?? opt) === props.noneOpt"
-      :data-color="getOptColor(opt) ?? false"
+      :data-color="!(opt as InputObjOpt).containerColor ? (opt as InputObjOpt).color ?? false : undefined"
+      :data-container-color="(opt as InputObjOpt).containerColor"
       :data-active="isActive(opt)"
       @mouseup.stop="select(opt)")
         svg(v-if="((opt as InputObjOpt).icon || props.icon)?.startsWith('#')")
@@ -54,6 +57,7 @@ type InputObjOpt = {
   value: string | number
   tooltip?: string
   color?: string
+  containerColor?: string
   icon?: string
   title?: string
 }
@@ -65,6 +69,7 @@ interface SelectInputProps {
   label?: string
   plurNum?: number | string
   color?: string
+  containerColor?: string
   icon?: string
   noneOpt?: string | number
   folded?: boolean

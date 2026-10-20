@@ -16,7 +16,7 @@ export const SEARCH_URL = /* @__PURE__ */ browser.runtime.getURL('/popup.search/
 export const EDITING_POPUP_URL = /* @__PURE__ */ browser.runtime.getURL(
   '/popup.editing/editing.html'
 )
-export const RGB_COLORS: Record<browser.ColorName, string> = {
+export const RGB_COLORS: Record<string, string> = {
   blue: '#37adff',
   turquoise: '#00c79a',
   cyan: '#00c79a',
@@ -29,7 +29,7 @@ export const RGB_COLORS: Record<browser.ColorName, string> = {
   toolbar: '#686868',
   gray: '#686868',
 }
-export const COLOR_NAMES: browser.ColorName[] = [
+export const COLOR_NAMES: string[] = [
   'blue',
   'turquoise',
   'green',
@@ -88,36 +88,6 @@ export const ASKID: ID = -11
 export const MOVEID: ID = -12
 
 export const CONTAINER_ICON_OPTS = [
-  { value: 'fingerprint', icon: '#fingerprint' },
-  { value: 'briefcase', icon: '#briefcase' },
-  { value: 'dollar', icon: '#dollar' },
-  { value: 'cart', icon: '#cart' },
-  { value: 'circle', icon: '#circle' },
-  { value: 'gift', icon: '#gift' },
-  { value: 'vacation', icon: '#vacation' },
-  { value: 'food', icon: '#food' },
-  { value: 'fruit', icon: '#fruit' },
-  { value: 'pet', icon: '#pet' },
-  { value: 'tree', icon: '#tree' },
-  { value: 'chill', icon: '#chill' },
-  { value: 'fence', icon: '#fence' },
-]
-export const PANEL_ICON_OPTS = [
-  { value: 'icon_books', icon: '#icon_books' },
-  { value: 'icon_code', icon: '#icon_code' },
-  { value: 'icon_circle', icon: '#icon_circle' },
-  { value: 'icon_play', icon: '#icon_play' },
-  { value: 'icon_mail', icon: '#icon_mail' },
-  { value: 'icon_man', icon: '#icon_man' },
-  { value: 'icon_archive', icon: '#icon_archive' },
-  { value: 'icon_clipboard', icon: '#icon_clipboard' },
-  { value: 'icon_book', icon: '#icon_book' },
-  { value: 'icon_coffee', icon: '#icon_coffee' },
-  { value: 'icon_search', icon: '#icon_search' },
-  { value: 'icon_lock', icon: '#icon_lock' },
-  { value: 'icon_edu', icon: '#icon_edu' },
-  { value: 'icon_flask', icon: '#icon_flask' },
-  { value: 'icon_gamepad', icon: '#icon_gamepad' },
   { value: 'fingerprint', icon: '#fingerprint' },
   { value: 'briefcase', icon: '#briefcase' },
   { value: 'dollar', icon: '#dollar' },

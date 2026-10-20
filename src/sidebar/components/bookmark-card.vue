@@ -3,14 +3,14 @@
   :id="'bookmark' + panelId + node.id"
   :data-selected="node.reactive.sel"
   :data-open="node.reactive.hasOpenTabs"
-  :data-color="node.reactive.containerColor"
+  :data-container-color="node.reactive.containerColor"
   :title="tooltip"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .dnd-layer(draggable="true" data-dnd-type="panel" data-dnd-id="bookmarks" @dragstart="onDragStart")
   .body
-    .color-layer(v-if="node.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as browser.ColorName] }")
+    .color-layer(v-if="node.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor] }")
     .line
       .fav
         svg(v-if="!favicon")

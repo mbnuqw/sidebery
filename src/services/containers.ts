@@ -43,13 +43,8 @@ export function parseCPID(cpid: string): browser.contextualIdentities.CreateDeta
   const info = {
     name: result[0],
     icon: result[1],
-    color: result[2] as browser.ColorName,
+    color: result[2],
   }
-  // Keep legacy color names
-  // TMP just for couple of versions (v153 is ESR)
-  if (info.color === 'cyan') info.color = 'turquoise'
-  if (info.color === 'gray') info.color = 'toolbar'
-  // ---TMP
 
   return info
 }

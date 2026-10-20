@@ -11,13 +11,13 @@
     label="container.icon_label"
     :value="props.conf.icon"
     :opts="CONTAINER_ICON_OPTS"
-    :color="props.conf.color"
+    :containerColor="props.conf.color"
     @update:value="updateIcon")
 
   SelectField(
     label="container.color_label"
     :value="props.conf.color"
-    :opts="COLOR_OPTS"
+    :opts="Containers.colorOptions"
     :icon="'#' + props.conf.icon"
     @update:value="updateColor")
 
@@ -177,7 +177,7 @@ function updateIcon(icon: string): void {
   Containers.saveContainer(props.conf)
 }
 
-function updateColor(color: browser.ColorName): void {
+function updateColor(color: string): void {
   props.conf.color = color
   Containers.saveContainer(props.conf)
 }

@@ -17,19 +17,6 @@ declare namespace browser {
     scale?: number
   }
 
-  type ColorName =
-    | 'blue'
-    | 'turquoise'
-    | 'cyan'
-    | 'green'
-    | 'yellow'
-    | 'orange'
-    | 'red'
-    | 'pink'
-    | 'purple'
-    | 'toolbar'
-    | 'gray'
-
   /**
    * Runtime
    *
@@ -649,7 +636,7 @@ declare namespace browser {
       cookieStoreId: string
       name: string
       icon: string
-      color: ColorName
+      color: string
       colorCode: string
     }
 
@@ -665,7 +652,7 @@ declare namespace browser {
 
     interface UpdateDetails {
       name?: string
-      color?: ColorName
+      color?: string
       icon?: string
     }
 

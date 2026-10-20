@@ -78,7 +78,7 @@ interface PanelConfigCommonProps {
   iconSVG: string
   iconIMG?: string
   iconIMGSrc?: string
-  color: browser.ColorName
+  color: string
   skipOnSwitching: boolean
   lockedPanel: boolean
 }
@@ -99,7 +99,7 @@ interface PanelCommonProps {
 
 interface PanelCommonReactiveProps {
   name: string
-  color: browser.ColorName
+  color: string
   iconSVG: string
   iconIMG?: string
   hidden: boolean

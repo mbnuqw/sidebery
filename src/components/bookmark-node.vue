@@ -10,12 +10,12 @@
   :data-open="node.reactive.hasOpenTabs")
   .body(
     :title="tooltip"
-    :data-color="node.reactive.containerColor"
+    :data-container-color="node.reactive.containerColor"
     @mousedown.stop="onMouseDown"
     @mouseup.stop="onMouseUp"
     @contextmenu.stop="onCtxMenu")
     .dnd-layer(draggable="true" data-dnd-type="bookmark" :data-dnd-id="node.id" @dragstart="onDragStart")
-    .color-layer(v-if="node.reactive.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as browser.ColorName] }")
+    .color-layer(v-if="node.reactive.customColor" :style="{ '--bkm-color': RGB_COLORS[node.customColor as string] }")
     .fav(v-if="node.type === BkmType.Bookmark")
       svg(v-if="!favicon")
         use(href="#icon_ff")

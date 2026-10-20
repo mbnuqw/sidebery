@@ -1,20 +1,8 @@
 import { NOID } from 'src/defaults'
 import * as Utils from 'src/utils'
-import * as Containers from 'src/services/containers'
+import * as Containers from 'src/services/containers.fg'
 import * as Settings from 'src/services/settings'
 import * as Tabs from 'src/services/tabs.fg'
-
-const CONTAINER_COLORS: Record<string, string> = {
-  blue: '#37adff',
-  turquoise: '#00c79a',
-  cyan: '#00c79a',
-  green: '#51cd00',
-  yellow: '#ffcb00',
-  orange: '#ff9f00',
-  red: '#ff613d',
-  pink: '#ff4bda',
-  purple: '#af51f5',
-}
 
 export function colorizeTabs(): void {
   for (const tab of Tabs.list) {
@@ -42,7 +30,7 @@ export function colorizeTab(tabId: ID): void {
   } else {
     const container = Containers.reactive.byId[tab.cookieStoreId]
     if (container) {
-      color = CONTAINER_COLORS[container.color]
+      color = Containers.colorsByName[container.color]
     } else {
       color = null
     }

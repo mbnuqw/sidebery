@@ -122,14 +122,6 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     return
   }
 
-  // Keep legacy color names
-  // TMP just for couple of versions (v153 is ESR)
-  for (const container of Object.values(stored.containers)) {
-    if (container.color === 'cyan') container.color = 'turquoise'
-    if (container.color === 'gray') container.color = 'toolbar'
-  }
-  // ---TMP
-
   const currentSnapshot: NormalizedSnapshot = {
     id: Math.random().toString(36).replace('0.', Date.now().toString(36)),
     time: Date.now(),

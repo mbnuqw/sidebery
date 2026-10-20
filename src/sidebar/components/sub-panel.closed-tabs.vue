@@ -23,7 +23,7 @@
             @mousedown="onBranchMouseDown($event, rmt)"
             @mouseup="onBranchMouseUp($event, rmt)")
             svg: use(href="#icon_tree_struct")
-          .container-mark(v-if="rmt.containerColor" :data-color="rmt.containerColor")
+          .container-mark(v-if="rmt.containerColor" :data-container-color="rmt.containerColor")
   .nothing-placeholder(v-if="Tabs.reactive.recentlyRemovedLen === 0")
     .msg {{translate('panel.nothing')}}
 </template>
