@@ -68,7 +68,7 @@ function recalcScroll(bottomEvent?: boolean): void {
   if (!state.bottomOverflow && contentHeight - contentY - _preScroll > boxHeight) {
     state.bottomOverflow = true
   }
-  if (state.bottomOverflow && contentHeight - contentY - _preScroll <= boxHeight) {
+  if (state.bottomOverflow && contentHeight - contentY - _preScroll - 1 <= boxHeight) {
     state.bottomOverflow = false
     if (bottomEvent) emit('bottom')
   }
