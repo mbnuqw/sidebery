@@ -332,6 +332,40 @@
     "zh_TW": "切換到第十個面板",
     "ja": "10番目のパネルに切り替え"
   },
+  "KbReopenInDefaultContainer": {
+    "en": "Reopen tab in default container"
+  },
+
+  "KbReopenInContainer0": {
+    "en": "Reopen tab in first container"
+  },
+  "KbReopenInContainer1": {
+    "en": "Reopen tab in second container"
+  },
+  "KbReopenInContainer2": {
+    "en": "Reopen tab in third container"
+  },
+  "KbReopenInContainer3": {
+    "en": "Reopen tab in fourth container"
+  },
+  "KbReopenInContainer4": {
+    "en": "Reopen tab in fifth container"
+  },
+  "KbReopenInContainer5": {
+    "en": "Reopen tab in sixth container"
+  },
+  "KbReopenInContainer6": {
+    "en": "Reopen tab in seventh container"
+  },
+  "KbReopenInContainer7": {
+    "en": "Reopen tab in eighth container"
+  },
+  "KbReopenInContainer8": {
+    "en": "Reopen tab in ninth container"
+  },
+  "KbReopenInContainer9": {
+    "en": "Reopen tab in tenth container"
+  },
   "KbSwitchToPrevPanel": {
     "en": "Switch to previously active panel",
     "de": "Zum zuletzt aktiven Panel wechseln",

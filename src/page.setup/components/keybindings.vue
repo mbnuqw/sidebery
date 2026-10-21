@@ -65,6 +65,17 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.group_tabs_act")
     KeybindingField(:keybinding="Keybindings.reactive.byName.flatten_tabs")
     KeybindingField(:keybinding="Keybindings.reactive.byName.edit_title")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_default_container")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_5")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_6")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_7")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_8")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reopen_in_container_9")
 
   section
     h2 {{translate('settings.kb_tabs_open')}}
