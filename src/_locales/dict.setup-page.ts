@@ -2538,6 +2538,9 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     en: 'Keep searching after triggering the context menu option',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
   },
+  'settings.search_all_panels_default': {
+    en: 'Search all panels by default (invert "/" prefix behavior)',
+  },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
     de: 'Tastenkombinationen',

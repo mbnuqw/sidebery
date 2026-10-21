@@ -60,18 +60,35 @@ export function onTabsSearch(activePanel: Panel): void {
   }
 }
 
-export function onTabsSearchNext(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
-  if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
+function getFilteredTabs(panel?: Panel): Tab[] {
+  let filteredTabs: Tab[] = []
+  if (Search.reactive.allPanels) {
+    for (const p of Sidebar.panels) {
+      if (Utils.isTabsPanel(p) && p.filteredTabs) {
+        filteredTabs.push(...p.filteredTabs)
+      }
+    }
+  } else {
+    if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (Utils.isTabsPanel(panel) && panel.filteredTabs) {
+      filteredTabs = panel.filteredTabs
+    }
+  }
+  return filteredTabs
+}
 
+export function onTabsSearchNext(panel?: Panel): void {
+  const filteredTabs = getFilteredTabs(panel)
+  if (!filteredTabs.length) return
+  
   const selId = Selection.getFirst()
-  let index = panel.filteredTabs.findIndex(t => t.id === selId)
+  let index = filteredTabs.findIndex(t => t.id === selId)
 
   index += 1
-  if (index < 0 || index >= panel.filteredTabs.length) return
+  if (index < 0 || index >= filteredTabs.length) return
 
   Selection.resetSelection()
-  const tab = panel.filteredTabs[index]
+  const tab = filteredTabs[index]
   if (tab) {
     Selection.selectTab(tab.id)
     Tabs.scrollToTab(tab.id, true)
@@ -79,21 +96,22 @@ export function onTabsSearchNext(panel?: Panel): void {
 }
 
 export function onTabsSearchPrev(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
-  if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
+  const filteredTabs = getFilteredTabs(panel)
+
+  if (!filteredTabs.length) return
 
   const selId = Selection.getFirst()
-  let index = panel.filteredTabs.findIndex(t => t.id === selId)
+  let index = filteredTabs.findIndex(t => t.id === selId)
 
-  if (index === -1 && panel.filteredTabs.length) {
-    index = panel.filteredTabs.length
+  if (index === -1 && filteredTabs.length) {
+    index = filteredTabs.length
   }
 
   index -= 1
-  if (index < 0 || index >= panel.filteredTabs.length) return
+  if (index < 0 || index >= filteredTabs.length) return
 
   Selection.resetSelection()
-  const tab = panel.filteredTabs[index]
+  const tab = filteredTabs[index]
   if (tab) {
     Selection.selectTab(tab.id)
     Tabs.scrollToTab(tab.id, true)
@@ -101,10 +119,13 @@ export function onTabsSearchPrev(panel?: Panel): void {
 }
 
 export function onTabsSearchEnter(panel?: Panel): void {
-  if (!Utils.isTabsPanel(panel)) return
+  // If in all panels mode, we don't strictly require the passed panel to be valid.
+  if (!Search.reactive.allPanels && !Utils.isTabsPanel(panel)) return
 
   // Try to find in another panel
-  if (Search.query && !panel.filteredTabs?.length) return findInAnotherPanel()
+  if (Search.query && !Search.reactive.allPanels && (!panel || !Utils.isTabsPanel(panel) || !panel.filteredTabs?.length)) {
+    return findInAnotherPanel()
+  }
 
   const selId = Selection.getFirst()
   const tab = Tabs.byId[selId]
