@@ -711,6 +711,16 @@ interface IndexForNewTabConf {
 }
 
 /**
+ * Check if the pinned tab is related to the given panel.
+ * Globally pinned tabs are not bound to any panel (their panelId is just
+ * the last known one), so they are considered to be related to any panel.
+ */
+function isPinnedTabRelatedToPanel(tab: Tab, panel: TabsPanel): boolean {
+  if (Settings.state.pinnedTabsPosition !== 'panel') return true
+  return tab.panelId === panel.id
+}
+
+/**
  * Find and return index for new tab.
  */
 export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): number {
@@ -779,21 +789,28 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     ? Settings.state.moveNewTabButtonActivePin
     : Settings.state.moveNewTabActivePin
 
+  // Place new tab opened while the pinned tab is active.
+  // Any position relative to the active tab makes no sense in this case,
+  // so use the configured override for all the rules (except 'none').
+  if (
+    moveNewTabSetting !== 'none' &&
+    activeTab &&
+    activeTab.pinned &&
+    isPinnedTabRelatedToPanel(activeTab, panel)
+  ) {
+    if (moveNewTabActivePinSetting === 'end') return nextIndex
+    else return startIndex
+  }
+
   if (moveNewTabSetting === 'start') return startIndex
   if (moveNewTabSetting === 'end') return nextIndex
   if (moveNewTabSetting === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
-    else if (activeTab.pinned) {
-      if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
-    } else return activeTab.index
+    else return activeTab.index
   }
   if (moveNewTabSetting === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
-    } else if (activeTab.pinned) {
-      if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
     } else {
       let index = activeTab.index + 1
       for (let t; index < Tabs.list.length; index++) {
@@ -806,9 +823,6 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   if (moveNewTabSetting === 'first_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
-    } else if (activeTab.pinned) {
-      if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
     } else {
       return activeTab.index + 1
     }
@@ -816,9 +830,6 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
   if (moveNewTabSetting === 'last_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
-    } else if (activeTab.pinned) {
-      if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
     } else {
       let index = activeTab.index + 1
       for (let t; index < Tabs.list.length; index++) {
