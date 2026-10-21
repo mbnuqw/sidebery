@@ -1,6 +1,7 @@
 {
   "ExtName": {
-    "en": "Sidebery"
+    "en": "Sidebery",
+    "ru": "Sidebery"
   },
   "ExtDesc": {
     "en": "Tabs tree, bookmarks and history in a highly configurable sidebar.",
@@ -24,7 +25,6 @@
     "zh_TW": "切換 Sidebery 側邊欄\n中鍵點選：開啟設定",
     "ja": "Sidebery サイドバーの切り替え\n中クリック: 設定を開く"
   },
-
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
     "de": "Öffne/Schließe Seitenleiste",
@@ -118,65 +118,75 @@
     "de": "Panel-Einstellungen öffnen",
     "fr": "Ouvrir la configuration du panneau",
     "zh_CN": "打开面板配置",
-    "zh_TW": "開啟面板設定"
+    "zh_TW": "開啟面板設定",
+    "ru": "Открыть настройки панели"
   },
   "KbCopyTitle": {
     "en": "Copy titles of selected tabs/bookmarks or active tab",
     "de": "Kopiere Titel der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
     "fr": "Copier le titre des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的标题",
-    "zh_TW": "複製選定分頁/書籤或當前分頁的標題"
+    "zh_TW": "複製選定分頁/書籤或當前分頁的標題",
+    "ru": "Копировать заголовки выбранных вкладок/закладок или активной вкладки"
   },
   "KbCopyUrl": {
     "en": "Copy URLs of selected tabs/bookmarks or active tab",
     "de": "Kopiere URL(s) der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
     "fr": "Copier l’URL des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的网址",
-    "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
+    "zh_TW": "複製選定分頁/書籤或當前分頁的網址",
+    "ru": "Копировать URL выбранных вкладок/закладок или активной вкладки"
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le premier modèle",
     "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁",
+    "ru": "Копировать выбранные вкладки/закладки или активную вкладку по 1-му шаблону"
   },
   "KbCopyByTmplt1": {
     "en": "Copy selected tabs/bookmarks or active tab by second template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le deuxième modèle",
     "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁",
+    "ru": "Копировать выбранные вкладки/закладки или активную вкладку по 2-му шаблону"
   },
   "KbCopyByTmplt2": {
     "en": "Copy selected tabs/bookmarks or active tab by third template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le troisième modèle",
     "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁",
+    "ru": "Копировать выбранные вкладки/закладки или активную вкладку по 3-му шаблону"
   },
   "KbCopyByTmplt3": {
     "en": "Copy selected tabs/bookmarks or active tab by fourth template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le quatrième modèle",
     "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁",
+    "ru": "Копировать выбранные вкладки/закладки или активную вкладку по 4-му шаблону"
   },
   "KbCopyByTmplt4": {
     "en": "Copy selected tabs/bookmarks or active tab by fifth template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le cinquième modèle",
     "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁",
+    "ru": "Копировать выбранные вкладки/закладки или активную вкладку по 5-му шаблону"
   },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
     "de": "Öffne Lesezeichen Unter-Panel",
     "fr": "Ouvrir le sous-panneau des marque-pages",
     "zh_CN": "打开书签子面板",
-    "zh_TW": "開啟書籤子面板"
+    "zh_TW": "開啟書籤子面板",
+    "ru": "Открыть подпанель закладок"
   },
   "KbOpenSyncPopup": {
     "en": "Open sync popup",
     "de": "Öffne Synchronisationsdialog",
     "fr": "Ouvrir la popup de synchronisation",
     "zh_CN": "打开同步弹出窗口",
-    "zh_TW": "彈出同步視窗"
+    "zh_TW": "彈出同步視窗",
+    "ru": "Открыть всплывающее окно синхронизации"
   },
   "KbNextPanel": {
     "en": "Switch to next panel",
@@ -337,7 +347,8 @@
     "de": "Zum zuletzt aktiven Panel wechseln",
     "fr": "Basculer sur le panneau précédemment actif",
     "zh_CN": "切换到之前活动的面板",
-    "zh_TW": "切換到先前面板"
+    "zh_TW": "切換到先前面板",
+    "ru": "Переключиться на предыдущую панель"
   },
   "KbScrollToActivePanelTop": {
     "en": "Scroll to the top of the active panel",
@@ -421,7 +432,8 @@
     "de": "Titel bearbeiten",
     "fr": "Modifier le titre",
     "zh_CN": "编辑标题",
-    "zh_TW": "編輯標題"
+    "zh_TW": "編輯標題",
+    "ru": "Редактировать заголовок"
   },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
@@ -706,7 +718,8 @@
     "pl": "Rozwiń zaznaczoną gałąź",
     "zh_CN": "切换选定的分支状态（折叠/展开）",
     "zh_TW": "切換選定的分支狀態（折疊/展開）",
-    "ja": "選択したブランチの状態を切り替える（折りたたむ/展開）"
+    "ja": "選択したブランチの状態を切り替える（折りたたむ/展開）",
+    "ru": "Свернуть/развернуть выбранную ветку"
   },
   "KbFoldInactBranches": {
     "en": "Fold inactive branches",
@@ -1232,7 +1245,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (A-z)",
     "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (A-z)",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（A-z）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（A-z）",
+    "ru": "Сортировать выбранные или соседние вкладки по названию (А-я)"
   },
   "KbSortTabsByTitleDes": {
     "en": "Sort selected tabs or siblings of the active tab by title (z-A)",
@@ -1241,7 +1255,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (z-A)",
     "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (z-A)",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（z-A）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（z-A）",
+    "ru": "Сортировать выбранные или соседние вкладки по названию (я-А)"
   },
   "KbSortTabsByTrlAsc": {
     "en": "Sort selected tabs or siblings of the active tab by URL (A-z)",
@@ -1250,7 +1265,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (A-z)",
     "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (A-z)",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（A-z）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（A-z）",
+    "ru": "Сортировать выбранные или соседние вкладки по URL (А-я)"
   },
   "KbSortTabsByTrlDes": {
     "en": "Sort selected tabs or siblings of the active tab by URL (z-A)",
@@ -1259,7 +1275,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (z-A)",
     "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (z-A)",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（z-A）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（z-A）",
+    "ru": "Сортировать выбранные или соседние вкладки по URL (я-А)"
   },
   "KbSortTabsByTimeAsc": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Old-Recent)",
@@ -1268,7 +1285,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Stare-Nowe)",
     "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（舊-新）",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（古い順）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（古い順）",
+    "ru": "Сортировать выбранные или соседние вкладки по времени доступа (Старые-Новые)"
   },
   "KbSortTabsByTimeDes": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Recent-Old)",
@@ -1277,7 +1295,8 @@
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Nowe-Stare)",
     "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（新-舊）",
-    "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（新しい順）"
+    "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（新しい順）",
+    "ru": "Сортировать выбранные или соседние вкладки по времени доступа (Новые-Старые)"
   },
   "KbSortPanelTabsByTitleAsc": {
     "en": "Sort tabs of the active panel by title (A-z)",
@@ -1286,7 +1305,8 @@
     "hu": "Az aktív panel lapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (A-z)",
     "zh_TW": "依名稱排序當前面板的分頁 (A-z)",
-    "ja": "アクティブパネルのタブをタイトルでソート（A-z）"
+    "ja": "アクティブパネルのタブをタイトルでソート（A-z）",
+    "ru": "Сортировать вкладки активной панели по названию (А-я)"
   },
   "KbSortPanelTabsByTitleDes": {
     "en": "Sort tabs of the active panel by title (z-A)",
@@ -1295,7 +1315,8 @@
     "hu": "Az aktív panel lapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (z-A)",
     "zh_TW": "依名稱排序當前面板的分頁 (z-A)",
-    "ja": "アクティブパネルのタブをタイトルでソート（z-A）"
+    "ja": "アクティブパネルのタブをタイトルでソート（z-A）",
+    "ru": "Сортировать вкладки активной панели по названию (я-А)"
   },
   "KbSortPanelTabsByTrlAsc": {
     "en": "Sort tabs of the active panel by URL (A-z)",
@@ -1304,7 +1325,8 @@
     "hu": "Az aktív panel lapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po URL (A-z)",
     "zh_TW": "依網址排序當前面板的分頁 (A-z)",
-    "ja": "アクティブパネルのタブをURLでソート（A-z）"
+    "ja": "アクティブパネルのタブをURLでソート（A-z）",
+    "ru": "Сортировать вкладки активной панели по URL (А-я)"
   },
   "KbSortPanelTabsByTrlDes": {
     "en": "Sort tabs of the active panel by URL (z-A)",
@@ -1313,7 +1335,8 @@
     "hu": "Az aktív panel lapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po URL (z-A)",
     "zh_TW": "依網址排序當前面板的分頁 (z-A)",
-    "ja": "アクティブパネルのタブをURLでソート（z-A）"
+    "ja": "アクティブパネルのタブをURLでソート（z-A）",
+    "ru": "Сортировать вкладки активной панели по URL (я-А)"
   },
   "KbSortPanelTabsByTimeAsc": {
     "en": "Sort tabs of the active panel by access time (Old-Recent)",
@@ -1322,7 +1345,8 @@
     "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Stare-Nowe)",
     "zh_TW": "依最近瀏覽時間排序當前面板的分頁（舊-新）",
-    "ja": "アクティブパネルのタブをアクセス時間でソート（古い順）"
+    "ja": "アクティブパネルのタブをアクセス時間でソート（古い順）",
+    "ru": "Сортировать вкладки активной панели по времени доступа (Старые-Новые)"
   },
   "KbSortPanelTabsByTimeDes": {
     "en": "Sort tabs of the active panel by access time (Recent-Old)",
@@ -1331,9 +1355,9 @@
     "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Nowe-Stare)",
     "zh_TW": "依最近瀏覽時間排序當前面板的分頁（新-舊）",
-    "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）"
+    "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）",
+    "ru": "Сортировать вкладки активной панели по времени доступа (Новые-Старые)"
   },
-
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",
     "de": "Proxy für \"",
@@ -1356,7 +1380,6 @@
     "zh_TW": "」容器",
     "ja": "」コンテナ"
   },
-
   "unavailable_url": {
     "en": "Unavailable URL",
     "de": "Nicht verfügbare URL",
@@ -1423,7 +1446,6 @@
     "zh_TW": "由於安全相關的 API 限制，Sidebery 無法開啟此鏈接。",
     "ja": "Firefox のセキュリティ関連の制限により、Sidebery はこのリンクを開けません。"
   },
-
   "group_disconnected_warn": {
     "en": "Cannot connect to the sidebar...",
     "de": "Keine Verbindung zur Seitenleiste möglich...",
