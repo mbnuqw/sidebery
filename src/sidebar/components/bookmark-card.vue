@@ -73,7 +73,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
   // Left
   if (e.button === 0) {
-    if (e.ctrlKey) {
+    if (Mouse.isCmdOrCtrl(e)) {
       if (!props.node.sel) Selection.selectBookmark(props.node.id)
       else Selection.deselectBookmark(props.node.id)
       return
@@ -115,7 +115,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 function onMouseUp(e: MouseEvent): void {
   if (e.button === 0) {
     if (!Mouse.isTarget('bookmark', props.node.id)) return
-    if (e.ctrlKey || e.shiftKey) return
+    if (Mouse.isCmdOrCtrl(e) || e.shiftKey) return
 
     if (Selection.isBookmarks()) {
       return Selection.resetSelection()
@@ -135,7 +135,7 @@ function onMouseUp(e: MouseEvent): void {
       if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], { noNotif: true })
     }
   } else if (e.button === 2) {
-    if (e.ctrlKey || e.shiftKey) return
+    if (Mouse.isCmdOrCtrl(e) || e.shiftKey) return
 
     Mouse.stopMultiSelection()
     if (!Settings.state.ctxMenuNative) {
@@ -146,13 +146,13 @@ function onMouseUp(e: MouseEvent): void {
 }
 
 function onCtxMenu(e: MouseEvent): void {
-  if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (!Settings.state.ctxMenuNative || Mouse.isCmdOrCtrl(e) || e.shiftKey) {
     e.stopPropagation()
     e.preventDefault()
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !props.node.sel) {
+  if (!Mouse.isCmdOrCtrl(e) && !e.shiftKey && !props.node.sel) {
     Selection.resetSelection()
   }
 
