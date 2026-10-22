@@ -14,6 +14,7 @@ import type * as SidebarBg from 'src/services/sidebar.bg'
 import type * as SidebarFg from 'src/services/sidebar.fg'
 import type * as ContainersBg from 'src/services/containers.bg'
 import type * as GroupPage from 'src/page.group/group'
+import type * as ExternalApiFg from 'src/services/external-api.fg'
 
 export interface Message<T extends E.InstanceType, A extends ActionsKeys<T>> {
   id?: ID
@@ -86,6 +87,7 @@ export type PanelConfigPopupActions = {
 }
 
 export type SidebarActions = {
+  externalApiRequest: typeof ExternalApiFg.handleIpcRequest
   reloadTab: (tab: T.Tab) => void
   queryTab: (props: Partial<T.Tab>) => T.Tab | null
   getTabs: (tabIds?: ID[]) => T.Tab[] | undefined
