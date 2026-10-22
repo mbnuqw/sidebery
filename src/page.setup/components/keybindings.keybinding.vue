@@ -28,6 +28,16 @@ import * as Keybindings from 'src/services/keybindings.fg'
 
 const ERR_SHOW_TIMEOUT = 2000
 
+// firefox maps 'Ctrl' to the command key on macos, 'MacCtrl' is the real control key
+// listed in the standard macos display order
+const MAC_KEYS: Record<string, string> = {
+  MacCtrl: '⌃',
+  Alt: '⌥',
+  Shift: '⇧',
+  Ctrl: '⌘',
+  Command: '⌘',
+}
+
 const inputEl = ref<HTMLInputElement | null>(null)
 const state = reactive({ newShortcut: '', overrideShortcut: null as Command | null })
 
@@ -36,7 +46,10 @@ defineProps<{ keybinding: Command }>()
 let errTimeout: number
 let errMsg = ''
 
-const inputLabel = computed((): string => state.newShortcut || translate('settings.kb_input'))
+const inputLabel = computed((): string => {
+  if (!state.newShortcut) return translate('settings.kb_input')
+  return normalizeShortcut(state.newShortcut)
+})
 
 function changeKeybinding(cmd: Command): void {
   state.newShortcut = ''
@@ -53,7 +66,12 @@ function changeKeybinding(cmd: Command): void {
 
 function normalizeShortcut(s?: string): string {
   if (!s) return '---'
-  if (Info.reactive.os === 'mac') return s.replace('Command', '⌘').replace('MacCtrl', '⌃')
+  if (Info.reactive.os === 'mac') {
+    const keys = s.split('+')
+    const mods = Object.keys(MAC_KEYS).filter(key => keys.includes(key))
+    const rest = keys.filter(key => !MAC_KEYS[key])
+    return [...mods.map(key => MAC_KEYS[key]), ...rest].join('')
+  }
   if (Info.reactive.os === 'win') return s.replace('Command', 'Win')
   if (Info.reactive.os === 'linux') return s.replace('Command', 'Super')
   return s
@@ -73,7 +91,10 @@ async function onKBBlur(cmd: Command) {
       }
 
       const title = translate('settings.kb_override_popup_title')
-      const noteShortcut = translate('settings.kb_override_popup_note_shortcut', newShortcut)
+      const noteShortcut = translate(
+        'settings.kb_override_popup_note_shortcut',
+        normalizeShortcut(newShortcut)
+      )
       const noteUsed = translate('settings.kb_override_popup_note_used', dup.description ?? '')
       const result = await Popups.ask({
         title: title,
