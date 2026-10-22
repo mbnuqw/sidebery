@@ -128,6 +128,13 @@ function checkIfSessionIsRestoring(newTab: Tab) {
     maybeRestoredTabs &&
     maybeRestoredTabs.length >= SESSION_RESTORE_MIN_TABS_COUNT
   ) {
+    if (Settings.state.domainTrees) {
+      Tabs.DomainTrees?.log(
+        'WARN',
+        'SessionRestore',
+        `checkIfSessionIsRestoring popup opened: suspect count=${maybeRestoredTabs.length}, tabs=[${maybeRestoredTabs.map(t => t.id).join(', ')}]`
+      )
+    }
     Popups.openProcessingTabsPopup()
 
     cancelDeferredMovingOfNewTabs()
@@ -187,6 +194,13 @@ async function tryToRestoreTabsStateFromSessionData(
   sData: (TabSessionData | undefined)[]
 ) {
   Logs.info('Tabs.tryToRestoreTabsStateFromSessionData', tabs.length, sData.length)
+  if (Settings.state.domainTrees) {
+    Tabs.DomainTrees?.log(
+      'WARN',
+      'SessionRestore',
+      `tryToRestoreTabsStateFromSessionData: ${tabs.length} tabs, ${sData.length} session entries`
+    )
+  }
 
   // Check if there is enough session data
   const tabsWithSessionDataLen = sData.filter(d => !!d).length
@@ -260,12 +274,26 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   const initialOpenerId = nativeTab.openerTabId
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
+  const posConfig = Tabs.newTabsPosition[tab.index]
+  const isDTGroup =
+    !!posConfig?.isDTGroup ||
+    Tabs.DomainTrees?.isDomainTreeGroup(tab) ||
+    Tabs.DomainTrees?.isPendingPlaceholder(nativeTab.id) ||
+    ((tab.isGroup || tab.url?.includes('/sidebery/group.html')) && tab.url?.includes('?dt='))
   const isSplt =
     tab.active &&
     tab.splitViewId !== undefined &&
     tab.splitViewId !== browser.tabs.SPLIT_VIEW_ID_NONE &&
     tab.url === 'about:blank' &&
     tab.title === 'about:opentabs'
+
+  if (Settings.state.domainTrees) {
+    Tabs.DomainTrees?.log(
+      'INFO',
+      'onTabCreated',
+      `Tab created: id=${nativeTab.id}, index=${nativeTab.index}, url=${nativeTab.url}, title="${nativeTab.title}", isDTGroup=${isDTGroup}, opener=${nativeTab.openerTabId}, pinned=${nativeTab.pinned}`
+    )
+  }
 
   // Stop if multiple tabs were open and data querying is started
   let notSessionRestore
@@ -281,7 +309,23 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
   }
 
   // Check if opener tab is pinned
-  if (Settings.state.pinnedAutoGroup && initialOpener?.pinned && Settings.state.tabsTree) {
+  const matchesDomainTree =
+    Settings.state.domainTrees &&
+    tab.url &&
+    !tab.url.startsWith('about:') &&
+    !tab.url.startsWith('chrome:') &&
+    !tab.url.includes('/sidebery/') &&
+    (Tabs.DomainTrees?.matchCustomRule(tab.url) !== null ||
+      (Tabs.DomainTrees?.matchDomain(tab.url) &&
+        Tabs.DomainTrees.findExistingDomainPlaceholder(Tabs.DomainTrees.matchDomain(tab.url)!.domainKey) !== undefined))
+
+  if (
+    !isDTGroup &&
+    Settings.state.pinnedAutoGroup &&
+    initialOpener?.pinned &&
+    Settings.state.tabsTree &&
+    !matchesDomainTree
+  ) {
     autoGroupTab = Tabs.findGroupTabBoundToPinnedTab(initialOpener)
     if (autoGroupTab) {
       tab.openerTabId = autoGroupTab.id
@@ -429,6 +473,7 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     if (
       !notSessionRestore &&
       !attached &&
+      !isDTGroup &&
       // Tab is unloaded and has set url
       ((tab.discarded && tab.url !== 'about:blank') ||
         // or tab is active and sidebery got activation event before creation event (this)
@@ -632,6 +677,23 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
 
   if (createGroup && !tab.pinned && initialOpener) {
     waitForNewTabMove().then(() => {
+      const currentTab = Tabs.byId[tab.id]
+      if (!currentTab) return
+      if (
+        Settings.state.domainTrees &&
+        (Tabs.DomainTrees?.getAncestorDomainTree(currentTab) ||
+          (currentTab.url &&
+            !currentTab.url.startsWith('about:') &&
+            !currentTab.url.startsWith('chrome:') &&
+            !currentTab.url.includes('/sidebery/') &&
+            (Tabs.DomainTrees?.matchCustomRule(currentTab.url) !== null ||
+              (Tabs.DomainTrees?.matchDomain(currentTab.url) &&
+                Tabs.DomainTrees.findExistingDomainPlaceholder(
+                  Tabs.DomainTrees.matchDomain(currentTab.url)!.domainKey
+                ) !== undefined))))
+      ) {
+        return
+      }
       Tabs.groupTabs([tab.id], { title: initialOpener.title, pinnedTab: initialOpener })
     })
   }
@@ -673,6 +735,21 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
 
   if (Tabs.badgeRulesEnabled && tab.discarded) {
     Tabs.updateBadge(tab)
+  }
+
+  if (
+    Settings.state.domainTrees &&
+    !tab.pinned &&
+    !tab.internal &&
+    !tab.isGroup &&
+    !isDTGroup &&
+    !Tabs.DomainTrees?.isDomainTreeGroup(tab) &&
+    tab.url &&
+    !tab.url.startsWith('about:') &&
+    !tab.url.startsWith('chrome:') &&
+    !tab.url.includes('/sidebery/')
+  ) {
+    Tabs.DomainTrees.handleDomainTabDebounced(tab.id, 200)
   }
 }
 
@@ -866,7 +943,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       }
 
       // Reset favicon (to cached)
-      if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
+      if (
+        (tab.internal && !Tabs.DomainTrees?.isDomainTreeGroup(tab)) ||
+        (!tab.internal && !Utils.sameStart(change.url, tab.url, 16))
+      ) {
         change.favIconUrl = Favicons.getFavicon(change.url)
       }
 
@@ -905,6 +985,22 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       // Check if tab should be moved to another panel
       if (Tabs.moveRules.length && !tab.pinned && change.url !== 'about:blank') {
         Tabs.moveByRule(tabId, 120)
+      }
+
+      // Check if tab should be grouped into a domain tree
+      if (
+        Settings.state.domainTrees &&
+        !tab.pinned &&
+        !tab.internal &&
+        !tab.isGroup &&
+        !Tabs.DomainTrees?.isDomainTreeGroup(tab) &&
+        change.url &&
+        !change.url.startsWith('about:') &&
+        !change.url.startsWith('chrome:') &&
+        !change.url.includes('/sidebery/')
+      ) {
+        Tabs.DomainTrees?.log('INFO', 'onTabUpdated:URL', `Tab ${tabId} URL changed to ${change.url}, triggering handleDomainTab`)
+        Tabs.DomainTrees.handleDomainTabDebounced(tabId, 200)
       }
 
       // Update url counter
@@ -1027,6 +1123,21 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
     // Update filtered results
     if (Search.active) Search.searchDebounced(300)
+
+    // Automatically group unpinned tab into its domain tree if domain trees are enabled
+    if (
+      Settings.state.domainTrees &&
+      !tab.internal &&
+      !tab.isGroup &&
+      !Tabs.DomainTrees?.isDomainTreeGroup(tab) &&
+      tab.url &&
+      !tab.url.startsWith('about:') &&
+      !tab.url.startsWith('chrome:') &&
+      !tab.url.includes('/sidebery/')
+    ) {
+      Tabs.DomainTrees?.log('INFO', 'onTabUpdated:Unpin', `Tab ${tab.id} was unpinned! URL=${tab.url}, triggering handleDomainTab`)
+      Tabs.DomainTrees.handleDomainTabDebounced(tab.id, 250)
+    }
   }
 
   // Handle pinned tab
@@ -1112,8 +1223,20 @@ function updTabReactiveProps(change: browser.tabs.ChangeInfo, tab: Tab) {
   if (change.audible !== undefined) tab.reactive.mediaAudible = change.audible
   if (dChange) tab.reactive.discarded = change.discarded as boolean
   if (change.favIconUrl !== undefined) {
-    if (tab.internal) tab.favIconUrl = undefined
+    if (tab.internal && !Tabs.DomainTrees?.isDomainTreeGroup(tab)) tab.favIconUrl = undefined
     Tabs.renderFavicon(tab)
+    if (tab.parentId !== D.NOID && Settings.state.domainTrees) {
+      let p: Tab | undefined = tab
+      while (p && p.parentId !== D.NOID) {
+        const next: Tab | undefined = Tabs.byId[p.parentId]
+        if (!next) break
+        p = next
+        if (Tabs.DomainTrees?.isDomainTreeGroup(p)) {
+          Tabs.DomainTrees.updateDomainTreeFavicon(p)
+          break
+        }
+      }
+    }
   }
   if (change.mutedInfo?.muted !== undefined) tab.reactive.mediaMuted = change.mutedInfo.muted
   if (pChange) tab.reactive.pinned = change.pinned as boolean
@@ -1348,6 +1471,16 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   Tabs.list.splice(tab.index, 1)
   Sidebar.recalcTabsPanels()
 
+  // Check if closed tab was part of a domain tree
+  if (Settings.state.domainTrees) {
+    Tabs.DomainTrees?.log(
+      'INFO',
+      'onTabRemoved',
+      `Tab ${tabId} removed (wasDTGroup=${Tabs.DomainTrees?.isDomainTreeGroup(tab)}, parentId=${tab.parentId}, url=${tab.url})`
+    )
+  }
+  Tabs.DomainTrees.onTabRemovedCheck(tab)
+
   // Update url counter
   Links.rmTab(tab)
 
@@ -1485,6 +1618,16 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Check if tab moved by Sidebery so no additional handling is needed
   if (tab.moving !== undefined) {
+    tab.moving = undefined
+    tab.dstPanelId = D.NOID
+    Tabs.saveTabData(id)
+    Tabs.cacheTabsData(640)
+    if (tab.active) Tabs.updateSuccessionDebounced(0)
+    return
+  }
+
+  // Check if tab is already at target index (moved in-memory by Sidebery)
+  if (Tabs.list[info.toIndex]?.id === id) {
     tab.dstPanelId = D.NOID
     Tabs.saveTabData(id)
     Tabs.cacheTabsData(640)
@@ -1496,13 +1639,18 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Move tab in tabs array
   const toTab = Tabs.list[info.toIndex]
-  const movedTab = Tabs.list[info.fromIndex]
-  if (movedTab && movedTab.id === id) {
-    Tabs.list.splice(info.fromIndex, 1)
-  } else {
-    Logs.err(`Tabs.onTabMoved: #${id} ${info.fromIndex} > ${info.toIndex}: Not found by index`)
-    return Tabs.reinitTabs()
+  let fromIndex = info.fromIndex
+  if (Tabs.list[fromIndex]?.id !== id) {
+    const actualIndex = Tabs.list.findIndex(t => t.id === id)
+    if (actualIndex !== -1) {
+      fromIndex = actualIndex
+    } else {
+      Logs.err(`Tabs.onTabMoved: #${id} ${info.fromIndex} > ${info.toIndex}: Not found by index`)
+      return Tabs.reinitTabs()
+    }
   }
+  const movedTab = Tabs.list[fromIndex]
+  Tabs.list.splice(fromIndex, 1)
 
   movedTab.moveTime = Date.now()
   movedTab.prevPanelId = movedTab.panelId
@@ -1710,6 +1858,16 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     return
   }
 
+  // Redirect domain tree root tab activation to the last active child in the tree
+  if (Settings.state.domainTrees && Tabs.DomainTrees?.isDomainTreeGroup(tab)) {
+    const targetChild = Tabs.DomainTrees.getLastActiveChild(tab)
+    if (targetChild) {
+      if (tab.folded) Tabs.expTabsBranch(tab.id)
+      browser.tabs.update(targetChild.id, { active: true })
+      return
+    }
+  }
+
   const ts = Date.now()
 
   // Update previous active tab and store its id
@@ -1738,6 +1896,10 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   tab.lastAccessed = ts
   tab.lastActivity = undefined
   Tabs.setActiveId(info.tabId)
+
+  if (Settings.state.domainTrees) {
+    Tabs.DomainTrees?.recordActiveChild(tab)
+  }
 
   const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return

@@ -18,6 +18,7 @@
       :password="props.password"
       :valid="props.valid"
       :width="props.inputWidth"
+      :resize="props.resize"
       @update:value="emit('update:value', $event)"
       @blur="onBlur"
       @keydown="emit('keydown', $event)")
@@ -48,6 +49,7 @@ interface TextFieldProps {
   inputWidth?: string
   dbg?: string
   default?: string | number
+  resize?: boolean | string
 }
 
 const emit = defineEmits(['update:value', 'blur', 'keydown'])

@@ -33,6 +33,8 @@ export * from 'src/services/tabs.fg.create'
 export * from 'src/services/tabs.fg.media'
 export * from 'src/services/tabs.fg.sorting'
 export * from 'src/services/tabs.fg.badge'
+export * as DomainTrees from 'src/services/tabs.fg.domain-trees'
+export * from 'src/services/tabs.fg.domain-trees'
 
 export interface TabsReactiveState {
   pinnedIds: ID[]
@@ -118,8 +120,8 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
   if (tab.status === undefined) tab.status = 'complete'
   if (tab.warn === undefined) tab.warn = false
   if (tab.internal === undefined) tab.internal = tab.url.startsWith(D.ADDON_HOST)
-  if (tab.internal) tab.favIconUrl = undefined
-  else {
+  if (tab.internal && !Tabs.DomainTrees?.isDomainTreeGroup(tab)) tab.favIconUrl = undefined
+  else if (!tab.internal) {
     if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') tab.warn = true
     if (tab.favIconUrl?.startsWith('chrome:')) tab.favIconUrl = undefined
   }
@@ -250,6 +252,7 @@ export async function load(src?: LoadSrc): Promise<void> {
   if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
   if (Settings.state.tabsBadge) Tabs.parseBadgeRegexpRules()
   if (Tabs.badgeRulesEnabled) Tabs.updateBadges()
+  if (Settings.state.domainTrees && src !== LoadSrc.SessionOnly) Tabs.DomainTrees.scanExistingTabs()
 
   ready = true
 
@@ -2050,6 +2053,10 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   // Calc last folded branch length
   if (foldedBranchLvl > -1 && foldedBranchRoot) {
     foldedBranchRoot.reactive.branchLen = foldedBranchLenCount
+  }
+
+  if (Settings.state.domainTrees) {
+    Tabs.DomainTrees?.cleanEmptyDomainTreesDebounced?.(100)
   }
 }
 

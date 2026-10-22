@@ -510,6 +510,60 @@ section(ref="el")
       :default="DEFAULT_SETTINGS.sortGroupsFirst"
       @update:value="Settings.saveDebounced(150)")
 
+  .wrapper(ref="domainTreesEl")
+    .sub-title: .text {{translate('settings.nav_settings_domain_trees')}}
+    ToggleField.-no-separator(
+      label="settings.domain_trees"
+      dbg="domainTrees"
+      v-model:value="Settings.state.domainTrees"
+      :default="DEFAULT_SETTINGS.domainTrees"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      ToggleField(
+        label="settings.domain_trees_universal"
+        dbg="domainTreesUniversal"
+        v-model:value="Settings.state.domainTreesUniversal"
+        :default="DEFAULT_SETTINGS.domainTreesUniversal"
+        :inactive="!Settings.state.domainTrees"
+        @update:value="Settings.saveDebounced(150)")
+      ToggleField(
+        label="settings.domain_tree_auto_fold"
+        dbg="domainTreeAutoFold"
+        v-model:value="Settings.state.domainTreeAutoFold"
+        :default="DEFAULT_SETTINGS.domainTreeAutoFold"
+        :inactive="!Settings.state.domainTrees"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.domain_tree_new_tab_position"
+        optLabel="settings.domain_tree_new_tab_position_"
+        dbg="domainTreeNewTabPosition"
+        v-model:value="Settings.state.domainTreeNewTabPosition"
+        :default="DEFAULT_SETTINGS.domainTreeNewTabPosition"
+        :opts="Settings.getOpts('domainTreeNewTabPosition')"
+        :inactive="!Settings.state.domainTrees"
+        @update:value="Settings.saveDebounced(150)")
+      ToggleField(
+        label="settings.domain_tree_confirm_close"
+        dbg="domainTreeConfirmClose"
+        v-model:value="Settings.state.domainTreeConfirmClose"
+        :default="DEFAULT_SETTINGS.domainTreeConfirmClose"
+        :inactive="!Settings.state.domainTrees"
+        @update:value="Settings.saveDebounced(150)")
+      TextField.domainTreeRulesField(
+        label="settings.domain_tree_rules"
+        dbg="domainTreeRules"
+        v-model:value="domainTreeRulesInput"
+        :or="'---'"
+        :resize="true"
+        :inactive="!Settings.state.domainTrees"
+        :fnote="translate('settings.domain_tree_rules_note')"
+        @update:value="onDomainTreeRulesUpdate")
+      .ctrls(v-if="Settings.state.domainTrees")
+        .btn(@click="recalcDomainTrees") {{translate('settings.domain_trees_recalc')}}
+        .btn(@click="viewDomainTreesLogs") {{translate('settings.domain_trees_view_logs')}}
+        .btn(@click="copyDomainTreesLogs") {{copyLogsBtnLabel}}
+        .btn.-warn(@click="clearDomainTreesLogs") {{translate('settings.domain_trees_clear_logs')}}
+
   .wrapper(ref="tabsColorEl")
     .sub-title: .text {{translate('settings.nav_settings_tabs_colorization')}}
     ToggleField.-no-separator(
@@ -713,12 +767,14 @@ section(ref="el")
 import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import type { TextInputComponent } from 'src/types'
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
+import type { TextInputComponent, DomainTreeRuleConfig } from 'src/types'
+import { DEFAULT_SETTINGS, NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import * as Settings from 'src/services/settings.fg'
 import * as Permissions from 'src/services/permissions.fg'
 import * as SetupPage from 'src/services/setup-page.fg'
 import * as Tabs from 'src/services/tabs.fg'
+import * as Windows from 'src/services/windows.fg'
+import * as IPC from 'src/services/ipc'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
@@ -729,6 +785,7 @@ const el = ref<HTMLElement | null>(null)
 const newTabPosEl = ref<HTMLElement | null>(null)
 const pinTabsEl = ref<HTMLElement | null>(null)
 const tabsTreeEl = ref<HTMLElement | null>(null)
+const domainTreesEl = ref<HTMLElement | null>(null)
 const tabsColorEl = ref<HTMLElement | null>(null)
 const tabsPreviewEl = ref<HTMLElement | null>(null)
 const nativeTabsEl = ref<HTMLElement | null>(null)
@@ -876,11 +933,117 @@ function onTabsBadgeRulesBlur(): void {
   }
 }
 
+function parseDomainTreeRules(raw: string): DomainTreeRuleConfig[] {
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean)
+  return lines.map((line, idx) => {
+    let name: string | undefined
+    let url = line
+    const colonIdx = line.indexOf(':')
+    if (
+      colonIdx !== -1 &&
+      !line.startsWith('http://') &&
+      !line.startsWith('https://') &&
+      !line.startsWith('/')
+    ) {
+      name = line.slice(0, colonIdx).trim()
+      url = line.slice(colonIdx + 1).trim()
+    }
+    return {
+      id: `rule_${idx}`,
+      name,
+      active: true,
+      url,
+    }
+  })
+}
+
+const domainTreeRulesInput = ref(
+  Settings.state.domainTreeRules
+    ?.map(r => (r.name ? `${r.name}: ${r.url}` : r.url))
+    .join('\n') ?? ''
+)
+
+function onDomainTreeRulesUpdate(val: string): void {
+  domainTreeRulesInput.value = val
+  Settings.state.domainTreeRules = parseDomainTreeRules(val)
+  Settings.saveDebounced(500)
+}
+
+async function recalcDomainTrees(): Promise<void> {
+  const winId = Windows.lastFocusedId !== NOID ? Windows.lastFocusedId : Windows.id
+  await IPC.sidebar(winId, 'recalcDomainTrees')
+}
+
+const copyLogsBtnLabel = ref(translate('settings.domain_trees_copy_logs'))
+let copyLogsTimeout: number | undefined
+
+async function fetchDomainTreesLogs(): Promise<string> {
+  const winId = Windows.lastFocusedId !== NOID ? Windows.lastFocusedId : Windows.id
+  let logs = ''
+  try {
+    logs = await IPC.sidebar(winId, 'getDomainTreesLogs')
+  } catch {
+    // fallback
+  }
+  if (!logs) {
+    try {
+      const stored = await browser.storage.local.get<{ domainTreesLogs?: any[] }>('domainTreesLogs')
+      if (stored?.domainTreesLogs?.length) {
+        logs = stored.domainTreesLogs
+          .map((e: any) => `[${e.timestamp}] [${e.level}] [${e.tag}] ${e.message}`)
+          .join('\n')
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return logs || 'No domain tree logs recorded yet.'
+}
+
+async function viewDomainTreesLogs(): Promise<void> {
+  const logs = await fetchDomainTreesLogs()
+  SetupPage.reactive.detailsTitle = translate('settings.domain_trees_view_logs')
+  SetupPage.reactive.detailsText = logs
+  SetupPage.reactive.detailsMode = 'view'
+}
+
+async function copyDomainTreesLogs(): Promise<void> {
+  const logs = await fetchDomainTreesLogs()
+  try {
+    await navigator.clipboard.writeText(logs)
+    copyLogsBtnLabel.value = translate('settings.domain_trees_logs_copied')
+    clearTimeout(copyLogsTimeout)
+    copyLogsTimeout = setTimeout(() => {
+      copyLogsBtnLabel.value = translate('settings.domain_trees_copy_logs')
+    }, 2000) as unknown as number
+  } catch {
+    viewDomainTreesLogs()
+  }
+}
+
+async function clearDomainTreesLogs(): Promise<void> {
+  const winId = Windows.lastFocusedId !== NOID ? Windows.lastFocusedId : Windows.id
+  try {
+    await IPC.sidebar(winId, 'clearDomainTreesLogs')
+  } catch {
+    // ignore
+  }
+  try {
+    await browser.storage.local.remove('domainTreesLogs')
+  } catch {
+    // ignore
+  }
+  if (SetupPage.reactive.detailsTitle === translate('settings.domain_trees_view_logs')) {
+    SetupPage.reactive.detailsText = 'Logs cleared.'
+  }
+}
+
 onMounted(() => {
   SetupPage.registerEl('settings_tabs', el.value)
   SetupPage.registerEl('settings_new_tab_position', newTabPosEl.value)
   SetupPage.registerEl('settings_pinned_tabs', pinTabsEl.value)
   SetupPage.registerEl('settings_tabs_tree', tabsTreeEl.value)
+  SetupPage.registerEl('settings_domain_trees', domainTreesEl.value)
   SetupPage.registerEl('settings_tabs_colorization', tabsColorEl.value)
   SetupPage.registerEl('settings_tabs_preview', tabsPreviewEl.value)
   SetupPage.registerEl('settings_tabs_native', nativeTabsEl.value)

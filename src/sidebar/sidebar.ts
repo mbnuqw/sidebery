@@ -46,6 +46,9 @@ async function main(): Promise<void> {
     moveTabsToThisWin: Tabs.moveToThisWin,
     moveTabToPanelViaOmnibox: Tabs.moveTabToPanelViaOmnibox,
     moveTabToGroupViaOmnibox: Tabs.moveTabToGroupViaOmnibox,
+    recalcDomainTrees: Tabs.DomainTrees.scanExistingTabs,
+    getDomainTreesLogs: async () => Tabs.DomainTrees.getLogsFormatted(),
+    clearDomainTreesLogs: Tabs.DomainTrees.clearLogs,
     openTabs: Tabs.open,
     handleReopening: Tabs.handleReopening,
     getActivePanelConfig: Sidebar.getActivePanelConfig,
@@ -196,5 +199,9 @@ async function main(): Promise<void> {
       Containers: Utils.clone({ reactive: Containers.reactive }),
     }
   }
+
+  ;(window as any).getDomainTreesLogs = () => Tabs.DomainTrees.getLogsFormatted()
+  ;(window as any).copyDomainTreesLogs = () => Tabs.DomainTrees.copyLogsToClipboard()
+  ;(window as any).clearDomainTreesLogs = () => Tabs.DomainTrees.clearLogs()
 }
 main()

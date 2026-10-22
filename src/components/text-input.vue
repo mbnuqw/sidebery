@@ -5,6 +5,7 @@
   :data-valid="props.valid"
   :data-wrong="state.wrongValueAnimation"
   :data-width="props.width"
+  :data-resize="props.resize"
   @contextmenu.stop
   @mousedown.stop
   @mouseup.stop
@@ -56,6 +57,7 @@ interface TextInputProps {
   tabindex?: string
   password?: boolean
   width?: string
+  resize?: boolean | string
 }
 
 const emit = defineEmits(['update:value', 'focus', 'blur', 'change', 'keydown'])
@@ -67,7 +69,7 @@ let textareaMinHeight = 0
 
 onMounted(() => {
   // Initial textarea height recalc
-  if (!props.line && textEl.value) {
+  if (!props.line && !props.resize && textEl.value) {
     const prevVal = textEl.value.value
     textEl.value.style.height = '0'
     textEl.value.value = ' '
@@ -111,7 +113,7 @@ function onAnimationEnd(): void {
 }
 
 function recalcTextHeight(): void {
-  if (!textEl.value || props.line) return
+  if (!textEl.value || props.line || props.resize) return
   textEl.value.style.height = '0'
 
   const h = textEl.value.scrollHeight - props.padding

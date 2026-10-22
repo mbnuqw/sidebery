@@ -610,12 +610,14 @@ export function setNewTabPosition(
   index: number,
   parentId: ID,
   panelId: ID,
-  unread?: boolean
+  unread?: boolean,
+  isDTGroup?: boolean
 ): void {
   Tabs.newTabsPosition[index] = {
     parent: parentId,
     panel: panelId,
     unread: unread,
+    isDTGroup: isDTGroup,
   }
 }
 
@@ -716,6 +718,8 @@ interface IndexForNewTabConf {
 export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): number {
   const parent = Tabs.byId[conf?.openerTabId ?? D.NOID]
   const startIndex = panel.startTabIndex > -1 ? panel.startTabIndex : 0
+  const namedTopOffset = Tabs.getNamedDomainTreeInsertionIndex?.(panel.id) ?? startIndex
+  const effectiveStartIndex = namedTopOffset > startIndex ? namedTopOffset : startIndex
   const nextIndex = panel.nextTabIndex > -1 ? panel.nextTabIndex : Tabs.list.length
   const activeTab = Tabs.byId[Tabs.activeId]
   const autoGroupped = conf?.autoGroupped ?? false
@@ -731,7 +735,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
-    if (Settings.state.moveNewTabPin === 'start') return startIndex
+    if (Settings.state.moveNewTabPin === 'start') return effectiveStartIndex
     if (Settings.state.moveNewTabPin === 'end') return nextIndex
   }
 
@@ -765,7 +769,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
         return index
       }
     }
-    if (Settings.state.moveNewTabParent === 'start' && !autoGroupped) return startIndex
+    if (Settings.state.moveNewTabParent === 'start' && !autoGroupped) return effectiveStartIndex
     if (Settings.state.moveNewTabParent === 'end' && !autoGroupped) return nextIndex
     if (Settings.state.moveNewTabParent === 'default' && !autoGroupped) return fallbackIndex
   }
@@ -779,13 +783,13 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
     ? Settings.state.moveNewTabButtonActivePin
     : Settings.state.moveNewTabActivePin
 
-  if (moveNewTabSetting === 'start') return startIndex
+  if (moveNewTabSetting === 'start') return effectiveStartIndex
   if (moveNewTabSetting === 'end') return nextIndex
   if (moveNewTabSetting === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
     else if (activeTab.pinned) {
       if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
+      return effectiveStartIndex
     } else return activeTab.index
   }
   if (moveNewTabSetting === 'after') {
@@ -793,7 +797,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return nextIndex
     } else if (activeTab.pinned) {
       if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
+      return effectiveStartIndex
     } else {
       let index = activeTab.index + 1
       for (let t; index < Tabs.list.length; index++) {
@@ -808,7 +812,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return nextIndex
     } else if (activeTab.pinned) {
       if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
+      return effectiveStartIndex
     } else {
       return activeTab.index + 1
     }
@@ -818,7 +822,7 @@ export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): 
       return nextIndex
     } else if (activeTab.pinned) {
       if (moveNewTabActivePinSetting === 'end') return nextIndex
-      return startIndex
+      return effectiveStartIndex
     } else {
       let index = activeTab.index + 1
       for (let t; index < Tabs.list.length; index++) {

@@ -91,6 +91,7 @@
         .BottomBar(
           v-if="bottomBar && Utils.isTabsPanel(activePanel)"
           @dragover.prevent.stop=""
+          :data-with-search="Settings.state.subPanelTabSearch"
           :data-drop-target-bookmarks="DnD.reactive.dstType === E.DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id"
           :data-drop-target-sync="DnD.reactive.dstType === E.DropType.SyncSubPanelBtn")
           .tool-btn(
@@ -108,6 +109,8 @@
             v-if="Settings.state.subPanelHistory"
             @click="Sidebar.openSubPanel(E.SubPanelType.History, activePanel)")
             svg: use(href="#icon_clock")
+          BottomSearchBar(
+            v-if="Settings.state.subPanelTabSearch")
           .tool-btn.-sync(
             v-if="Settings.state.subPanelSync"
             @dragleave="onSSPBDragLeave"
@@ -170,6 +173,7 @@ import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
 import SiteConfigPopup from '../components/popup.site-config.vue'
 import ProcessingTabsPopup from './components/popup.processing-tabs.vue'
 import SubPanel from './components/sub-panel.vue'
+import BottomSearchBar from './components/bar.search.bottom.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -189,7 +193,8 @@ let bottomBar =
   Settings.state.subPanelRecentlyClosedBar ||
   Settings.state.subPanelBookmarks ||
   Settings.state.subPanelHistory ||
-  Settings.state.subPanelSync
+  Settings.state.subPanelSync ||
+  Settings.state.subPanelTabSearch
 let inlinePreview =
   Settings.state.previewTabs &&
   (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')
@@ -208,7 +213,8 @@ function recalcStaticVars() {
     Settings.state.subPanelRecentlyClosedBar ||
     Settings.state.subPanelBookmarks ||
     Settings.state.subPanelHistory ||
-    Settings.state.subPanelSync
+    Settings.state.subPanelSync ||
+    Settings.state.subPanelTabSearch
   inlinePreview =
     Settings.state.previewTabs &&
     (Settings.state.previewTabsMode === 'i' || Settings.state.previewTabsPageModeFallback === 'i')
@@ -269,6 +275,31 @@ function onFocusOut(e: FocusEvent): void {
 }
 
 function onDocumentKeydown(e: KeyboardEvent): void {
+  // Tab search (F8)
+  if (e.code === 'F8' || e.key === 'F8') {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
+    if (!Utils.isTabsPanel(actPanel)) {
+      const tabsPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
+      if (tabsPanel) Sidebar.activatePanel(tabsPanel.id)
+    }
+    if (Sidebar.subPanelActive) {
+      Sidebar.closeSubPanel()
+    }
+
+    if (Search.isBottomBarFocused()) {
+      if (Search.reactive.rawQuery) {
+        Search.stop()
+      }
+      Search.focus()
+    } else {
+      Search.focusBottomBar()
+    }
+    return
+  }
+
   // Close popups
   if (e.code === 'Escape') {
     Sidebar.resetOrCancelInteraction()

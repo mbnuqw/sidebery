@@ -273,6 +273,17 @@
   opacity: calc(var(--tabs-activated-color-layer-opacity) + .2)
 #root[data-frame-color-scheme="light"] .Tab[data-active="false"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
+.Tab[data-named-domain-group="true"] .color-layer
+  opacity: .42
+  box-shadow: inset 0 0 0 1px var(--tab-color), 0 0 2px 0 #0007
+.Tab[data-named-domain-group="true"][data-active="true"] .color-layer
+  opacity: .55
+#root[data-frame-color-scheme="light"] .Tab[data-named-domain-group="true"] .color-layer
+  opacity: .50
+#root[data-frame-color-scheme="light"] .Tab[data-named-domain-group="true"][data-active="true"] .color-layer
+  opacity: .62
+.Tab[data-named-domain-group="true"] .title
+  font-weight: 600
 
 // ---
 // -- Flash animation
@@ -461,6 +472,27 @@
 
 .Tab[data-folded="true"] .fav .exp:before
   opacity: 1
+
+// ---
+// -- Domain trees solid favicon & hover expand arrow
+// -
+#root .Tab[data-domain-group="true"] .fav img
+#root .Tab[data-domain-group="true"] .fav svg.fav-icon
+  opacity: 1 !important
+
+#root[data-search="false"] .Tab[data-domain-group="true"][data-parent="true"][data-folded="true"] .fav .exp
+  opacity: 0
+  pointer-events: none
+  transform: rotateZ(-90deg)
+
+#root .Tab[data-domain-group="true"][data-parent="true"] .fav:hover .exp
+#root[data-search="false"] .Tab[data-domain-group="true"][data-parent="true"][data-folded="true"] .fav:hover .exp
+  opacity: 1
+  z-index: 2
+  pointer-events: auto
+  background-color: var(--frame-bg)
+  border-radius: 4px
+  box-shadow: 0 0 3px 0 #0008
 
 // ---
 // -- Progress spinner

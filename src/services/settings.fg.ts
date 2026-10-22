@@ -133,6 +133,10 @@ export function updateSettings(settings?: SettingsState | null): void {
   const stickyAncestorTabs = prev.stickyAncestorTabs !== next.stickyAncestorTabs
   const stickyAncestorTabsLimit = prev.stickyAncestorTabsLimit !== next.stickyAncestorTabsLimit
   const stickyAncestorTabsLayout = prev.stickyAncestorTabsLayout !== next.stickyAncestorTabsLayout
+  const domainTreesChanged =
+    prev.domainTrees !== next.domainTrees ||
+    prev.domainTreesUniversal !== next.domainTreesUniversal ||
+    JSON.stringify(prev.domainTreeRules) !== JSON.stringify(next.domainTreeRules)
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
@@ -245,6 +249,10 @@ export function updateSettings(settings?: SettingsState | null): void {
       if (Settings.stickyTabs) Tabs.calcStickyTabs(actPanel)
       else Tabs.resetStickyTabs(actPanel)
     }
+  }
+
+  if (Info.isSidebar && domainTreesChanged && Settings.state.domainTrees) {
+    Tabs.DomainTrees.scanExistingTabs()
   }
 }
 
