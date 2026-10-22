@@ -203,21 +203,21 @@ export const sidebarTranslations: Translations = {
     pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę w domyślnym kontenerze',
     ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку в стандартном контейнере',
     zh_CN: '中键点击：在默认容器中重新打开活动标签页',
-    zh_TW: '中鍵點選：在預設容器中重新開啟當前分頁',
+    zh_TW: '中鍵點選：在預設容器中重新開啟目前分頁',
     ja: '中クリック：デフォルトのコンテナでアクティブタブを再度開く',
   },
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
     zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
-    zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
+    zh_TW: url => `中鍵點選：載入「${url}」於目前分頁`,
     ja: url => `中クリック: アクティブなタブに「${url}」を読み込む`,
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
     zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
-    zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟當前分頁`,
+    zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟目前分頁`,
     ja: name => `中クリック: 「${name}」コンテナでアクティブタブを再度開く`,
   },
   'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
@@ -225,7 +225,7 @@ export const sidebarTranslations: Translations = {
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
     zh_CN: (url, name) => `中键点击：在“${name}”容器中加载“${url}”于活动标签页`,
-    zh_TW: (url, name) => `中鍵點選：在「${name}」容器中載入「${url}」於當前分頁`,
+    zh_TW: (url, name) => `中鍵點選：在「${name}」容器中於目前分頁載入「${url}」`,
     ja: (url, name) => `中クリック: 「${name}」コンテナでアクティブタブに「${url}」を読み込みます`,
   },
 
@@ -708,7 +708,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Zwiń wszystko',
     ru: 'Свернуть все',
     zh_CN: '全部折叠',
-    zh_TW: '全部折疊',
+    zh_TW: '全部摺疊',
     ja: 'すべて折りたたむ',
   },
   'nav.btn_expand': {
@@ -752,7 +752,7 @@ export const sidebarTranslations: Translations = {
     pl: 'Środkowy przycisk myszy: Zamknij aktywną kartę',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
     zh_CN: '中键单击：关闭活动标签页',
-    zh_TW: '中鍵點選：關閉當前分頁',
+    zh_TW: '中鍵點選：關閉目前分頁',
     ja: '中クリック：アクティブなタブを閉じる',
   },
   'nav.tabs_panel_tooltip_mid_discard': {

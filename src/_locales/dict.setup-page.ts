@@ -64,6 +64,7 @@ export const setupPageTranslations: Translations = {
     fr: 'Proxy',
     ru: 'Прокси',
     zh: '代理',
+    zh_TW: 'Proxy 設定',
     ja: 'プロキシ',
   },
   'container.proxy_host_placeholder': {
@@ -173,6 +174,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     fr: 'Agent utilisateur',
     hu: 'Böngészőazonosító',
     ja: 'ユーザーエージェント',
+    zh: '使用者代理字串 (User Agent)',
   },
   // - Panel config popup
   'panel.name_placeholder': {
@@ -622,6 +624,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
     fr: 'Barre d’adresse',
+    zh_TW: '網址列',
   },
   'settings.nav_settings_nav': {
     en: 'Navigation bar',
@@ -1103,7 +1106,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     pl: 'Używaj nazwy aktywnego panelu jako tytuł panelu bocznego',
     ru: 'Использовать имя активной панели в качестве заголовка боковой панели',
     zh_CN: '使用活动面板的名称作为侧边栏标题',
-    zh_TW: '使用當前面板的名稱作為側邊欄標題',
+    zh_TW: '使用目前面板的名稱作為側邊欄標題',
     ja: 'アクティブパネルの名前をサイドバーのタイトルとして使用する',
   },
   'settings.mark_window': {
@@ -1136,7 +1139,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     pl: 'Info: Dostępne zmienne: %PN - nazwa aktywnego panelu',
     ru: 'Примечание: Доступные переменные: %PN — имя активной панели',
     zh_CN: '可用变量：%PN - 活动面板名称',
-    zh_TW: '可用變數：%PN - 當前面板名稱',
+    zh_TW: '可用變數：%PN - 目前面板名稱',
     ja: '利用可能な変数：%PN - アクティブパネル名',
   },
   'settings.copy_title_url_indent': {
@@ -1408,7 +1411,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     pl: 'Wymagane dla:\n- Ukrywanie kart w nieaktywnym panelu\n- Ukrywanie złożonych kart',
     ru: 'Необходимо для:\n- Скрывания вкладок неактивных панелей\n- Скрывания свернутых вкладок',
     zh_CN: '用于：\n- 隐藏非活动面板中的标签页\n- 隐藏折叠的标签页',
-    zh_TW: '用於：\n- 隱藏非作用中面板的分頁\n- 隱藏折疊的分頁',
+    zh_TW: '用於：\n- 隱藏非作用中面板的分頁\n- 隱藏摺疊的分頁',
     ja: '必要な権限：\n- 非アクティブパネルのタブを非表示\n- 折りたたまれたタブを非表示',
   },
   'settings.clipboard_write_label': {
@@ -1591,10 +1594,12 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
+    zh_TW: '網址列 (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
+    zh_TW: '利用網址列（也有叫做 Omnibox）來快速觸發某些 Sidebery 指令。',
   },
   'settings.omnibox_note': {
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
@@ -1603,30 +1608,39 @@ You can also set prefixes for each command type for faster navigation. Starting 
     fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
 
 Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
+    zh_TW: `要開始使用，先聚焦網址列 (Ctrl+L/Cmd+L)，然後輸入 "="、一個空格，再輸入目標的容器/面板/群組名稱（不分大小寫）。接下來您即可從清單中選取希望使用的指令，或是按 Enter 直接使用第一個。
+
+您也可以為各種指令類型設定前綴以便更快呼叫指令。在 "=" 和空格之後再加上您所設定的前綴的任何字元，該前綴所代表的指令類型便會排到前面。`,
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
     fr: 'Commandes disponibles:',
+    zh_TW: '可用指令：',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
+    zh_TW: '在容器重新開啟目前分頁…',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
     fr: 'Basculer vers le panneau…',
+    zh_TW: '切換到面板…',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
     fr: 'Déplacer un onglet actif vers le panneau…',
+    zh_TW: '移動目前分頁到面板…',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
     fr: 'Déplacer un onglet actif vers le groupe…',
+    zh_TW: '移動目前分頁到群組…',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
     fr: 'Préfixe:',
+    zh_TW: '前綴：',
   },
 
   // - Navigation bar
@@ -1997,7 +2011,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     pl: 'Zwiń wszystko',
     ru: 'Свернуть все',
     zh_CN: '折叠全部',
-    zh_TW: '折疊全部',
+    zh_TW: '摺疊全部',
     ja: 'すべて折りたたむ',
   },
   'settings.nav_bar_btn_expand': {
@@ -2240,7 +2254,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     pl: 'Rozwiń/Zwiń gąłąź po najechaniu na nią',
     ru: 'Развернуть/свернуть ветвь при наведении на',
     zh_CN: '展开/折叠分支当悬停在',
-    zh_TW: '展開/折疊分支當懸停在',
+    zh_TW: '展開/摺疊分支當懸停在',
     ja: 'ホバー時にブランチを展開/折りたたむ',
   },
   'settings.dnd_exp_pointer': {
@@ -2533,10 +2547,12 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
     fr: 'Continuer à chercher après avoir changé d’onglet',
+    zh_TW: '切換分頁時保留搜尋',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
+    zh_TW: '觸發快捷選單項目時保留搜尋',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
@@ -2632,7 +2648,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     pl: 'zwinięte',
     ru: 'свернутых',
     zh_CN: '当标签页已折叠',
-    zh_TW: '當有分頁已折疊',
+    zh_TW: '當有分頁已摺疊',
     ja: '折りたたまれたタブ',
   },
   'settings.warn_on_multi_tab_close_none': {
@@ -2810,7 +2826,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     pl: 'Po aktywacji zamknięcia obecnej karty',
     ru: 'После закрытия текущей вкладки активировать',
     zh_CN: '关闭当前标签页后激活',
-    zh_TW: '關閉當前分頁後啟動',
+    zh_TW: '關閉目前分頁後啟動',
     ja: '現在のタブを閉じた後、アクティブにする',
   },
   'settings.activate_after_closing_prev_act': {
@@ -2887,7 +2903,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     pl: 'Ignoruj złożone karty',
     ru: 'Игнорировать свернутые вкладки',
     zh_CN: '忽略已折叠标签页',
-    zh_TW: '忽略已折疊分頁',
+    zh_TW: '忽略已摺疊分頁',
     ja: '折りたたまれたタブを無視する',
   },
   'settings.activate_after_closing_no_discarded': {
@@ -2952,6 +2968,22 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    zh_TW: `徽章規則清單，一行一個規則。每個規則包含以分號和空格 (\`; \`) 分隔的選用參數。
+範例：
+\`\`\`
+title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
+minIdleTime:5000; urgent
+url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
+\`\`\`
+可用參數：
+- \`url:{RegExp}\` 和/或 \`title:{RegExp}\`：用來符合分頁的正規表達式，可以透過命名群組來取得徽章的值。：\`(?<v>...)\`。如果您的 \`{RegExp}\` 裡面需要包含分號空格 (\`; \`)，請將空格用反斜線來標記跳脫：\`;\\ \`。預設的 \`{RegExp}\` 是空的字串，這代表如果不包含這些參數，則任何網址或是標題都會符合。沒有值的徽章對於已卸載或是目前作用中分頁會被忽略，在分頁卸載時或是變為作用中的時候會重設。
+- \`bg:{色彩}\` 和/或 \`fg:{色彩}\`：徽章背景 (bg) 或文字 (fg) 的顏色。
+- \`urgent\`：將徽章標記為緊急，並也讓各父元素變為緊急（摺疊分頁、非作用中面板）。對於已卸載或作用中分頁會忽略。切換分頁後：沒有值的徽章會被完全隱藏，有值的徽章會降格為普通徽章。
+- \`notify\`：顯示通知。
+- \`pinned\`：只套用該規則到已釘選的分頁。
+- \`normal\`：只套用該規則到沒有釘選的分頁。
+- \`value:{文字}\`：為徽章設定一個固定的值。
+- \`minIdleTime:{ms}\`：分頁閒置至少 \`{ms}\` 毫秒之後若標題變更，則套用此規則。`,
   },
 
   'settings.tabs_notification_badge_scope': {
@@ -3094,7 +3126,7 @@ Available parameters:
     pl: 'Przełącz panel po manualnym przeniesieniu aktywnej karty do innego panelu',
     ru: 'Переключать панель после ручного перемещения активной вкладки на другую панель',
     zh_CN: '手动移动活动标签页后将面板切换到另一个面板',
-    zh_TW: '手動將當前分頁移至另一個面板後切換面板',
+    zh_TW: '手動將目前分頁移至另一個面板後切換面板',
     ja: 'アクティブなタブを手動で別のパネルに移動した後にパネルを切り替える',
   },
   'settings.tabs_panel_switch_act_move_auto': {
@@ -3105,7 +3137,7 @@ Available parameters:
     pl: 'Przełącz panel po automatycznym przeniesieniu aktywnej karty do innego panelu',
     ru: 'Переключать панель после автоматического перемещения активной вкладки на другую панель',
     zh_CN: '自动移动活动标签页后将面板切换到另一个面板',
-    zh_TW: '自動將當前分頁移至另一個面板後切換面板',
+    zh_TW: '自動將目前分頁移至另一個面板後切換面板',
     ja: 'アクティブなタブを自動的に別のパネルに移動した後にパネルを切り替える',
   },
   'settings.tabs_url_in_tooltip': {
@@ -3221,18 +3253,23 @@ Available parameters:
   },
   'settings.sticky_active_tab': {
     en: 'Sticky active tab',
+    zh_TW: '將目前分頁固定於上方顯示',
   },
   'settings.tabs_title_lines_max': {
     en: 'Max count of title lines',
+    zh_TW: '標題最大行數',
   },
   'settings.tabs_title_lines_br': {
     en: 'Break the title by',
+    zh_TW: '標題斷行方式',
   },
   'settings.tabs_title_lines_br_w': {
     en: 'words',
+    zh_TW: '單詞',
   },
   'settings.tabs_title_lines_br_c': {
     en: 'characters',
+    zh_TW: '字元',
   },
 
   // - New tab position
@@ -3447,7 +3484,7 @@ Available parameters:
     pl: 'przed aktywną kartą',
     ru: 'перед активной вкладкой',
     zh_CN: '活动标签页之前',
-    zh_TW: '當前分頁之前',
+    zh_TW: '目前分頁之前',
     ja: 'アクティブなタブの前',
   },
   'settings.move_new_tab_after': {
@@ -3458,7 +3495,7 @@ Available parameters:
     pl: 'po aktywnej karcie',
     ru: 'после активной вкладки',
     zh_CN: '活动标签页之后',
-    zh_TW: '當前分頁之後',
+    zh_TW: '目前分頁之後',
     ja: 'アクティブなタブの後',
   },
   'settings.move_new_tab_first_child': {
@@ -3469,7 +3506,7 @@ Available parameters:
     pl: 'pierwsze dziecko aktywnej karty',
     ru: 'первая дочерняя вкладка активной',
     zh_CN: '活动标签页的第一个子标签页',
-    zh_TW: '當前分頁的第一個子分頁',
+    zh_TW: '目前分頁的第一個子分頁',
     ja: 'アクティブなタブの最初の子',
   },
   'settings.move_new_tab_last_child': {
@@ -3480,7 +3517,7 @@ Available parameters:
     pl: 'ostatnie dziecko aktywnej karty',
     ru: 'последняя дочерняя вкладка активной',
     zh_CN: '活动标签页的最后一个子标签页',
-    zh_TW: '當前分頁的最後一個子分頁',
+    zh_TW: '目前分頁的最後一個子分頁',
     ja: 'アクティブなタブの最後の子',
   },
   'settings.move_new_tab_none': {
@@ -3502,7 +3539,7 @@ Available parameters:
     pl: 'Jeśli aktywna karta jest przypięta',
     ru: 'Если активная вкладка закреплена',
     zh_CN: '如果活动标签页已固定',
-    zh_TW: '如果當前分頁已釘選',
+    zh_TW: '如果目前分頁已釘選',
     ja: 'アクティブなタブが固定されている場合',
   },
   'settings.auto_scroll_to_new_tab': {
@@ -3598,6 +3635,7 @@ Available parameters:
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
+    zh_TW: '也阻止透過快捷選單、滑鼠操作或鍵盤快速鍵進行的明確卸載',
   },
 
   // - Tabs tree
@@ -3658,7 +3696,7 @@ Available parameters:
     // pl: 'Przypięte karty nadrzędne',
     // ru: 'Закреплённые вкладки-предки', // TODO: Закреплённые already used for pinned
     // zh_CN: '固定祖先标签页',
-    // zh_TW: '固定祖先分頁',
+    zh_TW: '將目前分頁的祖先分頁固定於上方顯示',
     // ja: '先祖タブを固定表示',
   },
   'settings.sticky_ancestor_tabs_limit': {
@@ -3670,7 +3708,7 @@ Available parameters:
     // pl: 'Limit głębokości przypiętych kart nadrzędnych',
     // ru: 'Максимальная глубина закреплённых вкладок-предков',
     // zh_CN: '固定祖先标签页深度上限',
-    // zh_TW: '固定祖先分頁深度上限',
+    zh_TW: '深度上限',
     // ja: '固定する先祖タブの深さ制限',
   },
   'settings.sticky_ancestor_tabs_limit_1': {
@@ -3701,12 +3739,15 @@ Available parameters:
   },
   'settings.sticky_ancestor_tabs_layout': {
     en: 'Layout',
+    zh_TW: '佈局',
   },
   'settings.sticky_ancestor_tabs_layout_col': {
     en: 'vertical',
+    zh_TW: '垂直',
   },
   'settings.sticky_ancestor_tabs_layout_row': {
     en: 'horizontal',
+    zh_TW: '水平',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs branch on expanding another branch',
@@ -3716,7 +3757,7 @@ Available parameters:
     pl: 'Automatycznie zwijaj karty po rozwinięciu innej gałęzi',
     ru: 'Автоматическое сворачивание ветки вкладок при открытии другой ветки',
     zh_CN: '打开另一个标签页分支时自动折叠分支',
-    zh_TW: '展開另一個分頁分支時自動折疊分支',
+    zh_TW: '展開另一個分頁分支時自動摺疊分支',
     ja: '他のブランチを展開するときに自動的にタブブランチを折りたたむ',
   },
   'settings.auto_fold_tabs_except': {
@@ -3806,7 +3847,7 @@ Available parameters:
     pl: 'złożone',
     ru: 'свернутые',
     zh_CN: '当父项已折叠',
-    zh_TW: '當父分頁已折疊',
+    zh_TW: '當父分頁已摺疊',
     ja: '折りたたまれている場合',
   },
   'settings.rm_child_tabs_none': {
@@ -3838,7 +3879,7 @@ Available parameters:
     pl: 'Usypiaj zwinięte karty',
     ru: 'Выгружать свернутые вкладки',
     zh_CN: '卸载已折叠标签页',
-    zh_TW: '卸載已折疊分頁',
+    zh_TW: '卸載已摺疊分頁',
     ja: '折りたたまれたタブをアンロードする',
   },
   'settings.discard_folded_delay': {
@@ -3973,7 +4014,7 @@ Available parameters:
     pl: 'Otwórz nową kartę poziom niżej jeśli karta rodzica była zwinięta',
     ru: 'Открывать новую вкладку на уровень ниже, если родительская вкладка свернута',
     zh_CN: '如果父标签页已折叠，则在下一级打开新标签页',
-    zh_TW: '如果父分頁已折疊，則在下一層開啟新分頁',
+    zh_TW: '如果父分頁已摺疊，則在下一層開啟新分頁',
     ja: '親タブが折りたたまれている場合、新しいタブを1つ下のレベルに開く',
   },
   'settings.show_new_group_conf': {
@@ -4311,7 +4352,7 @@ Available parameters:
     pl: 'Ukryj natywne karty w zwiniętych gałęziach',
     ru: 'Скрывать нативные вкладки в свернутой ветке',
     zh_CN: '隐藏已折叠标签页',
-    zh_TW: '隱藏已折疊分頁',
+    zh_TW: '隱藏已摺疊分頁',
     ja: '折りたたまれたブランチのネイティブタブを非表示にする',
   },
   'settings.hide_folded_parent': {
@@ -4388,7 +4429,7 @@ Available parameters:
     pl: 'Ta opcja podświetli również aktywną kartę, ponieważ Firefox nie pozwala podświetlić tylko nieaktywnych kart',
     ru: 'Это также приведет к выделению активной вкладки, так как Firefox не позволяет выделять только неактивные вкладки',
     zh_CN: '这也将高亮显示活动标签页，因为 Firefox 不允许您仅高亮显示非活动标签页',
-    zh_TW: '這也將凸顯標示當前分頁，因為 Firefox 不允許您僅凸顯標示非當前分頁',
+    zh_TW: '這也將凸顯標示目前分頁，因為 Firefox 不允許您僅凸顯標示非作用中的分頁',
     ja: 'これにより、非アクティブ タブのみを強調表示することはできませんが、アクティブ タブも強調表示されます',
   },
 
@@ -4445,7 +4486,7 @@ Available parameters:
     pl: 'zwinięta',
     ru: 'свернутых',
     zh_CN: '已折叠',
-    zh_TW: '已折疊',
+    zh_TW: '已摺疊',
     ja: '折りたたまれた',
   },
   'settings.warn_on_multi_bookmark_delete_none': {
@@ -5052,6 +5093,7 @@ Available parameters:
     pl: 'brak',
     ru: 'выкл',
     zh: '不',
+    zh_TW: '不切換',
     ja: 'なし',
   },
   'settings.scroll_through_tabs_preselect_note': {
@@ -5068,6 +5110,7 @@ Available parameters:
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
     fr: 'Isoler les onglets épinglés globalement',
+    zh_TW: '分離處理已全域釘選的分頁',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
@@ -5077,7 +5120,7 @@ Available parameters:
     pl: 'Pomiń złożone karty',
     ru: 'Пропускать свернутые',
     zh_CN: '跳过已折叠标签页',
-    zh_TW: '跳過已折疊分頁',
+    zh_TW: '跳過已摺疊分頁',
     ja: '折りたたまれたタブをスキップする',
   },
   'settings.scroll_through_tabs_skip_discarded': {
@@ -5233,7 +5276,7 @@ Available parameters:
     pl: 'Lewy przycisk myszy na aktywnym panelu kart',
     ru: 'Клик левой кнопкой мыши по активной панели вкладок',
     zh_CN: '左键单击活动的标签页面板',
-    zh_TW: '左鍵點選當前分頁面板',
+    zh_TW: '左鍵點選目前分頁面板',
     ja: 'アクティブなタブパネルを左クリック',
   },
   'settings.nav_act_tabs_panel_left_click_scroll': {
@@ -5277,7 +5320,7 @@ Available parameters:
     pl: 'Lewy przycisk myszy na aktywnym panelu zakładek',
     ru: 'Клик левой кнопкой мыши по активной панели закладок',
     zh_CN: '左键单击活动的书签面板',
-    zh_TW: '左鍵點選當前的書籤面板',
+    zh_TW: '左鍵點選目前的書籤面板',
     ja: 'アクティブなブックマークパネルを左クリック',
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': {
@@ -5321,7 +5364,7 @@ Available parameters:
     pl: 'zamknij aktywną kartę',
     ru: 'закрыть активную вкладку',
     zh_CN: '关闭活动标签页',
-    zh_TW: '關閉當前分頁',
+    zh_TW: '關閉目前分頁',
     ja: 'アクティブなタブを閉じる',
   },
   'settings.nav_tabs_panel_mid_click_rm_all': {
@@ -5488,7 +5531,7 @@ Available parameters:
     pl: 'Aktywuj uprzednio aktywną kartę kiedy wciśnięto na aktywną kartę (Odwróć karty)',
     ru: 'Активировать ранее активную вкладку при нажатии на активную вкладку',
     zh_CN: '单击活动标签页时激活先前活动的标签页',
-    zh_TW: '點選當前分頁時回到先前分頁',
+    zh_TW: '點選目前分頁時回到先前分頁',
     ja: 'アクティブなタブをクリックしたときに以前にアクティブだったタブをアクティブにする（タブの切り替え）',
   },
   'settings.tabs_second_click_act_prev_panel_only': {
@@ -5499,7 +5542,7 @@ Available parameters:
     pl: 'Tylko w aktywnym panelu',
     ru: 'Только в активной панели',
     zh_CN: '仅在活动面板中',
-    zh_TW: '僅在當前面板中',
+    zh_TW: '僅在目前面板中',
     ja: 'アクティブなパネルのみ',
   },
   'settings.tabs_second_click_act_prev_no_unload': {
@@ -5543,7 +5586,7 @@ Available parameters:
     pl: 'Zacznij zaznaczenie shift+click z aktywnej karty',
     ru: 'Начинать выделение по shift+клику с активной вкладки',
     zh_CN: 'Shift + 点击 以从活动标签页起选择区间',
-    zh_TW: 'Shift + 點選 以從當前分頁起選取區間',
+    zh_TW: 'Shift + 點選 以從目前分頁起選取區間',
     ja: 'アクティブなタブからの shift+クリック選択を開始する',
   },
   'settings.ctrl_selection_include_active': {
@@ -5554,7 +5597,7 @@ Available parameters:
     pl: 'Początkowy wybór ctrl+kliknięcia obejmuje aktywną kartę',
     ru: 'Сделать первоначальный выбор ctrl+click, включающий активную вкладку',
     zh_CN: 'Ctrl + 点击 选择时初始包含活动标签页',
-    zh_TW: 'Ctrl + 點選 選取時初始包含當前分頁',
+    zh_TW: 'Ctrl + 點選 選取時初始包含目前分頁',
     ja: '最初のCtrl+クリック選択にアクティブなタブを含める',
   },
   'settings.tab_long_left_click': {
@@ -5896,7 +5939,7 @@ Available parameters:
     pl: 'rozwiń/zwiń',
     ru: 'развернуть/свернуть',
     zh_CN: '展开/折叠',
-    zh_TW: '展開/折疊',
+    zh_TW: '展開/摺疊',
     ja: '展開/折りたたむ',
   },
   'settings.tabs_panel_action_parent': {
@@ -5929,7 +5972,7 @@ Available parameters:
     pl: 'zwiń nieaktywne gałęzie',
     ru: 'свернуть неактивные ветки',
     zh_CN: '折叠非活动分支',
-    zh_TW: '折疊非作用中分支',
+    zh_TW: '摺疊非作用中分支',
     ja: '非アクティブなブランチを折りたたむ',
   },
   'settings.tabs_panel_action_menu': {
@@ -5951,7 +5994,7 @@ Available parameters:
     pl: 'zamknij aktywną kartę',
     ru: 'закрыть активную вкладку',
     zh_CN: '关闭活动标签页',
-    zh_TW: '關閉當前分頁',
+    zh_TW: '關閉目前分頁',
     ja: 'アクティブなタブを閉じる',
   },
   'settings.tabs_panel_action_undo': {
@@ -6135,7 +6178,7 @@ Available parameters:
     pl: 'otwórz w aktywnej karcie',
     ru: 'открыть в активной вкладке',
     zh_CN: '在活动标签页打开',
-    zh_TW: '在當前分頁開啟',
+    zh_TW: '在目前分頁開啟',
     ja: 'アクティブなタブで開く',
   },
   'settings.mouse.bh.left_click_action_open_in_new': {
@@ -6190,7 +6233,7 @@ Available parameters:
     pl: 'po aktywnej karcie',
     ru: 'после активной вкладки',
     zh_CN: '活动标签页之后',
-    zh_TW: '當前分頁之後',
+    zh_TW: '目前分頁之後',
     ja: 'アクティブなタブの後',
   },
 
@@ -6413,6 +6456,7 @@ Available parameters:
       return 'снепшотов'
     },
     zh: '快照',
+    zh_TW: '快照數',
     ja: 'スナップショット',
   },
   'settings.snap_limit_kb': {
@@ -6429,6 +6473,7 @@ Available parameters:
       return 'кбайт'
     },
     zh_CN: '千字节',
+    zh_TW: '千位元組',
     ja: 'キロバイト',
   },
   'settings.snap_limit_day': {
@@ -7258,7 +7303,7 @@ Available parameters:
 - 激活选定的面板`,
     zh_TW: `- 啟動選定的分頁
 - 開啟選定的書籤
-- 折疊/展開當前分頁分支或選定的書籤資料夾
+- 摺疊/展開目前分頁分支或選定的書籤資料夾
 - 啟動選定的快捷選單選項
 - 啟動選定的面板`,
     ja: `- 選択したタブをアクティブ化する
@@ -7357,7 +7402,7 @@ Available parameters:
     pl: 'Przewijanie do aktywnego panelu',
     ru: 'Прокрутка активной панели',
     zh_CN: '滚动活动面板',
-    zh_TW: '捲動當前面板',
+    zh_TW: '捲動目前面板',
     ja: 'アクティブパネルのスクロール',
   },
   'settings.kb_tabs': {
@@ -7486,7 +7531,7 @@ Available parameters:
     pl: 'Zaznacz najpierw aktywną kartę',
     ru: 'Выделять сначала активную вкладку',
     zh_CN: '位置首先选择活动标签页（键盘导航）',
-    zh_TW: '首先選取當前分頁（鍵盤導覽）',
+    zh_TW: '首先選取目前分頁（鍵盤導覽）',
     ja: 'アクティブなタブを最初に選択する',
   },
   'settings.select_cyclic': {
@@ -7825,7 +7870,7 @@ Available parameters:
     - 选择“/sidebar/sidebar.html”侧边栏框架
     - 选择“/sidebery/group.html”分组页面框架
   - 浏览“检查”标签页`,
-    zh_TW: `注意：要取得當前可用的 CSS 選擇器，請使用開發者工具：
+    zh_TW: `注意：要取得目前可用的 CSS 選擇器，請使用開發者工具：
   - 點選底部的「複製開發者工具 URL」按鈕
   - 使用該 URL 開啟新分頁
   - 選取要檢查的框架
@@ -8101,7 +8146,7 @@ Available parameters:
     pl: 'Aktualny panel',
     ru: 'Текущая панель',
     zh_CN: '当前面板',
-    zh_TW: '當前面板',
+    zh_TW: '目前面板',
     ja: '現在のパネル',
   },
   'snapshot.sel.reset_sel': {

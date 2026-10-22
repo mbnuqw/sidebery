@@ -77,7 +77,7 @@
     "pl": "Ukryj zaznaczony (lub aktywny) panel",
     "ru": "Скрыть выделенную (или активную) панель",
     "zh_CN": "隐藏选定（或活动）面板",
-    "zh_TW": "隱藏選定（或當前）面板",
+    "zh_TW": "隱藏選定（或目前）面板",
     "ja": "選択した（またはアクティブな）パネルを非表示"
   },
   "KbCreateSnapshot": {
@@ -125,44 +125,44 @@
     "de": "Kopiere Titel der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
     "fr": "Copier le titre des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的标题",
-    "zh_TW": "複製選定分頁/書籤或當前分頁的標題"
+    "zh_TW": "複製選定分頁/書籤或目前分頁的標題"
   },
   "KbCopyUrl": {
     "en": "Copy URLs of selected tabs/bookmarks or active tab",
     "de": "Kopiere URL(s) der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
     "fr": "Copier l’URL des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的网址",
-    "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
+    "zh_TW": "複製選定分頁/書籤或目前分頁的網址"
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le premier modèle",
     "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第一個範本複製選定分頁/書籤或目前分頁"
   },
   "KbCopyByTmplt1": {
     "en": "Copy selected tabs/bookmarks or active tab by second template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le deuxième modèle",
     "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第二個範本複製選定分頁/書籤或目前分頁"
   },
   "KbCopyByTmplt2": {
     "en": "Copy selected tabs/bookmarks or active tab by third template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le troisième modèle",
     "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第三個範本複製選定分頁/書籤或目前分頁"
   },
   "KbCopyByTmplt3": {
     "en": "Copy selected tabs/bookmarks or active tab by fourth template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le quatrième modèle",
     "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第四個範本複製選定分頁/書籤或目前分頁"
   },
   "KbCopyByTmplt4": {
     "en": "Copy selected tabs/bookmarks or active tab by fifth template",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le cinquième modèle",
     "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
-    "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
+    "zh_TW": "透過第五個範本複製選定分頁/書籤或目前分頁"
   },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
@@ -347,7 +347,7 @@
     "pl": "Przesuń na górę aktywnego panelu",
     "ru": "Прокрутить до верхней части активной панели",
     "zh_CN": "滚动到活动面板的顶部",
-    "zh_TW": "捲動到當前面板的頂部",
+    "zh_TW": "捲動到目前面板的頂部",
     "ja": "アクティブなパネルの先頭にスクロール"
   },
   "KbScrollToActivePanelBottom": {
@@ -358,7 +358,7 @@
     "pl": "Przesuń na dół aktywnego panelu",
     "ru": "Прокрутить до нижней части активной панели",
     "zh_CN": "滚动到活动面板的底部",
-    "zh_TW": "捲動到當前面板的底部",
+    "zh_TW": "捲動到目前面板的底部",
     "ja": "アクティブなパネルの末尾にスクロール"
   },
   "KbDuplicateTabs": {
@@ -369,7 +369,7 @@
     "pl": "Zduplikuj zaznaczone (lub aktywne) karty",
     "ru": "Дублировать выбранные (или активные) вкладки",
     "zh_CN": "复制选定（或活动）标签页",
-    "zh_TW": "複製選定（或當前）分頁",
+    "zh_TW": "複製選定（或目前）分頁",
     "ja": "選択した（またはアクティブな）タブを複製"
   },
   "KbPinTabs": {
@@ -380,7 +380,7 @@
     "pl": "Przypnij/Odepnij zaznaczone (lub aktywne) karty",
     "ru": "Закрепить/Открепить выбранные (или активные) вкладки",
     "zh_CN": "固定/取消固定选定（或活动）标签页",
-    "zh_TW": "釘選/取消釘選選定（或當前）分頁",
+    "zh_TW": "釘選/取消釘選選定（或目前）分頁",
     "ja": "選択した（またはアクティブな）タブをピン留/ピン留解除"
   },
   "KbGroupTabs": {
@@ -391,7 +391,7 @@
     "pl": "Grupuj zaznaczone (lub aktywne) karty",
     "ru": "Сгруппировать выбранные (или активные) вкладки",
     "zh_CN": "将选定（或活动）标签页分配给组",
-    "zh_TW": "將選定（或當前）分頁分給群組",
+    "zh_TW": "將選定（或目前）分頁分給群組",
     "ja": "選択した（またはアクティブな）タブをグループ化"
   },
   "KbGroupTabsAct": {
@@ -402,7 +402,7 @@
     "pl": "Grupuj zaznaczone (lub aktywne) karty i przełącz na stronę grupy",
     "ru": "Сгруппировать выбранные (или активные) вкладки и переключится на групповую страницу",
     "zh_CN": "将选定（或活动）标签页分配给组并切换到分组页面",
-    "zh_TW": "將選定（或當前）分頁分給群組並切換到群組頁面",
+    "zh_TW": "將選定（或目前）分頁分給群組並切換到群組頁面",
     "ja": "選択した（またはアクティブな）タブをグループ化してグループページに切り替え"
   },
   "KbFlattenTabs": {
@@ -431,7 +431,7 @@
     "pl": "Otwórz nową kartę w aktywnym panelu",
     "ru": "Открыть вкладку в активной панели",
     "zh_CN": "在活动面板中打开新标签页",
-    "zh_TW": "在當前面板中開啟新分頁",
+    "zh_TW": "在目前面板中開啟新分頁",
     "ja": "アクティブパネルで新しいタブを開く"
   },
   "KbOpenNewTabAfter": {
@@ -442,7 +442,7 @@
     "pl": "Otwórz nową kartę za aktywną kartą",
     "ru": "Открыть вкладку после активной вкладки",
     "zh_CN": "在活动标签页后打开新标签页",
-    "zh_TW": "在當前分頁後開啟新分頁",
+    "zh_TW": "在目前分頁後開啟新分頁",
     "ja": "アクティブなタブの後に新しいタブを開く"
   },
   "KbOpenNewTabAsFirstChild": {
@@ -453,7 +453,7 @@
     "pl": "Otwórz nową kartę jako pierwsze dziecko aktywnej karty",
     "ru": "Открыть дочернюю вкладку (в начале ветви)",
     "zh_CN": "打开新标签页作为活动标签页的第一个子标签页",
-    "zh_TW": "開啟新分頁作為當前分頁的第一個子分頁",
+    "zh_TW": "開啟新分頁作為目前分頁的第一個子分頁",
     "ja": "アクティブなタブの最初の子として新しいタブを開く"
   },
   "KbOpenNewTabAsLastChild": {
@@ -464,7 +464,7 @@
     "pl": "Otwórz nową kartę jako ostatnie dziecko aktywnej karty",
     "ru": "Открыть дочернюю вкладку (в конце ветви)",
     "zh_CN": "打开新标签页作为活动标签页的最后一个子标签页",
-    "zh_TW": "開啟新分頁作為當前分頁的最後一個子分頁",
+    "zh_TW": "開啟新分頁作為目前分頁的最後一個子分頁",
     "ja": "アクティブなタブの最後の子として新しいタブを開く"
   },
   "KbRm": {
@@ -475,7 +475,7 @@
     "pl": "Zamknij zaznaczoną lub aktywną kartę / Usuń zaznczone zakładki",
     "ru": "Закрыть выбранную или активную вкладку / Удалить выбранные закладки",
     "zh_CN": "关闭选定（或活动）标签页/删除选定书签",
-    "zh_TW": "關閉選定（或當前）分頁/刪除選定書籤",
+    "zh_TW": "關閉選定（或目前）分頁/刪除選定書籤",
     "ja": "選択した（またはアクティブな）タブを閉じる/選択したブックマークを削除"
   },
   "KbRmTAIP": {
@@ -486,7 +486,7 @@
     "pl": "Zamknij karty powyżej (w obecnym panelu)",
     "ru": "Закрыть вкладки выше (в текущей панели)",
     "zh_CN": "关闭上面的标签页（当前面板中）",
-    "zh_TW": "關閉上方分頁（當前面板中）",
+    "zh_TW": "關閉上方分頁（目前面板中）",
     "ja": "上のタブを閉じる（現在のパネル内）"
   },
   "KbRmTBIP": {
@@ -497,7 +497,7 @@
     "pl": "Zamknij karty poniżej (w obecnym panelu)",
     "ru": "Закрыть вкладки ниже (в текущей панели)",
     "zh_CN": "关闭下面的标签页（当前面板中）",
-    "zh_TW": "關閉下方分頁（當前面板中）",
+    "zh_TW": "關閉下方分頁（目前面板中）",
     "ja": "下のタブを閉じる（現在のパネル内）"
   },
   "KbRmTOIP": {
@@ -508,7 +508,7 @@
     "pl": "Zamknij inne karty (w obecnym panelu)",
     "ru": "Закрыть другие вкладки (в текущей панели)",
     "zh_CN": "关闭其他标签页（当前面板中）",
-    "zh_TW": "關閉其他分頁（當前面板中）",
+    "zh_TW": "關閉其他分頁（目前面板中）",
     "ja": "他のタブを閉じる（現在のパネル内）"
   },
   "KbSelNextPanel": {
@@ -629,7 +629,7 @@
     "pl": "Uśpij zaznaczone/aktywne karty",
     "ru": "Выгрузить выделенные/активные вкладки",
     "zh_CN": "卸载选定/活动标签页",
-    "zh_TW": "卸載選定/當前分頁",
+    "zh_TW": "卸載選定/目前分頁",
     "ja": "選択/アクティブなタブをアンロード"
   },
   "KbUnloadATIP": {
@@ -662,7 +662,7 @@
     "pl": "Uśpij zwinięte karty w panelu",
     "ru": "Выгрузить свернутые вкладки на панели",
     "zh_CN": "卸载面板中的折叠标签页",
-    "zh_TW": "卸載面板中的折疊分頁",
+    "zh_TW": "卸載面板中的摺疊分頁",
     "ja": "パネル内の折りたたまれたタブをアンロード"
   },
   "KbUnloadATIIP": {
@@ -684,7 +684,7 @@
     "pl": "Złóż zaznaczoną gałąź",
     "ru": "Свернуть выделенную ветвь",
     "zh_CN": "折叠选定的分支",
-    "zh_TW": "折疊選定的分支",
+    "zh_TW": "摺疊選定的分支",
     "ja": "選択したブランチを折りたたむ"
   },
   "KbExpandBranch": {
@@ -705,7 +705,7 @@
     "hu": "A kijelölt ág nyitása/csukása",
     "pl": "Rozwiń zaznaczoną gałąź",
     "zh_CN": "切换选定的分支状态（折叠/展开）",
-    "zh_TW": "切換選定的分支狀態（折疊/展開）",
+    "zh_TW": "切換選定的分支狀態（摺疊/展開）",
     "ja": "選択したブランチの状態を切り替える（折りたたむ/展開）"
   },
   "KbFoldInactBranches": {
@@ -716,7 +716,7 @@
     "pl": "Złóż niekatywne gałęzie",
     "ru": "Свернуть неактивные ветви вкладок",
     "zh_CN": "折叠非活动分支",
-    "zh_TW": "折疊非作用中分支",
+    "zh_TW": "摺疊非作用中分支",
     "ja": "非アクティブなブランチを折りたたむ"
   },
   "KbActPrevActTabC": {
@@ -727,7 +727,7 @@
     "pl": "Aktywuj poprzednio aktywną kartę (Zamiana kart)",
     "ru": "Активировать ранее активную вкладку",
     "zh_CN": "在当前和先前活动的标签页间交替",
-    "zh_TW": "在當前和先前分頁間交替",
+    "zh_TW": "在目前和先前分頁間交替",
     "ja": "以前にアクティブだったタブをアクティブにする（タブ切り替え）"
   },
   "KbActPrevActTab": {
@@ -760,7 +760,7 @@
     "pl": "Aktywuj historię kart w panelu: Wstecz",
     "ru": "История активных вкладок панели: Назад",
     "zh_CN": "前一活动标签页（活动面板）",
-    "zh_TW": "前一分頁（當前面板）",
+    "zh_TW": "前一分頁（目前面板）",
     "ja": "パネルのアクティブなタブの履歴: 戻る"
   },
   "KbActPanelNextActTab": {
@@ -771,7 +771,7 @@
     "pl": "Aktywuj historię kart w panelu: Naprzód",
     "ru": "История активных вкладок панели: Вперед",
     "zh_CN": "后一活动标签页（活动面板）",
-    "zh_TW": "後一分頁（當前面板）",
+    "zh_TW": "後一分頁（目前面板）",
     "ja": "パネルのアクティブなタブの履歴: 進む"
   },
   "KbSwitchToNextTab": {
@@ -815,7 +815,7 @@
     "pl": "Przełącz na pierwszą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на первую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第一个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第一個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第一個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの最初の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab1": {
@@ -826,7 +826,7 @@
     "pl": "Przełącz na drugą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на вторую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第二个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第二個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第二個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの2番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab2": {
@@ -837,7 +837,7 @@
     "pl": "Przełącz na trzecią nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на третью незакрепленную вкладку активной панели",
     "zh_CN": "切换到第三个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第三個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第三個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの3番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab3": {
@@ -848,7 +848,7 @@
     "pl": "Przełącz na czwartą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на четвертую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第四个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第四個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第四個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの4番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab4": {
@@ -859,7 +859,7 @@
     "pl": "Przełącz na piątą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на пятую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第五个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第五個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第五個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの5番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab5": {
@@ -870,7 +870,7 @@
     "pl": "Przełącz na szóstą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на шестую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第六个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第六個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第六個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの6番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab6": {
@@ -881,7 +881,7 @@
     "pl": "Przełącz na siódmą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на седьмую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第七个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第七個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第七個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの7番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab7": {
@@ -892,7 +892,7 @@
     "pl": "Przełącz na ósmą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на восьмую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第八个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第八個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第八個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの8番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab8": {
@@ -903,7 +903,7 @@
     "pl": "Przełącz na dziewiątą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на девятую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第九个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第九個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第九個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの9番目の固定されていないタブに切り替え"
   },
   "KbSwitchToUnpinnedTab9": {
@@ -914,7 +914,7 @@
     "pl": "Przełącz na dziesiątą nieprzypiętą kartę w aktywnym panelu",
     "ru": "Переключиться на десятую незакрепленную вкладку активной панели",
     "zh_CN": "切换到第十个未固定的标签页（当前面板中）",
-    "zh_TW": "切換到第十個未釘選的分頁（當前面板中）",
+    "zh_TW": "切換到第十個未釘選的分頁（目前面板中）",
     "ja": "アクティブパネルの10番目の固定されていないタブに切り替え"
   },
   "KbSwitchToTab0": {
@@ -925,7 +925,7 @@
     "pl": "Przełącz na pierwszą kartę w aktywnym panelu",
     "ru": "Переключиться на первую вкладку активной панели",
     "zh_CN": "切换到第一个标签页（当前面板中）",
-    "zh_TW": "切換到第一個分頁（當前面板中）",
+    "zh_TW": "切換到第一個分頁（目前面板中）",
     "ja": "アクティブパネルの最初のタブに切り替え"
   },
   "KbSwitchToTab1": {
@@ -936,7 +936,7 @@
     "pl": "Przełącz na drugą kartę w aktywnym panelu",
     "ru": "Переключиться на вторую вкладку активной панели",
     "zh_CN": "切换到第二个标签页（当前面板中）",
-    "zh_TW": "切換到第二個分頁（當前面板中）",
+    "zh_TW": "切換到第二個分頁（目前面板中）",
     "ja": "アクティブパネルの2番目のタブに切り替え"
   },
   "KbSwitchToTab2": {
@@ -947,7 +947,7 @@
     "pl": "Przełącz na trzecią kartę w aktywnym panelu",
     "ru": "Переключиться на третью вкладку активной панели",
     "zh_CN": "切换到第三个标签页（当前面板中）",
-    "zh_TW": "切換到第三個分頁（當前面板中）",
+    "zh_TW": "切換到第三個分頁（目前面板中）",
     "ja": "アクティブパネルの3番目のタブに切り替え"
   },
   "KbSwitchToTab3": {
@@ -958,7 +958,7 @@
     "pl": "Przełącz na czwartą kartę w aktywnym panelu",
     "ru": "Переключиться на четвертую вкладку активной панели",
     "zh_CN": "切换到第四个标签页（当前面板中）",
-    "zh_TW": "切換到第四個分頁（當前面板中）",
+    "zh_TW": "切換到第四個分頁（目前面板中）",
     "ja": "アクティブパネルの4番目のタブに切り替え"
   },
   "KbSwitchToTab4": {
@@ -969,7 +969,7 @@
     "pl": "Przełącz na piątą kartę w aktywnym panelu",
     "ru": "Переключиться на пятую вкладку активной панели",
     "zh_CN": "切换到第五个标签页（当前面板中）",
-    "zh_TW": "切換到第五個分頁（當前面板中）",
+    "zh_TW": "切換到第五個分頁（目前面板中）",
     "ja": "アクティブパネルの5番目のタブに切り替え"
   },
   "KbSwitchToTab5": {
@@ -980,7 +980,7 @@
     "pl": "Przełącz na szóstą kartę w aktywnym panelu",
     "ru": "Переключиться на шестую вкладку активной панели",
     "zh_CN": "切换到第六个标签页（当前面板中）",
-    "zh_TW": "切換到第六個分頁（當前面板中）",
+    "zh_TW": "切換到第六個分頁（目前面板中）",
     "ja": "アクティブパネルの6番目のタブに切り替え"
   },
   "KbSwitchToTab6": {
@@ -991,7 +991,7 @@
     "pl": "Przełącz na siódmą kartę w aktywnym panelu",
     "ru": "Переключиться на седьмую вкладку активной панели",
     "zh_CN": "切换到第七个标签页（当前面板中）",
-    "zh_TW": "切換到第七個分頁（當前面板中）",
+    "zh_TW": "切換到第七個分頁（目前面板中）",
     "ja": "アクティブパネルの7番目のタブに切り替え"
   },
   "KbSwitchToTab7": {
@@ -1002,7 +1002,7 @@
     "pl": "Przełącz na ósmą kartę w aktywnym panelu",
     "ru": "Переключиться на восьмую вкладку активной панели",
     "zh_CN": "切换到第八个标签页（当前面板中）",
-    "zh_TW": "切換到第八個分頁（當前面板中）",
+    "zh_TW": "切換到第八個分頁（目前面板中）",
     "ja": "アクティブパネルの8番目のタブに切り替え"
   },
   "KbSwitchToTab8": {
@@ -1013,7 +1013,7 @@
     "pl": "Przełącz na dziewiątą kartę w aktywnym panelu",
     "ru": "Переключиться на девятую вкладку активной панели",
     "zh_CN": "切换到第九个标签页（当前面板中）",
-    "zh_TW": "切換到第九個分頁（當前面板中）",
+    "zh_TW": "切換到第九個分頁（目前面板中）",
     "ja": "アクティブパネルの9番目のタブに切り替え"
   },
   "KbSwitchToTab9": {
@@ -1024,7 +1024,7 @@
     "pl": "Przełącz na dziesiątą kartę w aktywnym panelu",
     "ru": "Переключиться на десятую вкладку активной панели",
     "zh_CN": "切换到第十个标签页（当前面板中）",
-    "zh_TW": "切換到第十個分頁（當前面板中）",
+    "zh_TW": "切換到第十個分頁（目前面板中）",
     "ja": "アクティブパネルの10番目のタブに切り替え"
   },
   "KbSwitchToLastTab": {
@@ -1035,7 +1035,7 @@
     "pl": "Przełącz na ostatnią kartę w aktywnym panelu",
     "ru": "Переключиться на последнюю вкладку активной панели",
     "zh_CN": "切换到最后一个标签页（当前面板中）",
-    "zh_TW": "切換到最後一個分頁（當前面板中）",
+    "zh_TW": "切換到最後一個分頁（目前面板中）",
     "ja": "アクティブパネルの最後のタブに切り替え"
   },
   "KbMoveTabToAct": {
@@ -1046,7 +1046,7 @@
     "pl": "Przesuń zaznaczone karty do aktywnej karty",
     "ru": "Вложить выделенные вкладки в активную вкладку",
     "zh_CN": "将选定的标签页移动到活动标签页之后",
-    "zh_TW": "將選定的分頁移動到當前分頁之後",
+    "zh_TW": "將選定的分頁移動到目前分頁之後",
     "ja": "選択したタブをアクティブなタブの後に移動"
   },
   "KbMoveTabsUp": {
@@ -1079,7 +1079,7 @@
     "pl": "Przesuń zaznaczone (lub aktywne) karty na początek panelu",
     "ru": "Переместить выделенные (или активную) вкладки в начало панели",
     "zh_CN": "将选定（或活动）标签页移动到面板开头",
-    "zh_TW": "將選定（或當前）分頁移動到面板開頭",
+    "zh_TW": "將選定（或目前）分頁移動到面板開頭",
     "ja": "選択した（またはアクティブな）タブをパネルの先頭に移動"
   },
   "KbMoveTabsToPanelEnd": {
@@ -1090,7 +1090,7 @@
     "pl": "Przesuń zaznaczone (lub aktywne) karty na koniec panelu",
     "ru": "Переместить выделенные (или активную) вкладки в конец панели",
     "zh_CN": "将选定（或活动）标签页移动到面板末尾",
-    "zh_TW": "將選定（或當前）分頁移動到面板末尾",
+    "zh_TW": "將選定（或目前）分頁移動到面板末尾",
     "ja": "選択した（またはアクティブな）タブをパネルの末尾に移動"
   },
   "KbTabsIndent": {
@@ -1123,7 +1123,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do pierwszego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в первую панель",
     "zh_CN": "将选定（或活动）标签页移动到第一个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第一個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第一個面板",
     "ja": "選択した（またはアクティブな）タブを最初のパネルに移動"
   },
   "KbMoveTabsToPanel1": {
@@ -1134,7 +1134,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do drugiego panelu",
     "ru": "Переместить выделенные (или активную) вкладки во вторую панель",
     "zh_CN": "将选定（或活动）标签页移动到第二个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第二個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第二個面板",
     "ja": "選択した（またはアクティブな）タブを2番目のパネルに移動"
   },
   "KbMoveTabsToPanel2": {
@@ -1145,7 +1145,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do trzeciego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в третью панель",
     "zh_CN": "将选定（或活动）标签页移动到第三个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第三個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第三個面板",
     "ja": "選択した（またはアクティブな）タブを3番目のパネルに移動"
   },
   "KbMoveTabsToPanel3": {
@@ -1156,7 +1156,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do czwartego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в четвертую панель",
     "zh_CN": "将选定（或活动）标签页移动到第四个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第四個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第四個面板",
     "ja": "選択した（またはアクティブな）タブを4番目のパネルに移動"
   },
   "KbMoveTabsToPanel4": {
@@ -1167,7 +1167,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do piątego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в пятую панель",
     "zh_CN": "将选定（或活动）标签页移动到第五个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第五個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第五個面板",
     "ja": "選択した（またはアクティブな）タブを5番目のパネルに移動"
   },
   "KbMoveTabsToPanel5": {
@@ -1178,7 +1178,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do szóstego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в шестую панель",
     "zh_CN": "将选定（或活动）标签页移动到第六个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第六個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第六個面板",
     "ja": "選択した（またはアクティブな）タブを6番目のパネルに移動"
   },
   "KbMoveTabsToPanel6": {
@@ -1189,7 +1189,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do siódmego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в седьмую панель",
     "zh_CN": "将选定（或活动）标签页移动到第七个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第七個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第七個面板",
     "ja": "選択した（またはアクティブな）タブを7番目のパネルに移動"
   },
   "KbMoveTabsToPanel7": {
@@ -1200,7 +1200,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do ósmego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в восьмую панель",
     "zh_CN": "将选定（或活动）标签页移动到第八个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第八個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第八個面板",
     "ja": "選択した（またはアクティブな）タブを8番目のパネルに移動"
   },
   "KbMoveTabsToPanel8": {
@@ -1211,7 +1211,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do dziewiątego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в девятую панель",
     "zh_CN": "将选定（或活动）标签页移动到第九个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第九個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第九個面板",
     "ja": "選択した（またはアクティブな）タブを9番目のパネルに移動"
   },
   "KbMoveTabsToPanel9": {
@@ -1222,7 +1222,7 @@
     "pl": "Przenieś zaznaczone (lub aktywne) karty do dziesiątego panelu",
     "ru": "Переместить выделенные (или активную) вкладки в десятую панель",
     "zh_CN": "将选定（或活动）标签页移动到第十个面板",
-    "zh_TW": "將選定（或當前）分頁移動到第十個面板",
+    "zh_TW": "將選定（或目前）分頁移動到第十個面板",
     "ja": "選択した（またはアクティブな）タブを10番目のパネルに移動"
   },
   "KbSortTabsByTitleAsc": {
@@ -1231,7 +1231,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par titre (A-z)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (A-z)",
-    "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (A-z)",
+    "zh_TW": "依名稱排序選定分頁或目前分頁的同級分頁 (A-z)",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（A-z）"
   },
   "KbSortTabsByTitleDes": {
@@ -1240,7 +1240,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par titre (z-A)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (z-A)",
-    "zh_TW": "依名稱排序選定分頁或當前分頁的同級分頁 (z-A)",
+    "zh_TW": "依名稱排序選定分頁或目前分頁的同級分頁 (z-A)",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをタイトルでソート（z-A）"
   },
   "KbSortTabsByTrlAsc": {
@@ -1249,7 +1249,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par URL (A-z)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (A-z)",
-    "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (A-z)",
+    "zh_TW": "依網址排序選定分頁或目前分頁的同級分頁 (A-z)",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（A-z）"
   },
   "KbSortTabsByTrlDes": {
@@ -1258,7 +1258,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par URL (z-A)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (z-A)",
-    "zh_TW": "依網址排序選定分頁或當前分頁的同級分頁 (z-A)",
+    "zh_TW": "依網址排序選定分頁或目前分頁的同級分頁 (z-A)",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをURLでソート（z-A）"
   },
   "KbSortTabsByTimeAsc": {
@@ -1267,7 +1267,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (ancien-récent)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Stare-Nowe)",
-    "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（舊-新）",
+    "zh_TW": "依最近瀏覽時間排序選定分頁或目前分頁的同級分頁（舊-新）",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（古い順）"
   },
   "KbSortTabsByTimeDes": {
@@ -1276,7 +1276,7 @@
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (récent-ancien)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Nowe-Stare)",
-    "zh_TW": "依最近瀏覽時間排序選定分頁或當前分頁的同級分頁（新-舊）",
+    "zh_TW": "依最近瀏覽時間排序選定分頁或目前分頁的同級分頁（新-舊）",
     "ja": "選択したタブまたはアクティブタブの兄弟タブをアクセス時間でソート（新しい順）"
   },
   "KbSortPanelTabsByTitleAsc": {
@@ -1285,7 +1285,7 @@
     "fr": "Trier les onglets du panneau actif par titre (A-z)",
     "hu": "Az aktív panel lapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (A-z)",
-    "zh_TW": "依名稱排序當前面板的分頁 (A-z)",
+    "zh_TW": "依名稱排序目前面板的分頁 (A-z)",
     "ja": "アクティブパネルのタブをタイトルでソート（A-z）"
   },
   "KbSortPanelTabsByTitleDes": {
@@ -1294,7 +1294,7 @@
     "fr": "Trier les onglets du panneau actif par titre (z-A)",
     "hu": "Az aktív panel lapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (z-A)",
-    "zh_TW": "依名稱排序當前面板的分頁 (z-A)",
+    "zh_TW": "依名稱排序目前面板的分頁 (z-A)",
     "ja": "アクティブパネルのタブをタイトルでソート（z-A）"
   },
   "KbSortPanelTabsByTrlAsc": {
@@ -1303,7 +1303,7 @@
     "fr": "Trier les onglets du panneau actif par URL (A-z)",
     "hu": "Az aktív panel lapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po URL (A-z)",
-    "zh_TW": "依網址排序當前面板的分頁 (A-z)",
+    "zh_TW": "依網址排序目前面板的分頁 (A-z)",
     "ja": "アクティブパネルのタブをURLでソート（A-z）"
   },
   "KbSortPanelTabsByTrlDes": {
@@ -1312,7 +1312,7 @@
     "fr": "Trier les onglets du panneau actif par URL (z-A)",
     "hu": "Az aktív panel lapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po URL (z-A)",
-    "zh_TW": "依網址排序當前面板的分頁 (z-A)",
+    "zh_TW": "依網址排序目前面板的分頁 (z-A)",
     "ja": "アクティブパネルのタブをURLでソート（z-A）"
   },
   "KbSortPanelTabsByTimeAsc": {
@@ -1321,7 +1321,7 @@
     "fr": "Trier les onglets du panneau actif par date d’accès (ancien-récent)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Stare-Nowe)",
-    "zh_TW": "依最近瀏覽時間排序當前面板的分頁（舊-新）",
+    "zh_TW": "依最近瀏覽時間排序目前面板的分頁（舊-新）",
     "ja": "アクティブパネルのタブをアクセス時間でソート（古い順）"
   },
   "KbSortPanelTabsByTimeDes": {
@@ -1330,7 +1330,7 @@
     "fr": "Trier les onglets du panneau actif par date d’accès (récent-ancien)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Nowe-Stare)",
-    "zh_TW": "依最近瀏覽時間排序當前面板的分頁（新-舊）",
+    "zh_TW": "依最近瀏覽時間排序目前面板的分頁（新-舊）",
     "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）"
   },
 

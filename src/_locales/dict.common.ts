@@ -796,6 +796,7 @@ export const commonTranslations: Translations = {
     pl: 'Jeśli karta ma URL ("substring" or "/RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
     zh: '如果 URL 含有 ("字符串" 或 "/RegExp/")',
+    zh_TW: '如果分頁含有 URL (「子字串」或「/RegExp/」)',
     ja: 'URL が ("部分文字列" または "/RegExp/") を含む場合',
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
@@ -937,7 +938,7 @@ export const commonTranslations: Translations = {
     pl: 'Jeśli karta ma URL ("substring" or /"RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
     zh_CN: '如果标签页有 URL ("字符串" 或 "/RegExp/")',
-    zh_TW: '如果分頁含有 URL ("字符串" 或 "/RegExp/")',
+    zh_TW: '如果分頁含有 URL (「子字串」或「/RegExp/」)',
     ja: 'URL が ("部分文字列" または "/RegExp/") を含む場合',
   },
   'popup.tab_reopen_rules.rule_suffix_include': {
@@ -1025,6 +1026,7 @@ export const commonTranslations: Translations = {
     pl: '"substring" lub "/RegExp/"',
     ru: '"подстрока" или "/RegExp/"',
     zh: '"字符串" 或 "/RegExp/"',
+    zh_TW: '「子字串」或「/RegExp/」',
     ja: '"部分文字列" または "/RegExp/"',
   },
   'popup.url_rules.reopen_label': {
@@ -1414,7 +1416,7 @@ export const commonTranslations: Translations = {
     pl: 'Zwiń wszystkie foldery',
     ru: 'Свернуть все папки',
     zh_CN: '折叠全部文件夹',
-    zh_TW: '折疊全部資料夾',
+    zh_TW: '摺疊全部資料夾',
     ja: 'すべてのフォルダを折りたたむ',
   },
   'menu.bookmark.switch_view': {
@@ -2259,7 +2261,7 @@ export const commonTranslations: Translations = {
     pl: 'Zwiń niekatywne gałęzie',
     ru: 'Свернуть неактивные ветки',
     zh_CN: '折叠非活动分支',
-    zh_TW: '折疊非作用中分支',
+    zh_TW: '摺疊非作用中分支',
     ja: '非アクティブブランチを折りたたむ',
   },
   'menu.tabs_panel.dedup': {
@@ -2563,6 +2565,7 @@ export const commonTranslations: Translations = {
     pl: 'Wyłącz',
     ru: 'Отключить',
     zh: '禁用',
+    zh_TW: '停用',
     ja: '無効',
   },
   'menu.editor.tabs_title': {
@@ -2809,26 +2812,32 @@ export const commonTranslations: Translations = {
   'omnibox.default_suggestion': {
     en: 'Choose the command (default is the first one):',
     fr: 'Choisir la commande (la première est celle par défaut)',
+    zh_TW: '選一個指令（預設使用第一個）',
   },
   'omnibox.reopen_in_ctr': {
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
+    zh_TW: ctrName => `⭮ 在容器「${ctrName}」重新開啟目前分頁`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
     fr: 'Conteneur par défaut',
+    zh_TW: '預設容器',
   },
   'omnibox.move_to_panel': {
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
+    zh_TW: panelName => `↔ 移動目前分頁到面板「${panelName}」`,
   },
   'omnibox.switch_to_panel': {
     en: panelName => `⮞ Switch to "${panelName}" panel`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
+    zh_TW: panelName => `⮞ 切換到面板「${panelName}」`,
   },
   'omnibox.move_to_tab': {
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
     fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
+    zh_TW: tabTitle => `↕ 移動目前分頁到群組：「${tabTitle}」`,
   },
 }
 
