@@ -3,26 +3,55 @@
   .wrapper
     .snapshot-list-section
       .snapshot-list(:data-empty="!state.snapshots.length")
-        .controls
-          .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
-          .btn
-            .label {{translate('snapshot.btn_import_snapshot')}}
-            input(type="file" accept="application/json" @input="importSnapshot")
-        .snapshot(
-          v-for="snapshot in state.snapshots"
-          :key="snapshot.id"
-          :id="String(snapshot.id)"
-          :data-active="state.activeSnapshot?.id === snapshot.id"
-          @click="activateSnapshot(snapshot)")
-          .info
-            .date-time {{snapshot.dateStr}} - {{snapshot.timeStr}}
-            .content-info {{getSnapInfo(snapshot)}}
-          .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
-            svg: use(href="#icon_trash")
+        .permanent-snapshots-section(v-if="permanentSnapshots.length")
+          .perm-section-header {{translate('snapshot.permanent_snapshots_header')}}
+          .snapshot(
+            v-for="snapshot in permanentSnapshots"
+            :key="snapshot.id"
+            :id="String(snapshot.id)"
+            :data-active="state.activeSnapshot?.id === snapshot.id"
+            :data-permanent="true"
+            @click="activateSnapshot(snapshot)")
+            .info
+              .date-time {{snapshot.title ?? snapshot.dateStr + ' - ' + snapshot.timeStr}}
+              .content-info {{getSnapInfo(snapshot)}}
+            .rm-btn(:title="translate('snapshot.btn_remove')" @click.stop="removeSnapshot(snapshot)")
+              svg: use(href="#icon_trash")
+
+        .temporary-snapshots-section
+          .controls
+            .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
+            .btn
+              .label {{translate('snapshot.btn_import_snapshot')}}
+              input(type="file" accept="application/json" @input="importSnapshot")
+          .temp-section-header {{translate('snapshot.temporary_snapshots_header')}}
+
+          .snapshot(
+            v-for="snapshot in temporarySnapshots"
+            :key="snapshot.id"
+            :id="String(snapshot.id)"
+            :data-active="state.activeSnapshot?.id === snapshot.id"
+            @click="activateSnapshot(snapshot)")
+            .info
+              .date-time {{snapshot.dateStr}} - {{snapshot.timeStr}}
+              .content-info {{getSnapInfo(snapshot)}}
+            .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
+              svg: use(href="#icon_trash")
 
     .active-snapshot-section
       .header(v-if="state.activeSnapshot" :data-empty="!state.activeSnapshot")
-        .title(@wheel="onHeaderWheel") {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
+        template(v-if="state.activeSnapshot?.permanent")
+          .title
+            input.title-input(
+              ref="titleInputRef"
+              :value="state.activeSnapshot.title ?? state.activeSnapshot.dateStr + ' - ' + state.activeSnapshot.timeStr"
+              @change="onRenameActiveSnapshot($event)"
+              @keydown.enter="($event.target as HTMLInputElement).blur()")
+        .title(v-else @wheel="onHeaderWheel") {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
+        .btn(v-if="state.activeSnapshot?.permanent" @click="doMakeTemporary(state.activeSnapshot)").
+          {{translate('snapshot.btn_make_temporary')}}
+        .btn(v-else @click="doMakePermanent(state.activeSnapshot)").
+          {{translate('snapshot.btn_make_permanent')}}
         DropDownButton(
           :label="translate('snapshot.btn_export_snapshot')"
           @open="onExportSnapshotDropDownOpen")
@@ -90,7 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, reactive } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import type * as T from 'src/types'
 import { SnapOpenType, RemovingSnapshotResult } from 'src/enums'
 import { CONTAINER_ID, NOID } from 'src/defaults'
@@ -121,6 +150,15 @@ const state = reactive({
   mouseUpShiftTabId: null,
   mouseUpShiftMode: true,
 } as SnapshotsViewerState)
+
+const titleInputRef = ref<HTMLInputElement | null>(null)
+
+const permanentSnapshots = computed<T.SnapshotState[]>(() =>
+  state.snapshots.filter(s => s.permanent)
+)
+const temporarySnapshots = computed<T.SnapshotState[]>(() =>
+  state.snapshots.filter(s => !s.permanent)
+)
 
 const selectedTabsLen = computed<number>(() => {
   if (!state.activeSnapshot) return 0
@@ -178,19 +216,29 @@ function updateSnapshots(newSnapshots: T.Snapshot[]) {
     if (snapshot) snapshots.push(snapshot)
   }
 
-  let activeSnapshot = snapshots.find(s => s.id === state.activeSnapshot?.id) ?? null
+  const activeSnapshot = snapshots.find(s => s.id === state.activeSnapshot?.id) ?? null
   if (!activeSnapshot) resetSelection(state.activeSnapshot)
-  if (activeSnapshot) activeSnapshot = state.activeSnapshot
 
   state.snapshots = snapshots
-  state.activeSnapshot = activeSnapshot ?? snapshots[0]
+  state.activeSnapshot = activeSnapshot ?? snapshots[0] ?? null
 }
 SetupPage.snapshotsViewer.refresh = updateSnapshots
 
 function activateSnapshot(snapshot?: T.SnapshotState): void {
-  if (!snapshot || state.activeSnapshot === snapshot) return
-  resetSelection(state.activeSnapshot)
-  state.activeSnapshot = snapshot
+  if (!snapshot) return
+  if (state.activeSnapshot !== snapshot) {
+    resetSelection(state.activeSnapshot)
+    state.activeSnapshot = snapshot
+  }
+  if (snapshot.permanent) {
+    nextTick(() => {
+      if (titleInputRef.value) {
+        titleInputRef.value.focus()
+        const len = titleInputRef.value.value.length
+        titleInputRef.value.setSelectionRange(len, len)
+      }
+    })
+  }
 }
 
 function onHeaderWheel(e: WheelEvent): void {
@@ -356,6 +404,10 @@ async function openWindow(
 }
 
 async function removeSnapshot(snapshot: T.SnapshotState): Promise<void> {
+  if (snapshot.permanent) {
+    if (!window.confirm(translate('snapshot.confirm_delete_permanent'))) return
+  }
+
   const result = await IPC.bg('removeSnapshot', snapshot.id)
 
   if (result === RemovingSnapshotResult.Ok) {
@@ -472,5 +524,29 @@ function importSnapshot(importEvent: Event) {
     Snapshots.addSnapshot(snapshot)
   }
   reader.readAsText(file)
+}
+
+async function doMakePermanent(snapshot: T.SnapshotState | null): Promise<void> {
+  if (!snapshot) return
+  const result = await Snapshots.makeSnapshotPermanent(snapshot.id)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot makeSnapshotPermanent')
+}
+
+async function doMakeTemporary(snapshot: T.SnapshotState | null): Promise<void> {
+  if (!snapshot) return
+  const result = await Snapshots.makeSnapshotTemporary(snapshot.id)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot makeSnapshotTemporary')
+}
+
+async function onRenameSnapshot(snapshot: T.SnapshotState, event: Event): Promise<void> {
+  const title = (event.target as HTMLInputElement).value.trim()
+  snapshot.title = title || undefined
+  const result = await Snapshots.renameSnapshot(snapshot.id, title)
+  if (result === RemovingSnapshotResult.Err) Logs.warn('Snapshots: Cannot renameSnapshot')
+}
+
+async function onRenameActiveSnapshot(event: Event): Promise<void> {
+  if (!state.activeSnapshot) return
+  await onRenameSnapshot(state.activeSnapshot, event)
 }
 </script>
