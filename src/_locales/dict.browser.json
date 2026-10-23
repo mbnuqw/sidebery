@@ -104,7 +104,7 @@
   },
   "KbMenu": {
     "en": "Open menu for selected (or active) tab, bookmark or panel",
-    "de": "Menü öffnen",
+    "de": "Menü für ausgewählten (oder aktiven) Tab, Lesezeichen oder Panel öffnen",
     "fr": "Ouvrir le menu pour l’onglet, le marque-page ou le panneau sélectionné (ou actif)",
     "hu": "A kijelölt (vagy aktív) lap, könyvjelző vagy panel menüjének megnyitása",
     "pl": "Otwórz menu dla zaznaczonej (lub aktywnej) karty, zakładki lub panelu",
@@ -136,37 +136,42 @@
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der ersten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le premier modèle",
     "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt1": {
     "en": "Copy selected tabs/bookmarks or active tab by second template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der zweiten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le deuxième modèle",
     "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt2": {
     "en": "Copy selected tabs/bookmarks or active tab by third template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der dritten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le troisième modèle",
     "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt3": {
     "en": "Copy selected tabs/bookmarks or active tab by fourth template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der vierten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le quatrième modèle",
     "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt4": {
     "en": "Copy selected tabs/bookmarks or active tab by fifth template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der fünften Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le cinquième modèle",
     "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
   },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
-    "de": "Öffne Lesezeichen Unter-Panel",
+    "de": "Öffne Lesezeichen-Unter-Panel",
     "fr": "Ouvrir le sous-panneau des marque-pages",
     "zh_CN": "打开书签子面板",
     "zh_TW": "開啟書籤子面板"
@@ -191,7 +196,7 @@
   },
   "KbLoopPanelsForwards": {
     "en": "Loop through panels (Forwards)",
-    "de": "Durch die Panel schalten (vorwärts)",
+    "de": "Durch die Panels schalten (vorwärts)",
     "fr": "Boucle à travers les panneaux (vers l'avant)",
     "hu": "Panelek áttekintése (előre)",
     "pl": "Cyklicznie przełączać się między panelami (do przodu)",
@@ -202,7 +207,7 @@
   },
   "KbLoopPanelsBackwards": {
     "en": "Loop through panels (Backwards)",
-    "de": "Durch die Panel schalten (rückwärts)",
+    "de": "Durch die Panels schalten (rückwärts)",
     "fr": "Boucle à travers les panneaux (à rebours)",
     "hu": "Panelek áttekintése (visszafelé)",
     "pl": "Cyklicznie przełączać się między panelami (wstecz)",
@@ -407,7 +412,7 @@
   },
   "KbFlattenTabs": {
     "en": "Flatten selected tabs",
-    "de": "Ausgewählte Tabs zusammenziehen",
+    "de": "Ausgewählte Tabs abflachen",
     "fr": "Aplatir les onglets sélectionnés",
     "hu": "A kijelölt lapok szintcsökkentése",
     "pl": "Spłaszcz zaznaczone karty",
@@ -656,7 +661,7 @@
   },
   "KbUnloadFTIP": {
     "en": "Unload folded tabs in panel",
-    "de": "Gefaltete Tabs im Panel entladen",
+    "de": "Eingeklappte Tabs im Panel entladen",
     "fr": "Décharger les onglets repliés du panneau",
     "hu": "A panel becsukott lapjainak kisöprése",
     "pl": "Uśpij zwinięte karty w panelu",
@@ -721,7 +726,7 @@
   },
   "KbActPrevActTabC": {
     "en": "Activate previously active tab (Tab flip)",
-    "de": "Zuvor aktive Tab aktivieren (Tabwechsel)",
+    "de": "Zuvor aktiven Tab aktivieren (Tabwechsel)",
     "fr": "Activer l'onglet précédemment actif (Onglet revers)",
     "hu": "Korábban aktív lap aktiválása (lapváltogatás)",
     "pl": "Aktywuj poprzednio aktywną kartę (Zamiana kart)",
@@ -1414,7 +1419,7 @@
   },
   "api_limit_info": {
     "en": "Sidebery is unable to open this link due to security-related restrictions of Firefox.",
-    "de": "Aufgrund von sicherheitsrelevanten API Beschränkungen kann Sidebery diesen Link nicht öffnen.",
+    "de": "Aufgrund sicherheitsrelevanter Einschränkungen von Firefox kann Sidebery diesen Link nicht öffnen.",
     "fr": "Sidebery ne peux pas ouvrir ce lien à cause des restrictions de sécurité de Firefox",
     "hu": "A Firefox biztonsági beállításai miatt ezt a hivatkozást nem lehet megnyitni.",
     "pl": "Sidebery nie jest w stanie otworzyć tego linku z powodów związanych z restrykcjami bezpieczeństwa Firefoxa.",

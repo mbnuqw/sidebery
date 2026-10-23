@@ -7,6 +7,7 @@ export const setupPageTranslations: Translations = {
   // - Container config popup
   'container.name_placeholder': {
     en: 'Name...',
+    de: 'Name der Umgebung...',
     fr: 'Nom…',
     hu: 'Név…',
     pl: 'Nazwa...',
@@ -61,6 +62,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_label': {
     en: 'Proxy',
+    de: 'Proxy',
     fr: 'Proxy',
     ru: 'Прокси',
     zh: '代理',
@@ -84,7 +86,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_dns_label': {
     en: 'proxy DNS',
-    de: 'Proxy DNS',
+    de: 'Proxy-DNS',
     fr: 'Proxy DNS',
     hu: 'Proxy DNS',
     pl: 'Proxy DNS',
@@ -129,7 +131,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_include_tooltip': {
     en: 'Reopen tabs with matched URLs in this container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
-    de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
     hu: 'Az illeszkedő URL-ek újranyitása ebben a konténerben.\nSoronként egy-egy "szövegrészlet" vagy /RegExp/:\n    pelda.hu\n    /^(szabályos)?kifejezés$/\n    …',
     pl: 'Otwórz ponownie karty z pasującymi URL w tym kontenerze.\nLista "substrings" lub "/regex/ oddzielona nowymi liniami:\n    example.com\n    /^(some)?regex$/\n    ...',
@@ -153,7 +155,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_exclude_tooltip': {
     en: 'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
-    de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: `Rouvrir les onglets dont l’URL correspond dans le conteneur par défaut.
 Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     example.com
@@ -170,6 +172,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'container.user_agent': {
     en: 'User Agent',
+    de: 'User-Agent',
     fr: 'Agent utilisateur',
     hu: 'Böngészőazonosító',
     ja: 'ユーザーエージェント',
@@ -177,6 +180,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // - Panel config popup
   'panel.name_placeholder': {
     en: 'Name...',
+    de: 'Name des Panels...',
     fr: 'Nom…',
     hu: 'Név…',
     pl: 'Nazwa...',
@@ -220,6 +224,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_text_btn': {
     en: 'Text',
+    de: 'Text',
     fr: 'Texte',
     hu: 'Szöveg',
     pl: 'Tekst',
@@ -230,7 +235,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_text_placeholder': {
     en: 'e.g. A::#000000ff::700 32px Roboto',
-    de: 'z.B. A::#000000ff::700 32px Roboto',
+    de: 'z. B. A::#000000ff::700 32px Roboto',
     fr: 'ex. A::#000000ff::700 32px Roboto',
     hu: 'pl. A::#000000ff::700 32px Roboto',
     pl: 'np. A::#000000ff::700 32px Roboto',
@@ -310,7 +315,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.temp_mode_label': {
     en: 'Switch back to previously active tabs panel after mouse leave',
-    de: 'Nach Verlassen des Mauszeigers zum zuvor aktiven Tab-Panel wechseln',
+    de: 'Zum zuvor aktiven Tab-Panel zurückwechseln, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Basculer sur le panneau d’onglets précédemment actif à la sortie de la souris',
     hu: 'Visszalépés az előzőleg aktív lappanelra, ha az egérmutató elhagyja',
     pl: 'Przełącz spowrotem na poprzednio aktywny panel kart po wyjściu myszki',
@@ -442,7 +447,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.move_excluded_to': {
     en: 'Move unmatched (excluded) tabs to panel',
-    de: 'Verschiebe unpassende (ausgeschlossene) Tabs in dieses Panel',
+    de: 'Verschiebe nicht passende (ausgeschlossene) Tabs in Panel',
     fr: 'Déplacer les onglets sans correspondance (exclus) dans le panneau',
     hu: 'A nem illeszkedő (kizárt) lapok áthelyezése a panelra',
     pl: 'Przenieś niepasujące (wykluczone) karty do panelu',
@@ -508,7 +513,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.auto_convert': {
     en: 'Convert to source tabs panel on opening bookmark',
-    de: 'Beim Öffnen von Lesezeichen zum ursprünglichen Tab-Panel wechseln',
+    de: 'Beim Öffnen eines Lesezeichens in das ursprüngliche Tab-Panel umwandeln',
     fr: 'Reconvertir en panneau d’onglets à l’ouverture d’un marque-pages',
     hu: 'Könyvjelző megnyitásakor átalakítás az eredeti lappanellá',
     pl: 'Konwertuj do źródła panelu kart po otwarciu zakładki',
@@ -519,7 +524,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.root_id_label': {
     en: 'Root folder',
-    de: 'Quellordner',
+    de: 'Stammordner',
     fr: 'Dossier racine',
     hu: 'Kiinduló mappa',
     pl: 'Folder nadrzędny',
@@ -621,6 +626,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
+    de: 'Adressleiste',
     fr: 'Barre d’adresse',
   },
   'settings.nav_settings_nav': {
@@ -678,6 +684,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
     pl: 'Karty',
@@ -919,6 +926,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
     pl: 'Karty',
@@ -1198,6 +1206,9 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     en: `To use this feature enable "Copy by templates..." option in context menu editor or set keybindings.
 Templates are written per line in the form "Template name:Template" (without quotes).
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
+    de: `Um diese Funktion zu nutzen, aktivieren Sie die Option "Kopieren nach Vorlagen..." im Kontextmenü-Editor oder legen Sie eine Tastenbelegung fest.
+Vorlagen werden zeilenweise im Format "Vorlagenname:Vorlage" (ohne Anführungszeichen) angegeben.
+Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel oder Titel; %T - Titel; %U - URL`,
     fr: `Pour utiliser cette fonctionnalité, activez l’option “Copier avec un modèle” dans l’éditeur de menus contextuels ou définissez un raccourci clavier.
     Les modèles s’écrivent un par ligne sous la forme “Nom du modèle:Modèle” (sans les guillemets).`,
     zh_CN: `要使用此功能，请在菜单编辑器中启用“通过模板复制...”选项或设置快捷键。
@@ -1322,11 +1333,13 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.clear_favicons_cache': {
     en: 'Delete favicons cache',
+    de: 'Favicon-Zwischenspeicher löschen',
     zh_CN: '删除图标缓存',
     zh_TW: '刪除圖示快取',
   },
   'settings.clear_favicons_cache_confirm': {
     en: 'Are you sure you want to delete favicons cache?',
+    de: 'Möchten Sie den Favicon-Zwischenspeicher wirklich löschen?',
     zh_CN: '确定要删除图标缓存吗？',
     zh_TW: '確定要刪除圖示快取嗎？',
   },
@@ -1479,6 +1492,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.perm.downloads_label': {
     en: 'Downloads:',
+    de: 'Downloads:',
     hu: 'Hozzáférés a letöltésekhez:',
     fr: 'Téléchargements:',
     pl: 'Pobrane:',
@@ -1556,7 +1570,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.ctx_menu_ignore_ctr_or': {
     en: 'e.g. /^tmp.+/, Google, Facebook',
-    de: 'z.B. /^tmp.+/, Google, Facebook',
+    de: 'z. B. /^tmp.+/, Google, Facebook',
     fr: 'ex: /^tmp.+/, Google, Facebook',
     hu: 'pl. /^tmp.+/, Google, Facebook',
     pl: 'np. /^tmp.+/, Google, Facebook',
@@ -1590,42 +1604,53 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   // - Address bar (Omnibox)
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
+    de: 'Adressleiste (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
+    de: `Nutzen Sie die Adressleiste (Omnibox), um einige Sidebery-Befehle schnell auszuführen.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
   },
   'settings.omnibox_note': {
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
 
 You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
+    de: `Setzen Sie zunächst den Fokus in die Adressleiste (Strg+L/Cmd+L), geben Sie "=" gefolgt von einem Leerzeichen ein und tippen Sie dann den Namen der gewünschten Umgebung, des Panels oder der Gruppe (Groß-/Kleinschreibung wird ignoriert). Wählen Sie den gewünschten Befehl aus der Liste oder drücken Sie einfach die Eingabetaste, um den ersten zu verwenden.
+
+Sie können außerdem für jeden Befehlstyp ein Präfix festlegen, um schneller zu navigieren. Beginnt Ihre Eingabe (nach "=" und Leerzeichen) mit Zeichen aus dem festgelegten Präfix, erhalten Befehle dieses Typs eine höhere Priorität.`,
     fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
 
 Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
+    de: 'Verfügbare Befehle:',
     fr: 'Commandes disponibles:',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
+    de: 'Aktiven Tab in Umgebung neu öffnen...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
+    de: 'Zu Panel wechseln...',
     fr: 'Basculer vers le panneau…',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
+    de: 'Aktiven Tab in Panel verschieben...',
     fr: 'Déplacer un onglet actif vers le panneau…',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
+    de: 'Aktiven Tab in Gruppe verschieben...',
     fr: 'Déplacer un onglet actif vers le groupe…',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
+    de: 'Präfix:',
     fr: 'Préfixe:',
   },
 
@@ -1644,6 +1669,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout': {
     en: 'Layout',
+    de: 'Anordnung',
     hu: 'Elrendezés',
     fr: 'Disposition',
     pl: 'Układ',
@@ -1838,7 +1864,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_enabled_inline_note': {
     en: 'Note: "In one line" mode is enabled, so the navigation bar elements will be separated into two groups: panels (on the left) and buttons (on the right)',
-    de: 'Hinweis: Der Modus „In einer Zeile“ ist aktiviert, sodass die Elemente der Navigationsleiste in zwei Gruppen unterteilt werden: Bedienfelder (links) und Schaltflächen (rechts)',
+    de: 'Hinweis: Der Modus „In einer Zeile“ ist aktiviert, sodass die Elemente der Navigationsleiste in zwei Gruppen unterteilt werden: Panels (links) und Schaltflächen (rechts)',
     fr: 'Remarque : le mode « Sur une seule ligne » est activé, les éléments de la barre de navigation seront donc séparés en deux groupes : les panneaux (à gauche) et les boutons (à droite)',
     hu: 'Megjegyzés: Az „Egy sorban” mód engedélyezve van, így a navigációs sáv elemei két csoportra lesznek felosztva: panelek (bal oldalon) és gombok (jobb oldalon)',
     pl: 'Uwaga: Tryb „W jednej linii” jest włączony, więc elementy paska nawigacyjnego zostaną podzielone na dwie grupy: panele (po lewej stronie) i przyciski (po prawej stronie)',
@@ -1915,7 +1941,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_sd': {
     en: 'Delimiter',
-    de: 'Abgrenzung',
+    de: 'Trennlinie',
     fr: 'Délimiteur',
     hu: 'Elválasztó',
     pl: 'Delimiter',
@@ -2037,7 +2063,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     en: name =>
       `Delete "${name}" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.`,
     de: name =>
-      `Lösche "${name}" Panel?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.`,
+      `Panel "${name}" löschen?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.`,
     fr: name =>
       `Supprimer le panneau “${name}”?\nTous les onglets de ce panneau seront assignés au panneau d’onglets le plus proche.`,
     hu: name =>
@@ -2053,7 +2079,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_rm_bookmarks_panel_confirm': {
     en: name => `Delete "${name}" panel?`,
-    de: name => `Lösche "${name}" Panel?`,
+    de: name => `Panel "${name}" löschen?`,
     fr: name => `Supprimer le panneau “${name}”?`,
     hu: name => `Törölhető a panel: „${name}”?`,
     pl: name => `Usunąć panel ${name}"?`,
@@ -2532,10 +2558,12 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
+    de: 'Suche beim Wechseln der Tabs beibehalten',
     fr: 'Continuer à chercher après avoir changé d’onglet',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
+    de: 'Suche nach Auslösen einer Kontextmenü-Option beibehalten',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
   },
   'settings.search.shortcuts': {
@@ -2595,6 +2623,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   // - Tabs
   'settings.tabs_title': {
     en: 'Tabs',
+    de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
     pl: 'Karty',
@@ -2669,7 +2698,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_last_tab_on_panel_switching_loaded_only': {
     en: 'Except unloaded tabs',
-    de: 'Außer entladener Tabs',
+    de: 'Außer entladenen Tabs',
     fr: 'Sauf les onglets déchargés',
     hu: 'Kivéve a kisöpört lapokat',
     pl: 'Wyklucz niezaładowane karty',
@@ -2702,7 +2731,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.switch_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
-    de: 'Wenn der Mauszeiger die Seitenleiste verließ',
+    de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     fr: 'si la souris sort de la barre latérale',
     hu: 'ha az egér elhagyja az oldalsávot',
     pl: 'jeśli myszka została na panelu bocznym',
@@ -2724,6 +2753,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab': {
     en: 'Automatically scroll panel to activated tab',
+    de: 'Panel automatisch zum aktivierten Tab scrollen',
     pl: 'Automatycznie przewiń panel do aktywowanej karty',
     zh_CN: '自动滚动面板到激活的标签页',
     zh_TW: '自動捲動面板到啟動的分頁',
@@ -2740,7 +2770,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
-    de: 'Wenn der Mauszeiger die Seitenleiste verließ',
+    de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     hu: 'ha az egér elhagyja az oldalsávot',
     pl: 'jeśli myszka została na panelu bocznym',
     ru: 'если мышь покинула боковую панель',
@@ -2952,6 +2982,22 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    de: `Eine durch Zeilenumbrüche getrennte Liste von Badge-Regeln. Jede Regel besteht aus optionalen Parametern, getrennt durch ein Semikolon und ein Leerzeichen: \`; \`.
+Beispiele:
+\`\`\`
+title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
+minIdleTime:5000; urgent
+url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
+\`\`\`
+Verfügbare Parameter:
+- \`url:{RegExp}\` und/oder \`title:{RegExp}\`: Ein regulärer Ausdruck, der auf den Tab passt und optional den Badge-Wert über eine benannte Gruppe ausliest: \`(?<v>...)\`. Enthält Ihr \`{RegExp}\` ein Semikolon gefolgt von einem Leerzeichen \`; \`, maskieren Sie das Leerzeichen mit einem Backslash: \`;\\ \`. Standardmäßig ist \`{RegExp}\` eine leere Zeichenkette, sodass jede URL und jeder Titel passt, wenn diese Parameter fehlen. Ein Badge ohne Wert wird bei entladenen oder aktiven Tabs ignoriert und zurückgesetzt, sobald der Tab entladen oder aktiv wird.
+- \`bg:{Color}\` und/oder \`fg:{Color}\`: Die Farbe des Badge-Hintergrunds bzw. -Texts.
+- \`urgent\`: Markiert das Badge als dringend und überträgt diesen Status auf übergeordnete Elemente (eingeklappte Tabs, inaktive Panels). Wird bei entladenen und aktiven Tabs ignoriert. Nach dem Aktivieren des Tabs wird ein Badge ohne Wert vollständig ausgeblendet und ein Badge mit Wert zu einem normalen Badge herabgestuft.
+- \`notify\`: Zeigt eine Benachrichtigung an.
+- \`pinned\`: Wendet die Regel nur auf angeheftete Tabs an.
+- \`normal\`: Wendet die Regel nur auf nicht angeheftete Tabs an.
+- \`value:{Text}\`: Legt einen festen Wert für das Badge fest.
+- \`minIdleTime:{Milliseconds}\`: Wendet die Regel an, wenn sich der Tab-Titel ändert, nachdem der Tab mindestens \`{Milliseconds}\` lang unbenutzt war.`,
   },
 
   'settings.tabs_notification_badge_scope': {
@@ -3110,7 +3156,7 @@ Available parameters:
   },
   'settings.tabs_url_in_tooltip': {
     en: 'Show URL in tooltip',
-    de: 'Zeige URL in Tooltip',
+    de: 'Zeige URL im Tooltip',
     fr: 'Afficher l’URL dans l’infobulle',
     hu: 'URL megjelenítése a buboréksúgóban',
     pl: 'Pokaż URL w podpowiedzi',
@@ -3154,7 +3200,7 @@ Available parameters:
   },
   'settings.tabs_container_in_tooltip': {
     en: 'Show container in tooltip',
-    de: 'Zeige Container in Tooltip',
+    de: 'Zeige Umgebung im Tooltip',
     fr: 'Afficher le nom du conteneur dans l’infobulle',
     hu: 'Container megjelenítése a buboréksúgóban',
     pl: 'Pokaż kontener w podpowiedzi',
@@ -3176,6 +3222,7 @@ Available parameters:
   },
   'settings.new_tab_bar_position': {
     en: 'Position',
+    de: 'Position',
     hu: 'Elhelyezés',
     fr: 'Position',
     pl: 'Położenie',
@@ -3221,24 +3268,29 @@ Available parameters:
   },
   'settings.sticky_active_tab': {
     en: 'Sticky active tab',
+    de: 'Aktiven Tab beim Scrollen sichtbar halten',
   },
   'settings.tabs_title_lines_max': {
     en: 'Max count of title lines',
+    de: 'Maximale Anzahl von Titelzeilen',
   },
   'settings.tabs_title_lines_br': {
     en: 'Break the title by',
+    de: 'Zeilenumbruch im Titel',
   },
   'settings.tabs_title_lines_br_w': {
     en: 'words',
+    de: 'Wortweise',
   },
   'settings.tabs_title_lines_br_c': {
     en: 'characters',
+    de: 'Zeichenweise',
   },
 
   // - New tab position
   'settings.move_new_tab_pin': {
     en: 'Place new tab opened from pinned tab',
-    de: 'Platziere Tab, welcher von einem angeheftetem Tab geöffnet wird',
+    de: 'Platziere Tab, welcher von einem angehefteten Tab geöffnet wird',
     fr: 'Emplacement des onglets ouverts depuis un onglet épinglé',
     hu: 'Rögzített lapról megnyitott lap elhelyezése',
     pl: 'Położenie nowo otwartej karty z przypiętych kart',
@@ -3280,7 +3332,7 @@ Available parameters:
   },
   'settings.move_new_tab_parent': {
     en: 'Place new tab opened from another tab',
-    de: 'Platziere Tab, welcher von einem anderem Tab geöffnet wurde',
+    de: 'Platziere Tab, welcher von einem anderen Tab geöffnet wurde',
     fr: 'Emplacement des onglets ouverts depuis un autre onglet',
     hu: 'Másik lapról megnyitott lap elhelyezése',
     pl: 'Położenie nowej karty otworzonej z innej karty',
@@ -3291,7 +3343,7 @@ Available parameters:
   },
   'settings.move_new_tab_parent_before': {
     en: 'before parent',
-    de: 'Vor ursprünglichem Tab',
+    de: 'Vor übergeordnetem Tab',
     fr: 'avant le parent',
     hu: 'a szülő elé',
     pl: 'przed rodzicem',
@@ -3302,7 +3354,7 @@ Available parameters:
   },
   'settings.move_new_tab_parent_sibling': {
     en: 'after parent',
-    de: 'Nach ursprünglichem Tab',
+    de: 'Nach übergeordnetem Tab',
     fr: 'après le parent',
     hu: 'a szülő mögé',
     pl: 'po rodzicu',
@@ -3399,7 +3451,7 @@ Available parameters:
   },
   'settings.move_new_tab_button': {
     en: `Place new tab created by the Sidebery new tab button`,
-    de: 'Platziere neuen Tab, die mit der Schaltfläche „Neue Tab“ von Sidebery erstellt wurde',
+    de: 'Platziere neuen Tab, der mit der Sidebery-Schaltfläche "Neuer Tab" erstellt wurde',
     fr: 'Emplacement des onglets ouverts par le bouton Nouvel onglet de Sidebery',
     hu: 'Az új lap pozíciója, amelyet a Sidebery új lap gombjával hoztunk létre',
     pl: 'Pozycja nowej karty utworzonej za pomocą przycisku nowej karty Sidebery',
@@ -3597,6 +3649,7 @@ Available parameters:
   },
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
+    de: 'Auch beim gezielten Entladen über Kontextmenü, Mausaktion oder Tastenkombination',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
   },
 
@@ -3651,6 +3704,7 @@ Available parameters:
   },
   'settings.sticky_ancestor_tabs': {
     en: 'Sticky ancestor tabs of the active tab',
+    de: 'Übergeordnete Tabs des aktiven Tabs beim Scrollen sichtbar halten',
     // TODO: Updated, translation is needed
     // de: 'Fixierte übergeordnete Tabs',
     // fr: 'Onglets ancêtres fixes',
@@ -3663,6 +3717,7 @@ Available parameters:
   },
   'settings.sticky_ancestor_tabs_limit': {
     en: 'Depth limit',
+    de: 'Maximale Tiefe',
     // TODO: Updated, need translation
     // de: 'Maximale Tiefe der fixierten übergeordneten Tabs',
     // fr: 'Limite de profondeur des onglets ancêtres fixes',
@@ -3701,12 +3756,15 @@ Available parameters:
   },
   'settings.sticky_ancestor_tabs_layout': {
     en: 'Layout',
+    de: 'Anordnung',
   },
   'settings.sticky_ancestor_tabs_layout_col': {
     en: 'vertical',
+    de: 'Vertikal',
   },
   'settings.sticky_ancestor_tabs_layout_row': {
     en: 'horizontal',
+    de: 'Horizontal',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs branch on expanding another branch',
@@ -3934,7 +3992,7 @@ Available parameters:
   },
   'settings.auto_group_on_close': {
     en: 'Auto group child tabs after closing the parent tab',
-    de: 'Untergeordnete Tab automatisch gruppieren, nachdem der übergeordnete Tab geschlossen wurde',
+    de: 'Untergeordnete Tabs automatisch gruppieren, nachdem der übergeordnete Tab geschlossen wurde',
     fr: 'Grouper automatiquement les onglets enfant après la fermeture de leur parent',
     hu: 'Az utódlapok automatikus csoportosítása a szülőlap bezárásakor',
     pl: 'Automatycznie grupuj potomne karty po zamknięciu rodzica',
@@ -4538,7 +4596,7 @@ Available parameters:
   },
   'settings.pin_opened_bookmarks_folder': {
     en: 'Always show open folders when scrolling',
-    de: 'Geöffneten Ordner beim Scrollen anheften',
+    de: 'Geöffnete Ordner beim Scrollen sichtbar halten',
     fr: 'Toujours afficher le dossier ouvert pendant le scroll',
     hu: 'Görgetéskor mindig látszódjanak a nyitott mappák',
     pl: 'Zawsze pokazuj otwarte foldery podczas przewijania',
@@ -4704,7 +4762,7 @@ Available parameters:
   },
   'settings.font_family': {
     en: 'Default font-family',
-    de: 'Standardmäßig font-family',
+    de: 'Standard-Schriftart',
     fr: 'Police par défaut',
     hu: 'Alapértelmezett font-family',
     pl: 'Domyślna font-family',
@@ -4767,6 +4825,7 @@ Available parameters:
   },
   'settings.theme': {
     en: 'Theme',
+    de: 'Design',
     fr: 'Thème',
     hu: 'Téma',
     pl: 'Motyw',
@@ -4900,7 +4959,7 @@ Available parameters:
   },
   'settings.appearance_notes': {
     en: '- To apply theme color to Sidebery buttons in browser interface set "svg.context-properties.content.enabled" to "true" in about:config page.',
-    de: '- Um die Theme-Farbe auf Sidebery-Schaltflächen in der Browseroberfläche anzuwenden, setze "svg.context-properties.content.enabled" auf "true" auf der "about:config" Seite.',
+    de: '- Um die Theme-Farbe auf Sidebery-Schaltflächen in der Browseroberfläche anzuwenden, setzen Sie "svg.context-properties.content.enabled" auf "true" auf der Seite "about:config".',
     fr: '– Pour appliquer le thème de couleurs aux boutons de Sidebery dans l’interface du navigateur, définissez “svg.context-properties.content.enabled” à “true” dans la page “about:config”',
     hu: 'A gombokra vonatkozó témaszínek alkalmazásához a böngésző about:config lapján az „svg.context-properties.content.enabled” beállításnak „true” értéket kell adni.',
     pl: '- Aby zastosować schemat kolorystyczny do przycisków Sidebery w interfejsie przeglądarki, ustaw "svg.context-properties.content.enabled" na "true" na stronie about:config.',
@@ -5056,7 +5115,7 @@ Available parameters:
   },
   'settings.scroll_through_tabs_preselect_note': {
     en: 'Select tab using vertical scroll and activate it after mouse leave',
-    de: 'Wähle Tab durch vertikales Scrollen aus und aktiviere ihn nach Verlassen der Maus',
+    de: 'Wähle Tab durch vertikales Scrollen aus und aktiviere ihn, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Sélectionner un onglet avec le scroll vertical et l’activer quand la souris sort du panneau',
     hu: 'A lap kijelölése az egérgörgővel, majd a lap aktiválása, miután az egérmutató elhagyta',
     pl: 'Wybierz kartę używając pionowego przewijania i aktywuj ją kiedy mysz wyjdzie z panelu',
@@ -5067,6 +5126,7 @@ Available parameters:
   },
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
+    de: 'Global angeheftete Tabs isolieren',
     fr: 'Isoler les onglets épinglés globalement',
   },
   'settings.scroll_through_visible_tabs': {
@@ -5482,7 +5542,7 @@ Available parameters:
   },
   'settings.tabs_second_click_act_prev': {
     en: 'Activate previously active tab when clicking on the active tab (Tab flip)',
-    de: 'Beim Klicken auf aktiven Tab Aktivierung umkehren',
+    de: 'Beim Klick auf den aktiven Tab zum zuvor aktiven Tab wechseln',
     fr: 'Cliquer sur l’onglet actif active l’onglet précédemment actif (Onglet revers)',
     hu: 'Az aktív lapra kattintás aktiválja az előzőleg aktív lapot (lapváltogatás)',
     pl: 'Aktywuj uprzednio aktywną kartę kiedy wciśnięto na aktywną kartę (Odwróć karty)',
@@ -5537,7 +5597,7 @@ Available parameters:
   },
   'settings.shift_selection_from_active': {
     en: 'Start shift+click selection from the active tab',
-    de: 'Starte Umschalttaste+Klick Auswahl beim aktiven Tab',
+    de: 'Starte Umschalt+Klick-Auswahl beim aktiven Tab',
     fr: 'Démarrer la sélection maj+clic depuis l’onglet actif',
     hu: 'A Shift+kattintás típusú kijelölés indítása az aktív laptól',
     pl: 'Zacznij zaznaczenie shift+click z aktywnej karty',
@@ -5548,7 +5608,7 @@ Available parameters:
   },
   'settings.ctrl_selection_include_active': {
     en: 'Make initial ctrl+click selection include the active tab',
-    de: 'Bei der ersten Strg+Klick-Auswahl wird die aktive Registerkarte einbezogen',
+    de: 'Erste Strg+Klick-Auswahl schließt den aktiven Tab ein',
     fr: 'Faire que la sélection ctrl+clic initiale inclue l’onglet actif',
     hu: 'A kezdeti ctrl+kattintás kijelölése tartalmazza az aktív lapot',
     pl: 'Początkowy wybór ctrl+kliknięcia obejmuje aktywną kartę',
@@ -5901,7 +5961,7 @@ Available parameters:
   },
   'settings.tabs_panel_action_parent': {
     en: 'activate parent tab',
-    de: 'Obersten Tab aktivieren',
+    de: 'Übergeordneten Tab aktivieren',
     fr: 'activer l’onglet parent',
     hu: 'szülőlap aktiválása',
     pl: 'aktywuj rodzica',
@@ -6417,6 +6477,7 @@ Available parameters:
   },
   'settings.snap_limit_kb': {
     en: n => (n === 1 ? 'kbyte' : 'kbytes'),
+    de: 'KB',
     fr: 'Ko',
     hu: 'kbyte',
     pl: (n = 0): string => {
@@ -6506,7 +6567,7 @@ Available parameters:
   },
   'settings.sync_name_or': {
     en: 'e.g: Firefox Beta Home',
-    de: 'z.B. Firefox Beta Home',
+    de: 'z. B. Firefox Beta Home',
     fr: 'ex. Firefox Beta maison',
     hu: 'pl.: Firefox Beta otthoni',
     pl: 'np. Firefox Beta Home',
@@ -6516,7 +6577,7 @@ Available parameters:
   },
   'settings.sync_use_ff': {
     en: 'Use Firefox Sync',
-    de: 'Firefox Synchronisation verwenden',
+    de: 'Firefox Sync verwenden',
     fr: 'Utiliser Firefox Sync',
     hu: 'Használja a Firefox Sync alkalmazást',
     pl: 'Użyj synchronizacji Firefox',
@@ -6617,30 +6678,35 @@ Available parameters:
   },
   'settings.sync_gd_api_link': {
     en: 'Link',
+    de: 'Link',
     fr: 'Lien',
     zh_CN: '链接',
     zh_TW: '鏈結',
   },
   'settings.sync_gd_api_proj': {
     en: '1. Create a Google Cloud project:',
+    de: '1. Google-Cloud-Projekt erstellen:',
     fr: '1. Créer un project Google Cloud:',
     zh_CN: '1. 创建 Google Cloud 项目：',
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
     en: '- Audience: External',
+    de: '- Zielgruppe: Extern',
     fr: '– Audience: Externe',
     zh_CN: '- 受众群体：外部',
     zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
     en: '2. Enable Drive API:',
+    de: '2. Drive API aktivieren:',
     fr: '2. Activer l’API Drive:',
     zh_CN: '2. 启用“Google Drive API”：',
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
     en: '3. Create a Client:',
+    de: '3. Client erstellen:',
     fr: '3. Créer un Client:',
     zh_CN: '3. 创建客户端：',
     zh_TW: '3. 建立用戶端：',
@@ -6648,6 +6714,8 @@ Available parameters:
   'settings.sync_gd_api_cli_sub': {
     en: `- Type: Web application
 - Authorized redirect URIs:`,
+    de: `- Typ: Webanwendung
+- Autorisierte Weiterleitungs-URIs:`,
     fr: `– Type: Application Web
 – URI de redirections autorisées:`,
     zh_CN: `- 类型：Web 应用
@@ -6657,42 +6725,49 @@ Available parameters:
   },
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
+    de: '4. Erstellten Client öffnen und die Client-ID kopieren:',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
     zh_CN: '4. 复制创建的 OAuth 客户端 ID：',
     zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
+    de: '5. Diese Client-ID hier einfügen:',
     fr: '5. Insérer cet ID Client ici:',
     zh_CN: '5. 在此粘贴该客户端 ID：',
     zh_TW: '5. 在此貼上該用戶端編號：',
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
+    de: '6. Im Abschnitt "Datenzugriff" folgende Bereiche hinzufügen:',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
     zh_CN: '6. 在数据访问添加以下范围：',
     zh_TW: '6. 在資料存取權新增以下範圍：',
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
+    de: '7. Testnutzer hinzufügen (Ihre E-Mail-Adresse):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
     zh_CN: '7. 添加测试用户（您的电子邮件地址）：',
     zh_TW: '7. 新增測試使用者（您的電子郵件地址）：',
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
+    de: '8. Sidebery von Ihrem Google Drive trennen:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
     zh_CN: '8. 取消 Sidebery 与 Google 云端硬盘的关联：',
     zh_TW: '8. 取消 Sidebery 與 Google 雲端硬碟的連接：',
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
+    de: '(falls Sie den Standard-API-Schlüssel verwendet haben)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
     zh_CN: '（如果您使用默认 API 密钥）',
     zh_TW: '（如果您使用預設 API 金鑰）',
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
+    de: '9. Fertig. Bei der nächsten Anfrage an Google Drive erscheint ein Zustimmungsbildschirm.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
     zh_CN: '9. 完毕。下次向 Google 云端硬盘发出请求时，您将看到同意屏幕。',
     zh_TW: '9. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
@@ -6852,8 +6927,8 @@ Available parameters:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
     de: `Sidebery nutzt die Synchronisation von Firefox, deshalb:
-- müssen Sie sich in Ihrem Firefox Konto einloggen, damit es funktioniert
-- um sicher zu gehen, dass die Daten auf die Firefox Synchronisations-Server hochgeladen werden, müssen Sie in den Firefox Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken `,
+- müssen Sie sich bei Ihrem Firefox-Konto anmelden, damit es funktioniert
+- um sicherzugehen, dass die Daten auf die Firefox-Synchronisationsserver hochgeladen werden, müssen Sie in den Firefox-Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken`,
     fr: `Sidebery utilise la synchronisation de Firefox donc:
 – Vous devez être connecté·e à votre compte Firefox pour que ça fonctionne.
 – Pour vous assurer que les données sont bien envoyées aux serveurs de Firefox Sync, cliquez sur le bouton “Synchroniser maintenant” dans les paramètres de Firefox ou dans votre profil dans le menu principal (le bouton avec les trois lignes).`,
@@ -7145,7 +7220,7 @@ Available parameters:
   // - Keybindings
   'settings.kb_input': {
     en: 'Press new shortcut',
-    de: 'Drücke neues Tastenkürzel',
+    de: 'Neues Tastenkürzel drücken',
     fr: 'Saisissez le nouveau raccourci',
     hu: 'Most le kell nyomni az új billentyűparancsot',
     pl: 'Wciśnij nowy skrót klawiszowy',
@@ -7329,7 +7404,7 @@ Available parameters:
   },
   'settings.kb_loop_panels': {
     en: 'Loop through panels',
-    de: 'Durch die Panel schalten',
+    de: 'Durch die Panels schalten',
     fr: 'Boucle à travers les panneaux',
     hu: 'Panelek áttekintése',
     pl: 'Cyklicznie przełączać się między panelami',
@@ -7340,7 +7415,7 @@ Available parameters:
   },
   'settings.kb_switching_panel.ignore_hidden': {
     en: 'Ignore hidden panels',
-    de: 'Ausgeblendete Panel ignorieren',
+    de: 'Ausgeblendete Panels ignorieren',
     fr: 'Ignorer les panneaux masqués',
     hu: 'Rejtett panelek figyelmen kívül hagyása',
     pl: 'Ignoruj ukryte panele',
@@ -7637,6 +7712,7 @@ Available parameters:
   },
   'styles.vars_group.tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
     pl: 'Karty',
@@ -7669,6 +7745,7 @@ Available parameters:
   },
   'styles.vars_group.popup': {
     en: 'Popup',
+    de: 'Popup',
     fr: 'Popup',
     zh_CN: '弹出窗口',
     zh_TW: '彈出視窗',
@@ -7687,6 +7764,7 @@ Available parameters:
   },
   'styles.vars_group.sub-list_title': {
     en: 'Sub-list title',
+    de: 'Titel von Unterlisten',
     fr: 'Titre de sous-liste',
     zh_CN: '子列表标题',
     zh_TW: '子清單標題（歷史檢視時）',
@@ -7694,6 +7772,7 @@ Available parameters:
   },
   'styles.vars_group.search_bar': {
     en: 'Search bar',
+    de: 'Suchleiste',
     fr: 'Barre de recherche',
     zh_CN: '搜索栏',
     zh_TW: '搜尋欄',
@@ -7701,6 +7780,7 @@ Available parameters:
   },
   'styles.vars_group.new-tab_bar': {
     en: 'New-tab bar',
+    de: '"Neuer Tab"-Leiste',
     fr: 'Barre de nouvel onglet',
     zh_CN: '新标签页栏',
     zh_TW: '新分頁欄（新分頁按鈕外）',
@@ -7708,6 +7788,7 @@ Available parameters:
   },
   'styles.vars_group.notification': {
     en: 'Notification',
+    de: 'Benachrichtigung',
     fr: 'Notification',
     zh: '通知',
     ja: '通知',
@@ -7786,14 +7867,14 @@ Available parameters:
     - Select "/sidebar/sidebar.html" for sidebar frame
     - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
-    de: `HINWEIS: für derzeit verfügbare CSS-Selektoren den Debugger verwenden:
-  - Klicke auf die Schaltfläche "Kopiere Devtools-URL" in der Leiste unten
-  - Öffne einen neuen Tab mit dieser URL
-  - Wähle den Frame zum inspizieren aus
-    - Klicke auf das rechteckiges Symbol (mit drei Teilbereichen) oben rechts auf der Seite des Debuggers
-    - Wähle "/sidebar/sidebar.html" für den Frame der Seitenleiste
-    - Wähle "/sidebery/group.html" für den Frame der Gruppenseite
-  - "Inspektor"-Tab durchsehen`,
+    de: `HINWEIS: Um die derzeit verfügbaren CSS-Selektoren zu ermitteln, verwenden Sie den Debugger:
+  - Klicken Sie in der unteren Leiste auf die Schaltfläche "Kopiere Devtools-URL"
+  - Öffnen Sie einen neuen Tab mit dieser URL
+  - Wählen Sie den zu untersuchenden Frame aus
+    - Klicken Sie auf das rechteckige Symbol (mit drei Teilbereichen) oben rechts auf der Seite des Debuggers
+    - Wählen Sie "/sidebar/sidebar.html" für den Frame der Seitenleiste
+    - Wählen Sie "/sidebery/group.html" für den Frame der Gruppenseite
+  - Öffnen Sie den Tab "Inspektor"`,
     fr: `NOTE: Pour trouver les sélecteurs CSS actuellement disponibles, utiliser le débuggeur:
   – Cliquer sur le bouton “Copier l’URL des outils de développement” dans la barre en bas de la page
   – Sélectionner une iframe à inspecter
