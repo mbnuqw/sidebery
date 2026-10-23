@@ -136,30 +136,35 @@
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der ersten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le premier modèle",
     "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt1": {
     "en": "Copy selected tabs/bookmarks or active tab by second template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der zweiten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le deuxième modèle",
     "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt2": {
     "en": "Copy selected tabs/bookmarks or active tab by third template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der dritten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le troisième modèle",
     "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt3": {
     "en": "Copy selected tabs/bookmarks or active tab by fourth template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der vierten Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le quatrième modèle",
     "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt4": {
     "en": "Copy selected tabs/bookmarks or active tab by fifth template",
+    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der fünften Vorlage",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le cinquième modèle",
     "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
