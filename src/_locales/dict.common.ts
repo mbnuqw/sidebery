@@ -29,7 +29,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.url_placeholder': {
     en: 'e.g. https://example.com',
-    de: 'z.B. https://beispiel.de',
+    de: 'z. B. https://example.com',
     fr: 'ex: https://example.com',
     hu: 'pl.: https://pelda.hu',
     pl: 'np. https://example.com',
@@ -500,7 +500,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.recent_locations_label': {
     en: 'Recent locations',
-    de: 'Zuletzt besucht',
+    de: 'Zuletzt verwendet',
     fr: 'Emplacements récents',
     hu: 'Legutóbbi helyek',
     pl: 'Ostatnie miejsca',
@@ -555,7 +555,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.select_root_folder': {
     en: 'Select root folder',
-    de: 'Quellordner auswählen',
+    de: 'Stammordner auswählen',
     fr: 'Sélectionner le dossier racine',
     hu: 'A kiinduló mappa kiválasztása',
     pl: 'Zaznacz folder nadrzędny',
@@ -714,7 +714,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
     en: 'Default new tab',
-    de: 'Standard-Neuer Tab',
+    de: 'Standardseite für neue Tabs',
     fr: 'Nouvel onglet par défaut',
     hu: 'Alapértelmezett új lap',
     pl: 'Domyślna nowa karta',
@@ -1188,7 +1188,7 @@ export const commonTranslations: Translations = {
   },
   'menu.new_tab_bar.manage_shortcuts': {
     en: 'Manage Shortcuts',
-    de: 'Verwalte Verknüpfungen',
+    de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
     hu: 'Parancsikonok kezelése',
     pl: 'Zarządzaj skrótami',
@@ -2034,7 +2034,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.group': {
     en: 'Group',
-    de: 'Gruppe',
+    de: 'Gruppieren',
     fr: 'Grouper',
     hu: 'Csoportosítás',
     pl: 'Grupuj',
@@ -2045,7 +2045,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.flatten': {
     en: 'Flatten',
-    de: 'Plätten',
+    de: 'Abflachen',
     fr: 'Aplatir',
     hu: 'Szintcsökkentés',
     pl: 'Spłaszcz',
@@ -2078,7 +2078,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_ctr_': {
     en: 'Open in container...',
-    de: 'Öffne in Umgebung...',
+    de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
     hu: 'Megnyitás itt: konténer…',
     pl: 'Otwórz w kontenerze...',
@@ -2089,7 +2089,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_default_container': {
     en: 'Open in default container',
-    de: 'Öffne in Standardumgebung',
+    de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
     hu: 'Megnyitás itt: alapértelmezett konténer',
     pl: 'Otwórz w domyślnym kontenerze',
@@ -2100,7 +2100,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_': {
     en: 'Open in ',
-    de: 'Öffne in ',
+    de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
     hu: 'Megnyitás itt: ',
     pl: 'Otwórz w ',
@@ -2526,7 +2526,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.conf_tooltip': {
     en: 'Configure panel\nAlt: Basic panel config',
-    de: 'Panel konfigurieren\nAlt: Panel Grundkonfiguration',
+    de: 'Panel konfigurieren\nAlt: Grundkonfiguration des Panels',
     fr: 'Configurer le panneau\nAlt: Configuration basique du panneau',
     hu: 'Panelbeállítások\nAlt: alapszintű panelbeállítások',
     pl: 'Konfiguruj panel\nAlt: Podstawowa konfiguracja panelu',
