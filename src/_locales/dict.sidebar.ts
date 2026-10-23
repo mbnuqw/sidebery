@@ -254,7 +254,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
-    de: 'Tabs an benachbartes Panel anheften',
+    de: 'Tabs dem benachbarten Panel zuordnen',
     fr: 'Attacher les onglets au panneau voisin',
     hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
     pl: 'Załącz karty do sąsiednego panelu',
@@ -298,7 +298,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
-    de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
+    de: 'Hinweis: Tabs dieses Panels in anderen Fenstern werden in das benachbarte Panel verschoben',
     fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
     pl: 'Info: Karty tego panelu w innych oknach zostaną przeniesione do sąsiednich paneli',
@@ -899,7 +899,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
-    de: 'Lesezeichen entfernt',
+    de: ' Lesezeichen entfernt',
     fr: n => (n === 1 ? ' marque-page supprimé' : ' marque-pages supprimés'),
     hu: ' könyvjelző törölve lett',
     pl: (n = 0): string => {
@@ -1093,7 +1093,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
-    de: 'Panel konnte nicht aus Lesezeichen wiederherstellt werden',
+    de: 'Panel konnte nicht aus Lesezeichen wiederhergestellt werden',
     fr: 'Impossible de restaurer le panneau depuis les marque-pages',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
     pl: 'Nie można przywrócić panelu z zakładek',
@@ -1104,7 +1104,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
-    de: 'Quellordner nicht gefunden',
+    de: 'Stammordner nicht gefunden',
     fr: 'Dossier racine non trouvé',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie znaleziono nadrzędnego folderu',
@@ -1157,7 +1157,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
-    de: 'Quellordner konnte nicht gefunden werden',
+    de: 'Stammordner konnte nicht gefunden werden',
     fr: 'Impossible de trouver le dossier racine',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie można znaleźć nadrzędnego folderu',
@@ -1168,7 +1168,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
-    de: 'Versuche Tab-Panel neu zu speichern',
+    de: 'Versuchen Sie, das Tab-Panel erneut zu speichern',
     fr: 'Essayez de réenregistrer le panneau d’onglets',
     hu: 'Meg kell próbálni újramenteni a lappanelt',
     pl: 'Spróbuj zapisać ponowanie panel kart',
