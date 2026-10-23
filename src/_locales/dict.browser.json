@@ -27,7 +27,7 @@
 
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
-    "de": "Öffne/Schließe Seitenleiste",
+    "de": "Seitenleiste öffnen/schließen",
     "fr": "Ouvrir/fermer la barre latérale",
     "hu": "Az oldalsáv megnyitása/bezárása",
     "pl": "Otwórz/Zamknij panel boczny",
@@ -122,63 +122,63 @@
   },
   "KbCopyTitle": {
     "en": "Copy titles of selected tabs/bookmarks or active tab",
-    "de": "Kopiere Titel der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
+    "de": "Titel der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs kopieren",
     "fr": "Copier le titre des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的标题",
     "zh_TW": "複製選定分頁/書籤或當前分頁的標題"
   },
   "KbCopyUrl": {
     "en": "Copy URLs of selected tabs/bookmarks or active tab",
-    "de": "Kopiere URL(s) der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs",
+    "de": "URL(s) der ausgewählten Tabs/Lesezeichen oder des aktiven Tabs kopieren",
     "fr": "Copier l’URL des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的网址",
     "zh_TW": "複製選定分頁/書籤或當前分頁的網址"
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
-    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der ersten Vorlage",
+    "de": "Ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der ersten Vorlage kopieren",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le premier modèle",
     "zh_CN": "通过第一个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第一個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt1": {
     "en": "Copy selected tabs/bookmarks or active tab by second template",
-    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der zweiten Vorlage",
+    "de": "Ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der zweiten Vorlage kopieren",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le deuxième modèle",
     "zh_CN": "通过第二个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第二個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt2": {
     "en": "Copy selected tabs/bookmarks or active tab by third template",
-    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der dritten Vorlage",
+    "de": "Ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der dritten Vorlage kopieren",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le troisième modèle",
     "zh_CN": "通过第三个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第三個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt3": {
     "en": "Copy selected tabs/bookmarks or active tab by fourth template",
-    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der vierten Vorlage",
+    "de": "Ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der vierten Vorlage kopieren",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le quatrième modèle",
     "zh_CN": "通过第四个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第四個範本複製選定分頁/書籤或當前分頁"
   },
   "KbCopyByTmplt4": {
     "en": "Copy selected tabs/bookmarks or active tab by fifth template",
-    "de": "Kopiere ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der fünften Vorlage",
+    "de": "Ausgewählte Tabs/Lesezeichen oder aktiven Tab mit der fünften Vorlage kopieren",
     "fr": "Copier les onglets/marque-pages sélectionnés ou l’onglet actif avec le cinquième modèle",
     "zh_CN": "通过第五个模板复制选定标签页/书签或活动标签页",
     "zh_TW": "透過第五個範本複製選定分頁/書籤或當前分頁"
   },
   "KbOpenBookmarksSubPanel": {
     "en": "Open bookmarks sub-panel",
-    "de": "Öffne Lesezeichen-Unter-Panel",
+    "de": "Lesezeichen-Unter-Panel öffnen",
     "fr": "Ouvrir le sous-panneau des marque-pages",
     "zh_CN": "打开书签子面板",
     "zh_TW": "開啟書籤子面板"
   },
   "KbOpenSyncPopup": {
     "en": "Open sync popup",
-    "de": "Öffne Synchronisationsdialog",
+    "de": "Synchronisationsdialog öffnen",
     "fr": "Ouvrir la popup de synchronisation",
     "zh_CN": "打开同步弹出窗口",
     "zh_TW": "彈出同步視窗"
@@ -430,7 +430,7 @@
   },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
-    "de": "Öffne neuen Tab im aktiven Panel",
+    "de": "Neuen Tab im aktiven Panel öffnen",
     "fr": "Ouvrir un nouvel onglet dans le panneau actif",
     "hu": "Új lap az aktív panelon",
     "pl": "Otwórz nową kartę w aktywnym panelu",
@@ -441,7 +441,7 @@
   },
   "KbOpenNewTabAfter": {
     "en": "Open a new tab after the active tab",
-    "de": "Öffne neuen Tab nach aktivem Tab",
+    "de": "Neuen Tab nach dem aktiven Tab öffnen",
     "fr": "Ouvrir un nouvel onglet après l’onglet actif",
     "hu": "Új lap az aktív lap után",
     "pl": "Otwórz nową kartę za aktywną kartą",
@@ -452,7 +452,7 @@
   },
   "KbOpenNewTabAsFirstChild": {
     "en": "Open a new tab as the first child of the active tab",
-    "de": "Öffne neuen Tab als erstes Unterelement des aktiven Tabs",
+    "de": "Neuen Tab als erstes Unterelement des aktiven Tabs öffnen",
     "fr": "Ouvrir un nouvel onglet comme premier enfant de l’onglet actif",
     "hu": "Új lap az aktív lap első utódlapjaként",
     "pl": "Otwórz nową kartę jako pierwsze dziecko aktywnej karty",
@@ -463,7 +463,7 @@
   },
   "KbOpenNewTabAsLastChild": {
     "en": "Open a new tab as the last child of the active tab",
-    "de": "Öffne neuen Tab als letztes Unterelement des aktiven Tabs",
+    "de": "Neuen Tab als letztes Unterelement des aktiven Tabs öffnen",
     "fr": "Ouvrir un nouvel onglet comme dernier enfant de l’onglet actif",
     "hu": "Új lap az aktív lap utolsó utódlapjaként",
     "pl": "Otwórz nową kartę jako ostatnie dziecko aktywnej karty",
@@ -485,7 +485,7 @@
   },
   "KbRmTAIP": {
     "en": "Close tabs above (in current panel)",
-    "de": "Schließe Tabs darüber (im aktiven Panel)",
+    "de": "Tabs darüber schließen (im aktiven Panel)",
     "fr": "Fermer les onglets au-dessus (dans le panneau courant)",
     "hu": "Az aktív lap feletti lapok bezárása",
     "pl": "Zamknij karty powyżej (w obecnym panelu)",
@@ -496,7 +496,7 @@
   },
   "KbRmTBIP": {
     "en": "Close tabs below (in current panel)",
-    "de": "Schließe Tabs darunter (im aktiven Panel)",
+    "de": "Tabs darunter schließen (im aktiven Panel)",
     "fr": "Fermer les onglets en dessous (dans le panneau courant)",
     "hu": "Az aktív lap alatti lapok bezárása",
     "pl": "Zamknij karty poniżej (w obecnym panelu)",
@@ -507,7 +507,7 @@
   },
   "KbRmTOIP": {
     "en": "Close other tabs (in current panel)",
-    "de": "Schließe andere Tabs (im aktiven Panel)",
+    "de": "Andere Tabs schließen (im aktiven Panel)",
     "fr": "Fermer les autres onglets (dans le panneau courant)",
     "hu": "A többi lap bezárása (az aktív panelon)",
     "pl": "Zamknij inne karty (w obecnym panelu)",
@@ -595,7 +595,7 @@
   },
   "KbSelBranch": {
     "en": "Select the whole branch of tabs",
-    "de": "Wählen Sie den gesamten Zweig der Tabs aus",
+    "de": "Gesamten Tab-Zweig auswählen",
     "fr": "Sélectionnez toute la branche d'onglets",
     "hu": "Válassza ki a lapok teljes ágát",
     "pl": "Zaznacz całą gałąź kart",
@@ -1078,7 +1078,7 @@
   },
   "KbMoveTabsToPanelStart": {
     "en": "Move selected (or active) tabs to panel start",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs an den Anfang des Panels",
+    "de": "Ausgewählte (oder aktive) Tabs an den Anfang des Panels verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) au début du panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a panel elejére",
     "pl": "Przesuń zaznaczone (lub aktywne) karty na początek panelu",
@@ -1089,7 +1089,7 @@
   },
   "KbMoveTabsToPanelEnd": {
     "en": "Move selected (or active) tabs to panel end",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs an das Ende des Panels",
+    "de": "Ausgewählte (oder aktive) Tabs an das Ende des Panels verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) à la fin du panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a panel végére",
     "pl": "Przesuń zaznaczone (lub aktywne) karty na koniec panelu",
@@ -1122,7 +1122,7 @@
   },
   "KbMoveTabsToPanel0": {
     "en": "Move selected (or active) tabs to first panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in erstes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das erste Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le premier panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása az első panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do pierwszego panelu",
@@ -1133,7 +1133,7 @@
   },
   "KbMoveTabsToPanel1": {
     "en": "Move selected (or active) tabs to second panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in zweites Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das zweite Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le second panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a második panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do drugiego panelu",
@@ -1144,7 +1144,7 @@
   },
   "KbMoveTabsToPanel2": {
     "en": "Move selected (or active) tabs to third panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in drittes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das dritte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le troisième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a harmadik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do trzeciego panelu",
@@ -1155,7 +1155,7 @@
   },
   "KbMoveTabsToPanel3": {
     "en": "Move selected (or active) tabs to fourth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in viertes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das vierte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le quatrième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a negyedik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do czwartego panelu",
@@ -1166,7 +1166,7 @@
   },
   "KbMoveTabsToPanel4": {
     "en": "Move selected (or active) tabs to fifth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in fünftes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das fünfte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le cinquième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása az ötödik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do piątego panelu",
@@ -1177,7 +1177,7 @@
   },
   "KbMoveTabsToPanel5": {
     "en": "Move selected (or active) tabs to sixth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in sechstes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das sechste Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le sixième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a hatodik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do szóstego panelu",
@@ -1188,7 +1188,7 @@
   },
   "KbMoveTabsToPanel6": {
     "en": "Move selected (or active) tabs to seventh panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in siebtes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das siebte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le septième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a hetedik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do siódmego panelu",
@@ -1199,7 +1199,7 @@
   },
   "KbMoveTabsToPanel7": {
     "en": "Move selected (or active) tabs to eighth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in achtes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das achte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le huitième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a nyolcadik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do ósmego panelu",
@@ -1210,7 +1210,7 @@
   },
   "KbMoveTabsToPanel8": {
     "en": "Move selected (or active) tabs to ninth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in neuntes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das neunte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le neuvième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a kilencedik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do dziewiątego panelu",
@@ -1221,7 +1221,7 @@
   },
   "KbMoveTabsToPanel9": {
     "en": "Move selected (or active) tabs to tenth panel",
-    "de": "Verschiebe ausgewählte (oder aktive) Tabs in zehntes Panel",
+    "de": "Ausgewählte (oder aktive) Tabs in das zehnte Panel verschieben",
     "fr": "Déplacer les onglets sélectionnés (ou l’onglet actif) vers le dixième panneau",
     "hu": "A kijelölt (vagy aktív) lapok mozgatása a tizedik panelra",
     "pl": "Przenieś zaznaczone (lub aktywne) karty do dziesiątego panelu",
@@ -1232,7 +1232,7 @@
   },
   "KbSortTabsByTitleAsc": {
     "en": "Sort selected tabs or siblings of the active tab by title (A-z)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Titel (A-z)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Titel sortieren (A-z)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par titre (A-z)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (A-z)",
@@ -1241,7 +1241,7 @@
   },
   "KbSortTabsByTitleDes": {
     "en": "Sort selected tabs or siblings of the active tab by title (z-A)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Titel (z-A)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Titel sortieren (z-A)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par titre (z-A)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po tytułach (z-A)",
@@ -1250,7 +1250,7 @@
   },
   "KbSortTabsByTrlAsc": {
     "en": "Sort selected tabs or siblings of the active tab by URL (A-z)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach URL (A-z)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach URL sortieren (A-z)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par URL (A-z)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (A-z)",
@@ -1259,7 +1259,7 @@
   },
   "KbSortTabsByTrlDes": {
     "en": "Sort selected tabs or siblings of the active tab by URL (z-A)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach URL (z-A)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach URL sortieren (z-A)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par URL (z-A)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po URL (z-A)",
@@ -1268,7 +1268,7 @@
   },
   "KbSortTabsByTimeAsc": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Old-Recent)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit (Alt-Neu)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit sortieren (Alt-Neu)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (ancien-récent)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Stare-Nowe)",
@@ -1277,7 +1277,7 @@
   },
   "KbSortTabsByTimeDes": {
     "en": "Sort selected tabs or siblings of the active tab by access time (Recent-Old)",
-    "de": "Sortiere ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit (Neu-Alt)",
+    "de": "Ausgewählte Tabs oder Tabs auf gleicher Ebene des aktiven Tabs nach Zugriffszeit sortieren (Neu-Alt)",
     "fr": "Trier les onglets sélectionnés ou les voisins de l’onglet actif par date d’accès (récent-ancien)",
     "hu": "A kijelölt lapok vagy aktív lap testvérlapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj zaznaczone karty lub bliźniacze zaznaczonej karty po czasie dostępu (Nowe-Stare)",
@@ -1286,7 +1286,7 @@
   },
   "KbSortPanelTabsByTitleAsc": {
     "en": "Sort tabs of the active panel by title (A-z)",
-    "de": "Sortiere Tabs des aktiven Panels nach Titel (A-z)",
+    "de": "Tabs des aktiven Panels nach Titel sortieren (A-z)",
     "fr": "Trier les onglets du panneau actif par titre (A-z)",
     "hu": "Az aktív panel lapjainak rendezése cím szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (A-z)",
@@ -1295,7 +1295,7 @@
   },
   "KbSortPanelTabsByTitleDes": {
     "en": "Sort tabs of the active panel by title (z-A)",
-    "de": "Sortiere Tabs des aktiven Panels nach Titel (z-A)",
+    "de": "Tabs des aktiven Panels nach Titel sortieren (z-A)",
     "fr": "Trier les onglets du panneau actif par titre (z-A)",
     "hu": "Az aktív panel lapjainak rendezése cím szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po tytule (z-A)",
@@ -1304,7 +1304,7 @@
   },
   "KbSortPanelTabsByTrlAsc": {
     "en": "Sort tabs of the active panel by URL (A-z)",
-    "de": "Sortiere Tabs des aktiven Panels nach URL (A-z)",
+    "de": "Tabs des aktiven Panels nach URL sortieren (A-z)",
     "fr": "Trier les onglets du panneau actif par URL (A-z)",
     "hu": "Az aktív panel lapjainak rendezése URL szerint (A–z)",
     "pl": "Sortuj karty w aktywnym panelu po URL (A-z)",
@@ -1313,7 +1313,7 @@
   },
   "KbSortPanelTabsByTrlDes": {
     "en": "Sort tabs of the active panel by URL (z-A)",
-    "de": "Sortiere Tabs des aktiven Panels nach URL (z-A)",
+    "de": "Tabs des aktiven Panels nach URL sortieren (z-A)",
     "fr": "Trier les onglets du panneau actif par URL (z-A)",
     "hu": "Az aktív panel lapjainak rendezése URL szerint (z–A)",
     "pl": "Sortuj karty w aktywnym panelu po URL (z-A)",
@@ -1322,7 +1322,7 @@
   },
   "KbSortPanelTabsByTimeAsc": {
     "en": "Sort tabs of the active panel by access time (Old-Recent)",
-    "de": "Sortiere Tabs des aktiven Panels nach Zugriffszeit (Alt-Neu)",
+    "de": "Tabs des aktiven Panels nach Zugriffszeit sortieren (Alt-Neu)",
     "fr": "Trier les onglets du panneau actif par date d’accès (ancien-récent)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (régi–új)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Stare-Nowe)",
@@ -1331,7 +1331,7 @@
   },
   "KbSortPanelTabsByTimeDes": {
     "en": "Sort tabs of the active panel by access time (Recent-Old)",
-    "de": "Sortiere Tabs des aktiven Panels nach Zugriffszeit (Neu-Alt)",
+    "de": "Tabs des aktiven Panels nach Zugriffszeit sortieren (Neu-Alt)",
     "fr": "Trier les onglets du panneau actif par date d’accès (récent-ancien)",
     "hu": "Az aktív panel lapjainak rendezése idő szerint (új–régi)",
     "pl": "Sortuj karty w aktywnym panelu po czasie dostępu (Nowe-Stare)",
