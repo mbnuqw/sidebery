@@ -91,7 +91,7 @@ export const sidebarTranslations: Translations = {
   // -
   'panel.history.fav_tooltip': {
     en: 'Show history of this site',
-    de: 'Zeige Chronik dieser Seite',
+    de: 'Chronik dieser Seite anzeigen',
     fr: 'Voir l’historique pour ce site',
     hu: 'Ennek az oldalnak az előzményei',
     pl: 'Pokaż historię tej strony',
@@ -117,7 +117,7 @@ export const sidebarTranslations: Translations = {
   // -
   'newTabBar.new_tab': {
     en: 'Open a new tab',
-    de: 'Öffne einen neuen Tab',
+    de: 'Neuen Tab öffnen',
     fr: 'Ouvrir un nouvel onglet',
     hu: 'Új lap',
     pl: 'Otwórz nową kartę',
@@ -128,6 +128,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_default_container_with_url': {
     en: url => `Open "${url}" in a new tab`,
+    de: url => `"${url}" in einem neuen Tab öffnen`,
     fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
     zh_CN: url => `打开新标签页“${url}”`,
     zh_TW: url => `開啟新分頁「${url}」`,
@@ -146,7 +147,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_container': {
     en: name => `Open a new tab in "${name}" container`,
-    de: name => `Öffne einen neuen Tab in der Umgebung "${name}"`,
+    de: name => `Neuen Tab in der Umgebung "${name}" öffnen`,
     fr: name => `Ouvrir un nouvel onglet dans le conteneur “${name}”`,
     hu: name => `Új lap ebben a konténerben: „${name}”`,
     pl: name => `Otwórz nową kartę w kontenerze "${name}"`,
@@ -157,6 +158,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_container_with_url': {
     en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
+    de: (url, name) => `"${url}" in einem neuen Tab in der Umgebung "${name}" öffnen`,
     fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
     zh_CN: (url, name) => `在“${name}”容器中打开新标签页“${url}”`,
     zh_TW: (url, name) => `在「${name}」容器中開啟新分頁「${url}」`,
@@ -164,7 +166,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab': {
     en: 'Middle click: Open a child tab',
-    de: 'Mittelklick: Öffne einen untergeordneten Tab',
+    de: 'Mittelklick: Untergeordneten Tab öffnen',
     fr: 'Clic milieu: Ouvrir un onglet enfant',
     hu: 'Középső kattintás: új utódlap',
     pl: 'Środkowy przycisk myszy: Otwórz potomną kartę',
@@ -175,6 +177,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_with_url': {
     en: url => `Middle click: Open "${url}" in a child tab`,
+    de: url => `Mittelklick: "${url}" in einem untergeordneten Tab öffnen`,
     fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
     zh_CN: url => `中键单击：打开子标签页“${url}”`,
     zh_TW: url => `中鍵點選：開啟子分頁「${url}」`,
@@ -182,6 +185,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container': {
     en: name => `Middle click: Open a child tab in "${name}" container`,
+    de: name => `Mittelklick: Untergeordneten Tab in der Umgebung "${name}" öffnen`,
     fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
     zh_CN: name => `中键单击：在“${name}”容器中打开子标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中開啟子分頁`,
@@ -189,6 +193,8 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
+    de: (url, name) =>
+      `Mittelklick: "${url}" in einem untergeordneten Tab in der Umgebung "${name}" öffnen`,
     fr: (url, name) =>
       `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
     zh_CN: (url, name) => `中键单击：在“${name}”容器中打开子标签页“${url}”`,
@@ -197,7 +203,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_default_container': {
     en: 'Middle click: Reopen active tab in default container',
-    de: 'Mittelklick: Aktiven Tab erneut öffnen in der Standardumgebung',
+    de: 'Mittelklick: Aktiven Tab in der Standardumgebung erneut öffnen',
     fr: "Clic milieu: rouvrir l'onglet actif dans le conteneur par défaut",
     hu: 'Középső kattintás: az aktív lap újranyitása az alapértelmezett konténerben',
     pl: 'Środkowy przycisk myszy: Przeładuj aktywną kartę w domyślnym kontenerze',
@@ -208,6 +214,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
+    de: url => `Mittelklick: "${url}" im aktiven Tab laden`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
     zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
     zh_TW: url => `中鍵點選：載入「${url}」於當前分頁`,
@@ -215,6 +222,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
+    de: name => `Mittelklick: Aktiven Tab in der Umgebung "${name}" erneut öffnen`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
     zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
     zh_TW: name => `中鍵點選：在「${name}」容器中重新開啟當前分頁`,
@@ -222,6 +230,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
+    de: (url, name) => `Mittelklick: "${url}" im aktiven Tab in der Umgebung "${name}" laden`,
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
     zh_CN: (url, name) => `中键点击：在“${name}”容器中加载“${url}”于活动标签页`,
@@ -235,7 +244,7 @@ export const sidebarTranslations: Translations = {
   // - Tabs panel removing
   'popup.tabs_panel_removing.title': {
     en: 'Removing panel',
-    de: 'Entferne Panel',
+    de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
     hu: 'Panel törlése',
     pl: 'Usuwanie panelu',
@@ -245,7 +254,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
-    de: 'Tabs an benachbartes Panel anheften',
+    de: 'Tabs dem benachbarten Panel zuordnen',
     fr: 'Attacher les onglets au panneau voisin',
     hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
     pl: 'Załącz karty do sąsiednego panelu',
@@ -289,7 +298,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
-    de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
+    de: 'Hinweis: Tabs dieses Panels in anderen Fenstern werden in das benachbarte Panel verschoben',
     fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
     pl: 'Info: Karty tego panelu w innych oknach zostaną przeniesione do sąsiednich paneli',
@@ -490,7 +499,7 @@ export const sidebarTranslations: Translations = {
   // - Processing tabs
   'popup.proc_tabs.title': {
     en: 'Processing tabs...',
-    de: 'Verarbeitung der Tabs...',
+    de: 'Tabs werden verarbeitet...',
     fr: 'Traitement des onglets...',
     hu: 'Feldolgozás lapok...',
     pl: 'Przetwarzanie karty...',
@@ -724,7 +733,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
-    de: 'Mittelklick: Schließe Tabs',
+    de: 'Mittelklick: Tabs schließen',
     fr: 'Clic milieu: Fermer les onglets',
     hu: 'Középső kattintás: lapok bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij karty',
@@ -735,7 +744,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
-    de: 'Mittelklick: Schließe Tabs und entferne Panel',
+    de: 'Mittelklick: Tabs schließen und Panel entfernen',
     fr: 'Clic milieu: Fermer les onglets et supprimer le panneau',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
     pl: 'Środkowy przycisk myszy: Zamknij karty i usuń panel',
@@ -746,7 +755,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
-    de: 'Mittelklick: Schließe aktiven Tab',
+    de: 'Mittelklick: Aktiven Tab schließen',
     fr: 'Clic milieu: Fermer l’onglet actif',
     hu: 'Középső kattintás: az aktív lap bezárása',
     pl: 'Środkowy przycisk myszy: Zamknij aktywną kartę',
@@ -757,7 +766,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
-    de: 'Mittelklick: Entlade Tabs',
+    de: 'Mittelklick: Tabs entladen',
     fr: 'Clic milieu: décharger les onglets',
     hu: 'Középső kattintás: lapok kisöprése',
     pl: 'Środkowy przycisk myszy: Uśpij karty',
@@ -768,7 +777,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
-    de: 'Mittelklick: Verberge Panel',
+    de: 'Mittelklick: Panel ausblenden',
     fr: 'Clic milieu: Cacher le panneau',
     hu: 'Középső kattintás: panel elrejtése',
     pl: 'Środkowy przycisk myszy: Ukryj panel',
@@ -812,7 +821,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
-    de: 'Mittelklick: In Lesezeichen umwandeln und Panel verbergen',
+    de: 'Mittelklick: In Lesezeichen umwandeln und Panel ausblenden',
     fr: 'Clic milieu: Convertir en marque-pages et cacher le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
     pl: 'Środkowy przycisk myszy: Konwertuj do panelu zakładek i ukryj panel',
@@ -890,7 +899,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
-    de: 'Lesezeichen entfernt',
+    de: ' Lesezeichen entfernt',
     fr: n => (n === 1 ? ' marque-page supprimé' : ' marque-pages supprimés'),
     hu: ' könyvjelző törölve lett',
     pl: (n = 0): string => {
@@ -909,7 +918,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sort': {
     en: 'Sorting bookmarks...',
-    de: 'Sortiere Lesezeichen...',
+    de: 'Lesezeichen werden sortiert...',
     fr: 'Trier les marque-pages…',
     hu: 'Könyvjelzők rendezése…',
     pl: 'Sortowanie zakładek...',
@@ -920,7 +929,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_sort': {
     en: 'Sorting tabs...',
-    de: 'Sortiere Tabs...',
+    de: 'Tabs werden sortiert...',
     fr: 'Trier les onglets…',
     hu: 'Lapok rendezése…',
     pl: 'Sortowanie kart...',
@@ -975,7 +984,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_reloading': {
     en: 'Reloading tabs',
-    de: 'Tabs neu laden',
+    de: 'Tabs werden neu geladen',
     fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
     pl: 'Przeładowywanie kart',
@@ -996,7 +1005,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
-    de: 'Speichere in Lesezeichen...',
+    de: 'Wird in Lesezeichen gespeichert...',
     fr: 'Sauvegarder les marque-pages…',
     hu: 'Mentés könyvjelzőbe…',
     pl: 'Zapisywanie do zakładek...',
@@ -1029,7 +1038,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.converting': {
     en: 'Converting...',
-    de: 'Konvertiere...',
+    de: 'Wird umgewandelt...',
     fr: 'Conversion en cours…',
     hu: 'Átalakítás…',
     pl: 'Konwertowanie...',
@@ -1084,7 +1093,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
-    de: 'Panel konnte nicht aus Lesezeichen wiederherstellt werden',
+    de: 'Panel konnte nicht aus Lesezeichen wiederhergestellt werden',
     fr: 'Impossible de restaurer le panneau depuis les marque-pages',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
     pl: 'Nie można przywrócić panelu z zakładek',
@@ -1095,7 +1104,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
-    de: 'Quellordner nicht gefunden',
+    de: 'Stammordner nicht gefunden',
     fr: 'Dossier racine non trouvé',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie znaleziono nadrzędnego folderu',
@@ -1148,7 +1157,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
-    de: 'Quellordner konnte nicht gefunden werden',
+    de: 'Stammordner konnte nicht gefunden werden',
     fr: 'Impossible de trouver le dossier racine',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie można znaleźć nadrzędnego folderu',
@@ -1159,7 +1168,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
-    de: 'Versuche Tab-Panel neu zu speichern',
+    de: 'Versuchen Sie, das Tab-Panel erneut zu speichern',
     fr: 'Essayez de réenregistrer le panneau d’onglets',
     hu: 'Meg kell próbálni újramenteni a lappanelt',
     pl: 'Spróbuj zapisać ponowanie panel kart',
@@ -1214,7 +1223,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.history_del_sites': {
     en: 'Clearing history',
-    de: 'Verlauf löschen',
+    de: 'Chronik wird gelöscht',
     fr: 'Effacer l’historique',
     hu: 'Az előzmények törlése',
     pl: 'Czyszczenie historii',
@@ -1360,6 +1369,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.orange': {
     en: 'Orange',
+    de: 'Orange',
     hu: 'narancssárga',
     fr: 'Orange',
     pl: 'Pomarańczowy',
