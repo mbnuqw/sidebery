@@ -7,6 +7,7 @@ export const setupPageTranslations: Translations = {
   // - Container config popup
   'container.name_placeholder': {
     en: 'Name...',
+    de: 'Name der Umgebung...',
     fr: 'Nom…',
     hu: 'Név…',
     pl: 'Nazwa...',
@@ -61,6 +62,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_label': {
     en: 'Proxy',
+    de: 'Proxy',
     fr: 'Proxy',
     ru: 'Прокси',
     zh: '代理',
@@ -133,7 +135,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_include_tooltip': {
     en: 'Reopen tabs with matched URLs in this container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
-    de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
     hu: 'Az illeszkedő URL-ek újranyitása ebben a konténerben.\nSoronként egy-egy "szövegrészlet" vagy /RegExp/:\n    pelda.hu\n    /^(szabályos)?kifejezés$/\n    …',
     pl: 'Otwórz ponownie karty z pasującymi URL w tym kontenerze.\nLista "substrings" lub "/regex/ oddzielona nowymi liniami:\n    example.com\n    /^(some)?regex$/\n    ...',
@@ -157,7 +159,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_exclude_tooltip': {
     en: 'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
-    de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumsprüngen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: `Rouvrir les onglets dont l’URL correspond dans le conteneur par défaut.
 Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     example.com
@@ -174,6 +176,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'container.user_agent': {
     en: 'User Agent',
+    de: 'User-Agent',
     fr: 'Agent utilisateur',
     ru: 'User Agent',
     hu: 'Böngészőazonosító',
@@ -182,6 +185,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // - Panel config popup
   'panel.name_placeholder': {
     en: 'Name...',
+    de: 'Name des Panels...',
     fr: 'Nom…',
     hu: 'Név…',
     pl: 'Nazwa...',
@@ -225,6 +229,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_text_btn': {
     en: 'Text',
+    de: 'Text',
     fr: 'Texte',
     hu: 'Szöveg',
     pl: 'Tekst',
@@ -627,6 +632,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
+    de: 'Adressleiste',
     fr: 'Barre d’adresse',
     ru: 'Адресная строка',
   },
@@ -685,6 +691,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
     pl: 'Karty',
@@ -926,6 +933,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
     pl: 'Karty',
@@ -1205,6 +1213,9 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     en: `To use this feature enable "Copy by templates..." option in context menu editor or set keybindings.
 Templates are written per line in the form "Template name:Template" (without quotes).
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
+    de: `Um diese Funktion zu nutzen, aktivieren Sie die Option "Kopieren nach Vorlagen..." im Kontextmenü-Editor oder legen Sie eine Tastenbelegung fest.
+Vorlagen werden zeilenweise im Format "Vorlagenname:Vorlage" (ohne Anführungszeichen) angegeben.
+Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel oder Titel; %T - Titel; %U - URL`,
     fr: `Pour utiliser cette fonctionnalité, activez l’option “Copier avec un modèle” dans l’éditeur de menus contextuels ou définissez un raccourci clavier.
     Les modèles s’écrivent un par ligne sous la forme “Nom du modèle:Modèle” (sans les guillemets).`,
     ru: `Чтобы использовать эту функцию, включите параметр "Копировать по шаблонам..." в редакторе контекстного меню или задайте горячие клавиши.
@@ -1332,12 +1343,14 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.clear_favicons_cache': {
     en: 'Delete favicons cache',
+    de: 'Favicon-Zwischenspeicher löschen',
     ru: 'Удалить кэш иконок сайтов',
     zh_CN: '删除图标缓存',
     zh_TW: '刪除圖示快取',
   },
   'settings.clear_favicons_cache_confirm': {
     en: 'Are you sure you want to delete favicons cache?',
+    de: 'Möchten Sie den Favicon-Zwischenspeicher wirklich löschen?',
     ru: 'Вы уверены, что хотите удалить кэш иконок сайтов?',
     zh_CN: '确定要删除图标缓存吗？',
     zh_TW: '確定要刪除圖示快取嗎？',
@@ -1491,6 +1504,7 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.perm.downloads_label': {
     en: 'Downloads:',
+    de: 'Downloads:',
     hu: 'Hozzáférés a letöltésekhez:',
     fr: 'Téléchargements:',
     pl: 'Pobrane:',
@@ -1602,11 +1616,13 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   // - Address bar (Omnibox)
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
+    de: 'Adressleiste (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
     ru: 'Адресная строка (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
+    de: `Nutzen Sie die Adressleiste (Omnibox), um einige Sidebery-Befehle schnell auszuführen.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
     ru: 'Используйте адресную строку (она же Omniox) для быстрого вызова некоторых команд Sidebery.',
   },
@@ -1614,6 +1630,9 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
 
 You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
+    de: `Setzen Sie zunächst den Fokus in die Adressleiste (Strg+L/Cmd+L), geben Sie "=" gefolgt von einem Leerzeichen ein und tippen Sie dann den Namen der gewünschten Umgebung, des Panels oder der Gruppe (Groß-/Kleinschreibung wird ignoriert). Wählen Sie den gewünschten Befehl aus der Liste oder drücken Sie einfach die Eingabetaste, um den ersten zu verwenden.
+
+Sie können außerdem für jeden Befehlstyp ein Präfix festlegen, um schneller zu navigieren. Beginnt Ihre Eingabe (nach "=" und Leerzeichen) mit Zeichen aus dem festgelegten Präfix, erhalten Befehle dieses Typs eine höhere Priorität.`,
     fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
 
 Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
@@ -1622,31 +1641,37 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
+    de: 'Verfügbare Befehle:',
     fr: 'Commandes disponibles:',
     ru: 'Доступные команды:',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
+    de: 'Aktiven Tab in Umgebung neu öffnen...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
     ru: 'Переоткрыть активную вкладку в контейнере...',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
+    de: 'Zu Panel wechseln...',
     fr: 'Basculer vers le panneau…',
     ru: 'Переключиться на панель...',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
+    de: 'Aktiven Tab in Panel verschieben...',
     fr: 'Déplacer un onglet actif vers le panneau…',
     ru: 'Переместить активную вкладку на панель...',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
+    de: 'Aktiven Tab in Gruppe verschieben...',
     fr: 'Déplacer un onglet actif vers le groupe…',
     ru: 'Переместить активную вкладку в группу...',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
+    de: 'Präfix:',
     fr: 'Préfixe:',
     ru: 'Префикс:',
   },
@@ -1666,6 +1691,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout': {
     en: 'Layout',
+    de: 'Anordnung',
     hu: 'Elrendezés',
     fr: 'Disposition',
     pl: 'Układ',
@@ -2557,11 +2583,13 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
+    de: 'Suche beim Wechseln der Tabs beibehalten',
     fr: 'Continuer à chercher après avoir changé d’onglet',
     ru: 'Продолжать поиск после переключения вкладок',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
+    de: 'Suche nach Auslösen einer Kontextmenü-Option beibehalten',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
     ru: 'Продолжать поиск после выбора пункта контекстного меню',
   },
@@ -2622,6 +2650,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   // - Tabs
   'settings.tabs_title': {
     en: 'Tabs',
+    de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
     pl: 'Karty',
@@ -2751,6 +2780,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab': {
     en: 'Automatically scroll panel to activated tab',
+    de: 'Panel automatisch zum aktivierten Tab scrollen',
     pl: 'Automatycznie przewiń panel do aktywowanej karty',
     ru: 'Автоматически прокручивать панель к активной вкладке',
     zh_CN: '自动滚动面板到激活的标签页',
@@ -2980,6 +3010,22 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    de: `Eine durch Zeilenumbrüche getrennte Liste von Badge-Regeln. Jede Regel besteht aus optionalen Parametern, getrennt durch ein Semikolon und ein Leerzeichen: \`; \`.
+Beispiele:
+\`\`\`
+title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
+minIdleTime:5000; urgent
+url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
+\`\`\`
+Verfügbare Parameter:
+- \`url:{RegExp}\` und/oder \`title:{RegExp}\`: Ein regulärer Ausdruck, der auf den Tab passt und optional den Badge-Wert über eine benannte Gruppe ausliest: \`(?<v>...)\`. Enthält Ihr \`{RegExp}\` ein Semikolon gefolgt von einem Leerzeichen \`; \`, maskieren Sie das Leerzeichen mit einem Backslash: \`;\\ \`. Standardmäßig ist \`{RegExp}\` eine leere Zeichenkette, sodass jede URL und jeder Titel passt, wenn diese Parameter fehlen. Ein Badge ohne Wert wird bei entladenen oder aktiven Tabs ignoriert und zurückgesetzt, sobald der Tab entladen oder aktiv wird.
+- \`bg:{Color}\` und/oder \`fg:{Color}\`: Die Farbe des Badge-Hintergrunds bzw. -Texts.
+- \`urgent\`: Markiert das Badge als dringend und überträgt diesen Status auf übergeordnete Elemente (eingeklappte Tabs, inaktive Panels). Wird bei entladenen und aktiven Tabs ignoriert. Nach dem Aktivieren des Tabs wird ein Badge ohne Wert vollständig ausgeblendet und ein Badge mit Wert zu einem normalen Badge herabgestuft.
+- \`notify\`: Zeigt eine Benachrichtigung an.
+- \`pinned\`: Wendet die Regel nur auf angeheftete Tabs an.
+- \`normal\`: Wendet die Regel nur auf nicht angeheftete Tabs an.
+- \`value:{Text}\`: Legt einen festen Wert für das Badge fest.
+- \`minIdleTime:{Milliseconds}\`: Wendet die Regel an, wenn sich der Tab-Titel ändert, nachdem der Tab mindestens \`{Milliseconds}\` lang unbenutzt war.`,
     ru: `Список правил для бейджей, разделенных новой строкой. Каждое правило состоит из необязательных параметров, разделенных точкой с запятой и пробелом: \`; \`.
 Примеры:
 \`\`\`
@@ -3220,6 +3266,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_bar_position': {
     en: 'Position',
+    de: 'Position',
     hu: 'Elhelyezés',
     fr: 'Position',
     pl: 'Położenie',
@@ -3265,18 +3312,23 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_active_tab': {
     en: 'Sticky active tab',
+    de: 'Aktiven Tab beim Scrollen sichtbar halten',
   },
   'settings.tabs_title_lines_max': {
     en: 'Max count of title lines',
+    de: 'Maximale Anzahl von Titelzeilen',
   },
   'settings.tabs_title_lines_br': {
     en: 'Break the title by',
+    de: 'Zeilenumbruch im Titel',
   },
   'settings.tabs_title_lines_br_w': {
     en: 'words',
+    de: 'Wortweise',
   },
   'settings.tabs_title_lines_br_c': {
     en: 'characters',
+    de: 'Zeichenweise',
   },
 
   // - New tab position
@@ -3641,6 +3693,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
+    de: 'Auch beim gezielten Entladen über Kontextmenü, Mausaktion oder Tastenkombination',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
     ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
   },
@@ -3701,6 +3754,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs': {
     en: 'Sticky ancestor tabs of the active tab',
+    de: 'Übergeordnete Tabs des aktiven Tabs beim Scrollen sichtbar halten',
     // TODO: Updated, translation is needed
     // de: 'Fixierte übergeordnete Tabs',
     // fr: 'Onglets ancêtres fixes',
@@ -3713,6 +3767,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs_limit': {
     en: 'Depth limit',
+    de: 'Maximale Tiefe',
     // TODO: Updated, need translation
     // de: 'Maximale Tiefe der fixierten übergeordneten Tabs',
     // fr: 'Limite de profondeur des onglets ancêtres fixes',
@@ -3751,12 +3806,15 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs_layout': {
     en: 'Layout',
+    de: 'Anordnung',
   },
   'settings.sticky_ancestor_tabs_layout_col': {
     en: 'vertical',
+    de: 'Vertikal',
   },
   'settings.sticky_ancestor_tabs_layout_row': {
     en: 'horizontal',
+    de: 'Horizontal',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs branch on expanding another branch',
@@ -4830,6 +4888,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.theme': {
     en: 'Theme',
+    de: 'Design',
     fr: 'Thème',
     hu: 'Téma',
     pl: 'Motyw',
@@ -5131,6 +5190,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
+    de: 'Global angeheftete Tabs isolieren',
     fr: 'Isoler les onglets épinglés globalement',
     ru: 'Изолировать глобально закрепленные вкладки',
   },
@@ -6485,6 +6545,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit_kb': {
     en: n => (n === 1 ? 'kbyte' : 'kbytes'),
+    de: 'KB',
     fr: 'Ko',
     hu: 'kbyte',
     pl: (n = 0): string => {
@@ -6685,6 +6746,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_link': {
     en: 'Link',
+    de: 'Link',
     fr: 'Lien',
     ru: 'Ссылка',
     zh_CN: '链接',
@@ -6692,6 +6754,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_proj': {
     en: '1. Create a Google Cloud project:',
+    de: '1. Google-Cloud-Projekt erstellen:',
     fr: '1. Créer un project Google Cloud:',
     ru: '1. Создайте проект Google Cloud:',
     zh_CN: '1. 创建 Google Cloud 项目：',
@@ -6699,6 +6762,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_proj_sub': {
     en: '- Audience: External',
+    de: '- Zielgruppe: Extern',
     fr: '– Audience: Externe',
     ru: '- Целевая аудитория: Внешняя (External)',
     zh_CN: '- 受众群体：外部',
@@ -6706,6 +6770,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_drive': {
     en: '2. Enable Drive API:',
+    de: '2. Drive API aktivieren:',
     fr: '2. Activer l’API Drive:',
     ru: '2. Включите Google Drive API:',
     zh_CN: '2. 启用“Google Drive API”：',
@@ -6713,6 +6778,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_cli': {
     en: '3. Create a Client:',
+    de: '3. Client erstellen:',
     fr: '3. Créer un Client:',
     ru: '3. Создайте учетные данные (Client ID):',
     zh_CN: '3. 创建客户端：',
@@ -6721,6 +6787,8 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   'settings.sync_gd_api_cli_sub': {
     en: `- Type: Web application
 - Authorized redirect URIs:`,
+    de: `- Typ: Webanwendung
+- Autorisierte Weiterleitungs-URIs:`,
     fr: `– Type: Application Web
 – URI de redirections autorisées:`,
     ru: `- Тип приложения: Веб-приложение (Web application)
@@ -6732,6 +6800,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
+    de: '4. Erstellten Client öffnen und die Client-ID kopieren:',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
     ru: '4. Откройте созданный клиент и скопируйте Идентификатор клиента (Client ID):',
     zh_CN: '4. 复制创建的 OAuth 客户端 ID：',
@@ -6739,6 +6808,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
+    de: '5. Diese Client-ID hier einfügen:',
     fr: '5. Insérer cet ID Client ici:',
     ru: '5. Вставьте этот Идентификатор клиента сюда:',
     zh_CN: '5. 在此粘贴该客户端 ID：',
@@ -6746,6 +6816,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
+    de: '6. Im Abschnitt "Datenzugriff" folgende Bereiche hinzufügen:',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
     ru: '6. Добавьте следующие области доступа в разделе "Доступ к данным":',
     zh_CN: '6. 在数据访问添加以下范围：',
@@ -6753,6 +6824,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
+    de: '7. Testnutzer hinzufügen (Ihre E-Mail-Adresse):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
     ru: '7. Добавьте тестового пользователя (ваш email):',
     zh_CN: '7. 添加测试用户（您的电子邮件地址）：',
@@ -6760,6 +6832,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
+    de: '8. Sidebery von Ihrem Google Drive trennen:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
     ru: '8. Отключите Sidebery от вашего Google Диска:',
     zh_CN: '8. 取消 Sidebery 与 Google 云端硬盘的关联：',
@@ -6767,6 +6840,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
+    de: '(falls Sie den Standard-API-Schlüssel verwendet haben)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
     ru: '(если вы использовали ключ API по умолчанию)',
     zh_CN: '（如果您使用默认 API 密钥）',
@@ -6774,6 +6848,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
+    de: '9. Fertig. Bei der nächsten Anfrage an Google Drive erscheint ein Zustimmungsbildschirm.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
     ru: '9. Готово. При следующем запросе к Google Диску вы увидите экран согласия.',
     zh_CN: '9. 完毕。下次向 Google 云端硬盘发出请求时，您将看到同意屏幕。',
@@ -7721,6 +7796,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.tabs': {
     en: 'Tabs',
+    de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
     pl: 'Karty',
@@ -7753,6 +7829,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.popup': {
     en: 'Popup',
+    de: 'Popup',
     fr: 'Popup',
     ru: 'Всплывающие окна',
     zh_CN: '弹出窗口',
@@ -7772,6 +7849,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.sub-list_title': {
     en: 'Sub-list title',
+    de: 'Titel von Unterlisten',
     fr: 'Titre de sous-liste',
     ru: 'Заголовок подсписка',
     zh_CN: '子列表标题',
@@ -7780,6 +7858,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.search_bar': {
     en: 'Search bar',
+    de: 'Suchleiste',
     fr: 'Barre de recherche',
     ru: 'Строка поиска',
     zh_CN: '搜索栏',
@@ -7788,6 +7867,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.new-tab_bar': {
     en: 'New-tab bar',
+    de: '"Neuer Tab"-Leiste',
     fr: 'Barre de nouvel onglet',
     ru: 'Панель новой вкладки',
     zh_CN: '新标签页栏',
@@ -7796,6 +7876,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.notification': {
     en: 'Notification',
+    de: 'Benachrichtigung',
     fr: 'Notification',
     ru: 'Уведомления',
     zh: '通知',
