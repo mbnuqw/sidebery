@@ -106,7 +106,7 @@ export function updateSettings(settings?: SettingsState | null): void {
   const highlightOpenBookmarks = prev.highlightOpenBookmarks !== next.highlightOpenBookmarks
   const colorScheme = prev.colorScheme !== next.colorScheme
   const ctxMenuCtrIgnore = prev.ctxMenuIgnoreContainers !== next.ctxMenuIgnoreContainers
-  const fontSize = prev.fontSize !== next.fontSize
+  const fontSize = prev.fontSize !== next.fontSize || prev.fontSizeCustom !== next.fontSizeCustom
   const fontFamily = prev.fontFamily !== next.fontFamily
   const updateSidebarTitleChanged = prev.updateSidebarTitle !== next.updateSidebarTitle
   const pinnedTabsPositionChanged = prev.pinnedTabsPosition !== next.pinnedTabsPosition

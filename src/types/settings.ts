@@ -209,6 +209,7 @@ export interface SettingsState {
 
   // Appearance
   fontSize: (typeof SETTINGS_OPTIONS.fontSize)[number]
+  fontSizeCustom: number
   fontFamily: string
   animations: boolean
   animationSpeed: (typeof SETTINGS_OPTIONS.animationSpeed)[number]

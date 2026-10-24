@@ -4702,6 +4702,12 @@ Available parameters:
   'settings.font_size_xxl': {
     en: 'XXL',
   },
+  'settings.font_size_custom': {
+    en: 'custom',
+  },
+  'settings.font_size_custom_px': {
+    en: 'Custom font size (px)',
+  },
   'settings.font_family': {
     en: 'Default font-family',
     de: 'Standardmäßig font-family',

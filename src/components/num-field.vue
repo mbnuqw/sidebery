@@ -43,6 +43,7 @@ interface NumFieldProps {
   unitOpts?: readonly InputOption[]
   unitLabel?: string
   allowNegative?: boolean
+  allowFloat?: boolean
   note?: string
   maxValue?: number
   minValue?: number
@@ -108,6 +109,12 @@ function valueFilter(e: Event): number | void {
   if (props.allowNegative && (raw === '-0' || raw === '0-')) {
     target.value = '-'
     return
+  }
+  if (props.allowFloat) {
+    // Accept "," as decimal separator; keep incomplete decimals ("13." / "13.0") while typing
+    const num = raw.replace(',', '.')
+    if (/^\d+\.\d*$/.test(num) && (num.endsWith('.') || num.endsWith('0'))) return
+    return limitTheValue(parseFloat(num))
   }
   return limitTheValue(parseInt(raw))
 }
