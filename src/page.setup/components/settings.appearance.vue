@@ -10,6 +10,16 @@ section(ref="el")
     :default="DEFAULT_SETTINGS.fontSize"
     :opts="Settings.getOpts('fontSize')"
     @update:value="Settings.saveDebounced(150)")
+  .sub-fields.-nosep
+    NumField.-inline(
+      label="settings.font_size_custom_px"
+      v-model:value="fontSizeCustom"
+      dbg="fontSizeCustom"
+      :default="fontSizeCustomDefault"
+      :inactive="Settings.state.fontSize !== 'custom'"
+      :or="16"
+      :allow-float="true"
+      @update:value="Settings.saveDebounced(500)")
   TextField.-inline(
     label="settings.font_family"
     or="system-ui"
@@ -66,7 +76,7 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DEFAULT_SETTINGS } from 'src/defaults'
 import * as Settings from 'src/services/settings.fg'
@@ -75,8 +85,22 @@ import * as SetupPage from 'src/services/setup-page.fg'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import TextField from '../../components/text-field.vue'
+import NumField from '../../components/num-field.vue'
 
 const el = ref<HTMLElement | null>(null)
+
+// Show the preset's px value while a preset is selected
+const fontSizeCustom = computed({
+  get: () => {
+    if (Settings.state.fontSize === 'custom') return Settings.state.fontSizeCustom
+    return Styles.getFontSizePx()
+  },
+  set: (v: number) => (Settings.state.fontSizeCustom = v),
+})
+const fontSizeCustomDefault = computed(() => {
+  if (Settings.state.fontSize === 'custom') return DEFAULT_SETTINGS.fontSizeCustom
+  return Styles.getFontSizePx()
+})
 
 function onColorSchemeUpdate() {
   Styles.updateColorScheme()

@@ -207,6 +207,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Appearance
   fontSize: 'm',
+  fontSizeCustom: 16,
   fontFamily: '',
   animations: true,
   animationSpeed: 'norm',
@@ -350,7 +351,7 @@ export const SETTINGS_OPTIONS = {
   previewTabsSide: ['right', 'left'],
   hideFoldedParent: ['any', 'group', 'none'],
   rmChildTabs: ['all', 'folded', 'none'],
-  fontSize: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
+  fontSize: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'custom'],
   theme: ['proton', 'plain'],
   density: ['compact', 'default', 'loose'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
