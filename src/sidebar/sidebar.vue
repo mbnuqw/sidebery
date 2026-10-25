@@ -282,7 +282,7 @@ function onDocumentKeydown(e: KeyboardEvent): void {
 
   // Paste
   if (e.code === 'KeyV' && (Info.reactive.os === 'mac' ? e.metaKey : e.ctrlKey)) {
-    if (e.target instanceof HTMLInputElement) return
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
 
     let actPanel
     if (Sidebar.subPanelActive) actPanel = Sidebar.subPanels.bookmarks
