@@ -7,6 +7,7 @@ import * as Windows from 'src/services/windows.fg'
 import * as Bookmarks from 'src/services/bookmarks.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Tabs from 'src/services/tabs.fg'
+import * as TabPreviews from 'src/services/tabs.fg.preview'
 import * as History from 'src/services/history.fg'
 import { NOID } from 'src/defaults'
 
@@ -179,6 +180,7 @@ export function selectTab(tabId: ID): void {
   }
 
   if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
+  if (TabPreviews.state.status === TabPreviews.Status.Open) TabPreviews.closePreview()
 }
 
 export function selectTabs(tabIds: ID[]): void {
@@ -201,6 +203,7 @@ export function selectTabs(tabIds: ID[]): void {
   }
 
   if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
+  if (TabPreviews.state.status === TabPreviews.Status.Open) TabPreviews.closePreview()
 }
 
 export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
@@ -266,6 +269,7 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
   }
 
   if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
+  if (TabPreviews.state.status === TabPreviews.Status.Open) TabPreviews.closePreview()
 }
 
 export function selectTabsBranch(parentTab: Tab): void {
@@ -294,6 +298,7 @@ export function selectTabsBranch(parentTab: Tab): void {
   }
 
   if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
+  if (TabPreviews.state.status === TabPreviews.Status.Open) TabPreviews.closePreview()
 }
 
 export function selectBookmark(bookmarkId: ID): void {
