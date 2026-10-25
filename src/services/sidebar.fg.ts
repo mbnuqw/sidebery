@@ -11,6 +11,7 @@ import * as Containers from 'src/services/containers'
 import * as Bookmarks from 'src/services/bookmarks.fg'
 import * as Menu from 'src/services/menu.fg'
 import * as Tabs from 'src/services/tabs.fg'
+import * as TabPreviews from 'src/services/tabs.fg.preview'
 import * as IPC from 'src/services/ipc'
 import * as Store from 'src/services/storage.fg'
 import * as DnD from 'src/services/drag-and-drop.fg'
@@ -2882,6 +2883,9 @@ export function resetOrCancelInteraction() {
 
   // Site config popup
   if (Popups.reactive.siteConfigPopup) Popups.closeSiteConfigPopup()
+
+  // Tab preview
+  if (TabPreviews.state.status === TabPreviews.Status.Open) TabPreviews.closePreview()
 }
 
 export function resetPanelsPos() {
