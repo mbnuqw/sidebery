@@ -25,6 +25,7 @@
     "zh_TW": "切換 Sidebery 側邊欄\n中鍵點選：開啟設定",
     "ja": "Sidebery サイドバーの切り替え\n中クリック: 設定を開く"
   },
+
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
     "de": "Öffne/Schließe Seitenleiste",
@@ -1358,6 +1359,7 @@
     "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）",
     "ru": "Сортировать вкладки активной панели по времени доступа (Новые-Старые)"
   },
+
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",
     "de": "Proxy für \"",
@@ -1380,6 +1382,7 @@
     "zh_TW": "」容器",
     "ja": "」コンテナ"
   },
+
   "unavailable_url": {
     "en": "Unavailable URL",
     "de": "Nicht verfügbare URL",
@@ -1446,6 +1449,7 @@
     "zh_TW": "由於安全相關的 API 限制，Sidebery 無法開啟此鏈接。",
     "ja": "Firefox のセキュリティ関連の制限により、Sidebery はこのリンクを開けません。"
   },
+
   "group_disconnected_warn": {
     "en": "Cannot connect to the sidebar...",
     "de": "Keine Verbindung zur Seitenleiste möglich...",

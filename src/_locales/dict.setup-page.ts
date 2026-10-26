@@ -2964,22 +2964,6 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'バッジのルール',
   },
   'settings.tabs_badge_rules_note': {
-    ru: `Список правил для бейджей, разделенных новой строкой. Каждое правило состоит из необязательных параметров, разделенных точкой с запятой и пробелом: \`; \`.
-Примеры:
-\`\`\`
-title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
-minIdleTime:5000; urgent
-url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
-\`\`\`
-Доступные параметры:
-- \`url:{RegExp}\` и/или \`title:{RegExp}\`: Регулярное выражение для сопоставления вкладки и опционального получения значения бейджа через именованную группу: \`(?<v>...)\`. Если ваше \`{RegExp}\` содержит точку с запятой с пробелом \`; \`, экранируйте пробел обратным слэшем: \`;\\ \`. Значение по умолчанию \`{RegExp}\` — пустая строка, поэтому при отсутствии этих параметров будет совпадать любой URL или заголовок. Бейдж без значения игнорируется для выгруженных или активных вкладок и сбрасывается при выгрузке или активации вкладки.
-- \`bg:{Color}\` и/или \`fg:{Color}\`: Цвет фона или текста бейджа.
-- \`urgent\`: Делает бейдж срочным и распространяет этот статус на родительские элементы (свернутые вкладки, неактивные панели). Игнорируется для выгруженных и активных вкладок. После активации вкладки: бейдж без значения будет полностью скрыт, а бейдж со значением будет понижен до обычного.
-- \`notify\`: Показывает уведомление.
-- \`pinned\`: Применяет правило только к закрепленным вкладкам.
-- \`normal\`: Применяет правило только к незакрепленным вкладкам.
-- \`value:{Text}\`: Задает статическое значение для бейджа.
-- \`minIdleTime:{Milliseconds}\`: Применяет правило при изменении заголовка вкладки после простоя не менее \`{Milliseconds}\`.`,
     en: `A newline-separated list of badge rules. Each rule consists of optional parameters separated by a semicolon and a space: \`; \`.
 Examples:
 \`\`\`
@@ -2996,6 +2980,22 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    ru: `Список правил для бейджей, разделенных новой строкой. Каждое правило состоит из необязательных параметров, разделенных точкой с запятой и пробелом: \`; \`.
+Примеры:
+\`\`\`
+title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
+minIdleTime:5000; urgent
+url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
+\`\`\`
+Доступные параметры:
+- \`url:{RegExp}\` и/или \`title:{RegExp}\`: Регулярное выражение для сопоставления вкладки и опционального получения значения бейджа через именованную группу: \`(?<v>...)\`. Если ваше \`{RegExp}\` содержит точку с запятой с пробелом \`; \`, экранируйте пробел обратным слэшем: \`;\\ \`. Значение по умолчанию \`{RegExp}\` — пустая строка, поэтому при отсутствии этих параметров будет совпадать любой URL или заголовок. Бейдж без значения игнорируется для выгруженных или активных вкладок и сбрасывается при выгрузке или активации вкладки.
+- \`bg:{Color}\` и/или \`fg:{Color}\`: Цвет фона или текста бейджа.
+- \`urgent\`: Делает бейдж срочным и распространяет этот статус на родительские элементы (свернутые вкладки, неактивные панели). Игнорируется для выгруженных и активных вкладок. После активации вкладки: бейдж без значения будет полностью скрыт, а бейдж со значением будет понижен до обычного.
+- \`notify\`: Показывает уведомление.
+- \`pinned\`: Применяет правило только к закрепленным вкладкам.
+- \`normal\`: Применяет правило только к незакрепленным вкладкам.
+- \`value:{Text}\`: Задает статическое значение для бейджа.
+- \`minIdleTime:{Milliseconds}\`: Применяет правило при изменении заголовка вкладки после простоя не менее \`{Milliseconds}\`.`,
   },
 
   'settings.tabs_notification_badge_scope': {
@@ -3640,9 +3640,9 @@ Available parameters:
     ja: '固定タブのアンロードを防止する',
   },
   'settings.pinned.no_unload_explicit': {
-    ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
+    ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
   },
 
   // - Tabs tree
@@ -3669,24 +3669,24 @@ Available parameters:
     ja: 'タブツリーの深さ制限',
   },
   'settings.tabs_tree_limit_1': {
-    ru: '1',
     en: '1',
+    ru: '1',
   },
   'settings.tabs_tree_limit_2': {
-    ru: '2',
     en: '2',
+    ru: '2',
   },
   'settings.tabs_tree_limit_3': {
-    ru: '3',
     en: '3',
+    ru: '3',
   },
   'settings.tabs_tree_limit_4': {
-    ru: '4',
     en: '4',
+    ru: '4',
   },
   'settings.tabs_tree_limit_5': {
-    ru: '5',
     en: '5',
+    ru: '5',
   },
   'settings.tabs_tree_limit_none': {
     en: 'none',
@@ -3780,24 +3780,24 @@ Available parameters:
     ja: '開いているブランチの最大数',
   },
   'settings.auto_fold_tabs_except_1': {
-    ru: '1',
     en: '1',
+    ru: '1',
   },
   'settings.auto_fold_tabs_except_2': {
-    ru: '2',
     en: '2',
+    ru: '2',
   },
   'settings.auto_fold_tabs_except_3': {
-    ru: '3',
     en: '3',
+    ru: '3',
   },
   'settings.auto_fold_tabs_except_4': {
-    ru: '4',
     en: '4',
+    ru: '4',
   },
   'settings.auto_fold_tabs_except_5': {
-    ru: '5',
     en: '5',
+    ru: '5',
   },
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
@@ -4120,9 +4120,9 @@ Available parameters:
     ja: '色の生成元',
   },
   'settings.colorize_branches_src_url': {
-    ru: 'URL',
     en: 'URL',
     fr: 'l’URL',
+    ru: 'URL',
     zh_TW: '網址',
   },
   'settings.colorize_branches_src_domain': {
@@ -4738,32 +4738,32 @@ Available parameters:
     ja: 'フォントサイズ',
   },
   'settings.font_size_xxs': {
-    ru: 'XXS',
     en: 'XXS',
+    ru: 'XXS',
   },
   'settings.font_size_xs': {
-    ru: 'XS',
     en: 'XS',
+    ru: 'XS',
   },
   'settings.font_size_s': {
-    ru: 'S',
     en: 'S',
+    ru: 'S',
   },
   'settings.font_size_m': {
-    ru: 'M',
     en: 'M',
+    ru: 'M',
   },
   'settings.font_size_l': {
-    ru: 'L',
     en: 'L',
+    ru: 'L',
   },
   'settings.font_size_xl': {
-    ru: 'XL',
     en: 'XL',
+    ru: 'XL',
   },
   'settings.font_size_xxl': {
-    ru: 'XXL',
     en: 'XXL',
+    ru: 'XXL',
   },
   'settings.font_family': {
     en: 'Default font-family',
@@ -4942,12 +4942,12 @@ Available parameters:
     ja: '自動: ダーク/ライト',
   },
   'settings.color_scheme_ff': {
-    ru: 'Firefox',
     en: 'firefox',
     de: 'Firefox',
     fr: 'Firefox',
     hu: 'Firefox',
     pl: 'Firefox',
+    ru: 'Firefox',
     zh: 'Firefox',
     ja: 'Firefox',
   },
@@ -6399,12 +6399,12 @@ Available parameters:
     ja: '自動エクスポート形式',
   },
   'settings.snap_auto_export_type_json': {
-    ru: 'json',
     en: 'json',
+    ru: 'json',
   },
   'settings.snap_auto_export_type_md': {
-    ru: 'md',
     en: 'md',
+    ru: 'md',
   },
   'settings.snap_auto_export_type_both': {
     en: 'both',
@@ -6432,8 +6432,8 @@ Available parameters:
   // Although the translated name is displayed,
   // the default saved snapshot file name is always the same.
   'settings.snap_export_path_ph': {
-    ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
+    ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_export_path_note': {
     en: `Note: Path is relative to the downloads folder and Firefox doesn't allow to set path outside it.
@@ -6684,47 +6684,47 @@ Available parameters:
     ja: '上級ユーザー向け。制限を超えたためにデフォルト キーがブロックされた場合。',
   },
   'settings.sync_gd_api_link': {
-    ru: 'Ссылка',
     en: 'Link',
     fr: 'Lien',
+    ru: 'Ссылка',
     zh_CN: '链接',
     zh_TW: '鏈結',
   },
   'settings.sync_gd_api_proj': {
-    ru: '1. Создайте проект Google Cloud:',
     en: '1. Create a Google Cloud project:',
     fr: '1. Créer un project Google Cloud:',
+    ru: '1. Создайте проект Google Cloud:',
     zh_CN: '1. 创建 Google Cloud 项目：',
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
-    ru: '- Целевая аудитория: Внешняя (External)',
     en: '- Audience: External',
     fr: '– Audience: Externe',
+    ru: '- Целевая аудитория: Внешняя (External)',
     zh_CN: '- 受众群体：外部',
     zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
-    ru: '2. Включите Google Drive API:',
     en: '2. Enable Drive API:',
     fr: '2. Activer l’API Drive:',
+    ru: '2. Включите Google Drive API:',
     zh_CN: '2. 启用“Google Drive API”：',
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
-    ru: '3. Создайте учетные данные (Client ID):',
     en: '3. Create a Client:',
     fr: '3. Créer un Client:',
+    ru: '3. Создайте учетные данные (Client ID):',
     zh_CN: '3. 创建客户端：',
     zh_TW: '3. 建立用戶端：',
   },
   'settings.sync_gd_api_cli_sub': {
-    ru: `- Тип приложения: Веб-приложение (Web application)
-- Разрешенные URI перенаправления:`,
     en: `- Type: Web application
 - Authorized redirect URIs:`,
     fr: `– Type: Application Web
 – URI de redirections autorisées:`,
+    ru: `- Тип приложения: Веб-приложение (Web application)
+- Разрешенные URI перенаправления:`,
     zh_CN: `- 类型：Web 应用
 - 授权重定向 URI：`,
     zh_TW: `- 類型：網頁應用程式
@@ -6732,50 +6732,50 @@ Available parameters:
   },
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
-    ru: '4. Откройте созданный клиент и скопируйте Идентификатор клиента (Client ID):',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
+    ru: '4. Откройте созданный клиент и скопируйте Идентификатор клиента (Client ID):',
     zh_CN: '4. 复制创建的 OAuth 客户端 ID：',
     zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
-    ru: '5. Вставьте этот Идентификатор клиента сюда:',
     fr: '5. Insérer cet ID Client ici:',
+    ru: '5. Вставьте этот Идентификатор клиента сюда:',
     zh_CN: '5. 在此粘贴该客户端 ID：',
     zh_TW: '5. 在此貼上該用戶端編號：',
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
-    ru: '6. Добавьте следующие области доступа в разделе "Доступ к данным":',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
+    ru: '6. Добавьте следующие области доступа в разделе "Доступ к данным":',
     zh_CN: '6. 在数据访问添加以下范围：',
     zh_TW: '6. 在資料存取權新增以下範圍：',
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
-    ru: '7. Добавьте тестового пользователя (ваш email):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
+    ru: '7. Добавьте тестового пользователя (ваш email):',
     zh_CN: '7. 添加测试用户（您的电子邮件地址）：',
     zh_TW: '7. 新增測試使用者（您的電子郵件地址）：',
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
-    ru: '8. Отключите Sidebery от вашего Google Диска:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
+    ru: '8. Отключите Sidebery от вашего Google Диска:',
     zh_CN: '8. 取消 Sidebery 与 Google 云端硬盘的关联：',
     zh_TW: '8. 取消 Sidebery 與 Google 雲端硬碟的連接：',
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
-    ru: '(если вы использовали ключ API по умолчанию)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
+    ru: '(если вы использовали ключ API по умолчанию)',
     zh_CN: '（如果您使用默认 API 密钥）',
     zh_TW: '（如果您使用預設 API 金鑰）',
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
-    ru: '9. Готово. При следующем запросе к Google Диску вы увидите экран согласия.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
+    ru: '9. Готово. При следующем запросе к Google Диску вы увидите экран согласия.',
     zh_CN: '9. 完毕。下次向 Google 云端硬盘发出请求时，您将看到同意屏幕。',
     zh_TW: '9. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
   },
@@ -6825,9 +6825,9 @@ Available parameters:
   },
   'settings.sync_view_btn': {
     en: 'View synced data',
-    ru: 'Просмотреть синхронизированные данные',
     de: 'Synchronisierte Daten anzeigen',
     fr: 'Voir les données synchronisées',
+    ru: 'Просмотреть синхронизированные данные',
     zh_CN: '查看同步数据',
     zh_TW: '檢視同步資料',
   },
@@ -7697,630 +7697,6 @@ Available parameters:
     zh_TW: '群組頁面',
     ja: 'グループページ',
   },
-  'styles.var_label.--general-border-radius': {
-    en: 'Border radius',
-    ru: 'Радиус скругления',
-  },
-  'styles.var_label.--general-margin': {
-    en: 'Margin',
-    ru: 'Отступ (Margin)',
-  },
-  'styles.var_label.--toolbar-scrollbar-color': {
-    en: 'Toolbar scrollbar color',
-    ru: 'Цвет скроллбара панели инструментов',
-  },
-  'styles.var_label.--toolbar-el-overlay-selected-border': {
-    en: 'Toolbar el overlay selected border',
-    ru: 'Рамка выделенного элемента панели',
-  },
-  'styles.var_label.--toolbar-el-overlay-selected-bg': {
-    en: 'Toolbar el overlay selected background',
-    ru: 'Фон выделенного элемента панели',
-  },
-  'styles.var_label.--toolbar-el-overlay-active-border': {
-    en: 'Toolbar el overlay active border',
-    ru: 'Рамка активного элемента панели',
-  },
-  'styles.var_label.--toolbar-el-overlay-active-bg': {
-    en: 'Toolbar el overlay active background',
-    ru: 'Фон активного элемента панели',
-  },
-  'styles.var_label.--toolbar-el-overlay-hover-border': {
-    en: 'Toolbar el overlay hover border',
-    ru: 'Рамка элемента панели при наведении',
-  },
-  'styles.var_label.--toolbar-el-overlay-hover-bg': {
-    en: 'Toolbar el overlay hover background',
-    ru: 'Фон элемента панели при наведении',
-  },
-  'styles.var_label.--general-font-family': {
-    en: 'general font family',
-    ru: 'Шрифт',
-  },
-  'styles.var_label.--bottom-bar-height': {
-    en: 'bottom bar height',
-    ru: 'Высота нижней панели',
-  },
-  'styles.var_label.--border': {
-    en: 'border',
-    ru: 'Граница',
-  },
-  'styles.var_label.--border-color': {
-    en: 'border color',
-    ru: 'Цвет границы',
-  },
-  'styles.var_label.--accent': {
-    en: 'accent',
-    ru: 'Акцентный цвет',
-  },
-  'styles.var_label.--bg': {
-    en: 'bg',
-    ru: 'Фон',
-  },
-  'styles.var_label.--fg': {
-    en: 'fg',
-    ru: 'Текст',
-  },
-  'styles.var_label.--frame-bg': {
-    en: 'frame bg',
-    ru: 'Фон фрейма боковой панели',
-  },
-  'styles.var_label.--frame-fg': {
-    en: 'frame fg',
-    ru: 'Текст фрейма боковой панели',
-  },
-  'styles.var_label.--frame-el-bg': {
-    en: 'frame el bg',
-    ru: 'Фон элементов фрейма',
-  },
-  'styles.var_label.--frame-el-fg': {
-    en: 'frame el fg',
-    ru: 'Текст элементов фрейма',
-  },
-  'styles.var_label.--frame-el-shadow': {
-    en: 'frame el shadow',
-    ru: 'Тень элементов фрейма',
-  },
-  'styles.var_label.--frame-el-overlay-hover-bg': {
-    en: 'frame el overlay hover bg',
-    ru: 'Фон элементов фрейма при наведении',
-  },
-  'styles.var_label.--frame-el-overlay-clicked-bg': {
-    en: 'frame el overlay clicked bg',
-    ru: 'Фон элементов фрейма при клике',
-  },
-  'styles.var_label.--frame-el-overlay-selected-bg': {
-    en: 'frame el overlay selected bg',
-    ru: 'Фон выделенного элемента фрейма',
-  },
-  'styles.var_label.--frame-el-overlay-selected-border': {
-    en: 'frame el overlay selected border',
-    ru: 'Рамка выделенного элемента фрейма',
-  },
-  'styles.var_label.--frame-scrollbar-color': {
-    en: 'frame scrollbar color',
-    ru: 'Цвет скроллбара фрейма',
-  },
-  'styles.var_label.--toolbar-bg': {
-    en: 'toolbar bg',
-    ru: 'Фон панели инструментов',
-  },
-  'styles.var_label.--toolbar-fg': {
-    en: 'toolbar fg',
-    ru: 'Текст панели инструментов',
-  },
-  'styles.var_label.--toolbar-fg-active': {
-    en: 'toolbar fg active',
-    ru: 'Текст активного элемента панели',
-  },
-  'styles.var_label.--toolbar-el-overlay-clicked-bg': {
-    en: 'toolbar el overlay clicked bg',
-    ru: 'Фон элемента панели при клике',
-  },
-  'styles.var_label.--active-el-bg': {
-    en: 'active el bg',
-    ru: 'Фон активного элемента',
-  },
-  'styles.var_label.--active-el-fg': {
-    en: 'active el fg',
-    ru: 'Текст активного элемента',
-  },
-  'styles.var_label.--active-el-shadow': {
-    en: 'active el shadow',
-    ru: 'Тень активного элемента',
-  },
-  'styles.var_label.--active-el-overlay-hover-bg': {
-    en: 'active el overlay hover bg',
-    ru: 'Фон активного элемента при наведении',
-  },
-  'styles.var_label.--active-el-overlay-clicked-bg': {
-    en: 'active el overlay clicked bg',
-    ru: 'Фон активного элемента при клике',
-  },
-  'styles.var_label.--nav-hidden-panels-popup-margin': {
-    en: 'nav hidden panels popup margin',
-    ru: 'Отступ всплывающего окна скрытых панелей',
-  },
-  'styles.var_label.--nav-hidden-btn-border-radius': {
-    en: 'nav hidden btn border radius',
-    ru: 'Радиус скругления скрытой кнопки',
-  },
-  'styles.var_label.--nav-btn-border-radius': {
-    en: 'nav btn border radius',
-    ru: 'Радиус скругления кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-len-margin': {
-    en: 'nav btn len margin',
-    ru: 'Отступ счетчика кнопки',
-  },
-  'styles.var_label.--nav-delimiter-size': {
-    en: 'nav delimiter size',
-    ru: 'Размер разделителя',
-  },
-  'styles.var_label.--nav-btn-margin': {
-    en: 'nav btn margin',
-    ru: 'Отступ кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-height': {
-    en: 'nav btn height',
-    ru: 'Высота кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-width': {
-    en: 'nav btn width',
-    ru: 'Ширина кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-accent': {
-    en: 'nav btn accent',
-    ru: 'Акцент кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-fg': {
-    en: 'nav btn fg',
-    ru: 'Текст кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-active-shadow': {
-    en: 'nav btn active shadow',
-    ru: 'Тень активной кнопки навигации',
-  },
-  'styles.var_label.--nav-btn-badge-left': {
-    en: 'nav btn badge left',
-    ru: 'Позиция бейджа кнопки слева',
-  },
-  'styles.var_label.--nav-btn-bkm-badge-left': {
-    en: 'nav btn bkm badge left',
-    ru: 'Позиция бейджа закладок слева',
-  },
-  'styles.var_label.--tabs-height': {
-    en: 'tabs height',
-    ru: 'Высота вкладки',
-  },
-  'styles.var_label.--tabs-indent': {
-    en: 'tabs indent',
-    ru: 'Отступ уровня вложенности вкладки',
-  },
-  'styles.var_label.--tabs-margin': {
-    en: 'tabs margin',
-    ru: 'Отступ вкладки',
-  },
-  'styles.var_label.--tabs-border-radius': {
-    en: 'tabs border radius',
-    ru: 'Радиус скругления вкладки',
-  },
-  'styles.var_label.--tabs-font': {
-    en: 'tabs font',
-    ru: 'Шрифт вкладки',
-  },
-  'styles.var_label.--tabs-count-font': {
-    en: 'tabs count font',
-    ru: 'Шрифт счетчика дочерних вкладок',
-  },
-  'styles.var_label.--tabs-inner-gap': {
-    en: 'tabs inner gap',
-    ru: 'Внутренний зазор вкладки',
-  },
-  'styles.var_label.--tabs-lvl-opacity': {
-    en: 'tabs lvl opacity',
-    ru: 'Прозрачность маркера уровня',
-  },
-  'styles.var_label.--tabs-discarded-title-opacity': {
-    en: 'tabs discarded title opacity',
-    ru: 'Прозрачность заголовка выгруженной вкладки',
-  },
-  'styles.var_label.--tabs-discarded-favicon-opacity': {
-    en: 'tabs discarded favicon opacity',
-    ru: 'Прозрачность иконки выгруженной вкладки',
-  },
-  'styles.var_label.--tabs-activated-color-layer-opacity': {
-    en: 'tabs activated color layer opacity',
-    ru: 'Прозрачность цветового слоя активной вкладки',
-  },
-  'styles.var_label.--tabs-color-layer-opacity': {
-    en: 'tabs color layer opacity',
-    ru: 'Прозрачность цветового слоя вкладки',
-  },
-  'styles.var_label.--tabs-audio-btn-width': {
-    en: 'tabs audio btn width',
-    ru: 'Ширина кнопки звука вкладки',
-  },
-  'styles.var_label.--tabs-close-btn-margin': {
-    en: 'tabs close btn margin',
-    ru: 'Отступ кнопки закрытия вкладки',
-  },
-  'styles.var_label.--tabs-normal-bg': {
-    en: 'tabs normal bg',
-    ru: 'Обычный фон вкладки',
-  },
-  'styles.var_label.--tabs-normal-fg': {
-    en: 'tabs normal fg',
-    ru: 'Обычный текст вкладки',
-  },
-  'styles.var_label.--tabs-activated-bg': {
-    en: 'tabs activated bg',
-    ru: 'Фон активной вкладки',
-  },
-  'styles.var_label.--tabs-activated-fg': {
-    en: 'tabs activated fg',
-    ru: 'Текст активной вкладки',
-  },
-  'styles.var_label.--tabs-activated-shadow': {
-    en: 'tabs activated shadow',
-    ru: 'Тень активной вкладки',
-  },
-  'styles.var_label.--tabs-pinned-width': {
-    en: 'tabs pinned width',
-    ru: 'Ширина закрепленной вкладки',
-  },
-  'styles.var_label.--tabs-pinned-height': {
-    en: 'tabs pinned height',
-    ru: 'Высота закрепленной вкладки',
-  },
-  'styles.var_label.--tabs-pinned-audio-btn-width': {
-    en: 'tabs pinned audio btn width',
-    ru: 'Ширина кнопки звука закрепленной вкладки',
-  },
-  'styles.var_label.--tabs-pinned-audio-btn-height': {
-    en: 'tabs pinned audio btn height',
-    ru: 'Высота кнопки звука закрепленной вкладки',
-  },
-  'styles.var_label.--tabs-badge-min-size': {
-    en: 'tabs badge min size',
-    ru: 'Минимальный размер бейджа вкладки',
-  },
-  'styles.var_label.--tabs-badge-value-font': {
-    en: 'tabs badge value font',
-    ru: 'Шрифт значения бейджа',
-  },
-  'styles.var_label.--tabs-badge-value-padding': {
-    en: 'tabs badge value padding',
-    ru: 'Внутренний отступ бейджа',
-  },
-  'styles.var_label.--tabs-notification-badge-dot-bg': {
-    en: 'tabs notification badge dot bg',
-    ru: 'Фон точки-уведомления вкладки',
-  },
-  'styles.var_label.--tabs-notification-badge-count-bg': {
-    en: 'tabs notification badge count bg',
-    ru: 'Фон счетчика-уведомления вкладки',
-  },
-  'styles.var_label.--tabs-notification-badge-count-fg': {
-    en: 'tabs notification badge count fg',
-    ru: 'Текст счетчика-уведомления вкладки',
-  },
-  'styles.var_label.--tabs-progress-bg': {
-    en: 'tabs progress bg',
-    ru: 'Фон индикатора загрузки вкладки',
-  },
-  'styles.var_label.--bookmarks-bookmark-height': {
-    en: 'bookmarks bookmark height',
-    ru: 'Высота закладки',
-  },
-  'styles.var_label.--bookmarks-folder-height': {
-    en: 'bookmarks folder height',
-    ru: 'Высота папки закладок',
-  },
-  'styles.var_label.--bookmarks-separator-height': {
-    en: 'bookmarks separator height',
-    ru: 'Высота разделителя закладок',
-  },
-  'styles.var_label.--bookmarks-sub-panel-height': {
-    en: 'bookmarks sub panel height',
-    ru: 'Высота подпанели закладок',
-  },
-  'styles.var_label.--bookmarks-indent': {
-    en: 'bookmarks indent',
-    ru: 'Отступ вложенности закладок',
-  },
-  'styles.var_label.--bookmarks-margin': {
-    en: 'bookmarks margin',
-    ru: 'Отступ закладок',
-  },
-  'styles.var_label.--bookmarks-inner-gap': {
-    en: 'bookmarks inner gap',
-    ru: 'Внутренний зазор закладки',
-  },
-  'styles.var_label.--bookmarks-border-radius': {
-    en: 'bookmarks border radius',
-    ru: 'Радиус скругления элементов закладок',
-  },
-  'styles.var_label.--bookmarks-bookmark-font': {
-    en: 'bookmarks bookmark font',
-    ru: 'Шрифт закладки',
-  },
-  'styles.var_label.--bookmarks-folder-font': {
-    en: 'bookmarks folder font',
-    ru: 'Шрифт папки закладок',
-  },
-  'styles.var_label.--bookmarks-open-mark-top': {
-    en: 'bookmarks open mark top',
-    ru: 'Позиция метки открытия сверху',
-  },
-  'styles.var_label.--bookmarks-open-mark-left': {
-    en: 'bookmarks open mark left',
-    ru: 'Позиция метки открытия слева',
-  },
-  'styles.var_label.--bookmarks-expanded-folder-bg': {
-    en: 'bookmarks expanded folder bg',
-    ru: 'Фон развернутой папки',
-  },
-  'styles.var_label.--bookmarks-expanded-folder-shadow': {
-    en: 'bookmarks expanded folder shadow',
-    ru: 'Тень развернутой папки',
-  },
-  'styles.var_label.--bookmarks-node-activated-fg': {
-    en: 'bookmarks node activated fg',
-    ru: 'Текст активной закладки',
-  },
-  'styles.var_label.--history-item-margin': {
-    en: 'history item margin',
-    ru: 'Отступ элемента истории',
-  },
-  'styles.var_label.--history-item-border-radius': {
-    en: 'history item border radius',
-    ru: 'Радиус скругления элемента истории',
-  },
-  'styles.var_label.--history-item-padding-left': {
-    en: 'history item padding left',
-    ru: 'Левый отступ элемента истории',
-  },
-  'styles.var_label.--history-item-padding-right': {
-    en: 'history item padding right',
-    ru: 'Правый отступ элемента истории',
-  },
-  'styles.var_label.--popup-bg': {
-    en: 'popup bg',
-    ru: 'Фон всплывающего окна',
-  },
-  'styles.var_label.--popup-fg': {
-    en: 'popup fg',
-    ru: 'Текст всплывающего окна',
-  },
-  'styles.var_label.--popup-shadow': {
-    en: 'popup shadow',
-    ru: 'Тень всплывающего окна',
-  },
-  'styles.var_label.--popup-scrollbar-color': {
-    en: 'popup scrollbar color',
-    ru: 'Цвет скроллбара всплывающего окна',
-  },
-  'styles.var_label.--ctx-menu-bg': {
-    en: 'ctx menu bg',
-    ru: 'Фон контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-fg': {
-    en: 'ctx menu fg',
-    ru: 'Текст контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-border-radius': {
-    en: 'ctx menu border radius',
-    ru: 'Радиус скругления контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-padding': {
-    en: 'ctx menu padding',
-    ru: 'Внутренний отступ контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-font': {
-    en: 'ctx menu font',
-    ru: 'Шрифт контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-shadow': {
-    en: 'ctx menu shadow',
-    ru: 'Тень контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-separator': {
-    en: 'ctx menu separator',
-    ru: 'Разделитель контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-opt-border-radius': {
-    en: 'ctx menu opt border radius',
-    ru: 'Радиус скругления пунктов меню',
-  },
-  'styles.var_label.--ctx-menu-text-opt-height': {
-    en: 'ctx menu text opt height',
-    ru: 'Высота текстового пункта меню',
-  },
-  'styles.var_label.--ctx-menu-icon-opt-height': {
-    en: 'ctx menu icon opt height',
-    ru: 'Высота иконки пункта меню',
-  },
-  'styles.var_label.--ctx-menu-text-opt-inner-gap': {
-    en: 'ctx menu text opt inner gap',
-    ru: 'Внутренний зазор текстового пункта меню',
-  },
-  'styles.var_label.--ctx-menu-min-width': {
-    en: 'ctx menu min width',
-    ru: 'Минимальная ширина контекстного меню',
-  },
-  'styles.var_label.--ctx-menu-max-width': {
-    en: 'ctx menu max width',
-    ru: 'Максимальная ширина контекстного меню',
-  },
-  'styles.var_label.--slt-margin': {
-    en: 'slt margin',
-    ru: 'Отступ заголовка подсписка',
-  },
-  'styles.var_label.--slt-padding': {
-    en: 'slt padding',
-    ru: 'Внутренний отступ заголовка подсписка',
-  },
-  'styles.var_label.--slt-border-radius': {
-    en: 'slt border radius',
-    ru: 'Радиус скругления заголовка подсписка',
-  },
-  'styles.var_label.--search-height': {
-    en: 'search height',
-    ru: 'Высота строки поиска',
-  },
-  'styles.var_label.--search-border-radius': {
-    en: 'search border radius',
-    ru: 'Радиус скругления строки поиска',
-  },
-  'styles.var_label.--search-shadow': {
-    en: 'search shadow',
-    ru: 'Тень строки поиска',
-  },
-  'styles.var_label.--search-icon-width': {
-    en: 'search icon width',
-    ru: 'Ширина иконки поиска',
-  },
-  'styles.var_label.--search-font-size': {
-    en: 'search font size',
-    ru: 'Размер шрифта строки поиска',
-  },
-  'styles.var_label.--ntb-btn-height': {
-    en: 'ntb btn height',
-    ru: 'Высота кнопки новой вкладки',
-  },
-  'styles.var_label.--ntb-border-radius': {
-    en: 'ntb border radius',
-    ru: 'Радиус скругления панели новой вкладки',
-  },
-  'styles.var_label.--ntb-padding': {
-    en: 'ntb padding',
-    ru: 'Внутренний отступ панели новой вкладки',
-  },
-  'styles.var_label.--notification-bg': {
-    en: 'notification bg',
-    ru: 'Фон уведомления',
-  },
-  'styles.var_label.--notification-fg': {
-    en: 'notification fg',
-    ru: 'Текст уведомления',
-  },
-  'styles.var_label.--notification-margin': {
-    en: 'notification margin',
-    ru: 'Отступ уведомления',
-  },
-  'styles.var_label.--notification-border-radius': {
-    en: 'notification border radius',
-    ru: 'Радиус скругления уведомления',
-  },
-  'styles.var_label.--notification-max-width': {
-    en: 'notification max width',
-    ru: 'Максимальная ширина уведомления',
-  },
-  'styles.var_label.--btn-border-radius': {
-    en: 'btn border radius',
-    ru: 'Радиус скругления кнопки',
-  },
-  'styles.var_label.--btn-fg': {
-    en: 'btn fg',
-    ru: 'Текст кнопки',
-  },
-  'styles.var_label.--scrollbar-color': {
-    en: 'scrollbar color',
-    ru: 'Цвет полосы прокрутки',
-  },
-  'styles.var_label.--scroll-color': {
-    en: 'scroll color',
-    ru: 'Цвет скролла',
-  },
-  'styles.var_label.--scroll-progress-bg': {
-    en: 'scroll progress bg',
-    ru: 'Фон прогресса прокрутки',
-  },
-  'styles.var_label.--scroll-progress-height': {
-    en: 'scroll progress height',
-    ru: 'Высота прогресса прокрутки',
-  },
-  'styles.var_label.--d-swift': {
-    en: 'd swift',
-    ru: 'Быстрая анимация (swift)',
-  },
-  'styles.var_label.--d-fast': {
-    en: 'd fast',
-    ru: 'Быстрая анимация (fast)',
-  },
-  'styles.var_label.--d-norm': {
-    en: 'd norm',
-    ru: 'Обычная анимация (norm)',
-  },
-  'styles.var_label.--d-slow': {
-    en: 'd slow',
-    ru: 'Медленная анимация (slow)',
-  },
-  'styles.var_label.--status-notice': {
-    en: 'status notice',
-    ru: 'Статус: Уведомление',
-  },
-  'styles.var_label.--status-active': {
-    en: 'status active',
-    ru: 'Статус: Активный',
-  },
-  'styles.var_label.--status-err': {
-    en: 'status err',
-    ru: 'Статус: Ошибка',
-  },
-  'styles.var_label.--status-ok': {
-    en: 'status ok',
-    ru: 'Статус: Успешно (ОК)',
-  },
-  'styles.var_label.--status-notice-bg': {
-    en: 'status notice bg',
-    ru: 'Фон статуса уведомления',
-  },
-  'styles.var_label.--status-active-bg': {
-    en: 'status active bg',
-    ru: 'Фон статуса активный',
-  },
-  'styles.var_label.--status-err-bg': {
-    en: 'status err bg',
-    ru: 'Фон статуса ошибки',
-  },
-  'styles.var_label.--status-ok-bg': {
-    en: 'status ok bg',
-    ru: 'Фон статуса успешно',
-  },
-  'styles.var_label.--windows-popup-window-border': {
-    en: 'windows popup window border',
-    ru: 'Граница всплывающего окна Windows',
-  },
-  'styles.var_label.--badge-bg': {
-    en: 'badge bg',
-    ru: 'Фон бейджа',
-  },
-  'styles.var_label.--badge-fg': {
-    en: 'badge fg',
-    ru: 'Текст бейджа',
-  },
-  'styles.var_label.--badge-urgent-bg': {
-    en: 'badge urgent bg',
-    ru: 'Фон срочного бейджа',
-  },
-  'styles.var_label.--badge-urgent-fg': {
-    en: 'badge urgent fg',
-    ru: 'Текст срочного бейджа',
-  },
-  'styles.var_label.--focus-color': {
-    en: 'focus color',
-    ru: 'Цвет фокуса',
-  },
-  'styles.var_label.--filler-height': {
-    en: 'filler height',
-    ru: 'Высота заполнителя',
-  },
-  'styles.var_label.--header-height': {
-    en: 'header height',
-    ru: 'Высота заголовка',
-  },
   'styles.vars_group.general': {
     en: 'General',
     de: 'Allgemein',
@@ -8377,8 +7753,8 @@ Available parameters:
   },
   'styles.vars_group.popup': {
     en: 'Popup',
-    ru: 'Всплывающие окна',
     fr: 'Popup',
+    ru: 'Всплывающие окна',
     zh_CN: '弹出窗口',
     zh_TW: '彈出視窗',
     ja: 'ポップアップ',
@@ -8396,32 +7772,32 @@ Available parameters:
   },
   'styles.vars_group.sub-list_title': {
     en: 'Sub-list title',
-    ru: 'Заголовок подсписка',
     fr: 'Titre de sous-liste',
+    ru: 'Заголовок подсписка',
     zh_CN: '子列表标题',
     zh_TW: '子清單標題（歷史檢視時）',
     ja: 'サブリストのタイトル',
   },
   'styles.vars_group.search_bar': {
     en: 'Search bar',
-    ru: 'Строка поиска',
     fr: 'Barre de recherche',
+    ru: 'Строка поиска',
     zh_CN: '搜索栏',
     zh_TW: '搜尋欄',
     ja: '検索バー',
   },
   'styles.vars_group.new-tab_bar': {
     en: 'New-tab bar',
-    ru: 'Панель новой вкладки',
     fr: 'Barre de nouvel onglet',
+    ru: 'Панель новой вкладки',
     zh_CN: '新标签页栏',
     zh_TW: '新分頁欄（新分頁按鈕外）',
     ja: '新しいタブバー',
   },
   'styles.vars_group.notification': {
     en: 'Notification',
-    ru: 'Уведомления',
     fr: 'Notification',
+    ru: 'Уведомления',
     zh: '通知',
     ja: '通知',
   },
@@ -8499,14 +7875,6 @@ Available parameters:
     - Select "/sidebar/sidebar.html" for sidebar frame
     - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
-    ru: `ПРИМЕЧАНИЕ: Чтобы получить текущие доступные селекторы CSS, используйте отладчик:
-  - Нажмите кнопку "Копировать URL отладчика" в нижней панели
-  - Откройте новую вкладку с этим URL
-  - Выберите фрейм для инспекции
-    - Нажмите на прямоугольный значок (с тремя секциями) в правом верхнем углу страницы отладчика
-    - Выберите "/sidebar/sidebar.html" для фрейма боковой панели
-    - Выберите "/sidebery/group.html" для фрейма страницы групп
-  - Перейдите на вкладку "Инспектор"`,
     de: `HINWEIS: für derzeit verfügbare CSS-Selektoren den Debugger verwenden:
   - Klicke auf die Schaltfläche "Kopiere Devtools-URL" in der Leiste unten
   - Öffne einen neuen Tab mit dieser URL
@@ -8538,6 +7906,14 @@ Available parameters:
       - Wybierz "/sidebar/sidebar.html" dla frame panelu bocznego
       - Wybierz "/sidebery/group.html" dla frame strony grup
     - Przejrzyj kartę "Inspektor"`,
+    ru: `ПРИМЕЧАНИЕ: Чтобы получить текущие доступные селекторы CSS, используйте отладчик:
+  - Нажмите кнопку "Копировать URL отладчика" в нижней панели
+  - Откройте новую вкладку с этим URL
+  - Выберите фрейм для инспекции
+    - Нажмите на прямоугольный значок (с тремя секциями) в правом верхнем углу страницы отладчика
+    - Выберите "/sidebar/sidebar.html" для фрейма боковой панели
+    - Выберите "/sidebery/group.html" для фрейма страницы групп
+  - Перейдите на вкладку "Инспектор"`,
     zh_CN: `注意事项：要获取当前可用的 CSS 选择器，请使用调试器：
   - 点击底部的“复制开发工具 URL”按钮
   - 用一个新标签页打开这个 URL

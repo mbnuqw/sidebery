@@ -1098,9 +1098,13 @@ export const commonTranslations: Translations = {
     ja: 'スナップショットを作成',
   },
   'menu.browserAction.reopen_cached_win_first': {
-    ru: tabsCount => {
-      if (NUM_1_RE.test(tabsCount.toString())) return `Открыть кэшированное окно (${tabsCount} вкладка)`
-      if (NUM_234_RE.test(tabsCount.toString())) return `Открыть кэшированное окно (${tabsCount} вкладки)`
+    ru: (tabsCount = 0) => {
+      if (NUM_1_RE.test(tabsCount.toString())) {
+        return `Открыть кэшированное окно (${tabsCount} вкладка)`
+      }
+      if (NUM_234_RE.test(tabsCount.toString())) {
+        return `Открыть кэшированное окно (${tabsCount} вкладки)`
+      }
       return `Открыть кэшированное окно (${tabsCount} вкладок)`
     },
     en: tabsCount => {
@@ -1117,7 +1121,7 @@ export const commonTranslations: Translations = {
     zh_TW: '開啟已快取視窗',
   },
   'menu.browserAction.reopen_cached_win': {
-    ru: (tabsCount, panelsCount) => {
+    ru: (tabsCount = 0, panelsCount = 0) => {
       let t = 'вкладок'
       if (NUM_1_RE.test(tabsCount.toString())) t = 'вкладка'
       else if (NUM_234_RE.test(tabsCount.toString())) t = 'вкладки'
@@ -2841,9 +2845,9 @@ export const commonTranslations: Translations = {
     ru: 'Выберите команду (по умолчанию первая в списке):',
   },
   'omnibox.reopen_in_ctr': {
-    ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
+    ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
@@ -2851,19 +2855,19 @@ export const commonTranslations: Translations = {
     ru: 'Стандартный контейнер',
   },
   'omnibox.move_to_panel': {
-    ru: panelName => `↔ Переместить активную вкладку в панель "${panelName}"`,
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
+    ru: panelName => `↔ Переместить активную вкладку в панель "${panelName}"`,
   },
   'omnibox.switch_to_panel': {
-    ru: panelName => `⮞ Переключиться на панель "${panelName}"`,
     en: panelName => `⮞ Switch to "${panelName}" panel`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
+    ru: panelName => `⮞ Переключиться на панель "${panelName}"`,
   },
   'omnibox.move_to_tab': {
-    ru: tabTitle => `↕ Переместить активную вкладку в группу: "${tabTitle}"`,
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
     fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
+    ru: tabTitle => `↕ Переместить активную вкладку в группу: "${tabTitle}"`,
   },
 }
 
