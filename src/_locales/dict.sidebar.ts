@@ -128,6 +128,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_default_container_with_url': {
     en: url => `Open "${url}" in a new tab`,
+    de: url => `Öffne "${url}" in einem neuen Tab`,
     fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
     ru: url => `Открыть "${url}" в новой вкладке`,
     zh_CN: url => `打开新标签页“${url}”`,
@@ -158,6 +159,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_container_with_url': {
     en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
+    de: (url, name) => `Öffne "${url}" in einem neuen Tab in der Umgebung "${name}"`,
     fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
     ru: (url, name) => `Открыть "${url}" в новой вкладке в контейнере "${name}"`,
     zh_CN: (url, name) => `在“${name}”容器中打开新标签页“${url}”`,
@@ -177,6 +179,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_with_url': {
     en: url => `Middle click: Open "${url}" in a child tab`,
+    de: url => `Mittelklick: Öffne "${url}" in einem untergeordneten Tab`,
     fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
     ru: url => `Средняя кнопка мыши: Открыть "${url}" в дочерней вкладке`,
     zh_CN: url => `中键单击：打开子标签页“${url}”`,
@@ -185,6 +188,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container': {
     en: name => `Middle click: Open a child tab in "${name}" container`,
+    de: name => `Mittelklick: Öffne einen untergeordneten Tab in der Umgebung "${name}"`,
     fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
     ru: name => `Средняя кнопка мыши: Открыть дочернюю вкладку в контейнере "${name}"`,
     zh_CN: name => `中键单击：在“${name}”容器中打开子标签页`,
@@ -193,6 +197,8 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
+    de: (url, name) =>
+      `Mittelklick: Öffne "${url}" in einem untergeordneten Tab in der Umgebung "${name}"`,
     fr: (url, name) =>
       `Clic milieu: Ouvrir “${url}” dans un onglet enfant dans le conteneur “${name}”`,
     ru: (url, name) =>
@@ -214,6 +220,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
+    de: url => `Mittelklick: "${url}" im aktiven Tab laden`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
     ru: url => `Средняя кнопка мыши: Загрузить "${url}" в активной вкладке`,
     zh_CN: url => `中键点击：加载“${url}”于活动标签页`,
@@ -222,6 +229,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
+    de: name => `Mittelklick: Aktiven Tab erneut öffnen in der Umgebung "${name}"`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
     ru: name => `Средняя кнопка мыши: Переоткрыть активную вкладку в контейнере "${name}"`,
     zh_CN: name => `中键点击：在“${name}”容器中重新打开活动标签页`,
@@ -230,6 +238,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
+    de: (url, name) => `Mittelklick: "${url}" im aktiven Tab in der Umgebung "${name}" laden`,
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
     ru: (url, name) =>
@@ -255,7 +264,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
-    de: 'Tabs an benachbartes Panel anheften',
+    de: 'Tabs dem benachbarten Panel zuordnen',
     fr: 'Attacher les onglets au panneau voisin',
     hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
     pl: 'Załącz karty do sąsiednego panelu',
@@ -299,7 +308,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
-    de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
+    de: 'Hinweis: Tabs dieses Panels in anderen Fenstern werden in das benachbarte Panel verschoben',
     fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
     pl: 'Info: Karty tego panelu w innych oknach zostaną przeniesione do sąsiednich paneli',
@@ -900,7 +909,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
-    de: 'Lesezeichen entfernt',
+    de: ' Lesezeichen entfernt',
     fr: n => (n === 1 ? ' marque-page supprimé' : ' marque-pages supprimés'),
     hu: ' könyvjelző törölve lett',
     pl: (n = 0): string => {
@@ -1094,7 +1103,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
-    de: 'Panel konnte nicht aus Lesezeichen wiederherstellt werden',
+    de: 'Panel konnte nicht aus Lesezeichen wiederhergestellt werden',
     fr: 'Impossible de restaurer le panneau depuis les marque-pages',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
     pl: 'Nie można przywrócić panelu z zakładek',
@@ -1105,7 +1114,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
-    de: 'Quellordner nicht gefunden',
+    de: 'Stammordner nicht gefunden',
     fr: 'Dossier racine non trouvé',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie znaleziono nadrzędnego folderu',
@@ -1158,7 +1167,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
-    de: 'Quellordner konnte nicht gefunden werden',
+    de: 'Stammordner konnte nicht gefunden werden',
     fr: 'Impossible de trouver le dossier racine',
     hu: 'A kezdőmappa nem található',
     pl: 'Nie można znaleźć nadrzędnego folderu',
@@ -1169,7 +1178,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
-    de: 'Versuche Tab-Panel neu zu speichern',
+    de: 'Versuchen Sie, das Tab-Panel erneut zu speichern',
     fr: 'Essayez de réenregistrer le panneau d’onglets',
     hu: 'Meg kell próbálni újramenteni a lappanelt',
     pl: 'Spróbuj zapisać ponowanie panel kart',
@@ -1370,6 +1379,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.orange': {
     en: 'Orange',
+    de: 'Orange',
     hu: 'narancssárga',
     fr: 'Orange',
     pl: 'Pomarańczowy',

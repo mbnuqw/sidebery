@@ -29,7 +29,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.url_placeholder': {
     en: 'e.g. https://example.com',
-    de: 'z.B. https://beispiel.de',
+    de: 'z. B. https://example.com',
     fr: 'ex: https://example.com',
     hu: 'pl.: https://pelda.hu',
     pl: 'np. https://example.com',
@@ -108,6 +108,7 @@ export const commonTranslations: Translations = {
   },
   'btn.ok': {
     en: 'Ok',
+    de: 'OK',
     fr: 'Ok',
     ru: 'Ок',
     zh: '是',
@@ -163,6 +164,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.tabs.title': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
     pl: 'Karty',
@@ -250,6 +252,7 @@ export const commonTranslations: Translations = {
   },
   'sync.tabs_title': {
     en: 'Tabs',
+    de: 'Tabs',
     fr: 'Onglets',
     ru: 'Вкладки',
     zh_CN: '标签页',
@@ -257,6 +260,7 @@ export const commonTranslations: Translations = {
   },
   'sync.ctx_menu_title': {
     en: 'Context menu',
+    de: 'Kontextmenü',
     fr: 'Menu contextuel',
     ru: 'Контекстное меню',
     zh_CN: '上下文菜单',
@@ -264,6 +268,7 @@ export const commonTranslations: Translations = {
   },
   'sync.settings_title': {
     en: 'Settings',
+    de: 'Einstellungen',
     fr: 'Paramètres',
     ru: 'Настройки',
     zh_CN: '设置',
@@ -271,6 +276,7 @@ export const commonTranslations: Translations = {
   },
   'sync.style_title': {
     en: 'Styles',
+    de: 'Stile',
     fr: 'Styles',
     ru: 'Стили',
     zh_CN: '样式',
@@ -278,6 +284,7 @@ export const commonTranslations: Translations = {
   },
   'sync.keybindings_title': {
     en: 'Keybindings',
+    de: 'Tastenbelegung',
     fr: 'Raccourcis',
     ru: 'Горячие клавиши',
     zh_CN: '按键绑定',
@@ -285,6 +292,7 @@ export const commonTranslations: Translations = {
   },
   'sync.unknown_title': {
     en: 'Unknown',
+    de: 'Unbekannt',
     fr: 'Inconnu',
     ru: 'Неизвестно',
     zh: '未知',
@@ -368,6 +376,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_keyboard': {
     en: 'Keybindings have been successfully imported',
+    de: 'Tastenbelegung erfolgreich importiert',
     fr: 'Les raccourcis ont été importés avec succès',
     ru: 'Горячие клавиши успешно импортированы',
     zh_CN: '按键绑定已成功导入',
@@ -375,6 +384,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_menu': {
     en: 'Context menu has been successfully imported',
+    de: 'Kontextmenü erfolgreich importiert',
     fr: 'Le menu contextuel a été importé avec succès',
     ru: 'Контекстное меню успешно импортировано',
     zh_CN: '上下文菜单已成功导入',
@@ -382,6 +392,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_settings': {
     en: 'Settings have been successfully imported',
+    de: 'Einstellungen erfolgreich importiert',
     fr: 'Les paramètres ont été importés avec succès',
     ru: 'Настройки успешно импортированы',
     zh_CN: '设置已成功导入',
@@ -389,6 +400,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_styles': {
     en: 'Styles have been successfully imported',
+    de: 'Stile erfolgreich importiert',
     fr: 'Les styles ont été importés avec succès',
     ru: 'Стили успешно импортированы',
     zh_CN: '样式已成功导入',
@@ -455,6 +467,7 @@ export const commonTranslations: Translations = {
   // - Bookmarks popup
   'popup.bookmarks.name_label': {
     en: 'Name',
+    de: 'Name',
     fr: 'Nom',
     hu: 'Név',
     pl: 'Nazwa',
@@ -487,7 +500,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.recent_locations_label': {
     en: 'Recent locations',
-    de: 'Zuletzt besucht',
+    de: 'Zuletzt verwendet',
     fr: 'Emplacements récents',
     hu: 'Legutóbbi helyek',
     pl: 'Ostatnie miejsca',
@@ -542,7 +555,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.select_root_folder': {
     en: 'Select root folder',
-    de: 'Quellordner auswählen',
+    de: 'Stammordner auswählen',
     fr: 'Sélectionner le dossier racine',
     hu: 'A kiinduló mappa kiválasztása',
     pl: 'Zaznacz folder nadrzędny',
@@ -701,7 +714,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
     en: 'Default new tab',
-    de: 'Standard-Neuer Tab',
+    de: 'Standardseite für neue Tabs',
     fr: 'Nouvel onglet par défaut',
     hu: 'Alapértelmezett új lap',
     pl: 'Domyślna nowa karta',
@@ -768,6 +781,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_name_label': {
     en: 'Name (optional)',
+    de: 'Name (optional)',
     fr: 'Nom (optionnel)',
     hu: 'Név (opcionális)',
     pl: 'Nazwa (nieobowiązkowe)',
@@ -898,6 +912,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_name_label': {
     en: 'Name (optional)',
+    de: 'Name (optional)',
     fr: 'Nom (optionnel)',
     hu: 'Név (opcionális)',
     pl: 'Nazwa (nieobowiązkowe)',
@@ -1111,11 +1126,16 @@ export const commonTranslations: Translations = {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
     },
+    de: tabsCount => {
+      if (tabsCount === 1) return `Zwischengespeichertes Fenster öffnen (${tabsCount} Tab)`
+      return `Zwischengespeichertes Fenster öffnen (${tabsCount} Tabs)`
+    },
     zh_CN: tabsCount => `打开已缓存窗口（${tabsCount} 个标签页）`,
     zh_TW: tabsCount => `開啟已快取視窗（${tabsCount} 個分頁）`,
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Open cached window',
+    de: 'Zwischengespeichertes Fenster öffnen',
     ru: 'Открыть кэшированное окно',
     zh_CN: '打开已缓存窗口',
     zh_TW: '開啟已快取視窗',
@@ -1134,6 +1154,11 @@ export const commonTranslations: Translations = {
     en: (tabsCount, panelsCount) => {
       const t = tabsCount === 1 ? 'tab' : 'tabs'
       const p = panelsCount === 1 ? 'panel' : 'panels'
+      return `${tabsCount} ${t} in ${panelsCount} ${p}`
+    },
+    de: (tabsCount, panelsCount) => {
+      const t = tabsCount === 1 ? 'Tab' : 'Tabs'
+      const p = panelsCount === 1 ? 'Panel' : 'Panels'
       return `${tabsCount} ${t} in ${panelsCount} ${p}`
     },
     zh_CN: (tabsCount, panelsCount) => `${tabsCount} 个标签页在 ${panelsCount} 个面板中`,
@@ -1163,7 +1188,7 @@ export const commonTranslations: Translations = {
   },
   'menu.new_tab_bar.manage_shortcuts': {
     en: 'Manage Shortcuts',
-    de: 'Verwalte Verknüpfungen',
+    de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
     hu: 'Parancsikonok kezelése',
     pl: 'Zarządzaj skrótami',
@@ -2009,7 +2034,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.group': {
     en: 'Group',
-    de: 'Gruppe',
+    de: 'Gruppieren',
     fr: 'Grouper',
     hu: 'Csoportosítás',
     pl: 'Grupuj',
@@ -2020,7 +2045,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.flatten': {
     en: 'Flatten',
-    de: 'Plätten',
+    de: 'Abflachen',
     fr: 'Aplatir',
     hu: 'Szintcsökkentés',
     pl: 'Spłaszcz',
@@ -2053,7 +2078,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_ctr_': {
     en: 'Open in container...',
-    de: 'Öffne in Umgebung...',
+    de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
     hu: 'Megnyitás itt: konténer…',
     pl: 'Otwórz w kontenerze...',
@@ -2064,7 +2089,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_default_container': {
     en: 'Open in default container',
-    de: 'Öffne in Standardumgebung',
+    de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
     hu: 'Megnyitás itt: alapértelmezett konténer',
     pl: 'Otwórz w domyślnym kontenerze',
@@ -2075,7 +2100,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_': {
     en: 'Open in ',
-    de: 'Öffne in ',
+    de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
     hu: 'Megnyitás itt: ',
     pl: 'Otwórz w ',
@@ -2439,12 +2464,14 @@ export const commonTranslations: Translations = {
   'menu.copy_by_template': {
     ru: name => `Копировать ${name}`,
     en: name => 'Copy ' + name,
+    de: name => name + ' kopieren',
     fr: name => `Copier ${name}`,
     zh_CN: name => '复制 ' + name,
     zh_TW: name => '複製 ' + name,
   },
   'menu.paste': {
     en: 'Paste',
+    de: 'Einfügen',
     fr: 'Coller',
     hu: 'Paszta',
     pl: 'Pasta',
@@ -2499,7 +2526,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.conf_tooltip': {
     en: 'Configure panel\nAlt: Basic panel config',
-    de: 'Panel konfigurieren\nAlt: Panel Grundkonfiguration',
+    de: 'Panel konfigurieren\nAlt: Grundkonfiguration des Panels',
     fr: 'Configurer le panneau\nAlt: Configuration basique du panneau',
     hu: 'Panelbeállítások\nAlt: alapszintű panelbeállítások',
     pl: 'Konfiguruj panel\nAlt: Podstawowa konfiguracja panelu',
@@ -2713,6 +2740,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_3': {
     en: 'April',
+    de: 'April',
     fr: 'Avril',
     hu: 'április',
     pl: 'Kwiecień',
@@ -2752,6 +2780,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_7': {
     en: 'August',
+    de: 'August',
     fr: 'Aout',
     hu: 'augusztus',
     pl: 'Sierpień',
@@ -2761,6 +2790,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_8': {
     en: 'September',
+    de: 'September',
     fr: 'Septembre',
     hu: 'szeptember',
     pl: 'Wrzesień',
@@ -2780,6 +2810,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_10': {
     en: 'November',
+    de: 'November',
     fr: 'Novembre',
     hu: 'november',
     pl: 'Listopad',
@@ -2823,6 +2854,7 @@ export const commonTranslations: Translations = {
   // -
   'notif.open_private_windows_err': {
     en: 'Cannot open window',
+    de: 'Fenster konnte nicht geöffnet werden',
     fr: 'Impossible d’ouvrir la fenêtre',
     ru: 'Нельзя открыть окно',
     zh_CN: '无法打开窗口',
@@ -2830,6 +2862,7 @@ export const commonTranslations: Translations = {
   },
   'notif.open_private_windows_err_details': {
     en: 'Extension does not have permission for incognito mode',
+    de: 'Die Erweiterung darf nicht in privaten Fenstern ausgeführt werden',
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
     ru: 'У расширения нет разрешения на работу в приватных окнах',
     zh_CN: '扩展没有在隐私窗口中运行的权限',
@@ -2841,31 +2874,37 @@ export const commonTranslations: Translations = {
   // -
   'omnibox.default_suggestion': {
     en: 'Choose the command (default is the first one):',
+    de: 'Befehl auswählen (standardmäßig der erste):',
     fr: 'Choisir la commande (la première est celle par défaut)',
     ru: 'Выберите команду (по умолчанию первая в списке):',
   },
   'omnibox.reopen_in_ctr': {
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
+    de: ctrName => `⭮ Aktiven Tab in Umgebung "${ctrName}" neu öffnen`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
     ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
+    de: 'Standardumgebung',
     fr: 'Conteneur par défaut',
     ru: 'Стандартный контейнер',
   },
   'omnibox.move_to_panel': {
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
+    de: panelName => `↔ Aktiven Tab in Panel "${panelName}" verschieben`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
     ru: panelName => `↔ Переместить активную вкладку в панель "${panelName}"`,
   },
   'omnibox.switch_to_panel': {
     en: panelName => `⮞ Switch to "${panelName}" panel`,
+    de: panelName => `⮞ Zu Panel "${panelName}" wechseln`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
     ru: panelName => `⮞ Переключиться на панель "${panelName}"`,
   },
   'omnibox.move_to_tab': {
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
+    de: tabTitle => `↕ Aktiven Tab in Gruppe verschieben: "${tabTitle}"`,
     fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
     ru: tabTitle => `↕ Переместить активную вкладку в группу: "${tabTitle}"`,
   },
