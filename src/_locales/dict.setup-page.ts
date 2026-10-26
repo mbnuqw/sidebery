@@ -95,15 +95,19 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_http': {
     en: 'HTTP',
+    ru: 'HTTP',
   },
   'container.proxy_https': {
     en: 'TLS',
+    ru: 'TLS',
   },
   'container.proxy_socks4': {
     en: 'SOCKS4',
+    ru: 'SOCKS4',
   },
   'container.proxy_socks': {
     en: 'SOCKS5',
+    ru: 'SOCKS5',
   },
   'container.proxy_direct': {
     en: 'none',
@@ -171,6 +175,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'container.user_agent': {
     en: 'User Agent',
     fr: 'Agent utilisateur',
+    ru: 'User Agent',
     hu: 'Böngészőazonosító',
     ja: 'ユーザーエージェント',
   },
@@ -251,6 +256,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_url_btn': {
     en: 'URL',
+    ru: 'URL',
     zh_TW: '網址',
   },
   'panel.custom_icon_url_placeholder': {
@@ -622,6 +628,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
     fr: 'Barre d’adresse',
+    ru: 'Адресная строка',
   },
   'settings.nav_settings_nav': {
     en: 'Navigation bar',
@@ -1200,6 +1207,9 @@ Templates are written per line in the form "Template name:Template" (without quo
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
     fr: `Pour utiliser cette fonctionnalité, activez l’option “Copier avec un modèle” dans l’éditeur de menus contextuels ou définissez un raccourci clavier.
     Les modèles s’écrivent un par ligne sous la forme “Nom du modèle:Modèle” (sans les guillemets).`,
+    ru: `Чтобы использовать эту функцию, включите параметр "Копировать по шаблонам..." в редакторе контекстного меню или задайте горячие клавиши.
+Шаблоны записываются построчно в формате "Название шаблона:Шаблон" (без кавычек).
+Доступные переменные: %B - маркер списка (bullet); %CT - кастомный заголовок или заголовок; %T - заголовок; %U - URL`,
     zh_CN: `要使用此功能，请在菜单编辑器中启用“通过模板复制...”选项或设置快捷键。
 模板以“名称:内容”（不带引号）的格式逐行编写。
 可用变量：%B - 列表标记（项目符号）；%CT - 自定义标题或标题；%T - 标题；%U - 网址
@@ -1322,11 +1332,13 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   },
   'settings.clear_favicons_cache': {
     en: 'Delete favicons cache',
+    ru: 'Удалить кэш иконок сайтов',
     zh_CN: '删除图标缓存',
     zh_TW: '刪除圖示快取',
   },
   'settings.clear_favicons_cache_confirm': {
     en: 'Are you sure you want to delete favicons cache?',
+    ru: 'Вы уверены, что хотите удалить кэш иконок сайтов?',
     zh_CN: '确定要删除图标缓存吗？',
     zh_TW: '確定要刪除圖示快取嗎？',
   },
@@ -1591,10 +1603,12 @@ Available variables: %B - a list mark (bullet); %CT - custom title or title; %T 
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
+    ru: 'Адресная строка (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
+    ru: 'Используйте адресную строку (она же Omniox) для быстрого вызова некоторых команд Sidebery.',
   },
   'settings.omnibox_note': {
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
@@ -1603,30 +1617,38 @@ You can also set prefixes for each command type for faster navigation. Starting 
     fr: `Pour commencer, mettez le focus sur la barre d’adresse (Ctrl+L/Cmd+L), entrez “=” suivi d’une espace, puis tapez le nom du conteneur/panneau/groupe cible (insensible à la casse). Choisissez la commande dans la liste ou appuyez juste sur Entrée pour utiliser la première.
 
 Vous pouvez également définir des préfixes pour chaque type de commande pour une navigation plus rapide. Commencer votre requête (après le “=” et l’espace) avec un des préfixes configurés donnera aux commandes de ce type une plus grande priorité`,
+    ru: `Чтобы начать, активируйте адресную строку (Ctrl+L / Cmd+L), затем введите "=" и пробел, после чего начните вводить имя целевого контейнера/панели/группы (без учета регистра). Выберите нужную команду из списка или нажмите Enter, чтобы использовать первую.
+Вы также можете задать префиксы для каждого типа команд для более быстрой навигации. Начало вашего запроса (после "=" и пробела) с любых символов из настроенного префикса даст командам этого типа более высокий приоритет.`,
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
     fr: 'Commandes disponibles:',
+    ru: 'Доступные команды:',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
+    ru: 'Переоткрыть активную вкладку в контейнере...',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
     fr: 'Basculer vers le panneau…',
+    ru: 'Переключиться на панель...',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
     fr: 'Déplacer un onglet actif vers le panneau…',
+    ru: 'Переместить активную вкладку на панель...',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
     fr: 'Déplacer un onglet actif vers le groupe…',
+    ru: 'Переместить активную вкладку в группу...',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
     fr: 'Préfixe:',
+    ru: 'Префикс:',
   },
 
   // - Navigation bar
@@ -2198,6 +2220,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'キーを押した状態で',
   },
   'settings.dnd_mod_alt': {
+    ru: 'alt',
     en: 'alt',
     de: 'Alt',
     fr: 'alt',
@@ -2206,6 +2229,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Alt',
   },
   'settings.dnd_mod_shift': {
+    ru: 'shift',
     en: 'shift',
     de: 'Umschalttaste',
     fr: 'maj',
@@ -2214,6 +2238,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Shift',
   },
   'settings.dnd_mod_ctrl': {
+    ru: 'ctrl',
     en: 'ctrl',
     de: 'Strg',
     fr: 'ctrl',
@@ -2533,10 +2558,12 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
     fr: 'Continuer à chercher après avoir changé d’onglet',
+    ru: 'Продолжать поиск после переключения вкладок',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
+    ru: 'Продолжать поиск после выбора пункта контекстного меню',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
@@ -2725,6 +2752,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.scroll_panel_after_switching_tab': {
     en: 'Automatically scroll panel to activated tab',
     pl: 'Automatycznie przewiń panel do aktywowanej karty',
+    ru: 'Автоматически прокручивать панель к активной вкладке',
     zh_CN: '自动滚动面板到激活的标签页',
     zh_TW: '自動捲動面板到啟動的分頁',
   },
@@ -2952,6 +2980,22 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    ru: `Список правил для бейджей, разделенных новой строкой. Каждое правило состоит из необязательных параметров, разделенных точкой с запятой и пробелом: \`; \`.
+Примеры:
+\`\`\`
+title:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent
+minIdleTime:5000; urgent
+url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
+\`\`\`
+Доступные параметры:
+- \`url:{RegExp}\` и/или \`title:{RegExp}\`: Регулярное выражение для сопоставления вкладки и опционального получения значения бейджа через именованную группу: \`(?<v>...)\`. Если ваше \`{RegExp}\` содержит точку с запятой с пробелом \`; \`, экранируйте пробел обратным слэшем: \`;\\ \`. Значение по умолчанию \`{RegExp}\` — пустая строка, поэтому при отсутствии этих параметров будет совпадать любой URL или заголовок. Бейдж без значения игнорируется для выгруженных или активных вкладок и сбрасывается при выгрузке или активации вкладки.
+- \`bg:{Color}\` и/или \`fg:{Color}\`: Цвет фона или текста бейджа.
+- \`urgent\`: Делает бейдж срочным и распространяет этот статус на родительские элементы (свернутые вкладки, неактивные панели). Игнорируется для выгруженных и активных вкладок. После активации вкладки: бейдж без значения будет полностью скрыт, а бейдж со значением будет понижен до обычного.
+- \`notify\`: Показывает уведомление.
+- \`pinned\`: Применяет правило только к закрепленным вкладкам.
+- \`normal\`: Применяет правило только к незакрепленным вкладкам.
+- \`value:{Text}\`: Задает статическое значение для бейджа.
+- \`minIdleTime:{Milliseconds}\`: Применяет правило при изменении заголовка вкладки после простоя не менее \`{Milliseconds}\`.`,
   },
 
   'settings.tabs_notification_badge_scope': {
@@ -3598,6 +3642,7 @@ Available parameters:
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
+    ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
   },
 
   // - Tabs tree
@@ -3625,18 +3670,23 @@ Available parameters:
   },
   'settings.tabs_tree_limit_1': {
     en: '1',
+    ru: '1',
   },
   'settings.tabs_tree_limit_2': {
     en: '2',
+    ru: '2',
   },
   'settings.tabs_tree_limit_3': {
     en: '3',
+    ru: '3',
   },
   'settings.tabs_tree_limit_4': {
     en: '4',
+    ru: '4',
   },
   'settings.tabs_tree_limit_5': {
     en: '5',
+    ru: '5',
   },
   'settings.tabs_tree_limit_none': {
     en: 'none',
@@ -3731,18 +3781,23 @@ Available parameters:
   },
   'settings.auto_fold_tabs_except_1': {
     en: '1',
+    ru: '1',
   },
   'settings.auto_fold_tabs_except_2': {
     en: '2',
+    ru: '2',
   },
   'settings.auto_fold_tabs_except_3': {
     en: '3',
+    ru: '3',
   },
   'settings.auto_fold_tabs_except_4': {
     en: '4',
+    ru: '4',
   },
   'settings.auto_fold_tabs_except_5': {
     en: '5',
+    ru: '5',
   },
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
@@ -4067,6 +4122,7 @@ Available parameters:
   'settings.colorize_branches_src_url': {
     en: 'URL',
     fr: 'l’URL',
+    ru: 'URL',
     zh_TW: '網址',
   },
   'settings.colorize_branches_src_domain': {
@@ -4683,24 +4739,31 @@ Available parameters:
   },
   'settings.font_size_xxs': {
     en: 'XXS',
+    ru: 'XXS',
   },
   'settings.font_size_xs': {
     en: 'XS',
+    ru: 'XS',
   },
   'settings.font_size_s': {
     en: 'S',
+    ru: 'S',
   },
   'settings.font_size_m': {
     en: 'M',
+    ru: 'M',
   },
   'settings.font_size_l': {
     en: 'L',
+    ru: 'L',
   },
   'settings.font_size_xl': {
     en: 'XL',
+    ru: 'XL',
   },
   'settings.font_size_xxl': {
     en: 'XXL',
+    ru: 'XXL',
   },
   'settings.font_family': {
     en: 'Default font-family',
@@ -4884,6 +4947,7 @@ Available parameters:
     fr: 'Firefox',
     hu: 'Firefox',
     pl: 'Firefox',
+    ru: 'Firefox',
     zh: 'Firefox',
     ja: 'Firefox',
   },
@@ -5068,6 +5132,7 @@ Available parameters:
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
     fr: 'Isoler les onglets épinglés globalement',
+    ru: 'Изолировать глобально закрепленные вкладки',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
@@ -6335,9 +6400,11 @@ Available parameters:
   },
   'settings.snap_auto_export_type_json': {
     en: 'json',
+    ru: 'json',
   },
   'settings.snap_auto_export_type_md': {
     en: 'md',
+    ru: 'md',
   },
   'settings.snap_auto_export_type_both': {
     en: 'both',
@@ -6366,6 +6433,7 @@ Available parameters:
   // the default saved snapshot file name is always the same.
   'settings.snap_export_path_ph': {
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
+    ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_export_path_note': {
     en: `Note: Path is relative to the downloads folder and Firefox doesn't allow to set path outside it.
@@ -6618,30 +6686,35 @@ Available parameters:
   'settings.sync_gd_api_link': {
     en: 'Link',
     fr: 'Lien',
+    ru: 'Ссылка',
     zh_CN: '链接',
     zh_TW: '鏈結',
   },
   'settings.sync_gd_api_proj': {
     en: '1. Create a Google Cloud project:',
     fr: '1. Créer un project Google Cloud:',
+    ru: '1. Создайте проект Google Cloud:',
     zh_CN: '1. 创建 Google Cloud 项目：',
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
     en: '- Audience: External',
     fr: '– Audience: Externe',
+    ru: '- Целевая аудитория: Внешняя (External)',
     zh_CN: '- 受众群体：外部',
     zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
     en: '2. Enable Drive API:',
     fr: '2. Activer l’API Drive:',
+    ru: '2. Включите Google Drive API:',
     zh_CN: '2. 启用“Google Drive API”：',
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
     en: '3. Create a Client:',
     fr: '3. Créer un Client:',
+    ru: '3. Создайте учетные данные (Client ID):',
     zh_CN: '3. 创建客户端：',
     zh_TW: '3. 建立用戶端：',
   },
@@ -6650,6 +6723,8 @@ Available parameters:
 - Authorized redirect URIs:`,
     fr: `– Type: Application Web
 – URI de redirections autorisées:`,
+    ru: `- Тип приложения: Веб-приложение (Web application)
+- Разрешенные URI перенаправления:`,
     zh_CN: `- 类型：Web 应用
 - 授权重定向 URI：`,
     zh_TW: `- 類型：網頁應用程式
@@ -6658,42 +6733,49 @@ Available parameters:
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
+    ru: '4. Откройте созданный клиент и скопируйте Идентификатор клиента (Client ID):',
     zh_CN: '4. 复制创建的 OAuth 客户端 ID：',
     zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
     fr: '5. Insérer cet ID Client ici:',
+    ru: '5. Вставьте этот Идентификатор клиента сюда:',
     zh_CN: '5. 在此粘贴该客户端 ID：',
     zh_TW: '5. 在此貼上該用戶端編號：',
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
+    ru: '6. Добавьте следующие области доступа в разделе "Доступ к данным":',
     zh_CN: '6. 在数据访问添加以下范围：',
     zh_TW: '6. 在資料存取權新增以下範圍：',
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
+    ru: '7. Добавьте тестового пользователя (ваш email):',
     zh_CN: '7. 添加测试用户（您的电子邮件地址）：',
     zh_TW: '7. 新增測試使用者（您的電子郵件地址）：',
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
+    ru: '8. Отключите Sidebery от вашего Google Диска:',
     zh_CN: '8. 取消 Sidebery 与 Google 云端硬盘的关联：',
     zh_TW: '8. 取消 Sidebery 與 Google 雲端硬碟的連接：',
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
+    ru: '(если вы использовали ключ API по умолчанию)',
     zh_CN: '（如果您使用默认 API 密钥）',
     zh_TW: '（如果您使用預設 API 金鑰）',
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
+    ru: '9. Готово. При следующем запросе к Google Диску вы увидите экран согласия.',
     zh_CN: '9. 完毕。下次向 Google 云端硬盘发出请求时，您将看到同意屏幕。',
     zh_TW: '9. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
   },
@@ -6745,6 +6827,7 @@ Available parameters:
     en: 'View synced data',
     de: 'Synchronisierte Daten anzeigen',
     fr: 'Voir les données synchronisées',
+    ru: 'Просмотреть синхронизированные данные',
     zh_CN: '查看同步数据',
     zh_TW: '檢視同步資料',
   },
@@ -7437,6 +7520,7 @@ Available parameters:
   },
   'settings.kb_rm': {
     en: 'Close tab(s) / Delete bookmarks',
+    ru: 'Закрыть вкладку(и) / Удалить закладки',
     de: 'Tab(s) schließen / Lesezeichen löschen',
     fr: 'Fermer des onglets / Supprimer des marque-pages',
     hu: 'Lapok bezárása / könyvjelzők törlése',
@@ -7670,6 +7754,7 @@ Available parameters:
   'styles.vars_group.popup': {
     en: 'Popup',
     fr: 'Popup',
+    ru: 'Всплывающие окна',
     zh_CN: '弹出窗口',
     zh_TW: '彈出視窗',
     ja: 'ポップアップ',
@@ -7688,6 +7773,7 @@ Available parameters:
   'styles.vars_group.sub-list_title': {
     en: 'Sub-list title',
     fr: 'Titre de sous-liste',
+    ru: 'Заголовок подсписка',
     zh_CN: '子列表标题',
     zh_TW: '子清單標題（歷史檢視時）',
     ja: 'サブリストのタイトル',
@@ -7695,6 +7781,7 @@ Available parameters:
   'styles.vars_group.search_bar': {
     en: 'Search bar',
     fr: 'Barre de recherche',
+    ru: 'Строка поиска',
     zh_CN: '搜索栏',
     zh_TW: '搜尋欄',
     ja: '検索バー',
@@ -7702,6 +7789,7 @@ Available parameters:
   'styles.vars_group.new-tab_bar': {
     en: 'New-tab bar',
     fr: 'Barre de nouvel onglet',
+    ru: 'Панель новой вкладки',
     zh_CN: '新标签页栏',
     zh_TW: '新分頁欄（新分頁按鈕外）',
     ja: '新しいタブバー',
@@ -7709,6 +7797,7 @@ Available parameters:
   'styles.vars_group.notification': {
     en: 'Notification',
     fr: 'Notification',
+    ru: 'Уведомления',
     zh: '通知',
     ja: '通知',
   },
@@ -7817,6 +7906,14 @@ Available parameters:
       - Wybierz "/sidebar/sidebar.html" dla frame panelu bocznego
       - Wybierz "/sidebery/group.html" dla frame strony grup
     - Przejrzyj kartę "Inspektor"`,
+    ru: `ПРИМЕЧАНИЕ: Чтобы получить текущие доступные селекторы CSS, используйте отладчик:
+  - Нажмите кнопку "Копировать URL отладчика" в нижней панели
+  - Откройте новую вкладку с этим URL
+  - Выберите фрейм для инспекции
+    - Нажмите на прямоугольный значок (с тремя секциями) в правом верхнем углу страницы отладчика
+    - Выберите "/sidebar/sidebar.html" для фрейма боковой панели
+    - Выберите "/sidebery/group.html" для фрейма страницы групп
+  - Перейдите на вкладку "Инспектор"`,
     zh_CN: `注意事项：要获取当前可用的 CSS 选择器，请使用调试器：
   - 点击底部的“复制开发工具 URL”按钮
   - 用一个新标签页打开这个 URL
