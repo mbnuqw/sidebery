@@ -343,7 +343,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.no_empty_label': {
     en: 'Create new tab after the last one is closed',
-    de: 'Erstelle neuen Tab, nachdem der letzte geschlossen wurde',
+    de: 'Neuen Tab erstellen, nachdem der letzte geschlossen wurde',
     fr: 'Créer un nouvel onglet lorsque le dernier onglet est fermé',
     hu: 'Az utolsó lap bezárásakor egy új lap létrehozása',
     pl: 'Stwórz nową kartę kiedy ostatnia zostanie zamknięta',
@@ -376,7 +376,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_ctx_reopen': {
     en: 'Detect externally opened tab and reopen it in the target container on the first web request (global setting)',
-    de: 'Erkenne extern geöffnete Tabs und öffne sie bei der ersten Anfrage in der Zielumgebung neu (globale Einstellung)',
+    de: 'Extern geöffnete Tabs erkennen und bei der ersten Anfrage in der Zielumgebung neu öffnen (globale Einstellung)',
     fr: 'Détecter les onglets ouverts de l’extérieur et les rouvrir dans le conteneur cible à la première requête Web (paramètre global)',
     hu: 'A kívülről megnyitott lapok érzékelése és újranyitása a célkonténerben az első lekéréskor (globális beállítás)',
     pl: 'Wykryj otwarte zewnętrznie karty i otwórz je ponownie w docelowym kontenerze po pierwszym rządaniu (ustawienie globalne)',
@@ -420,7 +420,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.tab_move_rules': {
     en: 'Move tabs to this panel',
-    de: 'Verschiebe Tabs in dieses Panel',
+    de: 'Tabs in dieses Panel verschieben',
     fr: 'Déplacer les onglets dans ce panneau',
     hu: 'Lapok áthelyezése erre a panelra',
     pl: 'Przenieś karty do tego panelu',
@@ -442,7 +442,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.tab_move_rules_manage_badge': {
     en: 'Manage moving rules',
-    de: 'Verwalte Verschiebungsregeln',
+    de: 'Verschiebungsregeln verwalten',
     fr: 'Gérer les règles de déplacemement',
     hu: 'Áthelyezési szabályok kezelése',
     pl: 'Zarządzaj zasadami przenoszenia',
@@ -453,7 +453,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.move_excluded_to': {
     en: 'Move unmatched (excluded) tabs to panel',
-    de: 'Verschiebe nicht passende (ausgeschlossene) Tabs in Panel',
+    de: 'Nicht passende (ausgeschlossene) Tabs in Panel verschieben',
     fr: 'Déplacer les onglets sans correspondance (exclus) dans le panneau',
     hu: 'A nem illeszkedő (kizárt) lapok áthelyezése a panelra',
     pl: 'Przenieś niepasujące (wykluczone) karty do panelu',
@@ -475,7 +475,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_shortcuts_manage_btn': {
     en: 'Manage shortcuts',
-    de: 'Verwalte Verknüpfungen',
+    de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
     hu: 'Parancsikonok kezelése',
     pl: 'Zarządzaj skrótami',
@@ -1733,7 +1733,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_inline': {
     en: 'Show navigation bar in one line',
-    de: 'Zeige Navigationsleiste in einer Zeile',
+    de: 'Navigationsleiste in einer Zeile anzeigen',
     fr: 'Afficher la barre de navigation sur une ligne',
     hu: 'Egysoros vezérlősáv',
     pl: 'Pokaż pasek nawigacyjny w jednej linii',
@@ -1777,7 +1777,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_btn_count': {
     en: 'Show count of tabs/bookmarks',
-    de: 'Zeige Anzahl der Tabs/Lesezeichen',
+    de: 'Anzahl der Tabs/Lesezeichen anzeigen',
     fr: 'Afficher le nombre d’onglets ou de marque-pages',
     hu: 'A lapok/könyvjelzők darabszámának jelzése',
     pl: 'Pokaż licznik kart/zakładek',
@@ -1788,7 +1788,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.hide_empty_panels': {
     en: 'Hide empty tabs panels',
-    de: 'Verstecke leere Tab-Panels',
+    de: 'Leere Tab-Panels ausblenden',
     fr: 'Cacher les panneaux d’onglets vides',
     hu: 'Az üres lappanelok elrejtése',
     pl: 'Ukryj puste panele kart',
@@ -1799,7 +1799,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.hide_discarded_tab_panels': {
     en: 'Hide tab panel if all its tabs unloaded',
-    de: 'Verstecke Tab-Panel, wenn alle Tabs entladen sind',
+    de: 'Tab-Panel ausblenden, wenn alle seine Tabs entladen sind',
     fr: 'Cacher les panneaux d’onglets dont tous les onglets sont déchargés',
     hu: 'A lappanel elrejtése, ha minden lapja ki lett söpörve',
     pl: 'Ukryj panel kart jeśli wszystkie jego karty są niezaładowane',
@@ -2384,7 +2384,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_act_tab_from_link': {
     en: 'Activate tab created from a dragged link',
-    de: 'Aktiviere Tab, welcher durch einen abgelegten Link erstellt wurde',
+    de: 'Tab aktivieren, der aus einem abgelegten Link erstellt wurde',
     fr: 'Activer l’onglet créé depuis un lien déposé',
     hu: 'Beejtett hivatkozásból létrehozott lap aktiválása',
     pl: 'Aktywuj kartę stworzoną przez przeniesienie linku',
@@ -2395,7 +2395,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_act_search_tab': {
     en: 'Activate tab created to search for dragged text',
-    de: 'Aktiviere Tab, welcher zwecks Suche durch einen abgelegten Text erstellt wurde',
+    de: 'Tab aktivieren, der für die Suche nach abgelegtem Text erstellt wurde',
     fr: 'Activer l’onglet créé pour rechercher un texte déposé',
     hu: 'Beejtett szöveg keresésére létrehozott lap aktiválása',
     pl: 'Aktywuj kartę utworzoną przez szukanie dla przeniesionego tekstu',
@@ -2406,7 +2406,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_tabs': {
     en: 'Close tabs after dropping them to bookmarks',
-    de: 'Schließe Tabs, nachdem sie auf Lesezeichen abgelegt wurden',
+    de: 'Tabs schließen, nachdem sie auf Lesezeichen abgelegt wurden',
     fr: 'Fermer les onglets après les avoir déposés dans les marque-pages',
     hu: 'Lapok bezárása a könyvjelzők közé ejtésük után',
     pl: 'Zamknij karty po opuszczeniu ich do zakładek',
@@ -2428,7 +2428,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_bookmarks': {
     en: 'Delete bookmarks after dropping them to tabs',
-    de: 'Lösche Lesezeichen, nachdem sie auf Tabs abgelegt wurden',
+    de: 'Lesezeichen löschen, nachdem sie auf Tabs abgelegt wurden',
     fr: 'Supprimer les marque-pages après les avoir déposés dans les onglets',
     hu: 'Könyvjelzők törlése a lapok közé ejtésük után',
     pl: 'Usuń zakładki po opuszczeniu ich do kart',
@@ -2661,7 +2661,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.warn_on_multi_tab_close': {
     en: 'Warn on trying to close multiple tabs',
-    de: 'Warne beim Schließen mehrerer Tabs',
+    de: 'Beim Schließen mehrerer Tabs warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
     hu: 'Figyelmeztetés több lap egyidejű bezáráskor',
     pl: 'Ostrzegaj o próbie zamknięcia wielu kart',
@@ -2703,7 +2703,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_rm_undo_note': {
     en: 'Show undo notification on closing multiple tabs',
-    de: 'Zeige "Rückgängig"-Meldung nach Schließen mehrerer Tabs',
+    de: '"Rückgängig"-Meldung nach dem Schließen mehrerer Tabs anzeigen',
     fr: 'Afficher une notification pour annuler la fermeture de plusieurs onglets',
     hu: 'Visszavonási értesítés több lap egyidejű bezárásakor',
     pl: 'Pokaż cofalne powiadomienie podczas zamykania wielu kart',
@@ -2714,7 +2714,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_last_tab_on_panel_switching': {
     en: 'Activate last active tab on panel switching',
-    de: 'Aktiviere den zuletzt aktiven Tab beim Wechseln des Panels',
+    de: 'Beim Wechseln des Panels den zuletzt aktiven Tab aktivieren',
     fr: 'Activer le dernier onglet lors du basculement vers un panneau',
     hu: 'Panelváltáskor a legutóbb aktív lapra ugrás',
     pl: 'Aktywuj ostatnio aktywną kartę po przełączaniu panelu',
@@ -2818,7 +2818,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_rm_btn': {
     en: 'Show close button',
-    de: 'Zeige "Schließen"-Schaltfläche',
+    de: '"Schließen"-Schaltfläche anzeigen',
     fr: 'Afficher le bouton de fermeture',
     hu: 'Bezáró gomb megjelenítése',
     pl: 'Pokaż przycisk zamykania',
@@ -2917,7 +2917,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_stay_in_panel': {
     en: 'Stay in panel to the last tab',
-    de: 'Bleibe im Panel bis zum letzten Tab',
+    de: 'Bis zum letzten Tab im Panel bleiben',
     fr: 'Rester dans le panneau jusqu’au dernier onglet',
     hu: 'Maradjon a panelon az utolsó lapig',
     pl: 'Pozostań w panelu do ostatniej karty',
@@ -2939,7 +2939,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_no_folded': {
     en: 'Ignore folded tabs',
-    de: 'Ignoriere eingeklappte Tabs',
+    de: 'Eingeklappte Tabs ignorieren',
     fr: 'Ignorer les onglets repliés',
     hu: 'Becsukott lapok kihagyása',
     pl: 'Ignoruj złożone karty',
@@ -2950,7 +2950,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_no_discarded': {
     en: 'Ignore discarded tabs',
-    de: 'Ignoriere entladene Tabs',
+    de: 'Entladene Tabs ignorieren',
     fr: 'Ignorer les onglets déchargés',
     hu: 'Kisöpört lapok kihagyása',
     pl: 'Ignoruj odrzucone karty',
@@ -2961,7 +2961,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_unread_mark': {
     en: 'Show mark on unread tabs',
-    de: 'Zeige Markierung an ungelesenen Tabs',
+    de: 'Markierung an ungelesenen Tabs anzeigen',
     fr: 'Afficher un indicateur sur les onglets non lus',
     hu: 'Az olvasatlan lapok megjelölése',
     pl: 'Pokaż znacznik na nieprzeczytanych kartach',
@@ -3156,7 +3156,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_reload_limit': {
     en: 'Limit the count of simultaneously reloading tabs',
-    de: 'Beschränke die Anzahl gleichzeitig neu ladender Tabs',
+    de: 'Anzahl gleichzeitig neu ladender Tabs begrenzen',
     fr: 'Limiter le nombre d’onglets s’actualisant en même temps',
     hu: 'Az egyidejű oldalújratöltések korlátozása',
     pl: 'Ogranicz liczbę jednocześnie przeładowywanych kart',
@@ -3167,7 +3167,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_reload_limit_notif': {
     en: 'Show notification with the reloading progress',
-    de: 'Zeige Benachrichtigung mit Fortschritt des Neuladens',
+    de: 'Benachrichtigung mit Fortschritt des Neuladens anzeigen',
     fr: 'Afficher une notification avec la progression de l’actualisation',
     hu: 'Az oldalújratöltés folyamatának jelzése',
     pl: 'Pokaż powiadomienie z postępem przeładowywania',
@@ -3178,7 +3178,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_switch_act_move': {
     en: 'Switch panel after manually moving active tab to another panel',
-    de: 'Wechsle Panel nach manuellem Verschieben des aktiven Tabs in ein anderes Panel',
+    de: 'Panel nach manuellem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été manuellement déplacé.',
     hu: 'Váltás a célpanelra az aktív lap kézi áthelyezésekor',
     pl: 'Przełącz panel po manualnym przeniesieniu aktywnej karty do innego panelu',
@@ -3189,7 +3189,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_switch_act_move_auto': {
     en: 'Switch panel after auto moving active tab to another panel',
-    de: 'Wechsle Panel nach automatischem Verschieben des aktiven Tabs in ein anderes Panel',
+    de: 'Panel nach automatischem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été automatiquement déplacé.',
     hu: 'Váltás a célpanelra az aktív lap automatikus áthelyezésekor',
     pl: 'Przełącz panel po automatycznym przeniesieniu aktywnej karty do innego panelu',
@@ -3200,7 +3200,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_url_in_tooltip': {
     en: 'Show URL in tooltip',
-    de: 'Zeige URL im Tooltip',
+    de: 'URL im Tooltip anzeigen',
     fr: 'Afficher l’URL dans l’infobulle',
     hu: 'URL megjelenítése a buboréksúgóban',
     pl: 'Pokaż URL w podpowiedzi',
@@ -3244,7 +3244,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_container_in_tooltip': {
     en: 'Show container in tooltip',
-    de: 'Zeige Umgebung im Tooltip',
+    de: 'Umgebung im Tooltip anzeigen',
     fr: 'Afficher le nom du conteneur dans l’infobulle',
     hu: 'Container megjelenítése a buboréksúgóban',
     pl: 'Pokaż kontener w podpowiedzi',
@@ -3255,7 +3255,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',
-    de: 'Zeige "Neuer Tab"-Schaltflächen',
+    de: '"Neuer Tab"-Schaltflächen anzeigen',
     fr: 'Afficher le bouton “Nouvel onglet”',
     hu: '„Új lap” gombok megjelenítése',
     pl: 'Pokaż przyciski nowej karty',
@@ -3334,7 +3334,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - New tab position
   'settings.move_new_tab_pin': {
     en: 'Place new tab opened from pinned tab',
-    de: 'Platziere Tab, welcher von einem angehefteten Tab geöffnet wird',
+    de: 'Position von Tabs, die aus einem angehefteten Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un onglet épinglé',
     hu: 'Rögzített lapról megnyitott lap elhelyezése',
     pl: 'Położenie nowo otwartej karty z przypiętych kart',
@@ -3365,7 +3365,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_auto_group': {
     en: 'Group tabs that were opened from a pinned tab',
-    de: 'Gruppiere Tabs, welche von einem angehefteten Tab geöffnet wurden',
+    de: 'Tabs gruppieren, die aus einem angehefteten Tab geöffnet wurden',
     fr: 'Grouper les onglets qui ont été ouverts depuis un onglet épinglé',
     hu: 'Rögzített lapról nyitott lapok csoportosítása',
     pl: 'Grupuj karty otwarte z przypiętej karty',
@@ -3376,7 +3376,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent': {
     en: 'Place new tab opened from another tab',
-    de: 'Platziere Tab, welcher von einem anderen Tab geöffnet wurde',
+    de: 'Position von Tabs, die aus einem anderen Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un autre onglet',
     hu: 'Másik lapról megnyitott lap elhelyezése',
     pl: 'Położenie nowej karty otworzonej z innej karty',
@@ -3473,7 +3473,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_indent': {
     en: 'Create and maintain a tree structure if possible',
-    de: 'Erstellen und pflegen Sie nach Möglichkeit eine Baumstruktur',
+    de: 'Nach Möglichkeit eine Baumstruktur erstellen und beibehalten',
     fr: 'Créer et maintenir une structure arborescente si possible',
     hu: 'Ha lehetséges, hozzon létre és tartson fenn fa szerkezetet',
     pl: 'Utwórz i zachowaj strukturę drzewa, jeśli to możliwe',
@@ -3495,7 +3495,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_button': {
     en: `Place new tab created by the Sidebery new tab button`,
-    de: 'Platziere neuen Tab, der mit der Sidebery-Schaltfläche "Neuer Tab" erstellt wurde',
+    de: 'Position von Tabs, die mit der Sidebery-Schaltfläche "Neuer Tab" erstellt werden',
     fr: 'Emplacement des onglets ouverts par le bouton Nouvel onglet de Sidebery',
     hu: 'Az új lap pozíciója, amelyet a Sidebery új lap gombjával hoztunk létre',
     pl: 'Pozycja nowej karty utworzonej za pomocą przycisku nowej karty Sidebery',
@@ -3506,7 +3506,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
-    de: 'Platziere neuen Tab (allgemeine Regel)',
+    de: 'Position neuer Tabs (allgemeine Regel)',
     fr: 'Emplacement des nouveaux onglets (règle générale)',
     hu: 'Új lap elhelyezése (főszabály)',
     pl: 'Położenie nowej karty (zasada ogólna)',
@@ -3671,7 +3671,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_list': {
     en: 'Show titles of pinned tabs',
-    de: 'Zeige Namen angehefteter Tabs',
+    de: 'Titel angehefteter Tabs anzeigen',
     fr: 'Afficher le titre des onglets épinglés',
     hu: 'A rögzített lapok címének kijelzése',
     pl: 'Pokaż tytuły przypiętych kart',
@@ -3682,7 +3682,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned.no_unload': {
     en: 'Prevent pinned tabs from unloading',
-    de: 'Verhindere Entladen von angehefteten Tabs',
+    de: 'Entladen angehefteter Tabs verhindern',
     fr: 'Empêcher les onglets épinglés de se décharger',
     hu: 'A rögzített lapok kisöprésének megelőzése',
     pl: 'Zapobiegaj usypianiu przypiętych kart',
@@ -3934,7 +3934,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_lvl_dots': {
     en: 'Show marks to indicate tabs sub-tree levels',
-    de: 'Zeige Markierungen für Abstufung der Unterebenen der Tabs',
+    de: 'Markierungen für die Ebenen der Tab-Unterbäume anzeigen',
     fr: 'Afficher des guides pour indiquer le niveau d’arborescense des onglets',
     hu: 'Az utódlapok szintjének kijelzése',
     pl: 'Pokaż znaczniki aby wyróżnić poddrzewa kart',
@@ -4080,7 +4080,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.ignore_folded_parent': {
     en: 'Open a new tab one level down if the parent tab is folded',
-    de: 'Öffne neuen Tab eine Ebene tiefer, wenn übergeordneter Tab eingeklappt ist',
+    de: 'Neuen Tab eine Ebene tiefer öffnen, wenn der übergeordnete Tab eingeklappt ist',
     fr: 'Ouvrir le nouvel onglet un niveau plus bas si l’onglet parent est replié',
     hu: 'Az új lap egy szinttel lejjebb kerüljön, ha a szülőlap csukott',
     pl: 'Otwórz nową kartę poziom niżej jeśli karta rodzica była zwinięta',
@@ -4126,7 +4126,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_tabs_src': {
     en: 'Generate color from',
-    de: 'Bilde Farbe anhand von',
+    de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
     hu: 'A színezés szempontja',
     pl: 'Generuj kolor z',
@@ -4168,7 +4168,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_branches_src': {
     en: 'Generate color from',
-    de: 'Bilde Farbe anhand von',
+    de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
     hu: 'A színezés szempontja',
     pl: 'Generuj kolor z',
@@ -4195,7 +4195,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.inherit_custom_color': {
     en: 'Inherit custom (manually set) color in the child tabs',
-    de: 'Übernehme manuell festgelegte Farbe für untergeordnete Tabs',
+    de: 'Manuell festgelegte Farbe an untergeordnete Tabs vererben',
     fr: 'Hériter les couleurs personalisées (définies manuellement) dans les onglets enfants',
     hu: 'Az utódlapok örököljék a kézzel beállított színt',
     pl: 'Dziedzicz własny (manualnie ustawiony) kolor w kartach potomnych',
@@ -4408,7 +4408,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Native tabs
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
-    de: 'Verstecke native Tabs inaktiver Panels',
+    de: 'Native Tabs inaktiver Panels ausblenden',
     fr: 'Cacher les onglets natifs des panneaux inactifs',
     hu: 'Az inaktív panel natív lapjainak elrejtése',
     pl: 'Ukryj natywne karty nieaktywnego panelu',
@@ -4419,7 +4419,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_tabs': {
     en: 'Hide native tabs in folded branch',
-    de: 'Verstecke eingeklappte Tabs',
+    de: 'Native Tabs in eingeklappten Zweigen ausblenden',
     fr: 'Cacher les onglets natifs des branches repliées',
     hu: 'Az összecsukot ágak natív lapjainak elrejtése',
     pl: 'Ukryj natywne karty w zwiniętych gałęziach',
@@ -4430,7 +4430,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_parent': {
     en: 'Also hide the parent tab',
-    de: 'Verstecke auch übergeordnete Tabs',
+    de: 'Auch den übergeordneten Tab ausblenden',
     fr: 'Cacher aussi l’onglet parent',
     hu: 'A szülőlapot is rejtse el',
     pl: 'Również ukryj kartę rodzica',
@@ -4520,7 +4520,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.load_bookmarks_on_demand': {
     en: 'Load bookmarks on demand',
-    de: 'Lade Lesezeichen bei Bedarf',
+    de: 'Lesezeichen bei Bedarf laden',
     fr: 'Charger les marques-pages à la demande',
     hu: 'A könyvjelzők azonnali betöltése',
     pl: 'Załaduj zakładki na żądanie',
@@ -4531,7 +4531,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.warn_on_multi_bookmark_delete': {
     en: 'Warn on trying delete multiple bookmarks',
-    de: 'Warne beim Löschen mehrerer Lesezeichen',
+    de: 'Beim Löschen mehrerer Lesezeichen warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
     hu: 'Figyelmeztetés több könyvjelző egyidejű törlésekor',
     pl: 'Ostrzeż przed usunięciem wielu zakładek',
@@ -4575,7 +4575,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.ask_new_bookmark_place': {
     en: 'Ask where to store bookmarks',
-    de: 'Frage, wo Lesezeichen gespeichert werden sollen',
+    de: 'Nachfragen, wo Lesezeichen gespeichert werden sollen',
     fr: 'Demander où sauvegarder les marque-pages',
     hu: 'Rákérdezés a könyvjelző helyére',
     pl: 'Pytaj gdzie zapisać zakładkę',
@@ -4586,7 +4586,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.bookmarks_rm_undo_note': {
     en: 'Show undo notification after deleting bookmarks',
-    de: 'Zeige "Rückgängig"-Meldung nachdem Lesezeichen gelöscht wurden',
+    de: '"Rückgängig"-Meldung nach dem Löschen von Lesezeichen anzeigen',
     fr: 'Afficher une notification pour annuler la suppression de plusieurs marque-pages',
     hu: 'Visszavonási értesítés a könyvjelzők törlése után',
     pl: 'Pokaż powiadomienie przywrócenia zakładek po usunięciu ich',
@@ -4608,7 +4608,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_rm_other': {
     en: 'Auto-delete on opening bookmarks from the "Other Bookmarks" folder',
-    de: 'Entferne geöffnete Lesezeichen aus "Weitere Lesezeichen"-Ordner',
+    de: 'Lesezeichen aus dem Ordner "Weitere Lesezeichen" beim Öffnen automatisch löschen',
     fr: 'Supprimer automatiquement à l’ouverture de marque-pages du dossier “Autres marque-pages”',
     hu: 'Az „Egyéb könyvjelzők” mappából megnyitott könyvjelző automatikus törlése',
     pl: 'Automatyczne usuwanie otwartch zakłądek z folderu "Inne Zakładki"',
@@ -4619,7 +4619,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.show_bookmark_len': {
     en: 'Show folder size',
-    de: 'Zeige Ordnergröße',
+    de: 'Ordnergröße anzeigen',
     fr: 'Afficher la taille des dossiers',
     hu: 'A mappa méretének kijelzése',
     pl: 'Pokaż rozmiar folderu',
@@ -4630,7 +4630,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.highlight_open_bookmarks': {
     en: 'Mark open bookmarks',
-    de: 'Kennzeichne geöffnete Lesezeichen',
+    de: 'Geöffnete Lesezeichen kennzeichnen',
     fr: 'Indiquer les marque-pages ouverts',
     hu: 'A megnyitott könyvjelzők megjelölése',
     pl: 'Oznacz otwarte zakładki',
@@ -4641,7 +4641,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.activate_open_bookmark_tab': {
     en: 'Go to open tab instead of opening new one',
-    de: 'Wechsle zu offenem Tab, statt einen neuen zu öffnen',
+    de: 'Zu geöffnetem Tab wechseln, statt einen neuen zu öffnen',
     fr: 'Aller à l’onglet ouvert au lieu d’en ouvrir un nouveau',
     hu: 'A megnyitott lapra ugrás új lap nyitása helyett',
     pl: 'Zamiast otwierać nową kartę, idź do już otwartej',
@@ -5060,7 +5060,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.h_scroll_action': {
     en: 'Use horizontal scroll to',
-    de: 'Nutze horizontales Scrollen für',
+    de: 'Aktion beim horizontalen Scrollen',
     fr: 'Scroller horizontalement pour',
     hu: 'A vízszintes görgetés művelete',
     pl: 'Używaj poziomego przewijania do',
@@ -5104,7 +5104,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.one_panel_switch_per_scroll': {
     en: 'Limit to one panel switch per scroll',
-    de: 'Wechsle nur ein Panel pro Scroll-Bewegung',
+    de: 'Nur ein Panel pro Scroll-Bewegung wechseln',
     fr: 'Limiter à un basculement de panneau par scroll',
     hu: 'Csak egy panelváltás görgetésenként',
     pl: 'Ogranicz do jednego przełączenia panelu na przewinięcie',
@@ -5115,7 +5115,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs using vertical scroll',
-    de: 'Wechsle Tabs durch vertikales Scrollen',
+    de: 'Tabs durch vertikales Scrollen wechseln',
     fr: 'Basculer d’onglet en scrollant verticalement',
     hu: 'Lapváltás egérgörgővel',
     pl: 'Przełącz karty używając pionowego przewijania',
@@ -5179,7 +5179,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_preselect_note': {
     en: 'Select tab using vertical scroll and activate it after mouse leave',
-    de: 'Wähle Tab durch vertikales Scrollen aus und aktiviere ihn, sobald der Mauszeiger die Seitenleiste verlässt',
+    de: 'Tab durch vertikales Scrollen auswählen und aktivieren, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Sélectionner un onglet avec le scroll vertical et l’activer quand la souris sort du panneau',
     hu: 'A lap kijelölése az egérgörgővel, majd a lap aktiválása, miután az egérmutató elhagyta',
     pl: 'Wybierz kartę używając pionowego przewijania i aktywuj ją kiedy mysz wyjdzie z panelu',
@@ -5196,7 +5196,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
-    de: 'Überspringe eingeklappte Tabs',
+    de: 'Eingeklappte Tabs überspringen',
     fr: 'Ignorer les onglets repliés',
     hu: 'A becsukott lapok kihagyása',
     pl: 'Pomiń złożone karty',
@@ -5207,7 +5207,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_skip_discarded': {
     en: 'Skip unloaded tabs',
-    de: 'Überspringe entladene Tabs',
+    de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
     hu: 'A kisöpört lapok kihagyása',
     pl: 'Pomiń niezaładowane karty',
@@ -5363,7 +5363,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_tabs_panel_left_click_scroll': {
     en: 'scroll to start/end',
-    de: 'Scrolle zum Anfang/Ende',
+    de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
     hu: 'gördítés az elejére/végére',
     pl: 'przewiń na początek/koniec',
@@ -5374,7 +5374,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_tabs_panel_left_click_new_tab': {
     en: 'create tab',
-    de: 'Erstelle Tab',
+    de: 'Tab erstellen',
     fr: 'créer un onglet',
     hu: 'új lap nyitása',
     pl: 'utwórz kartę',
@@ -5407,7 +5407,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': {
     en: 'scroll to start/end',
-    de: 'Scrolle zum Anfang/Ende',
+    de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
     hu: 'gördítés az elejére/végére',
     pl: 'przewiń na początek/koniec',
@@ -5440,7 +5440,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_act_tab': {
     en: 'close active tab',
-    de: 'Schließe aktiven Tab',
+    de: 'Aktiven Tab schließen',
     fr: 'fermer l’onglet actif',
     hu: 'az aktív lap bezárása',
     pl: 'zamknij aktywną kartę',
@@ -5451,7 +5451,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_all': {
     en: 'close tabs',
-    de: 'Schließe Tabs',
+    de: 'Tabs schließen',
     fr: 'fermer les onglets',
     hu: 'a lapok bezárása',
     pl: 'zamknij karty',
@@ -5462,7 +5462,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_rmp': {
     en: 'close tabs and remove panel',
-    de: 'Schließe Tabs und entferne Panel',
+    de: 'Tabs schließen und Panel entfernen',
     fr: 'fermer les onglets et supprimer le panneau',
     hu: 'a lapok bezárása és a panel törlése',
     pl: 'zamknij karty i usuń panel',
@@ -5473,7 +5473,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_discard': {
     en: 'unload tabs',
-    de: 'Entlade Tabs',
+    de: 'Tabs entladen',
     fr: 'décharger les onglets',
     hu: 'a lapok kisöprése',
     pl: 'uśpij karty',
@@ -5484,7 +5484,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_hide': {
     en: 'hide panel',
-    de: 'Verstecke Panel',
+    de: 'Panel ausblenden',
     fr: 'cacher le panneau',
     hu: 'a panel elrejtése',
     pl: 'ukryj panel',
@@ -5495,7 +5495,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_bookmark': {
     en: 'save panel to bookmarks',
-    de: 'Speichere Panel in Lesezeichen',
+    de: 'Panel in Lesezeichen speichern',
     fr: 'sauvegarder le panneau dans les marque-pages',
     hu: 'a panel könyvjelzőzése',
     pl: 'zapisz panel do zakładek',
@@ -5506,7 +5506,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_bkm_rmp': {
     en: 'save to bookmarks and remove panel',
-    de: 'Speichere in Lesezeichen und entferne Panel',
+    de: 'In Lesezeichen speichern und Panel entfernen',
     fr: 'sauvegarder dans les marque-pages et supprimer le panneau',
     hu: 'a panel könyvjelzőzése és törlése',
     pl: 'zapisz do zakładek i usuń panel',
@@ -5517,7 +5517,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_convert': {
     en: 'convert to bookmarks',
-    de: 'Konvertiere in Lesezeichen',
+    de: 'In Lesezeichen umwandeln',
     fr: 'convertir en marque-pages',
     hu: 'átalakítás könyvjelzőkké',
     pl: 'konwertuj na zakładki',
@@ -5528,7 +5528,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_conv_hide': {
     en: 'convert to bookmarks panel and hide',
-    de: 'Konvertiere in Lesezeichen-Panel und verstecke',
+    de: 'In Lesezeichen-Panel umwandeln und ausblenden',
     fr: 'convertir en panneau de marque-pages et le cacher',
     hu: 'átalakítás könyvjelzőpanellá és elrejtés',
     pl: 'konwertuj na panel zakładek i ukryj',
@@ -5561,7 +5561,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_bookmarks_panel_mid_click_convert': {
     en: 'convert to tabs',
-    de: 'Konvertiere in Tabs',
+    de: 'In Tabs umwandeln',
     fr: 'convertir en onglets',
     hu: 'átalakítás lapokká',
     pl: 'konwertuj na karty',
@@ -5583,7 +5583,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_switch_panels_wheel': {
     en: 'Switch panels using vertical scroll over navigation bar',
-    de: 'Wechsle Panels durch vertikales Scrollen über der Navigationsleiste',
+    de: 'Panels durch vertikales Scrollen über der Navigationsleiste wechseln',
     fr: 'Basculer entre les panneaux en scrollant verticalement sur la barre de navigation',
     hu: 'Egérgörgős panelváltás a vezérlősávon',
     pl: 'Przełącz panele używając pionowego przewijania nad paskiem nawigacyjnym',
@@ -5629,7 +5629,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_second_click_act_prev_no_unload': {
     en: 'Skip unloaded tabs',
-    de: 'Überspringe entladene Tabs',
+    de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
     hu: 'A kisöpört lapok kihagyása',
     pl: 'Pomiń niezaładowane karty',
@@ -5640,7 +5640,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.activate_on_mouseup': {
     en: 'Activate tab on mouse button release',
-    de: 'Aktiviere Tab beim Loslassen der Maustaste',
+    de: 'Tab beim Loslassen der Maustaste aktivieren',
     fr: 'Activer l’onglet lors du relâchement du bouton de la souris',
     hu: 'A lap aktiválása az egérgomb felengedésekor',
     pl: 'Aktywuj kartę po puszczeniu przycisku myszy',
@@ -5662,7 +5662,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.shift_selection_from_active': {
     en: 'Start shift+click selection from the active tab',
-    de: 'Starte Umschalt+Klick-Auswahl beim aktiven Tab',
+    de: 'Umschalt+Klick-Auswahl beim aktiven Tab beginnen',
     fr: 'Démarrer la sélection maj+clic depuis l’onglet actif',
     hu: 'A Shift+kattintás típusú kijelölés indítása az aktív laptól',
     pl: 'Zacznij zaznaczenie shift+click z aktywnej karty',
@@ -5750,7 +5750,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.multiple_middle_close': {
     en: 'Use multi-selection when closing tabs with middle-click',
-    de: 'Gestatte Mehrfachauswahl beim Schließen von Tabs über Mittelklick',
+    de: 'Mehrfachauswahl beim Schließen von Tabs per Mittelklick verwenden',
     fr: 'Utiliser la sélection multiple pour fermer plusieurs onglets avec le clic milieu',
     hu: 'A többes kijelölés figyelembe vétele a lapok középső gombos bezárásakor',
     pl: 'Użyj wielokrotnego zaznaczenia podczas zamykania kart środkowym przyciskiem myszy',
@@ -6162,7 +6162,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.mid_click_action_open_in_new': {
     en: 'open in new tab',
-    de: 'Öffne in neuem Tab',
+    de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
     pl: 'otwórz w nowej karcie',
@@ -6195,7 +6195,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.new_tab_rm': {
     en: 'Remove clicked bookmark',
-    de: 'Entferne angeklicktes Lesezeichen',
+    de: 'Angeklicktes Lesezeichen entfernen',
     fr: 'Supprimer le marque-page cliqué',
     hu: 'Az érintett könyvjelző törlése',
     pl: 'Usuń klikniętą zakładkę',
@@ -6230,7 +6230,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.history.mid_click_action_open_in_new': {
     en: 'open in new tab',
-    de: 'Öffne in neuem Tab',
+    de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
     pl: 'Otwórz w nowej karcie',
@@ -6254,7 +6254,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Bookmark and History item actions
   'settings.mouse.bh.left_click_action_open_in_act': {
     en: 'open in active tab',
-    de: 'Öffne im aktiven Tab',
+    de: 'Im aktiven Tab öffnen',
     fr: 'ouvrir dans l’onglet actif',
     hu: 'megnyitás az aktív lapon',
     pl: 'otwórz w aktywnej karcie',
@@ -6265,7 +6265,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.left_click_action_open_in_new': {
     en: 'open in new tab',
-    de: 'Öffne in neuem Tab',
+    de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
     pl: 'otwórz w nowej karcie',
@@ -6332,7 +6332,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_notify': {
     en: 'Show notification after snapshot creation',
-    de: 'Zeige Benachrichtigung nach Erstellen von Schnappschuss',
+    de: 'Benachrichtigung nach dem Erstellen eines Schnappschusses anzeigen',
     fr: 'Afficher une notification après la création d’un instantané',
     hu: 'Értesítés a pillanatképek elkészültéről',
     pl: 'Pokaż powiadomienie po stworzeniu migawki',
@@ -6427,7 +6427,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_export_md_tree_note': {
     en: 'Add additional indents and bullets to window and panel items.',
-    de: 'Füge zusätzliche Einrückungen und Aufzählungszeichen zu Fenster- und Panel-Elementen hinzu.',
+    de: 'Fügt Fenster- und Panel-Elementen zusätzliche Einrückungen und Aufzählungszeichen hinzu.',
     fr: 'Ajoute des indenttions et puces supplémentaires pour les entrées des fenêtres et panneaux',
     hu: 'További behúzások és felsorolásjelek hozzáadása az ablak- és panelelemekhez.',
     pl: 'Dodaj dodatkowe wcięcia i wypunktowania do elementów okna i panelu',
@@ -6601,7 +6601,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.make_snapshot': {
     en: 'Create snapshot',
-    de: 'Erstelle Schnappschuss',
+    de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
     pl: 'Stwórz migawkę',
@@ -7105,7 +7105,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.copy_devtools_url': {
     en: 'Copy devtools URL',
-    de: 'Kopiere Devtools-URL',
+    de: 'Devtools-URL kopieren',
     fr: 'Copier l’URL des outils de développement',
     hu: 'Devtools URL másolása',
     pl: 'Kopiuj devtools URL',
@@ -7384,11 +7384,11 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - Fold/unfold an active tab branch or a selected bookmarks folder
 - Activate selected context-menu option
 - Activate selected panel`,
-    de: `- Aktiviere ausgewählten Tab
-- Öffne ausgewähltes Lesezeichen
-- Klappe aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein/aus
-- Aktiviere ausgewählte Kontextmenü-Option
-- Aktiviere ausgewähltes Panel`,
+    de: `- Ausgewählten Tab aktivieren
+- Ausgewähltes Lesezeichen öffnen
+- Aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein-/ausklappen
+- Ausgewählte Kontextmenü-Option aktivieren
+- Ausgewähltes Panel aktivieren`,
     fr: `– Activer l’onglet sélectionné
 – Ouvrir le marque-page sélectionné
 – Replier/déplier une branche d’onglets active ou un dossier de marque-pages sélectionné
@@ -7639,7 +7639,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.select_active_tab_first': {
     en: 'Select the active tab first',
-    de: 'Wähle den aktiven Tab zuerst aus',
+    de: 'Zuerst den aktiven Tab auswählen',
     fr: 'Sélectionner l’onglet actif en premier',
     hu: 'Először az aktív lap kiválasztása',
     pl: 'Zaznacz najpierw aktywną kartę',
@@ -7957,7 +7957,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
     de: `HINWEIS: Um die derzeit verfügbaren CSS-Selektoren zu ermitteln, verwenden Sie den Debugger:
-  - Klicken Sie in der unteren Leiste auf die Schaltfläche "Kopiere Devtools-URL"
+  - Klicken Sie in der unteren Leiste auf die Schaltfläche "Devtools-URL kopieren"
   - Öffnen Sie einen neuen Tab mit dieser URL
   - Wählen Sie den zu untersuchenden Frame aus
     - Klicken Sie auf das rechteckige Symbol (mit drei Teilbereichen) oben rechts auf der Seite des Debuggers
@@ -8163,7 +8163,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_remove': {
     en: 'Remove snapshot',
-    de: 'Entferne Schnappschuss',
+    de: 'Schnappschuss entfernen',
     fr: 'Supprimer l’instantané',
     hu: 'Törlés',
     pl: 'Usuń migawkę',

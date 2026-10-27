@@ -879,7 +879,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.enable_label': {
     en: 'Enable listed rules',
-    de: 'Aktiviere aufgeführte Regeln',
+    de: 'Aufgeführte Regeln aktivieren',
     fr: 'Activer les règles listées',
     hu: 'A szabályok engedélyezése',
     pl: 'Włącz wyszczególnione zasady',
@@ -2220,7 +2220,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_sub_menu_name': {
     en: 'Sort tabs',
-    de: 'Sortiere Tabs',
+    de: 'Tabs sortieren',
     fr: 'Trier les onglets',
     hu: 'Minden lap rendezése',
     pl: 'Sortuj wszystkie karty',
@@ -2231,7 +2231,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_title_asc': {
     en: 'Sort tabs by title (A-z)',
-    de: 'Sortiere Tabs nach Titel (A-z)',
+    de: 'Tabs nach Titel sortieren (A-z)',
     fr: 'Trier les onglets par titre (A-z)',
     hu: 'Minden lap rendezése: cím szerint (A–z)',
     pl: 'Sortuj wszystkie karty po tytule (A-z)',
@@ -2242,7 +2242,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_title_des': {
     en: 'Sort tabs by title (z-A)',
-    de: 'Sortiere Tabs nach Titel (z-A)',
+    de: 'Tabs nach Titel sortieren (z-A)',
     fr: 'Trier les onglets  par titre (z-A)',
     hu: 'Minden lap rendezése: cím szerint (z–A)',
     pl: 'Sortuj wszystkie karty po tytule (z-A)',
@@ -2253,7 +2253,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_url_asc': {
     en: 'Sort tabs by URL (A-z)',
-    de: 'Sortiere Tabs nach URL (A-z)',
+    de: 'Tabs nach URL sortieren (A-z)',
     fr: 'Trier les onglets par URL (A-z)',
     hu: 'Minden lap rendezése: URL szerint (A–z)',
     pl: 'Sortuj wszystkie karty po URL (A-z)',
@@ -2264,7 +2264,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_url_des': {
     en: 'Sort tabs by URL (z-A)',
-    de: 'Sortiere Tabs nach URL (z-A)',
+    de: 'Tabs nach URL sortieren (z-A)',
     fr: 'Trier les onglets par URL (z-A)',
     hu: 'Minden lap rendezése: URL szerint (z–A)',
     pl: 'Sortuj wszystkie karty po URL (z-A)',
@@ -2275,7 +2275,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_time_asc': {
     en: 'Sort tabs by access time (Old-Recent)',
-    de: 'Sortiere Tabs nach Zugriffszeit (Alt-Neu)',
+    de: 'Tabs nach Zugriffszeit sortieren (Alt-Neu)',
     fr: 'Trier les onglets par date (ancien-récent)',
     hu: 'Minden lap rendezése: idő szerint (régi–új)',
     pl: 'Sortuj wszystkie karty po dacie (Stare-Nowe)',
@@ -2286,7 +2286,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_time_des': {
     en: 'Sort tabs by access time (Recent-Old)',
-    de: 'Sortiere Tabs nach Zugriffszeit (Neu-Alt)',
+    de: 'Tabs nach Zugriffszeit sortieren (Neu-Alt)',
     fr: 'Trier les onglets par date (récent-ancien)',
     hu: 'Minden lap rendezése: idő szerint (új–régi)',
     pl: 'Sortuj wszystkie karty po dacie (Nowe-Stare)',
