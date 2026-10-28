@@ -250,7 +250,7 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
 
   // Left
   if (e.button === 0) {
-    if (e.ctrlKey) {
+    if (Mouse.isCmdOrCtrl(e)) {
       Mouse.blockWheel()
       const actTab = Tabs.byId[Tabs.activeId]
       if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
@@ -287,7 +287,7 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
 
   // Right
   else if (e.button === 2) {
-    if (e.ctrlKey || e.shiftKey || Windows.incognito) return
+    if (Mouse.isCmdOrCtrl(e) || e.shiftKey || Windows.incognito) return
 
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
@@ -315,14 +315,14 @@ function onNewTabCtxMenu(e: MouseEvent): void {
 
   e.stopPropagation()
 
-  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || Mouse.isCmdOrCtrl(e) || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
     e.preventDefault()
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !props.panel.selNewTab) {
+  if (!Mouse.isCmdOrCtrl(e) && !e.shiftKey && !props.panel.selNewTab) {
     Selection.resetSelection()
   }
 
