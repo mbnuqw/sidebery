@@ -87,9 +87,14 @@ create folder `chrome` with file `userChrome.css`.
   ```css
   /**
   * Hide sidebar-panel-header (sidebar.revamp: true)
+  * This keeps the header for native sidebars (like History and Bookmarks) and
+  * hides it for extensions. (https://github.com/mbnuqw/sidebery/discussions/2152)
   */
-  #sidebar-panel-header {
-    display: none;
+  @-moz-document url("chrome://browser/content/webext-panels.xhtml") {
+    /* hide revamped sidebar panel header for all web extension sidebar panels */
+    sidebar-panel-header {
+      display: none !important;
+    }
   }
 
   /**
