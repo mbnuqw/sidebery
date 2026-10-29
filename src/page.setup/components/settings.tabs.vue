@@ -271,7 +271,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       SelectField(
-        :inactive="!newTabBtnPosRelativeToActiveTab"
+        :inactive="!newTabBtnPosDependsOnActiveTab"
         label="settings.move_new_tab_active_pin"
         optLabel="settings.move_new_tab_pin_"
         dbg="moveNewTabButtonActivePin"
@@ -291,7 +291,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
       SelectField(
-        :inactive="!newTabPosRelativeToActiveTab"
+        :inactive="!newTabPosDependsOnActiveTab"
         label="settings.move_new_tab_active_pin"
         optLabel="settings.move_new_tab_pin_"
         dbg="moveNewTabActivePin"
@@ -734,22 +734,12 @@ const tabsPreviewEl = ref<HTMLElement | null>(null)
 const nativeTabsEl = ref<HTMLElement | null>(null)
 const badgeRulesEl = useTemplateRef<TextInputComponent>('badgeRulesEl')
 
-const newTabPosRelativeToActiveTab = computed<boolean>(() => {
-  return (
-    Settings.state.moveNewTab === 'after' ||
-    Settings.state.moveNewTab === 'before' ||
-    Settings.state.moveNewTab === 'first_child' ||
-    Settings.state.moveNewTab === 'last_child'
-  )
+const newTabPosDependsOnActiveTab = computed<boolean>(() => {
+  return Settings.state.moveNewTab !== 'none'
 })
 
-const newTabBtnPosRelativeToActiveTab = computed<boolean>(() => {
-  return (
-    Settings.state.moveNewTabButton === 'after' ||
-    Settings.state.moveNewTabButton === 'before' ||
-    Settings.state.moveNewTabButton === 'first_child' ||
-    Settings.state.moveNewTabButton === 'last_child'
-  )
+const newTabBtnPosDependsOnActiveTab = computed<boolean>(() => {
+  return Settings.state.moveNewTabButton !== 'none'
 })
 
 function toggleActivateLastTabOnPanelSwitching(): void {
