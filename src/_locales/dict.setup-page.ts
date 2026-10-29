@@ -4823,6 +4823,12 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     en: 'XXL',
     ru: 'XXL',
   },
+  'settings.font_size_custom': {
+    en: 'custom',
+  },
+  'settings.font_size_custom_px': {
+    en: 'Custom font size (px)',
+  },
   'settings.font_family': {
     en: 'Default font-family',
     de: 'Standard-Schriftart',

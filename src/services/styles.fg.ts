@@ -225,16 +225,23 @@ export function resetThemeSrcVars(): void {
   }
 }
 
+const FONT_SIZE_PX: Record<string, number> = {
+  xxs: 14.5,
+  xs: 15,
+  s: 15.5,
+  m: 16,
+  l: 16.5,
+  xl: 17,
+  xxl: 17.5,
+}
+
+export function getFontSizePx(): number {
+  if (Settings.state.fontSize === 'custom') return Math.max(8, Settings.state.fontSizeCustom || 16)
+  return FONT_SIZE_PX[Settings.state.fontSize] ?? 16
+}
+
 export function updateGlobalFontSize(): void {
-  const htmlEl = document.documentElement
-  if (Settings.state.fontSize === 'xxs') htmlEl.style.fontSize = '14.5px'
-  else if (Settings.state.fontSize === 'xs') htmlEl.style.fontSize = '15px'
-  else if (Settings.state.fontSize === 's') htmlEl.style.fontSize = '15.5px'
-  else if (Settings.state.fontSize === 'm') htmlEl.style.fontSize = '16px'
-  else if (Settings.state.fontSize === 'l') htmlEl.style.fontSize = '16.5px'
-  else if (Settings.state.fontSize === 'xl') htmlEl.style.fontSize = '17px'
-  else if (Settings.state.fontSize === 'xxl') htmlEl.style.fontSize = '17.5px'
-  else htmlEl.style.fontSize = '16px'
+  document.documentElement.style.fontSize = `${getFontSizePx()}px`
 }
 
 export function udpateGlobalFontFamily() {
