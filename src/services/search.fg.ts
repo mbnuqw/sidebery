@@ -24,6 +24,7 @@ export interface SearchState {
   barIsFilled: boolean
   active: boolean
   rawQuery: string
+  allPanels: boolean
 }
 
 export interface SearchShortcut {
@@ -45,6 +46,7 @@ export let reactive: SearchState = {
   barIsFilled: false,
   active: false,
   rawQuery: '',
+  allPanels: false,
 }
 
 export let active = false
@@ -114,6 +116,10 @@ export function next(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(1)
 
+  if (reactive.allPanels) {
+    return SearchTabs.onTabsSearchNext(undefined)
+  }
+
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
@@ -135,6 +141,10 @@ export function prev(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(-1)
 
+  if (reactive.allPanels) {
+    return SearchTabs.onTabsSearchPrev(undefined)
+  }
+
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
@@ -154,11 +164,10 @@ export function prev(): void {
 
 export function enter(): void {
   if (!Search.reactive.barIsShowed) return
+  if (Menu.isOpen) return Menu.activateOption()
 
-  if (Menu.isOpen) {
-    const activated = Menu.activateOption()
-    if (activated) Search.close()
-    return
+  if (reactive.allPanels) {
+    return SearchTabs.onTabsSearchEnter(undefined)
   }
 
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
@@ -276,6 +285,8 @@ export function selectAll(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return
 
+  if (reactive.allPanels) return
+
   const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
@@ -356,13 +367,20 @@ export function search(q?: string): void {
 
   // Update query
   if (q !== undefined) {
+    let isGlobal = Settings.state.searchAllPanelsDefault
+    if (q.startsWith('/')) {
+      isGlobal = !isGlobal
+      q = q.slice(1).trimStart()
+    }
+
     if (q.length < MIN_SEARCH_QUERY_LEN && !regexCJK.test(q)) q = ''
-    if (query === q) return
+    if (query === q && reactive.allPanels === isGlobal) return
     query = q
     lowerCaseQuery = q.toLowerCase()
 
     const v = !!q
     if (active !== v) reactive.active = active = v
+    reactive.allPanels = isGlobal && v
   }
 
   if (Menu.isOpen) Menu.close()
@@ -385,23 +403,29 @@ export function search(q?: string): void {
   if (!actPanel) return
   let targetPanelId = actPanel.id
 
-  if (Utils.isTabsPanel(actPanel)) {
-    if (Sidebar.subPanelActive) {
-      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
-        targetPanelId = Sidebar.subPanels.bookmarks.id
-        SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
-      } else if (Sidebar.subPanelType === SubPanelType.History) {
-        targetPanelId = NOID
-        SearchHistory.onHistorySearch()
-      }
-    } else {
-      SearchTabs.onTabsSearch(actPanel)
+  if (reactive.allPanels && query) {
+    for (const panel of Sidebar.panels) {
+      if (Utils.isTabsPanel(panel)) SearchTabs.onTabsSearch(panel)
     }
-  } else if (Utils.isBookmarksPanel(actPanel)) {
-    SearchBookmarks.onBookmarksSearch(actPanel, undefined)
-  } else if (Utils.isHistoryPanel(actPanel)) {
-    targetPanelId = NOID
-    SearchHistory.onHistorySearch()
+  } else {
+    if (Utils.isTabsPanel(actPanel)) {
+      if (Sidebar.subPanelActive) {
+        if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+          targetPanelId = Sidebar.subPanels.bookmarks.id
+          SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
+        } else if (Sidebar.subPanelType === SubPanelType.History) {
+          targetPanelId = NOID
+          SearchHistory.onHistorySearch()
+        }
+      } else {
+        SearchTabs.onTabsSearch(actPanel)
+      }
+    } else if (Utils.isBookmarksPanel(actPanel)) {
+      SearchBookmarks.onBookmarksSearch(actPanel, undefined)
+    } else if (Utils.isHistoryPanel(actPanel)) {
+      targetPanelId = NOID
+      SearchHistory.onHistorySearch()
+    }
   }
 
   if (query === '') {

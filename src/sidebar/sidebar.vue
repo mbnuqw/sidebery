@@ -86,6 +86,7 @@
           :is="getPanelComponent(panel)"
           :data-pos="panel.reactive.pos"
           :panel="panel")
+        SearchPanel(v-if="Search.reactive.active && Search.reactive.allPanels")
 
       Transition(name="bottom-bar")
         .BottomBar(
@@ -156,6 +157,7 @@ import PinnedTabsBar from './components/bar.pinned-tabs.vue'
 import NotificationsPopup from './components/popup.notifications.vue'
 import NavigationBar from './components/bar.navigation.vue'
 import WindowsPopup from './components/popup.windows.vue'
+import SearchPanel from './components/panel.search.vue'
 import TabsPanel from './components/panel.tabs.vue'
 import BookmarksPanel from './components/panel.bookmarks.vue'
 import HistoryPanel from './components/panel.history.vue'

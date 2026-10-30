@@ -1,0 +1,36 @@
+.SearchPanel
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: var(--frame-bg)
+  z-index: 20
+  display: flex
+  flex-direction: column
+
+.SearchPanel .search-groups
+  padding: var(--general-margin)
+  display: flex
+  flex-direction: column
+  grid-gap: var(--general-margin)
+
+.SearchPanel .search-group
+  display: flex
+  flex-direction: column
+
+.SearchPanel .group-header
+  display: flex
+  align-items: center
+  font-size: rem(14)
+  font-weight: 600
+  color: var(--title-fg)
+  padding: 4px 8px
+  border-bottom: 1px solid var(--border-color)
+  margin-bottom: 4px
+
+.SearchPanel .group-header .icon
+  width: 16px
+  height: 16px
+  margin-right: 8px
+  fill: var(--color, var(--title-fg))

@@ -78,6 +78,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   searchPanelSwitch: 'same_type',
   searchTabSwitch: false,
   searchMenuTrig: false,
+  searchAllPanelsDefault: false,
   searchBookmarksShortcut: '',
   searchHistoryShortcut: '',
   searchInputTimeout: 300,

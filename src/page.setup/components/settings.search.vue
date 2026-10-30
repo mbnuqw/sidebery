@@ -31,6 +31,12 @@ section(ref="el")
     dbg="searchMenuTrig"
     :default="DEFAULT_SETTINGS.searchMenuTrig"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.search_all_panels_default"
+    v-model:value="Settings.state.searchAllPanelsDefault"
+    dbg="searchAllPanelsDefault"
+    :default="DEFAULT_SETTINGS.searchAllPanelsDefault"
+    @update:value="Settings.saveDebounced(150)")
   InfoField(
     label="settings.search.shortcuts"
     :value="translate('settings.search.shortcuts.note')")

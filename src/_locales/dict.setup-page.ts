@@ -2593,6 +2593,9 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
     ru: 'Продолжать поиск после выбора пункта контекстного меню',
   },
+  'settings.search_all_panels_default': {
+    en: 'Search all panels by default (invert "/" prefix behavior)',
+  },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
     de: 'Tastenkombinationen',
