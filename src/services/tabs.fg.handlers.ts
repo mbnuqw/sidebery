@@ -646,15 +646,14 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     }
   }
 
-  // Scroll to new inactive tab
-  if (
-    !tab.pinned &&
-    !tab.active &&
-    !tab.invisible &&
-    tab.panelId === Sidebar.activePanelId &&
-    Settings.state.autoScrollToNewTab
-  ) {
-    Tabs.scrollToTabDebounced(120, tab.id, true)
+  // Scroll to new inactive tab. Globally-pinned tabs are visible regardless
+  // of the active panel, so they skip the panelId check that non-pinned and
+  // per-panel-pinned tabs still need.
+  if (!tab.active && !tab.invisible && Settings.state.autoScrollToNewTab) {
+    const panelScoped = !tab.pinned || Settings.state.pinnedTabsPosition === 'panel'
+    if (!panelScoped || tab.panelId === Sidebar.activePanelId) {
+      Tabs.scrollToTabDebounced(120, tab.id, true)
+    }
   }
 
   // Re-run activation event (if the tab was attached externally)
@@ -1811,7 +1810,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
-  if (Settings.state.scrollPanelAfterSwitchingTab !== 'no' && !tab.pinned) {
+  if (Settings.state.scrollPanelAfterSwitchingTab !== 'no') {
     if (Settings.state.scrollPanelAfterSwitchingTab === 'mouseleave' && Mouse.mouseIn) {
       Sidebar.setScrollOnMouseLeaveState(true)
     } else Tabs.scrollToTabDebounced(3, tab.id, true)

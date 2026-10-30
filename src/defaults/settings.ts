@@ -131,6 +131,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Pinned tabs
   pinnedTabsPosition: 'top',
   pinnedTabsList: false,
+  pinnedTabsListMaxRows: 5,
+  pinnedTabsSingleLine: false,
   pinnedAutoGroup: false,
   pinnedNoUnload: false,
   pinnedNoUnloadExplicit: true,
@@ -342,6 +344,7 @@ export const SETTINGS_OPTIONS = {
   activateAfterClosing: ['prev_act', 'next', 'prev', 'none'],
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'], // DEPR
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
+  pinnedTabsListMaxRows: [1, 2, 3, 4, 5, 6, 8, 10, 'none'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
   stickyAncestorTabsLimit: [1, 2, 3, 4, 5, 'none'],
   stickyAncestorTabsLayout: ['col', 'row'],

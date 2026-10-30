@@ -37,9 +37,15 @@ export async function editTabTitle(tabIds: ID[]) {
   inputEl = document.querySelector(selector) as HTMLInputElement | null
   if (!inputEl) return
 
+  // In a scrollable (row-capped) titled list, the tab being edited may be
+  // scrolled out of view - bring it into view before focusing.
+  if (tab.pinned) Tabs.scrollToPinnedTab(tab.id, true)
+
   await Utils.sleep(1)
 
-  inputEl.focus()
+  // preventScroll: Firefox's own focus-scroll is instant and would otherwise
+  // jump-finish the smooth scrollToPinnedTab call above before it completes.
+  inputEl.focus({ preventScroll: true })
   inputEl.setSelectionRange(0, inputEl.value.length, 'backward')
 }
 

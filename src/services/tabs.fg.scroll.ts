@@ -8,6 +8,8 @@ import { NOID, PRE_SCROLL } from 'src/defaults'
 
 const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
 export function scrollToTab(id: ID, smooth?: boolean): void {
+  if (Tabs.byId[id]?.pinned) return scrollToPinnedTab(id, smooth)
+
   const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
 
@@ -45,6 +47,47 @@ export function scrollToTab(id: ID, smooth?: boolean): void {
   }
 }
 export const scrollToTabDebounced = Utils.debounce(scrollToTab)
+
+// Pinned tabs live in .PinnedTabsBar, outside the panel's ScrollBox, in up to
+// four different places (per-panel, top, left, right) - so resolve the bar
+// from the DOM rather than from any registered panel/scroll state.
+const pinnedScrollConf: ScrollToOptions = { behavior: 'auto' }
+export function scrollToPinnedTab(id: ID, smooth?: boolean): void {
+  const el = document.getElementById('tab' + id.toString())
+  // .Tab's offsetParent is .tab-wrapper (position: relative), so offsets must
+  // be read off the wrapper - the wrapper's offsetParent is .PinnedTabsBar.
+  const wrapperEl = el?.parentElement
+  const barEl = wrapperEl?.parentElement
+  if (!el || !wrapperEl || !barEl || !barEl.classList.contains('PinnedTabsBar')) return
+
+  const vertical = Settings.pinnedTabsBarVertical
+  const scrollSize = vertical ? barEl.scrollHeight : barEl.scrollWidth
+  const clientSize = vertical ? barEl.clientHeight : barEl.clientWidth
+  if (!clientSize || scrollSize - clientSize <= 1) return
+
+  const offset = vertical ? barEl.scrollTop : barEl.scrollLeft
+  const tPos = vertical ? wrapperEl.offsetTop : wrapperEl.offsetLeft
+  const tSize = vertical ? wrapperEl.offsetHeight : wrapperEl.offsetWidth
+
+  // PRE_SCROLL (64) is tuned for a tall scrollable tab list; a pinned bar is a
+  // much narrower strip, so scale the margin to the pin's own size instead.
+  const pre = Math.min(tSize, Math.floor(clientSize / 4))
+
+  let target: number | undefined
+  if (tPos < offset + pre) {
+    target = Math.max(0, tPos - pre)
+  } else if (tPos + tSize > offset + clientSize - pre) {
+    target = tPos + tSize - clientSize + pre
+  }
+  if (target === undefined) return
+
+  pinnedScrollConf.behavior = smooth ? 'smooth' : 'auto'
+  delete pinnedScrollConf.top
+  delete pinnedScrollConf.left
+  if (vertical) pinnedScrollConf.top = target
+  else pinnedScrollConf.left = target
+  barEl.scroll(pinnedScrollConf)
+}
 
 const stickyBranch: Tab[] = []
 const stickyTopOffsets: (number | undefined)[] = []
