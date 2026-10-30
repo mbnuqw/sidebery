@@ -47,6 +47,9 @@ export type BgActions = {
   createSnapshot: typeof Snapshots.createSnapshot
   addSnapshot: typeof Snapshots.addSnapshot
   removeSnapshot: typeof Snapshots.removeSnapshot
+  makeSnapshotPermanent: typeof Snapshots.makeSnapshotPermanent
+  makeSnapshotTemporary: typeof Snapshots.makeSnapshotTemporary
+  renameSnapshot: typeof Snapshots.renameSnapshot
   openSnapshotWindows: typeof Snapshots.openWindows
   saveFavicon: typeof Favicons.saveFavicon
   reloadFavicons: () => any
