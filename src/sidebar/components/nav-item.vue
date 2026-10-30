@@ -18,6 +18,7 @@
   :data-drop-mode="dropPointerMode(item.id)"
   :title="item.reactive.tooltip || item.reactive.name"
   @dragstart="emit('dragstart', $event)"
+  @dragover.prevent="DnD.onNavItemDragOver($event, item.id)"
   @drop="emit('drop', $event)"
   @mousedown.stop="emit('mousedown', $event)"
   @mouseup.stop="emit('mouseup', $event)"
@@ -50,6 +51,7 @@
   :data-drop-mode="dropPointerMode(item.id)"
   :title="item.reactive.tooltip || item.reactive.name"
   @dragstart="emit('dragstart', $event)"
+  @dragover.prevent="DnD.onNavItemDragOver($event, item.id)"
   @drop="emit('drop', $event)"
   @mousedown.stop="emit('mousedown', $event)"
   @mouseup.stop="emit('mouseup', $event)"
@@ -73,6 +75,7 @@
   :data-drop-mode="dropPointerMode(item.id)"
   :title="item.tooltip || item.name"
   @dragstart="emit('dragstart', $event)"
+  @dragover.prevent="DnD.onNavItemDragOver($event, item.id)"
   @drop="emit('drop', $event)"
   @mousedown.stop="emit('mousedown', $event)"
   @mouseup.stop="emit('mouseup', $event)"
@@ -90,6 +93,7 @@
   :data-sel="item.id === Sidebar.reactive.selectedNavId"
   :data-drop-mode="dropPointerMode(item.id)"
   @dragstart="emit('dragstart', $event)"
+  @dragover.prevent="DnD.onNavItemDragOver($event, item.id)"
   @drop="emit('drop', $event)"
   @mousedown="emit('mousedown', $event)"
   @mouseup="emit('mouseup', $event)"
@@ -154,12 +158,9 @@ function dropPointerMode(id: ID): string {
   const dstId = Sidebar.reactive.nav[DnD.reactive.dstIndex]
   if (dstIsNavItem && dstId === id) {
     if (srcIsNavItem) {
-      if (DnD.srcIndex !== -1 && DnD.reactive.dstIndex !== -1) {
-        if (DnD.reactive.dstIndex < DnD.srcIndex) return 'before'
-        if (DnD.reactive.dstIndex === DnD.srcIndex) return 'none'
-        if (DnD.reactive.dstIndex > DnD.srcIndex) return 'after'
-      }
-      return 'before'
+      // Hovering the item that's being dragged itself - no-op.
+      if (DnD.reactive.dstIndex === DnD.srcIndex) return 'none'
+      return DnD.reactive.dstNavSide
     } else {
       if (DnD.reactive.dstType !== E.DropType.NavItem || id === 'add_tp') return 'in'
     }
