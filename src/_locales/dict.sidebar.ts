@@ -6,6 +6,7 @@ export const sidebarTranslations: Translations = {
   // -
   'bar.search.placeholder': {
     en: 'Search...',
+    it: 'Cerca...',
     de: 'Suche...',
     fr: 'Rechercher…',
     hu: 'Keresés…',
@@ -21,6 +22,7 @@ export const sidebarTranslations: Translations = {
   // -
   'confirm.warn_title': {
     en: 'Warning',
+    it: 'Attenzione',
     de: 'Warnung',
     fr: 'Attention',
     hu: 'Figyelmeztetés',
@@ -31,6 +33,7 @@ export const sidebarTranslations: Translations = {
   },
   'confirm.tabs_close': {
     en: n => `Are you sure you want to close ${n} tabs?`,
+    it: n => (n === 1 ? 'Sei sicuro di voler chiudere 1 scheda?' : `Sei sicuro di voler chiudere ${n} schede?`),
     de: n => `Möchten Sie diese ${n} Tabs wirklich schließen?`,
     fr: n =>
       n === 1
@@ -51,6 +54,7 @@ export const sidebarTranslations: Translations = {
   },
   'confirm.bookmarks_delete': {
     en: 'Are you sure you want to delete selected bookmarks?',
+    it: 'Sei sicuro di voler eliminare i segnalibri selezionati?',
     de: 'Möchten Sie die gewählten Lesezeichen wirklich löschen?',
     fr: 'Voulez-vous vraiment supprimer les marques-pages sélectionnés?',
     hu: 'Biztosan törölhetők a kijelölt könyvjelzők?',
@@ -66,6 +70,7 @@ export const sidebarTranslations: Translations = {
   // -
   'panel.nothing_found': {
     en: 'Nothing found',
+    it: 'Nessun risultato',
     de: 'Nichts gefunden',
     fr: 'Aucun résultat',
     hu: 'Nincs találat',
@@ -76,6 +81,7 @@ export const sidebarTranslations: Translations = {
   },
   'panel.nothing': {
     en: 'Nothing...',
+    it: 'Nessun elemento...',
     de: 'Nichts...',
     fr: 'Rien…',
     hu: 'Nincs…',
@@ -91,6 +97,7 @@ export const sidebarTranslations: Translations = {
   // -
   'panel.history.fav_tooltip': {
     en: 'Show history of this site',
+    it: 'Mostra cronologia di questo sito',
     de: 'Chronik dieser Seite anzeigen',
     fr: 'Voir l’historique pour ce site',
     hu: 'Ennek az oldalnak az előzményei',
@@ -102,6 +109,7 @@ export const sidebarTranslations: Translations = {
   },
   'panel.history.show_more': {
     en: '...hidden visits:',
+    it: '...visite nascoste:',
     de: '...ausgeblendete Besuche:',
     fr: '…visites cachées:',
     hu: '…rejtett látogatások:',
@@ -117,6 +125,7 @@ export const sidebarTranslations: Translations = {
   // -
   'newTabBar.new_tab': {
     en: 'Open a new tab',
+    it: 'Apri una nuova scheda',
     de: 'Neuen Tab öffnen',
     fr: 'Ouvrir un nouvel onglet',
     hu: 'Új lap',
@@ -128,6 +137,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_default_container_with_url': {
     en: url => `Open "${url}" in a new tab`,
+    it: url => `Apri "${url}" in una nuova scheda`,
     de: url => `"${url}" in einem neuen Tab öffnen`,
     fr: url => `Ouvrir “${url}” dans un nouvel onglet`,
     ru: url => `Открыть "${url}" в новой вкладке`,
@@ -137,6 +147,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.default_container_name': {
     en: 'Default',
+    it: 'Predefinito',
     de: 'Standard',
     fr: 'Défaut',
     hu: 'Alapértelmezett',
@@ -148,6 +159,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_container': {
     en: name => `Open a new tab in "${name}" container`,
+    it: name => `Apri una nuova scheda nel contenitore "${name}"`,
     de: name => `Neuen Tab in der Umgebung "${name}" öffnen`,
     fr: name => `Ouvrir un nouvel onglet dans le conteneur “${name}”`,
     hu: name => `Új lap ebben a konténerben: „${name}”`,
@@ -159,6 +171,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.new_tab_in_container_with_url': {
     en: (url, name) => `Open "${url}" in a new tab in "${name}" container`,
+    it: (url, name) => `Apri "${url}" nel contenitore "${name}"`,
     de: (url, name) => `"${url}" in einem neuen Tab in der Umgebung "${name}" öffnen`,
     fr: (url, name) => `Ouvrir “${url}” dans un nouvel onglet dans le conteneur “${name}”`,
     ru: (url, name) => `Открыть "${url}" в новой вкладке в контейнере "${name}"`,
@@ -168,6 +181,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab': {
     en: 'Middle click: Open a child tab',
+    it: 'Clic centrale: Apri scheda figlia',
     de: 'Mittelklick: Untergeordneten Tab öffnen',
     fr: 'Clic milieu: Ouvrir un onglet enfant',
     hu: 'Középső kattintás: új utódlap',
@@ -179,6 +193,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_with_url': {
     en: url => `Middle click: Open "${url}" in a child tab`,
+    it: url => `Clic centrale: Apri "${url}" in una scheda figlia`,
     de: url => `Mittelklick: "${url}" in einem untergeordneten Tab öffnen`,
     fr: url => `Clic milieu: Ouvrir “${url}” dans un onglet enfant`,
     ru: url => `Средняя кнопка мыши: Открыть "${url}" в дочерней вкладке`,
@@ -188,6 +203,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container': {
     en: name => `Middle click: Open a child tab in "${name}" container`,
+    it: name => `Clic centrale: Apri scheda figlia nel contenitore "${name}"`,
     de: name => `Mittelklick: Untergeordneten Tab in der Umgebung "${name}" öffnen`,
     fr: name => `Clic milieu: Ouvrir un onglet enfant dans le conteneur “${name}”`,
     ru: name => `Средняя кнопка мыши: Открыть дочернюю вкладку в контейнере "${name}"`,
@@ -197,6 +213,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.open_child_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Open "${url}" in a child tab in "${name}" container`,
+    it: (url, name) => `Clic centrale: Apri "${url}" nel contenitore "${name}"`,
     de: (url, name) =>
       `Mittelklick: "${url}" in einem untergeordneten Tab in der Umgebung "${name}" öffnen`,
     fr: (url, name) =>
@@ -209,6 +226,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_default_container': {
     en: 'Middle click: Reopen active tab in default container',
+    it: 'Clic centrale: Riapri scheda attiva nel contenitore predefinito',
     de: 'Mittelklick: Aktiven Tab in der Standardumgebung erneut öffnen',
     fr: "Clic milieu: rouvrir l'onglet actif dans le conteneur par défaut",
     hu: 'Középső kattintás: az aktív lap újranyitása az alapértelmezett konténerben',
@@ -220,6 +238,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reload_active_tab_with_url': {
     en: url => `Middle click: Load "${url}" in active tab`,
+    it: url => `Clic centrale: Carica "${url}" nella scheda attiva`,
     de: url => `Mittelklick: "${url}" im aktiven Tab laden`,
     fr: url => `Clic milieu: Charger “${url}” dans l’onglet actif`,
     ru: url => `Средняя кнопка мыши: Загрузить "${url}" в активной вкладке`,
@@ -229,6 +248,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container': {
     en: name => `Middle click: Reopen active tab in "${name}" container`,
+    it: name => `Clic centrale: Riapri scheda attiva nel contenitore "${name}"`,
     de: name => `Mittelklick: Aktiven Tab in der Umgebung "${name}" erneut öffnen`,
     fr: name => `Clic milieu: Rouvrir l’onglet actif dans le conteneur “${name}”`,
     ru: name => `Средняя кнопка мыши: Переоткрыть активную вкладку в контейнере "${name}"`,
@@ -238,6 +258,7 @@ export const sidebarTranslations: Translations = {
   },
   'newTabBar.middle_click_reopen_active_tab_in_container_with_url': {
     en: (url, name) => `Middle click: Load "${url}" in active tab in "${name}" container`,
+    it: (url, name) => `Clic centrale: Riapri scheda attiva con "${url}" nel contenitore "${name}"`,
     de: (url, name) => `Mittelklick: "${url}" im aktiven Tab in der Umgebung "${name}" laden`,
     fr: (url, name) =>
       `Clic milieu: Charger “${url}” dans l’onglet actif dans le conteneur “${name}”`,
@@ -254,6 +275,7 @@ export const sidebarTranslations: Translations = {
   // - Tabs panel removing
   'popup.tabs_panel_removing.title': {
     en: 'Removing panel',
+    it: 'Rimozione pannello',
     de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
     hu: 'Panel törlése',
@@ -264,6 +286,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
+    it: 'Sposta schede nel pannello vicino',
     de: 'Tabs dem benachbarten Panel zuordnen',
     fr: 'Attacher les onglets au panneau voisin',
     hu: 'Lapok hozzáfűzése a szomszédos panelhoz',
@@ -275,6 +298,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.leave': {
     en: 'Leave tabs untouched',
+    it: 'Lascia le schede intatte',
     de: 'Tabs behalten',
     fr: 'Ne pas toucher les onglets',
     hu: 'A lapok ne változzanak',
@@ -286,6 +310,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.save': {
     en: 'Save panel to bookmarks and close tabs',
+    it: 'Salva pannello nei segnalibri e chiudi schede',
     de: 'Panel in Lesezeichen speichern und Tabs schließen',
     fr: 'Sauvegarder le panneau dans les marque-pages et fermer les onglets',
     hu: 'A panel könyvjelzőzése és a lapok bezárása',
@@ -297,6 +322,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.close': {
     en: 'Close tabs',
+    it: 'Chiudi schede',
     de: 'Tabs schließen',
     fr: 'Fermer les onglets',
     hu: 'Lapok bezárása',
@@ -308,6 +334,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
+    it: 'Nota: Le schede di questo pannello in altre finestre verranno spostate nel pannello vicino',
     de: 'Hinweis: Tabs dieses Panels in anderen Fenstern werden in das benachbarte Panel verschoben',
     fr: 'Note: Les onglets de ce panneau dans d’autres fenêtres seront déplacés dans le panneau voisin',
     hu: 'Megjegyzés: A panel más ablakban lévő lapjai át lesznek helyezve a szomszédos panelra',
@@ -320,6 +347,7 @@ export const sidebarTranslations: Translations = {
   // - What to do with old unused bookmarks on saving tabs panel
   'popup.wtdwOldBookmarks.title': {
     en: folderName => `Tabs have been saved in "${folderName}" folder`,
+    it: folderName => `Le schede sono state salvate nella cartella "${folderName}"`,
     de: folderName => `Tabs wurden im Ordner "${folderName}" gespeichert`,
     fr: folderName => `Les onglets ont été sauvegardés dans le dossier “${folderName}”`,
     hu: folderName => `A lapok ebbe a mappába lesznek mentve: „${folderName}”`,
@@ -331,6 +359,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.wtdwOldBookmarks.note': {
     en: 'Delete old bookmarks in that folder?',
+    it: 'Eliminare i vecchi segnalibri in quella cartella?',
     de: 'Alte Lesezeichen in diesem Ordner löschen?',
     fr: 'Voulez-vous supprimer les anciens marque-pages de ce dossier?',
     hu: 'Törölhetők a régi könyvjelzők ebből a mappából?',
@@ -342,6 +371,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.wtdwOldBookmarks.checkbox_label': {
     en: "Remember and don't ask again",
+    it: 'Ricorda e non chiedere più',
     de: 'Merken und nicht erneut fragen',
     fr: 'Mémoriser et ne plus demander',
     hu: 'A válasz megjegyzése, ne kérdezze többször',
@@ -353,6 +383,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
+    it: 'Elimina',
     de: 'Löschen',
     fr: 'Supprimer',
     hu: 'Törlés',
@@ -364,6 +395,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
+    it: 'Mantieni',
     de: 'Behalten',
     fr: 'Garder',
     hu: 'Megtartás',
@@ -375,6 +407,7 @@ export const sidebarTranslations: Translations = {
   // - Container config popup
   'popup.container.title': {
     en: 'Container',
+    it: 'Contenitore',
     de: 'Umgebung',
     fr: 'Conteneur',
     hu: 'Konténer',
@@ -385,6 +418,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.container.name_placeholder': {
     en: 'Container name',
+    it: 'Nome contenitore',
     de: 'Umgebungsname',
     fr: 'Nom du conteneur',
     hu: 'Konténernév',
@@ -397,6 +431,7 @@ export const sidebarTranslations: Translations = {
   // - Panel config popup
   'popup.tabs_panel.title': {
     en: 'Tabs panel',
+    it: 'Pannello schede',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
     hu: 'Lappanel',
@@ -408,6 +443,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.bookmarks_panel.title': {
     en: 'Bookmarks panel',
+    it: 'Pannello segnalibri',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
     hu: 'Könyvjelzőpanel',
@@ -419,6 +455,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.common.name_label': {
     en: 'Name',
+    it: 'Nome',
     de: 'Name',
     fr: 'Nom',
     hu: 'Név',
@@ -430,6 +467,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.common.icon_label': {
     en: 'Icon',
+    it: 'Icona',
     de: 'Symbol',
     fr: 'Icone',
     hu: 'Ikon',
@@ -441,6 +479,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.common.color_label': {
     en: 'Color',
+    it: 'Colore',
     de: 'Farbe',
     fr: 'Couleur',
     hu: 'Szín',
@@ -452,6 +491,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.common.btn_more': {
     en: 'More options...',
+    it: 'Altre opzioni...',
     de: 'Weitere Optionen...',
     fr: 'Plus d’options…',
     hu: 'További beállítások…',
@@ -464,6 +504,7 @@ export const sidebarTranslations: Translations = {
   // - Group config popup
   'popup.group_config.popup_title': {
     en: 'Group',
+    it: 'Gruppo',
     de: 'Gruppe',
     fr: 'Groupe',
     hu: 'Csoportosítás',
@@ -475,6 +516,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.group_config.title': {
     en: 'Title',
+    it: 'Titolo',
     de: 'Name',
     fr: 'Titre',
     hu: 'Név',
@@ -486,6 +528,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.group_config.title_placeholder': {
     en: 'Group title',
+    it: 'Titolo del gruppo',
     de: 'Gruppenname',
     fr: 'Titre du groupe',
     hu: 'Csoportnév',
@@ -497,6 +540,7 @@ export const sidebarTranslations: Translations = {
   },
   'popup.group_config.do_not_show_again': {
     en: "Don't show again",
+    it: 'Non mostrare più',
     de: 'Nicht mehr anzeigen',
     fr: 'Ne plus me demander',
     hu: 'Ne mutassa újra',
@@ -509,6 +553,7 @@ export const sidebarTranslations: Translations = {
   // - Processing tabs
   'popup.proc_tabs.title': {
     en: 'Processing tabs...',
+    it: 'Elaborazione schede in corso...',
     de: 'Tabs werden verarbeitet...',
     fr: 'Traitement des onglets...',
     hu: 'Feldolgozás lapok...',
@@ -524,6 +569,7 @@ export const sidebarTranslations: Translations = {
   // -
   'sub_panel.bookmarks_panel.title': {
     en: 'Bookmarks',
+    it: 'Segnalibri',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -535,6 +581,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.bookmarks_panel.root_title': {
     en: 'All Bookmarks',
+    it: 'Tutti i segnalibri',
     de: 'Alle Lesezeichen',
     fr: 'Tous les marque-pages',
     hu: 'Minden könyvjelző',
@@ -546,6 +593,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
+    it: 'Schede chiuse di recente',
     de: 'Zuletzt geschlossene Tabs',
     fr: 'Onglets récemment fermés',
     hu: 'Legutóbb bezárt lapok',
@@ -557,6 +605,7 @@ export const sidebarTranslations: Translations = {
   },
   'sub_panel.history_panel.title': {
     en: 'History',
+    it: 'Cronologia',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -572,6 +621,7 @@ export const sidebarTranslations: Translations = {
   // -
   'dnd.tooltip.bookmarks_panel': {
     en: 'Bookmarks panel',
+    it: 'Pannello segnalibri',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau des marque-pages',
     hu: 'Könyvjelzőpanel',
@@ -583,6 +633,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.tabs_panel': {
     en: 'panel',
+    it: 'Pannello',
     de: 'Panel',
     fr: 'Panneau',
     ru: 'панель',
@@ -591,6 +642,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.tabs': {
     en: 'tabs',
+    it: 'schede',
     de: 'Tabs',
     fr: 'onglets',
     hu: 'lap',
@@ -610,6 +662,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.bookmarks': {
     en: 'bookmarks',
+    it: 'segnalibri',
     de: 'Lesezeichen',
     fr: 'marque-pages',
     hu: 'könyvjelző',
@@ -629,6 +682,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.nav_item': {
     en: 'Navigation element',
+    it: 'Elemento di navigazione',
     de: 'Navigationselement',
     fr: 'Élément de navigation',
     hu: 'Vezérlőelem',
@@ -640,6 +694,7 @@ export const sidebarTranslations: Translations = {
   },
   'dnd.tooltip.new_tab': {
     en: 'New tab',
+    it: 'Nuova scheda',
     de: 'Neuer Tab',
     fr: 'Nouvel onglet',
     hu: 'Új lap',
@@ -655,6 +710,7 @@ export const sidebarTranslations: Translations = {
   // -
   'nav.show_hidden_tooltip': {
     en: 'Show hidden panels',
+    it: 'Mostra pannelli nascosti',
     de: 'Versteckte Panels anzeigen',
     fr: 'Montrer les panneaux cachés',
     hu: 'Rejtett panelok megjelenítése',
@@ -666,6 +722,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_settings': {
     en: 'Settings',
+    it: 'Impostazioni',
     de: 'Einstellungen',
     fr: 'Paramètres',
     hu: 'Beállítások',
@@ -677,6 +734,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_add_tp': {
     en: 'Create tabs panel',
+    it: 'Crea pannello schede',
     de: 'Tab-Panel erstellen',
     fr: 'Créer un panneau d’onglets',
     hu: 'Új lappanel',
@@ -688,6 +746,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_search': {
     en: 'Search',
+    it: 'Cerca',
     de: 'Suchen',
     fr: 'Rechercher',
     hu: 'Keresés',
@@ -699,6 +758,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_create_snapshot': {
     en: 'Create snapshot',
+    it: 'Crea istantanea',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
@@ -710,6 +770,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
+    it: 'Silenzia/Riattiva schede con audio',
     de: 'Stummschalten hörbarer Tabs an/aus',
     fr: 'Couper/réactiver le son de l’onglet',
     hu: 'Lapok némítása/visszahangosítása',
@@ -721,6 +782,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_collapse': {
     en: 'Collapse all',
+    it: 'Comprimi tutto',
     de: 'Alle einklappen',
     fr: 'Replier tout',
     hu: 'Minden ág becsukása',
@@ -732,6 +794,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.btn_expand': {
     en: 'Expand all',
+    it: 'Espandi tutto',
     de: 'Alle ausklappen',
     fr: 'Déplier tout',
     hu: 'Minden ág megnyitása',
@@ -743,6 +806,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_all': {
     en: 'Middle click: Close tabs',
+    it: 'Clic centrale: Chiudi schede',
     de: 'Mittelklick: Tabs schließen',
     fr: 'Clic milieu: Fermer les onglets',
     hu: 'Középső kattintás: lapok bezárása',
@@ -754,6 +818,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
+    it: 'Clic centrale: Chiudi schede e rimuovi pannello',
     de: 'Mittelklick: Tabs schließen und Panel entfernen',
     fr: 'Clic milieu: Fermer les onglets et supprimer le panneau',
     hu: 'Középső kattintás: lapok bezárása és a panel törlése',
@@ -765,6 +830,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
+    it: 'Clic centrale: Chiudi scheda attiva',
     de: 'Mittelklick: Aktiven Tab schließen',
     fr: 'Clic milieu: Fermer l’onglet actif',
     hu: 'Középső kattintás: az aktív lap bezárása',
@@ -776,6 +842,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_discard': {
     en: 'Middle click: Unload tabs',
+    it: 'Clic centrale: Ibernare/Scarica schede dalla memoria',
     de: 'Mittelklick: Tabs entladen',
     fr: 'Clic milieu: décharger les onglets',
     hu: 'Középső kattintás: lapok kisöprése',
@@ -787,6 +854,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
+    it: 'Clic centrale: Nascondi pannello',
     de: 'Mittelklick: Panel ausblenden',
     fr: 'Clic milieu: Cacher le panneau',
     hu: 'Középső kattintás: panel elrejtése',
@@ -798,6 +866,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
+    it: 'Clic centrale: Salva nei segnalibri',
     de: 'Mittelklick: Als Lesezeichen speichern',
     fr: 'Clic milieu: Sauvegarder dans les marque-pages',
     hu: 'Középső kattintás: könyvjelzőzés',
@@ -809,6 +878,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
+    it: 'Clic centrale: Salva nei segnalibri e rimuovi pannello',
     de: 'Mittelklick: Als Lesezeichen speichern und Panel entfernen',
     fr: 'Clic milieu: Sauvegarder dans les marque-pages et supprimer le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel törlése',
@@ -820,6 +890,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
+    it: 'Clic centrale: Converti in pannello segnalibri',
     de: 'Mittelklick: In Lesezeichen-Panel umwandeln',
     fr: 'Clic milieu: Convertir en panneau de marque pages',
     hu: 'Középső kattintás: átalakítás könyvjelzőpanellá',
@@ -831,6 +902,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
+    it: 'Clic centrale: Converti in segnalibri e nascondi pannello',
     de: 'Mittelklick: In Lesezeichen umwandeln und Panel ausblenden',
     fr: 'Clic milieu: Convertir en marque-pages et cacher le panneau',
     hu: 'Középső kattintás: könyvjelzőzés és a panel elrejtése',
@@ -842,6 +914,7 @@ export const sidebarTranslations: Translations = {
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
+    it: 'Clic centrale: Converti in pannello schede',
     de: 'Mittelklick: In Tab-Panel umwandeln',
     fr: 'Clic milieu: Convertir en panneau d’onglets',
     hu: 'Középső kattintás: átalakítás lappanellá',
@@ -857,6 +930,7 @@ export const sidebarTranslations: Translations = {
   // -
   'notif.hide_tooltip': {
     en: 'Hide notification',
+    it: 'Nascondi notifica',
     de: 'Benachrichtigung verbergen',
     fr: 'Cacher la notification',
     hu: 'Értesítés elrejtése',
@@ -868,6 +942,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.undo_ctrl': {
     en: 'Undo',
+    it: 'Annulla',
     de: 'Rückgängig',
     fr: 'Annuler',
     hu: 'Visszavonás',
@@ -879,6 +954,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
+    it: ' schede chiuse',
     de: ' Tabs geschlossen',
     fr: n => (n === 1 ? ' onglet fermé' : ' onglets fermés'),
     hu: ' lap be lett zárva',
@@ -898,6 +974,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_create_err': {
     en: 'Cannot create bookmark',
+    it: 'Impossibile creare il segnalibro',
     de: 'Lesezeichen konnte nicht erstellt werden',
     fr: 'Impossible de créer le marque-page',
     hu: 'Nem sikerült könyvjelzőzni',
@@ -909,6 +986,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
+    it: n => (n === 1 ? ' segnalibro rimosso' : ' segnalibri rimossi'),
     de: ' Lesezeichen entfernt',
     fr: n => (n === 1 ? ' marque-page supprimé' : ' marque-pages supprimés'),
     hu: ' könyvjelző törölve lett',
@@ -928,6 +1006,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sort': {
     en: 'Sorting bookmarks...',
+    it: 'Ordinamento segnalibri in corso...',
     de: 'Lesezeichen werden sortiert...',
     fr: 'Trier les marque-pages…',
     hu: 'Könyvjelzők rendezése…',
@@ -939,6 +1018,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_sort': {
     en: 'Sorting tabs...',
+    it: 'Ordinamento schede in corso...',
     de: 'Tabs werden sortiert...',
     fr: 'Trier les onglets…',
     hu: 'Lapok rendezése…',
@@ -950,6 +1030,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.snapshot_created': {
     en: 'Snapshot created',
+    it: 'Istantanea creata',
     de: 'Schnappschuss erstellt',
     fr: 'Instantané créé',
     hu: 'Pillanatkép készült',
@@ -961,6 +1042,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.view_snapshot': {
     en: 'View',
+    it: 'Visualizza',
     de: 'Ansehen',
     fr: 'Voir',
     hu: 'Megtekintés',
@@ -972,6 +1054,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_err': {
     en: 'Wrong tabs position detected',
+    it: 'Posizione schede errata rilevata',
     de: 'Falsche Tab-Position erkannt',
     fr: 'Mauvaise position des onglets détectée',
     hu: 'A program a lapok helytelen állapotát észlelte',
@@ -983,6 +1066,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_err_fix': {
     en: 'Update tabs',
+    it: 'Aggiorna schede',
     de: 'Tabs aktualisieren',
     fr: 'Mettre à jour les onglets',
     hu: 'Lapok frissítése',
@@ -994,6 +1078,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_reloading': {
     en: 'Reloading tabs',
+    it: 'Ricaricamento schede in corso',
     de: 'Tabs werden neu geladen',
     fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
@@ -1005,6 +1090,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_reloading_stop': {
     en: 'Stop',
+    it: 'Ferma',
     de: 'Stopp',
     fr: 'Arrêter',
     hu: 'Állj',
@@ -1015,6 +1101,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
+    it: 'Salvataggio nei segnalibri...',
     de: 'Wird in Lesezeichen gespeichert...',
     fr: 'Sauvegarder les marque-pages…',
     hu: 'Mentés könyvjelzőbe…',
@@ -1026,6 +1113,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_saved_bookmarks': {
     en: 'Panel saved',
+    it: 'Pannello salvato',
     de: 'Panel gespeichert',
     fr: 'Panneau sauvegardé',
     hu: 'A panel mentése kész',
@@ -1037,6 +1125,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_updated_bookmarks': {
     en: 'Bookmarks updated',
+    it: 'Segnalibri aggiornati',
     de: 'Lesezeichen aktualisiert',
     fr: 'Marque-pages mis à jour',
     hu: 'A könyvjelzők frissítése kész',
@@ -1048,6 +1137,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.converting': {
     en: 'Converting...',
+    it: 'Conversione in corso...',
     de: 'Wird umgewandelt...',
     fr: 'Conversion en cours…',
     hu: 'Átalakítás…',
@@ -1059,6 +1149,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
+    it: 'Impossibile salvare il pannello nei segnalibri',
     de: 'Tab-Panel konnte nicht in Lesezeichen gespeichert werden',
     fr: 'Impossible de sauvegarder le panneau d’onglets dans les marque-pages',
     hu: 'Nem sikerült könyvjelzőzni a lappanelt',
@@ -1070,6 +1161,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.folder': {
     en: 'Cannot create destination folder',
+    it: 'Impossibile creare la cartella di destinazione',
     de: 'Zielordner konnte nicht erstellt werden',
     fr: 'Impossible de créer le dossier de destination',
     hu: 'Nem sikerült létrehozni a célmappát',
@@ -1081,6 +1173,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.folder_upd': {
     en: 'Cannot update destination folder',
+    it: 'Impossibile aggiornare la cartella di destinazione',
     de: 'Zielordner konnte nicht aktualisiert werden',
     fr: 'Impossible de mettre à jour le dossier de destination',
     hu: 'Nem sikerült frissíteni a célmappát',
@@ -1092,6 +1185,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.tabs_panel_to_bookmarks_err.bookmarks': {
     en: 'Cannot create bookmarks',
+    it: 'Impossibile creare i segnalibri',
     de: 'Lesezeichen konnten nicht erstellt werden',
     fr: 'Impossible de créer les marque-pages',
     hu: 'Nem sikerült létrehozni a könyvjelzőket',
@@ -1103,6 +1197,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
+    it: 'Impossibile ripristinare il pannello dai segnalibri',
     de: 'Panel konnte nicht aus Lesezeichen wiederhergestellt werden',
     fr: 'Impossible de restaurer le panneau depuis les marque-pages',
     hu: 'Nem sikerült a könyvjelzőkből helyreállítani a lapokat',
@@ -1114,6 +1209,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_err.root': {
     en: 'Root folder not found',
+    it: 'Cartella principale non trovata',
     de: 'Stammordner nicht gefunden',
     fr: 'Dossier racine non trouvé',
     hu: 'A kezdőmappa nem található',
@@ -1125,6 +1221,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.restore_from_bookmarks_ok': {
     en: 'The tab panel has been successfully restored',
+    it: 'Il pannello è stato ripristinato con successo',
     de: 'Tab-Panel erfolgreich wiederhergestellt',
     fr: 'Le panneau d’onglets a été restauré avec succès',
     hu: 'A lappanel helyreállítása kész',
@@ -1136,6 +1233,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.panel_conv': {
     en: 'The panel has been successfully converted',
+    it: 'Il pannello è stato convertito con successo',
     de: 'Panel erfolgreich umgewandelt',
     fr: 'Le panneau a été converti avec succès',
     hu: 'A panel átalakítása kész',
@@ -1146,6 +1244,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.panel_bkmrkd': {
     en: 'The panel has been successfully bookmarked',
+    it: 'Il pannello è stato salvato nei segnalibri',
     de: 'Panel erfolgreich als Lesezeichen gespeichert',
     fr: 'Le panneau a été enregistré dans les marque-pages avec succès',
     hu: 'A panel könyvjelzőzése kész',
@@ -1156,6 +1255,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.new_bookmark': {
     en: 'New bookmark added',
+    it: 'Nuovo segnalibro aggiunto',
     de: 'Neues Lesezeichen hinzugefügt',
     fr: 'Nouveau marque-page ajouté',
     hu: 'Új könyvjelző készült',
@@ -1167,6 +1267,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.title': {
     en: 'Cannot find root folder',
+    it: 'Cartella principale non trovata',
     de: 'Stammordner konnte nicht gefunden werden',
     fr: 'Impossible de trouver le dossier racine',
     hu: 'A kezdőmappa nem található',
@@ -1178,6 +1279,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
+    it: 'Prova a risalvare il pannello schede',
     de: 'Versuchen Sie, das Tab-Panel erneut zu speichern',
     fr: 'Essayez de réenregistrer le panneau d’onglets',
     hu: 'Meg kell próbálni újramenteni a lappanelt',
@@ -1189,6 +1291,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.bookmarks_sub_panel.no_root.save': {
     en: 'Save',
+    it: 'Salva',
     de: 'Speichern',
     fr: 'Enregistrer',
     hu: 'Mentés',
@@ -1200,6 +1303,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
+    it: 'Errore di autenticazione proxy',
     de: 'Proxy-Authentifizierungsfehler',
     fr: 'Erreur d’authentification du proxy',
     hu: 'Proxy-hitelesítési hiba',
@@ -1211,6 +1315,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.proxy_auth_err_details': {
     en: 'Check the proxy settings to make sure that they are correct.',
+    it: 'Controlla le impostazioni proxy per verificare che siano corrette.',
     de: 'Überprüfen Sie die Proxy-Einstellungen, um sicherzustellen, dass sie korrekt sind.',
     fr: 'Vérifiez que les paramètres du proxy sont corrects',
     hu: 'Ellenőrizni kell, hogy a proxy beállításai biztosan helyesek-e.',
@@ -1222,6 +1327,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.proxy_auth_err_ctrl': {
     en: 'Open settings',
+    it: 'Apri impostazioni',
     de: 'Einstellungen öffnen',
     fr: 'Ouvrir les paramètres',
     hu: 'Beállítások',
@@ -1233,6 +1339,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.history_del_sites': {
     en: 'Clearing history',
+    it: 'Cancellazione cronologia in corso',
     de: 'Chronik wird gelöscht',
     fr: 'Effacer l’historique',
     hu: 'Az előzmények törlése',
@@ -1244,6 +1351,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.history_del_sites_nothing': {
     en: 'Nothing to clear',
+    it: 'Nessun elemento da cancellare',
     de: 'Nichts zu löschen',
     fr: 'Rien à effacer',
     hu: 'Semmi nem lett törölve',
@@ -1255,6 +1363,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.cc.err': {
     en: 'Unable to clear cookies',
+    it: 'Impossibile cancellare i cookie',
     de: 'Cookies konnten nicht gelöscht werden',
     fr: 'Impossible d’effacer les cookies',
     hu: 'A sütik nem törölhetők',
@@ -1266,6 +1375,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.cc.err_url': {
     en: 'Incorrect URL: ',
+    it: 'URL non corretto: ',
     de: 'Falsche URL: ',
     fr: 'URL incorrecte: ',
     hu: 'Hibás URL: ',
@@ -1277,6 +1387,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.cc.ok': {
     en: 'Cookies were cleared',
+    it: 'Cookie cancellati con successo',
     de: 'Cookies wurden gelöscht',
     fr: 'Les cookies ont été effacés',
     hu: 'A sütik törlése kész',
@@ -1287,6 +1398,7 @@ export const sidebarTranslations: Translations = {
   },
   'notif.switch_to_tab': {
     en: 'Switch to tab',
+    it: 'Passa alla scheda',
     de: 'Zu Tab wechseln',
     fr: `Passer à l'onglet`,
     hu: 'Váltás a lapra',
@@ -1302,6 +1414,7 @@ export const sidebarTranslations: Translations = {
   // -
   'colors.toolbar': {
     en: 'Default',
+    it: 'Predefinito',
     de: 'Standard',
     fr: 'Par défaut',
     hu: 'alapértelmezett',
@@ -1313,6 +1426,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.gray': {
     en: 'Default',
+    it: 'Grigio',
     de: 'Standard',
     fr: 'Par défaut',
     hu: 'alapértelmezett',
@@ -1324,6 +1438,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.blue': {
     en: 'Blue',
+    it: 'Blu',
     de: 'Blau',
     fr: 'Bleu',
     hu: 'kék',
@@ -1335,6 +1450,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.turquoise': {
     en: 'Turquoise',
+    it: 'Turchese',
     de: 'Türkis',
     fr: 'Turquoise',
     hu: 'türkiz',
@@ -1346,6 +1462,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.cyan': {
     en: 'Cyan',
+    it: 'Ciano',
     de: 'Cyan',
     fr: 'Cyan',
     hu: 'cián',
@@ -1357,6 +1474,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.green': {
     en: 'Green',
+    it: 'Verde',
     de: 'Grün',
     fr: 'Vert',
     hu: 'zöld',
@@ -1368,6 +1486,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.yellow': {
     en: 'Yellow',
+    it: 'Giallo',
     de: 'Gelb',
     fr: 'Jaune',
     hu: 'sárga',
@@ -1379,6 +1498,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.orange': {
     en: 'Orange',
+    it: 'Arancione',
     de: 'Orange',
     hu: 'narancssárga',
     fr: 'Orange',
@@ -1389,6 +1509,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.red': {
     en: 'Red',
+    it: 'Rosso',
     de: 'Rot',
     fr: 'Rouge',
     hu: 'vörös',
@@ -1400,6 +1521,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.pink': {
     en: 'Pink',
+    it: 'Rosa',
     de: 'Rosa',
     fr: 'Rose',
     hu: 'rózsaszín',
@@ -1410,6 +1532,7 @@ export const sidebarTranslations: Translations = {
   },
   'colors.purple': {
     en: 'Purple',
+    it: 'Viola',
     de: 'Lila',
     fr: 'Violet',
     hu: 'lila',

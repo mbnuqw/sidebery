@@ -1,7 +1,8 @@
 {
   "ExtName": {
     "en": "Sidebery",
-    "ru": "Sidebery"
+    "ru": "Sidebery",
+    "it": "Sidebery"
   },
   "ExtDesc": {
     "en": "Tabs tree, bookmarks and history in a highly configurable sidebar.",
@@ -12,7 +13,8 @@
     "ru": "Древовидные вкладки, закладки и история на настраиваемой боковой панели.",
     "zh_CN": "标签页树、书签和历史记录在高度可配置的侧边栏中。",
     "zh_TW": "具有分頁樹、書籤和歷史紀錄功能的高自訂性側邊欄。",
-    "ja": "高度にカスタマイズ可能なサイドバー内のタブツリー、ブックマーク、履歴。"
+    "ja": "高度にカスタマイズ可能なサイドバー内のタブツリー、ブックマーク、履歴。",
+    "it": "Albero delle schede, segnalibri e cronologia in una barra laterale altamente configurabile."
   },
   "ActionTitle": {
     "en": "Toggle Sidebery sidebar\nMiddle click: Open settings",
@@ -23,9 +25,9 @@
     "ru": "Открыть Sidebery\nСредний щелчок: открыть настройки",
     "zh_CN": "切换 Sidebery 侧边栏\n中键点击：打开设置",
     "zh_TW": "切換 Sidebery 側邊欄\n中鍵點選：開啟設定",
-    "ja": "Sidebery サイドバーの切り替え\n中クリック: 設定を開く"
+    "ja": "Sidebery サイドバーの切り替え\n中クリック: 設定を開く",
+    "it": "Attiva/Disattiva barra Sidebery\nClic centrale: Apri impostazioni"
   },
-
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
     "de": "Seitenleiste öffnen/schließen",
@@ -35,7 +37,8 @@
     "ru": "Открыть/Закрыть панель",
     "zh_CN": "打开/关闭侧边栏面板",
     "zh_TW": "開啟/關閉側邊欄面板",
-    "ja": "サイドバーのパネルを開く/閉じる"
+    "ja": "サイドバーのパネルを開く/閉じる",
+    "it": "Apri/Chiudi pannello laterale"
   },
   "KbActivate": {
     "en": "Activate/Apply",
@@ -46,7 +49,8 @@
     "ru": "Активировать/Применить",
     "zh_CN": "激活/应用",
     "zh_TW": "啟用/套用",
-    "ja": "有効化/適用"
+    "ja": "有効化/適用",
+    "it": "Attiva/Applica"
   },
   "KbResetSelection": {
     "en": "Cancel/Reset",
@@ -57,7 +61,8 @@
     "ru": "Отмена/Сброс",
     "zh_CN": "取消/重置",
     "zh_TW": "取消/重設",
-    "ja": "キャンセル/リセット"
+    "ja": "キャンセル/リセット",
+    "it": "Annulla/Reimposta"
   },
   "KbSearch": {
     "en": "Search",
@@ -68,7 +73,8 @@
     "ru": "Поиск",
     "zh_CN": "搜索",
     "zh_TW": "搜尋",
-    "ja": "検索"
+    "ja": "検索",
+    "it": "Cerca"
   },
   "KbHideActPanel": {
     "en": "Hide selected (or active) panel",
@@ -79,7 +85,8 @@
     "ru": "Скрыть выделенную (или активную) панель",
     "zh_CN": "隐藏选定（或活动）面板",
     "zh_TW": "隱藏選定（或當前）面板",
-    "ja": "選択した（またはアクティブな）パネルを非表示"
+    "ja": "選択した（またはアクティブな）パネルを非表示",
+    "it": "Nascondi pannello selezionato (o attivo)"
   },
   "KbCreateSnapshot": {
     "en": "Create snapshot",
@@ -90,7 +97,8 @@
     "ru": "Создать снепшот",
     "zh_CN": "创建快照",
     "zh_TW": "建立快照",
-    "ja": "スナップショットを作成"
+    "ja": "スナップショットを作成",
+    "it": "Crea istantanea"
   },
   "KbOpenSnapViewer": {
     "en": "Open snapshots viewer",
@@ -101,7 +109,8 @@
     "ru": "Открыть средство просмотра снепшотов",
     "zh_CN": "打开快照查看器",
     "zh_TW": "開啟快照檢視器",
-    "ja": "スナップショットビューアを開く"
+    "ja": "スナップショットビューアを開く",
+    "it": "Apri visualizzatore istantanee"
   },
   "KbMenu": {
     "en": "Open menu for selected (or active) tab, bookmark or panel",
@@ -112,7 +121,8 @@
     "ru": "Открыть меню для выделенной (или активной) вкладки, закладки или панели",
     "zh_CN": "打开菜单",
     "zh_TW": "開啟選單",
-    "ja": "選択した（またはアクティブな）タブ、ブックマーク、またはパネル用のオープンメニュー"
+    "ja": "選択した（またはアクティブな）タブ、ブックマーク、またはパネル用のオープンメニュー",
+    "it": "Apri menu per elemento selezionato"
   },
   "KbOpenPanelConfig": {
     "en": "Open panel config",
@@ -120,7 +130,8 @@
     "fr": "Ouvrir la configuration du panneau",
     "zh_CN": "打开面板配置",
     "zh_TW": "開啟面板設定",
-    "ru": "Открыть настройки панели"
+    "ru": "Открыть настройки панели",
+    "it": "Apri configurazione pannello"
   },
   "KbCopyTitle": {
     "en": "Copy titles of selected tabs/bookmarks or active tab",
@@ -128,7 +139,8 @@
     "fr": "Copier le titre des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的标题",
     "zh_TW": "複製選定分頁/書籤或當前分頁的標題",
-    "ru": "Копировать заголовки выбранных вкладок/закладок или активной вкладки"
+    "ru": "Копировать заголовки выбранных вкладок/закладок или активной вкладки",
+    "it": "Copia titoli delle schede o segnalibri selezionati"
   },
   "KbCopyUrl": {
     "en": "Copy URLs of selected tabs/bookmarks or active tab",
@@ -136,7 +148,8 @@
     "fr": "Copier l’URL des onglets/marque-pages sélectionnés ou de l’onglet actif",
     "zh_CN": "复制选定标签页/书签或活动标签页的网址",
     "zh_TW": "複製選定分頁/書籤或當前分頁的網址",
-    "ru": "Копировать URL выбранных вкладок/закладок или активной вкладки"
+    "ru": "Копировать URL выбранных вкладок/закладок или активной вкладки",
+    "it": "Copia URL delle schede o segnalibri selezionati"
   },
   "KbCopyByTmplt0": {
     "en": "Copy selected tabs/bookmarks or active tab by first template",
@@ -1364,7 +1377,6 @@
     "ja": "アクティブパネルのタブをアクセス時間でソート（新しい順）",
     "ru": "Сортировать вкладки активной панели по времени доступа (Новые-Старые)"
   },
-
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",
     "de": "Proxy für \"",
@@ -1387,7 +1399,6 @@
     "zh_TW": "」容器",
     "ja": "」コンテナ"
   },
-
   "unavailable_url": {
     "en": "Unavailable URL",
     "de": "Nicht verfügbare URL",
@@ -1454,7 +1465,6 @@
     "zh_TW": "由於安全相關的 API 限制，Sidebery 無法開啟此鏈接。",
     "ja": "Firefox のセキュリティ関連の制限により、Sidebery はこのリンクを開けません。"
   },
-
   "group_disconnected_warn": {
     "en": "Cannot connect to the sidebar...",
     "de": "Keine Verbindung zur Seitenleiste möglich...",
