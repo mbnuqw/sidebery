@@ -7,6 +7,7 @@ export const commonTranslations: Translations = {
   // -
   'bookmarks_editor.name_bookmark_placeholder': {
     en: 'Bookmark name...',
+    it: 'Nome segnalibro...',
     de: 'Name des Lesezeichens...',
     fr: 'Nom du marque-page…',
     hu: 'A könyvjelző neve…',
@@ -18,6 +19,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.name_folder_placeholder': {
     en: 'Folder name...',
+    it: 'Nome cartella...',
     de: 'Name des Ordners...',
     fr: 'Nom du dossier…',
     hu: 'A mappa neve…',
@@ -29,6 +31,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.url_placeholder': {
     en: 'e.g. https://example.com',
+    it: 'es. https://example.com',
     de: 'z. B. https://example.com',
     fr: 'ex: https://example.com',
     hu: 'pl.: https://pelda.hu',
@@ -43,6 +46,7 @@ export const commonTranslations: Translations = {
   // -
   'btn.create': {
     en: 'Create',
+    it: 'Crea',
     de: 'Erstellen',
     fr: 'Créer',
     hu: 'Létrehozás',
@@ -54,6 +58,7 @@ export const commonTranslations: Translations = {
   },
   'btn.save': {
     en: 'Save',
+    it: 'Salva',
     de: 'Speichern',
     fr: 'Sauvegarder',
     hu: 'Mentés',
@@ -65,6 +70,7 @@ export const commonTranslations: Translations = {
   },
   'btn.restore': {
     en: 'Restore',
+    it: 'Ripristina',
     de: 'Wiederherstellen',
     fr: 'Restaurer',
     hu: 'Visszaállítás',
@@ -76,6 +82,7 @@ export const commonTranslations: Translations = {
   },
   'btn.update': {
     en: 'Update',
+    it: 'Aggiorna',
     de: 'Aktualisieren',
     fr: 'Mise à jour',
     hu: 'Frissítés',
@@ -86,6 +93,7 @@ export const commonTranslations: Translations = {
   },
   'btn.grant_permissions': {
     en: 'Grant permissions',
+    it: 'Concedi permessi',
     de: 'Berechtigungen erteilen',
     fr: 'Accorder les permissions',
     hu: 'Engedélyek megadása',
@@ -97,6 +105,7 @@ export const commonTranslations: Translations = {
   },
   'btn.yes': {
     en: 'Yes',
+    it: 'Sì',
     de: 'Ja',
     fr: 'Oui',
     hu: 'Igen',
@@ -108,6 +117,7 @@ export const commonTranslations: Translations = {
   },
   'btn.ok': {
     en: 'Ok',
+    it: 'OK',
     de: 'OK',
     fr: 'Ok',
     ru: 'Ок',
@@ -116,6 +126,7 @@ export const commonTranslations: Translations = {
   },
   'btn.no': {
     en: 'No',
+    it: 'No',
     de: 'Nein',
     fr: 'Non',
     hu: 'Nem',
@@ -126,6 +137,7 @@ export const commonTranslations: Translations = {
   },
   'btn.cancel': {
     en: 'Cancel',
+    it: 'Annulla',
     de: 'Abbrechen',
     fr: 'Annuler',
     hu: 'Mégsem',
@@ -136,6 +148,7 @@ export const commonTranslations: Translations = {
   },
   'btn.stop': {
     en: 'Stop',
+    it: 'Ferma',
     de: 'Stopp',
     fr: 'Arrêter',
     hu: 'Leállítás',
@@ -150,6 +163,7 @@ export const commonTranslations: Translations = {
   // -
   'container.new_container_name': {
     en: 'Container',
+    it: 'Contenitore',
     de: 'Umgebung',
     fr: 'Conteneur',
     hu: 'Konténer',
@@ -164,6 +178,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.tabs.title': {
     en: 'Tabs',
+    it: 'Schede',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -179,6 +194,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.bookmarks.title': {
     en: 'Bookmarks',
+    it: 'Segnalibri',
     de: 'Lesezeichen',
     fr: 'Marques-pages',
     hu: 'Könyvjelzők',
@@ -190,6 +206,7 @@ export const commonTranslations: Translations = {
   },
   'panel.bookmarks.req_perm': {
     en: 'Bookmarks panel requires "Bookmarks" permission.',
+    it: 'Il pannello segnalibri richiede il permesso "Segnalibri".',
     de: 'Lesezeichen-Panel erfordert "Lesezeichen"-Berechtigung',
     fr: 'Le panneau de marque-pages requiert la permission “Marque-pages”',
     hu: 'A könyvjelzők eléréséhez engedély szükséges.',
@@ -205,6 +222,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.history.title': {
     en: 'History',
+    it: 'Cronologia',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -216,6 +234,7 @@ export const commonTranslations: Translations = {
   },
   'panel.history.load_more': {
     en: 'Scroll to load more',
+    it: 'Scorri per caricare altro',
     de: 'Scrollen, um mehr zu laden',
     fr: 'Scroller pour charger plus',
     hu: 'Továbbiak betöltése görgetéssel',
@@ -227,6 +246,7 @@ export const commonTranslations: Translations = {
   },
   'panel.history.req_perm': {
     en: 'History panel requires "History" permission.',
+    it: 'Il pannello cronologia richiede il permesso "Cronologia".',
     de: 'Chronik-Panel erfordert "Chronik"-Berechtigung',
     fr: 'Le panneau d’historique requiert la permission “Historique”',
     hu: 'Az előzmények eléréséhez engedély szükséges.',
@@ -242,6 +262,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.sync.title': {
     en: 'Sync',
+    it: 'Sincronizzazione',
     de: 'Synchronisation',
     fr: 'Synchronisation',
     hu: 'Szinkronizálás',
@@ -252,6 +273,7 @@ export const commonTranslations: Translations = {
   },
   'sync.tabs_title': {
     en: 'Tabs',
+    it: 'Schede',
     de: 'Tabs',
     fr: 'Onglets',
     ru: 'Вкладки',
@@ -260,6 +282,7 @@ export const commonTranslations: Translations = {
   },
   'sync.ctx_menu_title': {
     en: 'Context menu',
+    it: 'Menu contestuale',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     ru: 'Контекстное меню',
@@ -268,6 +291,7 @@ export const commonTranslations: Translations = {
   },
   'sync.settings_title': {
     en: 'Settings',
+    it: 'Impostazioni',
     de: 'Einstellungen',
     fr: 'Paramètres',
     ru: 'Настройки',
@@ -276,6 +300,7 @@ export const commonTranslations: Translations = {
   },
   'sync.style_title': {
     en: 'Styles',
+    it: 'Stili',
     de: 'Stile',
     fr: 'Styles',
     ru: 'Стили',
@@ -284,6 +309,7 @@ export const commonTranslations: Translations = {
   },
   'sync.keybindings_title': {
     en: 'Keybindings',
+    it: 'Scorciatoie da tastiera',
     de: 'Tastenbelegung',
     fr: 'Raccourcis',
     ru: 'Горячие клавиши',
@@ -292,6 +318,7 @@ export const commonTranslations: Translations = {
   },
   'sync.unknown_title': {
     en: 'Unknown',
+    it: 'Sconosciuto',
     de: 'Unbekannt',
     fr: 'Inconnu',
     ru: 'Неизвестно',
@@ -299,6 +326,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_entries': {
     en: 'Unable to load entries from Google Drive',
+    it: 'Impossibile caricare le voci da Google Drive',
     de: 'Einträge aus Google Drive können nicht geladen werden',
     fr: 'Impossible de charger les entrées depuis Google Drive',
     hu: 'Nem lehet bejegyzéseket betölteni a Google Drive-ból',
@@ -310,6 +338,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_entries_sub': {
     en: 'Try again later',
+    it: 'Riprova più tardi',
     de: 'Versuchen Sie es später erneut',
     fr: 'Réessayer plus tard',
     hu: 'Próbálja újra később',
@@ -321,6 +350,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_tabs': {
     en: 'Unable to load tabs from Google Drive',
+    it: 'Impossibile caricare le schede da Google Drive',
     de: 'Tabs können nicht von Google Drive geladen werden',
     fr: 'Impossible de charger les onglets de Google Drive',
     hu: 'Nem sikerült betölteni a lapokat a Google Drive-ból',
@@ -331,6 +361,7 @@ export const commonTranslations: Translations = {
     ja: 'Google ドライブからタブを読み込めません',
   },
   'sync.err.load': {
+    it: 'Impossibile caricare i dati sincronizzati',
     en: 'Unable to load synced data',
     de: 'Synchronisierte Daten können nicht geladen werden',
     fr: 'Impossible de charger les données synchronisées',
@@ -342,6 +373,7 @@ export const commonTranslations: Translations = {
     ja: '同期されたデータを読み込めません',
   },
   'sync.err.save': {
+    it: 'Impossibile salvare i dati nello storage di sincronizzazione',
     en: 'Unable to save data to sync storage',
     de: 'Daten können nicht im Synchronisierungsspeicher gespeichert werden',
     fr: 'Impossible de sauvegarder les données vers le stockage synchronisé',
@@ -353,6 +385,7 @@ export const commonTranslations: Translations = {
     ja: '同期ストレージにデータを保存できません',
   },
   'sync.err.save_tabs': {
+    it: 'Impossibile salvare le schede nello storage di sincronizzazione',
     en: 'Unable to save tabs to sync storage',
     de: 'Tabs können nicht im Synchronisierungsspeicher gespeichert werden',
     fr: 'Impossible de sauvegarder les onglets vers le stockage synchronisé',
@@ -364,6 +397,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを同期ストレージに保存できません',
   },
   'sync.err.rm': {
+    it: 'Impossibile eliminare i dati dallo storage di sincronizzazione',
     en: 'Unable to remove data from sync storage',
     de: 'Daten können nicht aus dem Synchronisierungsspeicher entfernt werden',
     fr: 'Impossible de supprimer les données du stockage synchronisé',
@@ -375,6 +409,7 @@ export const commonTranslations: Translations = {
     ja: '同期ストレージからデータを削除できません',
   },
   'sync.success.import_keyboard': {
+    it: 'Scorciatoie da tastiera importate con successo',
     en: 'Keybindings have been successfully imported',
     de: 'Tastenbelegung erfolgreich importiert',
     fr: 'Les raccourcis ont été importés avec succès',
@@ -383,6 +418,7 @@ export const commonTranslations: Translations = {
     zh_TW: '按鍵綁定已成功匯入',
   },
   'sync.success.import_menu': {
+    it: 'Menu contestuale importato con successo',
     en: 'Context menu has been successfully imported',
     de: 'Kontextmenü erfolgreich importiert',
     fr: 'Le menu contextuel a été importé avec succès',
@@ -391,6 +427,7 @@ export const commonTranslations: Translations = {
     zh_TW: '快捷選單已成功匯入',
   },
   'sync.success.import_settings': {
+    it: 'Impostazioni importate con successo',
     en: 'Settings have been successfully imported',
     de: 'Einstellungen erfolgreich importiert',
     fr: 'Les paramètres ont été importés avec succès',
@@ -399,6 +436,7 @@ export const commonTranslations: Translations = {
     zh_TW: '設定已成功匯入',
   },
   'sync.success.import_styles': {
+    it: 'Stili importati con successo',
     en: 'Styles have been successfully imported',
     de: 'Stile erfolgreich importiert',
     fr: 'Les styles ont été importés avec succès',
@@ -407,6 +445,7 @@ export const commonTranslations: Translations = {
     zh_TW: '樣式已成功匯入',
   },
   'sync.unknown_profile': {
+    it: 'Profilo sconosciuto',
     en: 'Unknown profile',
     de: 'Unbekanntes Profil',
     fr: 'Profil inconnu',
@@ -418,6 +457,7 @@ export const commonTranslations: Translations = {
     ja: '不明なプロファイル',
   },
   'sync.entry.this_profile': {
+    it: 'Questo profilo',
     en: 'This profile',
     de: 'Dieses Profil',
     fr: 'Ce profil',
@@ -429,6 +469,7 @@ export const commonTranslations: Translations = {
     ja: 'このプロファイル',
   },
   'sync.entry.import_btn': {
+    it: 'Importa',
     en: 'Import',
     de: 'Importieren',
     fr: 'Importer',
@@ -439,6 +480,7 @@ export const commonTranslations: Translations = {
     ja: 'インポート',
   },
   'sync.entry.open_tabs_btn': {
+    it: 'Apri',
     en: 'Open',
     de: 'Öffnen',
     fr: 'Ouvrir',
@@ -450,6 +492,7 @@ export const commonTranslations: Translations = {
     ja: '開く',
   },
   'sync.entry.rm_btn': {
+    it: 'Elimina',
     en: 'Delete',
     de: 'Löschen',
     fr: 'Supprimer',
@@ -466,6 +509,7 @@ export const commonTranslations: Translations = {
   // -
   // - Bookmarks popup
   'popup.bookmarks.name_label': {
+    it: 'Nome',
     en: 'Name',
     de: 'Name',
     fr: 'Nom',
@@ -477,6 +521,7 @@ export const commonTranslations: Translations = {
     ja: '名前',
   },
   'popup.bookmarks.location_label': {
+    it: 'Posizione',
     en: 'Location',
     de: 'Ort',
     fr: 'Emplacement',
@@ -488,6 +533,7 @@ export const commonTranslations: Translations = {
     ja: '場所',
   },
   'popup.bookmarks.location_new_folder_placeholder': {
+    it: 'Nome nuova cartella',
     en: 'New folder name',
     de: 'Neuer Ordner',
     fr: 'Nom du nouveau dossier',
@@ -499,6 +545,7 @@ export const commonTranslations: Translations = {
     ja: '新しいフォルダ名',
   },
   'popup.bookmarks.recent_locations_label': {
+    it: 'Posizioni recenti',
     en: 'Recent locations',
     de: 'Zuletzt verwendet',
     fr: 'Emplacements récents',
@@ -510,6 +557,7 @@ export const commonTranslations: Translations = {
     ja: '最近の場所',
   },
   'popup.bookmarks.save_in_bookmarks': {
+    it: 'Salva nei segnalibri',
     en: 'Save in bookmarks',
     de: 'Als Lesezeichen speichern',
     fr: 'Sauvegarder dans les marque-pages',
@@ -521,6 +569,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークに保存',
   },
   'popup.bookmarks.set_folder_for_tabs_panel': {
+    it: 'Imposta cartella per questo pannello schede',
     en: 'Set folder for this tabs panel',
     de: 'Ordner für dieses Tab-Panel festlegen',
     fr: 'Définir le dossier pour ce panneau d’onglets',
@@ -532,6 +581,7 @@ export const commonTranslations: Translations = {
     ja: 'このタブパネルのフォルダを設定',
   },
   'popup.bookmarks.edit_bookmark': {
+    it: 'Modifica segnalibro',
     en: 'Edit bookmark',
     de: 'Lesezeichen bearbeiten',
     fr: 'Modifier le marque-page',
@@ -543,6 +593,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークを編集',
   },
   'popup.bookmarks.edit_folder': {
+    it: 'Modifica cartella',
     en: 'Edit folder',
     de: 'Ordner bearbeiten',
     fr: 'Modifier le dossier',
@@ -554,6 +605,7 @@ export const commonTranslations: Translations = {
     ja: 'フォルダを編集',
   },
   'popup.bookmarks.select_root_folder': {
+    it: 'Seleziona cartella radice',
     en: 'Select root folder',
     de: 'Stammordner auswählen',
     fr: 'Sélectionner le dossier racine',
@@ -565,6 +617,7 @@ export const commonTranslations: Translations = {
     ja: 'ルートフォルダを選択',
   },
   'popup.bookmarks.create_bookmark': {
+    it: 'Crea segnalibro',
     en: 'Create bookmark',
     de: 'Lesezeichen erstellen',
     fr: 'Créer le marque-page',
@@ -576,6 +629,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークを作成',
   },
   'popup.bookmarks.create_folder': {
+    it: 'Crea cartella',
     en: 'Create folder',
     de: 'Ordner erstellen',
     fr: 'Créer un dossier',
@@ -587,6 +641,7 @@ export const commonTranslations: Translations = {
     ja: 'フォルダを作成',
   },
   'popup.bookmarks.move_to': {
+    it: 'Sposta in',
     en: 'Move to',
     de: 'Verschieben nach',
     fr: 'Déplacer vers',
@@ -598,6 +653,7 @@ export const commonTranslations: Translations = {
     ja: '移動先',
   },
   'popup.bookmarks.move': {
+    it: 'Sposta',
     en: 'Move',
     de: 'Verschieben',
     fr: 'Déplacer',
@@ -609,6 +665,7 @@ export const commonTranslations: Translations = {
     ja: '移動',
   },
   'popup.bookmarks.create_bookmarks': {
+    it: 'Crea segnalibro/i',
     en: 'Create bookmark[s]',
     de: 'Lesezeichen erstellen',
     fr: 'Créer des marque-pages',
@@ -620,6 +677,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークを作成',
   },
   'popup.bookmarks.restore': {
+    it: 'Ripristina dalla cartella dei segnalibri',
     en: 'Restore from bookmarks folder',
     de: 'Aus Lesezeichen-Ordner wiederherstellen',
     fr: 'Restaurer depuis le dossier de marque-pages',
@@ -631,6 +689,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークフォルダから復元',
   },
   'popup.bookmarks.convert_title': {
+    it: 'Converti in segnalibri',
     en: 'Convert to bookmarks',
     de: 'In Lesezeichen konvertieren',
     fr: 'Convertir en marque-pages',
@@ -642,6 +701,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークに変換',
   },
   'popup.bookmarks.convert': {
+    it: 'Converti',
     en: 'Convert',
     de: 'Konvertieren',
     fr: 'Convertir',
@@ -654,6 +714,7 @@ export const commonTranslations: Translations = {
   },
 
   'popup.new_tab_shortcuts.title': {
+    it: 'Scorciatoie Nuova scheda',
     en: 'New Tab Shortcuts',
     de: '"Neuer Tab"-Verknüpfungen',
     fr: 'Raccourcis “Nouvel onglet”',
@@ -665,6 +726,7 @@ export const commonTranslations: Translations = {
     ja: '新しいタブのショートカット',
   },
   'popup.new_tab_shortcuts.create_title': {
+    it: 'Crea scorciatoia',
     en: 'Create shortcut',
     de: 'Verknüpfung erstellen',
     fr: 'Créer un raccourci',
@@ -676,6 +738,7 @@ export const commonTranslations: Translations = {
     ja: 'ショートカットを作成',
   },
   'popup.new_tab_shortcuts.new_shortcut_container_label': {
+    it: 'Contenitore',
     en: 'Container',
     de: 'Umgebung',
     fr: 'Conteneur',
@@ -686,6 +749,7 @@ export const commonTranslations: Translations = {
     ja: 'コンテナ',
   },
   'popup.new_tab_shortcuts.new_shortcut_not_set_container': {
+    it: 'Non impostato',
     en: 'Not set',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
@@ -697,6 +761,7 @@ export const commonTranslations: Translations = {
     ja: '未設定',
   },
   'popup.new_tab_shortcuts.new_shortcut_default_container': {
+    it: 'Contenitore predefinito',
     en: 'Default container',
     de: 'Standardumgebung',
     fr: 'Conteneur par défaut',
@@ -708,11 +773,13 @@ export const commonTranslations: Translations = {
     ja: 'デフォルトコンテナ',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_label': {
+    it: 'URL',
     en: 'URL',
     fr: 'URL',
     ru: 'URL-адрес',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
+    it: 'Nuova scheda predefinita',
     en: 'Default new tab',
     de: 'Standardseite für neue Tabs',
     fr: 'Nouvel onglet par défaut',
@@ -724,6 +791,7 @@ export const commonTranslations: Translations = {
     ja: 'デフォルトの新しいタブ',
   },
   'popup.new_tab_shortcuts.add_br_btn': {
+    it: 'Aggiungi nuova riga',
     en: 'Add new line',
     de: 'Neue Zeile hinzufügen',
     fr: 'Ajouter une nouvelle ligne',
@@ -735,6 +803,7 @@ export const commonTranslations: Translations = {
     ja: '新しい行を追加',
   },
   'popup.new_tab_shortcuts.add_shortcut_btn': {
+    it: 'Aggiungi scorciatoia',
     en: 'Add shortcut',
     de: 'Verknüpfung hinzufügen',
     fr: 'Ajouter un raccourci',
@@ -747,6 +816,7 @@ export const commonTranslations: Translations = {
   },
 
   'popup.tab_move_rules.title': {
+    it: 'Regole spostamento automatico schede',
     en: 'Tab auto-move rules',
     de: 'Regeln für das automatische Verschieben von Tabs',
     fr: 'Règles de déplacement automatique d’onglet',
@@ -758,6 +828,7 @@ export const commonTranslations: Translations = {
     ja: 'タブ自動移動ルール',
   },
   'popup.tab_move_rules.editor_title.new': {
+    it: 'Crea regola di spostamento',
     en: 'Create auto-move rule',
     de: 'Regel erstellen',
     fr: 'Créer une règle de déplacement automatique',
@@ -769,6 +840,7 @@ export const commonTranslations: Translations = {
     ja: '自動移動ルールを作成',
   },
   'popup.tab_move_rules.editor_title.edit': {
+    it: 'Modifica regola di spostamento',
     en: 'Edit auto-move rule',
     de: 'Regel bearbeiten',
     fr: 'Modifier la règle de déplacement automatique',
@@ -780,6 +852,7 @@ export const commonTranslations: Translations = {
     ja: '自動移動ルールを編集',
   },
   'popup.tab_move_rules.rule_name_label': {
+    it: 'Nome (opzionale)',
     en: 'Name (optional)',
     de: 'Name (optional)',
     fr: 'Nom (optionnel)',
@@ -791,6 +864,7 @@ export const commonTranslations: Translations = {
     ja: '名前（オプション）',
   },
   'popup.tab_move_rules.rule_container_label': {
+    it: 'Se la scheda è in un contenitore',
     en: 'If tab is in a container',
     de: 'Wenn der Tab sich in folgender Umgebung befindet',
     fr: 'Si l’onglet est dans un conteneur',
@@ -802,6 +876,7 @@ export const commonTranslations: Translations = {
     ja: 'タブがコンテナ内にある場合',
   },
   'popup.tab_move_rules.rule_container_not_set': {
+    it: 'Non impostato',
     en: 'Not set',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
@@ -813,6 +888,7 @@ export const commonTranslations: Translations = {
     ja: '未設定',
   },
   'popup.tab_move_rules.rule_url_label': {
+    it: 'Se la scheda ha URL ("sottostringa" o /RegExp/)',
     en: 'If tab has URL ("substring" or "/RegExp/")',
     de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     fr: 'Si l’onglet a l’URL (“sous-chaine” ou “/RegExp/”)',
@@ -823,6 +899,7 @@ export const commonTranslations: Translations = {
     ja: 'URL が ("部分文字列" または "/RegExp/") を含む場合',
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
+    it: 'Se la scheda è al livello principale dell\'albero',
     en: 'If tab at the top level of tree',
     de: 'Wenn der Tab sich auf der obersten Ebene des Baumes befindet',
     fr: 'Si l’onglet est à la racine de l’arborescence',
@@ -834,6 +911,7 @@ export const commonTranslations: Translations = {
     ja: 'タブがツリーの最上位レベルにある場合',
   },
   'popup.tab_move_rules.add_rule_btn': {
+    it: 'Aggiungi regola',
     en: 'Add rule',
     de: 'Regel hinzufügen',
     fr: 'Ajouter la règle',
@@ -845,6 +923,7 @@ export const commonTranslations: Translations = {
     ja: 'ルールを追加',
   },
   'popup.tab_move_rules.edit_rule_btn.save': {
+    it: 'Salva',
     en: 'Save',
     de: 'Regel speichern',
     fr: 'Sauvegarder',
@@ -856,6 +935,7 @@ export const commonTranslations: Translations = {
     ja: '保存',
   },
   'popup.tab_move_rules.edit_rule_btn.cancel': {
+    it: 'Annulla',
     en: 'Cancel',
     de: 'Abbrechen',
     fr: 'Annuler',
@@ -867,6 +947,7 @@ export const commonTranslations: Translations = {
   },
 
   'popup.tab_reopen_rules.title': {
+    it: 'Regole riapertura schede',
     en: 'Tab reopening rules',
     de: 'Regeln für das Neuöffnen von Tabs',
     fr: 'Règles de réouverture d’onglets',
@@ -878,6 +959,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを再度開くルール',
   },
   'popup.tab_reopen_rules.enable_label': {
+    it: 'Abilita regole elencate',
     en: 'Enable listed rules',
     de: 'Aufgeführte Regeln aktivieren',
     fr: 'Activer les règles listées',
@@ -889,6 +971,7 @@ export const commonTranslations: Translations = {
     ja: 'リストされたルールを有効にする',
   },
   'popup.tab_reopen_rules.editor_title.new': {
+    it: 'Crea nuova regola',
     en: 'Create new rule',
     de: 'Neue Regel erstellen',
     fr: 'Créer une nouvelle règle',
@@ -900,6 +983,7 @@ export const commonTranslations: Translations = {
     ja: '新しいルールを作成',
   },
   'popup.tab_reopen_rules.editor_title.edit': {
+    it: 'Modifica regola',
     en: 'Edit rule',
     de: 'Regel bearbeiten',
     fr: 'Modifier la règle',
@@ -911,6 +995,7 @@ export const commonTranslations: Translations = {
     ja: 'ルールを編集',
   },
   'popup.tab_reopen_rules.rule_name_label': {
+    it: 'Nome (opzionale)',
     en: 'Name (optional)',
     de: 'Name (optional)',
     fr: 'Nom (optionnel)',
@@ -922,6 +1007,7 @@ export const commonTranslations: Translations = {
     ja: '名前（オプション）',
   },
   'popup.tab_reopen_rules.rule_type_label': {
+    it: 'Tipo di regola',
     en: 'Type of the rule',
     de: 'Regeltyp',
     fr: 'Type de règle',
@@ -933,6 +1019,7 @@ export const commonTranslations: Translations = {
     ja: 'ルールの種類',
   },
   'popup.tab_reopen_rules.rule_type_include': {
+    it: 'Regola di inclusione',
     en: 'Include rule',
     de: 'Einschlussregel',
     fr: 'Règle d’inclusion',
@@ -944,6 +1031,7 @@ export const commonTranslations: Translations = {
     ja: 'インクルードルール',
   },
   'popup.tab_reopen_rules.rule_type_exclude': {
+    it: 'Regola di esclusione',
     en: 'Exclude rule',
     de: 'Ausschlussregel',
     fr: 'Règle d’exclusion',
@@ -955,6 +1043,7 @@ export const commonTranslations: Translations = {
     ja: '除外ルール',
   },
   'popup.tab_reopen_rules.rule_url_label': {
+    it: 'Se la scheda ha URL ("sottostringa" o /RegExp/)',
     en: 'If tab has URL ("substring" or "/RegExp/")',
     de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     fr: 'Si l’onglet a l’URL (“sous-chaine” ou “/RegExp/”)',
@@ -988,6 +1077,7 @@ export const commonTranslations: Translations = {
     ja: n => `...かつそれが「${n}」コンテナにある場合、デフォルトコンテナで再度開きます。`,
   },
   'popup.tab_reopen_rules.add_rule_btn': {
+    it: 'Aggiungi regola',
     en: 'Add rule',
     de: 'Regel hinzufügen',
     fr: 'Ajouter la règle',
@@ -999,6 +1089,7 @@ export const commonTranslations: Translations = {
     ja: 'ルールを追加',
   },
   'popup.tab_reopen_rules.edit_rule_btn.save': {
+    it: 'Salva',
     en: 'Save',
     de: 'Regel speichern',
     fr: 'Sauvegarder',
@@ -1010,6 +1101,7 @@ export const commonTranslations: Translations = {
     ja: '保存',
   },
   'popup.tab_reopen_rules.edit_rule_btn.cancel': {
+    it: 'Annulla',
     en: 'Cancel',
     de: 'Abbrechen',
     fr: 'Annuler',
@@ -1021,6 +1113,7 @@ export const commonTranslations: Translations = {
   },
 
   'popup.url_rules.title': {
+    it: 'Configurazione sito',
     en: 'Site Config',
     de: 'Seitenkonfiguration',
     fr: 'Configuration du site',
@@ -1032,6 +1125,7 @@ export const commonTranslations: Translations = {
     ja: 'サイト設定',
   },
   'popup.url_rules.match_label': {
+    it: 'Seleziona schede per URL',
     en: 'Select tabs by URL',
     de: 'Tabs nach URL auswählen',
     fr: 'Sélectionner des onglets par URL',
@@ -1043,6 +1137,7 @@ export const commonTranslations: Translations = {
     ja: 'URL によってタブを選択',
   },
   'popup.url_rules.custom_match_placeholder': {
+    it: '"sottostringa" o /RegExp/',
     en: '"substring" or "/RegExp/"',
     de: '"Zeichenkette" oder "/RegExp/"',
     fr: '“sous-chaine” ou “/RegExp/”',
@@ -1053,6 +1148,7 @@ export const commonTranslations: Translations = {
     ja: '"部分文字列" または "/RegExp/"',
   },
   'popup.url_rules.reopen_label': {
+    it: 'Riapri queste schede nel contenitore:',
     en: 'Reopen these tabs in container:',
     de: 'Diese Tabs in folgender Umgebung neu öffnen:',
     fr: 'Rouvrir ces onglets dans le conteneur',
@@ -1064,6 +1160,7 @@ export const commonTranslations: Translations = {
     ja: 'これらのタブをコンテナで再度開く：',
   },
   'popup.url_rules.move_label': {
+    it: 'Sposta queste schede nel pannello:',
     en: 'Move these tabs to panel:',
     de: 'Diese Tabs in folgendes Panel verschieben:',
     fr: 'Déplacer ces onglets vers le panneau:',
@@ -1075,6 +1172,7 @@ export const commonTranslations: Translations = {
     ja: 'これらのタブをパネルに移動：',
   },
   'popup.url_rules.move_top_lvl_label': {
+    it: 'Se la scheda è al livello principale dell\'albero',
     en: 'If tab at the top level of tree',
     de: 'Wenn sich der Tab auf der obersten Ebene des Baumes befindet',
     fr: 'Si l’onglet est à la racine de l’arborescence',
@@ -1091,6 +1189,7 @@ export const commonTranslations: Translations = {
   // -
   // - Toolbar button (browserAction)
   'menu.browserAction.open_settings': {
+    it: 'Apri impostazioni',
     en: 'Open settings',
     de: 'Einstellungen öffnen',
     fr: 'Ouvrir les paramètres',
@@ -1102,6 +1201,7 @@ export const commonTranslations: Translations = {
     ja: '設定を開く',
   },
   'menu.browserAction.create_snapshot': {
+    it: 'Crea istantanea',
     en: 'Create snapshot',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
@@ -1134,6 +1234,7 @@ export const commonTranslations: Translations = {
     zh_TW: tabsCount => `開啟已快取視窗（${tabsCount} 個分頁）`,
   },
   'menu.browserAction.reopen_cached_wins': {
+    it: 'Apri finestra salvata in cache',
     en: 'Open cached window',
     de: 'Zwischengespeichertes Fenster öffnen',
     ru: 'Открыть кэшированное окно',
@@ -1166,6 +1267,7 @@ export const commonTranslations: Translations = {
   },
   // - New tab bar
   'menu.new_tab_bar.no_container': {
+    it: 'Nessun contenitore',
     en: 'No Container',
     de: 'Keine Umgebung',
     fr: 'Pas de conteneur',
@@ -1177,6 +1279,7 @@ export const commonTranslations: Translations = {
     ja: 'コンテナなし',
   },
   'menu.new_tab_bar.new_container': {
+    it: 'In un nuovo contenitore',
     en: 'In New Container',
     de: 'In neuer Umgebung',
     fr: 'Dans un nouveau conteneur',
@@ -1187,6 +1290,7 @@ export const commonTranslations: Translations = {
     ja: '新しいコンテナで',
   },
   'menu.new_tab_bar.manage_shortcuts': {
+    it: 'Gestisci scorciatoie',
     en: 'Manage Shortcuts',
     de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
@@ -1198,6 +1302,7 @@ export const commonTranslations: Translations = {
     ja: 'ショートカットの管理',
   },
   'menu.new_tab_bar.manage_containers': {
+    it: 'Gestisci contenitori',
     en: 'Manage Containers',
     de: 'Umgebungen verwalten',
     fr: 'Gérer les conteneurs',
@@ -1209,6 +1314,7 @@ export const commonTranslations: Translations = {
   },
   // - Bookmark
   'menu.bookmark.open_in_sub_menu_name': {
+    it: 'Apri in',
     en: 'Open in',
     de: 'Öffnen in',
     fr: 'Ouvrir dans',
@@ -1220,6 +1326,7 @@ export const commonTranslations: Translations = {
     ja: '開く',
   },
   'menu.bookmark.open_in_new_window': {
+    it: 'Apri in una nuova finestra',
     en: 'Open in new normal window',
     de: 'Öffnen in neuem normalen Fenster',
     fr: 'Ouvrir dans une nouvelle fenêtre normale',
@@ -1231,6 +1338,7 @@ export const commonTranslations: Translations = {
     ja: '新しい通常ウィンドウで開く',
   },
   'menu.bookmark.open_in_new_priv_window': {
+    it: 'Apri in una nuova finestra anonima',
     en: 'Open in new private window',
     de: 'Öffnen in neuem privaten Fenster',
     fr: 'Ouvrir dans une nouvelle fenêtre privée',
@@ -1242,6 +1350,7 @@ export const commonTranslations: Translations = {
     ja: '新しいプライベートウィンドウで開く',
   },
   'menu.bookmark.open_in_panel_': {
+    it: 'Apri nel pannello...',
     en: 'Open in panel...',
     de: 'Öffnen in Panel...',
     fr: 'Ouvrir dans le panneau…',
@@ -1253,6 +1362,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルで開く...',
   },
   'menu.bookmark.open_in_new_panel': {
+    it: 'Apri in un nuovo pannello schede',
     en: 'Open in new tabs panel',
     de: 'Öffnen in neuem Tab-Panel',
     fr: 'Ouvrir dans un nouveau panneau',
@@ -1264,6 +1374,7 @@ export const commonTranslations: Translations = {
     ja: '新しいタブパネルで開く',
   },
   'menu.bookmark.open_in_ctr_': {
+    it: 'Apri nel contenitore...',
     en: 'Open in container...',
     de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
@@ -1275,6 +1386,7 @@ export const commonTranslations: Translations = {
     ja: 'コンテナで開く...',
   },
   'menu.bookmark.open_in_default_ctr': {
+    it: 'Apri nel contenitore predefinito',
     en: 'Open in default container',
     de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
@@ -1286,6 +1398,7 @@ export const commonTranslations: Translations = {
     ja: 'デフォルトコンテナで開く',
   },
   'menu.bookmark.open_in_': {
+    it: 'Apri in ',
     en: 'Open in ',
     de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
@@ -1297,6 +1410,7 @@ export const commonTranslations: Translations = {
     ja: '開く：',
   },
   'menu.bookmark.sort_sub_menu_name': {
+    it: 'Ordina',
     en: 'Sort',
     de: 'Sortieren',
     fr: 'Trier',
@@ -1307,6 +1421,7 @@ export const commonTranslations: Translations = {
     ja: '並べ替え',
   },
   'menu.bookmark.sort_by_name_asc': {
+    it: 'Ordina per nome (A-Z)',
     en: 'Sort by name (A-z)',
     de: 'Sortieren nach Name (A-z)',
     fr: 'Trier par nom (A-z)',
@@ -1318,6 +1433,7 @@ export const commonTranslations: Translations = {
     ja: '名前で並べ替え (A-Z)',
   },
   'menu.bookmark.sort_by_name_des': {
+    it: 'Ordina per nome (Z-A)',
     en: 'Sort by name (z-A)',
     de: 'Sortieren nach Name (z-A)',
     fr: 'Trier par nom (z-A)',
@@ -1329,6 +1445,7 @@ export const commonTranslations: Translations = {
     ja: '名前で並べ替え (Z-A)',
   },
   'menu.bookmark.sort_by_link_asc': {
+    it: 'Ordina per URL (A-Z)',
     en: 'Sort by URL (A-z)',
     de: 'Sortieren nach URL (A-z)',
     fr: 'Trier par URL (A-z)',
@@ -1340,6 +1457,7 @@ export const commonTranslations: Translations = {
     ja: 'URL で並べ替え (A-Z)',
   },
   'menu.bookmark.sort_by_link_des': {
+    it: 'Ordina per URL (Z-A)',
     en: 'Sort by URL (z-A)',
     de: 'Sortieren nach URL (z-A)',
     fr: 'Trier par URL (z-A)',
@@ -1351,6 +1469,7 @@ export const commonTranslations: Translations = {
     ja: 'URL で並べ替え (Z-A)',
   },
   'menu.bookmark.sort_by_time_asc': {
+    it: 'Ordina per data (meno recente-recente)',
     en: 'Sort by time (Old-New)',
     de: 'Sortieren nach Zeit (Alt-Neu)',
     fr: 'Trier par date (ancien-récent)',
@@ -1362,6 +1481,7 @@ export const commonTranslations: Translations = {
     ja: '時間で並べ替え (古い順)',
   },
   'menu.bookmark.sort_by_time_des': {
+    it: 'Ordina per data (recente-meno recente)',
     en: 'Sort by time (New-Old)',
     de: 'Sortieren nach Zeit (Neu-Alt)',
     fr: 'Trier par date (récent-ancien)',
@@ -1373,6 +1493,7 @@ export const commonTranslations: Translations = {
     ja: '時間で並べ替え (新しい順)',
   },
   'menu.bookmark.create_bookmark': {
+    it: 'Crea segnalibro',
     en: 'Create bookmark',
     de: 'Lesezeichen erstellen',
     fr: 'Créer un marque-page',
@@ -1384,6 +1505,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークを作成',
   },
   'menu.bookmark.create_folder': {
+    it: 'Crea cartella',
     en: 'Create folder',
     de: 'Ordner erstellen',
     fr: 'Créer un dossier',
@@ -1395,6 +1517,7 @@ export const commonTranslations: Translations = {
     ja: 'フォルダを作成',
   },
   'menu.bookmark.create_separator': {
+    it: 'Crea separatore',
     en: 'Create separator',
     de: 'Trennlinie hinzufügen',
     fr: 'Créer un séparateur',
@@ -1406,6 +1529,7 @@ export const commonTranslations: Translations = {
     ja: 'セパレータを作成',
   },
   'menu.bookmark.open_as_bookmarks_panel': {
+    it: 'Apri come pannello segnalibri',
     en: 'Open as bookmarks panel',
     de: 'Als Lesezeichen-Panel öffnen',
     fr: 'Ouvrir en panneau de marque-pages',
@@ -1417,6 +1541,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークパネルとして開く',
   },
   'menu.bookmark.open_as_tabs_panel': {
+    it: 'Apri come pannello schede',
     en: 'Open as tabs panel',
     de: 'Als Tab-Panel öffnen',
     fr: 'Ouvrir en panneau d’onglets',
@@ -1428,6 +1553,7 @@ export const commonTranslations: Translations = {
     ja: 'タブパネルとして開く',
   },
   'menu.bookmark.move_to': {
+    it: 'Sposta in...',
     en: 'Move to...',
     de: 'Verschieben nach...',
     fr: 'Déplacer vers…',
@@ -1439,6 +1565,7 @@ export const commonTranslations: Translations = {
     ja: '移動先...',
   },
   'menu.bookmark.edit_bookmark': {
+    it: 'Modifica',
     en: 'Edit',
     de: 'Bearbeiten',
     fr: 'Modifier',
@@ -1450,6 +1577,7 @@ export const commonTranslations: Translations = {
     ja: '編集',
   },
   'menu.bookmark.delete_bookmark': {
+    it: 'Elimina',
     en: 'Delete',
     de: 'Löschen',
     fr: 'Supprimer',
@@ -1462,6 +1590,7 @@ export const commonTranslations: Translations = {
   },
   // - Bookmarks panel
   'menu.bookmark.collapse_all': {
+    it: 'Comprimi tutte le cartelle',
     en: 'Collapse all folders',
     de: 'Alle Ordner einklappen',
     fr: 'Replier tous les dossiers',
@@ -1473,6 +1602,7 @@ export const commonTranslations: Translations = {
     ja: 'すべてのフォルダを折りたたむ',
   },
   'menu.bookmark.switch_view': {
+    it: 'Modalità di visualizzazione',
     en: 'View mode',
     de: 'Anzeigemodus',
     fr: 'Mode d’affichage',
@@ -1484,6 +1614,7 @@ export const commonTranslations: Translations = {
     ja: '表示モード',
   },
   'menu.bookmark.switch_view_history': {
+    it: 'Vista cronologia',
     en: 'History view',
     de: 'Chronikansicht',
     fr: 'Vue de l’historique',
@@ -1495,6 +1626,7 @@ export const commonTranslations: Translations = {
     ja: '履歴ビュー',
   },
   'menu.bookmark.switch_view_tree': {
+    it: 'Vista ad albero',
     en: 'Tree view',
     de: 'Baumansicht',
     fr: 'Vue en arborescence',
@@ -1506,6 +1638,7 @@ export const commonTranslations: Translations = {
     ja: 'ツリービュー',
   },
   'menu.bookmark.convert_to_tabs_panel': {
+    it: 'Converti in pannello schede',
     en: 'Convert to tabs panel',
     de: 'In Tab-Panel konvertieren',
     fr: 'Convertir en panneau d’onglets',
@@ -1517,6 +1650,7 @@ export const commonTranslations: Translations = {
     ja: 'タブパネルに変換',
   },
   'menu.bookmark.remove_panel': {
+    it: 'Rimuovi pannello',
     en: 'Remove panel',
     de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
@@ -1528,6 +1662,7 @@ export const commonTranslations: Translations = {
   },
   // - Tab
   'menu.tab.undo': {
+    it: 'Riapri scheda chiusa',
     en: 'Undo close tab',
     de: 'Geschlossenen Tab wiederherstellen',
     fr: 'Rouvrir l’onglet fermé',
@@ -1539,6 +1674,7 @@ export const commonTranslations: Translations = {
     ja: '閉じたタブを元に戻す',
   },
   'menu.tab.mute': {
+    it: 'Silenzia',
     en: 'Mute',
     de: 'Stumm schalten',
     fr: 'Couper le son de l’onglet',
@@ -1550,6 +1686,7 @@ export const commonTranslations: Translations = {
     ja: 'ミュート',
   },
   'menu.tab.unmute': {
+    it: 'Riattiva audio',
     en: 'Unmute',
     de: 'Stummschaltung aufheben',
     fr: 'Réactiver le son de l’onglet',
@@ -1561,6 +1698,7 @@ export const commonTranslations: Translations = {
     ja: 'ミュート解除',
   },
   'menu.tab.reload': {
+    it: 'Ricarica',
     en: 'Reload',
     de: 'Neu laden',
     fr: 'Actualiser',
@@ -1572,6 +1710,7 @@ export const commonTranslations: Translations = {
     ja: 'リロード',
   },
   'menu.tab.bookmark': {
+    it: 'Aggiungi ai segnalibri',
     en: 'Add to bookmarks',
     de: 'Zu Lesezeichen hinzufügen',
     fr: 'Ajouter aux marque-pages',
@@ -1583,6 +1722,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークに追加',
   },
   'menu.tab.move_to_sub_menu_name': {
+    it: 'Sposta in',
     en: 'Move to',
     de: 'Verschieben in',
     fr: 'Déplacer vers',
@@ -1594,6 +1734,7 @@ export const commonTranslations: Translations = {
     ja: '移動先',
   },
   'menu.tab.move_to_new_window': {
+    it: 'Sposta in una nuova finestra',
     en: 'Move to new window',
     de: 'Verschieben in neues Fenster',
     fr: 'Déplacer vers une nouvelle fenêtre',
@@ -1605,6 +1746,7 @@ export const commonTranslations: Translations = {
     ja: '新しいウィンドウに移動',
   },
   'menu.tab.move_to_new_priv_window': {
+    it: 'Sposta in una finestra anonima',
     en: 'Move to private window',
     de: 'Verschieben in privates Fenster',
     fr: 'Déplacer vers une nouvelle fenêtre privée',
@@ -1616,6 +1758,7 @@ export const commonTranslations: Translations = {
     ja: '新しいプライベートウィンドウに移動',
   },
   'menu.tab.move_to_window_': {
+    it: 'Sposta nella finestra...',
     en: 'Move to window...',
     de: 'Verschieben in Fenster...',
     fr: 'Déplacer vers une fenêtre existante…',
@@ -1627,6 +1770,7 @@ export const commonTranslations: Translations = {
     ja: 'ウィンドウに移動...',
   },
   'menu.tab.move_to_another_window': {
+    it: 'Sposta in un\'altra finestra',
     en: 'Move to another window',
     de: 'Verschieben in anderes Fenster',
     fr: 'Déplacer vers une autre fenêtre',
@@ -1638,6 +1782,7 @@ export const commonTranslations: Translations = {
     ja: '別のウィンドウに移動',
   },
   'menu.tab.move_to_panel_label': {
+    it: 'Sposta nel pannello...',
     en: 'Move to panel...',
     de: 'Verschieben in Panel...',
     fr: 'Déplacer vers le panneau…',
@@ -1649,6 +1794,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルに移動...',
   },
   'menu.tab.move_to_panel_': {
+    it: 'Sposta in ',
     en: 'Move to ',
     de: 'Verschieben in ',
     fr: 'Déplacer vers ',
@@ -1660,6 +1806,7 @@ export const commonTranslations: Translations = {
     ja: '移動先：',
   },
   'menu.tab.move_to_new_panel': {
+    it: 'Sposta in un nuovo pannello',
     en: 'Move to new panel',
     de: 'Verschieben in neues Panel',
     fr: 'Déplacer vers un nouveau panneau',
@@ -1671,6 +1818,7 @@ export const commonTranslations: Translations = {
     ja: '新しいパネルに移動',
   },
   'menu.tab.reopen_in_sub_menu_name': {
+    it: 'Riapri in',
     en: 'Reopen in',
     de: 'Neu öffnen in',
     fr: 'Rouvrir dans',
@@ -1682,6 +1830,7 @@ export const commonTranslations: Translations = {
     ja: '再度開く',
   },
   'menu.tab.reopen_in_new_window': {
+    it: 'Riapri in una nuova finestra di altro tipo',
     en: 'Reopen in new window of another type',
     de: 'Neu öffnen in neuem Fenster eines anderen Typs',
     fr: 'Rouvrir dans une nouvelle fenêtre d’un autre type',
@@ -1693,6 +1842,7 @@ export const commonTranslations: Translations = {
     ja: '他のタイプの新しいウィンドウで再度開く',
   },
   'menu.tab.reopen_in_new_norm_window': {
+    it: 'Riapri in una nuova finestra normale',
     en: 'Reopen in new normal window',
     de: 'Neu öffnen in neuem normalen Fenster',
     fr: 'Rouvrir dans une nouvelle fenêtre normale',
@@ -1704,6 +1854,7 @@ export const commonTranslations: Translations = {
     ja: '新しい通常ウィンドウで再度開く',
   },
   'menu.tab.reopen_in_new_priv_window': {
+    it: 'Riapri in una nuova finestra anonima',
     en: 'Reopen in new private window',
     de: 'Neu öffnen in neuem privaten Fenster',
     fr: 'Rouvrir dans une nouvelle fenêtre privée',
@@ -1715,6 +1866,7 @@ export const commonTranslations: Translations = {
     ja: '新しいプライベートウィンドウで再度開く',
   },
   'menu.tab.reopen_in_window': {
+    it: 'Riapri in una finestra di altro tipo',
     en: 'Reopen in window of another type',
     de: 'Neu öffnen in Fenster eines anderen Typs',
     fr: 'Rouvrir dans une fenêtre d’un autre type',
@@ -1726,6 +1878,7 @@ export const commonTranslations: Translations = {
     ja: '他のタイプのウィンドウで再度開く',
   },
   'menu.tab.reopen_in_norm_window': {
+    it: 'Riapri in una finestra normale',
     en: 'Reopen in normal window',
     de: 'Neu öffnen in normalem Fenster',
     fr: 'Rouvrir dans une fenêtre normale',
@@ -1737,6 +1890,7 @@ export const commonTranslations: Translations = {
     ja: '通常ウィンドウで再度開く',
   },
   'menu.tab.reopen_in_priv_window': {
+    it: 'Riapri in una finestra anonima',
     en: 'Reopen in private window',
     de: 'Neu öffnen in privatem Fenster',
     fr: 'Rouvrir dans une fenêtre privée',
@@ -1748,6 +1902,7 @@ export const commonTranslations: Translations = {
     ja: 'プライベートウィンドウで再度開く',
   },
   'menu.tab.reopen_in_window_': {
+    it: 'Riapri nella finestra...',
     en: 'Reopen in window...',
     de: 'Neu öffnen in Fenster...',
     fr: 'Rouvrir dans une fenêtre…',
@@ -1759,6 +1914,7 @@ export const commonTranslations: Translations = {
     ja: 'ウィンドウで再度開く...',
   },
   'menu.tab.reopen_in_ctr_': {
+    it: 'Riapri nel contenitore...',
     en: 'Reopen in container...',
     de: 'Neu öffnen in Umgebung...',
     fr: 'Rouvrir dans un conteneur',
@@ -1770,6 +1926,7 @@ export const commonTranslations: Translations = {
     ja: 'コンテナで再度開く...',
   },
   'menu.tab.reopen_in_default_container': {
+    it: 'Riapri nel contenitore predefinito',
     en: 'Reopen in default container',
     de: 'Neu öffnen in Standardumgebung',
     fr: 'Rouvrir dans le conteneur par défaut',
@@ -1781,6 +1938,7 @@ export const commonTranslations: Translations = {
     ja: 'デフォルトコンテナで再度開く',
   },
   'menu.tab.reopen_in_': {
+    it: 'Riapri in ',
     en: 'Reopen in ',
     de: 'Neu öffnen in ',
     fr: 'Rouvrir dans ',
@@ -1792,6 +1950,7 @@ export const commonTranslations: Translations = {
     ja: '再度開く：',
   },
   'menu.tab.reopen_in_new_container': {
+    it: 'Riapri in un nuovo contenitore',
     en: 'Reopen in new container',
     de: 'Neu öffnen in neuer Umgebung',
     fr: 'Rouvrir dans un nouveau conteneur',
@@ -1803,6 +1962,7 @@ export const commonTranslations: Translations = {
     ja: '新しいコンテナで再度開く',
   },
   'menu.tab.colorize_': {
+    it: 'Imposta colore',
     en: 'Set color',
     de: 'Farbe festlegen',
     fr: 'Définir la couleur',
@@ -1814,6 +1974,7 @@ export const commonTranslations: Translations = {
     ja: '色を設定',
   },
   'menu.tab.colorize_colors': {
+    it: 'Colore...',
     en: 'Color...',
     de: 'Farbe...',
     fr: 'Couleur…',
@@ -1825,6 +1986,7 @@ export const commonTranslations: Translations = {
     ja: '色…',
   },
   'menu.tab.sort_sub_menu_name': {
+    it: 'Ordina',
     en: 'Sort',
     de: 'Sortieren',
     fr: 'Trier',
@@ -1835,6 +1997,7 @@ export const commonTranslations: Translations = {
     ja: '並べ替え',
   },
   'menu.tab.sort_tree_by_title_asc': {
+    it: 'Ordina albero per titolo (A-Z)',
     en: 'Sort tree by title (A-z)',
     de: 'Sortieren nach Titel im Zweig (A-z)',
     fr: 'Trier l’arbre par titre (A-z)',
@@ -1846,6 +2009,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルでツリーを並べ替え (A-Z)',
   },
   'menu.tab.sort_tree_by_title_des': {
+    it: 'Ordina albero per titolo (Z-A)',
     en: 'Sort tree by title (z-A)',
     de: 'Sortieren nach Titel im Zweig (z-A)',
     fr: 'Trier l’arbre par titre (z-A)',
@@ -1857,6 +2021,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルでツリーを並べ替え (Z-A)',
   },
   'menu.tab.sort_tree_by_url_asc': {
+    it: 'Ordina albero per URL (A-Z)',
     en: 'Sort tree by URL (A-z)',
     de: 'Sortieren nach URL im Zweig (A-z)',
     fr: 'Trier l’arbre par URL (A-z)',
@@ -1868,6 +2033,7 @@ export const commonTranslations: Translations = {
     ja: 'URL でツリーを並べ替え (A-Z)',
   },
   'menu.tab.sort_tree_by_url_des': {
+    it: 'Ordina albero per URL (Z-A)',
     en: 'Sort tree by URL (z-A)',
     de: 'Sortieren nach URL im Zweig (z-A)',
     fr: 'Trier l’arbre par URL (z-A)',
@@ -1879,6 +2045,7 @@ export const commonTranslations: Translations = {
     ja: 'URL でツリーを並べ替え (Z-A)',
   },
   'menu.tab.sort_tree_by_time_asc': {
+    it: 'Ordina albero per data accesso (meno recente-recente)',
     en: 'Sort tree by access time (Old-Recent)',
     de: 'Sortieren nach Zugriffszeit im Zweig (Alt-Neu)',
     fr: 'Trier l’arbre par date d’accès (ancien-récent)',
@@ -1890,6 +2057,7 @@ export const commonTranslations: Translations = {
     ja: '時間でツリーを並べ替え (古い順)',
   },
   'menu.tab.sort_tree_by_time_des': {
+    it: 'Ordina albero per data accesso (recente-meno recente)',
     en: 'Sort tree by access time (Recent-Old)',
     de: 'Sortieren nach Zugriffszeit im Zweig (Neu-Alt)',
     fr: 'Trier l’arbre par date d’accès (récent-ancien)',
@@ -1901,6 +2069,7 @@ export const commonTranslations: Translations = {
     ja: '時間でツリーを並べ替え (新しい順)',
   },
   'menu.tab.sort_by_title_asc': {
+    it: 'Ordina per titolo (A-Z)',
     en: 'Sort by title (A-z)',
     de: 'Sortieren nach Titel (A-z)',
     fr: 'Trier par titre (A-z)',
@@ -1912,6 +2081,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルで並べ替え (A-Z)',
   },
   'menu.tab.sort_by_title_des': {
+    it: 'Ordina per titolo (Z-A)',
     en: 'Sort by title (z-A)',
     de: 'Sortieren nach Titel (z-A)',
     fr: 'Trier par titre (z-A)',
@@ -1923,6 +2093,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルで並べ替え (Z-A)',
   },
   'menu.tab.sort_by_url_asc': {
+    it: 'Ordina per URL (A-Z)',
     en: 'Sort by URL (A-z)',
     de: 'Sortieren nach URL (A-z)',
     fr: 'Trier par URL (A-z)',
@@ -1934,6 +2105,7 @@ export const commonTranslations: Translations = {
     ja: 'URL で並べ替え (A-Z)',
   },
   'menu.tab.sort_by_url_des': {
+    it: 'Ordina per URL (Z-A)',
     en: 'Sort by URL (z-A)',
     de: 'Sortieren nach URL (z-A)',
     fr: 'Trier par titre (z-A)',
@@ -1945,6 +2117,7 @@ export const commonTranslations: Translations = {
     ja: 'URL で並べ替え (Z-A)',
   },
   'menu.tab.sort_by_time_asc': {
+    it: 'Ordina per data di accesso (meno recente-recente)',
     en: 'Sort by access time (Old-Recent)',
     de: 'Sortieren nach Zugriffszeit (Alt-Neu)',
     fr: 'Trier par date d’accès (ancien-récent)',
@@ -1956,6 +2129,7 @@ export const commonTranslations: Translations = {
     ja: '時間で並べ替え (古い順)',
   },
   'menu.tab.sort_by_time_des': {
+    it: 'Ordina per data di accesso (recente-meno recente)',
     en: 'Sort by access time (Recent-Old)',
     de: 'Sortieren nach Zugriffszeit (Neu-Alt)',
     fr: 'Trier par date d’accès (récent-ancien)',
@@ -1967,6 +2141,7 @@ export const commonTranslations: Translations = {
     ja: '時間で並べ替え (新しい順)',
   },
   'menu.tab.pin': {
+    it: 'Fissa',
     en: 'Pin',
     de: 'Anheften',
     fr: 'Épingler',
@@ -1978,6 +2153,7 @@ export const commonTranslations: Translations = {
     ja: 'ピン留め',
   },
   'menu.tab.unpin': {
+    it: 'Sblocca',
     en: 'Unpin',
     de: 'Lösen',
     fr: 'Désépingler',
@@ -1989,6 +2165,7 @@ export const commonTranslations: Translations = {
     ja: 'ピン留め解除',
   },
   'menu.tab.duplicate': {
+    it: 'Duplica',
     en: 'Duplicate',
     de: 'Duplizieren',
     fr: 'Dupliquer',
@@ -2000,6 +2177,7 @@ export const commonTranslations: Translations = {
     ja: '複製',
   },
   'menu.tab.discard': {
+    it: 'Scarica',
     en: 'Unload',
     de: 'Entladen',
     fr: 'Décharger',
@@ -2011,6 +2189,7 @@ export const commonTranslations: Translations = {
     ja: 'アンロード',
   },
   'menu.tab.discard_other': {
+    it: 'Scarica le altre schede',
     en: 'Unload other tabs',
     de: 'Andere Tabs entladen',
     fr: 'Décharger les autres onglets',
@@ -2022,6 +2201,7 @@ export const commonTranslations: Translations = {
     ja: '他のタブをアンロード',
   },
   'menu.tab.edit_title': {
+    it: 'Modifica titolo',
     en: 'Edit title',
     de: 'Titel bearbeiten',
     fr: 'Modifier le titre',
@@ -2033,6 +2213,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルを編集',
   },
   'menu.tab.group': {
+    it: 'Gruppo',
     en: 'Group',
     de: 'Gruppieren',
     fr: 'Grouper',
@@ -2044,6 +2225,7 @@ export const commonTranslations: Translations = {
     ja: 'グループ',
   },
   'menu.tab.flatten': {
+    it: 'Appiattisci albero',
     en: 'Flatten',
     de: 'Abflachen',
     fr: 'Aplatir',
@@ -2055,6 +2237,7 @@ export const commonTranslations: Translations = {
     ja: 'フラット化',
   },
   'menu.tab.url_conf': {
+    it: 'Configura sito...',
     en: 'Configure site...',
     de: 'Seite konfigurieren...',
     fr: 'Configurer le site…',
@@ -2066,6 +2249,7 @@ export const commonTranslations: Translations = {
     ja: 'サイトの設定...',
   },
   'menu.tab.close': {
+    it: 'Chiudi',
     en: 'Close',
     de: 'Schließen',
     fr: 'Fermer',
@@ -2077,6 +2261,7 @@ export const commonTranslations: Translations = {
     ja: '閉じる',
   },
   'menu.tab.open_in_ctr_': {
+    it: 'Apri nel contenitore...',
     en: 'Open in container...',
     de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
@@ -2088,6 +2273,7 @@ export const commonTranslations: Translations = {
     ja: 'コンテナで開く...',
   },
   'menu.tab.open_in_default_container': {
+    it: 'Apri nel contenitore predefinito',
     en: 'Open in default container',
     de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
@@ -2099,6 +2285,7 @@ export const commonTranslations: Translations = {
     ja: 'デフォルトコンテナで開く',
   },
   'menu.tab.open_in_': {
+    it: 'Apri in ',
     en: 'Open in ',
     de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
@@ -2110,6 +2297,7 @@ export const commonTranslations: Translations = {
     ja: '開く：',
   },
   'menu.tab.sync': {
+    it: 'Sincronizza',
     en: 'Sync',
     de: 'Synchronisieren',
     fr: 'Synchronisation',
@@ -2120,6 +2308,7 @@ export const commonTranslations: Translations = {
     ja: '同期する',
   },
   'menu.tab.clear_cookies': {
+    it: 'Cancella cookie',
     en: 'Clear cookies',
     de: 'Cookies löschen',
     fr: 'Effacer les cookies',
@@ -2130,6 +2319,7 @@ export const commonTranslations: Translations = {
     ja: 'Cookie をクリア',
   },
   'menu.tab.close_descendants': {
+    it: 'Chiudi schede figlie',
     en: 'Close descendants',
     de: 'Untergeordnete schließen',
     fr: 'Fermer les descendants',
@@ -2141,6 +2331,7 @@ export const commonTranslations: Translations = {
     ja: '子孫を閉じる',
   },
   'menu.tab.close_branch': {
+    it: 'Chiudi ramo',
     en: 'Close branch',
     de: 'Zweig schließen',
     fr: 'Fermer la branche',
@@ -2152,6 +2343,7 @@ export const commonTranslations: Translations = {
     ja: 'ブランチを閉じる',
   },
   'menu.tab.close_above': {
+    it: 'Chiudi schede sopra',
     en: 'Close tabs above',
     de: 'Tabs darüber schließen',
     fr: 'Fermer les onglets au-dessus',
@@ -2163,6 +2355,7 @@ export const commonTranslations: Translations = {
     ja: '上側のタブを閉じる',
   },
   'menu.tab.close_below': {
+    it: 'Chiudi schede sotto',
     en: 'Close tabs below',
     de: 'Tabs darunter schließen',
     fr: 'Fermer les onglets en dessous',
@@ -2174,6 +2367,7 @@ export const commonTranslations: Translations = {
     ja: '下側のタブを閉じる',
   },
   'menu.tab.close_other': {
+    it: 'Chiudi altre schede',
     en: 'Close other tabs',
     de: 'Andere Tabs schließen',
     fr: 'Fermer les autres onglets',
@@ -2186,6 +2380,7 @@ export const commonTranslations: Translations = {
   },
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
+    it: 'Silenzia schede con audio',
     en: 'Mute audible tabs',
     de: 'Hörbare Tabs stummschalten',
     fr: 'Couper le son des onglets audibles',
@@ -2197,6 +2392,7 @@ export const commonTranslations: Translations = {
     ja: '音声タブをミュートする',
   },
   'menu.tabs_panel.reload': {
+    it: 'Ricarica schede',
     en: 'Reload tabs',
     de: 'Tabs neu laden',
     fr: 'Actualiser les onglets',
@@ -2208,6 +2404,7 @@ export const commonTranslations: Translations = {
     ja: 'タブをリロード',
   },
   'menu.tabs_panel.discard': {
+    it: 'Scarica schede',
     en: 'Unload tabs',
     de: 'Tabs entladen',
     fr: 'Décharger les onglets',
@@ -2219,6 +2416,7 @@ export const commonTranslations: Translations = {
     ja: 'タブをアンロード',
   },
   'menu.tabs_panel.sort_all_sub_menu_name': {
+    it: 'Ordina schede',
     en: 'Sort tabs',
     de: 'Tabs sortieren',
     fr: 'Trier les onglets',
@@ -2230,6 +2428,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを並べ替える',
   },
   'menu.tabs_panel.sort_all_by_title_asc': {
+    it: 'Ordina per titolo (A-Z)',
     en: 'Sort tabs by title (A-z)',
     de: 'Tabs nach Titel sortieren (A-z)',
     fr: 'Trier les onglets par titre (A-z)',
@@ -2241,6 +2440,7 @@ export const commonTranslations: Translations = {
     ja: 'タブをタイトルで並べ替える (A-Z)',
   },
   'menu.tabs_panel.sort_all_by_title_des': {
+    it: 'Ordina per titolo (Z-A)',
     en: 'Sort tabs by title (z-A)',
     de: 'Tabs nach Titel sortieren (z-A)',
     fr: 'Trier les onglets  par titre (z-A)',
@@ -2252,6 +2452,7 @@ export const commonTranslations: Translations = {
     ja: 'タブをタイトルで並べ替える (Z-A)',
   },
   'menu.tabs_panel.sort_all_by_url_asc': {
+    it: 'Ordina per URL (A-Z)',
     en: 'Sort tabs by URL (A-z)',
     de: 'Tabs nach URL sortieren (A-z)',
     fr: 'Trier les onglets par URL (A-z)',
@@ -2263,6 +2464,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを URL で並べ替える (A-Z)',
   },
   'menu.tabs_panel.sort_all_by_url_des': {
+    it: 'Ordina per URL (Z-A)',
     en: 'Sort tabs by URL (z-A)',
     de: 'Tabs nach URL sortieren (z-A)',
     fr: 'Trier les onglets par URL (z-A)',
@@ -2274,6 +2476,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを URL で並べ替える (Z-A)',
   },
   'menu.tabs_panel.sort_all_by_time_asc': {
+    it: 'Ordina per data di accesso (meno recente-recente)',
     en: 'Sort tabs by access time (Old-Recent)',
     de: 'Tabs nach Zugriffszeit sortieren (Alt-Neu)',
     fr: 'Trier les onglets par date (ancien-récent)',
@@ -2285,6 +2488,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを時間で並べ替える (古い順)',
   },
   'menu.tabs_panel.sort_all_by_time_des': {
+    it: 'Ordina per data di accesso (recente-meno recente)',
     en: 'Sort tabs by access time (Recent-Old)',
     de: 'Tabs nach Zugriffszeit sortieren (Neu-Alt)',
     fr: 'Trier les onglets par date (récent-ancien)',
@@ -2296,6 +2500,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを時間で並べ替える (新しい順)',
   },
   'menu.tabs_panel.sel_all': {
+    it: 'Seleziona schede',
     en: 'Select tabs',
     de: 'Tabs auswählen',
     fr: 'Sélectionner les onglets',
@@ -2307,6 +2512,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを選択',
   },
   'menu.tabs_panel.collapse_inact_branches': {
+    it: 'Comprimi rami inattivi',
     en: 'Collapse inactive branches',
     de: 'Inaktive Zweige einklappen',
     fr: 'Replier les branches inactives',
@@ -2318,6 +2524,7 @@ export const commonTranslations: Translations = {
     ja: '非アクティブブランチを折りたたむ',
   },
   'menu.tabs_panel.dedup': {
+    it: 'Chiudi schede duplicate',
     en: 'Close duplicate tabs',
     de: 'Doppelte Tabs schließen',
     fr: 'Fermer les onglets dupliqués',
@@ -2329,6 +2536,7 @@ export const commonTranslations: Translations = {
     ja: '重複タブを閉じる',
   },
   'menu.tabs_panel.close': {
+    it: 'Chiudi schede',
     en: 'Close tabs',
     de: 'Tabs schließen',
     fr: 'Fermer les onglets',
@@ -2340,6 +2548,7 @@ export const commonTranslations: Translations = {
     ja: 'タブを閉じる',
   },
   'menu.tabs_panel.bookmark': {
+    it: 'Salva nei segnalibri',
     en: 'Save to bookmarks',
     de: 'In Lesezeichen speichern',
     fr: 'Sauvegarder dans les marque-pages',
@@ -2351,6 +2560,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークに保存',
   },
   'menu.tabs_panel.restore_from_bookmarks': {
+    it: 'Ripristina dai segnalibri',
     en: 'Restore from bookmarks',
     de: 'Aus Lesezeichen wiederherstellen',
     fr: 'Restaurer depuis les marque-pages',
@@ -2362,6 +2572,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークから復元',
   },
   'menu.tabs_panel.convert_to_bookmarks_panel': {
+    it: 'Converti in pannello segnalibri',
     en: 'Convert to bookmarks panel',
     de: 'In Lesezeichen-Panel konvertieren',
     fr: 'Convertir en panneau de marque-pages',
@@ -2373,6 +2584,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークパネルに変換',
   },
   'menu.tabs_panel.remove_panel': {
+    it: 'Rimuovi pannello',
     en: 'Remove panel',
     de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
@@ -2384,6 +2596,7 @@ export const commonTranslations: Translations = {
   },
   // - History
   'menu.history.open': {
+    it: 'Apri',
     en: 'Open',
     de: 'Öffnen',
     fr: 'Historique',
@@ -2395,6 +2608,7 @@ export const commonTranslations: Translations = {
     ja: '開く',
   },
   'menu.history.delete_visits': {
+    it: n => (n === 1 ? 'Dimentica visita' : 'Dimentica visite'),
     en: n => (n === 1 ? 'Forget visit' : 'Forget visits'),
     de: n => (n === 1 ? 'Besuch vergessen' : 'Besuche vergessen'),
     fr: n => (n === 1 ? 'Supprimer la visite' : 'Supprimer les visites'),
@@ -2406,6 +2620,7 @@ export const commonTranslations: Translations = {
     ja: '記録を削除',
   },
   'menu.history.delete_sites': {
+    it: n => (n === 1 ? 'Dimentica sito' : 'Dimentica siti'),
     en: n => (n === 1 ? 'Forget site' : 'Forget sites'),
     de: n => (n === 1 ? 'Seite vergessen' : 'Seiten vergessen'),
     fr: n => (n === 1 ? 'Oublier le site' : 'Oublier les sites'),
@@ -2418,6 +2633,7 @@ export const commonTranslations: Translations = {
   },
   // - Common
   'menu.dedupe': {
+    it: 'Deduplica',
     en: 'Deduplicate',
     de: 'Deduplizieren',
     fr: 'Dédupliquer',
@@ -2429,6 +2645,7 @@ export const commonTranslations: Translations = {
     ja: '選択したタブの重複排除',
   },
   'menu.copy_urls': {
+    it: n => (n === 1 || n === undefined ? 'Copia URL' : 'Copia gli URL'),
     en: n => (n === 1 || n === undefined ? 'Copy URL' : 'Copy URLs'),
     de: n => (n === 1 || n === undefined ? 'URL kopieren' : 'URLs kopieren'),
     fr: n => (n === 1 || n === undefined ? 'Copier l’URL' : 'Copier les URLs'),
@@ -2440,6 +2657,7 @@ export const commonTranslations: Translations = {
     ja: 'URLをコピー',
   },
   'menu.copy_titles': {
+    it: n => (n === 1 || n === undefined ? 'Copia titolo' : 'Copia i titoli'),
     en: n => (n === 1 || n === undefined ? 'Copy title' : 'Copy titles'),
     de: n => (n === 1 || n === undefined ? 'Titel kopieren' : 'Mehrere Titel kopieren'),
     fr: n => (n === 1 || n === undefined ? 'Copier le titre' : 'Copier les titres'),
@@ -2451,6 +2669,7 @@ export const commonTranslations: Translations = {
     ja: 'タイトルをコピー',
   },
   'menu.copy_by_templates': {
+    it: 'Copia tramite modelli...',
     en: 'Copy by templates...',
     de: 'Kopieren nach Vorlagen...',
     fr: 'Copier avec modèle…',
@@ -2470,6 +2689,7 @@ export const commonTranslations: Translations = {
     zh_TW: name => '複製 ' + name,
   },
   'menu.paste': {
+    it: 'Incolla',
     en: 'Paste',
     de: 'Einfügen',
     fr: 'Coller',
@@ -2481,6 +2701,7 @@ export const commonTranslations: Translations = {
     ja: 'ペースト',
   },
   'menu.common.pin_panel': {
+    it: 'Fissa pannello',
     en: 'Pin panel',
     de: 'Panel anheften',
     fr: 'Éplingler le panneau',
@@ -2492,6 +2713,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルをピン留め',
   },
   'menu.common.unpin_panel': {
+    it: 'Sblocca pannello',
     en: 'Unpin panel',
     de: 'Panel lösen',
     fr: 'Désépingler le panneau',
@@ -2503,6 +2725,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルのピン留め解除',
   },
   'menu.panels.unload': {
+    it: 'Scarica',
     en: 'Unload',
     de: 'Entladen',
     fr: 'Décharger',
@@ -2514,6 +2737,7 @@ export const commonTranslations: Translations = {
     ja: 'アンロード',
   },
   'menu.common.conf': {
+    it: 'Configura pannello',
     en: 'Configure panel',
     de: 'Panel konfigurieren',
     fr: 'Configurer le panneau',
@@ -2525,6 +2749,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルの設定',
   },
   'menu.common.conf_tooltip': {
+    it: 'Configura pannello\nAlt: Configurazione rapida',
     en: 'Configure panel\nAlt: Basic panel config',
     de: 'Panel konfigurieren\nAlt: Grundkonfiguration des Panels',
     fr: 'Configurer le panneau\nAlt: Configuration basique du panneau',
@@ -2536,6 +2761,7 @@ export const commonTranslations: Translations = {
     ja: 'パネルの設定\nAlt: 基本パネル設定',
   },
   'menu.common.conf_in_sidebar': {
+    it: 'Configura pannello nella barra laterale',
     en: 'Configure panel in sidebar',
     de: 'Panel in der Seitenleiste konfigurieren',
     fr: 'Configurer le panneau dans la barre latérale',
@@ -2547,6 +2773,7 @@ export const commonTranslations: Translations = {
     ja: 'サイドバーでパネルを設定',
   },
   'menu.panels.hide_panel': {
+    it: 'Nascondi pannello',
     en: 'Hide panel',
     de: 'Panel verstecken',
     fr: 'Cacher le panneau',
@@ -2559,6 +2786,7 @@ export const commonTranslations: Translations = {
   },
   // - Menu Editor
   'menu.editor.reset': {
+    it: 'Ripristina',
     en: 'Reset',
     de: 'Zurücksetzen',
     fr: 'Réinitialiser',
@@ -2570,6 +2798,7 @@ export const commonTranslations: Translations = {
     ja: 'リセット',
   },
   'menu.editor.create_separator': {
+    it: 'Crea separatore',
     en: 'Create separator',
     de: 'Trennlinie hinzufügen',
     fr: 'Créer un séparateur',
@@ -2581,6 +2810,7 @@ export const commonTranslations: Translations = {
     ja: 'セパレータを作成',
   },
   'menu.editor.create_sub_tooltip': {
+    it: 'Crea sotto-menu',
     en: 'Create sub-menu',
     de: 'Untermenü erstellen',
     fr: 'Créer un sous-menu',
@@ -2592,6 +2822,7 @@ export const commonTranslations: Translations = {
     ja: 'サブメニューを作成',
   },
   'menu.editor.down_tooltip': {
+    it: 'Sposta giù',
     en: 'Move down',
     de: 'Nach unten verschieben',
     fr: 'Déplacer en dessous',
@@ -2603,6 +2834,7 @@ export const commonTranslations: Translations = {
     ja: '下に移動',
   },
   'menu.editor.up_tooltip': {
+    it: 'Sposta su',
     en: 'Move up',
     de: 'Nach oben verschieben',
     fr: 'Déplacer au-dessus',
@@ -2614,6 +2846,7 @@ export const commonTranslations: Translations = {
     ja: '上に移動',
   },
   'menu.editor.disable_tooltip': {
+    it: 'Disabilita',
     en: 'Disable',
     de: 'Deaktivieren',
     fr: 'Désactiver',
@@ -2624,6 +2857,7 @@ export const commonTranslations: Translations = {
     ja: '無効',
   },
   'menu.editor.tabs_title': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     fr: 'Onglets',
@@ -2635,6 +2869,7 @@ export const commonTranslations: Translations = {
     ja: 'タブ',
   },
   'menu.editor.tabs_panel_title': {
+    it: 'Pannello schede',
     en: 'Tabs panel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
@@ -2646,6 +2881,7 @@ export const commonTranslations: Translations = {
     ja: 'タブパネル',
   },
   'menu.editor.bookmarks_title': {
+    it: 'Segnalibri',
     en: 'Bookmarks',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
@@ -2657,6 +2893,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマーク',
   },
   'menu.editor.bookmarks_panel_title': {
+    it: 'Pannello segnalibri',
     en: 'Bookmarks panel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
@@ -2668,6 +2905,7 @@ export const commonTranslations: Translations = {
     ja: 'ブックマークパネル',
   },
   'menu.editor.inline_group_title': {
+    it: 'Etichetta sotto-menu...',
     en: 'Sub-menu label...',
     de: 'Untermenü-Bezeichnung...',
     fr: 'Libellé du sous-menu…',
@@ -2683,6 +2921,7 @@ export const commonTranslations: Translations = {
   // -- Settings
   // -
   'settings.opt_true': {
+    it: 'attivo',
     en: 'on',
     de: 'Ein',
     fr: 'on',
@@ -2694,6 +2933,7 @@ export const commonTranslations: Translations = {
     ja: 'オン',
   },
   'settings.opt_false': {
+    it: 'disattivo',
     en: 'off',
     de: 'Aus',
     fr: 'off',
@@ -2709,6 +2949,7 @@ export const commonTranslations: Translations = {
   // -- Time
   // -
   'time.month_0': {
+    it: 'Gennaio',
     en: 'January',
     de: 'Januar',
     fr: 'Janvier',
@@ -2719,6 +2960,7 @@ export const commonTranslations: Translations = {
     ja: '1月',
   },
   'time.month_1': {
+    it: 'Febbraio',
     en: 'February',
     de: 'Februar',
     fr: 'Février',
@@ -2729,6 +2971,7 @@ export const commonTranslations: Translations = {
     ja: '2月',
   },
   'time.month_2': {
+    it: 'Marzo',
     en: 'March',
     de: 'März',
     fr: 'Mars',
@@ -2739,6 +2982,7 @@ export const commonTranslations: Translations = {
     ja: '3月',
   },
   'time.month_3': {
+    it: 'Aprile',
     en: 'April',
     de: 'April',
     fr: 'Avril',
@@ -2749,6 +2993,7 @@ export const commonTranslations: Translations = {
     ja: '4月',
   },
   'time.month_4': {
+    it: 'Maggio',
     en: 'May',
     de: 'Mai',
     fr: 'Mai',
@@ -2759,6 +3004,7 @@ export const commonTranslations: Translations = {
     ja: '5月',
   },
   'time.month_5': {
+    it: 'Giugno',
     en: 'June',
     de: 'Juni',
     fr: 'Juin',
@@ -2769,6 +3015,7 @@ export const commonTranslations: Translations = {
     ja: '6月',
   },
   'time.month_6': {
+    it: 'Luglio',
     en: 'July',
     de: 'Juli',
     fr: 'Juillet',
@@ -2779,6 +3026,7 @@ export const commonTranslations: Translations = {
     ja: '7月',
   },
   'time.month_7': {
+    it: 'Agosto',
     en: 'August',
     de: 'August',
     fr: 'Aout',
@@ -2789,6 +3037,7 @@ export const commonTranslations: Translations = {
     ja: '8月',
   },
   'time.month_8': {
+    it: 'Settembre',
     en: 'September',
     de: 'September',
     fr: 'Septembre',
@@ -2799,6 +3048,7 @@ export const commonTranslations: Translations = {
     ja: '9月',
   },
   'time.month_9': {
+    it: 'Ottobre',
     en: 'October',
     de: 'Oktober',
     fr: 'Octobre',
@@ -2809,6 +3059,7 @@ export const commonTranslations: Translations = {
     ja: '10月',
   },
   'time.month_10': {
+    it: 'Novembre',
     en: 'November',
     de: 'November',
     fr: 'Novembre',
@@ -2819,6 +3070,7 @@ export const commonTranslations: Translations = {
     ja: '11月',
   },
   'time.month_11': {
+    it: 'Dicembre',
     en: 'December',
     de: 'Dezember',
     fr: 'Décembre',
@@ -2829,6 +3081,7 @@ export const commonTranslations: Translations = {
     ja: '12月',
   },
   'time.today': {
+    it: 'Oggi',
     en: 'Today',
     de: 'Heute',
     fr: 'Aujourd’hui',
@@ -2839,6 +3092,7 @@ export const commonTranslations: Translations = {
     ja: '今日',
   },
   'time.yesterday': {
+    it: 'Ieri',
     en: 'Yesterday',
     de: 'Gestern',
     fr: 'Hier',
@@ -2853,6 +3107,7 @@ export const commonTranslations: Translations = {
   // -- Notifications
   // -
   'notif.open_private_windows_err': {
+    it: 'Impossibile aprire la finestra',
     en: 'Cannot open window',
     de: 'Fenster konnte nicht geöffnet werden',
     fr: 'Impossible d’ouvrir la fenêtre',
@@ -2861,6 +3116,7 @@ export const commonTranslations: Translations = {
     zh_TW: '無法開啟視窗',
   },
   'notif.open_private_windows_err_details': {
+    it: 'L\'estensione non dispone del permesso per la modalità anonima',
     en: 'Extension does not have permission for incognito mode',
     de: 'Die Erweiterung darf nicht in privaten Fenstern ausgeführt werden',
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
@@ -2873,6 +3129,7 @@ export const commonTranslations: Translations = {
   // -- Omnibox
   // -
   'omnibox.default_suggestion': {
+    it: 'Scegli il comando (il predefinito è il primo):',
     en: 'Choose the command (default is the first one):',
     de: 'Befehl auswählen (standardmäßig der erste):',
     fr: 'Choisir la commande (la première est celle par défaut)',
@@ -2885,6 +3142,7 @@ export const commonTranslations: Translations = {
     ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
+    it: 'Contenitore predefinito',
     en: 'Default container',
     de: 'Standardumgebung',
     fr: 'Conteneur par défaut',

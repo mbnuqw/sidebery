@@ -6,6 +6,7 @@ export const setupPageTranslations: Translations = {
   // -
   // - Container config popup
   'container.name_placeholder': {
+    it: 'Nome...',
     en: 'Name...',
     de: 'Name der Umgebung...',
     fr: 'Nom…',
@@ -17,6 +18,7 @@ export const setupPageTranslations: Translations = {
     ja: '名前...',
   },
   'container.icon_label': {
+    it: 'Icona',
     en: 'Icon',
     de: 'Symbol',
     fr: 'Icone',
@@ -28,6 +30,7 @@ export const setupPageTranslations: Translations = {
     ja: 'アイコン',
   },
   'container.color_label': {
+    it: 'Colore',
     en: 'Color',
     de: 'Farbe',
     fr: 'Couleur',
@@ -39,6 +42,7 @@ export const setupPageTranslations: Translations = {
     ja: '色',
   },
   'container.reopen_rules_label': {
+    it: 'Includi / Escludi schede per URL',
     en: 'Include / Exclude tab by URL',
     de: 'Tabs nach URL ein- oder ausschließen',
     fr: 'Inclure / Exclure des onglets par URL',
@@ -50,6 +54,7 @@ export const setupPageTranslations: Translations = {
     ja: 'URLによるタブの追加/除外',
   },
   'container.manage_reopen_rules_label': {
+    it: 'Gestisci regole',
     en: 'Manage rules',
     de: 'Regeln verwalten',
     fr: 'Gérer les règles',
@@ -61,6 +66,7 @@ export const setupPageTranslations: Translations = {
     ja: 'ルールの管理',
   },
   'container.proxy_label': {
+    it: 'Proxy',
     en: 'Proxy',
     de: 'Proxy',
     fr: 'Proxy',
@@ -69,22 +75,27 @@ export const setupPageTranslations: Translations = {
     ja: 'プロキシ',
   },
   'container.proxy_host_placeholder': {
+    it: '---',
     en: '---',
     ru: 'хост',
   },
   'container.proxy_port_placeholder': {
+    it: '---',
     en: '---',
     ru: 'порт',
   },
   'container.proxy_username_placeholder': {
+    it: '---',
     en: '---',
     ru: 'пользователь',
   },
   'container.proxy_password_placeholder': {
+    it: '---',
     en: '---',
     ru: 'пароль',
   },
   'container.proxy_dns_label': {
+    it: 'Proxy DNS',
     en: 'proxy DNS',
     de: 'Proxy-DNS',
     fr: 'Proxy DNS',
@@ -96,22 +107,27 @@ export const setupPageTranslations: Translations = {
     ja: 'プロキシDNS',
   },
   'container.proxy_http': {
+    it: 'HTTP',
     en: 'HTTP',
     ru: 'HTTP',
   },
   'container.proxy_https': {
+    it: 'TLS',
     en: 'TLS',
     ru: 'TLS',
   },
   'container.proxy_socks4': {
+    it: 'SOCKS4',
     en: 'SOCKS4',
     ru: 'SOCKS4',
   },
   'container.proxy_socks': {
+    it: 'SOCKS5',
     en: 'SOCKS5',
     ru: 'SOCKS5',
   },
   'container.proxy_direct': {
+    it: 'nessuno',
     en: 'none',
     de: 'Keiner',
     fr: 'aucun',
@@ -123,6 +139,7 @@ export const setupPageTranslations: Translations = {
     ja: 'なし',
   },
   'container.rules_include': {
+    it: 'Includi URL',
     en: 'Include URLs',
     de: 'URLs einschließen',
     fr: 'Inclure les URLs',
@@ -134,6 +151,7 @@ export const setupPageTranslations: Translations = {
     ja: 'URLを含む',
   },
   'container.rules_include_tooltip': {
+    it: 'Riapri le schede con questi URL in questo contenitore.\nElenco separato da a capo di "sottostringhe" o /regex/:\n    esempio.com\n    /^(qualche)?regex$/\n    ...',
     en: 'Reopen tabs with matched URLs in this container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
@@ -147,6 +165,7 @@ export const setupPageTranslations: Translations = {
     ja: 'このコンテナ内の一致するURLを持つタブを再度開くします。\n"部分文字列"または"/正規表現/"の改行区切りリスト:\n    example.com\n    /^(some)?regex$/\n    ...',
   },
   'container.rules_exclude': {
+    it: 'Escludi URL',
     en: 'Exclude URLs',
     de: 'URLs ausschließen',
     fr: 'Exclure les URLs',
@@ -158,6 +177,7 @@ export const setupPageTranslations: Translations = {
     ja: 'URLを除外',
   },
   'container.rules_exclude_tooltip': {
+    it: 'Riapri le schede con questi URL nel contenitore predefinito.\nElenco separato da a capo di "sottostringhe" o /regex/:\n    esempio.com\n    /^(qualche)?regex$/\n    ...',
     en: 'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: `Rouvrir les onglets dont l’URL correspond dans le conteneur par défaut.
@@ -175,6 +195,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'デフォルトのコンテナ内で一致するURLを持つタブを再度開くします。\n"部分文字列"または"/正規表現/"の改行区切りリスト:\n    example.com\n    /^(some)?regex$/\n    ...',
   },
   'container.user_agent': {
+    it: 'User Agent',
     en: 'User Agent',
     de: 'User-Agent',
     fr: 'Agent utilisateur',
@@ -184,6 +205,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   // - Panel config popup
   'panel.name_placeholder': {
+    it: 'Nome...',
     en: 'Name...',
     de: 'Name des Panels...',
     fr: 'Nom…',
@@ -195,6 +217,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '名前...',
   },
   'panel.icon_label': {
+    it: 'Icona',
     en: 'Icon',
     de: 'Symbol',
     fr: 'Icone',
@@ -206,6 +229,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'アイコン',
   },
   'panel.color_label': {
+    it: 'Colore',
     en: 'Color',
     de: 'Farbe',
     fr: 'Couleur',
@@ -217,6 +241,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '色',
   },
   'panel.custom_icon': {
+    it: 'Icona personalizzata',
     en: 'Custom icon',
     de: 'Benutzerdefiniertes Symbol',
     fr: 'Icone personnalisée',
@@ -228,6 +253,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'カスタムアイコン',
   },
   'panel.custom_icon_text_btn': {
+    it: 'Testo',
     en: 'Text',
     de: 'Text',
     fr: 'Texte',
@@ -239,6 +265,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'テキスト',
   },
   'panel.custom_icon_text_placeholder': {
+    it: 'es. A::#000000ff::700 32px Roboto',
     en: 'e.g. A::#000000ff::700 32px Roboto',
     de: 'z. B. A::#000000ff::700 32px Roboto',
     fr: 'ex. A::#000000ff::700 32px Roboto',
@@ -249,6 +276,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '例：A::#000000ff::700 32px Roboto',
   },
   'panel.custom_icon_note': {
+    it: 'Sintassi valore testo: "testo::colore::valore-font-CSS"',
     en: 'Text value syntax: "text::color::CSS-font-value"',
     de: 'Textwerte-Syntax: "Text::Farbe::CSS-Schriftart-Wert"',
     fr: 'Syntaxe du champ de texte: “text::couleur::valeur-CSS-de-font”',
@@ -260,11 +288,13 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'テキスト値の構文: "text::color::CSS-font-value"',
   },
   'panel.custom_icon_url_btn': {
+    it: 'URL',
     en: 'URL',
     ru: 'URL',
     zh_TW: '網址',
   },
   'panel.custom_icon_url_placeholder': {
+    it: 'URL icona personalizzata...',
     en: 'Custom icon URL...',
     de: 'URL des benutzerdefinierten Symbols',
     fr: 'URL de l’icone personalisée…',
@@ -276,6 +306,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'カスタムアイコンのURL...',
   },
   'panel.custom_icon_load': {
+    it: 'Carica',
     en: 'Load',
     de: 'Laden',
     fr: 'Charger',
@@ -287,6 +318,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '読み込む',
   },
   'panel.custom_icon_file_btn': {
+    it: 'File',
     en: 'File',
     de: 'Datei',
     fr: 'Fichier',
@@ -298,6 +330,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ファイル',
   },
   'panel.custom_icon_colorize': {
+    it: 'Colora l\'icona personalizzata con il colore selezionato',
     en: 'Colorize custom icon with selected color',
     de: 'Benutzerdefiniertes Symbol mit gewählter Farbe einfärben',
     fr: 'Coloriser l’icone personalisée avec la couleur sélectionnée',
@@ -309,6 +342,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '選択した色でカスタムアイコンを着色する',
   },
   'panel.lock_panel_label': {
+    it: 'Impedisci il cambio automatico da questo pannello',
     en: 'Prevent auto-switching from this panel',
     de: 'Automatisches Wechseln aus diesem Panel verhindern',
     fr: 'Éviter le basculement automatique depuis ce panneau',
@@ -320,6 +354,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'このパネルからの自動切り替えを防止する',
   },
   'panel.temp_mode_label': {
+    it: 'Torna al pannello schede precedente dopo l\'uscita del cursore',
     en: 'Switch back to previously active tabs panel after mouse leave',
     de: 'Zum zuvor aktiven Tab-Panel zurückwechseln, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Basculer sur le panneau d’onglets précédemment actif à la sortie de la souris',
@@ -331,6 +366,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'マウスが離れた後、以前のアクティブなタブパネルに切り替える',
   },
   'panel.skip_on_switching': {
+    it: 'Salta questo pannello durante il passaggio tra pannelli',
     en: 'Skip this panel when switching panels',
     de: 'Beim Wechseln der Panels dieses Panel überspringen',
     fr: 'Ignorer ce panneau lors du basculement de panneaux',
@@ -342,6 +378,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'パネルを切り替える際にこのパネルをスキップする',
   },
   'panel.no_empty_label': {
+    it: 'Crea una nuova scheda dopo aver chiuso l\'ultima',
     en: 'Create new tab after the last one is closed',
     de: 'Neuen Tab erstellen, nachdem der letzte geschlossen wurde',
     fr: 'Créer un nouvel onglet lorsque le dernier onglet est fermé',
@@ -353,6 +390,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '最後のタブが閉じられた後に新しいタブを作成する',
   },
   'panel.new_tab_ctx': {
+    it: 'Contenitore della nuova scheda',
     en: 'Container of new tab',
     de: 'Umgebung neuer Tabs',
     fr: 'Conteneur des nouveaux onglets',
@@ -364,6 +402,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '新しいタブのコンテナ',
   },
   'panel.panel_tooltip_none': {
+    it: 'Non impostato',
     en: 'Not set',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
@@ -375,6 +414,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '未設定',
   },
   'panel.new_tab_ctx_reopen': {
+    it: 'Rileva schede aperte esternamente e riaprile nel contenitore di destinazione alla prima richiesta web (impostazione globale)',
     en: 'Detect externally opened tab and reopen it in the target container on the first web request (global setting)',
     de: 'Extern geöffnete Tabs erkennen und bei der ersten Anfrage in der Zielumgebung neu öffnen (globale Einstellung)',
     fr: 'Détecter les onglets ouverts de l’extérieur et les rouvrir dans le conteneur cible à la première requête Web (paramètre global)',
@@ -386,6 +426,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '外部で開かれたタブを検出し、最初のWebリクエストでターゲットコンテナで再度開くする（グローバル設定）',
   },
   'panel.drop_tab_ctx': {
+    it: 'Riapri la scheda rilasciata in questo pannello nel contenitore:',
     en: 'Reopen tab that was dropped to this panel in container:',
     de: 'Tabs, welche in dieses Panel verschoben wurden, in folgender Umgebung neu öffnen:',
     fr: 'Rouvrir les onglets déplacés dans ce panneau dans le conteneur:',
@@ -397,6 +438,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'このパネルにドロップされたタブをコンテナで再度開くする：',
   },
   'panel.ctr_tooltip_none': {
+    it: 'Non impostato',
     en: 'Not set',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
@@ -408,6 +450,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '未設定',
   },
   'panel.ctr_tooltip_default': {
+    it: 'Nessun contenitore',
     en: 'No container',
     de: 'Keine Umgebung',
     fr: 'Aucun conteneur',
@@ -419,6 +462,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'コンテナなし',
   },
   'panel.tab_move_rules': {
+    it: 'Sposta le schede in questo pannello',
     en: 'Move tabs to this panel',
     de: 'Tabs in dieses Panel verschieben',
     fr: 'Déplacer les onglets dans ce panneau',
@@ -430,6 +474,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブをこのパネルに移動する',
   },
   'panel.tab_move_rules_manage_btn': {
+    it: 'Gestisci regole',
     en: 'Manage rules',
     de: 'Regeln verwalten',
     fr: 'Gérer les règles',
@@ -441,6 +486,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ルールの管理',
   },
   'panel.tab_move_rules_manage_badge': {
+    it: 'Gestisci regole di spostamento',
     en: 'Manage moving rules',
     de: 'Verschiebungsregeln verwalten',
     fr: 'Gérer les règles de déplacemement',
@@ -452,6 +498,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '移動ルールの管理',
   },
   'panel.move_excluded_to': {
+    it: 'Sposta le schede non corrispondenti (escluse) nel pannello',
     en: 'Move unmatched (excluded) tabs to panel',
     de: 'Nicht passende (ausgeschlossene) Tabs in Panel verschieben',
     fr: 'Déplacer les onglets sans correspondance (exclus) dans le panneau',
@@ -463,6 +510,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '一致しない（除外された）タブをパネルに移動する',
   },
   'panel.new_tab_shortcuts': {
+    it: 'Scorciatoie "Nuova scheda" aggiuntive',
     en: 'Additional "New tab" shortcuts',
     de: 'Zusätzliche "Neuer Tab"-Schaltflächen',
     fr: 'Raccourcis de “Nouvel onglet” supplémentaires',
@@ -474,6 +522,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '追加の「新しいタブ」ショートカット',
   },
   'panel.new_tab_shortcuts_manage_btn': {
+    it: 'Gestisci scorciatoie',
     en: 'Manage shortcuts',
     de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
@@ -485,6 +534,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ショートカットの管理',
   },
   'panel.bookmarks_view_mode': {
+    it: 'Modalità di visualizzazione',
     en: 'View mode',
     de: 'Anzeigemodus',
     fr: 'Mode d’affichage',
@@ -496,6 +546,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '表示モード',
   },
   'panel.bookmarks_view_mode_tree': {
+    it: 'albero',
     en: 'tree',
     de: 'Baumstruktur',
     fr: 'arborescence',
@@ -507,6 +558,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ツリー',
   },
   'panel.bookmarks_view_mode_history': {
+    it: 'cronologia',
     en: 'history',
     de: 'Chronik',
     fr: 'historique',
@@ -518,6 +570,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '履歴',
   },
   'panel.auto_convert': {
+    it: 'Converti nel pannello schede d\'origine all\'apertura di un segnalibro',
     en: 'Convert to source tabs panel on opening bookmark',
     de: 'Beim Öffnen eines Lesezeichens in das ursprüngliche Tab-Panel umwandeln',
     fr: 'Reconvertir en panneau d’onglets à l’ouverture d’un marque-pages',
@@ -529,6 +582,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ブックマークを開くとソースタブパネルに変換する',
   },
   'panel.root_id_label': {
+    it: 'Cartella radice',
     en: 'Root folder',
     de: 'Stammordner',
     fr: 'Dossier racine',
@@ -540,6 +594,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ルートフォルダ',
   },
   'panel.root_id.choose': {
+    it: 'Scegli cartella',
     en: 'Choose folder',
     de: 'Ordner auswählen',
     fr: 'Choisir un dossier',
@@ -551,6 +606,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'フォルダを選択',
   },
   'panel.root_id.reset': {
+    it: 'Ripristina',
     en: 'Reset',
     de: 'Zurücksetzen',
     fr: 'Réinitialiser',
@@ -562,6 +618,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'リセット',
   },
   'panel.root_id_wrong': {
+    it: 'Impossibile trovare la cartella, selezionane una nuova',
     en: 'Cannot find such folder, please choose the new one',
     de: 'Kann diesen Ordner nicht finden, bitte neuen wählen',
     fr: 'Impossible de trouver le dossier, veuillez en choisir un autre',
@@ -577,6 +634,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // -- Settings
   // -
   'settings.nav_settings': {
+    it: 'Impostazioni',
     en: 'Settings',
     de: 'Einstellungen',
     fr: 'Paramètres',
@@ -588,6 +646,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '設定',
   },
   'settings.nav_settings_general': {
+    it: 'Generale',
     en: 'General',
     de: 'Allgemein',
     fr: 'Général',
@@ -599,6 +658,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '一般',
   },
   'settings.nav_settings_storage': {
+    it: 'Archiviazione',
     en: 'Storage',
     de: 'Speicher',
     fr: 'Stockage',
@@ -610,6 +670,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ストレージ',
   },
   'settings.nav_settings_permissions': {
+    it: 'Permessi',
     en: 'Permissions',
     de: 'Berechtigungen',
     fr: 'Permissions',
@@ -621,6 +682,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '権限',
   },
   'settings.nav_settings_menu': {
+    it: 'Menu',
     en: 'Menu',
     de: 'Menü',
     fr: 'Menu',
@@ -631,12 +693,14 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'メニュー',
   },
   'settings.nav_settings_omnibox': {
+    it: 'Barra degli indirizzi',
     en: 'Address bar',
     de: 'Adressleiste',
     fr: 'Barre d’adresse',
     ru: 'Адресная строка',
   },
   'settings.nav_settings_nav': {
+    it: 'Barra di navigazione',
     en: 'Navigation bar',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
@@ -648,6 +712,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ナビゲーションバー',
   },
   'settings.nav_settings_group': {
+    it: 'Pagina del gruppo',
     en: 'Group page',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
@@ -659,6 +724,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'グループページ',
   },
   'settings.nav_settings_containers': {
+    it: 'Contenitori',
     en: 'Containers',
     de: 'Umgebungen',
     fr: 'Conteneur',
@@ -669,6 +735,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'コンテナ',
   },
   'settings.nav_settings_dnd': {
+    it: 'Trascina e rilascia',
     en: 'Drag and Drop',
     de: 'Ziehen und Ablegen',
     fr: 'Glisser-déposer',
@@ -679,6 +746,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ドラッグアンドドロップ',
   },
   'settings.nav_settings_search': {
+    it: 'Ricerca',
     en: 'Search',
     de: 'Suche',
     fr: 'Recherche',
@@ -690,6 +758,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '検索',
   },
   'settings.nav_settings_tabs': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     fr: 'Onglets',
@@ -701,6 +770,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブ',
   },
   'settings.nav_settings_new_tab_position': {
+    it: 'Posizione della nuova scheda',
     en: 'Position of new tab',
     de: 'Position neuer Tabs',
     fr: 'Position du nouvel onglet',
@@ -712,6 +782,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '新しいタブの位置',
   },
   'settings.nav_settings_pinned_tabs': {
+    it: 'Schede fissate',
     en: 'Pinned tabs',
     de: 'Angeheftete Tabs',
     fr: 'Onglets épinglés',
@@ -723,6 +794,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ピン留めされたタブ',
   },
   'settings.nav_settings_tabs_tree': {
+    it: 'Albero delle schede',
     en: 'Tabs tree',
     de: 'Tab-Baum',
     fr: 'Arborescence',
@@ -734,6 +806,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブツリー',
   },
   'settings.nav_settings_tabs_colorization': {
+    it: 'Colorazione schede',
     en: 'Tabs colorization',
     de: 'Tab-Einfärbung',
     fr: 'Colorisation des onglets',
@@ -745,6 +818,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブの色付け',
   },
   'settings.nav_settings_tabs_preview': {
+    it: 'Anteprima schede',
     en: 'Tabs preview',
     de: 'Tab-Vorschau',
     fr: 'Aperçu des onglets',
@@ -756,6 +830,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブのプレビュー',
   },
   'settings.nav_settings_tabs_native': {
+    it: 'Schede native',
     en: 'Native tabs',
     de: 'Native Tabs',
     fr: 'Onglets natifs',
@@ -768,6 +843,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
 
   'settings.nav_settings_bookmarks': {
+    it: 'Segnalibri',
     en: 'Bookmarks',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
@@ -779,6 +855,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ブックマーク',
   },
   'settings.nav_settings_history': {
+    it: 'Cronologia',
     en: 'History',
     de: 'Chronik',
     fr: 'Historique',
@@ -790,6 +867,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '履歴',
   },
   'settings.nav_settings_appearance': {
+    it: 'Aspetto',
     en: 'Appearance',
     de: 'Erscheinungsbild',
     fr: 'Apparence',
@@ -801,6 +879,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '外観',
   },
   'settings.nav_settings_mouse': {
+    it: 'Mouse',
     en: 'Mouse',
     de: 'Maus',
     fr: 'Souris',
@@ -812,6 +891,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'マウス',
   },
   'settings.nav_settings_mouse_nav': {
+    it: 'Azioni barra di navigazione',
     en: 'Navigation bar actions',
     de: 'Aktionen mit Navigationsleiste',
     fr: 'Actions de la barre de navigation',
@@ -823,6 +903,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ナビゲーションバーアクション',
   },
   'settings.nav_settings_mouse_tabs': {
+    it: 'Azioni schede',
     en: 'Tab actions',
     de: 'Aktionen mit Tabs',
     fr: 'Actions des onglets',
@@ -834,6 +915,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブアクション',
   },
   'settings.nav_settings_mouse_tabs_panel': {
+    it: 'Azioni pannello schede',
     en: 'Tab panel actions',
     de: 'Aktionen mit Tab-Panels',
     fr: 'Actions des panneaux',
@@ -845,6 +927,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブパネルアクション',
   },
   'settings.nav_settings_mouse_new_tab_button': {
+    it: 'Azioni pulsante Nuova scheda',
     en: 'New Tab button actions',
     de: 'Aktionen mit "Neuer Tab"-Schaltflächen',
     fr: 'Action du bouton “Nouvel\u00A0onglet”',
@@ -856,6 +939,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '新しいタブボタンアクション',
   },
   'settings.nav_settings_mouse_bookmarks': {
+    it: 'Azioni segnalibri',
     en: 'Bookmark actions',
     de: 'Aktionen mit Lesezeichen',
     fr: 'Action des marque-pages',
@@ -867,6 +951,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ブックマークアクション',
   },
   'settings.nav_settings_mouse_history': {
+    it: 'Azioni cronologia',
     en: 'History item actions',
     de: 'Aktionen mit Chronik-Einträgen',
     fr: 'Actions des entrées de l’historique',
@@ -879,6 +964,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
 
   'settings.nav_settings_snapshots': {
+    it: 'Istantanee',
     en: 'Snapshots',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
@@ -889,6 +975,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'スナップショット',
   },
   'settings.nav_settings_sync': {
+    it: 'Sincronizzazione',
     en: 'Sync',
     de: 'Synchronisation',
     fr: 'Synchronisation',
@@ -899,6 +986,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '同期',
   },
   'settings.nav_settings_help': {
+    it: 'Aiuto',
     en: 'Help',
     de: 'Hilfe',
     fr: 'Aide',
@@ -910,6 +998,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ヘルプ',
   },
   'settings.nav_keybindings': {
+    it: 'Scorciatoie da tastiera',
     en: 'Keybindings',
     de: 'Tastenbelegung',
     fr: 'Raccourcis clavier',
@@ -921,6 +1010,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'キーバインディング',
   },
   'settings.nav_menu_editor': {
+    it: 'Editor dei menu',
     en: 'Menu editor',
     de: 'Menü-Editor',
     fr: 'Éditeur de menus',
@@ -932,6 +1022,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'メニューエディタ',
   },
   'settings.nav_menu_editor_tabs': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     fr: 'Onglets',
@@ -943,6 +1034,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブ',
   },
   'settings.nav_menu_editor_tabs_panel': {
+    it: 'Pannello schede',
     en: 'Tabs panel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
@@ -954,6 +1046,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'タブパネル',
   },
   'settings.nav_menu_editor_bookmarks': {
+    it: 'Segnalibri',
     en: 'Bookmarks',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
@@ -965,6 +1058,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ブックマーク',
   },
   'settings.nav_menu_editor_bookmarks_panel': {
+    it: 'Pannello segnalibri',
     en: 'Bookmarks panel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
@@ -976,6 +1070,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ブックマークパネル',
   },
   'settings.nav_styles_editor': {
+    it: 'Editor degli stili',
     en: 'Styles editor',
     de: 'Stil-Editor',
     fr: 'Éditeur de styles',
@@ -987,6 +1082,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'スタイルエディタ',
   },
   'settings.nav_snapshots': {
+    it: 'Visualizzatore istantanee',
     en: 'Snapshots viewer',
     de: 'Schnappschuss-Betrachter',
     fr: 'Visionneuse d’instantanés',
@@ -1000,6 +1096,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
 
   // - Details controls
   'settings.ctrl_edit': {
+    it: 'MODIFICA',
     en: 'EDIT',
     de: 'BEARBEITEN',
     fr: 'MODIFIER',
@@ -1011,6 +1108,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '編集',
   },
   'settings.ctrl_save': {
+    it: 'SALVA',
     en: 'SAVE',
     de: 'SPEICHERN',
     fr: 'SAUVEGARDER',
@@ -1022,6 +1120,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '保存',
   },
   'settings.ctrl_update': {
+    it: 'AGGIORNA',
     en: 'UPDATE',
     de: 'AKTUALISIEREN',
     fr: 'METTRE À JOUR',
@@ -1032,6 +1131,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '更新',
   },
   'settings.ctrl_copy': {
+    it: 'COPIA',
     en: 'COPY',
     de: 'KOPIEREN',
     fr: 'COPIER',
@@ -1043,6 +1143,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'コピー',
   },
   'settings.ctrl_close': {
+    it: 'CHIUDI',
     en: 'CLOSE',
     de: 'SCHLIEẞEN',
     fr: 'FERMER',
@@ -1056,6 +1157,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
 
   // - General
   'settings.general_title': {
+    it: 'Generale',
     en: 'General',
     de: 'Allgemein',
     fr: 'Général',
@@ -1067,6 +1169,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '一般',
   },
   'settings.native_scrollbars': {
+    it: 'Usa barre di scorrimento native',
     en: 'Use native scroll-bars',
     de: 'Nativen Scroll-Balken verwenden',
     fr: 'Utiliser les barres de scroll natives',
@@ -1078,6 +1181,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'ネイティブスクロールバー',
   },
   'settings.native_scrollbars_thin': {
+    it: 'Usa barre di scorrimento sottili',
     en: 'Use thin scroll-bars',
     de: 'Schmalen Scroll-Balken verwenden',
     fr: 'Utiliser des barres de scroll fines',
@@ -1089,6 +1193,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '細いスクロールバー',
   },
   'settings.native_scrollbars_left': {
+    it: 'Mostra barra di scorrimento sul lato sinistro',
     en: 'Show scroll-bar at the left side',
     de: 'Scroll-Balken auf der linken Seite anzeigen',
     fr: 'Afficher la barre de scroll à gauche',
@@ -1100,6 +1205,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'スクロールバーを左側に表示',
   },
   'settings.sel_win_screenshots': {
+    it: 'Mostra miniature nel menu di selezione finestra durante lo spostamento delle schede',
     en: 'Show screenshots in the window selection menu when moving tabs via context menu',
     de: 'Bildschirmfotos im Fensterauswahlmenü anzeigen, wenn Tabs über das Kontextmenü verschoben werden',
     fr: 'Afficher des captures d’écran dans le menu de sélection des fenêtres lors du déplacement d’onglets via le menu contextuel',
@@ -1111,6 +1217,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'コンテキストメニューを介してタブを移動するときにウィンドウ選択メニューにスクリーンショットを表示する',
   },
   'settings.update_sidebar_title': {
+    it: 'Usa il nome del pannello attivo come titolo della barra laterale',
     en: "Use active panel's name as sidebar title",
     de: 'Name des aktiven Panels als Seitenleistenname verwenden',
     fr: 'Utiliser le nom du panneau actif comme titre de la barre latérale',
@@ -1122,6 +1229,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'アクティブパネルの名前をサイドバーのタイトルとして使用する',
   },
   'settings.mark_window': {
+    it: 'Aggiungi prefisso al titolo della finestra se la barra Sidebery è attiva',
     en: "Add preface to the browser window's title if Sidebery sidebar is active",
     de: 'Präfix dem Fensternamen des Browsers voranstellen, wenn die Sidebery-Seitenleiste geöffnet ist',
     fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand la barre latérale Sidebery est actif',
@@ -1133,6 +1241,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'Sidebery サイドバーがアクティブな場合、ブラウザウィンドウのタイトルの前へ文字列を追加する',
   },
   'settings.mark_window_preface': {
+    it: 'Valore prefisso',
     en: 'Preface value',
     de: 'Präfix',
     fr: 'Préfixe',
@@ -1144,6 +1253,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '追加する文字列',
   },
   'settings.mark_window_preface_note': {
+    it: 'Nota: Variabili disponibili: %PN - nome del pannello attivo',
     en: 'Note: Available variables: %PN - active panel name',
     de: 'Hinweis: Verfügbare Variablen: %PN – aktiver Panel-Name',
     fr: 'Note: Variables disponibles: %PN – nom du panneau actif',
@@ -1155,6 +1265,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '利用可能な変数：%PN - アクティブパネル名',
   },
   'settings.copy_title_url_indent': {
+    it: 'Aggiungi rientro per schede figlie/segnalibri durante la copia',
     en: 'Append an indent for child tabs/bookmarks on copying',
     de: 'Beim Kopieren einen Einzug für untergeordnete Tabs/Lesezeichen anfügen',
     fr: 'Ajouter une indentation pour les onglets ou marque-pages enfants lors de la copie',
@@ -1166,6 +1277,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'コピー時に子タブ/子ブックマークにインデントを追加する',
   },
   'settings.copy_title_url_indent_or': {
+    it: 'nessun rientro',
     en: 'no indent',
     de: 'keine Einrückung',
     fr: 'aucune indentation',
@@ -1177,6 +1289,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'インデントなし',
   },
   'settings.copy_multi_bullet': {
+    it: 'Aggiungi punto elenco durante la copia di più elementi',
     en: 'Append a list mark when copying multiple items',
     de: 'Beim Kopieren mehrerer Elemente eine Listenmarkierung anfügen',
     fr: 'Ajouter une puce lors de la copie de plusieurs éléments',
@@ -1188,6 +1301,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: '複数のアイテムをコピーするときにリストマークを追加する',
   },
   'settings.copy_multi_bullet_or': {
+    it: 'nessun punto',
     en: 'no mark',
     de: 'keine Listenmarkierung',
     fr: 'aucune puce',
@@ -1199,6 +1313,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'マークなし',
   },
   'settings.copy_templates': {
+    it: 'Copia tramite modelli',
     en: 'Copy by templates',
     de: 'Kopieren nach Vorlagen',
     fr: 'Copier avec un modèle',
@@ -1210,6 +1325,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     ja: 'テンプレートによるコピー',
   },
   'settings.copy_templates_note': {
+    it: `Per usare questa funzione abilita l\'opzione "Copia tramite modelli..." nell\'editor del menu contestuale o assegna scorciatoie da tastiera.\nI modelli sono scritti riga per riga nella forma "Nome modello:Modello" (senza virgolette).\nVariabili disponibili:\n  - %TITLE% - titolo scheda o segnalibro\n  - %URL% - URL scheda o segnalibro`,
     en: `To use this feature enable "Copy by templates..." option in context menu editor or set keybindings.
 Templates are written per line in the form "Template name:Template" (without quotes).
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
@@ -1231,6 +1347,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
 注意：清單標記僅會在透過範本複製多個項目時新增`,
   },
   'settings.storage_btn': {
+    it: 'Dati di Sidebery:',
     en: "Sidebery's data:",
     de: 'Sidebery-Daten:',
     fr: 'Données de Sidebery:',
@@ -1242,6 +1359,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'Sidebery のデータ：',
   },
   'settings.permissions_btn': {
+    it: 'Permessi',
     en: 'Permissions',
     de: 'Berechtigungen',
     fr: 'Permissions',
@@ -1255,6 +1373,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
 
   // - Storage
   'settings.storage_title': {
+    it: 'Archiviazione',
     en: 'Storage',
     de: 'Speicher',
     fr: 'Stockage',
@@ -1266,6 +1385,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'ストレージ',
   },
   'settings.storage_edit_prop': {
+    it: 'modifica',
     en: 'edit',
     de: 'Ändern',
     fr: 'modifier',
@@ -1277,6 +1397,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '編集',
   },
   'settings.storage_delete_prop': {
+    it: 'elimina',
     en: 'delete',
     de: 'Löschen',
     fr: 'supprimer',
@@ -1288,6 +1409,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '削除',
   },
   'settings.storage_delete_confirm': {
+    it: 'Elimina proprietà ',
     en: 'Delete property ',
     de: 'Feld löschen ',
     fr: 'Supprimer la propriété',
@@ -1299,6 +1421,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'プロパティを削除 ',
   },
   'settings.update_storage_info': {
+    it: 'Aggiorna',
     en: 'Update',
     de: 'Aktualisieren',
     fr: 'Mettre à jour',
@@ -1309,6 +1432,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '更新',
   },
   'settings.clear_storage_info': {
+    it: 'Elimina tutto',
     en: 'Delete everything',
     de: 'Alles löschen',
     fr: 'Tout supprimer',
@@ -1320,6 +1444,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'すべて削除',
   },
   'settings.clear_storage_confirm': {
+    it: 'Sei sicuro di voler eliminare tutti i dati di Sidebery?',
     en: 'Are you sure you want to delete all Sidebery data?',
     de: 'Wirklich alle Sidebery-Daten löschen?',
     fr: 'Voulez-vous vraiment supprimer toutes les données de Sidebery?',
@@ -1331,6 +1456,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'Sidebery のすべてのデータを削除してもよろしいですか？',
   },
   'settings.favs_title': {
+    it: 'Favicon memorizzate',
     en: 'Cached favicons',
     de: 'Zwischengespeicherte Favicons',
     fr: 'Favicons en cache',
@@ -1342,6 +1468,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'キャッシュされたサイトアイコン',
   },
   'settings.clear_favicons_cache': {
+    it: 'Svuota cache favicon',
     en: 'Delete favicons cache',
     de: 'Favicon-Zwischenspeicher löschen',
     ru: 'Удалить кэш иконок сайтов',
@@ -1349,6 +1476,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     zh_TW: '刪除圖示快取',
   },
   'settings.clear_favicons_cache_confirm': {
+    it: 'Sei sicuro di voler svuotare la cache delle favicon?',
     en: 'Are you sure you want to delete favicons cache?',
     de: 'Möchten Sie den Favicon-Zwischenspeicher wirklich löschen?',
     ru: 'Вы уверены, что хотите удалить кэш иконок сайтов?',
@@ -1358,6 +1486,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
 
   // - Permissions
   'settings.permissions_title': {
+    it: 'Permessi',
     en: 'Permissions',
     de: 'Berechtigungen',
     fr: 'Permissions',
@@ -1369,6 +1498,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '権限',
   },
   'settings.all_urls_label': {
+    it: 'Accesso ai dati delle richieste web:',
     en: 'Accessing web requests data:',
     de: 'Zugriff auf Daten für Webanfragen:',
     fr: 'Accéder aux données pour tous les sites web:',
@@ -1380,6 +1510,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'Web リクエストデータへのアクセス：',
   },
   'settings.all_urls_info': {
+    it: 'Richiesto per:\n- Pulizia cookie\n- Regole proxy e URL dei contenitori\n- Catture schermo per la pagina gruppo e selezione finestre\n- Modifica User-Agent per contenitore',
     en: 'Required for:\n- Cleaning cookies\n- Proxy and URL rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
     de: 'Benötigt für:\n- Cookies löschen\n- Proxy- und URL-Regeln für Umgebungen\n- Bildschirmfotos für die Gruppenseite und das Fensterauswahlmenü\n- User-Agent per Umgebung ändern',
     fr: 'Requis pour\n– Nettoyer les cookies\n– Les règles de proxy et d’URL des conteneurs\n– Les captures d’écran pour la page de groupe et le panneau de sélection des fenêtres\n– Changer l’agent utilisateur par conteneur',
@@ -1393,6 +1524,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '必要な権限：\n- Cookie のクリーンアップ\n- コンテナのプロキシと URL ルール\n- グループページとウィンドウ選択パネルのスクリーンショット\n- コンテナごとのユーザーエージェントの変更',
   },
   'settings.perm.bookmarks_label': {
+    it: 'Segnalibri:',
     en: 'Bookmarks:',
     de: 'Lesezeichen:',
     fr: 'Marque-pages:',
@@ -1404,6 +1536,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'ブックマーク',
   },
   'settings.perm.bookmarks_info': {
+    it: 'Richiesto per:\n- Pannelli dei segnalibri',
     en: 'Required for:\n- Bookmarks panels',
     de: 'Benötigt für:\n- Lesezeichen-Panels',
     fr: 'Requis pour:\n– Le panneau des marques pages',
@@ -1415,6 +1548,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '必要な権限：\n- ブックマークパネル',
   },
   'settings.tab_hide_label': {
+    it: 'Nascondere schede:',
     en: 'Hiding tabs:',
     de: 'Tabs verstecken:',
     fr: 'Cacher les onglets:',
@@ -1426,6 +1560,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'タブを非表示：',
   },
   'settings.tab_hide_info': {
+    it: 'Richiesto per:\n- Nascondere schede nei pannelli inattivi\n- Nascondere rami di schede compressi',
     en: 'Required for:\n- Hiding tabs in inactive panels\n- Hiding folded tabs',
     de: 'Benötigt für:\n- Verstecken von Tabs in inaktiven Panels\n- Eingeklappte Tabs verstecken',
     fr: 'Requis pour:\n– Cacher les onglets dans les panneaux inactifs\n– Cacher les onglets repliés',
@@ -1437,6 +1572,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '必要な権限：\n- 非アクティブパネルのタブを非表示\n- 折りたたまれたタブを非表示',
   },
   'settings.clipboard_write_label': {
+    it: 'Scrittura negli appunti:',
     en: 'Writing to clipboard:',
     de: 'In Zwischenablage schreiben:',
     fr: 'Écrire dans le presse-papiers:',
@@ -1448,6 +1584,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'クリップボードに書き込む：',
   },
   'settings.clipboard_write_info': {
+    it: 'Richiesto per:\n- Copia di URL di schede/segnalibri dal menu contestuale',
     en: 'Required for:\n- Copying URLs of tabs/bookmarks through context menu',
     de: 'Benötigt für:\n- URLs von Tabs/Lesezeichen über Kontextmenü kopieren',
     fr: 'Requis pour:\n– Copier les URLs des onglets et marque-pages via le menu contextuel',
@@ -1459,6 +1596,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '必要な権限：\n- コンテキストメニューを介してタブ/ブックマークの URL をコピー',
   },
   'settings.clipboard_read_label': {
+    it: 'Lettura dagli appunti:',
     en: 'Reading from clipboard:',
     de: 'Lesen aus der Zwischenablage:',
     fr: 'Lire le presse-papier:',
@@ -1470,6 +1608,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'クリップボードから読み取る：',
   },
   'settings.clipboard_read_info': {
+    it: 'Richiesto per:\n- Funzione Incolla',
     en: 'Required for:\n- Paste function',
     de: 'Benötigt für:\n- Einfügefunktion',
     fr: 'Requis pour:\n– La fonction Coller',
@@ -1481,6 +1620,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '必要な権限：\n- 貼り付け機能',
   },
   'settings.history_label': {
+    it: 'Cronologia:',
     en: 'History:',
     de: 'Chronik:',
     fr: 'Historique:',
@@ -1492,6 +1632,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '履歴',
   },
   'settings.history_info': {
+    it: 'Richiesto per:\n- Pannello cronologia',
     en: 'Required for:\n- History panel',
     de: 'Benötigt für:\n- Chronik-Panel',
     fr: 'Requis pour:\n– Le panneau d’historique',
@@ -1503,6 +1644,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '履歴にアクセスする',
   },
   'settings.perm.downloads_label': {
+    it: 'Download:',
     en: 'Downloads:',
     de: 'Downloads:',
     hu: 'Hozzáférés a letöltésekhez:',
@@ -1514,6 +1656,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'ダウンロード',
   },
   'settings.perm.downloads_info': {
+    it: 'Richiesto per:\n- Esportazione automatica istantanee',
     en: 'Required for:\n- Snapshot auto export',
     de: 'Benötigt für:\n- Automatischen Export von Schnappschüssen',
     fr: 'Requis pour:\n– L’export automatique des instantanés',
@@ -1527,6 +1670,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
 
   // - Context menu
   'settings.ctx_menu_title': {
+    it: 'Menu contestuale',
     en: 'Context menu',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
@@ -1538,6 +1682,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'コンテキストメニュー',
   },
   'settings.ctx_menu_native': {
+    it: 'Usa menu contestuale nativo',
     en: 'Use native context menu',
     de: 'Natives Kontextmenü verwenden',
     fr: 'Utiliser le menu contextuel natif',
@@ -1549,6 +1694,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'ネイティブメニュー',
   },
   'settings.ctx_menu_render_inact': {
+    it: 'Mostra opzioni non attive',
     en: 'Render inactive options',
     de: 'Inaktive Optionen anzeigen',
     fr: 'Afficher les options inactives',
@@ -1560,6 +1706,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '非アクティブなタブをレンダリング',
   },
   'settings.ctx_menu_render_icons': {
+    it: 'Mostra icone',
     en: 'Render icons',
     de: 'Symbole anzeigen',
     fr: 'Afficher les icones',
@@ -1571,6 +1718,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'アイコンをレンダリング',
   },
   'settings.ctx_menu_ignore_ctr': {
+    it: 'Ignora contenitori',
     en: 'Ignore containers',
     de: 'Umgebungen ignorieren',
     fr: 'Ignorer les contenenurs',
@@ -1581,6 +1729,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'コンテナを無視',
   },
   'settings.ctx_menu_ignore_ctr_or': {
+    it: 'es. /^tmp.+/, Google, Facebook',
     en: 'e.g. /^tmp.+/, Google, Facebook',
     de: 'z. B. /^tmp.+/, Google, Facebook',
     fr: 'ex: /^tmp.+/, Google, Facebook',
@@ -1591,6 +1740,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: '/^tmp.+/, Google, Facebook',
   },
   'settings.ctx_menu_ignore_ctr_note': {
+    it: 'Elenco separato da virgole di nomi contenitori o /regexp/',
     en: 'Use comma-separated list of container names or /regexp/',
     de: 'Komma-getrennte Liste von Umgebungsnamen oder /RegExp/ verwenden',
     fr: 'Liste de noms de conteneur ou /RegExp/ séparés par des virgules',
@@ -1602,6 +1752,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     ja: 'コンマ区切りのコンテナ名または /regexp/ を使用します',
   },
   'settings.ctx_menu_editor': {
+    it: 'Modifica menu contestuale',
     en: 'Edit context menu',
     fr: 'Modifier le menu contextuel',
     de: 'Kontextmenü bearbeiten',
@@ -1615,18 +1766,21 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
 
   // - Address bar (Omnibox)
   'settings.omnibox_title': {
+    it: 'Barra degli indirizzi (Omnibox)',
     en: 'Address bar (Omnibox)',
     de: 'Adressleiste (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
     ru: 'Адресная строка (Omnibox)',
   },
   'settings.omnibox_desc': {
+    it: 'Usa la barra degli indirizzi (Omnibox) per eseguire rapidamente i comandi di Sidebery.',
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
     de: `Nutzen Sie die Adressleiste (Omnibox), um einige Sidebery-Befehle schnell auszuführen.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
     ru: 'Используйте адресную строку (она же Omniox) для быстрого вызова некоторых команд Sidebery.',
   },
   'settings.omnibox_note': {
+    it: `Per iniziare, posizionati sulla barra degli indirizzi (Ctrl+L o Cmd+L), digita "=" seguito da uno spazio, quindi digita il nome del contenitore, pannello o gruppo desiderato. Seleziona il comando desiderato dall\'elenco oppure premi Invio per eseguire il primo.`,
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
 
 You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
@@ -1640,36 +1794,42 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
 Вы также можете задать префиксы для каждого типа команд для более быстрой навигации. Начало вашего запроса (после "=" и пробела) с любых символов из настроенного префикса даст командам этого типа более высокий приоритет.`,
   },
   'settings.omnibox_cmds': {
+    it: 'Comandi disponibili:',
     en: 'Available commands:',
     de: 'Verfügbare Befehle:',
     fr: 'Commandes disponibles:',
     ru: 'Доступные команды:',
   },
   'settings.omni_reopen_in_ctr': {
+    it: 'Riapri scheda attiva nel contenitore...',
     en: 'Reopen an active tab in container...',
     de: 'Aktiven Tab in Umgebung neu öffnen...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
     ru: 'Переоткрыть активную вкладку в контейнере...',
   },
   'settings.omni_switch_to_panel': {
+    it: 'Passa al pannello...',
     en: 'Switch to panel...',
     de: 'Zu Panel wechseln...',
     fr: 'Basculer vers le panneau…',
     ru: 'Переключиться на панель...',
   },
   'settings.omni_move_to_panel': {
+    it: 'Sposta scheda attiva nel pannello...',
     en: 'Move an active tab to panel...',
     de: 'Aktiven Tab in Panel verschieben...',
     fr: 'Déplacer un onglet actif vers le panneau…',
     ru: 'Переместить активную вкладку на панель...',
   },
   'settings.omni_move_to_group': {
+    it: 'Sposta scheda attiva nel gruppo...',
     en: 'Move an active tab to group...',
     de: 'Aktiven Tab in Gruppe verschieben...',
     fr: 'Déplacer un onglet actif vers le groupe…',
     ru: 'Переместить активную вкладку в группу...',
   },
   'settings.omni_cmd_prefix': {
+    it: 'Prefisso:',
     en: 'Prefix:',
     de: 'Präfix:',
     fr: 'Préfixe:',
@@ -1679,6 +1839,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // - Navigation bar
   // TODO: rename 'nav' to 'navbar'
   'settings.nav_title': {
+    it: 'Barra di navigazione',
     en: 'Navigation bar',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
@@ -1690,6 +1851,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ナビゲーションバー',
   },
   'settings.nav_bar_layout': {
+    it: 'Disposizione',
     en: 'Layout',
     de: 'Anordnung',
     hu: 'Elrendezés',
@@ -1701,6 +1863,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'レイアウト',
   },
   'settings.nav_bar_layout_horizontal': {
+    it: 'orizzontale',
     en: 'horizontal',
     de: 'Horizontal',
     fr: 'horizontale',
@@ -1711,6 +1874,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '水平',
   },
   'settings.nav_bar_layout_vertical': {
+    it: 'verticale',
     en: 'vertical',
     de: 'Vertikal',
     fr: 'verticale',
@@ -1721,6 +1885,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '垂直',
   },
   'settings.nav_bar_layout_hidden': {
+    it: 'nascosta',
     en: 'hidden',
     de: 'Versteckt',
     fr: 'cachée',
@@ -1732,6 +1897,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '非表示',
   },
   'settings.nav_bar_inline': {
+    it: 'Mostra la barra di navigazione su una riga',
     en: 'Show navigation bar in one line',
     de: 'Navigationsleiste in einer Zeile anzeigen',
     fr: 'Afficher la barre de navigation sur une ligne',
@@ -1743,6 +1909,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ナビゲーションバーを一行で表示',
   },
   'settings.nav_bar_side': {
+    it: 'Lato',
     en: 'Side',
     de: 'Seite',
     fr: 'Côté',
@@ -1754,6 +1921,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'サイド',
   },
   'settings.nav_bar_side_left': {
+    it: 'sinistra',
     en: 'left',
     de: 'Links',
     fr: 'gauche',
@@ -1765,6 +1933,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '左',
   },
   'settings.nav_bar_side_right': {
+    it: 'destra',
     en: 'right',
     de: 'Rechts',
     fr: 'droite',
@@ -1776,6 +1945,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '右',
   },
   'settings.nav_btn_count': {
+    it: 'Mostra conteggio schede/segnalibri',
     en: 'Show count of tabs/bookmarks',
     de: 'Anzahl der Tabs/Lesezeichen anzeigen',
     fr: 'Afficher le nombre d’onglets ou de marque-pages',
@@ -1787,6 +1957,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブ/ブックマークの数を表示',
   },
   'settings.hide_empty_panels': {
+    it: 'Nascondi pannelli schede vuoti',
     en: 'Hide empty tabs panels',
     de: 'Leere Tab-Panels ausblenden',
     fr: 'Cacher les panneaux d’onglets vides',
@@ -1798,6 +1969,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '空のパネルを非表示',
   },
   'settings.hide_discarded_tab_panels': {
+    it: 'Nascondi pannello schede se tutte le schede sono scaricate',
     en: 'Hide tab panel if all its tabs unloaded',
     de: 'Tab-Panel ausblenden, wenn alle seine Tabs entladen sind',
     fr: 'Cacher les panneaux d’onglets dont tous les onglets sont déchargés',
@@ -1809,6 +1981,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '破棄されたタブのパネルを非表示',
   },
   'settings.nav_switch_panels_delay': {
+    it: 'Ritardo min. cambio pannelli (ms)',
     en: 'Min delay between panels switching (ms)',
     de: 'Mindestverzögerung beim Wechsel zwischen Panels (ms)',
     fr: 'Durée minimum entre chaque basculement de panneau (ms)',
@@ -1820,6 +1993,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'パネルの切り替え遅延（ミリ秒）',
   },
   'settings.bottom_bar': {
+    it: 'Barra inferiore del pannello schede',
     en: 'Bottom bar of tabs panel',
     de: 'Untere Leiste der Tab-Panels',
     fr: 'Barre du bas du panneau d’onglets',
@@ -1831,6 +2005,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブパネルの下部バー',
   },
   'settings.sub_panel.recently_closed_tabs': {
+    it: 'Sotto-pannello schede chiuse di recente',
     en: 'Recently closed tabs sub panel',
     de: '"Zuletzt geschlossene Tabs"-Unter-Panel',
     fr: 'Sous-panneau d’onglets récemment fermés',
@@ -1842,6 +2017,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '最近閉じたタブのサブパネル',
   },
   'settings.sub_panel.bookmarks': {
+    it: 'Sotto-pannello segnalibri',
     en: 'Bookmarks sub panel',
     de: '"Lesezeichen"-Unter-Panel',
     fr: 'Sous-panneau de marque-pages',
@@ -1853,6 +2029,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ブックマークのサブパネル',
   },
   'settings.sub_panel.history': {
+    it: 'Sotto-pannello cronologia',
     en: 'History sub panel',
     de: '"Chronik"-Unter-Panel',
     fr: 'Sous-panneau d’historique',
@@ -1864,6 +2041,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '履歴のサブパネル',
   },
   'settings.sub_panel.sync': {
+    it: 'Sotto-pannello sincronizzazione',
     en: 'Sync sub-panel',
     de: 'Synchronisierungs-Unter-Panel',
     fr: 'Sous-panneau Synchronisation',
@@ -1874,6 +2052,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '同期サブパネル',
   },
   'settings.nav_bar_enabled': {
+    it: 'Elementi abilitati',
     en: 'Enabled elements',
     de: 'Aktivierte Elemente',
     fr: 'Éléments activés',
@@ -1885,6 +2064,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '有効な要素',
   },
   'settings.nav_bar_enabled_inline_note': {
+    it: 'Nota: la modalità "Su una riga" è attiva, quindi gli elementi saranno divisi in due gruppi: pannelli (a sinistra) e pulsanti (a destra)',
     en: 'Note: "In one line" mode is enabled, so the navigation bar elements will be separated into two groups: panels (on the left) and buttons (on the right)',
     de: 'Hinweis: Der Modus „In einer Zeile“ ist aktiviert, sodass die Elemente der Navigationsleiste in zwei Gruppen unterteilt werden: Panels (links) und Schaltflächen (rechts)',
     fr: 'Remarque : le mode « Sur une seule ligne » est activé, les éléments de la barre de navigation seront donc séparés en deux groupes : les panneaux (à gauche) et les boutons (à droite)',
@@ -1896,6 +2076,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '注：「1行表示」モードが有効なため、ナビゲーションバーの要素は2つのグループに分けられます：パネル（左側）とボタン（右側）',
   },
   'settings.nav_bar.no_elements': {
+    it: 'Nessun elemento',
     en: 'No elements',
     de: 'Keine Elemente',
     fr: 'Aucun élément',
@@ -1907,6 +2088,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '要素なし',
   },
   'settings.nav_bar.inact_note': {
+    it: '(Inattivo)',
     en: '(Inactive)',
     de: '(Inaktiv)',
     fr: '(Inactif)',
@@ -1918,6 +2100,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '（非アクティブ）',
   },
   'settings.nav_bar.available_elements': {
+    it: 'Elementi disponibili',
     en: 'Available elements',
     de: 'Verfügbare Elemente',
     fr: 'Éléments disponibles',
@@ -1929,6 +2112,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '利用可能な要素',
   },
   'settings.nav_bar_btn_tabs_panel': {
+    it: 'Pannello schede',
     en: 'Tabs panel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
@@ -1940,6 +2124,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブパネル',
   },
   'settings.nav_bar_btn_bookmarks_panel': {
+    it: 'Pannello segnalibri',
     en: 'Bookmarks panel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
@@ -1951,6 +2136,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ブックマークパネル',
   },
   'settings.nav_bar_btn_sp': {
+    it: 'Spazio',
     en: 'Space',
     de: 'Leerraum',
     fr: 'Espace',
@@ -1962,6 +2148,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'スペース',
   },
   'settings.nav_bar_btn_sd': {
+    it: 'Separatore',
     en: 'Delimiter',
     de: 'Trennlinie',
     fr: 'Délimiteur',
@@ -1973,6 +2160,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '区切り',
   },
   'settings.nav_bar_btn_hdn': {
+    it: 'Pannelli nascosti',
     en: 'Hidden panels',
     de: 'Versteckte Panels',
     fr: 'Panneaux cachés',
@@ -1984,6 +2172,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '非表示パネル',
   },
   'settings.nav_bar_btn_history': {
+    it: 'Pannello cronologia',
     en: 'History panel',
     de: 'Chronik-Panel',
     fr: 'Panneau d’historique',
@@ -1995,6 +2184,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '履歴パネル',
   },
   'settings.nav_bar_btn_sync': {
+    it: 'Pannello sincronizzazione',
     en: 'Sync panel',
     de: 'Synchronisations-Panel',
     fr: 'Panneau de synchronisation',
@@ -2005,6 +2195,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     js: '同期パネル',
   },
   'settings.nav_bar_btn_search': {
+    it: 'Cerca',
     en: 'Search',
     de: 'Suche',
     fr: 'Recherche',
@@ -2016,6 +2207,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '検索',
   },
   'settings.nav_bar_btn_add_tp': {
+    it: 'Crea pannello schede',
     en: 'Create tabs panel',
     de: 'Tab-Panel erstellen',
     fr: 'Créer un panneau d’onglets',
@@ -2027,6 +2219,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブパネルを作成',
   },
   'settings.nav_bar_btn_create_snapshot': {
+    it: 'Crea istantanea',
     en: 'Create snapshot',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
@@ -2038,6 +2231,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'スナップショットを作成',
   },
   'settings.nav_bar_btn_collapse': {
+    it: 'Comprimi tutto',
     en: 'Collapse all',
     de: 'Alle einklappen',
     fr: 'Tout replier',
@@ -2049,6 +2243,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'すべて折りたたむ',
   },
   'settings.nav_bar_btn_expand': {
+    it: 'Espandi tutto',
     en: 'Expand all',
     de: 'Alle ausklappen',
     fr: 'Tout déplier',
@@ -2060,6 +2255,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'すべて展開する',
   },
   'settings.nav_bar_btn_remute_audio_tabs': {
+    it: 'Silenzia/Riattiva schede con audio',
     en: 'Mute/Unmute audible tabs',
     de: 'Stumm-/Lautschalten hörbarer Tabs',
     fr: 'Désactiver/réactiver le son des onglets audibles',
@@ -2071,6 +2267,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '音声をミュート/ミュート解除',
   },
   'settings.nav_bar_btn_settings': {
+    it: 'Impostazioni',
     en: 'Settings',
     de: 'Einstellungen',
     fr: 'Paramètres',
@@ -2082,6 +2279,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '設定',
   },
   'settings.nav_rm_tabs_panel_confirm': {
+    it: name => `Eliminare il pannello "${name}"?\nTutte le schede di questo pannello verranno assegnate al pannello schede più vicino.`,
     en: name =>
       `Delete "${name}" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.`,
     de: name =>
@@ -2100,6 +2298,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
       `「${name}」パネルを削除しますか？\nこのパネルのすべてのタブは、最も近いタブパネルに割り当てられます。`,
   },
   'settings.nav_rm_bookmarks_panel_confirm': {
+    it: name => `Eliminare il pannello "${name}"?`,
     en: name => `Delete "${name}" panel?`,
     de: name => `Panel "${name}" löschen?`,
     fr: name => `Supprimer le panneau “${name}”?`,
@@ -2113,6 +2312,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
 
   // - Group page
   'settings.group_title': {
+    it: 'Pagina del gruppo',
     en: 'Group page',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
@@ -2124,6 +2324,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'グループページ',
   },
   'settings.group_layout': {
+    it: 'Disposizione delle schede',
     en: 'Layout of tabs',
     de: 'Tab-Layout',
     fr: 'Disposition des onglets',
@@ -2135,6 +2336,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブのレイアウト',
   },
   'settings.group_layout_grid': {
+    it: 'griglia',
     en: 'grid',
     de: 'Gitter',
     fr: 'grille',
@@ -2146,6 +2348,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'グリッド',
   },
   'settings.group_layout_list': {
+    it: 'elenco',
     en: 'list',
     de: 'Liste',
     fr: 'liste',
@@ -2158,6 +2361,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
 
   // - Containers
   'settings.containers_title': {
+    it: 'Contenitori',
     en: 'Containers',
     de: 'Umgebungen',
     fr: 'Conteneurs',
@@ -2168,6 +2372,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'コンテナ',
   },
   'settings.containers_sort_by_name': {
+    it: 'Ordina contenitori per nome',
     en: 'Sort containers by name',
     de: 'Umgebungen nach Namen sortieren',
     fr: 'Trier les conteneurs par nom',
@@ -2179,6 +2384,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '名前でコンテナをソート',
   },
   'settings.container_remove_confirm': {
+    it: name => `Sei sicuro di voler eliminare il contenitore "${name}"?`,
     en: name => `Are you sure you want to delete "${name}" container?`,
     de: name => `Möchten Sie die Umgebung "${name}" wirklich löschen?`,
     fr: name => `Voulez-vous vraiment supprimer le conteneur “${name}”?`,
@@ -2190,6 +2396,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: name => `「${name}」コンテナを削除しますか？`,
   },
   'settings.containers_create_btn': {
+    it: 'Crea contenitore',
     en: 'Create container',
     de: 'Umgebung erstellen',
     fr: 'Créer le conteneur',
@@ -2203,6 +2410,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
 
   // - Drag and drop
   'settings.dnd_title': {
+    it: 'Trascina e rilascia',
     en: 'Drag and Drop',
     de: 'Ziehen und Ablegen',
     fr: 'Glisser-déposer',
@@ -2213,6 +2421,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ドラッグアンドドロップ',
   },
   'settings.dnd_tab_act': {
+    it: 'Attiva scheda al passaggio del mouse',
     en: 'Activate tab on hover',
     de: 'Tabs beim Darüberfahren mit der Maus aktivieren',
     fr: 'Activer l’onglet au survol',
@@ -2224,6 +2433,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ホバー時にタブをアクティブ化',
   },
   'settings.dnd_tab_act_delay': {
+    it: 'Con ritardo (ms)',
     en: 'With delay (ms)',
     de: 'Mit Verzögerung (ms)',
     fr: 'Avec un délai (ms)',
@@ -2235,6 +2445,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '遅延あり（ミリ秒）',
   },
   'settings.dnd_mod': {
+    it: 'Con tasto premuto',
     en: 'With pressed key',
     de: 'Mit Tastendruck',
     fr: 'En appuyant sur la touche',
@@ -2246,6 +2457,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'キーを押した状態で',
   },
   'settings.dnd_mod_alt': {
+    it: 'alt',
     ru: 'alt',
     en: 'alt',
     de: 'Alt',
@@ -2255,6 +2467,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Alt',
   },
   'settings.dnd_mod_shift': {
+    it: 'shift',
     ru: 'shift',
     en: 'shift',
     de: 'Umschalttaste',
@@ -2264,6 +2477,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Shift',
   },
   'settings.dnd_mod_ctrl': {
+    it: 'ctrl',
     ru: 'ctrl',
     en: 'ctrl',
     de: 'Strg',
@@ -2273,6 +2487,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     zh: 'Ctrl',
   },
   'settings.dnd_mod_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Ohne',
     fr: 'aucune',
@@ -2284,6 +2499,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'なし',
   },
   'settings.dnd_exp': {
+    it: 'Espandi/Comprimi il ramo passando su',
     en: 'Expand/Fold the branch on hovering over the',
     de: 'Zweig ein-/ausklappen beim Darüberfahren mit der Maus über',
     fr: 'Déplier/replier la branche en survolant',
@@ -2295,6 +2511,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ホバー時にブランチを展開/折りたたむ',
   },
   'settings.dnd_exp_pointer': {
+    it: 'freccia del puntatore',
     en: "pointer's triangle",
     de: 'Dreieck des Indikators',
     fr: 'l’indicateur triangulaire',
@@ -2306,6 +2523,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ポインタの三角形',
   },
   'settings.dnd_exp_hover': {
+    it: 'scheda/segnalibro',
     en: 'tab/bookmark',
     de: 'Tab/Lesezeichen',
     fr: 'l’onglet/le marque-page',
@@ -2317,6 +2535,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブ/ブックマーク',
   },
   'settings.dnd_exp_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -2328,6 +2547,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'なし',
   },
   'settings.dnd_exp_delay': {
+    it: 'Con ritardo (ms)',
     en: 'With delay (ms)',
     de: 'Mit Verzögerung (ms)',
     fr: 'Avec un délai (ms)',
@@ -2339,6 +2559,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '遅延あり（ミリ秒）',
   },
   'settings.dnd_outside': {
+    it: 'Azione al rilascio fuori dalla barra laterale',
     en: 'Action on drag-and-drop to the outside of sidebar',
     de: 'Aktion beim Ziehen und Ablegen aus der Seitenleiste heraus',
     fr: 'Action lors d’un glisser-déposer hors de la barre latérale',
@@ -2350,6 +2571,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'サイドバーの外部にドラッグアンドドロップした場合のアクション',
   },
   'settings.dnd_outside_win': {
+    it: 'Apri in una nuova finestra',
     en: 'Open in new window',
     de: 'In neuem Fenster öffnen',
     fr: 'Ouvrir dans une nouvelle fenêtre',
@@ -2361,6 +2583,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '新しいウィンドウで開く',
   },
   'settings.dnd_outside_data': {
+    it: 'Passa i dati trascinati alla destinazione',
     en: 'Pass dragged data to the target',
     de: 'Daten auf Ziel übertragen',
     fr: 'Passer les données à la cible',
@@ -2372,6 +2595,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ドラッグされたデータをターゲットに渡す',
   },
   'settings.settings.dnd_outside_note': {
+    it: 'Premi il tasto "Alt" prima di trascinare per invertire questa opzione',
     en: 'Press the "Alt" key before dragging to invert this option',
     de: '"Alt"-Taste vor dem Ziehen gedrückt halten, um diese Option zu invertieren',
     fr: 'Appuyer sur “Alt” avant de démarrer le glisser-déposer pour inverser cet action',
@@ -2383,6 +2607,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ドラッグする前に「Alt」キーを押すと、このオプションを反転します',
   },
   'settings.dnd_act_tab_from_link': {
+    it: 'Attiva la scheda creata da un link trascinato',
     en: 'Activate tab created from a dragged link',
     de: 'Tab aktivieren, der aus einem abgelegten Link erstellt wurde',
     fr: 'Activer l’onglet créé depuis un lien déposé',
@@ -2394,6 +2619,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ドラッグされたリンクから作成されたタブをアクティブ化',
   },
   'settings.dnd_act_search_tab': {
+    it: 'Attiva la scheda creata per cercare il testo trascinato',
     en: 'Activate tab created to search for dragged text',
     de: 'Tab aktivieren, der für die Suche nach abgelegtem Text erstellt wurde',
     fr: 'Activer l’onglet créé pour rechercher un texte déposé',
@@ -2405,6 +2631,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ドラッグされたテキストを検索するために作成されたタブをアクティブ化',
   },
   'settings.dnd_move_tabs': {
+    it: 'Chiudi le schede dopo averle rilasciate nei segnalibri',
     en: 'Close tabs after dropping them to bookmarks',
     de: 'Tabs schließen, nachdem sie auf Lesezeichen abgelegt wurden',
     fr: 'Fermer les onglets après les avoir déposés dans les marque-pages',
@@ -2416,6 +2643,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ブックマークにドロップした後タブを閉じる',
   },
   'settings.dnd_move_tabs_note': {
+    it: 'Nota: Ctrl+Rilascio manterrà le schede',
     en: 'Note: Ctrl+Drop will preserve the tabs',
     de: '"Strg"-Taste vor dem Ablegen gedrückt halten, um die Tabs zu erhalten',
     fr: 'Note: Ctrl+Déposer empêche la fermeture des onglets',
@@ -2427,6 +2655,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '注：Ctrl+ドロップでタブを保持します',
   },
   'settings.dnd_move_bookmarks': {
+    it: 'Elimina i segnalibri dopo averli rilasciati nelle schede',
     en: 'Delete bookmarks after dropping them to tabs',
     de: 'Lesezeichen löschen, nachdem sie auf Tabs abgelegt wurden',
     fr: 'Supprimer les marque-pages après les avoir déposés dans les onglets',
@@ -2438,6 +2667,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ブックマークをタブにドロップした後にブックマークを削除',
   },
   'settings.dnd_move_bookmarks_note': {
+    it: 'Nota: Ctrl+Rilascio manterrà i segnalibri',
     en: 'Note: Ctrl+Drop will preserve the bookmarks',
     de: '"Strg"-Taste vor dem Ablegen gedrückt halten, um die Lesezeichen zu erhalten',
     fr: 'Note: Ctrl+Déposer empêche la suppression des marque-pages',
@@ -2449,6 +2679,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '注：ブックマークの移動は、ドラッグアンドドロップが有効になっている場合にのみ機能します。',
   },
   'settings.move_tab_to_panel': {
+    it: 'Posizione al rilascio di schede in un pannello',
     en: 'Position when dropping tabs to a panel',
     de: 'Position beim Ablegen von Tabs auf einem Panel',
     fr: 'Position lors du dépôt des onglets sur un panneau',
@@ -2460,6 +2691,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'タブをパネルにドロップしたときの位置',
   },
   'settings.move_tab_to_panel_start': {
+    it: 'Inizio pannello',
     en: 'Panel start',
     de: 'Panel-Anfang',
     fr: 'Début du panneau',
@@ -2471,6 +2703,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'パネルの先頭',
   },
   'settings.move_tab_to_panel_end': {
+    it: 'Fine pannello',
     en: 'Panel end',
     de: 'Panel-Ende',
     fr: 'Fin du panneau',
@@ -2484,6 +2717,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
 
   // - Search;
   'settings.search_title': {
+    it: 'Ricerca',
     en: 'Search',
     de: 'Suche',
     fr: 'Recherche',
@@ -2495,6 +2729,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '検索',
   },
   'settings.search_bar_mode': {
+    it: 'Modalità barra di ricerca',
     en: 'Search bar mode',
     de: 'Modus der Suchleiste',
     fr: 'Mode de la barre de recherche',
@@ -2506,6 +2741,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '検索バーモード',
   },
   'settings.search_bar_mode_static': {
+    it: 'sempre visibile',
     en: 'always shown',
     de: 'Immer anzeigen',
     fr: 'toujours affichée',
@@ -2517,6 +2753,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '常に表示',
   },
   'settings.search_bar_mode_dynamic': {
+    it: 'dinamica',
     en: 'dynamic',
     de: 'Dynamisch',
     fr: 'dynamique',
@@ -2528,6 +2765,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ダイナミック',
   },
   'settings.search_bar_mode_none': {
+    it: 'inattiva',
     en: 'inactive',
     de: 'Inaktiv',
     fr: 'inactive',
@@ -2539,6 +2777,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '非アクティブ',
   },
   'settings.search_panel_switch': {
+    it: 'Mantieni ricerca al cambio di pannello',
     en: 'Keep searching when switching panels',
     de: 'Suche beim Wechseln der Panels beibehalten',
     fr: 'Continuer de chercher après un basculement de panneau',
@@ -2550,6 +2789,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'パネルを切り替えるときに検索を維持する',
   },
   'settings.search_panel_switch_any': {
+    it: 'qualsiasi pannello',
     en: 'any panel',
     de: 'Bei allen Panels',
     fr: 'n’importe quel panneau',
@@ -2560,6 +2800,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'いずれかのパネル',
   },
   'settings.search_panel_switch_same_type': {
+    it: 'stesso tipo di pannello',
     en: 'same panel type',
     de: 'Bei Panels gleichen Typs',
     fr: 'panneaux du même type',
@@ -2571,6 +2812,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: '同じパネルタイプ',
   },
   'settings.search_panel_switch_none': {
+    it: 'disattivato',
     en: 'off',
     de: 'Nie',
     fr: 'off',
@@ -2582,18 +2824,21 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'オフ',
   },
   'settings.search_tab_switch': {
+    it: 'Mantieni ricerca dopo il cambio di scheda',
     en: 'Keep searching after switching tabs',
     de: 'Suche beim Wechseln der Tabs beibehalten',
     fr: 'Continuer à chercher après avoir changé d’onglet',
     ru: 'Продолжать поиск после переключения вкладок',
   },
   'settings.search_menu_trigger': {
+    it: 'Mantieni ricerca dopo aver usato il menu contestuale',
     en: 'Keep searching after triggering the context menu option',
     de: 'Suche nach Auslösen einer Kontextmenü-Option beibehalten',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
     ru: 'Продолжать поиск после выбора пункта контекстного меню',
   },
   'settings.search.shortcuts': {
+    it: 'Scorciatoie',
     en: 'Shortcuts',
     de: 'Tastenkombinationen',
     fr: 'Raccourcis',
@@ -2605,6 +2850,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
     ja: 'ショートカット',
   },
   'settings.search.shortcuts.note': {
+    it: `Modificatori disponibili: ctrl, alt, cmd\nEsempi: "*", "ctrl+$", "ctrl+alt+g"`,
     en: `Available modifiers: ctrl, alt, cmd
 Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     de: `Verfügbare Modifikatoren: ctrl, alt, cmd
@@ -2625,6 +2871,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 例：「*」、「ctrl+$」、「ctrl+alt+g」`,
   },
   'settings.search.bookmarks_shortcut': {
+    it: 'Passa ai segnalibri',
     en: 'Switch to bookmarks',
     de: 'Zu Lesezeichen wechseln',
     fr: 'Basculer vers les marque-pages',
@@ -2636,6 +2883,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'ブックマークに切り替える',
   },
   'settings.search.history_shortcut': {
+    it: 'Passa alla cronologia',
     en: 'Switch to history',
     de: 'Zur Chronik wechseln',
     fr: 'Basculer vers l’historique',
@@ -2649,6 +2897,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 
   // - Tabs
   'settings.tabs_title': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     hu: 'Lapok',
@@ -2660,6 +2909,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'タブ',
   },
   'settings.warn_on_multi_tab_close': {
+    it: 'Avvisa quando si tenta di chiudere più schede',
     en: 'Warn on trying to close multiple tabs',
     de: 'Beim Schließen mehrerer Tabs warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
@@ -2671,6 +2921,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '複数のタブを閉じようとした場合に警告する',
   },
   'settings.warn_on_multi_tab_close_any': {
+    it: 'qualsiasi',
     en: 'any',
     de: 'Alle',
     fr: 'tous',
@@ -2681,6 +2932,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'いずれか',
   },
   'settings.warn_on_multi_tab_close_collapsed': {
+    it: 'compresse',
     en: 'collapsed',
     de: 'Eingeklappte',
     fr: 'repliés',
@@ -2692,6 +2944,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '折りたたまれたタブ',
   },
   'settings.warn_on_multi_tab_close_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Nie',
     fr: 'aucun',
@@ -2702,6 +2955,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'なし',
   },
   'settings.tabs_rm_undo_note': {
+    it: 'Mostra notifica di annullamento alla chiusura di più schede',
     en: 'Show undo notification on closing multiple tabs',
     de: '"Rückgängig"-Meldung nach dem Schließen mehrerer Tabs anzeigen',
     fr: 'Afficher une notification pour annuler la fermeture de plusieurs onglets',
@@ -2713,6 +2967,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '複数のタブを閉じた後、元に戻す通知を表示する',
   },
   'settings.activate_last_tab_on_panel_switching': {
+    it: 'Attiva l\'ultima scheda attiva al cambio pannello',
     en: 'Activate last active tab on panel switching',
     de: 'Beim Wechseln des Panels den zuletzt aktiven Tab aktivieren',
     fr: 'Activer le dernier onglet lors du basculement vers un panneau',
@@ -2724,6 +2979,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'パネルを切り替えるときに最後にアクティブだったタブをアクティブにする',
   },
   'settings.activate_last_tab_on_panel_switching_loaded_only': {
+    it: 'Eccetto schede scaricate',
     en: 'Except unloaded tabs',
     de: 'Außer entladenen Tabs',
     fr: 'Sauf les onglets déchargés',
@@ -2735,6 +2991,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'アンロードされたタブを除く',
   },
   'settings.switch_panel_after_switching_tab': {
+    it: 'Cambia pannello automaticamente all\'attivazione di una scheda di un altro pannello',
     en: 'Automatically switch panel on activating tab of another panel',
     de: 'Panel bei Aktivierung eines Tabs eines anderen Panels automatisch wechseln',
     fr: 'Basculer automatiquement de panneau lors de l’activation de l’onglet d’un autre panneau',
@@ -2746,6 +3003,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '他のパネルのタブをアクティブにすると自動的にパネルを切り替える',
   },
   'settings.switch_panel_after_switching_tab_always': {
+    it: 'sempre',
     en: 'always',
     de: 'Immer',
     fr: 'tout le temps',
@@ -2757,6 +3015,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '常に',
   },
   'settings.switch_panel_after_switching_tab_mouseleave': {
+    it: 'se il mouse esce dalla barra laterale',
     en: 'if the mouse left the sidebar',
     de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     fr: 'si la souris sort de la barre latérale',
@@ -2768,6 +3027,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'マウスがサイドバーから離れた場合',
   },
   'settings.switch_panel_after_switching_tab_no': {
+    it: 'no',
     en: 'no',
     de: 'Nie',
     fr: 'jamais',
@@ -2779,6 +3039,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'しない',
   },
   'settings.scroll_panel_after_switching_tab': {
+    it: 'Scorri automaticamente il pannello alla scheda attivata',
     en: 'Automatically scroll panel to activated tab',
     de: 'Panel automatisch zum aktivierten Tab scrollen',
     pl: 'Automatycznie przewiń panel do aktywowanej karty',
@@ -2787,6 +3048,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '自動捲動面板到啟動的分頁',
   },
   'settings.scroll_panel_after_switching_tab_always': {
+    it: 'sempre',
     en: 'always',
     de: 'Immer',
     hu: 'mindig',
@@ -2797,6 +3059,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '常に',
   },
   'settings.scroll_panel_after_switching_tab_mouseleave': {
+    it: 'se il mouse esce dalla barra laterale',
     en: 'if the mouse left the sidebar',
     de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     hu: 'ha az egér elhagyja az oldalsávot',
@@ -2807,6 +3070,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'マウスがサイドバーから離れた場合',
   },
   'settings.scroll_panel_after_switching_tab_no': {
+    it: 'no',
     en: 'no',
     de: 'Nie',
     hu: 'soha',
@@ -2817,6 +3081,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'しない',
   },
   'settings.tab_rm_btn': {
+    it: 'Mostra pulsante di chiusura',
     en: 'Show close button',
     de: '"Schließen"-Schaltfläche anzeigen',
     fr: 'Afficher le bouton de fermeture',
@@ -2828,6 +3093,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '閉じるボタンを表示する',
   },
   'settings.tab_rm_btn_always': {
+    it: 'sempre',
     en: 'always',
     de: 'Immer',
     fr: 'tout le temps',
@@ -2839,6 +3105,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '常に',
   },
   'settings.tab_rm_btn_hover': {
+    it: 'al passaggio del mouse',
     en: 'on mouse hover',
     de: 'Beim Darüberfahren mit der Maus',
     fr: 'lors du survol de la souris',
@@ -2850,6 +3117,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'マウスホバー時',
   },
   'settings.tab_rm_btn_none': {
+    it: 'no',
     en: 'no',
     de: 'Nie',
     fr: 'jamais',
@@ -2861,6 +3129,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '表示しない',
   },
   'settings.activate_after_closing': {
+    it: 'Dopo aver chiuso la scheda attiva, attiva',
     en: 'After closing current tab activate',
     de: 'Nach Schließen des aktuellen Tabs, aktiviere',
     fr: 'Après la fermeture de l’onglet actif, activer',
@@ -2872,6 +3141,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '現在のタブを閉じた後、アクティブにする',
   },
   'settings.activate_after_closing_prev_act': {
+    it: 'la scheda precedentemente attiva',
     en: 'previously active tab',
     de: 'Den zuletzt aktiven Tab',
     fr: 'l’onglet précédemment actif',
@@ -2883,6 +3153,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '以前にアクティブだったタブ',
   },
   'settings.activate_after_closing_next': {
+    it: 'la scheda successiva',
     en: 'next tab',
     de: 'Den nächsten Tab',
     fr: 'l’onglet suivant',
@@ -2894,6 +3165,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '次のタブ',
   },
   'settings.activate_after_closing_prev': {
+    it: 'la scheda precedente',
     en: 'previous tab',
     de: 'Den vorherigen Tab',
     fr: 'l’onglet précédent',
@@ -2905,6 +3177,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '前のタブ',
   },
   'settings.activate_after_closing_none': {
+    it: 'nessuna',
     en: 'off',
     de: 'Nichts',
     fr: 'rien',
@@ -2916,6 +3189,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'オフ',
   },
   'settings.activate_after_closing_stay_in_panel': {
+    it: 'Rimani nel pannello fino all\'ultima scheda',
     en: 'Stay in panel to the last tab',
     de: 'Bis zum letzten Tab im Panel bleiben',
     fr: 'Rester dans le panneau jusqu’au dernier onglet',
@@ -2927,6 +3201,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '最後のタブまでパネルに留まる',
   },
   'settings.activate_after_closing_global': {
+    it: 'Globalmente',
     en: 'Globally',
     de: 'Global',
     fr: 'Globalement',
@@ -2938,6 +3213,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'グローバルに',
   },
   'settings.activate_after_closing_no_folded': {
+    it: 'Ignora schede compresse',
     en: 'Ignore folded tabs',
     de: 'Eingeklappte Tabs ignorieren',
     fr: 'Ignorer les onglets repliés',
@@ -2949,6 +3225,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '折りたたまれたタブを無視する',
   },
   'settings.activate_after_closing_no_discarded': {
+    it: 'Ignora schede scaricate',
     en: 'Ignore discarded tabs',
     de: 'Entladene Tabs ignorieren',
     fr: 'Ignorer les onglets déchargés',
@@ -2960,6 +3237,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: '破棄されたタブを無視する',
   },
   'settings.tabs_unread_mark': {
+    it: 'Mostra indicatore sulle schede non lette',
     en: 'Show mark on unread tabs',
     de: 'Markierung an ungelesenen Tabs anzeigen',
     fr: 'Afficher un indicateur sur les onglets non lus',
@@ -2972,6 +3250,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
 
   'settings.tabs_badge': {
+    it: 'Mostra badge sulle favicon all\'aggiornamento di URL o titolo',
     en: 'Show badges over tab favicons on URL or title update',
     de: 'Badges über Tab-Favicons bei Aktualisierung von URL oder Titel anzeigen',
     fr: `Afficher des badges sur les favicons des onglets lors de la mise à jour de l'URL ou du titre`,
@@ -2983,6 +3262,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'URLまたはタイトルが更新されたとき、タブのファビコンにバッジを表示する',
   },
   'settings.tabs_badge_rules': {
+    it: 'Regole per i badge',
     en: 'Badge rules',
     de: 'Badge-Regeln',
     fr: 'Règles des badges',
@@ -2994,6 +3274,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
     ja: 'バッジのルール',
   },
   'settings.tabs_badge_rules_note': {
+    it: `Elenco separato da a capo di regole per i badge. Ogni regola include parametri opzionali separati da punto e virgola e spazio: "; ".`,
     en: `A newline-separated list of badge rules. Each rule consists of optional parameters separated by a semicolon and a space: \`; \`.
 Examples:
 \`\`\`
@@ -3045,6 +3326,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
 
   'settings.tabs_notification_badge_scope': {
+    it: 'Mostra badge di notifica sulle favicon delle schede',
     en: 'Show notification badges over tab favicons',
     de: 'Benachrichtigungs-Badges auf Tab-Favicons anzeigen',
     fr: "Afficher les badges de notification sur les favicons d'onglet",
@@ -3056,6 +3338,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブのファビコンに通知バッジを表示する',
   },
   'settings.tabs_notification_badge_scope_all': {
+    it: 'attivo',
     en: 'on',
     de: 'Ein',
     fr: 'tous',
@@ -3067,6 +3350,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'オン',
   },
   'settings.tabs_notification_badge_scope_pin': {
+    it: 'solo per schede fissate',
     en: 'only for pinned',
     de: 'Nur für angeheftete',
     fr: 'onglets épinglés seulement',
@@ -3078,6 +3362,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定のみ',
   },
   'settings.tabs_notification_badge_scope_norm': {
+    it: 'solo per schede non fissate',
     en: 'only for not pinned',
     de: 'Nur für nicht angeheftete',
     fr: 'onlets non épinglés seulement',
@@ -3089,6 +3374,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定以外のみ',
   },
   'settings.tabs_notification_badge_scope_none': {
+    it: 'disattivo',
     en: 'off',
     de: 'Aus',
     fr: 'aucun',
@@ -3100,6 +3386,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'オフ',
   },
   'settings.tabs_notification_badge_style': {
+    it: 'Stile badge di notifica (conteggio o punto)',
     en: 'Show notification badge with count or a dot',
     de: 'Benachrichtigungs-Badge mit Zähler oder Punkt anzeigen',
     fr: 'Afficher le badge de notification avec compteur ou point',
@@ -3111,6 +3398,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '通知バッジをカウントまたはドットで表示する',
   },
   'settings.tabs_notification_badge_style_count': {
+    it: 'conteggio',
     en: 'count',
     de: 'Zähler',
     fr: 'compteur',
@@ -3122,6 +3410,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'カウント',
   },
   'settings.tabs_notification_badge_style_dot': {
+    it: 'punto',
     en: 'dot',
     de: 'Punkt',
     fr: 'point',
@@ -3133,6 +3422,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ドット',
   },
   'settings.tabs_notification_badge_regexp_pattern': {
+    it: 'Espressione regolare per estrarre il conteggio dal titolo',
     en: 'Regular expression for matching notification count in tab title',
     de: 'Regulärer Ausdruck zur Übereinstimmung der Benachrichtigungszahl im Tab-Titel',
     fr: "Expression régulière pour correspondre au nombre de notifications dans le titre de l'onglet",
@@ -3144,6 +3434,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブのタイトルで通知数をマッチするための正規表現',
   },
   'settings.tabs_notification_badge_regexp_pattern_info': {
+    it: 'Restituisce il primo gruppo di cattura trovato nel pattern',
     en: 'Returns the first found capturing group in the pattern',
     de: 'Gibt die erste gefundene Erfassungsgruppe im Muster zurück',
     fr: 'Renvoie le premier groupe de capture trouvé dans le motif',
@@ -3155,6 +3446,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パターン内で最初に見つかったキャプチャグループを返します',
   },
   'settings.tabs_reload_limit': {
+    it: 'Limita il numero di schede ricaricate simultaneamente',
     en: 'Limit the count of simultaneously reloading tabs',
     de: 'Anzahl gleichzeitig neu ladender Tabs begrenzen',
     fr: 'Limiter le nombre d’onglets s’actualisant en même temps',
@@ -3166,6 +3458,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '同時に再読み込みするタブの数を制限する',
   },
   'settings.tabs_reload_limit_notif': {
+    it: 'Mostra notifica con l\'avanzamento del ricaricamento',
     en: 'Show notification with the reloading progress',
     de: 'Benachrichtigung mit Fortschritt des Neuladens anzeigen',
     fr: 'Afficher une notification avec la progression de l’actualisation',
@@ -3177,6 +3470,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '再読み込みの進捗を通知で表示する',
   },
   'settings.tabs_panel_switch_act_move': {
+    it: 'Cambia pannello dopo lo spostamento manuale della scheda attiva',
     en: 'Switch panel after manually moving active tab to another panel',
     de: 'Panel nach manuellem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été manuellement déplacé.',
@@ -3188,6 +3482,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブを手動で別のパネルに移動した後にパネルを切り替える',
   },
   'settings.tabs_panel_switch_act_move_auto': {
+    it: 'Cambia pannello dopo lo spostamento automatico della scheda attiva',
     en: 'Switch panel after auto moving active tab to another panel',
     de: 'Panel nach automatischem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été automatiquement déplacé.',
@@ -3199,6 +3494,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブを自動的に別のパネルに移動した後にパネルを切り替える',
   },
   'settings.tabs_url_in_tooltip': {
+    it: 'Mostra URL nel suggerimento',
     en: 'Show URL in tooltip',
     de: 'URL im Tooltip anzeigen',
     fr: 'Afficher l’URL dans l’infobulle',
@@ -3210,6 +3506,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ツールチップにURLを表示する',
   },
   'settings.tabs_url_in_tooltip_full': {
+    it: 'completo',
     en: 'full',
     de: 'Vollständig',
     fr: 'entière',
@@ -3221,6 +3518,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'フル',
   },
   'settings.tabs_url_in_tooltip_stripped': {
+    it: 'semplificato',
     en: 'stripped',
     de: 'Gekürzt',
     fr: 'raccourcie',
@@ -3232,6 +3530,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '短縮',
   },
   'settings.tabs_url_in_tooltip_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Gar nicht',
     fr: 'non',
@@ -3243,6 +3542,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.tabs_container_in_tooltip': {
+    it: 'Mostra contenitore nel suggerimento',
     en: 'Show container in tooltip',
     de: 'Umgebung im Tooltip anzeigen',
     fr: 'Afficher le nom du conteneur dans l’infobulle',
@@ -3254,6 +3554,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ツールチップにコンテナを表示する',
   },
   'settings.show_new_tab_btns': {
+    it: 'Mostra pulsanti nuova scheda',
     en: 'Show new tab buttons',
     de: '"Neuer Tab"-Schaltflächen anzeigen',
     fr: 'Afficher le bouton “Nouvel onglet”',
@@ -3265,6 +3566,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブボタンを表示する',
   },
   'settings.new_tab_bar_position': {
+    it: 'Posizione',
     en: 'Position',
     de: 'Position',
     hu: 'Elhelyezés',
@@ -3275,6 +3577,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '位置',
   },
   'settings.new_tab_bar_position_after_tabs': {
+    it: 'dopo le schede',
     en: 'after tabs',
     de: 'Nach Tabs',
     fr: 'après les onglets',
@@ -3286,6 +3589,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブの後',
   },
   'settings.new_tab_bar_position_bottom': {
+    it: 'in fondo',
     en: 'bottom',
     de: 'Unten',
     fr: 'en bas',
@@ -3301,6 +3605,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   //   ru: 'Предварительная прогрузка вкладки при наведении мыши',
   // },
   'settings.tabs_switch_delay': {
+    it: 'Ritardo min. cambio schede (ms)',
     en: 'Min delay between tabs switching (ms)',
     de: 'Mindestverzögerung beim Wechsel zwischen Tabs (ms)',
     fr: 'Durée minimum entre deux basculements d’onglet (ms)',
@@ -3311,28 +3616,34 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ切り替え間の最小遅延（ミリ秒）',
   },
   'settings.sticky_active_tab': {
+    it: 'Scheda attiva sempre visibile (sticky)',
     en: 'Sticky active tab',
     de: 'Aktiven Tab beim Scrollen sichtbar halten',
   },
   'settings.tabs_title_lines_max': {
+    it: 'Numero max righe del titolo',
     en: 'Max count of title lines',
     de: 'Maximale Anzahl von Titelzeilen',
   },
   'settings.tabs_title_lines_br': {
+    it: 'Interrompi titolo per',
     en: 'Break the title by',
     de: 'Zeilenumbruch im Titel',
   },
   'settings.tabs_title_lines_br_w': {
+    it: 'parole',
     en: 'words',
     de: 'Wortweise',
   },
   'settings.tabs_title_lines_br_c': {
+    it: 'caratteri',
     en: 'characters',
     de: 'Zeichenweise',
   },
 
   // - New tab position
   'settings.move_new_tab_pin': {
+    it: 'Posizione nuova scheda aperta da scheda fissata',
     en: 'Place new tab opened from pinned tab',
     de: 'Position von Tabs, die aus einem angehefteten Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un onglet épinglé',
@@ -3344,6 +3655,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定されたタブから開いた新しいタブの位置',
   },
   'settings.move_new_tab_pin_start': {
+    it: 'inizio pannello',
     en: 'panel start',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
@@ -3354,6 +3666,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの先頭',
   },
   'settings.move_new_tab_pin_end': {
+    it: 'fine pannello',
     en: 'panel end',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
@@ -3364,6 +3677,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの末尾',
   },
   'settings.pinned_auto_group': {
+    it: 'Raggruppa schede aperte da una scheda fissata',
     en: 'Group tabs that were opened from a pinned tab',
     de: 'Tabs gruppieren, die aus einem angehefteten Tab geöffnet wurden',
     fr: 'Grouper les onglets qui ont été ouverts depuis un onglet épinglé',
@@ -3375,6 +3689,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定されたタブから開いたタブをグループ化する',
   },
   'settings.move_new_tab_parent': {
+    it: 'Posizione nuova scheda aperta da un\'altra scheda',
     en: 'Place new tab opened from another tab',
     de: 'Position von Tabs, die aus einem anderen Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un autre onglet',
@@ -3386,6 +3701,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '他のタブから開いた新しいタブの位置',
   },
   'settings.move_new_tab_parent_before': {
+    it: 'prima del genitore',
     en: 'before parent',
     de: 'Vor übergeordnetem Tab',
     fr: 'avant le parent',
@@ -3397,6 +3713,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親の前',
   },
   'settings.move_new_tab_parent_sibling': {
+    it: 'dopo il genitore',
     en: 'after parent',
     de: 'Nach übergeordnetem Tab',
     fr: 'après le parent',
@@ -3408,6 +3725,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親の後',
   },
   'settings.move_new_tab_parent_first_child': {
+    it: 'prima figlia',
     en: 'first child',
     de: 'Als erstes Unterelement',
     fr: 'premier enfant',
@@ -3419,6 +3737,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最初の子',
   },
   'settings.move_new_tab_parent_last_child': {
+    it: 'ultima figlia',
     en: 'last child',
     de: 'Als letztes Unterelement',
     fr: 'dernier enfant',
@@ -3430,6 +3749,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最後の子',
   },
   'settings.move_new_tab_parent_start': {
+    it: 'inizio pannello',
     en: 'panel start',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
@@ -3440,6 +3760,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの先頭',
   },
   'settings.move_new_tab_parent_end': {
+    it: 'fine pannello',
     en: 'panel end',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
@@ -3450,6 +3771,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの末尾',
   },
   'settings.move_new_tab_parent_default': {
+    it: 'non spostare',
     en: 'do not move it',
     de: 'Nicht bewegen',
     fr: 'ne pas le déplacer',
@@ -3461,6 +3783,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '移動しない',
   },
   'settings.move_new_tab_parent_none': {
+    it: 'usa regola generale',
     en: 'use general rule',
     de: 'Allgemeine Regel verwenden',
     fr: 'utiliser la règle générale',
@@ -3472,6 +3795,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '一般ルールを使用する',
   },
   'settings.move_new_tab_parent_indent': {
+    it: 'Crea e mantieni struttura ad albero se possibile',
     en: 'Create and maintain a tree structure if possible',
     de: 'Nach Möglichkeit eine Baumstruktur erstellen und beibehalten',
     fr: 'Créer et maintenir une structure arborescente si possible',
@@ -3483,6 +3807,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '可能であればツリー構造を作成し維持する',
   },
   'settings.move_new_tab_parent_act_panel': {
+    it: 'Solo se il pannello del genitore è attivo',
     en: 'Only if panel of parent tab is active',
     de: 'Nur, wenn Panel des übergeordneten Tabs aktiv ist',
     fr: 'Seulement si le panneau de l’onglet parent est actif',
@@ -3494,6 +3819,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブのパネルがアクティブな場合のみ',
   },
   'settings.move_new_tab_button': {
+    it: 'Posizione nuova scheda creata dal pulsante Sidebery',
     en: `Place new tab created by the Sidebery new tab button`,
     de: 'Position von Tabs, die mit der Sidebery-Schaltfläche "Neuer Tab" erstellt werden',
     fr: 'Emplacement des onglets ouverts par le bouton Nouvel onglet de Sidebery',
@@ -3505,6 +3831,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Sideberyの新規タブボタンを使用して作成された新規タブの位置',
   },
   'settings.move_new_tab': {
+    it: 'Posizione nuova scheda (regola generale)',
     en: 'Place new tab (general rule)',
     de: 'Position neuer Tabs (allgemeine Regel)',
     fr: 'Emplacement des nouveaux onglets (règle générale)',
@@ -3516,6 +3843,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブの位置（一般ルール）',
   },
   'settings.move_new_tab_start': {
+    it: 'inizio pannello',
     en: 'panel start',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
@@ -3526,6 +3854,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの先頭',
   },
   'settings.move_new_tab_end': {
+    it: 'fine pannello',
     en: 'panel end',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
@@ -3536,6 +3865,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの末尾',
   },
   'settings.move_new_tab_before': {
+    it: 'prima della scheda attiva',
     en: 'before active tab',
     de: 'Vor aktivem Tab',
     fr: 'avant l’onglet actif',
@@ -3547,6 +3877,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブの前',
   },
   'settings.move_new_tab_after': {
+    it: 'dopo la scheda attiva',
     en: 'after active tab',
     de: 'Nach aktivem Tab',
     fr: 'après l’onglet actif',
@@ -3558,6 +3889,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブの後',
   },
   'settings.move_new_tab_first_child': {
+    it: 'prima figlia della scheda attiva',
     en: 'first child of active tab',
     de: 'Erstes Unterelement des aktiven Tabs',
     fr: 'premier enfant de l’onglet actif',
@@ -3569,6 +3901,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブの最初の子',
   },
   'settings.move_new_tab_last_child': {
+    it: 'ultima figlia della scheda attiva',
     en: 'last child of active tab',
     de: 'Letztes Unterelement des aktiven Tabs',
     fr: 'dernier enfant de l’onglet actif',
@@ -3580,6 +3913,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブの最後の子',
   },
   'settings.move_new_tab_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'ne pas le déplacer',
@@ -3591,6 +3925,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.move_new_tab_active_pin': {
+    it: 'Se la scheda attiva è fissata',
     en: 'If active tab is pinned',
     de: 'Wenn der aktive Tab angeheftet ist',
     fr: 'Is l’onflet actif est épinglé',
@@ -3602,6 +3937,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブが固定されている場合',
   },
   'settings.auto_scroll_to_new_tab': {
+    it: 'Scorri automaticamente alla nuova scheda',
     en: 'Auto scroll to position of new tab',
     de: 'Automatisch zur Position des neuen Tabs scrollen',
     fr: 'Scroller automatiquement à la position du nouvel onglet',
@@ -3615,6 +3951,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Pinned tabs
   'settings.pinned_tabs_position': {
+    it: 'Posizione schede fissate',
     en: 'Pinned tabs position',
     de: 'Position angehefteter Tabs',
     fr: 'Position des onglets épinglés',
@@ -3626,6 +3963,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定タブの位置',
   },
   'settings.pinned_tabs_position_panel': {
+    it: 'nel pannello - in alto',
     en: 'in panel - top',
     de: 'Im Panel - Oben',
     fr: 'Dans le panneau – en haut',
@@ -3637,6 +3975,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネル - 上部',
   },
   'settings.pinned_tabs_position_top': {
+    it: 'globalmente - in alto',
     en: 'globally - top',
     de: 'Global - Oben',
     fr: 'Globale – en haut',
@@ -3648,6 +3987,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グローバル - 上部',
   },
   'settings.pinned_tabs_position_left': {
+    it: 'globalmente - a sinistra',
     en: 'globally - left',
     de: 'Global - Links',
     fr: 'Globale – à gauche',
@@ -3659,6 +3999,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グローバル - 左部',
   },
   'settings.pinned_tabs_position_right': {
+    it: 'globalmente - a destra',
     en: 'globally - right',
     de: 'Global - Rechts',
     fr: 'Globale – à droite',
@@ -3670,6 +4011,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グローバル - 右部',
   },
   'settings.pinned_tabs_list': {
+    it: 'Mostra titoli delle schede fissate',
     en: 'Show titles of pinned tabs',
     de: 'Titel angehefteter Tabs anzeigen',
     fr: 'Afficher le titre des onglets épinglés',
@@ -3681,6 +4023,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定タブのタイトルを表示する',
   },
   'settings.pinned.no_unload': {
+    it: 'Impedisci scaricamento schede fissate',
     en: 'Prevent pinned tabs from unloading',
     de: 'Entladen angehefteter Tabs verhindern',
     fr: 'Empêcher les onglets épinglés de se décharger',
@@ -3692,6 +4035,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '固定タブのアンロードを防止する',
   },
   'settings.pinned.no_unload_explicit': {
+    it: 'Incluso scaricamento esplicito da menu, mouse o tastiera',
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
     de: 'Auch beim gezielten Entladen über Kontextmenü, Mausaktion oder Tastenkombination',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
@@ -3700,6 +4044,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Tabs tree
   'settings.tabs_tree_layout': {
+    it: 'Struttura ad albero delle schede',
     en: 'Tabs tree structure',
     de: 'Baumstruktur aktivieren',
     fr: 'Arborescence des onglets',
@@ -3711,6 +4056,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブツリー構造',
   },
   'settings.tabs_tree_limit': {
+    it: 'Limite livelli albero',
     en: 'Tabs tree level limit',
     de: 'Maximale Anzahl von Ebenen',
     fr: 'Niveau d’arborescence maximal des onglets',
@@ -3722,26 +4068,32 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブツリーの深さ制限',
   },
   'settings.tabs_tree_limit_1': {
+    it: '1',
     en: '1',
     ru: '1',
   },
   'settings.tabs_tree_limit_2': {
+    it: '2',
     en: '2',
     ru: '2',
   },
   'settings.tabs_tree_limit_3': {
+    it: '3',
     en: '3',
     ru: '3',
   },
   'settings.tabs_tree_limit_4': {
+    it: '4',
     en: '4',
     ru: '4',
   },
   'settings.tabs_tree_limit_5': {
+    it: '5',
     en: '5',
     ru: '5',
   },
   'settings.tabs_tree_limit_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Unbegrenzt',
     fr: 'aucun',
@@ -3753,6 +4105,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.sticky_ancestor_tabs': {
+    it: 'Mantieni visibili le schede genitrici della scheda attiva',
     en: 'Sticky ancestor tabs of the active tab',
     de: 'Übergeordnete Tabs des aktiven Tabs beim Scrollen sichtbar halten',
     // TODO: Updated, translation is needed
@@ -3766,6 +4119,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     // ja: '先祖タブを固定表示',
   },
   'settings.sticky_ancestor_tabs_limit': {
+    it: 'Limite di profondità',
     en: 'Depth limit',
     de: 'Maximale Tiefe',
     // TODO: Updated, need translation
@@ -3779,21 +4133,27 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     // ja: '固定する先祖タブの深さ制限',
   },
   'settings.sticky_ancestor_tabs_limit_1': {
+    it: '1',
     en: '1',
   },
   'settings.sticky_ancestor_tabs_limit_2': {
+    it: '2',
     en: '2',
   },
   'settings.sticky_ancestor_tabs_limit_3': {
+    it: '3',
     en: '3',
   },
   'settings.sticky_ancestor_tabs_limit_4': {
+    it: '4',
     en: '4',
   },
   'settings.sticky_ancestor_tabs_limit_5': {
+    it: '5',
     en: '5',
   },
   'settings.sticky_ancestor_tabs_limit_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Unbegrenzt',
     fr: 'aucun',
@@ -3805,18 +4165,22 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.sticky_ancestor_tabs_layout': {
+    it: 'Disposizione',
     en: 'Layout',
     de: 'Anordnung',
   },
   'settings.sticky_ancestor_tabs_layout_col': {
+    it: 'verticale',
     en: 'vertical',
     de: 'Vertikal',
   },
   'settings.sticky_ancestor_tabs_layout_row': {
+    it: 'orizzontale',
     en: 'horizontal',
     de: 'Horizontal',
   },
   'settings.auto_fold_tabs': {
+    it: 'Comprimi automaticamente un ramo quando se ne espande un altro',
     en: 'Auto fold tabs branch on expanding another branch',
     de: 'Zweig beim Öffnen eines anderen Zweiges automatisch einklappen',
     fr: 'Replier automatiquement les autres branches d’onglets lorsqu’une branche est dépliée',
@@ -3828,6 +4192,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '他のブランチを展開するときに自動的にタブブランチを折りたたむ',
   },
   'settings.auto_fold_tabs_except': {
+    it: 'Numero max rami aperti',
     en: 'Max count of open branches',
     de: 'Maximale Anzahl offener Zweige',
     fr: 'Nombre maximal de branches dépliées',
@@ -3838,26 +4203,32 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '開いているブランチの最大数',
   },
   'settings.auto_fold_tabs_except_1': {
+    it: '1',
     en: '1',
     ru: '1',
   },
   'settings.auto_fold_tabs_except_2': {
+    it: '2',
     en: '2',
     ru: '2',
   },
   'settings.auto_fold_tabs_except_3': {
+    it: '3',
     en: '3',
     ru: '3',
   },
   'settings.auto_fold_tabs_except_4': {
+    it: '4',
     en: '4',
     ru: '4',
   },
   'settings.auto_fold_tabs_except_5': {
+    it: '5',
     en: '5',
     ru: '5',
   },
   'settings.auto_fold_tabs_except_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Unbegrenzt',
     fr: 'aucun',
@@ -3869,6 +4240,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.auto_exp_tabs': {
+    it: 'Espandi automaticamente all\'attivazione della scheda',
     en: 'Auto expand tab on activation',
     de: 'Tabs bei Aktivierung automatisch ausklappen',
     fr: 'Déplier automatiquement l’onglet lors de son activation',
@@ -3880,6 +4252,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブ化時にタブを自動展開する',
   },
   'settings.auto_exp_tabs_on_new': {
+    it: 'Espandi ramo alla creazione di una scheda figlia',
     en: 'Auto expand branch on creating a new child tab',
     de: 'Zweig nach Erstellung eines untergeordneten Tabs automatisch ausklappen',
     fr: 'Déplier automatiquement la branche à la création d’un onglet enfant',
@@ -3891,6 +4264,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しい子タブを作成するときにブランチを自動展開する',
   },
   'settings.rm_child_tabs': {
+    it: 'Chiudi schede figlie insieme al genitore',
     en: 'Close child tabs along with parent',
     de: 'Untergeordnete Tabs zusammen mit übergeordneten schließen',
     fr: 'Fermer les onglets enfants en même temps que son parent',
@@ -3902,6 +4276,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブと一緒に子タブを閉じる',
   },
   'settings.rm_child_tabs_all': {
+    it: 'tutte',
     en: 'all',
     de: 'Alle',
     fr: 'tous',
@@ -3912,6 +4287,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'すべて',
   },
   'settings.rm_child_tabs_folded': {
+    it: 'compresse',
     en: 'folded',
     de: 'Eingeklappte',
     fr: 'repliés',
@@ -3923,6 +4299,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '折りたたまれている場合',
   },
   'settings.rm_child_tabs_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Keine',
     fr: 'aucun',
@@ -3933,6 +4310,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.tabs_lvl_dots': {
+    it: 'Mostra indicatori di livello nell\'albero',
     en: 'Show marks to indicate tabs sub-tree levels',
     de: 'Markierungen für die Ebenen der Tab-Unterbäume anzeigen',
     fr: 'Afficher des guides pour indiquer le niveau d’arborescense des onglets',
@@ -3944,6 +4322,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブのサブツリーレベルを示すマークを表示する',
   },
   'settings.discard_folded': {
+    it: 'Scarica schede compresse',
     en: 'Unload folded tabs',
     de: 'Eingeklappte Tabs entladen',
     fr: 'Décharger les onglets repliés',
@@ -3955,6 +4334,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '折りたたまれたタブをアンロードする',
   },
   'settings.discard_folded_delay': {
+    it: 'Con ritardo',
     en: 'With delay',
     de: 'Mit Verzögerung',
     fr: 'Avec un délai',
@@ -3966,6 +4346,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アンロードするまでの遅延',
   },
   'settings.discard_folded_delay_sec': {
+    it: n => (n === 1 ? 'secondo' : 'secondi'),
     en: n => (n === 1 ? 'second' : 'seconds'),
     de: n => (n === 1 ? 'Sekunde' : 'Sekunden'),
     fr: n => (n === 1 ? 'seconde' : 'secondes'),
@@ -3984,6 +4365,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '秒',
   },
   'settings.discard_folded_delay_min': {
+    it: n => (n === 1 ? 'minuto' : 'minuti'),
     en: n => (n === 1 ? 'minute' : 'minutes'),
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
     fr: n => (n === 1 ? 'minute' : 'minutes'),
@@ -4002,6 +4384,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '分',
   },
   'settings.tabs_tree_bookmarks': {
+    it: 'Conserva albero alla creazione dei segnalibri',
     en: 'Preserve tree on creating bookmarks',
     de: 'Baumstruktur beim Erstellen von Lesezeichen erhalten',
     fr: 'Converser l’arboresence à la création de marque-pages',
@@ -4013,6 +4396,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークを作成するときにツリーを保持する',
   },
   'settings.tree_rm_outdent': {
+    it: 'Dopo la chiusura del genitore, sposta all\'esterno',
     en: 'After closing parent tab, outdent',
     de: 'Nach Schließen von übergeordnetem Tab ausrücken',
     fr: 'Après la fermeture d’un onglet parent, désindenter',
@@ -4024,6 +4408,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブを閉じた後、インデントを解除する',
   },
   'settings.tree_rm_outdent_branch': {
+    it: 'l\'intero ramo',
     en: 'whole branch',
     de: 'Ganzen Zweig',
     fr: 'toute la branche',
@@ -4035,6 +4420,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '全体のブランチ',
   },
   'settings.tree_rm_outdent_first_child': {
+    it: 'la prima figlia',
     en: 'first child',
     de: 'Erstes Unterelement',
     fr: 'le premier enfant',
@@ -4046,6 +4432,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最初の子',
   },
   'settings.auto_group_on_close': {
+    it: 'Raggruppa schede figlie dopo la chiusura del genitore',
     en: 'Auto group child tabs after closing the parent tab',
     de: 'Untergeordnete Tabs automatisch gruppieren, nachdem der übergeordnete Tab geschlossen wurde',
     fr: 'Grouper automatiquement les onglets enfant après la fermeture de leur parent',
@@ -4057,6 +4444,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブを閉じた後、子タブを自動的にグループ化する',
   },
   'settings.auto_group_on_close_0_lvl': {
+    it: 'Solo se la scheda chiusa era al livello radice',
     en: 'Only if the closed tab was on the root level',
     de: 'Nur wenn sich der geschlossene Tab auf der Stammebene befand',
     fr: 'Seulement si l’onglet fermé était à la racine de l’arborescence',
@@ -4068,6 +4456,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '閉じたタブがルートレベルにある場合のみ',
   },
   'settings.auto_group_on_close_mouse_only': {
+    it: 'Solo se chiusa tramite mouse',
     en: 'Only if the tab was closed with the mouse',
     de: 'Nur wenn der Tab mit der Maus geschlossen wurde',
     fr: 'Seulement si l’onglet a été fermé à la souris',
@@ -4079,6 +4468,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウスでタブを閉じた場合のみ',
   },
   'settings.ignore_folded_parent': {
+    it: 'Apri nuova scheda un livello sotto se il genitore è compresso',
     en: 'Open a new tab one level down if the parent tab is folded',
     de: 'Neuen Tab eine Ebene tiefer öffnen, wenn der übergeordnete Tab eingeklappt ist',
     fr: 'Ouvrir le nouvel onglet un niveau plus bas si l’onglet parent est replié',
@@ -4090,6 +4480,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブが折りたたまれている場合、新しいタブを1つ下のレベルに開く',
   },
   'settings.show_new_group_conf': {
+    it: 'Mostra configurazione alla creazione di un gruppo',
     en: 'Show config popup when creating a group',
     de: 'Einstellungsdialog anzeigen, wenn eine Gruppe erstellt wird',
     fr: 'Afficher la popup de configuration lorsqu’un groupe est créé',
@@ -4101,6 +4492,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グループを作成するときに構成ポップアップを表示する',
   },
   'settings.sort_groups_first': {
+    it: 'Ordina gruppi prima delle altre schede',
     en: 'Sort groups before other tabs',
     de: 'Gruppen vor anderen Tabs sortieren',
     fr: 'Trier les groupes avant les autres onglets',
@@ -4114,6 +4506,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Tabs colorization
   'settings.colorize_tabs': {
+    it: 'Colora schede',
     en: 'Colorize tabs',
     de: 'Tabs einfärben',
     fr: 'Coloriser les onglets',
@@ -4125,6 +4518,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを色付けする',
   },
   'settings.colorize_tabs_src': {
+    it: 'Genera colore da',
     en: 'Generate color from',
     de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
@@ -4136,6 +4530,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '色の生成元',
   },
   'settings.colorize_tabs_src_domain': {
+    it: 'dominio',
     en: 'domain',
     de: 'Domäne',
     fr: 'le domaine',
@@ -4146,6 +4541,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ドメイン',
   },
   'settings.colorize_tabs_src_container': {
+    it: 'contenitore',
     en: 'container',
     de: 'Umgebung',
     fr: 'le conteneur',
@@ -4156,6 +4552,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテナ',
   },
   'settings.colorize_branches': {
+    it: 'Colora rami',
     en: 'Colorize branches',
     de: 'Zweige einfärben',
     fr: 'Coloriser les branches',
@@ -4167,6 +4564,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブランチを色付けする',
   },
   'settings.colorize_branches_src': {
+    it: 'Genera colore da',
     en: 'Generate color from',
     de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
@@ -4178,12 +4576,14 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '色の生成元',
   },
   'settings.colorize_branches_src_url': {
+    it: 'URL',
     en: 'URL',
     fr: 'l’URL',
     ru: 'URL',
     zh_TW: '網址',
   },
   'settings.colorize_branches_src_domain': {
+    it: 'dominio',
     en: 'domain',
     de: 'Domäne',
     fr: 'le domaine',
@@ -4194,6 +4594,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ドメイン',
   },
   'settings.tabs.inherit_custom_color': {
+    it: 'Eredita colore personalizzato nelle schede figlie',
     en: 'Inherit custom (manually set) color in the child tabs',
     de: 'Manuell festgelegte Farbe an untergeordnete Tabs vererben',
     fr: 'Hériter les couleurs personalisées (définies manuellement) dans les onglets enfants',
@@ -4207,6 +4608,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Tabs Preview
   'settings.tabs.preview': {
+    it: 'Mostra anteprima al passaggio del mouse',
     en: 'Show tab preview on mouse hover',
     de: 'Tab-Vorschau beim Darüberfahren mit der Maus anzeigen',
     fr: 'Afficher un aperçu des onglets au survol de la souris',
@@ -4218,6 +4620,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウスホバー時にタブプレビューを表示する',
   },
   'settings.tabs.preview_mode': {
+    it: 'Modalità anteprima',
     en: 'Preview mode',
     de: 'Vorschaumodus',
     fr: 'Mode de d’affichage',
@@ -4229,6 +4632,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プレビューモード',
   },
   'settings.tabs.preview_mode_i': {
+    it: 'popup nella barra laterale',
     en: 'popup in sidebar',
     de: 'Seitenleisten-Popup',
     fr: 'popup dans la barre latérale',
@@ -4240,6 +4644,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サイドバーでポップアップ',
   },
   'settings.tabs.preview_mode_p': {
+    it: 'popup nella pagina',
     en: 'popup in page',
     de: 'Popup auf der Seite',
     fr: 'popup dans la page',
@@ -4251,6 +4656,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ページ内ポップアップ',
   },
   'settings.tabs.preview_mode_n': {
+    it: 'non mostrare anteprima',
     en: "don't show preview",
     de: 'Vorschau nicht anzeigen',
     fr: 'ne pas afficher d’aperçu',
@@ -4262,6 +4668,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プレビューを表示しない',
   },
   'settings.tabs.preview_page_mode_fallback': {
+    it: 'Modalità di ripiego (se impossibile usare la principale)',
     en: "Fallback mode (if it's impossible to use the main mode)",
     de: 'Rückfallmodus (falls die Nutzung des Hauptmodus nicht möglich ist)',
     fr: 'Option de repli (si c’est impossible d’utiliser le mode principal)',
@@ -4273,6 +4680,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'フォールバックモード（メインモードを使用できない場合）',
   },
   'settings.tabs.preview_delay': {
+    it: 'Ritardo prima della comparsa (ms)',
     en: 'Delay before appearing (ms)',
     de: 'Verzögerung vor dem Erscheinen (ms)',
     fr: 'Délai avant l’apparition (ms)',
@@ -4284,6 +4692,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '表示までの遅延（ミリ秒）',
   },
   'settings.tabs.preview_inline_height': {
+    it: 'Altezza max anteprima nella barra laterale (px, 0 = auto)',
     en: 'Max preview height in sidebar (px, 0 = auto)',
     de: 'Max. Vorschauhöhe in der Seitenleiste (px, 0 = auto)',
     fr: 'Hauteur max de l’aperçu dans la barre latérale (px, 0 = auto)',
@@ -4295,6 +4704,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サイドバーのプレビュー最大高さ (px、0 = 自動)',
   },
   'settings.tabs.preview_popup_width': {
+    it: 'Larghezza anteprima nella pagina (px)',
     en: 'Preview width in page (px)',
     de: 'Vorschaubreite auf der Seite (px)',
     fr: `Largeur de l'aperçu dans la page (px)`,
@@ -4306,6 +4716,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ページ内のプレビュー幅 (px)',
   },
   'settings.tabs.preview_title': {
+    it: 'Numero max righe del titolo',
     en: 'Max number of title lines',
     de: 'Maximale Anzahl von Titelzeilen',
     fr: 'Nombre de lignes maximum pour le titre',
@@ -4317,6 +4728,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タイトル行の最大数',
   },
   'settings.tabs.preview_url': {
+    it: 'Numero max righe dell\'URL',
     en: 'Max number of URL lines',
     de: 'Maximale Anzahl von URL-Zeilen',
     fr: 'Nombre de lignes maximim pour l’URL',
@@ -4328,6 +4740,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'URL 行の最大数',
   },
   'settings.tabs.preview_side': {
+    it: 'Lato della barra (per calcolare la posizione del popup)',
     en: 'Sidebar side (needed to correctly calculate position of the popup)',
     de: 'Position der Seitenleiste (Wird benötigt, um die Position des Popups korrekt zu berechnen)',
     fr: 'Position de la barre latérale (requise pour calculer correctement la position de la popup)',
@@ -4339,6 +4752,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サイドバーの位置（ポップアップの位置を正しく計算するために必要）',
   },
   'settings.tabs.preview_side_right': {
+    it: 'sinistra',
     en: 'left',
     de: 'Links',
     fr: 'gauche',
@@ -4350,6 +4764,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '左部',
   },
   'settings.tabs.preview_side_left': {
+    it: 'destra',
     en: 'right',
     de: 'Rechts',
     fr: 'droite',
@@ -4361,6 +4776,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '右部',
   },
   'settings.tabs.preview_follow_mouse': {
+    it: 'Segui il cursore del mouse',
     en: 'Follow the mouse cursor',
     de: 'Mauszeiger folgen',
     fr: 'Suivre le pointeur de la souris',
@@ -4372,6 +4788,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウスカーソルに従う',
   },
   'settings.tabs.preview_in_page_offset_y': {
+    it: 'Offset verticale popup nella pagina (px)',
     en: 'Popup vertical offset in page (px)',
     de: 'Vertikaler Popup-Versatz in Seite (px)',
     fr: 'Décalage vertical de la popup dans la page (px)',
@@ -4383,6 +4800,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ページ内のポップアップ垂直オフセット（px）',
   },
   'settings.tabs.preview_in_page_offset_x': {
+    it: 'Offset orizzontale popup nella pagina (px)',
     en: 'Popup horizontal offset in page (px)',
     de: 'Horizontaler Popup-Versatz in Seite (px)',
     fr: 'Décalage horizontal de la popup dans la page (px)',
@@ -4394,6 +4812,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ページ内のポップアップ水平オフセット（px）',
   },
   'settings.tabs.preview_crop_right': {
+    it: 'Ritaglia anteprima dal lato destro (px)',
     en: 'Crop preview from right side (px)',
     de: 'Vorschau von rechts zuschneiden (px)',
     fr: 'Rogner l’aperçu depuis le côté droit (px)',
@@ -4407,6 +4826,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Native tabs
   'settings.hide_inactive_panel_tabs': {
+    it: 'Nascondi schede native dei pannelli inattivi',
     en: 'Hide native tabs of inactive panels',
     de: 'Native Tabs inaktiver Panels ausblenden',
     fr: 'Cacher les onglets natifs des panneaux inactifs',
@@ -4418,6 +4838,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '非アクティブパネルのネイティブタブを非表示にする',
   },
   'settings.hide_folded_tabs': {
+    it: 'Nascondi schede native nei rami compressi',
     en: 'Hide native tabs in folded branch',
     de: 'Native Tabs in eingeklappten Zweigen ausblenden',
     fr: 'Cacher les onglets natifs des branches repliées',
@@ -4429,6 +4850,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '折りたたまれたブランチのネイティブタブを非表示にする',
   },
   'settings.hide_folded_parent': {
+    it: 'Nascondi anche la scheda genitrice',
     en: 'Also hide the parent tab',
     de: 'Auch den übergeordneten Tab ausblenden',
     fr: 'Cacher aussi l’onglet parent',
@@ -4440,6 +4862,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブも非表示にする',
   },
   'settings.hide_folded_parent_any': {
+    it: 'qualsiasi scheda',
     en: 'any tab',
     de: 'Jeden Tab',
     fr: 'de tous les onglets',
@@ -4451,6 +4874,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '任意のタブ',
   },
   'settings.hide_folded_parent_group': {
+    it: 'scheda gruppo',
     en: 'group tab',
     de: 'Gruppen-Tab',
     fr: 'des groupe d’onglets',
@@ -4462,6 +4886,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グループタブ',
   },
   'settings.hide_folded_parent_none': {
+    it: 'disattivato',
     en: 'off',
     de: 'aus',
     fr: 'jamais',
@@ -4473,6 +4898,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'オフ',
   },
   'settings.hide_unloaded_tabs': {
+    it: 'Nascondi schede native scaricate',
     en: 'Hide unloaded native tabs',
     de: 'Nicht geladene native Tabs ausblenden',
     fr: 'Cacher les onglets natifs déchargés',
@@ -4484,6 +4910,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '読み込まれていないネイティブタブを非表示にする',
   },
   'settings.native_highlight': {
+    it: 'Evidenzia schede native selezionando schede Sidebery',
     en: 'Highlight native tabs when selecting Sidebery tabs',
     de: 'Native Tabs bei der Auswahl von Tabs in Sidebery hervorheben',
     fr: "Mettre en surbrillance les onglets natifs lors de la sélection d'onglets dans Sidebery",
@@ -4495,6 +4922,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Sidebery タブを選択した際にネイティブタブを強調表示する',
   },
   'settings.native_highlight_note': {
+    it: 'Evidenzierà anche la scheda attiva, poiché Firefox non permette di evidenziare solo quelle inattive',
     en: "This will also highlight the active tab, since Firefox doesn't allow you to highlight only inactive tabs",
     de: 'Dadurch wird auch der aktive Tab hervorgehoben, da Firefox es nicht zulässt, nur inaktive Tabs hervorzuheben',
     fr: 'L’onglet actif sera aussi marqué comme sélectionné, car Firefox n’autorise pas de sélectionner uniquement des onglets inactifs',
@@ -4508,6 +4936,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Bookmarks
   'settings.bookmarks_title': {
+    it: 'Segnalibri',
     en: 'Bookmarks',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
@@ -4519,6 +4948,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマーク',
   },
   'settings.load_bookmarks_on_demand': {
+    it: 'Carica segnalibri su richiesta',
     en: 'Load bookmarks on demand',
     de: 'Lesezeichen bei Bedarf laden',
     fr: 'Charger les marques-pages à la demande',
@@ -4530,6 +4960,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークを必要に応じて読み込む',
   },
   'settings.warn_on_multi_bookmark_delete': {
+    it: 'Avvisa quando si eliminano più segnalibri',
     en: 'Warn on trying delete multiple bookmarks',
     de: 'Beim Löschen mehrerer Lesezeichen warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
@@ -4541,6 +4972,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '複数のブックマークを削除しようとすると警告する',
   },
   'settings.warn_on_multi_bookmark_delete_any': {
+    it: 'qualsiasi',
     en: 'any',
     de: 'Immer',
     fr: 'tous',
@@ -4552,6 +4984,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'いつでも',
   },
   'settings.warn_on_multi_bookmark_delete_collapsed': {
+    it: 'compressi',
     en: 'collapsed',
     de: 'Eingeklappte',
     fr: 'repliés',
@@ -4563,6 +4996,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '折りたたまれた',
   },
   'settings.warn_on_multi_bookmark_delete_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Nie',
     fr: 'aucun',
@@ -4574,6 +5008,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '警告しない',
   },
   'settings.ask_new_bookmark_place': {
+    it: 'Chiedi dove salvare i segnalibri',
     en: 'Ask where to store bookmarks',
     de: 'Nachfragen, wo Lesezeichen gespeichert werden sollen',
     fr: 'Demander où sauvegarder les marque-pages',
@@ -4585,6 +5020,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークの保存場所を尋ねる',
   },
   'settings.bookmarks_rm_undo_note': {
+    it: 'Mostra notifica di annullamento dopo aver eliminato segnalibri',
     en: 'Show undo notification after deleting bookmarks',
     de: '"Rückgängig"-Meldung nach dem Löschen von Lesezeichen anzeigen',
     fr: 'Afficher une notification pour annuler la suppression de plusieurs marque-pages',
@@ -4596,6 +5032,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークを削除した後、元に戻す通知を表示する',
   },
   'settings.auto_close_bookmarks': {
+    it: 'Chiudi automaticamente le cartelle',
     en: 'Auto-close folders',
     de: 'Ordner automatisch schließen',
     fr: 'Fermer automatiquement les dossiers',
@@ -4607,6 +5044,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'フォルダを自動的に閉じる',
   },
   'settings.auto_rm_other': {
+    it: 'Elimina automaticamente all\'apertura dalla cartella "Altri segnalibri"',
     en: 'Auto-delete on opening bookmarks from the "Other Bookmarks" folder',
     de: 'Lesezeichen aus dem Ordner "Weitere Lesezeichen" beim Öffnen automatisch löschen',
     fr: 'Supprimer automatiquement à l’ouverture de marque-pages du dossier “Autres marque-pages”',
@@ -4618,6 +5056,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '「その他のブックマーク」フォルダからブックマークを開くと自動的に削除する',
   },
   'settings.show_bookmark_len': {
+    it: 'Mostra dimensione cartella',
     en: 'Show folder size',
     de: 'Ordnergröße anzeigen',
     fr: 'Afficher la taille des dossiers',
@@ -4629,6 +5068,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'フォルダのサイズを表示',
   },
   'settings.highlight_open_bookmarks': {
+    it: 'Contrassegna segnalibri aperti',
     en: 'Mark open bookmarks',
     de: 'Geöffnete Lesezeichen kennzeichnen',
     fr: 'Indiquer les marque-pages ouverts',
@@ -4640,6 +5080,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '開いているブックマークをマークする',
   },
   'settings.activate_open_bookmark_tab': {
+    it: 'Vai alla scheda aperta invece di aprirne una nuova',
     en: 'Go to open tab instead of opening new one',
     de: 'Zu geöffnetem Tab wechseln, statt einen neuen zu öffnen',
     fr: 'Aller à l’onglet ouvert au lieu d’en ouvrir un nouveau',
@@ -4651,6 +5092,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブを開く代わりに開いているタブに移動する',
   },
   'settings.pin_opened_bookmarks_folder': {
+    it: 'Mantieni visibili le cartelle aperte durante lo scorrimento',
     en: 'Always show open folders when scrolling',
     de: 'Geöffnete Ordner beim Scrollen sichtbar halten',
     fr: 'Toujours afficher le dossier ouvert pendant le scroll',
@@ -4662,6 +5104,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スクロール時に常に開いているフォルダを表示する',
   },
   'settings.old_bookmarks_after_save': {
+    it: 'Cosa fare con i vecchi segnalibri dopo aver salvato il pannello',
     en: 'What to do with old bookmarks after saving tabs panel',
     de: 'Wie mit alten Lesezeichen nach Speicherung des Tab-Panels als Lesezeichen verfahren',
     fr: 'Que faire des anciens marque-pages après avoir sauvegardé un panneau d’onglet',
@@ -4673,6 +5116,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネルを保存した後、古いブックマークに対して何をするか',
   },
   'settings.old_bookmarks_after_save_ask': {
+    it: 'chiedi',
     en: 'ask',
     de: 'Nachfragen',
     fr: 'demander',
@@ -4684,6 +5128,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '尋ねる',
   },
   'settings.old_bookmarks_after_save_del': {
+    it: 'elimina',
     en: 'delete',
     de: 'Löschen',
     fr: 'les supprimer',
@@ -4695,6 +5140,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '削除',
   },
   'settings.old_bookmarks_after_save_keep': {
+    it: 'mantieni',
     en: 'keep',
     de: 'Behalten',
     fr: 'les garder',
@@ -4705,6 +5151,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '保持',
   },
   'settings.fetch_bookmarks_favs': {
+    it: 'Recupera favicon',
     en: 'Fetch favicons',
     de: 'Favicons herunterladen',
     fr: 'Récupérer les favicons',
@@ -4716,6 +5163,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ファビコンを取得する',
   },
   'settings.fetch_bookmarks_favs_stop': {
+    it: 'Interrompi recupero',
     en: 'Stop fetching',
     de: 'Herunterladen stoppen',
     fr: 'Arrêter la récupération',
@@ -4727,6 +5175,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '取得を停止',
   },
   'settings.fetch_bookmarks_favs_done': {
+    it: 'completato',
     en: 'done',
     de: 'Fertig',
     fr: 'effectués',
@@ -4737,6 +5186,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '完了',
   },
   'settings.fetch_bookmarks_favs_errors': {
+    it: 'errori',
     en: 'errors',
     de: 'Fehler',
     fr: 'erreurs',
@@ -4750,6 +5200,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - History
   'settings.history_title': {
+    it: 'Cronologia',
     en: 'History',
     de: 'Chronik',
     fr: 'Historique',
@@ -4761,6 +5212,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '履歴',
   },
   'settings.load_history_on_demand': {
+    it: 'Inizializza servizio cronologia su richiesta',
     en: 'Initialize history service on demand',
     de: 'Chronik-Dienst bei Bedarf initialisieren',
     fr: 'Démarrer le service d’historique à la demande',
@@ -4774,6 +5226,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Appearance
   'settings.appearance_title': {
+    it: 'Aspetto',
     en: 'Appearance',
     de: 'Erscheinungsbild',
     fr: 'Apparence',
@@ -4785,6 +5238,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '外観',
   },
   'settings.font_size': {
+    it: 'Dimensione carattere',
     en: 'Font size',
     de: 'Schriftgröße',
     fr: 'Taille de la police',
@@ -4796,34 +5250,42 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'フォントサイズ',
   },
   'settings.font_size_xxs': {
+    it: 'XXS',
     en: 'XXS',
     ru: 'XXS',
   },
   'settings.font_size_xs': {
+    it: 'XS',
     en: 'XS',
     ru: 'XS',
   },
   'settings.font_size_s': {
+    it: 'S',
     en: 'S',
     ru: 'S',
   },
   'settings.font_size_m': {
+    it: 'M',
     en: 'M',
     ru: 'M',
   },
   'settings.font_size_l': {
+    it: 'L',
     en: 'L',
     ru: 'L',
   },
   'settings.font_size_xl': {
+    it: 'XL',
     en: 'XL',
     ru: 'XL',
   },
   'settings.font_size_xxl': {
+    it: 'XXL',
     en: 'XXL',
     ru: 'XXL',
   },
   'settings.font_family': {
+    it: 'Famiglia di caratteri predefinita',
     en: 'Default font-family',
     de: 'Standard-Schriftart',
     fr: 'Police par défaut',
@@ -4835,6 +5297,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'デフォルト font-family',
   },
   'settings.animations': {
+    it: 'Animazioni',
     en: 'Animations',
     de: 'Animationen',
     fr: 'Animations',
@@ -4846,6 +5309,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アニメーション',
   },
   'settings.animation_speed': {
+    it: 'Velocità animazioni',
     en: 'Animations speed',
     de: 'Animationsgeschwindigkeit',
     fr: 'Vitesse des animations',
@@ -4857,6 +5321,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アニメーションの速度',
   },
   'settings.animation_speed_fast': {
+    it: 'veloce',
     en: 'fast',
     de: 'Schnell',
     fr: 'rapide',
@@ -4867,6 +5332,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '速い',
   },
   'settings.animation_speed_norm': {
+    it: 'normale',
     en: 'normal',
     de: 'Normal',
     fr: 'normale',
@@ -4877,6 +5343,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '普通',
   },
   'settings.animation_speed_slow': {
+    it: 'lenta',
     en: 'slow',
     de: 'Langsam',
     fr: 'lente',
@@ -4887,6 +5354,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '遅い',
   },
   'settings.theme': {
+    it: 'Tema',
     en: 'Theme',
     de: 'Design',
     fr: 'Thème',
@@ -4898,6 +5366,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'テーマ',
   },
   'settings.theme_proton': {
+    it: 'proton',
     en: 'proton',
     de: 'Proton',
     fr: 'proton',
@@ -4907,6 +5376,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プロトン',
   },
   'settings.theme_plain': {
+    it: 'semplice',
     en: 'plain',
     de: 'Schlicht',
     fr: 'sobre',
@@ -4917,6 +5387,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プレーン',
   },
   'settings.density': {
+    it: 'Densità',
     en: 'Density',
     de: 'Dichte',
     fr: 'Densité',
@@ -4927,6 +5398,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '密度',
   },
   'settings.density_compact': {
+    it: 'compatta',
     en: 'compact',
     de: 'Kompakt',
     fr: 'compacte',
@@ -4938,6 +5410,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンパクト',
   },
   'settings.density_default': {
+    it: 'predefinita',
     en: 'default',
     de: 'Standard',
     fr: 'normale',
@@ -4949,6 +5422,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'デフォルト',
   },
   'settings.density_loose': {
+    it: 'ampia',
     en: 'relaxed',
     de: 'Locker',
     fr: 'aérée',
@@ -4960,6 +5434,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ゆったり',
   },
   'settings.switch_color_scheme': {
+    it: 'Combinazione colori',
     en: 'Color scheme',
     de: 'Farbschema',
     fr: 'Schéma de couleur',
@@ -4970,6 +5445,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'カラースキーム',
   },
   'settings.color_scheme_dark': {
+    it: 'scura',
     en: 'dark',
     de: 'Dunkel',
     fr: 'sombre',
@@ -4980,6 +5456,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ダーク',
   },
   'settings.color_scheme_light': {
+    it: 'chiara',
     en: 'light',
     de: 'Hell',
     fr: 'clair',
@@ -4990,6 +5467,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ライト',
   },
   'settings.color_scheme_sys': {
+    it: 'auto: scura/chiara',
     en: 'auto: dark/light',
     de: 'Auto: dunkel/hell',
     fr: 'auto: sombre/clair',
@@ -5001,6 +5479,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '自動: ダーク/ライト',
   },
   'settings.color_scheme_ff': {
+    it: 'firefox',
     en: 'firefox',
     de: 'Firefox',
     fr: 'Firefox',
@@ -5011,6 +5490,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Firefox',
   },
   'settings.appearance_notes_title': {
+    it: 'Note:',
     en: 'Notes:',
     de: 'Hinweis:',
     fr: 'Notes:',
@@ -5022,6 +5502,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '注意事項:',
   },
   'settings.appearance_notes': {
+    it: '- Per applicare il colore del tema ai pulsanti Sidebery imposta "svg.context-properties.content.enabled" su "true" in about:config.',
     en: '- To apply theme color to Sidebery buttons in browser interface set "svg.context-properties.content.enabled" to "true" in about:config page.',
     de: '- Um die Theme-Farbe auf Sidebery-Schaltflächen in der Browseroberfläche anzuwenden, setzen Sie "svg.context-properties.content.enabled" auf "true" auf der Seite "about:config".',
     fr: '– Pour appliquer le thème de couleurs aux boutons de Sidebery dans l’interface du navigateur, définissez “svg.context-properties.content.enabled” à “true” dans la page “about:config”',
@@ -5035,6 +5516,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '- ブラウザインターフェースのSideberyボタンにテーマカラーを適用するには、about:configページで「svg.context-properties.content.enabled」を「true」に設定してください。',
   },
   'settings.edit_styles': {
+    it: 'Modifica stili',
     en: 'Edit styles',
     de: 'Stile anpassen',
     fr: 'Modifier les styles',
@@ -5048,6 +5530,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Mouse
   'settings.mouse_title': {
+    it: 'Mouse',
     en: 'Mouse',
     de: 'Maus',
     fr: 'Souris',
@@ -5059,6 +5542,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウス',
   },
   'settings.h_scroll_action': {
+    it: 'Usa scorrimento orizzontale per',
     en: 'Use horizontal scroll to',
     de: 'Aktion beim horizontalen Scrollen',
     fr: 'Scroller horizontalement pour',
@@ -5070,6 +5554,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '水平スクロールで',
   },
   'settings.h_scroll_action_switch_panels': {
+    it: 'cambiare pannello',
     en: 'switch panels',
     de: 'Panel wechseln',
     fr: 'basculer entre les panneaux',
@@ -5081,6 +5566,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルを切り替える',
   },
   'settings.h_scroll_action_switch_act_tabs': {
+    it: 'cambiare schede attive di recente',
     en: 'switch recently active tabs',
     de: 'Zuletzt aktive Tabs wechseln',
     fr: 'basculer entre les onglets actifs',
@@ -5092,6 +5578,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最近アクティブなタブに切り替える',
   },
   'settings.h_scroll_action_none': {
+    it: 'non fare nulla',
     en: 'do nothing',
     de: 'Nichts',
     fr: 'rien',
@@ -5103,6 +5590,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '何もしない',
   },
   'settings.one_panel_switch_per_scroll': {
+    it: 'Limita a un cambio pannello per scorrimento',
     en: 'Limit to one panel switch per scroll',
     de: 'Nur ein Panel pro Scroll-Bewegung wechseln',
     fr: 'Limiter à un basculement de panneau par scroll',
@@ -5114,6 +5602,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スクロールごとにパネルの切り替えを1回に制限する',
   },
   'settings.scroll_through_tabs': {
+    it: 'Cambia schede con scorrimento verticale',
     en: 'Switch tabs using vertical scroll',
     de: 'Tabs durch vertikales Scrollen wechseln',
     fr: 'Basculer d’onglet en scrollant verticalement',
@@ -5125,6 +5614,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '垂直スクロールでタブを切り替える',
   },
   'settings.scroll_through_tabs_panel': {
+    it: 'nel pannello',
     en: 'in panel',
     de: 'Im Panel',
     fr: 'dans le panneau',
@@ -5135,6 +5625,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネル内で',
   },
   'settings.scroll_through_tabs_global': {
+    it: 'globalmente',
     en: 'globally',
     de: 'Global',
     fr: 'entre tous les onglets',
@@ -5146,6 +5637,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グローバルに',
   },
   'settings.scroll_through_tabs_psp': {
+    it: 'preseleziona nel pannello',
     en: 'preselect in panel',
     de: 'Vorauswahl im Panel',
     fr: 'présélectionner dans le panneau',
@@ -5157,6 +5649,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネル内で事前選択',
   },
   'settings.scroll_through_tabs_psg': {
+    it: 'preseleziona globalmente',
     en: 'preselect globally',
     de: 'Global vorauswählen',
     fr: 'présélectionner parmi tous les onglets',
@@ -5168,6 +5661,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グローバルに事前選択',
   },
   'settings.scroll_through_tabs_none': {
+    it: 'nessuno',
     en: 'none',
     de: 'Nie',
     fr: 'jamais',
@@ -5178,6 +5672,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.scroll_through_tabs_preselect_note': {
+    it: 'Seleziona scheda con scorrimento verticale e attivala dopo l\'uscita del cursore',
     en: 'Select tab using vertical scroll and activate it after mouse leave',
     de: 'Tab durch vertikales Scrollen auswählen und aktivieren, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Sélectionner un onglet avec le scroll vertical et l’activer quand la souris sort du panneau',
@@ -5189,12 +5684,14 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '垂直スクロールでタブを選択し、マウスが離れた後にアクティブ化する',
   },
   'settings.scroll_through_tabs_glob_pin_isolate': {
+    it: 'Isola schede fissate globalmente',
     en: 'Isolate globally pinned tabs',
     de: 'Global angeheftete Tabs isolieren',
     fr: 'Isoler les onglets épinglés globalement',
     ru: 'Изолировать глобально закрепленные вкладки',
   },
   'settings.scroll_through_visible_tabs': {
+    it: 'Salta schede compresse',
     en: 'Skip folded tabs',
     de: 'Eingeklappte Tabs überspringen',
     fr: 'Ignorer les onglets repliés',
@@ -5206,6 +5703,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '折りたたまれたタブをスキップする',
   },
   'settings.scroll_through_tabs_skip_discarded': {
+    it: 'Salta schede scaricate',
     en: 'Skip unloaded tabs',
     de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
@@ -5217,6 +5715,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アンロードされたタブをスキップする',
   },
   'settings.scroll_through_tabs_except_overflow': {
+    it: 'Tranne se il pannello trabocca',
     en: 'Unless panel is overflowing',
     de: 'Außer, wenn Panel überläuft',
     fr: 'Sauf si le panneau a une barre de scroll',
@@ -5228,6 +5727,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルがオーバーフローしていない限り',
   },
   'settings.scroll_through_tabs_cyclic': {
+    it: 'Ciclicamente',
     en: 'Cyclically',
     de: 'Zyklisch',
     fr: 'De façon cyclique',
@@ -5239,6 +5739,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '循環',
   },
   'settings.scroll_through_tabs_scroll_area': {
+    it: 'Larghezza area di scorrimento (px)',
     en: 'Scroll area width (px)',
     de: 'Größe des Scroll-Bereiches (px)',
     fr: 'Largeur de la zone de scroll (px)',
@@ -5250,6 +5751,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スクロールエリアの幅 (px)',
   },
   'settings.scroll_through_tabs_scroll_area_note': {
+    it: 'Positivo - a destra, negativo - a sinistra del pannello',
     en: 'Positive - at the right, negative - at the left side of the panel',
     de: 'Positiv - rechte Seite, Negativ - linke Seite des Panels',
     fr: 'Positive: à droite ou négative: à gauche du panneau',
@@ -5261,6 +5763,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '正数 - 右側、負数 - 左側のパネルでスクロール',
   },
   'settings.auto_menu_multi_sel': {
+    it: 'Apri automaticamente menu alla selezione multipla con tasto destro',
     en: 'Automatically open context menu on right-button multi-selection',
     de: 'Nach Mehrfachauswahl mit rechter Maustaste Kontextmenü automatisch öffnen',
     fr: 'Ouvrir le menu contextuel automatiquement après une sélection multiple au clic droit',
@@ -5272,6 +5775,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '右クリックの複数選択時に自動的にコンテキストメニューを開く',
   },
   'settings.auto_menu_multi_sel_note': {
+    it: 'Solo per menu contestuale non nativo',
     en: 'Only for non-native context menu',
     de: 'Wird nur bei Verwendung des nicht-nativen Kontextmenüs unterstützt',
     fr: 'Seulement pour le menu contextuel non natif',
@@ -5283,6 +5787,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ネイティブでないコンテキストメニューの場合のみ',
   },
   'settings.long_click_delay': {
+    it: 'Ritardo clic prolungato (ms)',
     en: 'Long click delay (ms)',
     de: 'Dauer für langen Klick (ms)',
     fr: 'Durée du clic long (ms)',
@@ -5294,6 +5799,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '長押しの遅延時間（ミリ秒）',
   },
   'settings.wheel_threshold': {
+    it: 'Soglia per cambiare pannelli e schede tramite scorrimento',
     en: 'Set threshold for switching between panels and tabs by scrolling',
     de: 'Grenzwert für Wechsel zwischen Panels und Tabs durch Scrollen',
     fr: 'Définir un seuil de scroll avant de basculer entre les panneaux et onglets',
@@ -5305,6 +5811,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スクロールによるパネルとタブの切り替えの閾値を設定する',
   },
   'settings.wheel_threshold_y': {
+    it: 'Scorrimento verticale (px)',
     en: 'Vertical scrolling (px)',
     de: 'Vertikales Scrollen (px)',
     fr: 'Scroll vertical (px)',
@@ -5316,6 +5823,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '垂直スクロール（px）',
   },
   'settings.wheel_accumulation_y': {
+    it: 'Accumulo scorrimento verticale',
     en: 'Vertical scroll accumulation',
     de: 'Vertikale Scroll-Akkumulation',
     fr: 'Cumul du scroll vertical',
@@ -5327,6 +5835,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '垂直スクロールの蓄積',
   },
   'settings.wheel_threshold_x': {
+    it: 'Scorrimento orizzontale (px)',
     en: 'Horizontal scrolling (px)',
     de: 'Horizontales Scrollen (px)',
     fr: 'Scroll horizontal (px)',
@@ -5338,6 +5847,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '水平スクロール（px）',
   },
   'settings.wheel_accumulation_x': {
+    it: 'Accumulo scorrimento orizzontale',
     en: 'Horizontal scroll accumulation',
     de: 'Horizontale Scroll-Akkumulation',
     fr: 'Cumul du scroll horizontal',
@@ -5351,6 +5861,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // Navigation bar actions
   'settings.nav_act_tabs_panel_left_click': {
+    it: 'Clic sinistro su pannello schede attivo',
     en: 'Left click on active tabs panel',
     de: 'Linksklick auf aktives Tab-Panel',
     fr: 'Clic gauche sur un panneau d’onglets actif',
@@ -5362,6 +5873,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブパネルを左クリック',
   },
   'settings.nav_act_tabs_panel_left_click_scroll': {
+    it: 'scorri all\'inizio/fine',
     en: 'scroll to start/end',
     de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
@@ -5373,6 +5885,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '先頭/末尾までスクロール',
   },
   'settings.nav_act_tabs_panel_left_click_new_tab': {
+    it: 'crea scheda',
     en: 'create tab',
     de: 'Tab erstellen',
     fr: 'créer un onglet',
@@ -5384,6 +5897,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを作成',
   },
   'settings.nav_act_tabs_panel_left_click_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -5395,6 +5909,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.nav_act_bookmarks_panel_left_click': {
+    it: 'Clic sinistro su pannello segnalibri attivo',
     en: 'Left click on active bookmarks panel',
     de: 'Linksklick auf aktives Lesezeichen-Panel',
     fr: 'Clic gauche sur un panneau de marque-pages actif',
@@ -5406,6 +5921,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなブックマークパネルを左クリック',
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': {
+    it: 'scorri all\'inizio/fine',
     en: 'scroll to start/end',
     de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
@@ -5417,6 +5933,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '先頭/末尾までスクロール',
   },
   'settings.nav_act_bookmarks_panel_left_click_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -5428,6 +5945,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.nav_tabs_panel_mid_click': {
+    it: 'Clic centrale su pannello schede',
     en: 'Middle click on tabs panel',
     de: 'Mittelklick auf Tab-Panel',
     fr: 'Clic du milieu sur un panneau d’onglet',
@@ -5439,6 +5957,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネルを中クリック',
   },
   'settings.nav_tabs_panel_mid_click_rm_act_tab': {
+    it: 'chiudi scheda attiva',
     en: 'close active tab',
     de: 'Aktiven Tab schließen',
     fr: 'fermer l’onglet actif',
@@ -5450,6 +5969,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブを閉じる',
   },
   'settings.nav_tabs_panel_mid_click_rm_all': {
+    it: 'chiudi schede',
     en: 'close tabs',
     de: 'Tabs schließen',
     fr: 'fermer les onglets',
@@ -5461,6 +5981,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを閉じる',
   },
   'settings.nav_tabs_panel_mid_click_rm_rmp': {
+    it: 'chiudi schede e rimuovi pannello',
     en: 'close tabs and remove panel',
     de: 'Tabs schließen und Panel entfernen',
     fr: 'fermer les onglets et supprimer le panneau',
@@ -5472,6 +5993,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを閉じてパネルを削除',
   },
   'settings.nav_tabs_panel_mid_click_discard': {
+    it: 'scarica schede',
     en: 'unload tabs',
     de: 'Tabs entladen',
     fr: 'décharger les onglets',
@@ -5483,6 +6005,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブをアンロード',
   },
   'settings.nav_tabs_panel_mid_click_hide': {
+    it: 'nascondi pannello',
     en: 'hide panel',
     de: 'Panel ausblenden',
     fr: 'cacher le panneau',
@@ -5494,6 +6017,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルを非表示',
   },
   'settings.nav_tabs_panel_mid_click_bookmark': {
+    it: 'salva pannello nei segnalibri',
     en: 'save panel to bookmarks',
     de: 'Panel in Lesezeichen speichern',
     fr: 'sauvegarder le panneau dans les marque-pages',
@@ -5505,6 +6029,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルをブックマークに保存',
   },
   'settings.nav_tabs_panel_mid_click_bkm_rmp': {
+    it: 'salva nei segnalibri e rimuovi pannello',
     en: 'save to bookmarks and remove panel',
     de: 'In Lesezeichen speichern und Panel entfernen',
     fr: 'sauvegarder dans les marque-pages et supprimer le panneau',
@@ -5516,6 +6041,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークに保存してパネルを削除',
   },
   'settings.nav_tabs_panel_mid_click_convert': {
+    it: 'converti in segnalibri',
     en: 'convert to bookmarks',
     de: 'In Lesezeichen umwandeln',
     fr: 'convertir en marque-pages',
@@ -5527,6 +6053,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークに変換',
   },
   'settings.nav_tabs_panel_mid_click_conv_hide': {
+    it: 'converti in pannello segnalibri e nascondi',
     en: 'convert to bookmarks panel and hide',
     de: 'In Lesezeichen-Panel umwandeln und ausblenden',
     fr: 'convertir en panneau de marque-pages et le cacher',
@@ -5538,6 +6065,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークパネルに変換して非表示',
   },
   'settings.nav_tabs_panel_mid_click_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -5549,6 +6077,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.nav_bookmarks_panel_mid_click': {
+    it: 'Clic centrale su pannello segnalibri',
     en: 'Middle click on bookmarks panel',
     de: 'Mittelklick auf Lesezeichen-Panel',
     fr: 'Clic du milieu sur un panneau de marque-pages',
@@ -5560,6 +6089,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークパネルを中クリック',
   },
   'settings.nav_bookmarks_panel_mid_click_convert': {
+    it: 'converti in schede',
     en: 'convert to tabs',
     de: 'In Tabs umwandeln',
     fr: 'convertir en onglets',
@@ -5571,6 +6101,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブに変換',
   },
   'settings.nav_bookmarks_panel_mid_click_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -5582,6 +6113,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'なし',
   },
   'settings.nav_switch_panels_wheel': {
+    it: 'Cambia pannelli con scorrimento verticale sulla barra di navigazione',
     en: 'Switch panels using vertical scroll over navigation bar',
     de: 'Panels durch vertikales Scrollen über der Navigationsleiste wechseln',
     fr: 'Basculer entre les panneaux en scrollant verticalement sur la barre de navigation',
@@ -5595,6 +6127,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // Tab actions
   'settings.tab_double_click': {
+    it: 'Doppio clic sulla scheda',
     en: 'Double click on tab',
     de: 'Doppelklick auf Tab',
     fr: 'Double-clic sur un onglet',
@@ -5606,6 +6139,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブをダブルクリック',
   },
   'settings.tabs_second_click_act_prev': {
+    it: 'Attiva scheda precedente cliccando sulla scheda attiva (Tab flip)',
     en: 'Activate previously active tab when clicking on the active tab (Tab flip)',
     de: 'Beim Klick auf den aktiven Tab zum zuvor aktiven Tab wechseln',
     fr: 'Cliquer sur l’onglet actif active l’onglet précédemment actif (Onglet revers)',
@@ -5617,6 +6151,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブをクリックしたときに以前にアクティブだったタブをアクティブにする（タブの切り替え）',
   },
   'settings.tabs_second_click_act_prev_panel_only': {
+    it: 'Solo nel pannello attivo',
     en: 'Only in the active panel',
     de: 'Nur im aktiven Panel',
     fr: 'Seulement sur le panneau actif',
@@ -5628,6 +6163,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなパネルのみ',
   },
   'settings.tabs_second_click_act_prev_no_unload': {
+    it: 'Salta schede scaricate',
     en: 'Skip unloaded tabs',
     de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
@@ -5639,6 +6175,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アンロードされたタブをスキップする',
   },
   'settings.activate_on_mouseup': {
+    it: 'Attiva scheda al rilascio del tasto del mouse',
     en: 'Activate tab on mouse button release',
     de: 'Tab beim Loslassen der Maustaste aktivieren',
     fr: 'Activer l’onglet lors du relâchement du bouton de la souris',
@@ -5650,6 +6187,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウスボタンを離したときにタブをアクティブにする',
   },
   'settings.tab_close_on_mouse_up': {
+    it: 'Chiudi scheda al rilascio del tasto del mouse',
     en: 'Trigger the close button action on mouse button release',
     de: 'Die Schließfunktion beim Loslassen der Maustaste auslösen',
     fr: "Lancer l'action du bouton de fermeture lorsque le bouton de la souris est relâché",
@@ -5661,6 +6199,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'マウスボタンを離したときに閉じるボタンを起動する',
   },
   'settings.shift_selection_from_active': {
+    it: 'Inizia selezione Shift+clic dalla scheda attiva',
     en: 'Start shift+click selection from the active tab',
     de: 'Umschalt+Klick-Auswahl beim aktiven Tab beginnen',
     fr: 'Démarrer la sélection maj+clic depuis l’onglet actif',
@@ -5672,6 +6211,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブからの shift+クリック選択を開始する',
   },
   'settings.ctrl_selection_include_active': {
+    it: 'Includi la scheda attiva nella selezione iniziale Ctrl+clic',
     en: 'Make initial ctrl+click selection include the active tab',
     de: 'Erste Strg+Klick-Auswahl schließt den aktiven Tab ein',
     fr: 'Faire que la sélection ctrl+clic initiale inclue l’onglet actif',
@@ -5683,6 +6223,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最初のCtrl+クリック選択にアクティブなタブを含める',
   },
   'settings.tab_long_left_click': {
+    it: 'Clic sinistro prolungato su scheda',
     en: 'Long left click on tab',
     de: 'Langer Linksklick auf Tab',
     fr: 'Clic gauche long sur un onglet',
@@ -5694,6 +6235,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを左クリック長押し',
   },
   'settings.tab_long_right_click': {
+    it: 'Clic destro prolungato su scheda',
     en: 'Long right click on tab',
     de: 'Langer Rechtsklick auf Tab',
     fr: 'Clic droit long sur un onglet',
@@ -5705,6 +6247,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを右クリック長押し',
   },
   'settings.tab_middle_click': {
+    it: 'Clic centrale su scheda',
     en: 'Middle click on tab',
     de: 'Mittelklick auf Tab',
     fr: 'Clic milieu sur un onglet',
@@ -5716,6 +6259,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを中クリック',
   },
   'settings.tab_middle_click_ctrl': {
+    it: 'Con tasto Ctrl premuto',
     en: 'With Ctrl key pressed',
     de: 'Mit gedrückter Strg-Taste',
     fr: 'Avec la touche Ctrl enfoncée',
@@ -5727,6 +6271,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Ctrl キーを押しながら',
   },
   'settings.tab_middle_click_shift': {
+    it: 'Con tasto Shift premuto',
     en: 'With Shift key pressed',
     de: 'Mit gedrückter Umschalttaste',
     fr: 'Avec la touche Maj enfoncée',
@@ -5738,6 +6283,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Shift キーを押しながら',
   },
   'settings.tab_pinned_middle_click': {
+    it: 'Se la scheda è fissata',
     en: 'If tab is pinned',
     de: 'Bei angehefteten Tabs',
     fr: 'Si l’onglet est épinglé',
@@ -5749,6 +6295,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブが固定されている場合',
   },
   'settings.multiple_middle_close': {
+    it: 'Usa selezione multipla chiudendo schede con clic centrale',
     en: 'Use multi-selection when closing tabs with middle-click',
     de: 'Mehrfachauswahl beim Schließen von Tabs per Mittelklick verwenden',
     fr: 'Utiliser la sélection multiple pour fermer plusieurs onglets avec le clic milieu',
@@ -5760,6 +6307,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '中クリックでタブを閉じるときにマルチ選択を使用する',
   },
   'settings.multiple_middle_close_note': {
+    it: 'Le schede selezionate verranno chiuse al rilascio del tasto',
     en: 'Selected tabs will be closed on releasing the button',
     de: 'Ausgewählte Tabs werden beim Loslassen der Taste geschlossen',
     fr: 'Les onglets sélectionnés seront fermés lors du relâchement du bouton',
@@ -5771,6 +6319,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ボタンを離すと選択したタブが閉じられます',
   },
   'settings.tab_close_middle_click': {
+    it: 'Clic centrale sul pulsante di chiusura',
     en: 'Middle click on close tab button',
     de: 'Mittelklick auf "Schließen"-Schaltfläche',
     fr: 'Clic milieu sur le bouton de fermeture d’onglet”',
@@ -5782,6 +6331,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '閉じるボタンを中クリック',
   },
   'settings.tab_action_reload': {
+    it: 'ricarica',
     en: 'reload',
     de: 'Neu laden',
     fr: 'actualiser',
@@ -5793,6 +6343,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'リロード',
   },
   'settings.tab_action_duplicate': {
+    it: 'duplica',
     en: 'duplicate',
     de: 'Duplizieren',
     fr: 'dupliquer',
@@ -5804,6 +6355,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '複製',
   },
   'settings.tab_action_dup_child': {
+    it: 'duplica come figlia',
     en: 'duplicate as a child',
     de: 'Als untergeordneten Tab duplizieren',
     fr: 'dupliquer en tant qu’enfant',
@@ -5815,6 +6367,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '子として複製',
   },
   'settings.tab_action_pin': {
+    it: 'fissa',
     en: 'pin',
     de: 'Anheften',
     fr: 'épingler',
@@ -5826,6 +6379,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ピン留め',
   },
   'settings.tab_action_unpin': {
+    it: 'sblocca',
     en: 'unpin',
     de: 'Lösen',
     fr: 'desépingler',
@@ -5837,6 +6391,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ピン留め解除',
   },
   'settings.tab_action_mute': {
+    it: 'silenzia',
     en: 'mute',
     de: 'Stumm schalten',
     fr: 'couper le son',
@@ -5848,6 +6403,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ミュート',
   },
   'settings.tab_action_clear_cookies': {
+    it: 'cancella cookie',
     en: 'clear cookies',
     de: 'Cookies löschen',
     fr: 'supprimer les cookies',
@@ -5858,6 +6414,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Cookie をクリア',
   },
   'settings.tab_action_exp': {
+    it: 'espandi',
     en: 'expand',
     de: 'Ausklappen',
     fr: 'étendre',
@@ -5869,6 +6426,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '展開',
   },
   'settings.tab_action_new_after': {
+    it: 'nuova scheda allo stesso livello',
     en: 'new sibling tab',
     de: 'Neuer Tab auf gleicher Ebene',
     fr: 'nouvel onglet voisin',
@@ -5880,6 +6438,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しい同じ階層のタブ',
   },
   'settings.tab_action_new_child': {
+    it: 'nuova scheda figlia',
     en: 'new child tab',
     de: 'Neuer untergeordneter Tab',
     fr: 'nouvel onglet enfant',
@@ -5891,6 +6450,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しい子タブ',
   },
   'settings.tab_action_close': {
+    it: 'chiudi scheda',
     en: 'close tab',
     de: 'Tab schließen',
     fr: 'fermer l’onglet',
@@ -5902,6 +6462,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを閉じる',
   },
   'settings.tab_action_discard': {
+    it: 'scarica',
     en: 'unload',
     de: 'Entladen',
     fr: 'décharger',
@@ -5913,6 +6474,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アンロード',
   },
   'settings.tab_action_discard_or_close': {
+    it: 'scarica o chiudi scheda',
     en: 'unload or close tab',
     de: 'Entladen oder Schließen des Tabs',
     fr: 'décharger ou fermer l’onglet',
@@ -5924,6 +6486,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブをアンロードまたは閉じる',
   },
   'settings.tab_action_edit_title': {
+    it: 'modifica titolo',
     en: 'edit title',
     de: 'Titel bearbeiten',
     fr: 'modifier le titre',
@@ -5935,6 +6498,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タイトルを編集',
   },
   'settings.tab_action_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -5948,6 +6512,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // Tabs panel actions
   'settings.tabs_panel_left_click_action': {
+    it: 'Clic sinistro su pannello schede',
     en: 'Left click on tabs panel',
     de: 'Linksklick auf Tab-Panel',
     fr: 'Clic gauche sur un panneau d’onglets',
@@ -5959,6 +6524,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネル上で左クリック',
   },
   'settings.tabs_panel_double_click_action': {
+    it: 'Doppio clic su pannello schede',
     en: 'Double click on tabs panel',
     de: 'Doppelklick auf Tab-Panel',
     fr: 'Double clic sur un panneau d’onglets',
@@ -5970,6 +6536,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネル上でダブルクリック',
   },
   'settings.tabs_panel_right_click_action': {
+    it: 'Clic destro su pannello schede',
     en: 'Right click on tabs panel',
     de: 'Rechtsklick auf Tab-Panel',
     fr: 'Clic droit sur un panneau d’onglets',
@@ -5981,6 +6548,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネル上で右クリック',
   },
   'settings.tabs_panel_middle_click_action': {
+    it: 'Clic centrale su pannello schede',
     en: 'Middle click on tabs panel',
     de: 'Mittelklick auf Tab-Panel',
     fr: 'Clic milieu sur un panneau d’onglets',
@@ -5992,6 +6560,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブパネル上で中クリック',
   },
   'settings.tabs_panel_action_prev': {
+    it: 'pannello precedente',
     en: 'previous panel',
     de: 'Vorheriges Panel',
     fr: 'panneau précédent',
@@ -6003,6 +6572,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '前のパネル',
   },
   'settings.tabs_panel_action_next': {
+    it: 'pannello successivo',
     en: 'next panel',
     de: 'Nächstes Panel',
     fr: 'panneau suivant',
@@ -6014,6 +6584,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '次のパネル',
   },
   'settings.tabs_panel_action_expand': {
+    it: 'espandi/comprimi',
     en: 'expand/fold',
     de: 'Ein-/Ausklappen',
     fr: 'déplier/replier',
@@ -6025,6 +6596,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '展開/折りたたむ',
   },
   'settings.tabs_panel_action_parent': {
+    it: 'attiva scheda genitrice',
     en: 'activate parent tab',
     de: 'Übergeordneten Tab aktivieren',
     fr: 'activer l’onglet parent',
@@ -6036,6 +6608,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '親タブをアクティブ化',
   },
   'settings.tabs_panel_action_tab': {
+    it: 'crea scheda',
     en: 'create tab',
     de: 'Tab erstellen',
     fr: 'créer un onglet',
@@ -6047,6 +6620,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを作成',
   },
   'settings.tabs_panel_action_collapse': {
+    it: 'comprimi rami inattivi',
     en: 'collapse inactive branches',
     de: 'Inaktive Zweige einklappen',
     fr: 'replier les branches inactives',
@@ -6058,6 +6632,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '非アクティブなブランチを折りたたむ',
   },
   'settings.tabs_panel_action_menu': {
+    it: 'mostra menu',
     en: 'show menu',
     de: 'Menü anzeigen',
     fr: 'afficher le menu',
@@ -6069,6 +6644,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'メニューを表示',
   },
   'settings.tabs_panel_action_rm_act_tab': {
+    it: 'chiudi scheda attiva',
     en: 'close active tab',
     de: 'Aktiven Tab schließen',
     fr: 'fermer l’onglet actif',
@@ -6080,6 +6656,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブを閉じる',
   },
   'settings.tabs_panel_action_undo': {
+    it: 'annulla chiusura scheda',
     en: 'undo tab close',
     de: '"Tab schließen" rückgängig machen',
     fr: 'rouvrir l’onglet fermé',
@@ -6091,6 +6668,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを閉じる操作を元に戻す',
   },
   'settings.tabs_panel_action_none': {
+    it: 'nessuna',
     en: 'none',
     de: 'Nichts',
     fr: 'rien',
@@ -6104,6 +6682,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // New Tab button actions
   'settings.mouse.new_tab_middle_click_action': {
+    it: 'Clic centrale sul pulsante Nuova scheda',
     en: 'Middle click on New Tab button',
     de: 'Mittelklick auf "Neuer Tab"-Schaltfläche',
     fr: 'Clic milieu sur le bouton “Nouvel onglet”',
@@ -6115,6 +6694,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブボタンを中クリック',
   },
   'settings.mouse.new_tab_action_new_child': {
+    it: 'apri nuova scheda figlia',
     en: 'open new child tab',
     de: 'Neuen untergeordneten Tab erstellen',
     fr: 'ouvrir un nouvel onglet enfant',
@@ -6126,6 +6706,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しい子タブを開く',
   },
   'settings.mouse.new_tab_action_reopen': {
+    it: 'applica contenitore o URL',
     en: 'apply container or URL',
     de: 'Umgebung oder URL anwenden',
     fr: 'appliquer le conteneur ou l’URL',
@@ -6139,6 +6720,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // Bookmark actions
   'settings.mouse.bookmarks.left_click_action': {
+    it: 'Clic sinistro sul segnalibro',
     en: 'Left-click on the bookmark',
     de: 'Linksklick auf Lesezeichen',
     fr: 'Clic gauche sur un marque-page',
@@ -6150,6 +6732,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークを左クリック',
   },
   'settings.mouse.bookmarks.mid_click_action': {
+    it: 'Clic centrale sul segnalibro',
     en: 'Middle-click on the bookmark',
     de: 'Mittelklick auf Lesezeichen',
     fr: 'Clic milieu sur un marque-page',
@@ -6161,6 +6744,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマークを中クリック',
   },
   'settings.mouse.bookmarks.mid_click_action_open_in_new': {
+    it: 'apri in nuova scheda',
     en: 'open in new tab',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
@@ -6172,6 +6756,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブで開く',
   },
   'settings.mouse.bookmarks.mid_click_action_edit': {
+    it: 'modifica',
     en: 'edit',
     de: 'Ändern',
     fr: 'modifier',
@@ -6183,6 +6768,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '編集',
   },
   'settings.mouse.bookmarks.mid_click_action_delete': {
+    it: 'elimina',
     en: 'delete',
     de: 'Löschen',
     fr: 'supprimer',
@@ -6194,6 +6780,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '削除',
   },
   'settings.mouse.bookmarks.new_tab_rm': {
+    it: 'Rimuovi segnalibro cliccato',
     en: 'Remove clicked bookmark',
     de: 'Angeklicktes Lesezeichen entfernen',
     fr: 'Supprimer le marque-page cliqué',
@@ -6207,6 +6794,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // History items actions
   'settings.mouse.history.left_click_action': {
+    it: 'Clic sinistro sull\'elemento della cronologia',
     en: 'Left-click on the history item',
     de: 'Linksklick auf Chronik-Eintrag',
     fr: 'Clic gauche sur une entrée de l’historique',
@@ -6218,6 +6806,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '履歴アイテムを左クリック',
   },
   'settings.mouse.history.mid_click_action': {
+    it: 'Clic centrale sull\'elemento della cronologia',
     en: 'Middle-click on the history item',
     de: 'Mittelklick auf Chronik-Eintrag',
     fr: 'Clic milieu sur une entrée de l’historique',
@@ -6229,6 +6818,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '履歴アイテムを中クリック',
   },
   'settings.mouse.history.mid_click_action_open_in_new': {
+    it: 'apri in nuova scheda',
     en: 'open in new tab',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
@@ -6240,6 +6830,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブで開く',
   },
   'settings.mouse.history.mid_click_action_forget_visit': {
+    it: 'dimentica visita',
     en: 'forget visit',
     de: 'Besuch vergessen',
     fr: 'oublier la visite',
@@ -6253,6 +6844,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // Bookmark and History item actions
   'settings.mouse.bh.left_click_action_open_in_act': {
+    it: 'apri nella scheda attiva',
     en: 'open in active tab',
     de: 'Im aktiven Tab öffnen',
     fr: 'ouvrir dans l’onglet actif',
@@ -6264,6 +6856,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブで開く',
   },
   'settings.mouse.bh.left_click_action_open_in_new': {
+    it: 'apri in nuova scheda',
     en: 'open in new tab',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
@@ -6275,6 +6868,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブで開く',
   },
   'settings.mouse.bh.new_tab_activate': {
+    it: 'Attiva la nuova scheda',
     en: 'Activate the new tab',
     de: 'Neuen Tab aktivieren',
     fr: 'Activer le nouvel onglet',
@@ -6286,6 +6880,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブをアクティブ化',
   },
   'settings.mouse.bh.new_tab_pos': {
+    it: 'Posizione della nuova scheda',
     en: 'Position of the new tab',
     de: 'Position des neuen Tabs',
     fr: 'Position du nouvel onglet',
@@ -6297,6 +6892,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブの位置',
   },
   'settings.mouse.bh.new_tab_pos_default': {
+    it: 'predefinita',
     en: 'default',
     de: 'Standard',
     fr: 'par défaut',
@@ -6308,6 +6904,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'デフォルト',
   },
   'settings.mouse.bh.new_tab_pos_after': {
+    it: 'dopo la scheda attiva',
     en: 'after active tab',
     de: 'Nach aktivem Tab',
     fr: 'après l’onglet actif',
@@ -6321,6 +6918,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Snapshots
   'settings.snapshots_title': {
+    it: 'Istantanee',
     en: 'Snapshots',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
@@ -6331,6 +6929,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショット',
   },
   'settings.snap_notify': {
+    it: 'Mostra notifica dopo la creazione dell\'istantanea',
     en: 'Show notification after snapshot creation',
     de: 'Benachrichtigung nach dem Erstellen eines Schnappschusses anzeigen',
     fr: 'Afficher une notification après la création d’un instantané',
@@ -6342,6 +6941,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショット作成後に通知を表示する',
   },
   'settings.snap_exclude_private': {
+    it: 'Escludi finestre anonime',
     en: 'Exclude private windows',
     de: 'Private Fenster ausschließen',
     fr: 'Ignorer les fenêtres de navigation privée',
@@ -6353,6 +6953,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プライベートウィンドウを除外する',
   },
   'settings.snap_interval': {
+    it: 'Intervallo istantanee automatiche',
     en: 'Auto-snapshots interval',
     de: 'Intervall automatischer Schnappschüsse',
     fr: 'Intervalle entre les instantanés automatiques',
@@ -6364,6 +6965,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '自動スナップショットの間隔',
   },
   'settings.snap_interval_min': {
+    it: n => (n === 1 ? 'minuto' : 'minuti'),
     en: n => (n === 1 ? 'minute' : 'minutes'),
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
     fr: n => (n === 0 || n === 1 ? 'minute' : 'minutes'),
@@ -6382,6 +6984,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '分',
   },
   'settings.snap_interval_hr': {
+    it: n => (n === 1 ? 'ora' : 'ore'),
     en: n => (n === 1 ? 'hour' : 'hours'),
     de: n => (n === 1 ? 'Stunde' : 'Stunden'),
     fr: n => (n === 0 || n === 1 ? 'heure' : 'heures'),
@@ -6401,6 +7004,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '時間',
   },
   'settings.snap_interval_day': {
+    it: n => (n === 1 ? 'giorno' : 'giorni'),
     en: n => (n === 1 ? 'day' : 'days'),
     de: n => (n === 1 ? 'Tag' : 'Tage'),
     fr: n => (n === 0 || n === 1 ? 'jour' : 'jours'),
@@ -6415,6 +7019,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '日',
   },
   'settings.snap_export_md_tree': {
+    it: 'Struttura ad albero completa in Markdown',
     en: 'Full-tree structure in Markdown',
     de: 'Vollständige Baumstruktur im Markdown',
     fr: 'Structure de l’arborescence complète en Markdown',
@@ -6426,6 +7031,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Markdown での完全なツリー構造',
   },
   'settings.snap_export_md_tree_note': {
+    it: 'Aggiunge rientri e punti elenco agli elementi di finestre e pannelli.',
     en: 'Add additional indents and bullets to window and panel items.',
     de: 'Fügt Fenster- und Panel-Elementen zusätzliche Einrückungen und Aufzählungszeichen hinzu.',
     fr: 'Ajoute des indenttions et puces supplémentaires pour les entrées des fenêtres et panneaux',
@@ -6437,6 +7043,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ウィンドウとパネルの項目に追加のインデントと箇条書きを追加します。',
   },
   'settings.snap_auto_export': {
+    it: 'Esportazione automatica (a ogni istantanea)',
     en: 'Auto export (on every snapshot)',
     de: 'Automatischer Export (bei jedem Schnappschuss)',
     fr: 'Export automatique (pour chaque instantané)',
@@ -6448,6 +7055,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '自動エクスポート（すべてのスナップショットで）',
   },
   'settings.snap_auto_export_type': {
+    it: 'Formato/i esportazione automatica',
     en: 'Auto export format(s)',
     de: 'Dateiformat(e) der automatischen Exporte',
     fr: 'Format(s) des exports automatiques',
@@ -6459,14 +7067,17 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '自動エクスポート形式',
   },
   'settings.snap_auto_export_type_json': {
+    it: 'json',
     en: 'json',
     ru: 'json',
   },
   'settings.snap_auto_export_type_md': {
+    it: 'md',
     en: 'md',
     ru: 'md',
   },
   'settings.snap_auto_export_type_both': {
+    it: 'entrambi',
     en: 'both',
     de: 'beide',
     fr: 'les deux',
@@ -6478,6 +7089,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '両方',
   },
   'settings.snap_export_path': {
+    it: 'Percorso con nome file',
     en: 'Path with file name',
     de: 'Pfad mit Dateinamen',
     fr: 'Chemin avec le nom du fichier',
@@ -6492,10 +7104,12 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Although the translated name is displayed,
   // the default saved snapshot file name is always the same.
   'settings.snap_export_path_ph': {
+    it: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_export_path_note': {
+    it: `Nota: il percorso è relativo alla cartella dei download e Firefox non consente di salvare al di fuori di essa.\n%Y - anno; %M - mese; %D - giorno; %h - ora; %m - minuto; %s - secondo`,
     en: `Note: Path is relative to the downloads folder and Firefox doesn't allow to set path outside it.
 %Y - year; %M - month; %D - day; %h - hour; %m - minute; %s - second`,
     de: `Hinweis: Der Pfad ist relativ zum Download-Ordner. Firefox gestattet es jedoch nicht, ihn außerhalb dessen zu setzen.
@@ -6516,6 +7130,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 %Y - 年; %M - 月; %D - 日; %h - 時; %m - 分; %s - 秒`,
   },
   'settings.snap_limit': {
+    it: 'Limite istantanee',
     en: 'Snapshots limit',
     de: 'Obergrenze für Schnappschüsse',
     fr: 'Limite du nombre d’instantanés',
@@ -6526,6 +7141,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットの制限',
   },
   'settings.snap_limit_snap': {
+    it: n => (n === 1 ? 'istantanea' : 'istantanee'),
     en: n => (n === 1 ? 'snapshot' : 'snapshots'),
     de: n => (n === 1 ? 'Schnappschuss' : 'Schnappschüsse'),
     fr: n => (n === 0 || n === 1 ? 'instantané' : 'instantanés'),
@@ -6544,6 +7160,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショット',
   },
   'settings.snap_limit_kb': {
+    it: n => (n === 1 ? 'kbyte' : 'kbyte'),
     en: n => (n === 1 ? 'kbyte' : 'kbytes'),
     de: 'KB',
     fr: 'Ko',
@@ -6561,6 +7178,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'キロバイト',
   },
   'settings.snap_limit_day': {
+    it: n => (n === 1 ? 'giorno' : 'giorni'),
     en: n => (n === 1 ? 'day' : 'days'),
     de: n => (n === 1 ? 'Tag' : 'Tage'),
     fr: n => (n === 0 || n === 1 ? 'jour' : 'jours'),
@@ -6578,6 +7196,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '日',
   },
   'settings.snap_limit_note': {
+    it: 'Non si applica alle istantanee esportate automaticamente',
     en: "Doesn't apply to auto-exported snapshots",
     de: 'Gilt nicht für automatisch exportierte Schnappschüsse',
     fr: 'Ne s’applique pas aux instantanés exportés automatiquement',
@@ -6589,6 +7208,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '自動エクスポートされたスナップショットには適用されません',
   },
   'settings.snapshots_view_label': {
+    it: 'Visualizza istantanee',
     en: 'View snapshots',
     de: 'Schnappschüsse ansehen',
     fr: 'Voir les instantanés',
@@ -6600,6 +7220,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットを表示',
   },
   'settings.make_snapshot': {
+    it: 'Crea istantanea',
     en: 'Create snapshot',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
@@ -6613,6 +7234,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Sync
   'settings.sync_title': {
+    it: 'Sincronizzazione',
     en: 'Sync',
     de: 'Synchronisation',
     fr: 'Synchronisation',
@@ -6623,6 +7245,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '同期',
   },
   'settings.sync_name': {
+    it: 'Nome profilo per sincronizzazione',
     en: 'Profile name for sync',
     de: 'Profilname für Synchronisation',
     fr: 'Nom du profil de synchronisation',
@@ -6634,6 +7257,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '同期のためのプロファイル名',
   },
   'settings.sync_name_or': {
+    it: 'es: Firefox Casa',
     en: 'e.g: Firefox Beta Home',
     de: 'z. B. Firefox Beta Home',
     fr: 'ex. Firefox Beta maison',
@@ -6644,6 +7268,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '例: Firefox Beta Home',
   },
   'settings.sync_use_ff': {
+    it: 'Usa Firefox Sync',
     en: 'Use Firefox Sync',
     de: 'Firefox Sync verwenden',
     fr: 'Utiliser Firefox Sync',
@@ -6654,6 +7279,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Firefox Syncを使用する',
   },
   'settings.sync_ff_note': {
+    it: `Note:\n- È necessario accedere all\'account Firefox per farlo funzionare\n- Per assicurarti che i dati siano caricati premi "Sincronizza ora" nelle impostazioni di Firefox`,
     en: `Notes:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
@@ -6686,6 +7312,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - データが Firefox 同期サーバーにアップロードされていることを確認するには、Firefox 設定またはメイン メニューのプロファイルにある [今すぐ同期] ボタン (3 本の線のボタン) を押す必要があります`,
   },
   'settings.sync_use_gd': {
+    it: 'Usa Google Drive (sperimentale)',
     en: 'Use Google Drive (experimental)',
     de: 'Google Drive verwenden (experimentell)',
     fr: 'Utiliser Google Drive (expérimental)',
@@ -6697,6 +7324,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Google ドライブを使用する (試験的)',
   },
   'settings.sync_gd_note': {
+    it: `Note:\n- Sidebery non ha accesso ai tuoi altri file su Google Drive\n- I file sono salvati in JSON`,
     en: `Notes:
 - Sidebery doesn't have access to your files on Google Drive
 - Sidebery files are stored in JSON, so Google can read their contents (encryption is planned)`,
@@ -6723,6 +7351,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - Sidebery ファイルは JSON 形式で保存されるため、Google はファイルの内容を読み取ることができます (暗号化が予定されています)`,
   },
   'settings.sync_gd_api': {
+    it: 'Usa la tua chiave API personale',
     en: 'Use your own API key',
     de: 'Eigenen API-Schlüssel verwenden',
     fr: 'Utiliser votre propre clé d’API',
@@ -6734,6 +7363,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '独自のAPIキーを使用する',
   },
   'settings.sync_gd_api_note': {
+    it: 'Per utenti avanzati. Nel caso la chiave predefinita superi i limiti.',
     en: 'For advanced users. In case default key gets blocked due to exceeding the limits.',
     de: 'Für fortgeschrittene Benutzer. Falls der Standardschlüssel aufgrund Überschreitung der Grenzwerte gesperrt wird.',
     fr: 'Paramètre avancé, dans le cas où la clé par défaut se fasse bloquer pour cause de dépassement des limites.',
@@ -6745,6 +7375,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '上級ユーザー向け。制限を超えたためにデフォルト キーがブロックされた場合。',
   },
   'settings.sync_gd_api_link': {
+    it: 'Link',
     en: 'Link',
     de: 'Link',
     fr: 'Lien',
@@ -6753,6 +7384,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '鏈結',
   },
   'settings.sync_gd_api_proj': {
+    it: '1. Crea un progetto Google Cloud:',
     en: '1. Create a Google Cloud project:',
     de: '1. Google-Cloud-Projekt erstellen:',
     fr: '1. Créer un project Google Cloud:',
@@ -6761,6 +7393,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '1. 建立 Google Cloud 專案：',
   },
   'settings.sync_gd_api_proj_sub': {
+    it: '- Destinatari: Esterno',
     en: '- Audience: External',
     de: '- Zielgruppe: Extern',
     fr: '– Audience: Externe',
@@ -6769,6 +7402,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '- 目標對象：外部',
   },
   'settings.sync_gd_api_drive': {
+    it: '2. Abilita le API di Google Drive:',
     en: '2. Enable Drive API:',
     de: '2. Drive API aktivieren:',
     fr: '2. Activer l’API Drive:',
@@ -6777,6 +7411,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '2. 啟用「Google Drive API」：',
   },
   'settings.sync_gd_api_cli': {
+    it: '3. Crea un Client ID OAuth:',
     en: '3. Create a Client:',
     de: '3. Client erstellen:',
     fr: '3. Créer un Client:',
@@ -6785,6 +7420,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '3. 建立用戶端：',
   },
   'settings.sync_gd_api_cli_sub': {
+    it: `- Tipo: Applicazione Web\n- URI di reindirizzamento autorizzati:`,
     en: `- Type: Web application
 - Authorized redirect URIs:`,
     de: `- Typ: Webanwendung
@@ -6799,6 +7435,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - 授權重新導向 URI：`,
   },
   'settings.sync_gd_api_id': {
+    it: '4. Apri il client creato e copia il Client ID:',
     en: '4. Open created client and get the Client ID:',
     de: '4. Erstellten Client öffnen und die Client-ID kopieren:',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
@@ -6807,6 +7444,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '4. 複製建立的 OAuth 用戶端編號：',
   },
   'settings.sync_gd_api_ins': {
+    it: '5. Incolla il Client ID qui:',
     en: '5. Insert that Client ID here:',
     de: '5. Diese Client-ID hier einfügen:',
     fr: '5. Insérer cet ID Client ici:',
@@ -6815,6 +7453,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '5. 在此貼上該用戶端編號：',
   },
   'settings.sync_gd_api_scope': {
+    it: '6. Aggiungi i seguenti ambiti nella sezione Accesso ai dati:',
     en: '6. Add the following scopes in the Data Access section:',
     de: '6. Im Abschnitt "Datenzugriff" folgende Bereiche hinzufügen:',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
@@ -6823,6 +7462,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '6. 在資料存取權新增以下範圍：',
   },
   'settings.sync_gd_api_usr': {
+    it: '7. Aggiungi un utente di test (la tua email):',
     en: '7. Add a test user (your email):',
     de: '7. Testnutzer hinzufügen (Ihre E-Mail-Adresse):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
@@ -6831,6 +7471,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '7. 新增測試使用者（您的電子郵件地址）：',
   },
   'settings.sync_gd_api_reload': {
+    it: '8. Disconnetti Sidebery da Google Drive:',
     en: '8. Disconnect Sidebery from your Google Drive:',
     de: '8. Sidebery von Ihrem Google Drive trennen:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
@@ -6839,6 +7480,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '8. 取消 Sidebery 與 Google 雲端硬碟的連接：',
   },
   'settings.sync_gd_api_reload_sub': {
+    it: '(se utilizzavi la chiave predefinita)',
     en: '(if you used the default API key)',
     de: '(falls Sie den Standard-API-Schlüssel verwendet haben)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
@@ -6847,6 +7489,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '（如果您使用預設 API 金鑰）',
   },
   'settings.sync_gd_api_done': {
+    it: '9. Fatto. Alla prossima richiesta vedrai la schermata di autorizzazione.',
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
     de: '9. Fertig. Bei der nächsten Anfrage an Google Drive erscheint ein Zustimmungsbildschirm.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
@@ -6855,6 +7498,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '9. 完成。下次向 Google 雲端硬碟發出請求時，您將看到同意畫面。',
   },
   'settings.sync_save_settings': {
+    it: 'Salva impostazioni nella sincronizzazione',
     en: 'Save settings to sync storage',
     de: 'Einstellungen im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les paramètres dans l’espace de stockage synchronisé',
@@ -6866,6 +7510,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '設定を同期ストレージに保存',
   },
   'settings.sync_save_ctx_menu': {
+    it: 'Salva menu contestuale nella sincronizzazione',
     en: 'Save context menu to sync storage',
     de: 'Kontextmenü im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder le menu contextuel dans l’espace de stockage synchronisé',
@@ -6877,6 +7522,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテキストメニューを同期ストレージに保存',
   },
   'settings.sync_save_styles': {
+    it: 'Salva stili nella sincronizzazione',
     en: 'Save styles to sync storage',
     de: 'Stile im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les styles dans l’espace de stockage synchronisé',
@@ -6888,6 +7534,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スタイルを同期ストレージに保存',
   },
   'settings.sync_save_kb': {
+    it: 'Salva scorciatoie nella sincronizzazione',
     en: 'Save keybindings to sync storage',
     de: 'Tastenbelegung im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les raccourcis clavier dans l’espace de stockage synchronisé',
@@ -6899,6 +7546,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'キーバインディングを同期ストレージに保存',
   },
   'settings.sync_view_btn': {
+    it: 'Visualizza dati sincronizzati',
     en: 'View synced data',
     de: 'Synchronisierte Daten anzeigen',
     fr: 'Voir les données synchronisées',
@@ -6907,6 +7555,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '檢視同步資料',
   },
   'settings.sync_settings_title': {
+    it: 'Impostazioni',
     en: 'Settings',
     de: 'Einstellungen',
     fr: 'Paramètres',
@@ -6918,6 +7567,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '設定',
   },
   'settings.sync_ctx_menu_title': {
+    it: 'Menu contestuale',
     en: 'Context menu',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
@@ -6929,6 +7579,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテキストメニュー',
   },
   'settings.sync_styles_title': {
+    it: 'Stili',
     en: 'Styles',
     de: 'Stile',
     fr: 'Styles',
@@ -6940,6 +7591,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スタイル',
   },
   'settings.sync_kb_title': {
+    it: 'Scorciatoie da tastiera',
     en: 'Keybindings',
     de: 'Tastenbelegung',
     fr: 'Raccourcis clavier',
@@ -6951,6 +7603,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'キーバインディング',
   },
   'settings.sync_apply_btn': {
+    it: 'Applica',
     en: 'Apply',
     de: 'Anwenden',
     fr: 'Appliquer',
@@ -6962,6 +7615,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '適用',
   },
   'settings.sync_delete_btn': {
+    it: 'Elimina',
     en: 'Delete',
     de: 'Löschen',
     fr: 'Supprimer',
@@ -6973,6 +7627,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '削除',
   },
   'settings.sync_apply_confirm': {
+    it: 'Sei sicuro di voler applicare i dati sincronizzati?',
     en: 'Are you sure you want to apply synced data?',
     de: 'Möchten Sie die synchronisierten Daten wirklich anwenden?',
     fr: 'Voulez-vous vraiment appliquer les données synchronisées?',
@@ -6984,6 +7639,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '同期データを適用しますか？',
   },
   'settings.sync.apply_err': {
+    it: 'Impossibile applicare i dati sincronizzati',
     en: 'Cannot apply synchronized data',
     de: 'Kann synchronisierte Daten nicht anwenden',
     fr: 'Impossible d’appliquer les données synchronisées',
@@ -6995,6 +7651,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '同期データを適用できません',
   },
   'settings.sync_notes_title': {
+    it: 'Note:',
     en: 'Notes:',
     de: 'Hinweis:',
     fr: 'Notes:',
@@ -7006,6 +7663,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '注意事項：',
   },
   'settings.sync_notes': {
+    it: `Sidebery usa la sincronizzazione di Firefox:\n- È necessario accedere all\'account Firefox\n- Premi "Sincronizza ora" in Firefox per forzare il caricamento`,
     en: `Sidebery uses Firefox syncronization so:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
@@ -7036,6 +7694,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - データが Firefox 同期サーバーにアップロードされたことを確認するには、Firefox 設定またはメインメニュー（三行ボタン）内のプロファイルで「今すぐ同期」ボタンを押す必要があります`,
   },
   'settings.sync_update_btn': {
+    it: 'Aggiorna dati sincronizzati',
     en: 'Update synced data',
     de: 'Synchronisierte Daten aktualisieren',
     fr: 'Mettre à jour les données synchronisées',
@@ -7049,6 +7708,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Help
   'settings.help_title': {
+    it: 'Aiuto',
     en: 'Help',
     de: 'Hilfe',
     fr: 'Aide',
@@ -7060,6 +7720,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ヘルプ',
   },
   'settings.help_exp_data': {
+    it: 'Esporta dati estensione',
     en: 'Export addon data',
     de: 'Add-on-Daten exportieren',
     fr: 'Exporter les données de l’extension',
@@ -7071,6 +7732,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アドオンデータのエクスポート',
   },
   'settings.help_imp_data': {
+    it: 'Importa dati estensione',
     en: 'Import addon data',
     de: 'Add-on-Daten importieren',
     fr: 'Importer les données de l’extension',
@@ -7082,6 +7744,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アドオンデータのインポート',
   },
   'settings.help_imp_perm': {
+    it: 'Sono richiesti permessi aggiuntivi',
     en: 'Additional permissions are required',
     de: 'Zusätzliche Berechtigungen werden benötigt',
     fr: 'Des permissions supplémentaires sont requises',
@@ -7093,6 +7756,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '追加の権限が必要です',
   },
   'settings.debug_info': {
+    it: 'Mostra informazioni di debug',
     en: 'Show debug info',
     de: 'Debug-Informationen anzeigen',
     fr: 'Voir les informations de débuggage',
@@ -7104,6 +7768,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'デバッグ情報を表示',
   },
   'settings.copy_devtools_url': {
+    it: 'Copia URL strumenti di sviluppo',
     en: 'Copy devtools URL',
     de: 'Devtools-URL kopieren',
     fr: 'Copier l’URL des outils de développement',
@@ -7115,6 +7780,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'DevtoolsのURLをコピー',
   },
   'settings.repo_bug': {
+    it: 'Segnala un bug',
     en: 'Report a bug',
     de: 'Einen Fehler melden',
     fr: 'Signaler un bug',
@@ -7126,6 +7792,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'バグを報告する',
   },
   'settings.repo_feature': {
+    it: 'Suggerisci una funzionalità',
     en: 'Suggest a feature',
     de: 'Eine Verbesserung vorschlagen',
     fr: 'Suggérer une fonctionnalité',
@@ -7137,6 +7804,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '機能の提案',
   },
   'settings.reload_addon': {
+    it: 'Ricarica estensione',
     en: 'Reload add-on',
     de: 'Add-on neu laden',
     fr: 'Actualiser l’extension',
@@ -7148,6 +7816,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アドオンをリロード',
   },
   'settings.reset_settings': {
+    it: 'Ripristina impostazioni predefinite',
     en: 'Reset settings',
     de: 'Einstellungen zurücksetzen',
     fr: 'Réinitialiser les paramètres',
@@ -7159,6 +7828,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '設定をリセット',
   },
   'settings.reset_confirm': {
+    it: 'Sei sicuro di voler ripristinare le impostazioni predefinite?',
     en: 'Are you sure you want to reset settings?',
     de: 'Sind Sie sicher, dass Sie Ihre Einstellungen zurücksetzen möchten?',
     fr: 'Voulez-vous vraiment réinitialiser les paramètres?',
@@ -7170,6 +7840,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '設定をリセットしてもよろしいですか？',
   },
   'settings.export_title': {
+    it: 'Seleziona cosa esportare',
     en: 'Select what to export',
     de: 'Daten zum Export auswählen',
     fr: 'Sélectionner les données à exporter',
@@ -7181,6 +7852,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'エクスポートする項目を選択',
   },
   'settings.import_title': {
+    it: 'Seleziona cosa importare',
     en: 'Select what to import',
     de: 'Daten zum Import auswählen',
     fr: 'Sélectionner les données à importer',
@@ -7192,6 +7864,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'インポートする項目を選択',
   },
   'settings.backup_all': {
+    it: 'Tutto',
     en: 'All',
     de: 'Alles',
     fr: 'Tout',
@@ -7202,6 +7875,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'すべて',
   },
   'settings.backup_settings': {
+    it: 'Impostazioni',
     en: 'Settings',
     de: 'Einstellungen',
     fr: 'Paramètres',
@@ -7213,6 +7887,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '設定',
   },
   'settings.backup_menu': {
+    it: 'Menu contestuale',
     en: 'Context menu',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
@@ -7224,6 +7899,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテキストメニュー',
   },
   'settings.backup_containers': {
+    it: 'Configurazione contenitori',
     en: 'Containers config',
     de: 'Einstellungen für Umgebungen',
     fr: 'Configuration des conteneurs',
@@ -7235,6 +7911,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテナの設定',
   },
   'settings.backup_nav': {
+    it: 'Pannelli e barra di navigazione',
     en: 'Panels and navigation bar',
     de: 'Panels und Navigationsleiste',
     fr: 'Panneaux et barre de navigation',
@@ -7246,6 +7923,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルとナビゲーションバー',
   },
   'settings.backup_styles': {
+    it: 'Stili',
     en: 'Styles',
     de: 'Stile',
     fr: 'Styles',
@@ -7257,6 +7935,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スタイル',
   },
   'settings.backup_snapshots': {
+    it: 'Istantanee',
     en: 'Snapshots',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
@@ -7267,6 +7946,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショット',
   },
   'settings.backup_favicons': {
+    it: 'Cache icone siti',
     en: 'Sites icons cache',
     de: 'Favicon-Zwischenspeicher',
     fr: 'Favicons en cache',
@@ -7278,6 +7958,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サイトのアイコンキャッシュ',
   },
   'settings.backup_kb': {
+    it: 'Scorciatoie da tastiera',
     en: 'Keybindings',
     de: 'Tastenbelegung',
     fr: 'Raccourcis claviers',
@@ -7289,6 +7970,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'キーバインディング',
   },
   'settings.backup_parse_err': {
+    it: 'Formato non valido dei dati importati',
     en: 'Wrong format of imported data',
     de: 'Falsches Format der importierten Daten',
     fr: 'Format d’importation de données incorrect',
@@ -7302,6 +7984,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   // - Keybindings
   'settings.kb_input': {
+    it: 'Premi una nuova scorciatoia',
     en: 'Press new shortcut',
     de: 'Neues Tastenkürzel drücken',
     fr: 'Saisissez le nouveau raccourci',
@@ -7313,6 +7996,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいショートカットを押してください',
   },
   'settings.kb_err_duplicate': {
+    it: 'Scorciatoia già esistente',
     en: 'Already exists',
     de: 'Existiert bereits',
     fr: 'Déjà affecté',
@@ -7324,6 +8008,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '既に存在しています',
   },
   'settings.kb_err_invalid': {
+    it: 'Scorciatoia non valida',
     en: 'Invalid shortcut',
     de: 'Ungültiges Tastenkürzel',
     fr: 'Raccourci invalide',
@@ -7335,6 +8020,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '無効なショートカットです',
   },
   'settings.kb_override_popup_title': {
+    it: 'Scorciatoia già in uso.\nSovrascrivere?',
     en: 'Keybinding is already in use.\nOverride?',
     de: 'Tastenkürzel wird bereits verwendet.\nÜberschreiben?',
     fr: 'Le raccourci est déjà affecté.\nRemplacer?',
@@ -7346,6 +8032,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'キーバインドは既に使用されています。\n上書きしますか？',
   },
   'settings.kb_override_popup_note_shortcut': {
+    it: shortcut => `Scorciatoia: "${shortcut}"`,
     en: shortcut => `Shortcut: "${shortcut}"`,
     de: shortcut => `Tastenkürzel: "${shortcut}"`,
     fr: shortcut => `Raccourci: ${shortcut}`,
@@ -7357,6 +8044,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: shortcut => `ショートカット: "${shortcut}"`,
   },
   'settings.kb_override_popup_note_used': {
+    it: usedIn => `Utilizzata in: "${usedIn}"`,
     en: usedIn => `Used in: "${usedIn}"`,
     de: usedIn => `Verwendet in: "${usedIn}"`,
     fr: usedIn => `Utilisé pour: ${usedIn}`,
@@ -7368,6 +8056,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: usedIn => `使用箇所: "${usedIn}"`,
   },
   'settings.kb_general': {
+    it: 'Generale',
     en: 'General',
     de: 'Allgemein',
     fr: 'Général',
@@ -7379,6 +8068,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '一般',
   },
   'settings.kb_select_act_note': {
+    it: `- Attiva la scheda selezionata\n- Apri il segnalibro selezionato\n- Espandi/comprimi un ramo di schede o una cartella\n- Attiva l\'opzione del menu contestuale selezionata\n- Attiva il pannello selezionato`,
     en: `- Activate selected tab
 - Open selected bookmark
 - Fold/unfold an active tab branch or a selected bookmarks folder
@@ -7426,6 +8116,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - 選択したパネルをアクティブ化する`,
   },
   'settings.kb_reset_selection_note': {
+    it: `- Chiudi il menu contestuale non nativo\n- Annulla la selezione\n- Esci dalla modalità ricerca\n- Chiudi sotto-pannelli e popup`,
     en: `- Close non-native context menu
 - Reset selection
 - Exit from search mode
@@ -7464,6 +8155,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - サブパネルとポップアップウィンドウを閉じる`,
   },
   'settings.kb_menu_note': {
+    it: 'Nota: Si aprirà un menu non nativo, poiché non è possibile aprire programmaticamente il menu nativo.',
     en: "Note: A non-native menu will open, since it's not possible to open the native menu programmatically.",
     de: 'Hinweis: Es wird ein nicht-natives Menü geöffnet, da es nicht möglich ist, das native Menü programmgesteuert zu öffnen.',
     fr: 'Note: Cela ouvrira un menu non natif, vu qu’il n’est pas possible d’ouvrir le menu natif de manière programmatique',
@@ -7475,6 +8167,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '注意: ネイティブメニューをプログラムで開くことはできないため、非ネイティブメニューが開きます。',
   },
   'settings.kb_switching_panel': {
+    it: 'Passaggio tra pannelli',
     en: 'Switching between panels',
     de: 'Zwischen Panels wechseln',
     fr: 'Basculement entre panneaux',
@@ -7486,6 +8179,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネル間の切り替え',
   },
   'settings.kb_loop_panels': {
+    it: 'Scorri ciclicamente i pannelli',
     en: 'Loop through panels',
     de: 'Durch die Panels schalten',
     fr: 'Boucle à travers les panneaux',
@@ -7497,6 +8191,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルを順に巡回する',
   },
   'settings.kb_switching_panel.ignore_hidden': {
+    it: 'Ignora pannelli nascosti',
     en: 'Ignore hidden panels',
     de: 'Ausgeblendete Panels ignorieren',
     fr: 'Ignorer les panneaux masqués',
@@ -7508,6 +8203,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '非表示パネルを無視する',
   },
   'settings.kb_scroll_active_panel': {
+    it: 'Scorrimento del pannello attivo',
     en: 'Scrolling the active panel',
     de: 'Scrollen des aktiven Panels',
     fr: 'Scroller dans le panneau actif',
@@ -7519,6 +8215,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブパネルのスクロール',
   },
   'settings.kb_tabs': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     fr: 'Onglets',
@@ -7530,6 +8227,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ',
   },
   'settings.kb_tabs_open': {
+    it: 'Apri una nuova scheda',
     en: 'Open a new tab',
     de: 'Neuen Tab öffnen',
     fr: 'Ouvrir un nouvel onglet',
@@ -7541,6 +8239,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブを開く',
   },
   'settings.new_tab_in_panel_pos': {
+    it: 'Posizione della nuova scheda',
     en: 'Position of the new tab',
     de: 'Position des neuen Tabs',
     fr: 'Position du nouvel onglet',
@@ -7552,6 +8251,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブの位置',
   },
   'settings.new_tab_in_panel_pos_general': {
+    it: 'regola generale',
     en: 'general rule',
     de: 'allgemeine Regel',
     fr: 'règle générale',
@@ -7563,6 +8263,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '一般的な規則',
   },
   'settings.new_tab_in_panel_pos_btn': {
+    it: 'regola pulsante nuova scheda',
     en: 'new tab button rule',
     de: 'Regel für die Schaltfläche „Neuer Tab“',
     fr: 'Règle du bouton « nouvel onglet »',
@@ -7574,6 +8275,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブ」ボタンに関するルール',
   },
   'settings.new_tab_in_panel_pos_start': {
+    it: 'inizio pannello',
     en: 'panel start',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
@@ -7584,6 +8286,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの先頭',
   },
   'settings.new_tab_in_panel_pos_end': {
+    it: 'fine pannello',
     en: 'panel end',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
@@ -7594,6 +8297,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'パネルの末尾',
   },
   'settings.kb_rm': {
+    it: 'Chiudi scheda/e / Elimina segnalibri',
     en: 'Close tab(s) / Delete bookmarks',
     ru: 'Закрыть вкладку(и) / Удалить закладки',
     de: 'Tab(s) schließen / Lesezeichen löschen',
@@ -7605,6 +8309,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブを閉じる / ブックマークを削除',
   },
   'settings.kb_selections': {
+    it: 'Selezione elementi',
     en: 'Selecting elements',
     de: 'Elemente auswählen',
     fr: 'Sélectionner des éléments',
@@ -7616,6 +8321,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '要素の選択',
   },
   'settings.kb_sel_tabs_bookmarks': {
+    it: 'Selezione schede / segnalibri',
     en: 'Selecting tabs / bookmarks',
     de: 'Tabs / Lesezeichen auswählen',
     fr: 'Sélectionner des onglets / marque-pages',
@@ -7627,6 +8333,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ / ブックマークの選択',
   },
   'settings.kb_selecting_up_down': {
+    it: 'Selezione su / giù',
     en: 'Selecting up / down',
     de: 'Nach oben / unten auswählen',
     fr: 'Sélectionner au-dessus / en dessous',
@@ -7638,6 +8345,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '上下の選択',
   },
   'settings.select_active_tab_first': {
+    it: 'Seleziona prima la scheda attiva',
     en: 'Select the active tab first',
     de: 'Zuerst den aktiven Tab auswählen',
     fr: 'Sélectionner l’onglet actif en premier',
@@ -7649,6 +8357,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アクティブなタブを最初に選択する',
   },
   'settings.select_cyclic': {
+    it: 'Ciclicamente',
     en: 'Cyclically',
     de: 'Zyklisch',
     fr: 'De façon cyclique',
@@ -7660,6 +8369,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '循環',
   },
   'settings.kb_unloading_tabs': {
+    it: 'Scarica schede',
     en: 'Unload tabs',
     de: 'Tabs entladen',
     fr: 'Décharger les onglets',
@@ -7671,6 +8381,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブのアンロード',
   },
   'settings.kb_branches': {
+    it: 'Rami',
     en: 'Branches',
     de: 'Zweige',
     fr: 'Branches',
@@ -7681,6 +8392,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブランチ',
   },
   'settings.kb_active_tabs_history': {
+    it: 'Cronologia schede attive',
     en: 'Tabs activation history',
     de: 'Tab-Aktivierungschronik',
     fr: 'Historique d’activation des onglets',
@@ -7692,6 +8404,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブのアクティベーション履歴',
   },
   'settings.kb_switching_tab': {
+    it: 'Passaggio tra schede',
     en: 'Switching between tabs',
     de: 'Zwischen Tabs wechseln',
     fr: 'Basculer entre les onglets',
@@ -7703,6 +8416,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ間の切り替え',
   },
   'settings.kb_switch_act_note': {
+    it: '- usa le impostazioni di scorrimento verticale per il cambio schede',
     en: '- using vertical scroll settings for tabs switching',
     de: '- unter Verwendung der Einstellungen für den Wechsel zwischen Tabs durch vertikales Scrollen',
     fr: '– en utilisant les paramètres du scroll vertical pour le basculement d’onglet',
@@ -7714,6 +8428,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '- タブの切り替えに垂直スクロール設定を使用する',
   },
   'settings.kb_move_tabs': {
+    it: 'Spostamento schede',
     en: 'Moving tabs',
     de: 'Tabs verschieben',
     fr: 'Déplacer les onglets',
@@ -7725,6 +8440,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブの移動',
   },
   'settings.kb_sort_tabs': {
+    it: 'Ordinamento schede',
     en: 'Sorting tabs',
     de: 'Tabs sortieren',
     fr: 'Trier les onglets',
@@ -7736,6 +8452,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブの並べ替え',
   },
   'settings.reset_kb': {
+    it: 'Ripristina scorciatoie',
     en: 'Reset Keybindings',
     de: 'Tastenbelegung zurücksetzen',
     fr: 'Réinitialiser les raccourcis',
@@ -7751,6 +8468,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // -- Styles editor
   // -
   'styles.css_sidebar': {
+    it: 'Barra laterale',
     en: 'Sidebar',
     de: 'Seitenleiste',
     fr: 'Barre latérale',
@@ -7762,6 +8480,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サイドバー',
   },
   'styles.css_group': {
+    it: 'Pagina del gruppo',
     en: 'Group page',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
@@ -7773,6 +8492,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'グループページ',
   },
   'styles.vars_group.general': {
+    it: 'Generale',
     en: 'General',
     de: 'Allgemein',
     fr: 'Général',
@@ -7784,6 +8504,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '一般',
   },
   'styles.vars_group.nav': {
+    it: 'Barra di navigazione',
     en: 'Navigation bar',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
@@ -7795,6 +8516,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ナビゲーションバー',
   },
   'styles.vars_group.tabs': {
+    it: 'Schede',
     en: 'Tabs',
     de: 'Tabs',
     hu: 'Lapok',
@@ -7806,6 +8528,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ',
   },
   'styles.vars_group.bookmarks': {
+    it: 'Segnalibri',
     en: 'Bookmarks',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
@@ -7817,6 +8540,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ブックマーク',
   },
   'styles.vars_group.history': {
+    it: 'Cronologia',
     en: 'History',
     de: 'Chronik',
     fr: 'Historique',
@@ -7828,6 +8552,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '履歴',
   },
   'styles.vars_group.popup': {
+    it: 'Finestra a comparsa',
     en: 'Popup',
     de: 'Popup',
     fr: 'Popup',
@@ -7837,6 +8562,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ポップアップ',
   },
   'styles.vars_group.menu': {
+    it: 'Menu contestuale',
     en: 'Context menu',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
@@ -7848,6 +8574,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'コンテキストメニュー',
   },
   'styles.vars_group.sub-list_title': {
+    it: 'Titolo sotto-elenco',
     en: 'Sub-list title',
     de: 'Titel von Unterlisten',
     fr: 'Titre de sous-liste',
@@ -7857,6 +8584,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'サブリストのタイトル',
   },
   'styles.vars_group.search_bar': {
+    it: 'Barra di ricerca',
     en: 'Search bar',
     de: 'Suchleiste',
     fr: 'Barre de recherche',
@@ -7866,6 +8594,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '検索バー',
   },
   'styles.vars_group.new-tab_bar': {
+    it: 'Barra nuova scheda',
     en: 'New-tab bar',
     de: '"Neuer Tab"-Leiste',
     fr: 'Barre de nouvel onglet',
@@ -7875,6 +8604,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいタブバー',
   },
   'styles.vars_group.notification': {
+    it: 'Notifica',
     en: 'Notification',
     de: 'Benachrichtigung',
     fr: 'Notification',
@@ -7883,6 +8613,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '通知',
   },
   'styles.vars_group.buttons': {
+    it: 'Pulsanti',
     en: 'Buttons',
     de: 'Schaltflächen',
     fr: 'Boutons',
@@ -7894,6 +8625,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ボタン',
   },
   'styles.vars_group.scroll': {
+    it: 'Scorrimento',
     en: 'Scroll',
     de: 'Scrollen',
     fr: 'Scroll',
@@ -7905,6 +8637,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スクロール',
   },
   'styles.vars_group.animation': {
+    it: 'Velocità animazione',
     en: 'Animation speed',
     de: 'Animationsgeschwindigkeit',
     fr: 'Vitesse d’animation',
@@ -7916,6 +8649,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'アニメーション速度',
   },
   'styles.vars_group.other': {
+    it: 'Altro',
     en: 'Other',
     de: 'Andere',
     fr: 'Autre',
@@ -7926,6 +8660,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'その他',
   },
   'styles.reset_styles': {
+    it: 'Ripristina variabili CSS',
     en: 'Reset CSS variables',
     de: 'CSS-Variablen zurücksetzen',
     fr: 'Réinitialiser les variables CSS',
@@ -7937,6 +8672,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'CSS変数をリセット',
   },
   'styles.css_placeholder': {
+    it: 'Scrivi CSS personalizzato qui...',
     en: 'Write custom CSS here...',
     de: 'Hier eigenen CSS-Quellcode erstellen...',
     fr: 'Écrire ici votre CSS personnalisé',
@@ -7948,6 +8684,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ここにカスタムCSSを記述してください...',
   },
   'styles.css_selectors_instruction': {
+    it: `NOTA: Per visualizzare i selettori CSS disponibili usa il debugger:\n  - Fai clic su "Copia URL strumenti di sviluppo" in fondo\n  - Apri una nuova scheda con quell\'URL\n  - Seleziona il frame da ispezionare`,
     en: `NOTE: To get currently available css-selectors use debugger:
   - Click "Copy devtools URL" button in the bottom bar
   - Open a new tab with that URL
@@ -8025,6 +8762,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // -- Snapshots viewer
   // -
   'snapshot.btn_create_first': {
+    it: 'Crea la prima istantanea',
     en: 'Create first snapshot',
     de: 'Ersten Schnappschuss erstellen',
     fr: 'Créer un premier instantané',
@@ -8036,6 +8774,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '最初のスナップショットを作成',
   },
   'snapshot.btn_create_snapshot': {
+    it: 'Crea istantanea',
     en: 'Create snapshot',
     de: 'Erstellen',
     fr: 'Créer un instantané',
@@ -8047,6 +8786,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットを作成',
   },
   'snapshot.btn_import_snapshot': {
+    it: 'Importa istantanea',
     en: 'Import snapshot',
     de: 'Importieren',
     fr: 'Importer un instantané',
@@ -8058,6 +8798,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットをインポート',
   },
   'snapshot.btn_export_snapshot': {
+    it: 'Esporta istantanea',
     en: 'Export snapshot',
     de: 'Exportieren',
     fr: 'Exporter un instantané',
@@ -8069,6 +8810,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットをエクスポート',
   },
   'snapshot.btn_export_snapshot_json': {
+    it: 'Salva come JSON',
     en: 'Save as JSON',
     de: 'Als JSON speichern',
     fr: 'Sauvegarder en JSON',
@@ -8080,6 +8822,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'JSONとして保存',
   },
   'snapshot.btn_export_snapshot_md': {
+    it: 'Salva come Markdown',
     en: 'Save as Markdown',
     de: 'Als Markdown speichern',
     fr: 'Sauvegarder en Markdown',
@@ -8091,6 +8834,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Markdownとして保存',
   },
   'snapshot.btn_export_snapshot_md_note': {
+    it: 'Nessun supporto per la re-importazione',
     en: 'No reverse import support',
     de: 'Rückimport wird nicht unterstützt',
     fr: 'Réimport non pris en charge',
@@ -8102,6 +8846,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '逆インポートはサポートされていません',
   },
   'snapshot.btn_copy_snapshot_md': {
+    it: 'Copia come Markdown',
     en: 'Copy as Markdown',
     de: 'Als Markdown kopieren',
     fr: 'Copier en Markdown',
@@ -8113,6 +8858,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'Markdownとしてコピー',
   },
   'snapshot.btn_open_all_win': {
+    it: 'Apri tutte le finestre',
     en: 'Open all windows',
     de: 'Alle Fenster öffnen',
     fr: 'Ouvrir toutes les fenêtres',
@@ -8124,6 +8870,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'すべてのウィンドウを開く',
   },
   'snapshot.snap_win': {
+    it: n => (n === 1 ? 'finestra' : 'finestre'),
     en: n => (n === 1 ? 'window' : 'windows'),
     de: 'Fenster',
     fr: n => (n === 1 ? 'fenêtre' : 'fenêtres'),
@@ -8143,6 +8890,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ウィンドウ',
   },
   'snapshot.snap_tab': {
+    it: n => (n === 1 ? 'scheda' : 'schede'),
     en: n => (n === 1 ? 'tab' : 'tabs'),
     de: n => (n === 1 ? 'Tab' : 'Tabs'),
     fr: n => (n === 1 ? 'onglet' : 'onglets'),
@@ -8162,6 +8910,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'タブ',
   },
   'snapshot.btn_remove': {
+    it: 'Rimuovi istantanea',
     en: 'Remove snapshot',
     de: 'Schnappschuss entfernen',
     fr: 'Supprimer l’instantané',
@@ -8173,6 +8922,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'スナップショットを削除',
   },
   'snapshot.window_title': {
+    it: 'Finestra',
     en: 'Window',
     de: 'Fenster',
     fr: 'Fenêtre',
@@ -8184,6 +8934,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ウィンドウ',
   },
   'snapshot.btn_open_win': {
+    it: 'Apri finestra',
     en: 'Open window',
     de: 'Fenster öffnen',
     fr: 'Ouvrir la fenêtre',
@@ -8195,6 +8946,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ウィンドウを開く',
   },
   'snapshot.btn_open_as_private_win': {
+    it: 'Apri come finestra anonima',
     en: 'Open as private window',
     de: 'Als privates Fenster öffnen',
     fr: 'Ouvrir dans une fenêtre privée',
@@ -8206,6 +8958,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'プライベートウィンドウとして開く',
   },
   'snapshot.btn_open_as_norm_win': {
+    it: 'Apri come finestra normale',
     en: 'Open as normal window',
     de: 'Als normales Fenster öffnen',
     fr: 'Ouvrir dans une fenêtre normale',
@@ -8217,6 +8970,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '通常のウィンドウとして開く',
   },
   'snapshot.global_pin_title': {
+    it: 'Schede fissate',
     en: 'Pinned tabs',
     de: 'Angeheftete Tabs',
     fr: 'Onglets épinglés',
@@ -8228,6 +8982,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: 'ピン留めされたタブ',
   },
   'snapshot.selected': {
+    it: 'Selezionate:',
     en: 'Selected:',
     de: 'Ausgewählt:',
     fr: 'Sélectionnés:',
@@ -8239,6 +8994,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '選択中：',
   },
   'snapshot.sel.open_in': {
+    it: 'Apri in...',
     en: 'Open in...',
     de: 'Öffnen in...',
     fr: 'Ouvrir dans…',
@@ -8250,6 +9006,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '次の場所で開く...',
   },
   'snapshot.sel.open_in_window': {
+    it: 'Nuova finestra',
     en: 'New window',
     de: 'Neues Fenster',
     fr: 'Nouvelle fenêtre',
@@ -8261,6 +9018,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいウィンドウ',
   },
   'snapshot.sel.open_in_private_window': {
+    it: 'Nuova finestra anonima',
     en: 'New private window',
     de: 'Neues privates Fenster',
     fr: 'Nouvelle fenêtre privée',
@@ -8272,6 +9030,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '新しいプライベートウィンドウ',
   },
   'snapshot.sel.open_in_panel': {
+    it: 'Pannello corrente',
     en: 'Current panel',
     de: 'Aktuelles Panel',
     fr: 'Panneau actif',
@@ -8283,6 +9042,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     ja: '現在のパネル',
   },
   'snapshot.sel.reset_sel': {
+    it: 'Azzera selezione',
     en: 'Reset selection',
     de: 'Auswahl zurücksetzen',
     fr: 'Annuler la sélection',
