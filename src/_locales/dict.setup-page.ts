@@ -5934,6 +5934,12 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     zh_TW: '編輯標題',
     ja: 'タイトルを編集',
   },
+  'settings.tab_action_toggle_bind_tab': {
+    en: 'bind/unbind tab',
+  },
+  'settings.tab_action_return_to_bound': {
+    en: 'return to bound URL',
+  },
   'settings.tab_action_none': {
     en: 'none',
     de: 'Nichts',

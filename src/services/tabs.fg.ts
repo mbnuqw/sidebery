@@ -1,5 +1,5 @@
 import * as T from 'src/types'
-import { TabStatus, LoadSrc, Err } from 'src/enums'
+import { TabStatus, LoadSrc, Err, InstanceType } from 'src/enums'
 import * as D from 'src/defaults'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
@@ -160,6 +160,8 @@ export function mutateNativeTabToSideberyTab(nativeTab: T.NativeTab): T.Tab {
       branchColor: null,
       color: null,
       isGroup: tab.isGroup,
+      bound: false,
+      boundAway: false,
     }
   }
 
@@ -517,6 +519,12 @@ function restoreTab(
     tab.reactive.folded = tab.folded = !!props.folded
     if (props.customTitle) tab.customTitle = props.customTitle
     if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+    if (props.boundUrl) {
+      tab.boundUrl = props.boundUrl
+      tab.boundTitle = props.boundTitle
+      tab.reactive.bound = true
+      tab.reactive.boundAway = isAwayFromBound(tab)
+    }
   } else {
     Logs.warn(`Tabs.restoreTab: no props for: "${tab.id} i${tab.index} url${tab.url}"`)
   }
@@ -743,6 +751,8 @@ export function cacheTabsData(delay = 300): void {
       if (tab.cookieStoreId !== D.CONTAINER_ID) info.ctx = tab.cookieStoreId
       if (tab.customTitle) info.customTitle = tab.customTitle
       if (tab.customColor) info.customColor = tab.customColor
+      if (tab.boundUrl) info.boundUrl = tab.boundUrl
+      if (tab.boundTitle) info.boundTitle = tab.boundTitle
       data.push(info)
     }
 
@@ -1254,6 +1264,141 @@ export function repinTabs(tabIds: ID[]): void {
       Logs.err('Tabs.repinTabs: Cannot repin tab:', err)
     })
   }
+}
+
+/**
+ * Bind tabs to their current URL
+ */
+export function bindTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.boundUrl = getBoundUrlOf(tab.url)
+    tab.boundTitle = tab.customTitle ?? tab.title
+    tab.reactive.bound = true
+    tab.reactive.boundAway = false
+    renderFavicon(tab)
+    notifyBindPlaceholder(tab, true)
+  }
+  Tabs.cacheTabsData()
+}
+
+/**
+ * Tell a tab's open bind placeholder page whether it's bound ("Bound/Unbound Tab" heading)
+ */
+function notifyBindPlaceholder(tab: T.Tab, bound: boolean): void {
+  if (tab.discarded || !Utils.isPlaceholderUrl(tab.url)) return
+  try {
+    if (!Utils.parsePlaceholderUrl(tab.url).bind) return
+  } catch {
+    return
+  }
+  const msg: T.Message<InstanceType.url, 'setBound'> = {
+    dstType: InstanceType.url,
+    action: 'setBound',
+    args: [bound],
+  }
+  IPPC.send(msg, tab).catch(err =>
+    Logs.warn('Tabs.notifyBindPlaceholder: Cannot notify page:', err)
+  )
+}
+
+/**
+ * Bind tabs and all their descendants; already bound tabs keep their binding
+ */
+export function bindTabTrees(tabIds: ID[]): void {
+  const ids: ID[] = []
+  for (const id of tabIds) {
+    const tab = Tabs.byId[id]
+    if (!tab) continue
+    if (!tab.boundUrl) ids.push(id)
+    forEachDescendant(tab, t => !t.boundUrl && !ids.includes(t.id) && ids.push(t.id))
+  }
+  bindTabs(ids)
+}
+
+/**
+ * Unbind tabs and all their descendants
+ */
+export function unbindTabTrees(tabIds: ID[]): void {
+  const ids: ID[] = []
+  for (const id of tabIds) {
+    const tab = Tabs.byId[id]
+    if (!tab) continue
+    if (!ids.includes(id)) ids.push(id)
+    forEachDescendant(tab, t => !ids.includes(t.id) && ids.push(t.id))
+  }
+  unbindTabs(ids)
+}
+
+export function unbindTabs(tabIds: ID[]): void {
+  for (const tabId of tabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+    tab.boundUrl = undefined
+    tab.boundTitle = undefined
+    tab.reactive.bound = false
+    tab.reactive.boundAway = false
+    renderFavicon(tab)
+    notifyBindPlaceholder(tab, false)
+  }
+  Tabs.cacheTabsData()
+}
+
+export function toggleBindTabs(tabIds: ID[]): void {
+  const firstTab = Tabs.byId[tabIds[0]]
+  if (!firstTab) return
+  if (firstTab.boundUrl) unbindTabs(tabIds)
+  else bindTabs(tabIds)
+}
+
+export function returnToBound(tabId: ID): void {
+  const tab = Tabs.byId[tabId]
+  if (!tab?.boundUrl) return
+  browser.tabs.update(tabId, { url: tab.boundUrl }).catch(err => {
+    Logs.err('Tabs.returnToBound: Cannot navigate to bound URL:', err)
+  })
+}
+
+// The group page keeps rewriting its hash with an IPPC suffix (~!...!~), which isn't part of the group
+const IPPC_HASH_SUFFIX_RE = /~!.*!~$/
+
+export function getBoundUrlOf(url: string): string {
+  return Utils.isGroupUrl(url) ? url.replace(IPPC_HASH_SUFFIX_RE, '') : url
+}
+
+/**
+ * Whether a bound tab at `url` has navigated away from its bound page
+ */
+export function isAwayFromBound(tab: T.Tab, url = tab.url): boolean {
+  if (!tab.boundUrl || Utils.isPlaceholderUrl(url)) return false
+  // Any group page counts as the bound group, since renaming a group changes its url
+  if (Utils.isGroupUrl(tab.boundUrl)) return !Utils.isGroupUrl(url)
+  return url !== tab.boundUrl
+}
+
+/**
+ * Page a bound tab turns into instead of closing: the group page itself for
+ * bound groups, otherwise the bind placeholder
+ */
+export function getBoundReplacementUrl(tab: T.Tab): string {
+  if (tab.boundUrl && Utils.isGroupUrl(tab.boundUrl)) return tab.boundUrl
+  return Utils.createPlaceholderUrl({
+    url: tab.boundUrl ?? tab.url,
+    title: tab.boundTitle,
+    bind: true,
+  })
+}
+
+/**
+ * Show bound tab's replacement page instead of closing it
+ */
+export function keepBoundTab(tab: T.Tab): void {
+  if (Utils.isPlaceholderUrl(tab.url)) return
+  if (tab.boundUrl && Utils.isGroupUrl(tab.boundUrl) && Utils.isGroupUrl(tab.url)) return
+  browser.tabs.update(tab.id, { url: getBoundReplacementUrl(tab) }).catch(err => {
+    Logs.err('Tabs.keepBoundTab: Cannot show replacement page:', err)
+  })
 }
 
 /**
@@ -2934,11 +3079,33 @@ export function renderTitle(tab: T.Tab, forcedTitle?: string) {
   }
 }
 
+/**
+ * Svg favicon for a tab without an img favicon. Bound tabs on their bind
+ * placeholder use the home icon.
+ */
+function getFavSvgIcon(tab: T.Tab): string {
+  if (tab.boundUrl && Utils.isPlaceholderUrl(tab.url)) return '#icon_home'
+  return tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+}
+
+/**
+ * Flag the .fav element of a tab on its bind placeholder (hides the corner bind mark).
+ * Set on every render so it clears once the tab leaves the placeholder.
+ */
+function markBindPlaceholder(tab: T.Tab, svgUseEl?: SVGElement) {
+  const favEl = svgUseEl?.parentElement?.parentElement
+  if (!favEl) return
+  favEl.toggleAttribute('data-bind-placeholder', !!tab.boundUrl && Utils.isPlaceholderUrl(tab.url))
+}
+
 export function renderFavicon(tab: T.Tab) {
   const imgEl = tab.favImgEl
   const svgUseEl = tab.favSvgUseEl
   const stickyImgEl = tab.stickyFavImgEl
   const stickySvgUseEl = tab.stickyFavSvgUseEl
+
+  markBindPlaceholder(tab, svgUseEl)
+  markBindPlaceholder(tab, stickySvgUseEl)
 
   if (tab.favIconUrl) {
     if (imgEl) {
@@ -2958,7 +3125,7 @@ export function renderFavicon(tab: T.Tab) {
     let icon
     if (svgUseEl?.parentElement) {
       // Set svg
-      icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+      icon = getFavSvgIcon(tab)
       svgUseEl.setAttribute('href', icon)
       // Show svg
       svgUseEl.parentElement.style.display = 'block'
@@ -2966,7 +3133,7 @@ export function renderFavicon(tab: T.Tab) {
       if (imgEl?.style) imgEl.style.display = 'none'
     }
     if (stickySvgUseEl?.parentElement) {
-      if (!icon) icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+      if (!icon) icon = getFavSvgIcon(tab)
       stickySvgUseEl.setAttribute('href', icon)
       stickySvgUseEl.parentElement.style.display = 'block'
       if (stickyImgEl?.style) stickyImgEl.style.display = 'none'
@@ -2978,6 +3145,8 @@ export function renderStickyFavicon(tab: T.Tab, placeholder: boolean) {
   const stickyImgEl = tab.stickyFavImgEl
   const stickySvgUseEl = tab.stickyFavSvgUseEl
 
+  markBindPlaceholder(tab, stickySvgUseEl)
+
   if (tab.favIconUrl && stickyImgEl && !placeholder) {
     // Set img
     stickyImgEl.src = tab.favIconUrl
@@ -2986,7 +3155,7 @@ export function renderStickyFavicon(tab: T.Tab, placeholder: boolean) {
     // Hide svg
     if (stickySvgUseEl?.parentElement) stickySvgUseEl.parentElement.style.display = 'none'
   } else if (stickySvgUseEl?.parentElement) {
-    const icon = tab.warn ? '#icon_warn' : Favicons.getFavPlaceholder(tab.url)
+    const icon = getFavSvgIcon(tab)
     stickySvgUseEl.setAttribute('href', icon)
     stickySvgUseEl.parentElement.style.display = 'block'
     if (stickyImgEl?.style) stickyImgEl.style.display = 'none'

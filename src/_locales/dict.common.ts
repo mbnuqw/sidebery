@@ -1988,6 +1988,21 @@ export const commonTranslations: Translations = {
     zh_TW: '取消釘選分頁',
     ja: 'ピン留め解除',
   },
+  'menu.tab.bind_tab': {
+    en: 'Bind Tab',
+  },
+  'menu.tab.unbind_tab': {
+    en: 'Unbind Tab',
+  },
+  'menu.tab.bind_tab_tree': {
+    en: 'Bind Tab Tree',
+  },
+  'menu.tab.unbind_tab_tree': {
+    en: 'Unbind Tab Tree',
+  },
+  'menu.tab.return_to_bound': {
+    en: 'Return to bound URL',
+  },
   'menu.tab.duplicate': {
     en: 'Duplicate',
     de: 'Duplizieren',

@@ -226,7 +226,8 @@ export async function removeTabs(
       if (tab.invisible) hasInvisibleTab = true
     }
 
-    if ((rmChildTabsFolded && tab.folded) || rmChildTabsAll) {
+    // A bound tab stays open, so it doesn't take its (folded) children with it
+    if (((rmChildTabsFolded && tab.folded) || rmChildTabsAll) && !tab.boundUrl) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (!t || t.lvl <= tab.lvl) break
@@ -239,6 +240,16 @@ export async function removeTabs(
       }
     }
   }
+
+  // Bound tabs are never closed: they turn into a placeholder (or back into their group) in place
+  for (let i = tabs.length; i--;) {
+    const tab = tabs[i]
+    if (!tab.boundUrl) continue
+    Tabs.keepBoundTab(tab)
+    tabs.splice(i, 1)
+    toRemove.splice(toRemove.indexOf(tab.id), 1)
+  }
+  if (!tabs.length) return
 
   let count = tabs.length
   const warn =

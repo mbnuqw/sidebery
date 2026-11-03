@@ -17,6 +17,7 @@ const COPY = {
   './src/assets/logo-native.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/logo.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/group-page-favicon.svg': `${Utils.ADDON_PATH}/assets/`,
+  './src/assets/bound-page-favicon.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/snapshot-native.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/proxy-native.svg': `${Utils.ADDON_PATH}/assets/`,
   './src/assets/window-native.svg': `${Utils.ADDON_PATH}/assets/`,
