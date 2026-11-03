@@ -186,6 +186,7 @@
     height: 100%
     border-radius: var(--tabs-border-radius)
     z-index: 1
+    pointer-events: none
 
 .Tab:hover .body:before
   background-color: var(--frame-el-overlay-hover-bg)
@@ -819,6 +820,84 @@
   left: 0
   width: 2px
   height: 16px
+
+// ---
+// -- Bind Tab tabs
+// -
+
+// Marker at the bottom-left corner of the favicon. Shows the "home" icon when
+// the tab is on its bound URL and the "undo" icon once it has navigated away.
+.Tab .bind-mark
+  position: absolute
+  left: -3px
+  bottom: -3px
+  width: 11px
+  height: 11px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 50%
+  background-color: var(--frame-bg)
+  pointer-events: none
+  z-index: 12
+  animation: appearing-animation var(--d-norm)
+
+// On the bind placeholder the favicon itself is the home icon, so no corner mark
+.Tab .fav[data-bind-placeholder] .bind-mark
+  display: none
+
+.Tab .bind-mark-icon
+  width: 9px
+  height: 9px
+  fill: var(--tabs-normal-fg)
+
+.Tab[data-active="true"] .bind-mark-icon
+  fill: var(--tabs-activated-fg)
+
+// Navigated away from the bound URL — highlight the marker with the accent
+.Tab[data-bound-away="true"] .bind-mark-icon
+  fill: var(--accent)
+
+// Hovering a tab that navigated away from its bound URL swaps the title
+// for "Back to <bound title>" (favicon and corner mark are unchanged)
+.Tab .title.-back-to
+  display: none
+  align-items: center
+  gap: 0.25em
+  .back-to-btn
+    position: relative
+    display: flex
+    flex-shrink: 0
+    padding: 2px
+    margin-right: 2px
+    border-radius: 3px
+    cursor: pointer
+  .back-to-btn:hover
+    background-color: var(--frame-el-overlay-hover-bg)
+  .back-to-icon
+    width: 14px
+    height: 14px
+    fill: currentColor
+  .back-to-prefix
+    flex-shrink: 0
+  .back-to-title
+    font-weight: bold
+    overflow: hidden
+    text-overflow: ellipsis
+// .title clears the favicon (and audio icon) with text-indent, which each flex item
+// would inherit, so use the same offset as padding instead
+.Tab .t-box .title.-back-to
+  text-indent: 0
+  padding-left: calc(var(--tabs-fav-margin) + var(--tabs-title-indent))
+.Tab[data-audible="true"] .t-box .title.-back-to
+.Tab[data-muted="true"] .t-box .title.-back-to
+.Tab[data-paused="true"] .t-box .title.-back-to
+  padding-left: calc(var(--tabs-fav-margin) + var(--tabs-title-indent-audio))
+.Tab[data-bound-away="true"]:hover .t-box
+  .title:not(.-back-to)
+    display: none
+  .title.-back-to
+    display: flex
 
 // ---
 // -- Keyframes

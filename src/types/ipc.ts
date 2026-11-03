@@ -152,6 +152,10 @@ export type GroupPageActions = {
   update: typeof GroupPage.onGroupUpdMsg
 }
 
+export type UrlPageActions = {
+  setBound: (isBound: boolean) => void
+}
+
 export type Actions =
   | BgActions
   | SettingsActions
@@ -161,6 +165,7 @@ export type Actions =
   | PreviewActions
   | PanelConfigPopupActions
   | GroupPageActions
+  | UrlPageActions
 
 export type ActionsKeys<T> = T extends E.InstanceType.bg
   ? keyof BgActions
@@ -178,7 +183,9 @@ export type ActionsKeys<T> = T extends E.InstanceType.bg
               ? keyof PanelConfigPopupActions
               : T extends E.InstanceType.group
                 ? keyof GroupPageActions
-                : never
+                : T extends E.InstanceType.url
+                  ? keyof UrlPageActions
+                  : never
 
 export type ActionsType<T> = T extends E.InstanceType.bg
   ? BgActions
@@ -196,4 +203,6 @@ export type ActionsType<T> = T extends E.InstanceType.bg
               ? PanelConfigPopupActions
               : T extends E.InstanceType.group
                 ? GroupPageActions
-                : any
+                : T extends E.InstanceType.url
+                  ? UrlPageActions
+                  : any

@@ -681,6 +681,10 @@ export async function getPlaceholderPageInitData(tabId: ID): Promise<Placeholder
       original_url: browser.i18n.getMessage('original_url'),
       copy_url: browser.i18n.getMessage('copy_url'),
       api_limit_info: browser.i18n.getMessage('api_limit_info'),
+      bound_tab: browser.i18n.getMessage('bound_tab'),
+      unbound_tab: browser.i18n.getMessage('unbound_tab'),
+      url: browser.i18n.getMessage('url'),
+      open: browser.i18n.getMessage('open'),
     },
   }
 }

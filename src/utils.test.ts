@@ -27,6 +27,12 @@ describe('Utils.createPlaceholderUrl(), Utils.parsePlaceholderUrl()', () => {
     expect(info.url).toBe(srcUrl)
     expect(info.title).toBe(srcTitle)
   })
+  test('encode decode bind flag', () => {
+    const placeholderUrl = Utils.createPlaceholderUrl({ url: 'https://a.b/c', bind: true })
+    const info = Utils.parsePlaceholderUrl(placeholderUrl + '~!123456789abc!ch!~')
+    expect(info.url).toBe('https://a.b/c')
+    expect(info.bind).toBe(true)
+  })
   test('decode legacy', () => {
     const srcUrl = 'file:///home/m/sidebery-snapshot-2026.02.08-13.46.05.json'
     const srcTitle = '123'

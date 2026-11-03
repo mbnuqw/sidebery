@@ -1,7 +1,7 @@
 /* eslint no-console: off */
 import type { ParsedTheme, SrcVars } from 'src/services/styles'
 import type { PlaceholderPageInitData } from 'src/services/tabs.bg'
-import { decodePlaceholderInfo, toCSSVarName } from 'src/utils'
+import { createPlaceholderUrl, decodePlaceholderInfo, toCSSVarName } from 'src/utils'
 import * as Logs from './url.logs'
 import * as IPPC from 'src/services/ippc.page'
 import { InstanceType } from 'src/enums'
@@ -10,6 +10,9 @@ import { PAGE_HASH_RE } from 'src/defaults'
 let prefix = ''
 let url = ''
 let title = ''
+let bind = false
+let unbound = false
+let renderHeading: (() => void) | undefined
 
 function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
   if (!rootEl) rootEl = document.getElementById('root') ?? undefined
@@ -38,7 +41,9 @@ void (async () => {
 
   document.title = title
 
-  const initData: PlaceholderPageInitData = await IPPC.init(InstanceType.url, setHash, {})
+  const initData: PlaceholderPageInitData = await IPPC.init(InstanceType.url, setHash, {
+    setBound: onSetBound,
+  })
 
   if (initData.winId !== undefined) Logs.setWinId(initData.winId)
   if (initData.tabId !== undefined) Logs.setTabId(initData.tabId)
@@ -89,6 +94,66 @@ void (async () => {
     targetLinkEl.innerText = url
   }
 
+  // Bind placeholder: editable url with "Open" button
+  if (bind) {
+    const openBtnEl = document.getElementById('open_btn')
+    const inputEl = document.getElementById('target_url_input') as HTMLTextAreaElement | null
+    if (!openBtnEl) return Logs.err('Cannot get element: openBtnEl')
+    if (!inputEl) return Logs.err('Cannot get element: inputEl')
+
+    renderHeading = () => {
+      if (unbound) titleEl.innerText = initData.labels?.unbound_tab || 'Unbound Tab'
+      else titleEl.innerText = initData.labels?.bound_tab || 'Bound Tab'
+    }
+    renderHeading()
+    targetLinkLabelEl.innerText = initData.labels?.url || 'URL'
+    openBtnEl.innerText = initData.labels?.open || 'Open'
+    document.body.setAttribute('data-bind', 'true')
+    const iconEl = document.createElement('link')
+    iconEl.rel = 'icon'
+    iconEl.type = 'image/svg+xml'
+    iconEl.href = '/assets/bound-page-favicon.svg'
+    document.head.appendChild(iconEl)
+    titleNoteEl.hidden = true
+    targetLinkEl.hidden = true
+    copyBtnEl.hidden = true
+    openBtnEl.hidden = false
+    inputEl.hidden = false
+    inputEl.value = targetLinkEl.innerText
+
+    // Grow with the text; scroll only once it would reach the bottom of the page
+    const fit = () => {
+      inputEl.style.height = 'auto'
+      const fullH = inputEl.scrollHeight + 2
+      let h = fullH
+      // The page is vertically centered, so each height change moves the box; re-measure a few times
+      for (let i = 0; i < 6; i++) {
+        inputEl.style.height = `${h}px`
+        const over = inputEl.getBoundingClientRect().bottom - (window.innerHeight - 24)
+        const next = Math.max(48, Math.min(fullH, h - over))
+        if (Math.abs(next - h) < 1) break
+        h = next
+      }
+    }
+    inputEl.addEventListener('input', fit)
+    window.addEventListener('resize', fit)
+    fit()
+
+    const open = () => {
+      const dst = inputEl.value.trim()
+      if (dst) window.location.href = dst
+    }
+    openBtnEl.addEventListener('click', open)
+    // Enter anywhere on the page opens (also stops the URL box getting a newline)
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.isComposing) {
+        e.preventDefault()
+        open()
+      }
+    })
+    return
+  }
+
   // Setup copy button
   copyBtnEl.addEventListener('click', () => {
     if (url) navigator.clipboard.writeText(encodeURI(url))
@@ -115,6 +180,23 @@ function parseUrl() {
   const info = decodePlaceholderInfo(data)
   url = info.url
   if (info.title) title = info.title
+  bind = !!info.bind
+  unbound = !!info.unbound
+}
+
+/**
+ * Sidebar (un)bound this placeholder's tab: update the heading, and the hash
+ * so a reload keeps the state (the trailing IPPC suffix is kept as is)
+ */
+function onSetBound(isBound: boolean) {
+  if (!bind) return
+  unbound = !isBound
+  const suffix = window.location.hash.slice(1 + prefix.length)
+  const info = { url, title: title || undefined, bind: true, unbound: unbound || undefined }
+  const newUrl = createPlaceholderUrl(info)
+  prefix = newUrl.slice(newUrl.indexOf('#') + 1)
+  history.replaceState(undefined, '', `#${prefix}${suffix}`)
+  renderHeading?.()
 }
 
 function setHash(h: string) {

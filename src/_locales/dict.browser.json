@@ -441,6 +441,12 @@
     "zh_TW": "編輯標題",
     "ru": "Редактировать заголовок"
   },
+  "KbToggleBindTab": {
+    "en": "Bind/unbind tab"
+  },
+  "KbReturnToBoundUrl": {
+    "en": "Return to bound URL"
+  },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open a new tab in the active panel",
     "de": "Neuen Tab im aktiven Panel öffnen",
@@ -1431,6 +1437,18 @@
     "zh_CN": "复制",
     "zh_TW": "複製",
     "ja": "コピー"
+  },
+  "bound_tab": {
+    "en": "Bound Tab"
+  },
+  "unbound_tab": {
+    "en": "Unbound Tab"
+  },
+  "url": {
+    "en": "URL"
+  },
+  "open": {
+    "en": "Open"
   },
   "copy_url": {
     "en": "Copy URL",
