@@ -884,6 +884,15 @@
     font-weight: bold
     overflow: hidden
     text-overflow: ellipsis
+// .title clears the favicon (and audio icon) with text-indent, which each flex item
+// would inherit, so use the same offset as padding instead
+.Tab .t-box .title.-back-to
+  text-indent: 0
+  padding-left: calc(var(--tabs-fav-margin) + var(--tabs-title-indent))
+.Tab[data-audible="true"] .t-box .title.-back-to
+.Tab[data-muted="true"] .t-box .title.-back-to
+.Tab[data-paused="true"] .t-box .title.-back-to
+  padding-left: calc(var(--tabs-fav-margin) + var(--tabs-title-indent-audio))
 .Tab[data-bound-away="true"]:hover .t-box
   .title:not(.-back-to)
     display: none
