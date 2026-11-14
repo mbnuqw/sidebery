@@ -7,6 +7,7 @@ export const setupPageTranslations: Translations = {
   // - Container config popup
   'container.name_placeholder': {
     en: 'Name...',
+    sv: 'Namn…',
     de: 'Name der Umgebung...',
     fr: 'Nom…',
     hu: 'Név…',
@@ -18,6 +19,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.icon_label': {
     en: 'Icon',
+    sv: 'Ikon',
     de: 'Symbol',
     fr: 'Icone',
     hu: 'Ikon',
@@ -29,6 +31,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.color_label': {
     en: 'Color',
+    sv: 'Färg',
     de: 'Farbe',
     fr: 'Couleur',
     hu: 'Szín',
@@ -40,6 +43,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.reopen_rules_label': {
     en: 'Include / Exclude tab by URL',
+    sv: 'Inkludera eller uteslut flikar efter URL',
     de: 'Tabs nach URL ein- oder ausschließen',
     fr: 'Inclure / Exclure des onglets par URL',
     hu: 'Lapok hozzáadása / kizárása URL alapján',
@@ -51,6 +55,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.manage_reopen_rules_label': {
     en: 'Manage rules',
+    sv: 'Hantera regler',
     de: 'Regeln verwalten',
     fr: 'Gérer les règles',
     hu: 'Szabályok kezelése',
@@ -62,6 +67,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_label': {
     en: 'Proxy',
+    sv: 'Proxy',
     de: 'Proxy',
     fr: 'Proxy',
     ru: 'Прокси',
@@ -70,22 +76,27 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_host_placeholder': {
     en: '---',
+    sv: '---',
     ru: 'хост',
   },
   'container.proxy_port_placeholder': {
     en: '---',
+    sv: '---',
     ru: 'порт',
   },
   'container.proxy_username_placeholder': {
     en: '---',
+    sv: '---',
     ru: 'пользователь',
   },
   'container.proxy_password_placeholder': {
     en: '---',
+    sv: '---',
     ru: 'пароль',
   },
   'container.proxy_dns_label': {
     en: 'proxy DNS',
+    sv: 'DNS via proxy',
     de: 'Proxy-DNS',
     fr: 'Proxy DNS',
     hu: 'Proxy DNS',
@@ -97,22 +108,27 @@ export const setupPageTranslations: Translations = {
   },
   'container.proxy_http': {
     en: 'HTTP',
+    sv: 'HTTP',
     ru: 'HTTP',
   },
   'container.proxy_https': {
     en: 'TLS',
+    sv: 'TLS',
     ru: 'TLS',
   },
   'container.proxy_socks4': {
     en: 'SOCKS4',
+    sv: 'SOCKS4',
     ru: 'SOCKS4',
   },
   'container.proxy_socks': {
     en: 'SOCKS5',
+    sv: 'SOCKS5',
     ru: 'SOCKS5',
   },
   'container.proxy_direct': {
     en: 'none',
+    sv: 'ingen',
     de: 'Keiner',
     fr: 'aucun',
     hu: 'nincs',
@@ -124,6 +140,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_include': {
     en: 'Include URLs',
+    sv: 'Inkludera URL:er',
     de: 'URLs einschließen',
     fr: 'Inclure les URLs',
     hu: 'Hozzáadandó URL-ek',
@@ -135,6 +152,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_include_tooltip': {
     en: 'Reopen tabs with matched URLs in this container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    sv: 'Öppna flikar med matchande URL:er på nytt i den här behållaren.\nLista med ”delsträngar” eller ”/regex/”, en per rad:\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: 'Rouvrir les onglets dont l’URL correspond dans ce conteneur.\nListe de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:\n    example.com\n    /^(une)?regex$/\n    …',
     hu: 'Az illeszkedő URL-ek újranyitása ebben a konténerben.\nSoronként egy-egy "szövegrészlet" vagy /RegExp/:\n    pelda.hu\n    /^(szabályos)?kifejezés$/\n    …',
@@ -148,6 +166,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_exclude': {
     en: 'Exclude URLs',
+    sv: 'Uteslut URL:er',
     de: 'URLs ausschließen',
     fr: 'Exclure les URLs',
     hu: 'Kizárandó URL-ek',
@@ -159,6 +178,7 @@ export const setupPageTranslations: Translations = {
   },
   'container.rules_exclude_tooltip': {
     en: 'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+    sv: 'Öppna flikar med matchande URL:er på nytt i standardbehållaren.\nLista med ”delsträngar” eller ”/regex/”, en per rad:\n    example.com\n    /^(some)?regex$/\n    ...',
     de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nMit Zeilenumbrüchen getrennte Liste von "Zeichenketten" oder "/RegEx/":\n    example.com\n    /^(some)?regex$/\n    ...',
     fr: `Rouvrir les onglets dont l’URL correspond dans le conteneur par défaut.
 Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
@@ -176,6 +196,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'container.user_agent': {
     en: 'User Agent',
+    sv: 'User-Agent',
     de: 'User-Agent',
     fr: 'Agent utilisateur',
     ru: 'User Agent',
@@ -185,6 +206,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // - Panel config popup
   'panel.name_placeholder': {
     en: 'Name...',
+    sv: 'Namn…',
     de: 'Name des Panels...',
     fr: 'Nom…',
     hu: 'Név…',
@@ -196,6 +218,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.icon_label': {
     en: 'Icon',
+    sv: 'Ikon',
     de: 'Symbol',
     fr: 'Icone',
     hu: 'Ikon',
@@ -207,6 +230,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.color_label': {
     en: 'Color',
+    sv: 'Färg',
     de: 'Farbe',
     fr: 'Couleur',
     hu: 'Szín',
@@ -218,6 +242,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon': {
     en: 'Custom icon',
+    sv: 'Anpassad ikon',
     de: 'Benutzerdefiniertes Symbol',
     fr: 'Icone personnalisée',
     hu: 'Egyéni ikon',
@@ -229,6 +254,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_text_btn': {
     en: 'Text',
+    sv: 'Text',
     de: 'Text',
     fr: 'Texte',
     hu: 'Szöveg',
@@ -240,6 +266,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_text_placeholder': {
     en: 'e.g. A::#000000ff::700 32px Roboto',
+    sv: 't.ex. A::#000000ff::700 32px Roboto',
     de: 'z. B. A::#000000ff::700 32px Roboto',
     fr: 'ex. A::#000000ff::700 32px Roboto',
     hu: 'pl. A::#000000ff::700 32px Roboto',
@@ -250,6 +277,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_note': {
     en: 'Text value syntax: "text::color::CSS-font-value"',
+    sv: 'Textvärdets syntax: "text::färg::CSS-teckensnittsvärde"',
     de: 'Textwerte-Syntax: "Text::Farbe::CSS-Schriftart-Wert"',
     fr: 'Syntaxe du champ de texte: “text::couleur::valeur-CSS-de-font”',
     hu: 'A szöveg szintaxisa: szöveg::szín::CSS-betűkészlet-leírás',
@@ -261,11 +289,13 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_url_btn': {
     en: 'URL',
+    sv: 'URL',
     ru: 'URL',
     zh_TW: '網址',
   },
   'panel.custom_icon_url_placeholder': {
     en: 'Custom icon URL...',
+    sv: 'URL till anpassad ikon…',
     de: 'URL des benutzerdefinierten Symbols',
     fr: 'URL de l’icone personalisée…',
     hu: 'Saját ikon URL-je…',
@@ -277,6 +307,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_load': {
     en: 'Load',
+    sv: 'Läs in',
     de: 'Laden',
     fr: 'Charger',
     hu: 'Megnyitás',
@@ -288,6 +319,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_file_btn': {
     en: 'File',
+    sv: 'Fil',
     de: 'Datei',
     fr: 'Fichier',
     hu: 'Fájl',
@@ -299,6 +331,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.custom_icon_colorize': {
     en: 'Colorize custom icon with selected color',
+    sv: 'Färga den anpassade ikonen med den valda färgen',
     de: 'Benutzerdefiniertes Symbol mit gewählter Farbe einfärben',
     fr: 'Coloriser l’icone personalisée avec la couleur sélectionnée',
     hu: 'A saját ikon színezése a kiválasztott színnel',
@@ -310,6 +343,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.lock_panel_label': {
     en: 'Prevent auto-switching from this panel',
+    sv: 'Förhindra automatiskt byte från den här panelen',
     de: 'Automatisches Wechseln aus diesem Panel verhindern',
     fr: 'Éviter le basculement automatique depuis ce panneau',
     hu: 'A panel automatikus elhagyásának megelőzése',
@@ -321,6 +355,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.temp_mode_label': {
     en: 'Switch back to previously active tabs panel after mouse leave',
+    sv: 'Återgå till föregående aktiva flikpanel när muspekaren lämnar sidofältet',
     de: 'Zum zuvor aktiven Tab-Panel zurückwechseln, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Basculer sur le panneau d’onglets précédemment actif à la sortie de la souris',
     hu: 'Visszalépés az előzőleg aktív lappanelra, ha az egérmutató elhagyja',
@@ -332,6 +367,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.skip_on_switching': {
     en: 'Skip this panel when switching panels',
+    sv: 'Hoppa över den här panelen vid panelbyte',
     de: 'Beim Wechseln der Panels dieses Panel überspringen',
     fr: 'Ignorer ce panneau lors du basculement de panneaux',
     hu: 'Kihagyás a panelok közötti lépegetésből',
@@ -343,6 +379,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.no_empty_label': {
     en: 'Create new tab after the last one is closed',
+    sv: 'Skapa en ny flik när den sista stängs',
     de: 'Neuen Tab erstellen, nachdem der letzte geschlossen wurde',
     fr: 'Créer un nouvel onglet lorsque le dernier onglet est fermé',
     hu: 'Az utolsó lap bezárásakor egy új lap létrehozása',
@@ -354,6 +391,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_ctx': {
     en: 'Container of new tab',
+    sv: 'Behållare för nya flikar',
     de: 'Umgebung neuer Tabs',
     fr: 'Conteneur des nouveaux onglets',
     hu: 'Az új lap konténere',
@@ -365,6 +403,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.panel_tooltip_none': {
     en: 'Not set',
+    sv: 'Inte angivet',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
     hu: 'Nincs megadva',
@@ -376,6 +415,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_ctx_reopen': {
     en: 'Detect externally opened tab and reopen it in the target container on the first web request (global setting)',
+    sv: 'Identifiera flikar som öppnas utifrån och öppna dem på nytt i målbehållaren vid den första webbförfrågan (global inställning)',
     de: 'Extern geöffnete Tabs erkennen und bei der ersten Anfrage in der Zielumgebung neu öffnen (globale Einstellung)',
     fr: 'Détecter les onglets ouverts de l’extérieur et les rouvrir dans le conteneur cible à la première requête Web (paramètre global)',
     hu: 'A kívülről megnyitott lapok érzékelése és újranyitása a célkonténerben az első lekéréskor (globális beállítás)',
@@ -387,6 +427,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.drop_tab_ctx': {
     en: 'Reopen tab that was dropped to this panel in container:',
+    sv: 'Öppna flikar som släpps på den här panelen på nytt i behållaren:',
     de: 'Tabs, welche in dieses Panel verschoben wurden, in folgender Umgebung neu öffnen:',
     fr: 'Rouvrir les onglets déplacés dans ce panneau dans le conteneur:',
     hu: 'A panelba dobott lap újranyitása ebben a konténerben:',
@@ -398,6 +439,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.ctr_tooltip_none': {
     en: 'Not set',
+    sv: 'Inte angivet',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
     hu: 'Nincs megadva',
@@ -409,6 +451,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.ctr_tooltip_default': {
     en: 'No container',
+    sv: 'Ingen behållare',
     de: 'Keine Umgebung',
     fr: 'Aucun conteneur',
     hu: 'Nincs konténer',
@@ -420,6 +463,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.tab_move_rules': {
     en: 'Move tabs to this panel',
+    sv: 'Flytta flikar till den här panelen',
     de: 'Tabs in dieses Panel verschieben',
     fr: 'Déplacer les onglets dans ce panneau',
     hu: 'Lapok áthelyezése erre a panelra',
@@ -431,6 +475,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.tab_move_rules_manage_btn': {
     en: 'Manage rules',
+    sv: 'Hantera regler',
     de: 'Regeln verwalten',
     fr: 'Gérer les règles',
     hu: 'Szabályok kezelése',
@@ -442,6 +487,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.tab_move_rules_manage_badge': {
     en: 'Manage moving rules',
+    sv: 'Hantera flyttregler',
     de: 'Verschiebungsregeln verwalten',
     fr: 'Gérer les règles de déplacemement',
     hu: 'Áthelyezési szabályok kezelése',
@@ -453,6 +499,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.move_excluded_to': {
     en: 'Move unmatched (excluded) tabs to panel',
+    sv: 'Flytta flikar som inte matchar (uteslutna flikar) till panelen',
     de: 'Nicht passende (ausgeschlossene) Tabs in Panel verschieben',
     fr: 'Déplacer les onglets sans correspondance (exclus) dans le panneau',
     hu: 'A nem illeszkedő (kizárt) lapok áthelyezése a panelra',
@@ -464,6 +511,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_shortcuts': {
     en: 'Additional "New tab" shortcuts',
+    sv: 'Ytterligare genvägar för ”Ny flik”',
     de: 'Zusätzliche "Neuer Tab"-Schaltflächen',
     fr: 'Raccourcis de “Nouvel onglet” supplémentaires',
     hu: 'További „Új lap” parancsikonok',
@@ -475,6 +523,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.new_tab_shortcuts_manage_btn': {
     en: 'Manage shortcuts',
+    sv: 'Hantera genvägar',
     de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
     hu: 'Parancsikonok kezelése',
@@ -486,6 +535,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.bookmarks_view_mode': {
     en: 'View mode',
+    sv: 'Visningsläge',
     de: 'Anzeigemodus',
     fr: 'Mode d’affichage',
     hu: 'Nézetmód',
@@ -497,6 +547,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.bookmarks_view_mode_tree': {
     en: 'tree',
+    sv: 'träd',
     de: 'Baumstruktur',
     fr: 'arborescence',
     hu: 'fanézet',
@@ -508,6 +559,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.bookmarks_view_mode_history': {
     en: 'history',
+    sv: 'historik',
     de: 'Chronik',
     fr: 'historique',
     hu: 'előzménynézet',
@@ -519,6 +571,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.auto_convert': {
     en: 'Convert to source tabs panel on opening bookmark',
+    sv: 'Omvandla till den ursprungliga flikpanelen när ett bokmärke öppnas',
     de: 'Beim Öffnen eines Lesezeichens in das ursprüngliche Tab-Panel umwandeln',
     fr: 'Reconvertir en panneau d’onglets à l’ouverture d’un marque-pages',
     hu: 'Könyvjelző megnyitásakor átalakítás az eredeti lappanellá',
@@ -530,6 +583,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.root_id_label': {
     en: 'Root folder',
+    sv: 'Rotmapp',
     de: 'Stammordner',
     fr: 'Dossier racine',
     hu: 'Kiinduló mappa',
@@ -541,6 +595,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.root_id.choose': {
     en: 'Choose folder',
+    sv: 'Välj mapp',
     de: 'Ordner auswählen',
     fr: 'Choisir un dossier',
     hu: 'Mappa kiválasztása',
@@ -552,6 +607,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.root_id.reset': {
     en: 'Reset',
+    sv: 'Återställ',
     de: 'Zurücksetzen',
     fr: 'Réinitialiser',
     hu: 'Alaphelyzet',
@@ -563,6 +619,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'panel.root_id_wrong': {
     en: 'Cannot find such folder, please choose the new one',
+    sv: 'Mappen kunde inte hittas. Välj en annan mapp.',
     de: 'Kann diesen Ordner nicht finden, bitte neuen wählen',
     fr: 'Impossible de trouver le dossier, veuillez en choisir un autre',
     hu: 'Nincs ilyen mappa. Egy másik mappát kell választani',
@@ -578,6 +635,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // -
   'settings.nav_settings': {
     en: 'Settings',
+    sv: 'Inställningar',
     de: 'Einstellungen',
     fr: 'Paramètres',
     hu: 'Beállítások',
@@ -589,6 +647,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_general': {
     en: 'General',
+    sv: 'Allmänt',
     de: 'Allgemein',
     fr: 'Général',
     hu: 'Általános',
@@ -600,6 +659,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_storage': {
     en: 'Storage',
+    sv: 'Lagring',
     de: 'Speicher',
     fr: 'Stockage',
     hu: 'Tárhely',
@@ -611,6 +671,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_permissions': {
     en: 'Permissions',
+    sv: 'Behörigheter',
     de: 'Berechtigungen',
     fr: 'Permissions',
     hu: 'Engedélyek',
@@ -622,6 +683,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_menu': {
     en: 'Menu',
+    sv: 'Meny',
     de: 'Menü',
     fr: 'Menu',
     hu: 'Menü',
@@ -632,12 +694,14 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_omnibox': {
     en: 'Address bar',
+    sv: 'Adressfält',
     de: 'Adressleiste',
     fr: 'Barre d’adresse',
     ru: 'Адресная строка',
   },
   'settings.nav_settings_nav': {
     en: 'Navigation bar',
+    sv: 'Navigeringsfält',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
     hu: 'Vezérlősáv',
@@ -649,6 +713,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_group': {
     en: 'Group page',
+    sv: 'Gruppsida',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
     hu: 'Csoportoldal',
@@ -660,6 +725,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_containers': {
     en: 'Containers',
+    sv: 'Behållare',
     de: 'Umgebungen',
     fr: 'Conteneur',
     hu: 'Konténerek',
@@ -670,6 +736,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_dnd': {
     en: 'Drag and Drop',
+    sv: 'Dra och släpp',
     de: 'Ziehen und Ablegen',
     fr: 'Glisser-déposer',
     hu: 'Húzd és ejtsd',
@@ -680,6 +747,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_search': {
     en: 'Search',
+    sv: 'Sökning',
     de: 'Suche',
     fr: 'Recherche',
     hu: 'Keresés',
@@ -691,6 +759,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -702,6 +771,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_new_tab_position': {
     en: 'Position of new tab',
+    sv: 'Placering av nya flikar',
     de: 'Position neuer Tabs',
     fr: 'Position du nouvel onglet',
     hu: 'Új lap elhelyezése',
@@ -713,6 +783,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_pinned_tabs': {
     en: 'Pinned tabs',
+    sv: 'Fästa flikar',
     de: 'Angeheftete Tabs',
     fr: 'Onglets épinglés',
     hu: 'Rögzített lapok',
@@ -724,6 +795,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs_tree': {
     en: 'Tabs tree',
+    sv: 'Flikträd',
     de: 'Tab-Baum',
     fr: 'Arborescence',
     hu: 'Fanézet',
@@ -735,6 +807,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs_colorization': {
     en: 'Tabs colorization',
+    sv: 'Färgläggning av flikar',
     de: 'Tab-Einfärbung',
     fr: 'Colorisation des onglets',
     hu: 'Színezés',
@@ -746,6 +819,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs_preview': {
     en: 'Tabs preview',
+    sv: 'Förhandsvisning av flikar',
     de: 'Tab-Vorschau',
     fr: 'Aperçu des onglets',
     hu: 'Előnézet',
@@ -757,6 +831,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_tabs_native': {
     en: 'Native tabs',
+    sv: 'Webbläsarens flikar',
     de: 'Native Tabs',
     fr: 'Onglets natifs',
     hu: 'Natív lapok',
@@ -769,6 +844,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
 
   'settings.nav_settings_bookmarks': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -780,6 +856,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_history': {
     en: 'History',
+    sv: 'Historik',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -791,6 +868,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_appearance': {
     en: 'Appearance',
+    sv: 'Utseende',
     de: 'Erscheinungsbild',
     fr: 'Apparence',
     hu: 'Megjelenés',
@@ -802,6 +880,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse': {
     en: 'Mouse',
+    sv: 'Mus',
     de: 'Maus',
     fr: 'Souris',
     hu: 'Egér',
@@ -813,6 +892,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_nav': {
     en: 'Navigation bar actions',
+    sv: 'Åtgärder i navigeringsfältet',
     de: 'Aktionen mit Navigationsleiste',
     fr: 'Actions de la barre de navigation',
     hu: 'A vezérlősáv műveletei',
@@ -824,6 +904,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_tabs': {
     en: 'Tab actions',
+    sv: 'Åtgärder för flikar',
     de: 'Aktionen mit Tabs',
     fr: 'Actions des onglets',
     hu: 'Lapműveletek',
@@ -835,6 +916,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_tabs_panel': {
     en: 'Tab panel actions',
+    sv: 'Åtgärder i flikpanelen',
     de: 'Aktionen mit Tab-Panels',
     fr: 'Actions des panneaux',
     hu: 'A lappanel műveletei',
@@ -846,6 +928,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_new_tab_button': {
     en: 'New Tab button actions',
+    sv: 'Åtgärder för knappen Ny flik',
     de: 'Aktionen mit "Neuer Tab"-Schaltflächen',
     fr: 'Action du bouton “Nouvel\u00A0onglet”',
     hu: 'Az „Új lap” gomb műveletei',
@@ -857,6 +940,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_bookmarks': {
     en: 'Bookmark actions',
+    sv: 'Åtgärder för bokmärken',
     de: 'Aktionen mit Lesezeichen',
     fr: 'Action des marque-pages',
     hu: 'Könyvjelzőműveletek',
@@ -868,6 +952,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_mouse_history': {
     en: 'History item actions',
+    sv: 'Åtgärder för historikposter',
     de: 'Aktionen mit Chronik-Einträgen',
     fr: 'Actions des entrées de l’historique',
     hu: 'Előzményműveletek',
@@ -880,6 +965,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
 
   'settings.nav_settings_snapshots': {
     en: 'Snapshots',
+    sv: 'Ögonblicksbilder',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
     hu: 'Pillanatképek',
@@ -890,6 +976,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_sync': {
     en: 'Sync',
+    sv: 'Synkronisering',
     de: 'Synchronisation',
     fr: 'Synchronisation',
     hu: 'Szinkronizálás',
@@ -900,6 +987,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_settings_help': {
     en: 'Help',
+    sv: 'Hjälp',
     de: 'Hilfe',
     fr: 'Aide',
     hu: 'Segítség',
@@ -911,6 +999,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_keybindings': {
     en: 'Keybindings',
+    sv: 'Kortkommandon',
     de: 'Tastenbelegung',
     fr: 'Raccourcis clavier',
     hu: 'Billentyűparancsok',
@@ -922,6 +1011,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor': {
     en: 'Menu editor',
+    sv: 'Menyredigerare',
     de: 'Menü-Editor',
     fr: 'Éditeur de menus',
     hu: 'Menüszerkesztő',
@@ -933,6 +1023,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_tabs': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -944,6 +1035,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_tabs_panel': {
     en: 'Tabs panel',
+    sv: 'Flikpanel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
     hu: 'Lappanel',
@@ -955,6 +1047,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_bookmarks': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -966,6 +1059,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_menu_editor_bookmarks_panel': {
     en: 'Bookmarks panel',
+    sv: 'Bokmärkespanel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
     hu: 'Könyvjelzőpanel',
@@ -977,6 +1071,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_styles_editor': {
     en: 'Styles editor',
+    sv: 'Stilredigerare',
     de: 'Stil-Editor',
     fr: 'Éditeur de styles',
     hu: 'Stílusszerkesztő',
@@ -988,6 +1083,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.nav_snapshots': {
     en: 'Snapshots viewer',
+    sv: 'Visare för ögonblicksbilder',
     de: 'Schnappschuss-Betrachter',
     fr: 'Visionneuse d’instantanés',
     hu: 'Pillanatképek',
@@ -1001,6 +1097,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // - Details controls
   'settings.ctrl_edit': {
     en: 'EDIT',
+    sv: 'REDIGERA',
     de: 'BEARBEITEN',
     fr: 'MODIFIER',
     hu: 'SZERKESZTÉS',
@@ -1012,6 +1109,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.ctrl_save': {
     en: 'SAVE',
+    sv: 'SPARA',
     de: 'SPEICHERN',
     fr: 'SAUVEGARDER',
     hu: 'MENTÉS',
@@ -1023,6 +1121,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.ctrl_update': {
     en: 'UPDATE',
+    sv: 'UPPDATERA',
     de: 'AKTUALISIEREN',
     fr: 'METTRE À JOUR',
     hu: 'FRISSÍTÉS',
@@ -1033,6 +1132,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.ctrl_copy': {
     en: 'COPY',
+    sv: 'KOPIERA',
     de: 'KOPIEREN',
     fr: 'COPIER',
     hu: 'MÁSOLÁS',
@@ -1044,6 +1144,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.ctrl_close': {
     en: 'CLOSE',
+    sv: 'STÄNG',
     de: 'SCHLIEẞEN',
     fr: 'FERMER',
     hu: 'BEZÁRÁS',
@@ -1057,6 +1158,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   // - General
   'settings.general_title': {
     en: 'General',
+    sv: 'Allmänt',
     de: 'Allgemein',
     fr: 'Général',
     hu: 'Általános',
@@ -1068,6 +1170,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.native_scrollbars': {
     en: 'Use native scroll-bars',
+    sv: 'Använd systemets rullningslister',
     de: 'Nativen Scroll-Balken verwenden',
     fr: 'Utiliser les barres de scroll natives',
     hu: 'Natív gördítősáv',
@@ -1079,6 +1182,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.native_scrollbars_thin': {
     en: 'Use thin scroll-bars',
+    sv: 'Använd smala rullningslister',
     de: 'Schmalen Scroll-Balken verwenden',
     fr: 'Utiliser des barres de scroll fines',
     hu: 'Vékony gördítősáv',
@@ -1090,6 +1194,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.native_scrollbars_left': {
     en: 'Show scroll-bar at the left side',
+    sv: 'Visa rullningslisten till vänster',
     de: 'Scroll-Balken auf der linken Seite anzeigen',
     fr: 'Afficher la barre de scroll à gauche',
     hu: 'Bal oldali gördítősáv',
@@ -1101,6 +1206,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.sel_win_screenshots': {
     en: 'Show screenshots in the window selection menu when moving tabs via context menu',
+    sv: 'Visa skärmbilder i fönsterväljaren när flikar flyttas via snabbmenyn',
     de: 'Bildschirmfotos im Fensterauswahlmenü anzeigen, wenn Tabs über das Kontextmenü verschoben werden',
     fr: 'Afficher des captures d’écran dans le menu de sélection des fenêtres lors du déplacement d’onglets via le menu contextuel',
     hu: 'Képernyőképek megjelenítése az ablakválasztó menüben a lapok környezeti menüből történő áthelyezésekor',
@@ -1112,6 +1218,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.update_sidebar_title': {
     en: "Use active panel's name as sidebar title",
+    sv: 'Använd den aktiva panelens namn som sidofältets titel',
     de: 'Name des aktiven Panels als Seitenleistenname verwenden',
     fr: 'Utiliser le nom du panneau actif comme titre de la barre latérale',
     hu: 'Az oldalsáv neve mindig egyezzen meg az aktív panel nevével',
@@ -1123,6 +1230,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.mark_window': {
     en: "Add preface to the browser window's title if Sidebery sidebar is active",
+    sv: 'Lägg till ett prefix i webbläsarfönstrets titel när Sideberys sidofält är aktivt',
     de: 'Präfix dem Fensternamen des Browsers voranstellen, wenn die Sidebery-Seitenleiste geöffnet ist',
     fr: 'Ajouter un préfixe au titre de la fenêtre du navigateur quand la barre latérale Sidebery est actif',
     hu: 'Az ablak címében előtag jelzi, ha a Sidebery oldalsáv aktív',
@@ -1134,6 +1242,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.mark_window_preface': {
     en: 'Preface value',
+    sv: 'Prefix',
     de: 'Präfix',
     fr: 'Préfixe',
     hu: 'Az előtag szövege',
@@ -1145,6 +1254,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.mark_window_preface_note': {
     en: 'Note: Available variables: %PN - active panel name',
+    sv: 'Obs! Tillgängliga variabler: %PN – den aktiva panelens namn',
     de: 'Hinweis: Verfügbare Variablen: %PN – aktiver Panel-Name',
     fr: 'Note: Variables disponibles: %PN – nom du panneau actif',
     hu: 'Megjegyzés: felhasználható változók: %PN – az aktív panel neve',
@@ -1156,6 +1266,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_title_url_indent': {
     en: 'Append an indent for child tabs/bookmarks on copying',
+    sv: 'Lägg till indrag för underordnade flikar och bokmärken vid kopiering',
     de: 'Beim Kopieren einen Einzug für untergeordnete Tabs/Lesezeichen anfügen',
     fr: 'Ajouter une indentation pour les onglets ou marque-pages enfants lors de la copie',
     hu: 'Behúzás hozzáfűzése a gyermek tabulátorokhoz/könyvjelzőkhöz másolásakor',
@@ -1167,6 +1278,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_title_url_indent_or': {
     en: 'no indent',
+    sv: 'inget indrag',
     de: 'keine Einrückung',
     fr: 'aucune indentation',
     hu: 'nincs bemélyedés',
@@ -1178,6 +1290,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_multi_bullet': {
     en: 'Append a list mark when copying multiple items',
+    sv: 'Lägg till listmarkörer när flera objekt kopieras',
     de: 'Beim Kopieren mehrerer Elemente eine Listenmarkierung anfügen',
     fr: 'Ajouter une puce lors de la copie de plusieurs éléments',
     hu: 'Listajel hozzáfűzése több elem másolásakor',
@@ -1189,6 +1302,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_multi_bullet_or': {
     en: 'no mark',
+    sv: 'ingen markör',
     de: 'keine Listenmarkierung',
     fr: 'aucune puce',
     hu: 'nincs listajel',
@@ -1200,6 +1314,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
   },
   'settings.copy_templates': {
     en: 'Copy by templates',
+    sv: 'Kopiera med mallar',
     de: 'Kopieren nach Vorlagen',
     fr: 'Copier avec un modèle',
     hu: 'Másolás sablonok alapján',
@@ -1213,6 +1328,7 @@ Liste de “sous-chaines” ou “/RegExp/” avec une entrée par ligne:
     en: `To use this feature enable "Copy by templates..." option in context menu editor or set keybindings.
 Templates are written per line in the form "Template name:Template" (without quotes).
 Available variables: %B - a list mark (bullet); %CT - custom title or title; %T - title; %U - URL`,
+    sv: 'Aktivera ”Kopiera med mallar…” i snabbmenyredigeraren eller ange kortkommandon för att använda den här funktionen.\nSkriv en mall per rad på formen ”Mallnamn:Mall” (utan citattecken).\nTillgängliga variabler: %B – listmarkör; %CT – anpassad titel eller titel; %T – titel; %U – URL',
     de: `Um diese Funktion zu nutzen, aktivieren Sie die Option "Kopieren nach Vorlagen..." im Kontextmenü-Editor oder legen Sie eine Tastenbelegung fest.
 Vorlagen werden zeilenweise im Format "Vorlagenname:Vorlage" (ohne Anführungszeichen) angegeben.
 Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel oder Titel; %T - Titel; %U - URL`,
@@ -1232,6 +1348,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.storage_btn': {
     en: "Sidebery's data:",
+    sv: 'Sideberys data:',
     de: 'Sidebery-Daten:',
     fr: 'Données de Sidebery:',
     hu: 'Sidebery-adatok:',
@@ -1243,6 +1360,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.permissions_btn': {
     en: 'Permissions',
+    sv: 'Behörigheter',
     de: 'Berechtigungen',
     fr: 'Permissions',
     hu: 'Engedélyek',
@@ -1256,6 +1374,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   // - Storage
   'settings.storage_title': {
     en: 'Storage',
+    sv: 'Lagring',
     de: 'Speicher',
     fr: 'Stockage',
     hu: 'Tárhely',
@@ -1267,6 +1386,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.storage_edit_prop': {
     en: 'edit',
+    sv: 'redigera',
     de: 'Ändern',
     fr: 'modifier',
     hu: 'szerkesztés',
@@ -1278,6 +1398,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.storage_delete_prop': {
     en: 'delete',
+    sv: 'ta bort',
     de: 'Löschen',
     fr: 'supprimer',
     hu: 'törlés',
@@ -1289,6 +1410,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.storage_delete_confirm': {
     en: 'Delete property ',
+    sv: 'Ta bort egenskapen ',
     de: 'Feld löschen ',
     fr: 'Supprimer la propriété',
     hu: 'Törölhető a tulajdonság: ',
@@ -1300,6 +1422,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.update_storage_info': {
     en: 'Update',
+    sv: 'Uppdatera',
     de: 'Aktualisieren',
     fr: 'Mettre à jour',
     hu: 'Frissítés',
@@ -1310,6 +1433,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clear_storage_info': {
     en: 'Delete everything',
+    sv: 'Ta bort allt',
     de: 'Alles löschen',
     fr: 'Tout supprimer',
     hu: 'Teljes törlés',
@@ -1321,6 +1445,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clear_storage_confirm': {
     en: 'Are you sure you want to delete all Sidebery data?',
+    sv: 'Vill du ta bort alla Sideberys data?',
     de: 'Wirklich alle Sidebery-Daten löschen?',
     fr: 'Voulez-vous vraiment supprimer toutes les données de Sidebery?',
     hu: 'Biztosan törölhető a Sidebery összes adata?',
@@ -1332,6 +1457,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.favs_title': {
     en: 'Cached favicons',
+    sv: 'Cachade webbplatsikoner',
     de: 'Zwischengespeicherte Favicons',
     fr: 'Favicons en cache',
     hu: 'Gyorsítótárazott webhelyikonok',
@@ -1343,6 +1469,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clear_favicons_cache': {
     en: 'Delete favicons cache',
+    sv: 'Rensa cachen för webbplatsikoner',
     de: 'Favicon-Zwischenspeicher löschen',
     ru: 'Удалить кэш иконок сайтов',
     zh_CN: '删除图标缓存',
@@ -1350,6 +1477,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clear_favicons_cache_confirm': {
     en: 'Are you sure you want to delete favicons cache?',
+    sv: 'Vill du rensa cachen för webbplatsikoner?',
     de: 'Möchten Sie den Favicon-Zwischenspeicher wirklich löschen?',
     ru: 'Вы уверены, что хотите удалить кэш иконок сайтов?',
     zh_CN: '确定要删除图标缓存吗？',
@@ -1359,6 +1487,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   // - Permissions
   'settings.permissions_title': {
     en: 'Permissions',
+    sv: 'Behörigheter',
     de: 'Berechtigungen',
     fr: 'Permissions',
     hu: 'Engedélyek',
@@ -1370,6 +1499,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.all_urls_label': {
     en: 'Accessing web requests data:',
+    sv: 'Åtkomst till data i webbförfrågningar:',
     de: 'Zugriff auf Daten für Webanfragen:',
     fr: 'Accéder aux données pour tous les sites web:',
     hu: 'Hozzáférés a webes lekérések adataihoz:',
@@ -1381,6 +1511,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.all_urls_info': {
     en: 'Required for:\n- Cleaning cookies\n- Proxy and URL rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
+    sv: 'Krävs för:\n- Rensning av kakor\n- Behållarnas proxy- och URL-regler\n- Skärmbilder för gruppsidan och fönsterväljaren\n- Ändring av User-Agent per behållare',
     de: 'Benötigt für:\n- Cookies löschen\n- Proxy- und URL-Regeln für Umgebungen\n- Bildschirmfotos für die Gruppenseite und das Fensterauswahlmenü\n- User-Agent per Umgebung ändern',
     fr: 'Requis pour\n– Nettoyer les cookies\n– Les règles de proxy et d’URL des conteneurs\n– Les captures d’écran pour la page de groupe et le panneau de sélection des fenêtres\n– Changer l’agent utilisateur par conteneur',
     hu: 'A következő funkciókhoz szükséges:\n– Sütik törlése\n– A konténerek proxy- és URL-szabályainak beállítása\n– Képernyőképek a csoportoldalhoz és az ablakválasztóhoz\n– Konténerenkénti böngészőazonosító megadása',
@@ -1394,6 +1525,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.perm.bookmarks_label': {
     en: 'Bookmarks:',
+    sv: 'Bokmärken:',
     de: 'Lesezeichen:',
     fr: 'Marque-pages:',
     hu: 'Hozzáférés a könyvjelzőkhöz:',
@@ -1405,6 +1537,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.perm.bookmarks_info': {
     en: 'Required for:\n- Bookmarks panels',
+    sv: 'Krävs för:\n- Bokmärkespaneler',
     de: 'Benötigt für:\n- Lesezeichen-Panels',
     fr: 'Requis pour:\n– Le panneau des marques pages',
     hu: 'A következő funkciókhoz szükséges:\n– Könyvjelzőpanelok',
@@ -1416,6 +1549,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.tab_hide_label': {
     en: 'Hiding tabs:',
+    sv: 'Dölja flikar:',
     de: 'Tabs verstecken:',
     fr: 'Cacher les onglets:',
     hu: 'Lapok elrejtése:',
@@ -1427,6 +1561,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.tab_hide_info': {
     en: 'Required for:\n- Hiding tabs in inactive panels\n- Hiding folded tabs',
+    sv: 'Krävs för:\n- Döljning av flikar i inaktiva paneler\n- Döljning av hopfällda flikar',
     de: 'Benötigt für:\n- Verstecken von Tabs in inaktiven Panels\n- Eingeklappte Tabs verstecken',
     fr: 'Requis pour:\n– Cacher les onglets dans les panneaux inactifs\n– Cacher les onglets repliés',
     hu: 'A következő funkciókhoz szükséges:\n– Az inaktív panelok lapjainak elrejtése\n– A becsukott ágak lapjainak elrejtése',
@@ -1438,6 +1573,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clipboard_write_label': {
     en: 'Writing to clipboard:',
+    sv: 'Skriva till urklipp:',
     de: 'In Zwischenablage schreiben:',
     fr: 'Écrire dans le presse-papiers:',
     hu: 'A vágólap írása:',
@@ -1449,6 +1585,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clipboard_write_info': {
     en: 'Required for:\n- Copying URLs of tabs/bookmarks through context menu',
+    sv: 'Krävs för:\n- Kopiering av flikars och bokmärkens URL:er via snabbmenyn',
     de: 'Benötigt für:\n- URLs von Tabs/Lesezeichen über Kontextmenü kopieren',
     fr: 'Requis pour:\n– Copier les URLs des onglets et marque-pages via le menu contextuel',
     hu: 'A következő funkciókhoz szükséges:\n– A lapok/könyvjelzők URL-jének másolása a környezeti menü segítségével',
@@ -1460,6 +1597,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clipboard_read_label': {
     en: 'Reading from clipboard:',
+    sv: 'Läsa från urklipp:',
     de: 'Lesen aus der Zwischenablage:',
     fr: 'Lire le presse-papier:',
     hu: 'Olvasás a vágólapról:',
@@ -1471,6 +1609,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.clipboard_read_info': {
     en: 'Required for:\n- Paste function',
+    sv: 'Krävs för:\n- Inklistringsfunktionen',
     de: 'Benötigt für:\n- Einfügefunktion',
     fr: 'Requis pour:\n– La fonction Coller',
     hu: 'A következő funkciókhoz szükséges:\n– Beillesztés funkció',
@@ -1482,6 +1621,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.history_label': {
     en: 'History:',
+    sv: 'Historik:',
     de: 'Chronik:',
     fr: 'Historique:',
     hu: 'Hozzáférés az előzményekhez:',
@@ -1493,6 +1633,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.history_info': {
     en: 'Required for:\n- History panel',
+    sv: 'Krävs för:\n- Historikpanelen',
     de: 'Benötigt für:\n- Chronik-Panel',
     fr: 'Requis pour:\n– Le panneau d’historique',
     hu: 'A következő funkciókhoz szükséges:\n– Előzménypanel',
@@ -1504,6 +1645,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.perm.downloads_label': {
     en: 'Downloads:',
+    sv: 'Hämtningar:',
     de: 'Downloads:',
     hu: 'Hozzáférés a letöltésekhez:',
     fr: 'Téléchargements:',
@@ -1515,6 +1657,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.perm.downloads_info': {
     en: 'Required for:\n- Snapshot auto export',
+    sv: 'Krävs för:\n- Automatisk export av ögonblicksbilder',
     de: 'Benötigt für:\n- Automatischen Export von Schnappschüssen',
     fr: 'Requis pour:\n– L’export automatique des instantanés',
     hu: 'A következő funkciókhoz szükséges:\n– A pillanatképek automatikus exportálása',
@@ -1528,6 +1671,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   // - Context menu
   'settings.ctx_menu_title': {
     en: 'Context menu',
+    sv: 'Snabbmeny',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     hu: 'Környezeti menü',
@@ -1539,6 +1683,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_native': {
     en: 'Use native context menu',
+    sv: 'Använd webbläsarens snabbmeny',
     de: 'Natives Kontextmenü verwenden',
     fr: 'Utiliser le menu contextuel natif',
     hu: 'Natív környezeti menü',
@@ -1550,6 +1695,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_render_inact': {
     en: 'Render inactive options',
+    sv: 'Visa inaktiva alternativ',
     de: 'Inaktive Optionen anzeigen',
     fr: 'Afficher les options inactives',
     hu: 'Az inaktív menüpontok megjelenítése',
@@ -1561,6 +1707,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_render_icons': {
     en: 'Render icons',
+    sv: 'Visa ikoner',
     de: 'Symbole anzeigen',
     fr: 'Afficher les icones',
     hu: 'Ikonok megjelenítése',
@@ -1572,6 +1719,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_ignore_ctr': {
     en: 'Ignore containers',
+    sv: 'Ignorera behållare',
     de: 'Umgebungen ignorieren',
     fr: 'Ignorer les contenenurs',
     hu: 'Konténerek kihagyása',
@@ -1582,6 +1730,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_ignore_ctr_or': {
     en: 'e.g. /^tmp.+/, Google, Facebook',
+    sv: 't.ex. /^tmp.+/, Google, Facebook',
     de: 'z. B. /^tmp.+/, Google, Facebook',
     fr: 'ex: /^tmp.+/, Google, Facebook',
     hu: 'pl. /^tmp.+/, Google, Facebook',
@@ -1592,6 +1741,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_ignore_ctr_note': {
     en: 'Use comma-separated list of container names or /regexp/',
+    sv: 'Ange en kommaseparerad lista med behållarnamn eller /regexp/',
     de: 'Komma-getrennte Liste von Umgebungsnamen oder /RegExp/ verwenden',
     fr: 'Liste de noms de conteneur ou /RegExp/ séparés par des virgules',
     hu: 'Vesszővel tagolt konténernevek vagy /RegExp/',
@@ -1603,6 +1753,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   },
   'settings.ctx_menu_editor': {
     en: 'Edit context menu',
+    sv: 'Redigera snabbmenyn',
     fr: 'Modifier le menu contextuel',
     de: 'Kontextmenü bearbeiten',
     hu: 'A környezeti menü szerkesztése',
@@ -1616,12 +1767,14 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
   // - Address bar (Omnibox)
   'settings.omnibox_title': {
     en: 'Address bar (Omnibox)',
+    sv: 'Adressfält (Omnibox)',
     de: 'Adressleiste (Omnibox)',
     fr: 'Barre d’adresse (Omnibox)',
     ru: 'Адресная строка (Omnibox)',
   },
   'settings.omnibox_desc': {
     en: `Use the address bar (aka Omnibox) for fast triggering some Sidebery commands.`,
+    sv: 'Använd adressfältet (även kallat Omnibox) för att snabbt köra vissa Sidebery-kommandon.',
     de: `Nutzen Sie die Adressleiste (Omnibox), um einige Sidebery-Befehle schnell auszuführen.`,
     fr: 'Utiliser la barre d’adresse (aka Omnibox) pour déclencher rapidement des commandes Sidebery.',
     ru: 'Используйте адресную строку (она же Omniox) для быстрого вызова некоторых команд Sidebery.',
@@ -1630,6 +1783,7 @@ Verfügbare Variablen: %B - Aufzählungszeichen; %CT - benutzerdefinierter Titel
     en: `To start, focus the address bar (Ctrl+L/Cmd+L), then input "=" followed by a space, then start typing target container/panel/group name (case-insensitive). Choose desired command from the list or just press Enter to use the first one.
 
 You can also set prefixes for each command type for faster navigation. Starting your query (after the "=" and space) with any characters from the configured prefix will give commands of this type a higher priority.`,
+    sv: 'Börja med att fokusera adressfältet (Ctrl+L/Cmd+L), skriv ”=” följt av ett mellanslag och börja sedan skriva namnet på behållaren, panelen eller gruppen (utan skillnad mellan stora och små bokstäver). Välj önskat kommando i listan eller tryck på Retur för att använda det första.\n\nDu kan även ange prefix för varje kommandotyp för att navigera snabbare. Om du börjar sökningen (efter ”=” och mellanslaget) med något av tecknen i det inställda prefixet prioriteras kommandon av den typen.',
     de: `Setzen Sie zunächst den Fokus in die Adressleiste (Strg+L/Cmd+L), geben Sie "=" gefolgt von einem Leerzeichen ein und tippen Sie dann den Namen der gewünschten Umgebung, des Panels oder der Gruppe (Groß-/Kleinschreibung wird ignoriert). Wählen Sie den gewünschten Befehl aus der Liste oder drücken Sie einfach die Eingabetaste, um den ersten zu verwenden.
 
 Sie können außerdem für jeden Befehlstyp ein Präfix festlegen, um schneller zu navigieren. Beginnt Ihre Eingabe (nach "=" und Leerzeichen) mit Zeichen aus dem festgelegten Präfix, erhalten Befehle dieses Typs eine höhere Priorität.`,
@@ -1641,36 +1795,42 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.omnibox_cmds': {
     en: 'Available commands:',
+    sv: 'Tillgängliga kommandon:',
     de: 'Verfügbare Befehle:',
     fr: 'Commandes disponibles:',
     ru: 'Доступные команды:',
   },
   'settings.omni_reopen_in_ctr': {
     en: 'Reopen an active tab in container...',
+    sv: 'Öppna den aktiva fliken på nytt i behållaren…',
     de: 'Aktiven Tab in Umgebung neu öffnen...',
     fr: 'Réouvrir un onglet actif dans un contenur…',
     ru: 'Переоткрыть активную вкладку в контейнере...',
   },
   'settings.omni_switch_to_panel': {
     en: 'Switch to panel...',
+    sv: 'Byt till panelen…',
     de: 'Zu Panel wechseln...',
     fr: 'Basculer vers le panneau…',
     ru: 'Переключиться на панель...',
   },
   'settings.omni_move_to_panel': {
     en: 'Move an active tab to panel...',
+    sv: 'Flytta den aktiva fliken till panelen…',
     de: 'Aktiven Tab in Panel verschieben...',
     fr: 'Déplacer un onglet actif vers le panneau…',
     ru: 'Переместить активную вкладку на панель...',
   },
   'settings.omni_move_to_group': {
     en: 'Move an active tab to group...',
+    sv: 'Flytta den aktiva fliken till gruppen…',
     de: 'Aktiven Tab in Gruppe verschieben...',
     fr: 'Déplacer un onglet actif vers le groupe…',
     ru: 'Переместить активную вкладку в группу...',
   },
   'settings.omni_cmd_prefix': {
     en: 'Prefix:',
+    sv: 'Prefix:',
     de: 'Präfix:',
     fr: 'Préfixe:',
     ru: 'Префикс:',
@@ -1680,6 +1840,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // TODO: rename 'nav' to 'navbar'
   'settings.nav_title': {
     en: 'Navigation bar',
+    sv: 'Navigeringsfält',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
     hu: 'Vezérlősáv',
@@ -1691,6 +1852,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout': {
     en: 'Layout',
+    sv: 'Layout',
     de: 'Anordnung',
     hu: 'Elrendezés',
     fr: 'Disposition',
@@ -1702,6 +1864,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout_horizontal': {
     en: 'horizontal',
+    sv: 'vågrät',
     de: 'Horizontal',
     fr: 'horizontale',
     hu: 'vízszintes',
@@ -1712,6 +1875,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout_vertical': {
     en: 'vertical',
+    sv: 'lodrät',
     de: 'Vertikal',
     fr: 'verticale',
     hu: 'függőleges',
@@ -1722,6 +1886,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_layout_hidden': {
     en: 'hidden',
+    sv: 'dolt',
     de: 'Versteckt',
     fr: 'cachée',
     hu: 'rejtett',
@@ -1733,6 +1898,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_inline': {
     en: 'Show navigation bar in one line',
+    sv: 'Visa navigeringsfältet på en rad',
     de: 'Navigationsleiste in einer Zeile anzeigen',
     fr: 'Afficher la barre de navigation sur une ligne',
     hu: 'Egysoros vezérlősáv',
@@ -1744,6 +1910,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_side': {
     en: 'Side',
+    sv: 'Sida',
     de: 'Seite',
     fr: 'Côté',
     hu: 'Oldal',
@@ -1755,6 +1922,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_side_left': {
     en: 'left',
+    sv: 'vänster',
     de: 'Links',
     fr: 'gauche',
     hu: 'bal',
@@ -1766,6 +1934,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_side_right': {
     en: 'right',
+    sv: 'höger',
     de: 'Rechts',
     fr: 'droite',
     hu: 'jobb',
@@ -1777,6 +1946,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_btn_count': {
     en: 'Show count of tabs/bookmarks',
+    sv: 'Visa antalet flikar eller bokmärken',
     de: 'Anzahl der Tabs/Lesezeichen anzeigen',
     fr: 'Afficher le nombre d’onglets ou de marque-pages',
     hu: 'A lapok/könyvjelzők darabszámának jelzése',
@@ -1788,6 +1958,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.hide_empty_panels': {
     en: 'Hide empty tabs panels',
+    sv: 'Dölj tomma flikpaneler',
     de: 'Leere Tab-Panels ausblenden',
     fr: 'Cacher les panneaux d’onglets vides',
     hu: 'Az üres lappanelok elrejtése',
@@ -1799,6 +1970,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.hide_discarded_tab_panels': {
     en: 'Hide tab panel if all its tabs unloaded',
+    sv: 'Dölj flikpanelen om alla dess flikar är frigjorda',
     de: 'Tab-Panel ausblenden, wenn alle seine Tabs entladen sind',
     fr: 'Cacher les panneaux d’onglets dont tous les onglets sont déchargés',
     hu: 'A lappanel elrejtése, ha minden lapja ki lett söpörve',
@@ -1810,6 +1982,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_switch_panels_delay': {
     en: 'Min delay between panels switching (ms)',
+    sv: 'Minsta fördröjning mellan panelbyten (ms)',
     de: 'Mindestverzögerung beim Wechsel zwischen Panels (ms)',
     fr: 'Durée minimum entre chaque basculement de panneau (ms)',
     hu: 'A panelváltás minimális késleltetése (ms)',
@@ -1821,6 +1994,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.bottom_bar': {
     en: 'Bottom bar of tabs panel',
+    sv: 'Nedre fält i flikpanelen',
     de: 'Untere Leiste der Tab-Panels',
     fr: 'Barre du bas du panneau d’onglets',
     hu: 'A lappanelok alsó sávja',
@@ -1832,6 +2006,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.sub_panel.recently_closed_tabs': {
     en: 'Recently closed tabs sub panel',
+    sv: 'Underpanel för nyligen stängda flikar',
     de: '"Zuletzt geschlossene Tabs"-Unter-Panel',
     fr: 'Sous-panneau d’onglets récemment fermés',
     hu: 'Legutóbb bezárt lapok',
@@ -1843,6 +2018,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.sub_panel.bookmarks': {
     en: 'Bookmarks sub panel',
+    sv: 'Underpanel för bokmärken',
     de: '"Lesezeichen"-Unter-Panel',
     fr: 'Sous-panneau de marque-pages',
     hu: 'Könyvjelzők',
@@ -1854,6 +2030,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.sub_panel.history': {
     en: 'History sub panel',
+    sv: 'Underpanel för historik',
     de: '"Chronik"-Unter-Panel',
     fr: 'Sous-panneau d’historique',
     hu: 'Előzmények',
@@ -1865,6 +2042,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.sub_panel.sync': {
     en: 'Sync sub-panel',
+    sv: 'Underpanel för synkronisering',
     de: 'Synchronisierungs-Unter-Panel',
     fr: 'Sous-panneau Synchronisation',
     hu: 'Szinkronizálás alpanel',
@@ -1875,6 +2053,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_enabled': {
     en: 'Enabled elements',
+    sv: 'Aktiverade element',
     de: 'Aktivierte Elemente',
     fr: 'Éléments activés',
     hu: 'Megjelenítendő elemek',
@@ -1886,6 +2065,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_enabled_inline_note': {
     en: 'Note: "In one line" mode is enabled, so the navigation bar elements will be separated into two groups: panels (on the left) and buttons (on the right)',
+    sv: 'Obs! Läget ”På en rad” är aktiverat. Navigeringsfältets element delas därför upp i två grupper: paneler till vänster och knappar till höger.',
     de: 'Hinweis: Der Modus „In einer Zeile“ ist aktiviert, sodass die Elemente der Navigationsleiste in zwei Gruppen unterteilt werden: Panels (links) und Schaltflächen (rechts)',
     fr: 'Remarque : le mode « Sur une seule ligne » est activé, les éléments de la barre de navigation seront donc séparés en deux groupes : les panneaux (à gauche) et les boutons (à droite)',
     hu: 'Megjegyzés: Az „Egy sorban” mód engedélyezve van, így a navigációs sáv elemei két csoportra lesznek felosztva: panelek (bal oldalon) és gombok (jobb oldalon)',
@@ -1897,6 +2077,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar.no_elements': {
     en: 'No elements',
+    sv: 'Inga element',
     de: 'Keine Elemente',
     fr: 'Aucun élément',
     hu: 'Nincsenek elemek',
@@ -1908,6 +2089,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar.inact_note': {
     en: '(Inactive)',
+    sv: '(Inaktivt)',
     de: '(Inaktiv)',
     fr: '(Inactif)',
     hu: '(Inaktív)',
@@ -1919,6 +2101,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar.available_elements': {
     en: 'Available elements',
+    sv: 'Tillgängliga element',
     de: 'Verfügbare Elemente',
     fr: 'Éléments disponibles',
     hu: 'Rendelkezésre álló elemek',
@@ -1930,6 +2113,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_tabs_panel': {
     en: 'Tabs panel',
+    sv: 'Flikpanel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
     hu: 'Lappanel',
@@ -1941,6 +2125,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_bookmarks_panel': {
     en: 'Bookmarks panel',
+    sv: 'Bokmärkespanel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
     hu: 'Könyvjelzőpanel',
@@ -1952,6 +2137,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_sp': {
     en: 'Space',
+    sv: 'Mellanrum',
     de: 'Leerraum',
     fr: 'Espace',
     hu: 'Helykitöltő',
@@ -1963,6 +2149,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_sd': {
     en: 'Delimiter',
+    sv: 'Avgränsare',
     de: 'Trennlinie',
     fr: 'Délimiteur',
     hu: 'Elválasztó',
@@ -1974,6 +2161,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_hdn': {
     en: 'Hidden panels',
+    sv: 'Dolda paneler',
     de: 'Versteckte Panels',
     fr: 'Panneaux cachés',
     hu: 'Rejtett panelok',
@@ -1985,6 +2173,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_history': {
     en: 'History panel',
+    sv: 'Historikpanel',
     de: 'Chronik-Panel',
     fr: 'Panneau d’historique',
     hu: 'Előzménypanel',
@@ -1996,6 +2185,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_sync': {
     en: 'Sync panel',
+    sv: 'Synkroniseringspanel',
     de: 'Synchronisations-Panel',
     fr: 'Panneau de synchronisation',
     hu: 'Szinkronizálási panel',
@@ -2006,6 +2196,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_search': {
     en: 'Search',
+    sv: 'Sökning',
     de: 'Suche',
     fr: 'Recherche',
     hu: 'Keresés',
@@ -2017,6 +2208,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_add_tp': {
     en: 'Create tabs panel',
+    sv: 'Skapa flikpanel',
     de: 'Tab-Panel erstellen',
     fr: 'Créer un panneau d’onglets',
     hu: 'Új lappanel',
@@ -2028,6 +2220,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_create_snapshot': {
     en: 'Create snapshot',
+    sv: 'Skapa ögonblicksbild',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
@@ -2039,6 +2232,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_collapse': {
     en: 'Collapse all',
+    sv: 'Fäll ihop alla',
     de: 'Alle einklappen',
     fr: 'Tout replier',
     hu: 'Ágak becsukása',
@@ -2050,6 +2244,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_expand': {
     en: 'Expand all',
+    sv: 'Fäll ut alla',
     de: 'Alle ausklappen',
     fr: 'Tout déplier',
     hu: 'Ágak megnyitása',
@@ -2061,6 +2256,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_remute_audio_tabs': {
     en: 'Mute/Unmute audible tabs',
+    sv: 'Stäng av eller slå på ljudet för flikar som spelar upp ljud',
     de: 'Stumm-/Lautschalten hörbarer Tabs',
     fr: 'Désactiver/réactiver le son des onglets audibles',
     hu: 'Lapok hangja ki/be',
@@ -2072,6 +2268,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_bar_btn_settings': {
     en: 'Settings',
+    sv: 'Inställningar',
     de: 'Einstellungen',
     fr: 'Paramètres',
     hu: 'Beállítások',
@@ -2084,6 +2281,8 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.nav_rm_tabs_panel_confirm': {
     en: name =>
       `Delete "${name}" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.`,
+    sv: name =>
+      `Vill du ta bort panelen ”${name}”?\nAlla flikar i panelen flyttas till närmaste flikpanel.`,
     de: name =>
       `Panel "${name}" löschen?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.`,
     fr: name =>
@@ -2101,6 +2300,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.nav_rm_bookmarks_panel_confirm': {
     en: name => `Delete "${name}" panel?`,
+    sv: name => `Vill du ta bort panelen ”${name}”?`,
     de: name => `Panel "${name}" löschen?`,
     fr: name => `Supprimer le panneau “${name}”?`,
     hu: name => `Törölhető a panel: „${name}”?`,
@@ -2114,6 +2314,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // - Group page
   'settings.group_title': {
     en: 'Group page',
+    sv: 'Gruppsida',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
     hu: 'Csoportoldal',
@@ -2125,6 +2326,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.group_layout': {
     en: 'Layout of tabs',
+    sv: 'Fliklayout',
     de: 'Tab-Layout',
     fr: 'Disposition des onglets',
     hu: 'A lapok elrendezése',
@@ -2136,6 +2338,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.group_layout_grid': {
     en: 'grid',
+    sv: 'rutnät',
     de: 'Gitter',
     fr: 'grille',
     hu: 'rács',
@@ -2147,6 +2350,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.group_layout_list': {
     en: 'list',
+    sv: 'lista',
     de: 'Liste',
     fr: 'liste',
     hu: 'lista',
@@ -2159,6 +2363,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // - Containers
   'settings.containers_title': {
     en: 'Containers',
+    sv: 'Behållare',
     de: 'Umgebungen',
     fr: 'Conteneurs',
     hu: 'Konténerek',
@@ -2169,6 +2374,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.containers_sort_by_name': {
     en: 'Sort containers by name',
+    sv: 'Sortera behållare efter namn',
     de: 'Umgebungen nach Namen sortieren',
     fr: 'Trier les conteneurs par nom',
     hu: 'A konténerek rendezése név szerint',
@@ -2180,6 +2386,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.container_remove_confirm': {
     en: name => `Are you sure you want to delete "${name}" container?`,
+    sv: name => `Vill du ta bort behållaren ”${name}”?`,
     de: name => `Möchten Sie die Umgebung "${name}" wirklich löschen?`,
     fr: name => `Voulez-vous vraiment supprimer le conteneur “${name}”?`,
     hu: name => `Biztos törölhető a konténer: „${name}”?`,
@@ -2191,6 +2398,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.containers_create_btn': {
     en: 'Create container',
+    sv: 'Skapa behållare',
     de: 'Umgebung erstellen',
     fr: 'Créer le conteneur',
     hu: 'Új konténer',
@@ -2204,6 +2412,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // - Drag and drop
   'settings.dnd_title': {
     en: 'Drag and Drop',
+    sv: 'Dra och släpp',
     de: 'Ziehen und Ablegen',
     fr: 'Glisser-déposer',
     hu: 'Húzd és ejtsd',
@@ -2214,6 +2423,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_tab_act': {
     en: 'Activate tab on hover',
+    sv: 'Aktivera fliken när muspekaren hålls över den',
     de: 'Tabs beim Darüberfahren mit der Maus aktivieren',
     fr: 'Activer l’onglet au survol',
     hu: 'Lap aktiválása, ha fölé ér az egérmutató',
@@ -2225,6 +2435,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_tab_act_delay': {
     en: 'With delay (ms)',
+    sv: 'Med fördröjning (ms)',
     de: 'Mit Verzögerung (ms)',
     fr: 'Avec un délai (ms)',
     hu: 'Késleltetés (ms)',
@@ -2236,6 +2447,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_mod': {
     en: 'With pressed key',
+    sv: 'Med tangenten nedtryckt',
     de: 'Mit Tastendruck',
     fr: 'En appuyant sur la touche',
     hu: 'Módosítóbillentyű',
@@ -2248,6 +2460,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.dnd_mod_alt': {
     ru: 'alt',
     en: 'alt',
+    sv: 'Alt',
     de: 'Alt',
     fr: 'alt',
     hu: 'Alt',
@@ -2257,6 +2470,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.dnd_mod_shift': {
     ru: 'shift',
     en: 'shift',
+    sv: 'Skift',
     de: 'Umschalttaste',
     fr: 'maj',
     hu: 'Shift',
@@ -2266,6 +2480,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.dnd_mod_ctrl': {
     ru: 'ctrl',
     en: 'ctrl',
+    sv: 'Ctrl',
     de: 'Strg',
     fr: 'ctrl',
     hu: 'Ctrl',
@@ -2274,6 +2489,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_mod_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Ohne',
     fr: 'aucune',
     hu: 'nincs',
@@ -2285,6 +2501,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_exp': {
     en: 'Expand/Fold the branch on hovering over the',
+    sv: 'Fäll ut eller ihop grenen när muspekaren hålls över',
     de: 'Zweig ein-/ausklappen beim Darüberfahren mit der Maus über',
     fr: 'Déplier/replier la branche en survolant',
     hu: 'Ág nyitása/csukása, ha az egérmutató érinti',
@@ -2296,6 +2513,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_exp_pointer': {
     en: "pointer's triangle",
+    sv: 'släppmarkörens triangel',
     de: 'Dreieck des Indikators',
     fr: 'l’indicateur triangulaire',
     hu: 'az ágjelző nyilacskát',
@@ -2307,6 +2525,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_exp_hover': {
     en: 'tab/bookmark',
+    sv: 'fliken eller bokmärket',
     de: 'Tab/Lesezeichen',
     fr: 'l’onglet/le marque-page',
     hu: 'a lapot/könyvjelzőt',
@@ -2318,6 +2537,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_exp_none': {
     en: 'none',
+    sv: 'inget',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -2329,6 +2549,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_exp_delay': {
     en: 'With delay (ms)',
+    sv: 'Med fördröjning (ms)',
     de: 'Mit Verzögerung (ms)',
     fr: 'Avec un délai (ms)',
     hu: 'Késleltetés (ms)',
@@ -2340,6 +2561,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_outside': {
     en: 'Action on drag-and-drop to the outside of sidebar',
+    sv: 'Åtgärd när du drar och släpper utanför sidofältet',
     de: 'Aktion beim Ziehen und Ablegen aus der Seitenleiste heraus',
     fr: 'Action lors d’un glisser-déposer hors de la barre latérale',
     hu: 'Az oldalsávon kívülre történő húzás művelete',
@@ -2351,6 +2573,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_outside_win': {
     en: 'Open in new window',
+    sv: 'Öppna i nytt fönster',
     de: 'In neuem Fenster öffnen',
     fr: 'Ouvrir dans une nouvelle fenêtre',
     hu: 'Megnyitás új ablakban',
@@ -2362,6 +2585,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_outside_data': {
     en: 'Pass dragged data to the target',
+    sv: 'Överför dragna data till målet',
     de: 'Daten auf Ziel übertragen',
     fr: 'Passer les données à la cible',
     hu: 'Adat átadása a célnak',
@@ -2373,6 +2597,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.settings.dnd_outside_note': {
     en: 'Press the "Alt" key before dragging to invert this option',
+    sv: 'Tryck på Alt innan du börjar dra för att växla till det andra alternativet',
     de: '"Alt"-Taste vor dem Ziehen gedrückt halten, um diese Option zu invertieren',
     fr: 'Appuyer sur “Alt” avant de démarrer le glisser-déposer pour inverser cet action',
     hu: 'A húzás megkezdése előtt az „Alt” billentyű lenyomása felcseréli a beállítást',
@@ -2384,6 +2609,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_act_tab_from_link': {
     en: 'Activate tab created from a dragged link',
+    sv: 'Aktivera flikar som skapas från dragna länkar',
     de: 'Tab aktivieren, der aus einem abgelegten Link erstellt wurde',
     fr: 'Activer l’onglet créé depuis un lien déposé',
     hu: 'Beejtett hivatkozásból létrehozott lap aktiválása',
@@ -2395,6 +2621,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_act_search_tab': {
     en: 'Activate tab created to search for dragged text',
+    sv: 'Aktivera flikar som skapas för att söka efter dragen text',
     de: 'Tab aktivieren, der für die Suche nach abgelegtem Text erstellt wurde',
     fr: 'Activer l’onglet créé pour rechercher un texte déposé',
     hu: 'Beejtett szöveg keresésére létrehozott lap aktiválása',
@@ -2406,6 +2633,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_tabs': {
     en: 'Close tabs after dropping them to bookmarks',
+    sv: 'Stäng flikar när de släpps bland bokmärken',
     de: 'Tabs schließen, nachdem sie auf Lesezeichen abgelegt wurden',
     fr: 'Fermer les onglets après les avoir déposés dans les marque-pages',
     hu: 'Lapok bezárása a könyvjelzők közé ejtésük után',
@@ -2417,6 +2645,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_tabs_note': {
     en: 'Note: Ctrl+Drop will preserve the tabs',
+    sv: 'Obs! Håll ned Ctrl när du släpper för att behålla flikarna',
     de: '"Strg"-Taste vor dem Ablegen gedrückt halten, um die Tabs zu erhalten',
     fr: 'Note: Ctrl+Déposer empêche la fermeture des onglets',
     hu: 'Megjegyzés: a Ctrl+ejtés megőrzi a lapokat',
@@ -2428,6 +2657,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_bookmarks': {
     en: 'Delete bookmarks after dropping them to tabs',
+    sv: 'Ta bort bokmärken när de släpps bland flikar',
     de: 'Lesezeichen löschen, nachdem sie auf Tabs abgelegt wurden',
     fr: 'Supprimer les marque-pages après les avoir déposés dans les onglets',
     hu: 'Könyvjelzők törlése a lapok közé ejtésük után',
@@ -2439,6 +2669,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.dnd_move_bookmarks_note': {
     en: 'Note: Ctrl+Drop will preserve the bookmarks',
+    sv: 'Obs! Håll ned Ctrl när du släpper för att behålla bokmärkena',
     de: '"Strg"-Taste vor dem Ablegen gedrückt halten, um die Lesezeichen zu erhalten',
     fr: 'Note: Ctrl+Déposer empêche la suppression des marque-pages',
     hu: 'Megjegyzés: a Ctrl+ejtés megőrzi a könyvjelzőket',
@@ -2450,6 +2681,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.move_tab_to_panel': {
     en: 'Position when dropping tabs to a panel',
+    sv: 'Placering när flikar släpps på en panel',
     de: 'Position beim Ablegen von Tabs auf einem Panel',
     fr: 'Position lors du dépôt des onglets sur un panneau',
     hu: 'Pozíció a lapok panelre való ejtésekor',
@@ -2461,6 +2693,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.move_tab_to_panel_start': {
     en: 'Panel start',
+    sv: 'I början av panelen',
     de: 'Panel-Anfang',
     fr: 'Début du panneau',
     hu: 'Panel eleje',
@@ -2472,6 +2705,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.move_tab_to_panel_end': {
     en: 'Panel end',
+    sv: 'I slutet av panelen',
     de: 'Panel-Ende',
     fr: 'Fin du panneau',
     hu: 'Panel vége',
@@ -2485,6 +2719,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   // - Search;
   'settings.search_title': {
     en: 'Search',
+    sv: 'Sökning',
     de: 'Suche',
     fr: 'Recherche',
     hu: 'Keresés',
@@ -2496,6 +2731,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_bar_mode': {
     en: 'Search bar mode',
+    sv: 'Sökfältets läge',
     de: 'Modus der Suchleiste',
     fr: 'Mode de la barre de recherche',
     hu: 'Működési mód',
@@ -2507,6 +2743,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_bar_mode_static': {
     en: 'always shown',
+    sv: 'alltid synligt',
     de: 'Immer anzeigen',
     fr: 'toujours affichée',
     hu: 'mindig látható',
@@ -2518,6 +2755,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_bar_mode_dynamic': {
     en: 'dynamic',
+    sv: 'dynamiskt',
     de: 'Dynamisch',
     fr: 'dynamique',
     hu: 'dinamikus',
@@ -2529,6 +2767,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_bar_mode_none': {
     en: 'inactive',
+    sv: 'inaktivt',
     de: 'Inaktiv',
     fr: 'inactive',
     hu: 'inaktív',
@@ -2540,6 +2779,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_panel_switch': {
     en: 'Keep searching when switching panels',
+    sv: 'Fortsätt söka vid panelbyte',
     de: 'Suche beim Wechseln der Panels beibehalten',
     fr: 'Continuer de chercher après un basculement de panneau',
     hu: 'A keresések megőrzése panelváltáskor',
@@ -2551,6 +2791,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_panel_switch_any': {
     en: 'any panel',
+    sv: 'alla paneler',
     de: 'Bei allen Panels',
     fr: 'n’importe quel panneau',
     hu: 'bármely panel',
@@ -2561,6 +2802,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_panel_switch_same_type': {
     en: 'same panel type',
+    sv: 'samma paneltyp',
     de: 'Bei Panels gleichen Typs',
     fr: 'panneaux du même type',
     hu: 'azonos típusú panel',
@@ -2572,6 +2814,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_panel_switch_none': {
     en: 'off',
+    sv: 'av',
     de: 'Nie',
     fr: 'off',
     hu: 'kikapcsolva',
@@ -2583,18 +2826,21 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   },
   'settings.search_tab_switch': {
     en: 'Keep searching after switching tabs',
+    sv: 'Fortsätt söka efter flikbyte',
     de: 'Suche beim Wechseln der Tabs beibehalten',
     fr: 'Continuer à chercher après avoir changé d’onglet',
     ru: 'Продолжать поиск после переключения вкладок',
   },
   'settings.search_menu_trigger': {
     en: 'Keep searching after triggering the context menu option',
+    sv: 'Fortsätt söka efter att ett alternativ i snabbmenyn valts',
     de: 'Suche nach Auslösen einer Kontextmenü-Option beibehalten',
     fr: 'Continuer à chercher après avoir déclenché l’option du menu contextuel',
     ru: 'Продолжать поиск после выбора пункта контекстного меню',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
+    sv: 'Genvägar',
     de: 'Tastenkombinationen',
     fr: 'Raccourcis',
     hu: 'Billentyűparancsok',
@@ -2607,6 +2853,7 @@ Vous pouvez également définir des préfixes pour chaque type de commande pour 
   'settings.search.shortcuts.note': {
     en: `Available modifiers: ctrl, alt, cmd
 Examples: "*", "ctrl+$", "ctrl+alt+g"`,
+    sv: 'Tillgängliga modifierartangenter: ctrl, alt, cmd\nExempel: "*", "ctrl+$", "ctrl+alt+g"',
     de: `Verfügbare Modifikatoren: ctrl, alt, cmd
 Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     fr: `Modificateurs disponibles: ctrl, alt, cmd
@@ -2626,6 +2873,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.search.bookmarks_shortcut': {
     en: 'Switch to bookmarks',
+    sv: 'Byt till bokmärken',
     de: 'Zu Lesezeichen wechseln',
     fr: 'Basculer vers les marque-pages',
     hu: 'Váltás a könyvjelzőkre',
@@ -2637,6 +2885,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.search.history_shortcut': {
     en: 'Switch to history',
+    sv: 'Byt till historik',
     de: 'Zur Chronik wechseln',
     fr: 'Basculer vers l’historique',
     hu: 'Váltás az előzményekre',
@@ -2650,6 +2899,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   // - Tabs
   'settings.tabs_title': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
@@ -2661,6 +2911,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.warn_on_multi_tab_close': {
     en: 'Warn on trying to close multiple tabs',
+    sv: 'Varna när flera flikar ska stängas',
     de: 'Beim Schließen mehrerer Tabs warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
     hu: 'Figyelmeztetés több lap egyidejű bezáráskor',
@@ -2672,6 +2923,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.warn_on_multi_tab_close_any': {
     en: 'any',
+    sv: 'alltid',
     de: 'Alle',
     fr: 'tous',
     hu: 'bármely',
@@ -2682,6 +2934,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.warn_on_multi_tab_close_collapsed': {
     en: 'collapsed',
+    sv: 'om hopfällda flikar ingår',
     de: 'Eingeklappte',
     fr: 'repliés',
     hu: 'becsukott',
@@ -2693,6 +2946,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.warn_on_multi_tab_close_none': {
     en: 'none',
+    sv: 'aldrig',
     de: 'Nie',
     fr: 'aucun',
     hu: 'nem',
@@ -2703,6 +2957,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_rm_undo_note': {
     en: 'Show undo notification on closing multiple tabs',
+    sv: 'Visa en avisering med möjlighet att ångra när flera flikar stängs',
     de: '"Rückgängig"-Meldung nach dem Schließen mehrerer Tabs anzeigen',
     fr: 'Afficher une notification pour annuler la fermeture de plusieurs onglets',
     hu: 'Visszavonási értesítés több lap egyidejű bezárásakor',
@@ -2714,6 +2969,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_last_tab_on_panel_switching': {
     en: 'Activate last active tab on panel switching',
+    sv: 'Aktivera den senast aktiva fliken vid panelbyte',
     de: 'Beim Wechseln des Panels den zuletzt aktiven Tab aktivieren',
     fr: 'Activer le dernier onglet lors du basculement vers un panneau',
     hu: 'Panelváltáskor a legutóbb aktív lapra ugrás',
@@ -2725,6 +2981,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_last_tab_on_panel_switching_loaded_only': {
     en: 'Except unloaded tabs',
+    sv: 'Utom frigjorda flikar',
     de: 'Außer entladenen Tabs',
     fr: 'Sauf les onglets déchargés',
     hu: 'Kivéve a kisöpört lapokat',
@@ -2736,6 +2993,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.switch_panel_after_switching_tab': {
     en: 'Automatically switch panel on activating tab of another panel',
+    sv: 'Byt panel automatiskt när en flik i en annan panel aktiveras',
     de: 'Panel bei Aktivierung eines Tabs eines anderen Panels automatisch wechseln',
     fr: 'Basculer automatiquement de panneau lors de l’activation de l’onglet d’un autre panneau',
     hu: 'Automatikus panelváltás egy másik panel lapjának aktiválásakor',
@@ -2747,6 +3005,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.switch_panel_after_switching_tab_always': {
     en: 'always',
+    sv: 'alltid',
     de: 'Immer',
     fr: 'tout le temps',
     hu: 'mindig',
@@ -2758,6 +3017,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.switch_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
+    sv: 'om muspekaren har lämnat sidofältet',
     de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     fr: 'si la souris sort de la barre latérale',
     hu: 'ha az egér elhagyja az oldalsávot',
@@ -2769,6 +3029,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.switch_panel_after_switching_tab_no': {
     en: 'no',
+    sv: 'nej',
     de: 'Nie',
     fr: 'jamais',
     hu: 'soha',
@@ -2780,6 +3041,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab': {
     en: 'Automatically scroll panel to activated tab',
+    sv: 'Rulla automatiskt till den aktiverade fliken i panelen',
     de: 'Panel automatisch zum aktivierten Tab scrollen',
     pl: 'Automatycznie przewiń panel do aktywowanej karty',
     ru: 'Автоматически прокручивать панель к активной вкладке',
@@ -2788,6 +3050,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab_always': {
     en: 'always',
+    sv: 'alltid',
     de: 'Immer',
     hu: 'mindig',
     pl: 'zawsze',
@@ -2798,6 +3061,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
+    sv: 'om muspekaren har lämnat sidofältet',
     de: 'Wenn der Mauszeiger die Seitenleiste verlassen hat',
     hu: 'ha az egér elhagyja az oldalsávot',
     pl: 'jeśli myszka została na panelu bocznym',
@@ -2808,6 +3072,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.scroll_panel_after_switching_tab_no': {
     en: 'no',
+    sv: 'nej',
     de: 'Nie',
     hu: 'soha',
     pl: 'nie',
@@ -2818,6 +3083,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_rm_btn': {
     en: 'Show close button',
+    sv: 'Visa stängningsknapp',
     de: '"Schließen"-Schaltfläche anzeigen',
     fr: 'Afficher le bouton de fermeture',
     hu: 'Bezáró gomb megjelenítése',
@@ -2829,6 +3095,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_rm_btn_always': {
     en: 'always',
+    sv: 'alltid',
     de: 'Immer',
     fr: 'tout le temps',
     hu: 'mindig',
@@ -2840,6 +3107,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_rm_btn_hover': {
     en: 'on mouse hover',
+    sv: 'när muspekaren hålls över fliken',
     de: 'Beim Darüberfahren mit der Maus',
     fr: 'lors du survol de la souris',
     hu: 'az egérmutató alatt',
@@ -2851,6 +3119,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tab_rm_btn_none': {
     en: 'no',
+    sv: 'nej',
     de: 'Nie',
     fr: 'jamais',
     hu: 'soha',
@@ -2862,6 +3131,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing': {
     en: 'After closing current tab activate',
+    sv: 'När den aktuella fliken stängs, aktivera',
     de: 'Nach Schließen des aktuellen Tabs, aktiviere',
     fr: 'Après la fermeture de l’onglet actif, activer',
     hu: 'Az aktuális lap bezárása után legyen aktív',
@@ -2873,6 +3143,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_prev_act': {
     en: 'previously active tab',
+    sv: 'föregående aktiva flik',
     de: 'Den zuletzt aktiven Tab',
     fr: 'l’onglet précédemment actif',
     hu: 'az előzőleg aktív lap',
@@ -2884,6 +3155,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_next': {
     en: 'next tab',
+    sv: 'nästa flik',
     de: 'Den nächsten Tab',
     fr: 'l’onglet suivant',
     hu: 'a következő lap',
@@ -2895,6 +3167,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_prev': {
     en: 'previous tab',
+    sv: 'föregående flik',
     de: 'Den vorherigen Tab',
     fr: 'l’onglet précédent',
     hu: 'az előző lap',
@@ -2906,6 +3179,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_none': {
     en: 'off',
+    sv: 'av',
     de: 'Nichts',
     fr: 'rien',
     hu: 'nincs megadva',
@@ -2917,6 +3191,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_stay_in_panel': {
     en: 'Stay in panel to the last tab',
+    sv: 'Stanna i panelen tills den sista fliken stängs',
     de: 'Bis zum letzten Tab im Panel bleiben',
     fr: 'Rester dans le panneau jusqu’au dernier onglet',
     hu: 'Maradjon a panelon az utolsó lapig',
@@ -2928,6 +3203,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_global': {
     en: 'Globally',
+    sv: 'Globalt',
     de: 'Global',
     fr: 'Globalement',
     hu: 'Globálisan',
@@ -2939,6 +3215,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_no_folded': {
     en: 'Ignore folded tabs',
+    sv: 'Ignorera hopfällda flikar',
     de: 'Eingeklappte Tabs ignorieren',
     fr: 'Ignorer les onglets repliés',
     hu: 'Becsukott lapok kihagyása',
@@ -2950,6 +3227,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.activate_after_closing_no_discarded': {
     en: 'Ignore discarded tabs',
+    sv: 'Ignorera frigjorda flikar',
     de: 'Entladene Tabs ignorieren',
     fr: 'Ignorer les onglets déchargés',
     hu: 'Kisöpört lapok kihagyása',
@@ -2961,6 +3239,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_unread_mark': {
     en: 'Show mark on unread tabs',
+    sv: 'Visa en markering på olästa flikar',
     de: 'Markierung an ungelesenen Tabs anzeigen',
     fr: 'Afficher un indicateur sur les onglets non lus',
     hu: 'Az olvasatlan lapok megjelölése',
@@ -2973,6 +3252,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
 
   'settings.tabs_badge': {
     en: 'Show badges over tab favicons on URL or title update',
+    sv: 'Visa märken på flikarnas webbplatsikoner när URL eller titel ändras',
     de: 'Badges über Tab-Favicons bei Aktualisierung von URL oder Titel anzeigen',
     fr: `Afficher des badges sur les favicons des onglets lors de la mise à jour de l'URL ou du titre`,
     hu: 'Jelvények megjelenítése a lapok faviconjain az URL vagy a cím frissülésekor',
@@ -2984,6 +3264,7 @@ Przykłady: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.tabs_badge_rules': {
     en: 'Badge rules',
+    sv: 'Regler för märken',
     de: 'Badge-Regeln',
     fr: 'Règles des badges',
     hu: 'Jelvényszabályok',
@@ -3010,6 +3291,7 @@ Available parameters:
 - \`normal\`: Applies the rule only to non-pinned tabs.
 - \`value:{Text}\`: Sets a static value for the badge.
 - \`minIdleTime:{Milliseconds}\`: Applies the rule when the tab title changes after the tab has been idle for at least \`{Milliseconds}\`.`,
+    sv: 'En lista med regler för märken, en regel per rad. Varje regel består av valfria parametrar åtskilda av semikolon och mellanslag: `; `.\nExempel:\n```\ntitle:\\((?<v>\\d+)\\)|\\[(?<v>\\d+)\\]; urgent\nminIdleTime:5000; urgent\nurl:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000\n```\nTillgängliga parametrar:\n- `url:{RegExp}` och/eller `title:{RegExp}`: Ett reguljärt uttryck som matchar fliken och vid behov hämtar märkets värde via en namngiven grupp: `(?<v>...)`. Om ditt `{RegExp}` innehåller ett semikolon följt av ett mellanslag `; `, skriv ett omvänt snedstreck före mellanslaget: `;\\ `. Standardvärdet för `{RegExp}` är en tom sträng, så alla URL:er eller titlar matchar om dessa parametrar utelämnas. Ett märke utan värde ignoreras för frigjorda eller aktiva flikar och återställs när fliken frigörs eller aktiveras.\n- `bg:{Color}` och/eller `fg:{Color}`: Färgen på märkets bakgrund eller text.\n- `urgent`: Markerar märket som brådskande och för denna status vidare till överordnade element (hopfällda flikar, inaktiva paneler). Ignoreras för frigjorda och aktiva flikar. När fliken aktiveras döljs ett märke utan värde helt, medan ett märke med värde blir ett vanligt märke.\n- `notify`: Visar en avisering.\n- `pinned`: Tillämpar regeln enbart på fästa flikar.\n- `normal`: Tillämpar regeln enbart på flikar som inte är fästa.\n- `value:{Text}`: Anger ett fast värde för märket.\n- `minIdleTime:{Milliseconds}`: Tillämpar regeln när flikens titel ändras efter att fliken har varit inaktiv i minst `{Milliseconds}`.',
     de: `Eine durch Zeilenumbrüche getrennte Liste von Badge-Regeln. Jede Regel besteht aus optionalen Parametern, getrennt durch ein Semikolon und ein Leerzeichen: \`; \`.
 Beispiele:
 \`\`\`
@@ -3046,6 +3328,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 
   'settings.tabs_notification_badge_scope': {
     en: 'Show notification badges over tab favicons',
+    sv: 'Visa aviseringsmärken på flikarnas webbplatsikoner',
     de: 'Benachrichtigungs-Badges auf Tab-Favicons anzeigen',
     fr: "Afficher les badges de notification sur les favicons d'onglet",
     hu: 'Értesítési jelzők megjelenítése a lap ikonjain',
@@ -3057,6 +3340,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_scope_all': {
     en: 'on',
+    sv: 'på',
     de: 'Ein',
     fr: 'tous',
     hu: 'be',
@@ -3068,6 +3352,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_scope_pin': {
     en: 'only for pinned',
+    sv: 'endast för fästa',
     de: 'Nur für angeheftete',
     fr: 'onglets épinglés seulement',
     hu: 'csak rögzített',
@@ -3079,6 +3364,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_scope_norm': {
     en: 'only for not pinned',
+    sv: 'endast för ej fästa',
     de: 'Nur für nicht angeheftete',
     fr: 'onlets non épinglés seulement',
     hu: 'csak nem rögzített',
@@ -3090,6 +3376,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_scope_none': {
     en: 'off',
+    sv: 'av',
     de: 'Aus',
     fr: 'aucun',
     hu: 'ki',
@@ -3101,6 +3388,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_style': {
     en: 'Show notification badge with count or a dot',
+    sv: 'Visa aviseringsmärken med antal eller punkt',
     de: 'Benachrichtigungs-Badge mit Zähler oder Punkt anzeigen',
     fr: 'Afficher le badge de notification avec compteur ou point',
     hu: 'Értesítési jelző megjelenítése számlálóval vagy ponttal',
@@ -3112,6 +3400,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_style_count': {
     en: 'count',
+    sv: 'antal',
     de: 'Zähler',
     fr: 'compteur',
     hu: 'számláló',
@@ -3123,6 +3412,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_style_dot': {
     en: 'dot',
+    sv: 'punkt',
     de: 'Punkt',
     fr: 'point',
     hu: 'pont',
@@ -3134,6 +3424,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_regexp_pattern': {
     en: 'Regular expression for matching notification count in tab title',
+    sv: 'Reguljärt uttryck som matchar antalet aviseringar i fliktiteln',
     de: 'Regulärer Ausdruck zur Übereinstimmung der Benachrichtigungszahl im Tab-Titel',
     fr: "Expression régulière pour correspondre au nombre de notifications dans le titre de l'onglet",
     hu: 'Reguláris kifejezés az értesítések számának megfeleltetéséhez a lap címében',
@@ -3145,6 +3436,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_notification_badge_regexp_pattern_info': {
     en: 'Returns the first found capturing group in the pattern',
+    sv: 'Returnerar den första matchande fångstgruppen i uttrycket',
     de: 'Gibt die erste gefundene Erfassungsgruppe im Muster zurück',
     fr: 'Renvoie le premier groupe de capture trouvé dans le motif',
     hu: 'Visszaadja a minta első megtalált rögzítő csoportját',
@@ -3156,6 +3448,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_reload_limit': {
     en: 'Limit the count of simultaneously reloading tabs',
+    sv: 'Begränsa antalet flikar som läses in på nytt samtidigt',
     de: 'Anzahl gleichzeitig neu ladender Tabs begrenzen',
     fr: 'Limiter le nombre d’onglets s’actualisant en même temps',
     hu: 'Az egyidejű oldalújratöltések korlátozása',
@@ -3167,6 +3460,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_reload_limit_notif': {
     en: 'Show notification with the reloading progress',
+    sv: 'Visa en avisering med förloppet för omladdningen',
     de: 'Benachrichtigung mit Fortschritt des Neuladens anzeigen',
     fr: 'Afficher une notification avec la progression de l’actualisation',
     hu: 'Az oldalújratöltés folyamatának jelzése',
@@ -3178,6 +3472,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_switch_act_move': {
     en: 'Switch panel after manually moving active tab to another panel',
+    sv: 'Byt panel när den aktiva fliken flyttas manuellt till en annan panel',
     de: 'Panel nach manuellem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été manuellement déplacé.',
     hu: 'Váltás a célpanelra az aktív lap kézi áthelyezésekor',
@@ -3189,6 +3484,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_switch_act_move_auto': {
     en: 'Switch panel after auto moving active tab to another panel',
+    sv: 'Byt panel när den aktiva fliken flyttas automatiskt till en annan panel',
     de: 'Panel nach automatischem Verschieben des aktiven Tabs in ein anderes Panel wechseln',
     fr: 'Basculer vers le panneau où l’onglet actif a été automatiquement déplacé.',
     hu: 'Váltás a célpanelra az aktív lap automatikus áthelyezésekor',
@@ -3200,6 +3496,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_url_in_tooltip': {
     en: 'Show URL in tooltip',
+    sv: 'Visa URL i inforutan',
     de: 'URL im Tooltip anzeigen',
     fr: 'Afficher l’URL dans l’infobulle',
     hu: 'URL megjelenítése a buboréksúgóban',
@@ -3211,6 +3508,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_url_in_tooltip_full': {
     en: 'full',
+    sv: 'fullständig',
     de: 'Vollständig',
     fr: 'entière',
     hu: 'teljes',
@@ -3222,6 +3520,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_url_in_tooltip_stripped': {
     en: 'stripped',
+    sv: 'utan frågeparametrar',
     de: 'Gekürzt',
     fr: 'raccourcie',
     hu: 'rövidített',
@@ -3233,6 +3532,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_url_in_tooltip_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Gar nicht',
     fr: 'non',
     hu: 'nem',
@@ -3244,6 +3544,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_container_in_tooltip': {
     en: 'Show container in tooltip',
+    sv: 'Visa behållare i inforutan',
     de: 'Umgebung im Tooltip anzeigen',
     fr: 'Afficher le nom du conteneur dans l’infobulle',
     hu: 'Container megjelenítése a buboréksúgóban',
@@ -3255,6 +3556,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',
+    sv: 'Visa knappar för nya flikar',
     de: '"Neuer Tab"-Schaltflächen anzeigen',
     fr: 'Afficher le bouton “Nouvel onglet”',
     hu: '„Új lap” gombok megjelenítése',
@@ -3266,6 +3568,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_bar_position': {
     en: 'Position',
+    sv: 'Placering',
     de: 'Position',
     hu: 'Elhelyezés',
     fr: 'Position',
@@ -3276,6 +3579,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_bar_position_after_tabs': {
     en: 'after tabs',
+    sv: 'efter flikarna',
     de: 'Nach Tabs',
     fr: 'après les onglets',
     hu: 'a lapok után',
@@ -3287,6 +3591,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_bar_position_bottom': {
     en: 'bottom',
+    sv: 'längst ned',
     de: 'Unten',
     fr: 'en bas',
     hu: 'alul',
@@ -3302,6 +3607,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // },
   'settings.tabs_switch_delay': {
     en: 'Min delay between tabs switching (ms)',
+    sv: 'Minsta fördröjning mellan flikbyten (ms)',
     de: 'Mindestverzögerung beim Wechsel zwischen Tabs (ms)',
     fr: 'Durée minimum entre deux basculements d’onglet (ms)',
     hu: 'A lapváltás minimális késleltetése (ms)',
@@ -3312,28 +3618,34 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_active_tab': {
     en: 'Sticky active tab',
+    sv: 'Håll den aktiva fliken synlig vid rullning',
     de: 'Aktiven Tab beim Scrollen sichtbar halten',
   },
   'settings.tabs_title_lines_max': {
     en: 'Max count of title lines',
+    sv: 'Högsta antal titelrader',
     de: 'Maximale Anzahl von Titelzeilen',
   },
   'settings.tabs_title_lines_br': {
     en: 'Break the title by',
+    sv: 'Radbryt titeln efter',
     de: 'Zeilenumbruch im Titel',
   },
   'settings.tabs_title_lines_br_w': {
     en: 'words',
+    sv: 'ord',
     de: 'Wortweise',
   },
   'settings.tabs_title_lines_br_c': {
     en: 'characters',
+    sv: 'tecken',
     de: 'Zeichenweise',
   },
 
   // - New tab position
   'settings.move_new_tab_pin': {
     en: 'Place new tab opened from pinned tab',
+    sv: 'Placera nya flikar som öppnas från en fäst flik',
     de: 'Position von Tabs, die aus einem angehefteten Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un onglet épinglé',
     hu: 'Rögzített lapról megnyitott lap elhelyezése',
@@ -3345,6 +3657,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_pin_start': {
     en: 'panel start',
+    sv: 'i början av panelen',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
     hu: 'a panel elejére',
@@ -3355,6 +3668,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_pin_end': {
     en: 'panel end',
+    sv: 'i slutet av panelen',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
     hu: 'a panel végére',
@@ -3365,6 +3679,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_auto_group': {
     en: 'Group tabs that were opened from a pinned tab',
+    sv: 'Gruppera flikar som öppnas från en fäst flik',
     de: 'Tabs gruppieren, die aus einem angehefteten Tab geöffnet wurden',
     fr: 'Grouper les onglets qui ont été ouverts depuis un onglet épinglé',
     hu: 'Rögzített lapról nyitott lapok csoportosítása',
@@ -3376,6 +3691,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent': {
     en: 'Place new tab opened from another tab',
+    sv: 'Placera nya flikar som öppnas från en annan flik',
     de: 'Position von Tabs, die aus einem anderen Tab geöffnet werden',
     fr: 'Emplacement des onglets ouverts depuis un autre onglet',
     hu: 'Másik lapról megnyitott lap elhelyezése',
@@ -3387,6 +3703,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_before': {
     en: 'before parent',
+    sv: 'före den överordnade fliken',
     de: 'Vor übergeordnetem Tab',
     fr: 'avant le parent',
     hu: 'a szülő elé',
@@ -3398,6 +3715,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_sibling': {
     en: 'after parent',
+    sv: 'efter den överordnade fliken',
     de: 'Nach übergeordnetem Tab',
     fr: 'après le parent',
     hu: 'a szülő mögé',
@@ -3409,6 +3727,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_first_child': {
     en: 'first child',
+    sv: 'som första underordnade flik',
     de: 'Als erstes Unterelement',
     fr: 'premier enfant',
     hu: 'első utódként',
@@ -3420,6 +3739,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_last_child': {
     en: 'last child',
+    sv: 'som sista underordnade flik',
     de: 'Als letztes Unterelement',
     fr: 'dernier enfant',
     hu: 'utolsó utódként',
@@ -3431,6 +3751,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_start': {
     en: 'panel start',
+    sv: 'i början av panelen',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
     hu: 'a panel elejére',
@@ -3441,6 +3762,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_end': {
     en: 'panel end',
+    sv: 'i slutet av panelen',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
     hu: 'a panel végére',
@@ -3451,6 +3773,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_default': {
     en: 'do not move it',
+    sv: 'flytta dem inte',
     de: 'Nicht bewegen',
     fr: 'ne pas le déplacer',
     hu: 'ne helyezze át',
@@ -3462,6 +3785,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_none': {
     en: 'use general rule',
+    sv: 'använd den allmänna regeln',
     de: 'Allgemeine Regel verwenden',
     fr: 'utiliser la règle générale',
     hu: 'a főszabály szerint',
@@ -3473,6 +3797,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_indent': {
     en: 'Create and maintain a tree structure if possible',
+    sv: 'Skapa och bevara en trädstruktur när det är möjligt',
     de: 'Nach Möglichkeit eine Baumstruktur erstellen und beibehalten',
     fr: 'Créer et maintenir une structure arborescente si possible',
     hu: 'Ha lehetséges, hozzon létre és tartson fenn fa szerkezetet',
@@ -3484,6 +3809,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_parent_act_panel': {
     en: 'Only if panel of parent tab is active',
+    sv: 'Endast om den överordnade flikens panel är aktiv',
     de: 'Nur, wenn Panel des übergeordneten Tabs aktiv ist',
     fr: 'Seulement si le panneau de l’onglet parent est actif',
     hu: 'Csak ha a szülőlap panelja aktív',
@@ -3495,6 +3821,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_button': {
     en: `Place new tab created by the Sidebery new tab button`,
+    sv: 'Placera nya flikar som skapas med Sideberys knapp för nya flikar',
     de: 'Position von Tabs, die mit der Sidebery-Schaltfläche "Neuer Tab" erstellt werden',
     fr: 'Emplacement des onglets ouverts par le bouton Nouvel onglet de Sidebery',
     hu: 'Az új lap pozíciója, amelyet a Sidebery új lap gombjával hoztunk létre',
@@ -3506,6 +3833,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
+    sv: 'Placera nya flikar (allmän regel)',
     de: 'Position neuer Tabs (allgemeine Regel)',
     fr: 'Emplacement des nouveaux onglets (règle générale)',
     hu: 'Új lap elhelyezése (főszabály)',
@@ -3517,6 +3845,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_start': {
     en: 'panel start',
+    sv: 'i början av panelen',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
     hu: 'a panel elejére',
@@ -3527,6 +3856,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_end': {
     en: 'panel end',
+    sv: 'i slutet av panelen',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
     hu: 'a panel végére',
@@ -3537,6 +3867,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_before': {
     en: 'before active tab',
+    sv: 'före den aktiva fliken',
     de: 'Vor aktivem Tab',
     fr: 'avant l’onglet actif',
     hu: 'az aktív lap elé',
@@ -3548,6 +3879,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_after': {
     en: 'after active tab',
+    sv: 'efter den aktiva fliken',
     de: 'Nach aktivem Tab',
     fr: 'après l’onglet actif',
     hu: 'az aktív lap után',
@@ -3559,6 +3891,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_first_child': {
     en: 'first child of active tab',
+    sv: 'som första underordnade flik till den aktiva fliken',
     de: 'Erstes Unterelement des aktiven Tabs',
     fr: 'premier enfant de l’onglet actif',
     hu: 'az aktív lap első utódlapjaként',
@@ -3570,6 +3903,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_last_child': {
     en: 'last child of active tab',
+    sv: 'som sista underordnade flik till den aktiva fliken',
     de: 'Letztes Unterelement des aktiven Tabs',
     fr: 'dernier enfant de l’onglet actif',
     hu: 'az aktív lap utolsó utódlapjaként',
@@ -3581,6 +3915,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_none': {
     en: 'none',
+    sv: 'flytta dem inte',
     de: 'Nichts',
     fr: 'ne pas le déplacer',
     hu: 'semmi',
@@ -3592,6 +3927,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.move_new_tab_active_pin': {
     en: 'If active tab is pinned',
+    sv: 'Om den aktiva fliken är fäst',
     de: 'Wenn der aktive Tab angeheftet ist',
     fr: 'Is l’onflet actif est épinglé',
     hu: 'Ha az aktív lap rögzítve van',
@@ -3603,6 +3939,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_scroll_to_new_tab': {
     en: 'Auto scroll to position of new tab',
+    sv: 'Rulla automatiskt till nya flikar',
     de: 'Automatisch zur Position des neuen Tabs scrollen',
     fr: 'Scroller automatiquement à la position du nouvel onglet',
     hu: 'Automatikus görgetés az új lap pozíciójához',
@@ -3616,6 +3953,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Pinned tabs
   'settings.pinned_tabs_position': {
     en: 'Pinned tabs position',
+    sv: 'Placering av fästa flikar',
     de: 'Position angehefteter Tabs',
     fr: 'Position des onglets épinglés',
     hu: 'A rögzített lapok elhelyezése',
@@ -3627,6 +3965,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_position_panel': {
     en: 'in panel - top',
+    sv: 'i panelen – överst',
     de: 'Im Panel - Oben',
     fr: 'Dans le panneau – en haut',
     hu: 'a panelon – fent',
@@ -3638,6 +3977,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_position_top': {
     en: 'globally - top',
+    sv: 'globalt – överst',
     de: 'Global - Oben',
     fr: 'Globale – en haut',
     hu: 'globálisan – fent',
@@ -3649,6 +3989,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_position_left': {
     en: 'globally - left',
+    sv: 'globalt – till vänster',
     de: 'Global - Links',
     fr: 'Globale – à gauche',
     hu: 'globálisan – balra',
@@ -3660,6 +4001,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_position_right': {
     en: 'globally - right',
+    sv: 'globalt – till höger',
     de: 'Global - Rechts',
     fr: 'Globale – à droite',
     hu: 'globálisan – jobbra',
@@ -3671,6 +4013,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned_tabs_list': {
     en: 'Show titles of pinned tabs',
+    sv: 'Visa titlar för fästa flikar',
     de: 'Titel angehefteter Tabs anzeigen',
     fr: 'Afficher le titre des onglets épinglés',
     hu: 'A rögzített lapok címének kijelzése',
@@ -3682,6 +4025,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned.no_unload': {
     en: 'Prevent pinned tabs from unloading',
+    sv: 'Förhindra att fästa flikar frigörs',
     de: 'Entladen angehefteter Tabs verhindern',
     fr: 'Empêcher les onglets épinglés de se décharger',
     hu: 'A rögzített lapok kisöprésének megelőzése',
@@ -3693,6 +4037,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pinned.no_unload_explicit': {
     en: 'Including explicit unloading via context menu, mouse action or keybinding',
+    sv: 'Även uttrycklig frigöring via snabbmenyn, musåtgärder eller kortkommandon',
     de: 'Auch beim gezielten Entladen über Kontextmenü, Mausaktion oder Tastenkombination',
     fr: 'Incluant le déchargement explicite via le menu contextuel, une action de souris ou un raccourci clavier',
     ru: 'Включая явную выгрузку через контекстное меню, действие мыши или горячую клавишу',
@@ -3701,6 +4046,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Tabs tree
   'settings.tabs_tree_layout': {
     en: 'Tabs tree structure',
+    sv: 'Flikträdets struktur',
     de: 'Baumstruktur aktivieren',
     fr: 'Arborescence des onglets',
     hu: 'A lapok megjelenítése fanézetben',
@@ -3712,6 +4058,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_tree_limit': {
     en: 'Tabs tree level limit',
+    sv: 'Gräns för antal nivåer i flikträdet',
     de: 'Maximale Anzahl von Ebenen',
     fr: 'Niveau d’arborescence maximal des onglets',
     hu: 'A fanézet szintkorlátja',
@@ -3723,26 +4070,32 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_tree_limit_1': {
     en: '1',
+    sv: '1',
     ru: '1',
   },
   'settings.tabs_tree_limit_2': {
     en: '2',
+    sv: '2',
     ru: '2',
   },
   'settings.tabs_tree_limit_3': {
     en: '3',
+    sv: '3',
     ru: '3',
   },
   'settings.tabs_tree_limit_4': {
     en: '4',
+    sv: '4',
     ru: '4',
   },
   'settings.tabs_tree_limit_5': {
     en: '5',
+    sv: '5',
     ru: '5',
   },
   'settings.tabs_tree_limit_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Unbegrenzt',
     fr: 'aucun',
     hu: 'nincs',
@@ -3754,6 +4107,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs': {
     en: 'Sticky ancestor tabs of the active tab',
+    sv: 'Håll den aktiva flikens överordnade flikar synliga vid rullning',
     de: 'Übergeordnete Tabs des aktiven Tabs beim Scrollen sichtbar halten',
     // TODO: Updated, translation is needed
     // de: 'Fixierte übergeordnete Tabs',
@@ -3767,6 +4121,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs_limit': {
     en: 'Depth limit',
+    sv: 'Djupgräns',
     de: 'Maximale Tiefe',
     // TODO: Updated, need translation
     // de: 'Maximale Tiefe der fixierten übergeordneten Tabs',
@@ -3780,21 +4135,27 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs_limit_1': {
     en: '1',
+    sv: '1',
   },
   'settings.sticky_ancestor_tabs_limit_2': {
     en: '2',
+    sv: '2',
   },
   'settings.sticky_ancestor_tabs_limit_3': {
     en: '3',
+    sv: '3',
   },
   'settings.sticky_ancestor_tabs_limit_4': {
     en: '4',
+    sv: '4',
   },
   'settings.sticky_ancestor_tabs_limit_5': {
     en: '5',
+    sv: '5',
   },
   'settings.sticky_ancestor_tabs_limit_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Unbegrenzt',
     fr: 'aucun',
     hu: 'nincs',
@@ -3806,18 +4167,22 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sticky_ancestor_tabs_layout': {
     en: 'Layout',
+    sv: 'Layout',
     de: 'Anordnung',
   },
   'settings.sticky_ancestor_tabs_layout_col': {
     en: 'vertical',
+    sv: 'lodrät',
     de: 'Vertikal',
   },
   'settings.sticky_ancestor_tabs_layout_row': {
     en: 'horizontal',
+    sv: 'vågrät',
     de: 'Horizontal',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs branch on expanding another branch',
+    sv: 'Fäll ihop flikgrenen automatiskt när en annan gren fälls ut',
     de: 'Zweig beim Öffnen eines anderen Zweiges automatisch einklappen',
     fr: 'Replier automatiquement les autres branches d’onglets lorsqu’une branche est dépliée',
     hu: 'Az ágak becsukása másik ág lenyitásakor',
@@ -3829,6 +4194,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_fold_tabs_except': {
     en: 'Max count of open branches',
+    sv: 'Högsta antal öppna grenar',
     de: 'Maximale Anzahl offener Zweige',
     fr: 'Nombre maximal de branches dépliées',
     hu: 'A nyitott ágak maximális száma',
@@ -3839,26 +4205,32 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_fold_tabs_except_1': {
     en: '1',
+    sv: '1',
     ru: '1',
   },
   'settings.auto_fold_tabs_except_2': {
     en: '2',
+    sv: '2',
     ru: '2',
   },
   'settings.auto_fold_tabs_except_3': {
     en: '3',
+    sv: '3',
     ru: '3',
   },
   'settings.auto_fold_tabs_except_4': {
     en: '4',
+    sv: '4',
     ru: '4',
   },
   'settings.auto_fold_tabs_except_5': {
     en: '5',
+    sv: '5',
     ru: '5',
   },
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Unbegrenzt',
     fr: 'aucun',
     hu: 'nincs',
@@ -3870,6 +4242,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_exp_tabs': {
     en: 'Auto expand tab on activation',
+    sv: 'Fäll ut fliken automatiskt när den aktiveras',
     de: 'Tabs bei Aktivierung automatisch ausklappen',
     fr: 'Déplier automatiquement l’onglet lors de son activation',
     hu: 'A lap lenyitása aktiváláskor',
@@ -3881,6 +4254,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_exp_tabs_on_new': {
     en: 'Auto expand branch on creating a new child tab',
+    sv: 'Fäll ut grenen automatiskt när en underordnad flik skapas',
     de: 'Zweig nach Erstellung eines untergeordneten Tabs automatisch ausklappen',
     fr: 'Déplier automatiquement la branche à la création d’un onglet enfant',
     hu: 'Az ág lenyitása új utódlap létrehozásakor',
@@ -3892,6 +4266,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.rm_child_tabs': {
     en: 'Close child tabs along with parent',
+    sv: 'Stäng underordnade flikar tillsammans med den överordnade',
     de: 'Untergeordnete Tabs zusammen mit übergeordneten schließen',
     fr: 'Fermer les onglets enfants en même temps que son parent',
     hu: 'Az utódlapok bezárása a szülővel együtt',
@@ -3903,6 +4278,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.rm_child_tabs_all': {
     en: 'all',
+    sv: 'alla',
     de: 'Alle',
     fr: 'tous',
     hu: 'mindig',
@@ -3913,6 +4289,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.rm_child_tabs_folded': {
     en: 'folded',
+    sv: 'hopfällda',
     de: 'Eingeklappte',
     fr: 'repliés',
     hu: 'becsukottak',
@@ -3924,6 +4301,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.rm_child_tabs_none': {
     en: 'none',
+    sv: 'inga',
     de: 'Keine',
     fr: 'aucun',
     hu: 'nem',
@@ -3934,6 +4312,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_lvl_dots': {
     en: 'Show marks to indicate tabs sub-tree levels',
+    sv: 'Visa markeringar för nivåerna i flikarnas underträd',
     de: 'Markierungen für die Ebenen der Tab-Unterbäume anzeigen',
     fr: 'Afficher des guides pour indiquer le niveau d’arborescense des onglets',
     hu: 'Az utódlapok szintjének kijelzése',
@@ -3945,6 +4324,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.discard_folded': {
     en: 'Unload folded tabs',
+    sv: 'Frigör hopfällda flikar',
     de: 'Eingeklappte Tabs entladen',
     fr: 'Décharger les onglets repliés',
     hu: 'Az összecsukot lapok kisöprése',
@@ -3956,6 +4336,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.discard_folded_delay': {
     en: 'With delay',
+    sv: 'Med fördröjning',
     de: 'Mit Verzögerung',
     fr: 'Avec un délai',
     hu: 'Késleltetéssel',
@@ -3967,6 +4348,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.discard_folded_delay_sec': {
     en: n => (n === 1 ? 'second' : 'seconds'),
+    sv: n => (n === 1 ? 'sekund' : 'sekunder'),
     de: n => (n === 1 ? 'Sekunde' : 'Sekunden'),
     fr: n => (n === 1 ? 'seconde' : 'secondes'),
     hu: 'másodperc',
@@ -3985,6 +4367,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.discard_folded_delay_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
+    sv: n => (n === 1 ? 'minut' : 'minuter'),
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
     fr: n => (n === 1 ? 'minute' : 'minutes'),
     hu: 'perc',
@@ -4003,6 +4386,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_tree_bookmarks': {
     en: 'Preserve tree on creating bookmarks',
+    sv: 'Bevara trädstrukturen när bokmärken skapas',
     de: 'Baumstruktur beim Erstellen von Lesezeichen erhalten',
     fr: 'Converser l’arboresence à la création de marque-pages',
     hu: 'Könyvjelzőzéskor a lapok faszerkezetének megőrzése',
@@ -4014,6 +4398,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tree_rm_outdent': {
     en: 'After closing parent tab, outdent',
+    sv: 'Flytta ut följande en nivå när en överordnad flik stängs',
     de: 'Nach Schließen von übergeordnetem Tab ausrücken',
     fr: 'Après la fermeture d’un onglet parent, désindenter',
     hu: 'A szülőlap bezárásakor szintcsökkentés',
@@ -4025,6 +4410,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tree_rm_outdent_branch': {
     en: 'whole branch',
+    sv: 'hela grenen',
     de: 'Ganzen Zweig',
     fr: 'toute la branche',
     hu: 'a teljes ágra',
@@ -4036,6 +4422,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tree_rm_outdent_first_child': {
     en: 'first child',
+    sv: 'den första underordnade fliken',
     de: 'Erstes Unterelement',
     fr: 'le premier enfant',
     hu: 'az első utódra',
@@ -4047,6 +4434,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_group_on_close': {
     en: 'Auto group child tabs after closing the parent tab',
+    sv: 'Gruppera automatiskt underordnade flikar när den överordnade fliken stängs',
     de: 'Untergeordnete Tabs automatisch gruppieren, nachdem der übergeordnete Tab geschlossen wurde',
     fr: 'Grouper automatiquement les onglets enfant après la fermeture de leur parent',
     hu: 'Az utódlapok automatikus csoportosítása a szülőlap bezárásakor',
@@ -4058,6 +4446,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_group_on_close_0_lvl': {
     en: 'Only if the closed tab was on the root level',
+    sv: 'Endast om den stängda fliken var på rotnivån',
     de: 'Nur wenn sich der geschlossene Tab auf der Stammebene befand',
     fr: 'Seulement si l’onglet fermé était à la racine de l’arborescence',
     hu: 'Csak ha a bezárt lap legfelső szintű volt',
@@ -4069,6 +4458,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_group_on_close_mouse_only': {
     en: 'Only if the tab was closed with the mouse',
+    sv: 'Endast om fliken stängdes med musen',
     de: 'Nur wenn der Tab mit der Maus geschlossen wurde',
     fr: 'Seulement si l’onglet a été fermé à la souris',
     hu: 'Csak ha a lap egérrel lett bezárva',
@@ -4080,6 +4470,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.ignore_folded_parent': {
     en: 'Open a new tab one level down if the parent tab is folded',
+    sv: 'Öppna nya flikar en nivå ned om den överordnade fliken är hopfälld',
     de: 'Neuen Tab eine Ebene tiefer öffnen, wenn der übergeordnete Tab eingeklappt ist',
     fr: 'Ouvrir le nouvel onglet un niveau plus bas si l’onglet parent est replié',
     hu: 'Az új lap egy szinttel lejjebb kerüljön, ha a szülőlap csukott',
@@ -4091,6 +4482,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.show_new_group_conf': {
     en: 'Show config popup when creating a group',
+    sv: 'Visa inställningsrutan när en grupp skapas',
     de: 'Einstellungsdialog anzeigen, wenn eine Gruppe erstellt wird',
     fr: 'Afficher la popup de configuration lorsqu’un groupe est créé',
     hu: 'Beállítóablak megjelenítése csoportosításkor',
@@ -4102,6 +4494,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sort_groups_first': {
     en: 'Sort groups before other tabs',
+    sv: 'Sortera grupper före andra flikar',
     de: 'Gruppen vor anderen Tabs sortieren',
     fr: 'Trier les groupes avant les autres onglets',
     hu: 'A csoportok elhelyezése a többi lap elé',
@@ -4115,6 +4508,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Tabs colorization
   'settings.colorize_tabs': {
     en: 'Colorize tabs',
+    sv: 'Färglägg flikar',
     de: 'Tabs einfärben',
     fr: 'Coloriser les onglets',
     hu: 'Színes lapok',
@@ -4126,6 +4520,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_tabs_src': {
     en: 'Generate color from',
+    sv: 'Skapa färgen utifrån',
     de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
     hu: 'A színezés szempontja',
@@ -4137,6 +4532,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_tabs_src_domain': {
     en: 'domain',
+    sv: 'domän',
     de: 'Domäne',
     fr: 'le domaine',
     hu: 'tartomány',
@@ -4147,6 +4543,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_tabs_src_container': {
     en: 'container',
+    sv: 'behållare',
     de: 'Umgebung',
     fr: 'le conteneur',
     hu: 'konténer',
@@ -4157,6 +4554,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_branches': {
     en: 'Colorize branches',
+    sv: 'Färglägg grenar',
     de: 'Zweige einfärben',
     fr: 'Coloriser les branches',
     hu: 'Az ágak színezése',
@@ -4168,6 +4566,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_branches_src': {
     en: 'Generate color from',
+    sv: 'Skapa färgen utifrån',
     de: 'Farbe ableiten von',
     fr: 'Générer la couleur depuis',
     hu: 'A színezés szempontja',
@@ -4179,12 +4578,14 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.colorize_branches_src_url': {
     en: 'URL',
+    sv: 'URL',
     fr: 'l’URL',
     ru: 'URL',
     zh_TW: '網址',
   },
   'settings.colorize_branches_src_domain': {
     en: 'domain',
+    sv: 'domän',
     de: 'Domäne',
     fr: 'le domaine',
     hu: 'tartomány',
@@ -4195,6 +4596,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.inherit_custom_color': {
     en: 'Inherit custom (manually set) color in the child tabs',
+    sv: 'Låt underordnade flikar ärva den anpassade färgen som angetts manuellt',
     de: 'Manuell festgelegte Farbe an untergeordnete Tabs vererben',
     fr: 'Hériter les couleurs personalisées (définies manuellement) dans les onglets enfants',
     hu: 'Az utódlapok örököljék a kézzel beállított színt',
@@ -4208,6 +4610,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Tabs Preview
   'settings.tabs.preview': {
     en: 'Show tab preview on mouse hover',
+    sv: 'Förhandsvisa flikar när muspekaren hålls över dem',
     de: 'Tab-Vorschau beim Darüberfahren mit der Maus anzeigen',
     fr: 'Afficher un aperçu des onglets au survol de la souris',
     hu: 'Az egérmutató alatti lap előnézetének megjelenítése',
@@ -4219,6 +4622,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_mode': {
     en: 'Preview mode',
+    sv: 'Förhandsvisningsläge',
     de: 'Vorschaumodus',
     fr: 'Mode de d’affichage',
     hu: 'Előnézeti mód',
@@ -4230,6 +4634,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_mode_i': {
     en: 'popup in sidebar',
+    sv: 'popup i sidofältet',
     de: 'Seitenleisten-Popup',
     fr: 'popup dans la barre latérale',
     hu: 'oldalsávos felugró',
@@ -4241,6 +4646,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_mode_p': {
     en: 'popup in page',
+    sv: 'popup på sidan',
     de: 'Popup auf der Seite',
     fr: 'popup dans la page',
     hu: 'az oldalon felbukkanó ablakban',
@@ -4252,6 +4658,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_mode_n': {
     en: "don't show preview",
+    sv: 'visa ingen förhandsvisning',
     de: 'Vorschau nicht anzeigen',
     fr: 'ne pas afficher d’aperçu',
     hu: 'ne legyen előnézet',
@@ -4263,6 +4670,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_page_mode_fallback': {
     en: "Fallback mode (if it's impossible to use the main mode)",
+    sv: 'Reservläge (om det ordinarie läget inte kan användas)',
     de: 'Rückfallmodus (falls die Nutzung des Hauptmodus nicht möglich ist)',
     fr: 'Option de repli (si c’est impossible d’utiliser le mode principal)',
     hu: 'Tartalékmód (ha nem lehet használni az alapértelmezett módot)',
@@ -4274,6 +4682,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_delay': {
     en: 'Delay before appearing (ms)',
+    sv: 'Fördröjning innan förhandsvisningen visas (ms)',
     de: 'Verzögerung vor dem Erscheinen (ms)',
     fr: 'Délai avant l’apparition (ms)',
     hu: 'A megjelenés késleltetése (ms)',
@@ -4285,6 +4694,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_inline_height': {
     en: 'Max preview height in sidebar (px, 0 = auto)',
+    sv: 'Största höjd för förhandsvisning i sidofältet (px, 0 = automatiskt)',
     de: 'Max. Vorschauhöhe in der Seitenleiste (px, 0 = auto)',
     fr: 'Hauteur max de l’aperçu dans la barre latérale (px, 0 = auto)',
     hu: 'Előnézet max. magassága az oldalsávban (px, 0 = auto)',
@@ -4296,6 +4706,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_popup_width': {
     en: 'Preview width in page (px)',
+    sv: 'Förhandsvisningens bredd på sidan (px)',
     de: 'Vorschaubreite auf der Seite (px)',
     fr: `Largeur de l'aperçu dans la page (px)`,
     hu: 'Előnézet szélessége az oldalon (px)',
@@ -4307,6 +4718,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_title': {
     en: 'Max number of title lines',
+    sv: 'Största antal titelrader',
     de: 'Maximale Anzahl von Titelzeilen',
     fr: 'Nombre de lignes maximum pour le titre',
     hu: 'A címsorok maximális száma',
@@ -4318,6 +4730,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_url': {
     en: 'Max number of URL lines',
+    sv: 'Största antal URL-rader',
     de: 'Maximale Anzahl von URL-Zeilen',
     fr: 'Nombre de lignes maximim pour l’URL',
     hu: 'Az URL-sorok maximális száma',
@@ -4329,6 +4742,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_side': {
     en: 'Sidebar side (needed to correctly calculate position of the popup)',
+    sv: 'Sidofältets sida (behövs för att beräkna popupens placering korrekt)',
     de: 'Position der Seitenleiste (Wird benötigt, um die Position des Popups korrekt zu berechnen)',
     fr: 'Position de la barre latérale (requise pour calculer correctement la position de la popup)',
     hu: 'Az oldalsáv oldala (a felbukkanó ablakok elhelyezése miatt szükséges)',
@@ -4340,6 +4754,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_side_right': {
     en: 'left',
+    sv: 'vänster',
     de: 'Links',
     fr: 'gauche',
     hu: 'bal',
@@ -4351,6 +4766,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_side_left': {
     en: 'right',
+    sv: 'höger',
     de: 'Rechts',
     fr: 'droite',
     hu: 'jobb',
@@ -4362,6 +4778,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_follow_mouse': {
     en: 'Follow the mouse cursor',
+    sv: 'Följ muspekaren',
     de: 'Mauszeiger folgen',
     fr: 'Suivre le pointeur de la souris',
     hu: 'Az egérkurzor követése',
@@ -4373,6 +4790,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_in_page_offset_y': {
     en: 'Popup vertical offset in page (px)',
+    sv: 'Popupens lodräta förskjutning på sidan (px)',
     de: 'Vertikaler Popup-Versatz in Seite (px)',
     fr: 'Décalage vertical de la popup dans la page (px)',
     hu: 'A felbukkanó ablak függőleges eltolása az oldalon (px)',
@@ -4384,6 +4802,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_in_page_offset_x': {
     en: 'Popup horizontal offset in page (px)',
+    sv: 'Popupens vågräta förskjutning på sidan (px)',
     de: 'Horizontaler Popup-Versatz in Seite (px)',
     fr: 'Décalage horizontal de la popup dans la page (px)',
     hu: 'A felbukkanó ablak vízszintes eltolása az oldalon (px)',
@@ -4395,6 +4814,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs.preview_crop_right': {
     en: 'Crop preview from right side (px)',
+    sv: 'Beskär förhandsvisningen från höger (px)',
     de: 'Vorschau von rechts zuschneiden (px)',
     fr: 'Rogner l’aperçu depuis le côté droit (px)',
     hu: 'Az előnézet levágása jobbról (px)',
@@ -4408,6 +4828,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Native tabs
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
+    sv: 'Dölj flikarna från inaktiva paneler i Firefox flikrad',
     de: 'Native Tabs inaktiver Panels ausblenden',
     fr: 'Cacher les onglets natifs des panneaux inactifs',
     hu: 'Az inaktív panel natív lapjainak elrejtése',
@@ -4419,6 +4840,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_tabs': {
     en: 'Hide native tabs in folded branch',
+    sv: 'Dölj flikarna i hopfällda grenar i Firefox flikrad',
     de: 'Native Tabs in eingeklappten Zweigen ausblenden',
     fr: 'Cacher les onglets natifs des branches repliées',
     hu: 'Az összecsukot ágak natív lapjainak elrejtése',
@@ -4430,6 +4852,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_parent': {
     en: 'Also hide the parent tab',
+    sv: 'Dölj även den överordnade fliken',
     de: 'Auch den übergeordneten Tab ausblenden',
     fr: 'Cacher aussi l’onglet parent',
     hu: 'A szülőlapot is rejtse el',
@@ -4441,6 +4864,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_parent_any': {
     en: 'any tab',
+    sv: 'alla fliktyper',
     de: 'Jeden Tab',
     fr: 'de tous les onglets',
     hu: 'bármely lap',
@@ -4452,6 +4876,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_parent_group': {
     en: 'group tab',
+    sv: 'endast gruppflikar',
     de: 'Gruppen-Tab',
     fr: 'des groupe d’onglets',
     hu: 'csoportlap',
@@ -4463,6 +4888,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_folded_parent_none': {
     en: 'off',
+    sv: 'av',
     de: 'aus',
     fr: 'jamais',
     hu: 'nem',
@@ -4474,6 +4900,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.hide_unloaded_tabs': {
     en: 'Hide unloaded native tabs',
+    sv: 'Dölj frigjorda flikar i Firefox flikrad',
     de: 'Nicht geladene native Tabs ausblenden',
     fr: 'Cacher les onglets natifs déchargés',
     hu: 'Elrejti a betöltetlen natív lapokat',
@@ -4485,6 +4912,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.native_highlight': {
     en: 'Highlight native tabs when selecting Sidebery tabs',
+    sv: 'Markera motsvarande flikar i Firefox flikrad när flikar markeras i Sidebery',
     de: 'Native Tabs bei der Auswahl von Tabs in Sidebery hervorheben',
     fr: "Mettre en surbrillance les onglets natifs lors de la sélection d'onglets dans Sidebery",
     hu: 'A natív lapok kiemelése a Sidebery lapjaival összhangban',
@@ -4496,6 +4924,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.native_highlight_note': {
     en: "This will also highlight the active tab, since Firefox doesn't allow you to highlight only inactive tabs",
+    sv: 'Även den aktiva fliken markeras, eftersom Firefox inte tillåter att enbart inaktiva flikar markeras',
     de: 'Dadurch wird auch der aktive Tab hervorgehoben, da Firefox es nicht zulässt, nur inaktive Tabs hervorzuheben',
     fr: 'L’onglet actif sera aussi marqué comme sélectionné, car Firefox n’autorise pas de sélectionner uniquement des onglets inactifs',
     hu: 'Az aktív lap is ki lesz emelve, mert a Firefox nem teszi lehetővé kizárólag inaktív lapok kiemelését',
@@ -4509,6 +4938,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Bookmarks
   'settings.bookmarks_title': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -4520,6 +4950,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.load_bookmarks_on_demand': {
     en: 'Load bookmarks on demand',
+    sv: 'Läs in bokmärken vid behov',
     de: 'Lesezeichen bei Bedarf laden',
     fr: 'Charger les marques-pages à la demande',
     hu: 'A könyvjelzők azonnali betöltése',
@@ -4531,6 +4962,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.warn_on_multi_bookmark_delete': {
     en: 'Warn on trying delete multiple bookmarks',
+    sv: 'Varna när flera bokmärken tas bort',
     de: 'Beim Löschen mehrerer Lesezeichen warnen',
     fr: 'Demander confirmation avant de fermer de plusieurs onglets',
     hu: 'Figyelmeztetés több könyvjelző egyidejű törlésekor',
@@ -4542,6 +4974,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.warn_on_multi_bookmark_delete_any': {
     en: 'any',
+    sv: 'alltid',
     de: 'Immer',
     fr: 'tous',
     hu: 'bármely',
@@ -4553,6 +4986,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.warn_on_multi_bookmark_delete_collapsed': {
     en: 'collapsed',
+    sv: 'för hopfällda mappar',
     de: 'Eingeklappte',
     fr: 'repliés',
     hu: 'becsukott',
@@ -4564,6 +4998,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.warn_on_multi_bookmark_delete_none': {
     en: 'none',
+    sv: 'aldrig',
     de: 'Nie',
     fr: 'aucun',
     hu: 'nem',
@@ -4575,6 +5010,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.ask_new_bookmark_place': {
     en: 'Ask where to store bookmarks',
+    sv: 'Fråga var bokmärken ska sparas',
     de: 'Nachfragen, wo Lesezeichen gespeichert werden sollen',
     fr: 'Demander où sauvegarder les marque-pages',
     hu: 'Rákérdezés a könyvjelző helyére',
@@ -4586,6 +5022,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.bookmarks_rm_undo_note': {
     en: 'Show undo notification after deleting bookmarks',
+    sv: 'Visa en avisering med möjlighet att ångra när bokmärken tagits bort',
     de: '"Rückgängig"-Meldung nach dem Löschen von Lesezeichen anzeigen',
     fr: 'Afficher une notification pour annuler la suppression de plusieurs marque-pages',
     hu: 'Visszavonási értesítés a könyvjelzők törlése után',
@@ -4597,6 +5034,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_close_bookmarks': {
     en: 'Auto-close folders',
+    sv: 'Fäll ihop mappar automatiskt',
     de: 'Ordner automatisch schließen',
     fr: 'Fermer automatiquement les dossiers',
     hu: 'Mappák automatikus becsukása',
@@ -4608,6 +5046,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_rm_other': {
     en: 'Auto-delete on opening bookmarks from the "Other Bookmarks" folder',
+    sv: 'Ta automatiskt bort bokmärken när de öppnas från mappen ”Övriga bokmärken”',
     de: 'Lesezeichen aus dem Ordner "Weitere Lesezeichen" beim Öffnen automatisch löschen',
     fr: 'Supprimer automatiquement à l’ouverture de marque-pages du dossier “Autres marque-pages”',
     hu: 'Az „Egyéb könyvjelzők” mappából megnyitott könyvjelző automatikus törlése',
@@ -4619,6 +5058,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.show_bookmark_len': {
     en: 'Show folder size',
+    sv: 'Visa antalet bokmärken i mappar',
     de: 'Ordnergröße anzeigen',
     fr: 'Afficher la taille des dossiers',
     hu: 'A mappa méretének kijelzése',
@@ -4630,6 +5070,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.highlight_open_bookmarks': {
     en: 'Mark open bookmarks',
+    sv: 'Markera öppna bokmärken',
     de: 'Geöffnete Lesezeichen kennzeichnen',
     fr: 'Indiquer les marque-pages ouverts',
     hu: 'A megnyitott könyvjelzők megjelölése',
@@ -4641,6 +5082,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.activate_open_bookmark_tab': {
     en: 'Go to open tab instead of opening new one',
+    sv: 'Gå till den öppna fliken i stället för att öppna en ny',
     de: 'Zu geöffnetem Tab wechseln, statt einen neuen zu öffnen',
     fr: 'Aller à l’onglet ouvert au lieu d’en ouvrir un nouveau',
     hu: 'A megnyitott lapra ugrás új lap nyitása helyett',
@@ -4652,6 +5094,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.pin_opened_bookmarks_folder': {
     en: 'Always show open folders when scrolling',
+    sv: 'Visa alltid öppna mappar vid rullning',
     de: 'Geöffnete Ordner beim Scrollen sichtbar halten',
     fr: 'Toujours afficher le dossier ouvert pendant le scroll',
     hu: 'Görgetéskor mindig látszódjanak a nyitott mappák',
@@ -4663,6 +5106,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.old_bookmarks_after_save': {
     en: 'What to do with old bookmarks after saving tabs panel',
+    sv: 'Vad ska hända med gamla bokmärken när en flikpanel sparas?',
     de: 'Wie mit alten Lesezeichen nach Speicherung des Tab-Panels als Lesezeichen verfahren',
     fr: 'Que faire des anciens marque-pages après avoir sauvegardé un panneau d’onglet',
     hu: 'A lappanelok mentése után a régi könyvjelzőkre alkalmazandó művelet',
@@ -4674,6 +5118,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.old_bookmarks_after_save_ask': {
     en: 'ask',
+    sv: 'fråga',
     de: 'Nachfragen',
     fr: 'demander',
     hu: 'kérdés',
@@ -4685,6 +5130,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.old_bookmarks_after_save_del': {
     en: 'delete',
+    sv: 'ta bort',
     de: 'Löschen',
     fr: 'les supprimer',
     hu: 'törlés',
@@ -4696,6 +5142,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.old_bookmarks_after_save_keep': {
     en: 'keep',
+    sv: 'behåll',
     de: 'Behalten',
     fr: 'les garder',
     hu: 'megtartás',
@@ -4706,6 +5153,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.fetch_bookmarks_favs': {
     en: 'Fetch favicons',
+    sv: 'Hämta webbplatsikoner',
     de: 'Favicons herunterladen',
     fr: 'Récupérer les favicons',
     hu: 'Webhelyikonok letöltése',
@@ -4717,6 +5165,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.fetch_bookmarks_favs_stop': {
     en: 'Stop fetching',
+    sv: 'Stoppa hämtningen',
     de: 'Herunterladen stoppen',
     fr: 'Arrêter la récupération',
     hu: 'A letöltés leállítása',
@@ -4728,6 +5177,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.fetch_bookmarks_favs_done': {
     en: 'done',
+    sv: 'klara',
     de: 'Fertig',
     fr: 'effectués',
     hu: 'kész',
@@ -4738,6 +5188,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.fetch_bookmarks_favs_errors': {
     en: 'errors',
+    sv: 'fel',
     de: 'Fehler',
     fr: 'erreurs',
     hu: 'hiba',
@@ -4751,6 +5202,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - History
   'settings.history_title': {
     en: 'History',
+    sv: 'Historik',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -4762,6 +5214,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.load_history_on_demand': {
     en: 'Initialize history service on demand',
+    sv: 'Initiera historiktjänsten vid behov',
     de: 'Chronik-Dienst bei Bedarf initialisieren',
     fr: 'Démarrer le service d’historique à la demande',
     hu: 'Az előzmények azonnali betöltése',
@@ -4775,6 +5228,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Appearance
   'settings.appearance_title': {
     en: 'Appearance',
+    sv: 'Utseende',
     de: 'Erscheinungsbild',
     fr: 'Apparence',
     hu: 'Megjelenés',
@@ -4786,6 +5240,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.font_size': {
     en: 'Font size',
+    sv: 'Teckenstorlek',
     de: 'Schriftgröße',
     fr: 'Taille de la police',
     hu: 'Betűméret',
@@ -4797,34 +5252,42 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.font_size_xxs': {
     en: 'XXS',
+    sv: 'XXS',
     ru: 'XXS',
   },
   'settings.font_size_xs': {
     en: 'XS',
+    sv: 'XS',
     ru: 'XS',
   },
   'settings.font_size_s': {
     en: 'S',
+    sv: 'S',
     ru: 'S',
   },
   'settings.font_size_m': {
     en: 'M',
+    sv: 'M',
     ru: 'M',
   },
   'settings.font_size_l': {
     en: 'L',
+    sv: 'L',
     ru: 'L',
   },
   'settings.font_size_xl': {
     en: 'XL',
+    sv: 'XL',
     ru: 'XL',
   },
   'settings.font_size_xxl': {
     en: 'XXL',
+    sv: 'XXL',
     ru: 'XXL',
   },
   'settings.font_family': {
     en: 'Default font-family',
+    sv: 'Standardteckensnitt',
     de: 'Standard-Schriftart',
     fr: 'Police par défaut',
     hu: 'Alapértelmezett font-family',
@@ -4836,6 +5299,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.animations': {
     en: 'Animations',
+    sv: 'Animeringar',
     de: 'Animationen',
     fr: 'Animations',
     hu: 'Animáció',
@@ -4847,6 +5311,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.animation_speed': {
     en: 'Animations speed',
+    sv: 'Animeringshastighet',
     de: 'Animationsgeschwindigkeit',
     fr: 'Vitesse des animations',
     hu: 'Az animáció sebessége',
@@ -4858,6 +5323,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.animation_speed_fast': {
     en: 'fast',
+    sv: 'snabb',
     de: 'Schnell',
     fr: 'rapide',
     hu: 'gyors',
@@ -4868,6 +5334,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.animation_speed_norm': {
     en: 'normal',
+    sv: 'normal',
     de: 'Normal',
     fr: 'normale',
     hu: 'közepes',
@@ -4878,6 +5345,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.animation_speed_slow': {
     en: 'slow',
+    sv: 'långsam',
     de: 'Langsam',
     fr: 'lente',
     hu: 'lassú',
@@ -4888,6 +5356,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.theme': {
     en: 'Theme',
+    sv: 'Tema',
     de: 'Design',
     fr: 'Thème',
     hu: 'Téma',
@@ -4899,6 +5368,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.theme_proton': {
     en: 'proton',
+    sv: 'Proton',
     de: 'Proton',
     fr: 'proton',
     ru: 'протон',
@@ -4908,6 +5378,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.theme_plain': {
     en: 'plain',
+    sv: 'enkelt',
     de: 'Schlicht',
     fr: 'sobre',
     hu: 'egyszerű',
@@ -4918,6 +5389,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.density': {
     en: 'Density',
+    sv: 'Täthet',
     de: 'Dichte',
     fr: 'Densité',
     hu: 'Térköz',
@@ -4928,6 +5400,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.density_compact': {
     en: 'compact',
+    sv: 'kompakt',
     de: 'Kompakt',
     fr: 'compacte',
     hu: 'zárt',
@@ -4939,6 +5412,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.density_default': {
     en: 'default',
+    sv: 'standard',
     de: 'Standard',
     fr: 'normale',
     hu: 'alapértelmezett',
@@ -4950,6 +5424,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.density_loose': {
     en: 'relaxed',
+    sv: 'luftig',
     de: 'Locker',
     fr: 'aérée',
     hu: 'szellős',
@@ -4961,6 +5436,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.switch_color_scheme': {
     en: 'Color scheme',
+    sv: 'Färgschema',
     de: 'Farbschema',
     fr: 'Schéma de couleur',
     hu: 'Színséma',
@@ -4971,6 +5447,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.color_scheme_dark': {
     en: 'dark',
+    sv: 'mörkt',
     de: 'Dunkel',
     fr: 'sombre',
     hu: 'sötét',
@@ -4981,6 +5458,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.color_scheme_light': {
     en: 'light',
+    sv: 'ljust',
     de: 'Hell',
     fr: 'clair',
     hu: 'világos',
@@ -4991,6 +5469,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.color_scheme_sys': {
     en: 'auto: dark/light',
+    sv: 'automatiskt: mörkt/ljust',
     de: 'Auto: dunkel/hell',
     fr: 'auto: sombre/clair',
     hu: 'automatikus: sötét/világos',
@@ -5002,6 +5481,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.color_scheme_ff': {
     en: 'firefox',
+    sv: 'Firefox',
     de: 'Firefox',
     fr: 'Firefox',
     hu: 'Firefox',
@@ -5012,6 +5492,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.appearance_notes_title': {
     en: 'Notes:',
+    sv: 'Observera:',
     de: 'Hinweis:',
     fr: 'Notes:',
     hu: 'Megjegyzés:',
@@ -5023,6 +5504,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.appearance_notes': {
     en: '- To apply theme color to Sidebery buttons in browser interface set "svg.context-properties.content.enabled" to "true" in about:config page.',
+    sv: '- För att använda temats färg på Sideberys knappar i webbläsarens gränssnitt anger du ”svg.context-properties.content.enabled” till ”true” på sidan about:config.',
     de: '- Um die Theme-Farbe auf Sidebery-Schaltflächen in der Browseroberfläche anzuwenden, setzen Sie "svg.context-properties.content.enabled" auf "true" auf der Seite "about:config".',
     fr: '– Pour appliquer le thème de couleurs aux boutons de Sidebery dans l’interface du navigateur, définissez “svg.context-properties.content.enabled” à “true” dans la page “about:config”',
     hu: 'A gombokra vonatkozó témaszínek alkalmazásához a böngésző about:config lapján az „svg.context-properties.content.enabled” beállításnak „true” értéket kell adni.',
@@ -5036,6 +5518,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.edit_styles': {
     en: 'Edit styles',
+    sv: 'Redigera stilar',
     de: 'Stile anpassen',
     fr: 'Modifier les styles',
     hu: 'Stílusszerkesztő',
@@ -5049,6 +5532,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Mouse
   'settings.mouse_title': {
     en: 'Mouse',
+    sv: 'Mus',
     de: 'Maus',
     fr: 'Souris',
     hu: 'Egér',
@@ -5060,6 +5544,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.h_scroll_action': {
     en: 'Use horizontal scroll to',
+    sv: 'Använd vågrät rullning för att',
     de: 'Aktion beim horizontalen Scrollen',
     fr: 'Scroller horizontalement pour',
     hu: 'A vízszintes görgetés művelete',
@@ -5071,6 +5556,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.h_scroll_action_switch_panels': {
     en: 'switch panels',
+    sv: 'växla panel',
     de: 'Panel wechseln',
     fr: 'basculer entre les panneaux',
     hu: 'panelváltás',
@@ -5082,6 +5568,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.h_scroll_action_switch_act_tabs': {
     en: 'switch recently active tabs',
+    sv: 'växla mellan nyligen aktiva flikar',
     de: 'Zuletzt aktive Tabs wechseln',
     fr: 'basculer entre les onglets actifs',
     hu: 'váltás a nemrég aktív lapok között',
@@ -5093,6 +5580,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.h_scroll_action_none': {
     en: 'do nothing',
+    sv: 'inte göra något',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5104,6 +5592,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.one_panel_switch_per_scroll': {
     en: 'Limit to one panel switch per scroll',
+    sv: 'Begränsa till ett panelbyte per rullning',
     de: 'Nur ein Panel pro Scroll-Bewegung wechseln',
     fr: 'Limiter à un basculement de panneau par scroll',
     hu: 'Csak egy panelváltás görgetésenként',
@@ -5115,6 +5604,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs using vertical scroll',
+    sv: 'Växla flik med lodrät rullning',
     de: 'Tabs durch vertikales Scrollen wechseln',
     fr: 'Basculer d’onglet en scrollant verticalement',
     hu: 'Lapváltás egérgörgővel',
@@ -5126,6 +5616,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_panel': {
     en: 'in panel',
+    sv: 'i panelen',
     de: 'Im Panel',
     fr: 'dans le panneau',
     hu: 'a panelon',
@@ -5136,6 +5627,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_global': {
     en: 'globally',
+    sv: 'globalt',
     de: 'Global',
     fr: 'entre tous les onglets',
     hu: 'mindenütt',
@@ -5147,6 +5639,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_psp': {
     en: 'preselect in panel',
+    sv: 'förvälj i panelen',
     de: 'Vorauswahl im Panel',
     fr: 'présélectionner dans le panneau',
     hu: 'kijelöltek a panelon',
@@ -5158,6 +5651,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_psg': {
     en: 'preselect globally',
+    sv: 'förvälj globalt',
     de: 'Global vorauswählen',
     fr: 'présélectionner parmi tous les onglets',
     hu: 'kijelöltek mindenütt',
@@ -5169,6 +5663,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nie',
     fr: 'jamais',
     hu: 'nem',
@@ -5179,6 +5674,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_preselect_note': {
     en: 'Select tab using vertical scroll and activate it after mouse leave',
+    sv: 'Välj flik med lodrät rullning och aktivera den när muspekaren lämnar sidofältet',
     de: 'Tab durch vertikales Scrollen auswählen und aktivieren, sobald der Mauszeiger die Seitenleiste verlässt',
     fr: 'Sélectionner un onglet avec le scroll vertical et l’activer quand la souris sort du panneau',
     hu: 'A lap kijelölése az egérgörgővel, majd a lap aktiválása, miután az egérmutató elhagyta',
@@ -5190,12 +5686,14 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_glob_pin_isolate': {
     en: 'Isolate globally pinned tabs',
+    sv: 'Håll globalt fästa flikar åtskilda',
     de: 'Global angeheftete Tabs isolieren',
     fr: 'Isoler les onglets épinglés globalement',
     ru: 'Изолировать глобально закрепленные вкладки',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
+    sv: 'Hoppa över hopfällda flikar',
     de: 'Eingeklappte Tabs überspringen',
     fr: 'Ignorer les onglets repliés',
     hu: 'A becsukott lapok kihagyása',
@@ -5207,6 +5705,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_skip_discarded': {
     en: 'Skip unloaded tabs',
+    sv: 'Hoppa över frigjorda flikar',
     de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
     hu: 'A kisöpört lapok kihagyása',
@@ -5218,6 +5717,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_except_overflow': {
     en: 'Unless panel is overflowing',
+    sv: 'Utom när panelens innehåll inte ryms',
     de: 'Außer, wenn Panel überläuft',
     fr: 'Sauf si le panneau a une barre de scroll',
     hu: 'Csak a panel túlcsordulásáig',
@@ -5229,6 +5729,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_cyclic': {
     en: 'Cyclically',
+    sv: 'Cykliskt',
     de: 'Zyklisch',
     fr: 'De façon cyclique',
     hu: 'Ciklikusan',
@@ -5240,6 +5741,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_scroll_area': {
     en: 'Scroll area width (px)',
+    sv: 'Rullningsområdets bredd (px)',
     de: 'Größe des Scroll-Bereiches (px)',
     fr: 'Largeur de la zone de scroll (px)',
     hu: 'A gördítési terület szélessége (px)',
@@ -5251,6 +5753,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.scroll_through_tabs_scroll_area_note': {
     en: 'Positive - at the right, negative - at the left side of the panel',
+    sv: 'Positivt värde: till höger i panelen. Negativt värde: till vänster.',
     de: 'Positiv - rechte Seite, Negativ - linke Seite des Panels',
     fr: 'Positive: à droite ou négative: à gauche du panneau',
     hu: 'Pozitív: a panel jobb; negatív: a panel bal oldalán',
@@ -5262,6 +5765,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_menu_multi_sel': {
     en: 'Automatically open context menu on right-button multi-selection',
+    sv: 'Öppna snabbmenyn automatiskt efter markering av flera objekt med höger musknapp',
     de: 'Nach Mehrfachauswahl mit rechter Maustaste Kontextmenü automatisch öffnen',
     fr: 'Ouvrir le menu contextuel automatiquement après une sélection multiple au clic droit',
     hu: 'Jobb gombos többes kijelöléskor a környezeti menü automatikus megnyitása',
@@ -5273,6 +5777,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.auto_menu_multi_sel_note': {
     en: 'Only for non-native context menu',
+    sv: 'Gäller endast Sideberys egen snabbmeny',
     de: 'Wird nur bei Verwendung des nicht-nativen Kontextmenüs unterstützt',
     fr: 'Seulement pour le menu contextuel non natif',
     hu: 'Csak a nem natív környezeti menü esetén',
@@ -5284,6 +5789,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.long_click_delay': {
     en: 'Long click delay (ms)',
+    sv: 'Fördröjning för långt klick (ms)',
     de: 'Dauer für langen Klick (ms)',
     fr: 'Durée du clic long (ms)',
     hu: 'A hosszú kattintás ideje (ms)',
@@ -5295,6 +5801,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.wheel_threshold': {
     en: 'Set threshold for switching between panels and tabs by scrolling',
+    sv: 'Ange tröskel för växling mellan paneler och flikar med rullning',
     de: 'Grenzwert für Wechsel zwischen Panels und Tabs durch Scrollen',
     fr: 'Définir un seuil de scroll avant de basculer entre les panneaux et onglets',
     hu: 'Az egérgörgős lap- és panelváltás küszöbszintje',
@@ -5306,6 +5813,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.wheel_threshold_y': {
     en: 'Vertical scrolling (px)',
+    sv: 'Lodrät rullning (px)',
     de: 'Vertikales Scrollen (px)',
     fr: 'Scroll vertical (px)',
     hu: 'Függőleges görgetés (px)',
@@ -5317,6 +5825,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.wheel_accumulation_y': {
     en: 'Vertical scroll accumulation',
+    sv: 'Ackumulera lodrät rullning',
     de: 'Vertikale Scroll-Akkumulation',
     fr: 'Cumul du scroll vertical',
     hu: 'A függőleges egérgörgetés halmozása',
@@ -5328,6 +5837,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.wheel_threshold_x': {
     en: 'Horizontal scrolling (px)',
+    sv: 'Vågrät rullning (px)',
     de: 'Horizontales Scrollen (px)',
     fr: 'Scroll horizontal (px)',
     hu: 'Vízszintes görgetés (px)',
@@ -5339,6 +5849,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.wheel_accumulation_x': {
     en: 'Horizontal scroll accumulation',
+    sv: 'Ackumulera vågrät rullning',
     de: 'Horizontale Scroll-Akkumulation',
     fr: 'Cumul du scroll horizontal',
     hu: 'A vízszintes egérgörgetés halmozása',
@@ -5352,6 +5863,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Navigation bar actions
   'settings.nav_act_tabs_panel_left_click': {
     en: 'Left click on active tabs panel',
+    sv: 'Vänsterklick på den aktiva flikpanelen',
     de: 'Linksklick auf aktives Tab-Panel',
     fr: 'Clic gauche sur un panneau d’onglets actif',
     hu: 'Bal kattintás az aktív lappanelon',
@@ -5363,6 +5875,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_tabs_panel_left_click_scroll': {
     en: 'scroll to start/end',
+    sv: 'rulla till början/slutet',
     de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
     hu: 'gördítés az elejére/végére',
@@ -5374,6 +5887,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_tabs_panel_left_click_new_tab': {
     en: 'create tab',
+    sv: 'skapa flik',
     de: 'Tab erstellen',
     fr: 'créer un onglet',
     hu: 'új lap nyitása',
@@ -5385,6 +5899,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_tabs_panel_left_click_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5396,6 +5911,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_bookmarks_panel_left_click': {
     en: 'Left click on active bookmarks panel',
+    sv: 'Vänsterklick på den aktiva bokmärkespanelen',
     de: 'Linksklick auf aktives Lesezeichen-Panel',
     fr: 'Clic gauche sur un panneau de marque-pages actif',
     hu: 'Bal kattintás az aktív könyvjelzőpanelon',
@@ -5407,6 +5923,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': {
     en: 'scroll to start/end',
+    sv: 'rulla till början/slutet',
     de: 'Zum Anfang/Ende scrollen',
     fr: 'scroller tout en haut/tout en bas',
     hu: 'gördítés az elejére/végére',
@@ -5418,6 +5935,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_act_bookmarks_panel_left_click_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5429,6 +5947,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click': {
     en: 'Middle click on tabs panel',
+    sv: 'Mittklick på en flikpanel',
     de: 'Mittelklick auf Tab-Panel',
     fr: 'Clic du milieu sur un panneau d’onglet',
     hu: 'Középső kattintás egy lappanelon',
@@ -5440,6 +5959,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_act_tab': {
     en: 'close active tab',
+    sv: 'stäng aktiv flik',
     de: 'Aktiven Tab schließen',
     fr: 'fermer l’onglet actif',
     hu: 'az aktív lap bezárása',
@@ -5451,6 +5971,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_all': {
     en: 'close tabs',
+    sv: 'stäng flikar',
     de: 'Tabs schließen',
     fr: 'fermer les onglets',
     hu: 'a lapok bezárása',
@@ -5462,6 +5983,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_rm_rmp': {
     en: 'close tabs and remove panel',
+    sv: 'stäng flikarna och ta bort panelen',
     de: 'Tabs schließen und Panel entfernen',
     fr: 'fermer les onglets et supprimer le panneau',
     hu: 'a lapok bezárása és a panel törlése',
@@ -5473,6 +5995,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_discard': {
     en: 'unload tabs',
+    sv: 'frigör flikar',
     de: 'Tabs entladen',
     fr: 'décharger les onglets',
     hu: 'a lapok kisöprése',
@@ -5484,6 +6007,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_hide': {
     en: 'hide panel',
+    sv: 'dölj panelen',
     de: 'Panel ausblenden',
     fr: 'cacher le panneau',
     hu: 'a panel elrejtése',
@@ -5495,6 +6019,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_bookmark': {
     en: 'save panel to bookmarks',
+    sv: 'spara panelen som bokmärken',
     de: 'Panel in Lesezeichen speichern',
     fr: 'sauvegarder le panneau dans les marque-pages',
     hu: 'a panel könyvjelzőzése',
@@ -5506,6 +6031,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_bkm_rmp': {
     en: 'save to bookmarks and remove panel',
+    sv: 'spara som bokmärken och ta bort panelen',
     de: 'In Lesezeichen speichern und Panel entfernen',
     fr: 'sauvegarder dans les marque-pages et supprimer le panneau',
     hu: 'a panel könyvjelzőzése és törlése',
@@ -5517,6 +6043,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_convert': {
     en: 'convert to bookmarks',
+    sv: 'konvertera till bokmärken',
     de: 'In Lesezeichen umwandeln',
     fr: 'convertir en marque-pages',
     hu: 'átalakítás könyvjelzőkké',
@@ -5528,6 +6055,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_conv_hide': {
     en: 'convert to bookmarks panel and hide',
+    sv: 'konvertera till en bokmärkespanel och dölj den',
     de: 'In Lesezeichen-Panel umwandeln und ausblenden',
     fr: 'convertir en panneau de marque-pages et le cacher',
     hu: 'átalakítás könyvjelzőpanellá és elrejtés',
@@ -5539,6 +6067,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_tabs_panel_mid_click_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5550,6 +6079,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_bookmarks_panel_mid_click': {
     en: 'Middle click on bookmarks panel',
+    sv: 'Mittklick på en bokmärkespanel',
     de: 'Mittelklick auf Lesezeichen-Panel',
     fr: 'Clic du milieu sur un panneau de marque-pages',
     hu: 'Középső kattintás egy könyvjelzőpanelon',
@@ -5561,6 +6091,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_bookmarks_panel_mid_click_convert': {
     en: 'convert to tabs',
+    sv: 'konvertera till flikar',
     de: 'In Tabs umwandeln',
     fr: 'convertir en onglets',
     hu: 'átalakítás lapokká',
@@ -5572,6 +6103,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_bookmarks_panel_mid_click_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5583,6 +6115,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.nav_switch_panels_wheel': {
     en: 'Switch panels using vertical scroll over navigation bar',
+    sv: 'Växla panel med lodrät rullning över navigeringsfältet',
     de: 'Panels durch vertikales Scrollen über der Navigationsleiste wechseln',
     fr: 'Basculer entre les panneaux en scrollant verticalement sur la barre de navigation',
     hu: 'Egérgörgős panelváltás a vezérlősávon',
@@ -5596,6 +6129,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Tab actions
   'settings.tab_double_click': {
     en: 'Double click on tab',
+    sv: 'Dubbelklick på en flik',
     de: 'Doppelklick auf Tab',
     fr: 'Double-clic sur un onglet',
     hu: 'Dupla kattintás a lapon',
@@ -5607,6 +6141,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_second_click_act_prev': {
     en: 'Activate previously active tab when clicking on the active tab (Tab flip)',
+    sv: 'Aktivera föregående aktiva flik när du klickar på den aktiva fliken (flikväxling)',
     de: 'Beim Klick auf den aktiven Tab zum zuvor aktiven Tab wechseln',
     fr: 'Cliquer sur l’onglet actif active l’onglet précédemment actif (Onglet revers)',
     hu: 'Az aktív lapra kattintás aktiválja az előzőleg aktív lapot (lapváltogatás)',
@@ -5618,6 +6153,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_second_click_act_prev_panel_only': {
     en: 'Only in the active panel',
+    sv: 'Endast i den aktiva panelen',
     de: 'Nur im aktiven Panel',
     fr: 'Seulement sur le panneau actif',
     hu: 'Csak az aktív panelon',
@@ -5629,6 +6165,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_second_click_act_prev_no_unload': {
     en: 'Skip unloaded tabs',
+    sv: 'Hoppa över frigjorda flikar',
     de: 'Entladene Tabs überspringen',
     fr: 'Ignorer les onglets déchargés',
     hu: 'A kisöpört lapok kihagyása',
@@ -5640,6 +6177,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.activate_on_mouseup': {
     en: 'Activate tab on mouse button release',
+    sv: 'Aktivera fliken när musknappen släpps',
     de: 'Tab beim Loslassen der Maustaste aktivieren',
     fr: 'Activer l’onglet lors du relâchement du bouton de la souris',
     hu: 'A lap aktiválása az egérgomb felengedésekor',
@@ -5651,6 +6189,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_close_on_mouse_up': {
     en: 'Trigger the close button action on mouse button release',
+    sv: 'Utför stängningsknappens åtgärd när musknappen släpps',
     de: 'Die Schließfunktion beim Loslassen der Maustaste auslösen',
     fr: "Lancer l'action du bouton de fermeture lorsque le bouton de la souris est relâché",
     hu: 'A bezárás gomb műveletének elindítása az egérgomb elengedésekor',
@@ -5662,6 +6201,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.shift_selection_from_active': {
     en: 'Start shift+click selection from the active tab',
+    sv: 'Börja markeringen med Skift+klick från den aktiva fliken',
     de: 'Umschalt+Klick-Auswahl beim aktiven Tab beginnen',
     fr: 'Démarrer la sélection maj+clic depuis l’onglet actif',
     hu: 'A Shift+kattintás típusú kijelölés indítása az aktív laptól',
@@ -5673,6 +6213,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.ctrl_selection_include_active': {
     en: 'Make initial ctrl+click selection include the active tab',
+    sv: 'Ta med den aktiva fliken i den första markeringen med Ctrl+klick',
     de: 'Erste Strg+Klick-Auswahl schließt den aktiven Tab ein',
     fr: 'Faire que la sélection ctrl+clic initiale inclue l’onglet actif',
     hu: 'A kezdeti ctrl+kattintás kijelölése tartalmazza az aktív lapot',
@@ -5684,6 +6225,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_long_left_click': {
     en: 'Long left click on tab',
+    sv: 'Långt vänsterklick på en flik',
     de: 'Langer Linksklick auf Tab',
     fr: 'Clic gauche long sur un onglet',
     hu: 'Hosszú bal kattintás a lapon',
@@ -5695,6 +6237,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_long_right_click': {
     en: 'Long right click on tab',
+    sv: 'Långt högerklick på en flik',
     de: 'Langer Rechtsklick auf Tab',
     fr: 'Clic droit long sur un onglet',
     hu: 'Hosszú jobb kattintás a lapon',
@@ -5706,6 +6249,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_middle_click': {
     en: 'Middle click on tab',
+    sv: 'Mittklick på en flik',
     de: 'Mittelklick auf Tab',
     fr: 'Clic milieu sur un onglet',
     hu: 'Középső kattintás a lapon',
@@ -5717,6 +6261,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_middle_click_ctrl': {
     en: 'With Ctrl key pressed',
+    sv: 'Med Ctrl-tangenten nedtryckt',
     de: 'Mit gedrückter Strg-Taste',
     fr: 'Avec la touche Ctrl enfoncée',
     hu: 'Nyomva tartott Ctrl billentyűvel',
@@ -5728,6 +6273,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_middle_click_shift': {
     en: 'With Shift key pressed',
+    sv: 'Med Skift-tangenten nedtryckt',
     de: 'Mit gedrückter Umschalttaste',
     fr: 'Avec la touche Maj enfoncée',
     hu: 'Nyomva tartott Shift billentyűvel',
@@ -5739,6 +6285,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_pinned_middle_click': {
     en: 'If tab is pinned',
+    sv: 'Om fliken är fäst',
     de: 'Bei angehefteten Tabs',
     fr: 'Si l’onglet est épinglé',
     hu: 'Ha egy lap rögzítve van',
@@ -5750,6 +6297,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.multiple_middle_close': {
     en: 'Use multi-selection when closing tabs with middle-click',
+    sv: 'Tillåt markering av flera flikar vid stängning med mittklick',
     de: 'Mehrfachauswahl beim Schließen von Tabs per Mittelklick verwenden',
     fr: 'Utiliser la sélection multiple pour fermer plusieurs onglets avec le clic milieu',
     hu: 'A többes kijelölés figyelembe vétele a lapok középső gombos bezárásakor',
@@ -5761,6 +6309,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.multiple_middle_close_note': {
     en: 'Selected tabs will be closed on releasing the button',
+    sv: 'De markerade flikarna stängs när knappen släpps',
     de: 'Ausgewählte Tabs werden beim Loslassen der Taste geschlossen',
     fr: 'Les onglets sélectionnés seront fermés lors du relâchement du bouton',
     hu: 'A kijelölt lapok a gomb felengedésekor be lesznek zárva',
@@ -5772,6 +6321,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_close_middle_click': {
     en: 'Middle click on close tab button',
+    sv: 'Mittklick på flikens stängningsknapp',
     de: 'Mittelklick auf "Schließen"-Schaltfläche',
     fr: 'Clic milieu sur le bouton de fermeture d’onglet”',
     hu: 'Középső kattintás a lapbezáró gombon',
@@ -5783,6 +6333,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_reload': {
     en: 'reload',
+    sv: 'ladda om',
     de: 'Neu laden',
     fr: 'actualiser',
     hu: 'újratöltés',
@@ -5794,6 +6345,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_duplicate': {
     en: 'duplicate',
+    sv: 'duplicera',
     de: 'Duplizieren',
     fr: 'dupliquer',
     hu: 'megkettőzés',
@@ -5805,6 +6357,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_dup_child': {
     en: 'duplicate as a child',
+    sv: 'duplicera som underordnad flik',
     de: 'Als untergeordneten Tab duplizieren',
     fr: 'dupliquer en tant qu’enfant',
     hu: 'megkettőzés utódként',
@@ -5816,6 +6369,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_pin': {
     en: 'pin',
+    sv: 'fäst',
     de: 'Anheften',
     fr: 'épingler',
     hu: 'rögzítés',
@@ -5827,6 +6381,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_unpin': {
     en: 'unpin',
+    sv: 'lösgör',
     de: 'Lösen',
     fr: 'desépingler',
     hu: 'feloldás',
@@ -5838,6 +6393,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_mute': {
     en: 'mute',
+    sv: 'stäng av ljud',
     de: 'Stumm schalten',
     fr: 'couper le son',
     hu: 'némítás',
@@ -5849,6 +6405,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_clear_cookies': {
     en: 'clear cookies',
+    sv: 'rensa kakor',
     de: 'Cookies löschen',
     fr: 'supprimer les cookies',
     hu: 'sütik törlése',
@@ -5859,6 +6416,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_exp': {
     en: 'expand',
+    sv: 'fäll ut',
     de: 'Ausklappen',
     fr: 'étendre',
     hu: 'lenyitás',
@@ -5870,6 +6428,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_new_after': {
     en: 'new sibling tab',
+    sv: 'ny flik på samma nivå',
     de: 'Neuer Tab auf gleicher Ebene',
     fr: 'nouvel onglet voisin',
     hu: 'új testvérlap',
@@ -5881,6 +6440,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_new_child': {
     en: 'new child tab',
+    sv: 'ny underordnad flik',
     de: 'Neuer untergeordneter Tab',
     fr: 'nouvel onglet enfant',
     hu: 'új utódlap',
@@ -5892,6 +6452,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_close': {
     en: 'close tab',
+    sv: 'stäng fliken',
     de: 'Tab schließen',
     fr: 'fermer l’onglet',
     hu: 'bezárás',
@@ -5903,6 +6464,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_discard': {
     en: 'unload',
+    sv: 'frigör',
     de: 'Entladen',
     fr: 'décharger',
     hu: 'kisöprés',
@@ -5914,6 +6476,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_discard_or_close': {
     en: 'unload or close tab',
+    sv: 'frigör eller stäng fliken',
     de: 'Entladen oder Schließen des Tabs',
     fr: 'décharger ou fermer l’onglet',
     hu: 'lap kirakása vagy bezárása',
@@ -5925,6 +6488,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_edit_title': {
     en: 'edit title',
+    sv: 'redigera titel',
     de: 'Titel bearbeiten',
     fr: 'modifier le titre',
     hu: 'cím szerkesztése',
@@ -5936,6 +6500,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tab_action_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -5949,6 +6514,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Tabs panel actions
   'settings.tabs_panel_left_click_action': {
     en: 'Left click on tabs panel',
+    sv: 'Vänsterklick på en flikpanel',
     de: 'Linksklick auf Tab-Panel',
     fr: 'Clic gauche sur un panneau d’onglets',
     hu: 'Bal kattintás egy lappanelon',
@@ -5960,6 +6526,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_double_click_action': {
     en: 'Double click on tabs panel',
+    sv: 'Dubbelklick på en flikpanel',
     de: 'Doppelklick auf Tab-Panel',
     fr: 'Double clic sur un panneau d’onglets',
     hu: 'Dupla kattintás egy lappanelon',
@@ -5971,6 +6538,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_right_click_action': {
     en: 'Right click on tabs panel',
+    sv: 'Högerklick på en flikpanel',
     de: 'Rechtsklick auf Tab-Panel',
     fr: 'Clic droit sur un panneau d’onglets',
     hu: 'Jobb kattintás egy lappanelon',
@@ -5982,6 +6550,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_middle_click_action': {
     en: 'Middle click on tabs panel',
+    sv: 'Mittklick på en flikpanel',
     de: 'Mittelklick auf Tab-Panel',
     fr: 'Clic milieu sur un panneau d’onglets',
     hu: 'Középső kattintás egy lappanelon',
@@ -5993,6 +6562,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_prev': {
     en: 'previous panel',
+    sv: 'föregående panel',
     de: 'Vorheriges Panel',
     fr: 'panneau précédent',
     hu: 'előző panel',
@@ -6004,6 +6574,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_next': {
     en: 'next panel',
+    sv: 'nästa panel',
     de: 'Nächstes Panel',
     fr: 'panneau suivant',
     hu: 'következő panel',
@@ -6015,6 +6586,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_expand': {
     en: 'expand/fold',
+    sv: 'fäll ut/ihop',
     de: 'Ein-/Ausklappen',
     fr: 'déplier/replier',
     hu: 'nyitás/csukás',
@@ -6026,6 +6598,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_parent': {
     en: 'activate parent tab',
+    sv: 'aktivera överordnad flik',
     de: 'Übergeordneten Tab aktivieren',
     fr: 'activer l’onglet parent',
     hu: 'szülőlap aktiválása',
@@ -6037,6 +6610,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_tab': {
     en: 'create tab',
+    sv: 'skapa flik',
     de: 'Tab erstellen',
     fr: 'créer un onglet',
     hu: 'új lap',
@@ -6048,6 +6622,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_collapse': {
     en: 'collapse inactive branches',
+    sv: 'fäll ihop inaktiva grenar',
     de: 'Inaktive Zweige einklappen',
     fr: 'replier les branches inactives',
     hu: 'inaktív ágak becsukása',
@@ -6059,6 +6634,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_menu': {
     en: 'show menu',
+    sv: 'visa meny',
     de: 'Menü anzeigen',
     fr: 'afficher le menu',
     hu: 'menü megjelenítése',
@@ -6070,6 +6646,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_rm_act_tab': {
     en: 'close active tab',
+    sv: 'stäng aktiv flik',
     de: 'Aktiven Tab schließen',
     fr: 'fermer l’onglet actif',
     hu: 'aktív lap bezárása',
@@ -6081,6 +6658,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_undo': {
     en: 'undo tab close',
+    sv: 'ångra stängning av flik',
     de: '"Tab schließen" rückgängig machen',
     fr: 'rouvrir l’onglet fermé',
     hu: 'lapbezárás visszavonása',
@@ -6092,6 +6670,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.tabs_panel_action_none': {
     en: 'none',
+    sv: 'ingen',
     de: 'Nichts',
     fr: 'rien',
     hu: 'semmi',
@@ -6105,6 +6684,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // New Tab button actions
   'settings.mouse.new_tab_middle_click_action': {
     en: 'Middle click on New Tab button',
+    sv: 'Mittklick på knappen Ny flik',
     de: 'Mittelklick auf "Neuer Tab"-Schaltfläche',
     fr: 'Clic milieu sur le bouton “Nouvel onglet”',
     hu: 'Középső kattintás az „Új lap” gombon',
@@ -6116,6 +6696,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.new_tab_action_new_child': {
     en: 'open new child tab',
+    sv: 'öppna ny underordnad flik',
     de: 'Neuen untergeordneten Tab erstellen',
     fr: 'ouvrir un nouvel onglet enfant',
     hu: 'új utódlap',
@@ -6127,6 +6708,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.new_tab_action_reopen': {
     en: 'apply container or URL',
+    sv: 'tillämpa behållare eller URL',
     de: 'Umgebung oder URL anwenden',
     fr: 'appliquer le conteneur ou l’URL',
     hu: 'konténer vagy URL alkalmazása',
@@ -6140,6 +6722,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Bookmark actions
   'settings.mouse.bookmarks.left_click_action': {
     en: 'Left-click on the bookmark',
+    sv: 'Vänsterklick på bokmärket',
     de: 'Linksklick auf Lesezeichen',
     fr: 'Clic gauche sur un marque-page',
     hu: 'Bal kattintás egy könyvjelzőn',
@@ -6151,6 +6734,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.mid_click_action': {
     en: 'Middle-click on the bookmark',
+    sv: 'Mittklick på bokmärket',
     de: 'Mittelklick auf Lesezeichen',
     fr: 'Clic milieu sur un marque-page',
     hu: 'Középső kattintás egy könyvjelzőn',
@@ -6162,6 +6746,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.mid_click_action_open_in_new': {
     en: 'open in new tab',
+    sv: 'öppna i ny flik',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
@@ -6173,6 +6758,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.mid_click_action_edit': {
     en: 'edit',
+    sv: 'redigera',
     de: 'Ändern',
     fr: 'modifier',
     hu: 'szerkesztés',
@@ -6184,6 +6770,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.mid_click_action_delete': {
     en: 'delete',
+    sv: 'ta bort',
     de: 'Löschen',
     fr: 'supprimer',
     hu: 'törlés',
@@ -6195,6 +6782,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bookmarks.new_tab_rm': {
     en: 'Remove clicked bookmark',
+    sv: 'Ta bort det klickade bokmärket',
     de: 'Angeklicktes Lesezeichen entfernen',
     fr: 'Supprimer le marque-page cliqué',
     hu: 'Az érintett könyvjelző törlése',
@@ -6208,6 +6796,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // History items actions
   'settings.mouse.history.left_click_action': {
     en: 'Left-click on the history item',
+    sv: 'Vänsterklick på historikposten',
     de: 'Linksklick auf Chronik-Eintrag',
     fr: 'Clic gauche sur une entrée de l’historique',
     hu: 'Bal kattintás egy előzményen',
@@ -6219,6 +6808,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.history.mid_click_action': {
     en: 'Middle-click on the history item',
+    sv: 'Mittklick på historikposten',
     de: 'Mittelklick auf Chronik-Eintrag',
     fr: 'Clic milieu sur une entrée de l’historique',
     hu: 'Középső kattintás egy előzményen',
@@ -6230,6 +6820,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.history.mid_click_action_open_in_new': {
     en: 'open in new tab',
+    sv: 'öppna i ny flik',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
@@ -6241,6 +6832,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.history.mid_click_action_forget_visit': {
     en: 'forget visit',
+    sv: 'glöm besöket',
     de: 'Besuch vergessen',
     fr: 'oublier la visite',
     hu: 'a megtekintés törlése',
@@ -6254,6 +6846,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // Bookmark and History item actions
   'settings.mouse.bh.left_click_action_open_in_act': {
     en: 'open in active tab',
+    sv: 'öppna i aktiv flik',
     de: 'Im aktiven Tab öffnen',
     fr: 'ouvrir dans l’onglet actif',
     hu: 'megnyitás az aktív lapon',
@@ -6265,6 +6858,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.left_click_action_open_in_new': {
     en: 'open in new tab',
+    sv: 'öppna i ny flik',
     de: 'In neuem Tab öffnen',
     fr: 'ouvrir dans un nouvel onglet',
     hu: 'megnyitás új lapon',
@@ -6276,6 +6870,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.new_tab_activate': {
     en: 'Activate the new tab',
+    sv: 'Aktivera den nya fliken',
     de: 'Neuen Tab aktivieren',
     fr: 'Activer le nouvel onglet',
     hu: 'Az új lap aktiválása',
@@ -6287,6 +6882,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.new_tab_pos': {
     en: 'Position of the new tab',
+    sv: 'Den nya flikens placering',
     de: 'Position des neuen Tabs',
     fr: 'Position du nouvel onglet',
     hu: 'Az új lap elhelyezése',
@@ -6298,6 +6894,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.new_tab_pos_default': {
     en: 'default',
+    sv: 'standard',
     de: 'Standard',
     fr: 'par défaut',
     hu: 'alapértelmezett',
@@ -6309,6 +6906,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.mouse.bh.new_tab_pos_after': {
     en: 'after active tab',
+    sv: 'efter aktiv flik',
     de: 'Nach aktivem Tab',
     fr: 'après l’onglet actif',
     hu: 'az aktív lap után',
@@ -6322,6 +6920,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Snapshots
   'settings.snapshots_title': {
     en: 'Snapshots',
+    sv: 'Ögonblicksbilder',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
     hu: 'Pillanatképek',
@@ -6332,6 +6931,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_notify': {
     en: 'Show notification after snapshot creation',
+    sv: 'Visa en avisering när en ögonblicksbild har skapats',
     de: 'Benachrichtigung nach dem Erstellen eines Schnappschusses anzeigen',
     fr: 'Afficher une notification après la création d’un instantané',
     hu: 'Értesítés a pillanatképek elkészültéről',
@@ -6343,6 +6943,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_exclude_private': {
     en: 'Exclude private windows',
+    sv: 'Uteslut privata fönster',
     de: 'Private Fenster ausschließen',
     fr: 'Ignorer les fenêtres de navigation privée',
     hu: 'A privát ablakok kihagyása',
@@ -6354,6 +6955,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_interval': {
     en: 'Auto-snapshots interval',
+    sv: 'Intervall för automatiska ögonblicksbilder',
     de: 'Intervall automatischer Schnappschüsse',
     fr: 'Intervalle entre les instantanés automatiques',
     hu: 'Automatikus pillanatképek időköze',
@@ -6365,6 +6967,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_interval_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
+    sv: n => (n === 1 ? 'minut' : 'minuter'),
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
     fr: n => (n === 0 || n === 1 ? 'minute' : 'minutes'),
     hu: 'perc',
@@ -6383,6 +6986,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_interval_hr': {
     en: n => (n === 1 ? 'hour' : 'hours'),
+    sv: n => (n === 1 ? 'timme' : 'timmar'),
     de: n => (n === 1 ? 'Stunde' : 'Stunden'),
     fr: n => (n === 0 || n === 1 ? 'heure' : 'heures'),
     hu: 'óra',
@@ -6402,6 +7006,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_interval_day': {
     en: n => (n === 1 ? 'day' : 'days'),
+    sv: n => (n === 1 ? 'dag' : 'dagar'),
     de: n => (n === 1 ? 'Tag' : 'Tage'),
     fr: n => (n === 0 || n === 1 ? 'jour' : 'jours'),
     hu: 'nap',
@@ -6416,6 +7021,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_export_md_tree': {
     en: 'Full-tree structure in Markdown',
+    sv: 'Fullständig trädstruktur i Markdown',
     de: 'Vollständige Baumstruktur im Markdown',
     fr: 'Structure de l’arborescence complète en Markdown',
     hu: 'Teljes fastruktúra a Markdown jelölőnyelvben',
@@ -6427,6 +7033,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_export_md_tree_note': {
     en: 'Add additional indents and bullets to window and panel items.',
+    sv: 'Lägg till extra indrag och listpunkter för fönster och paneler.',
     de: 'Fügt Fenster- und Panel-Elementen zusätzliche Einrückungen und Aufzählungszeichen hinzu.',
     fr: 'Ajoute des indenttions et puces supplémentaires pour les entrées des fenêtres et panneaux',
     hu: 'További behúzások és felsorolásjelek hozzáadása az ablak- és panelelemekhez.',
@@ -6438,6 +7045,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_auto_export': {
     en: 'Auto export (on every snapshot)',
+    sv: 'Exportera automatiskt (vid varje ögonblicksbild)',
     de: 'Automatischer Export (bei jedem Schnappschuss)',
     fr: 'Export automatique (pour chaque instantané)',
     hu: 'Automatikus exportálás (minden pillanatképről)',
@@ -6449,6 +7057,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_auto_export_type': {
     en: 'Auto export format(s)',
+    sv: 'Format för automatisk export',
     de: 'Dateiformat(e) der automatischen Exporte',
     fr: 'Format(s) des exports automatiques',
     hu: 'Az automatikus exportálás formátuma(i)',
@@ -6460,14 +7069,17 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_auto_export_type_json': {
     en: 'json',
+    sv: 'json',
     ru: 'json',
   },
   'settings.snap_auto_export_type_md': {
     en: 'md',
+    sv: 'md',
     ru: 'md',
   },
   'settings.snap_auto_export_type_both': {
     en: 'both',
+    sv: 'båda',
     de: 'beide',
     fr: 'les deux',
     hu: 'mindkettő',
@@ -6479,6 +7091,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_export_path': {
     en: 'Path with file name',
+    sv: 'Sökväg med filnamn',
     de: 'Pfad mit Dateinamen',
     fr: 'Chemin avec le nom du fichier',
     hu: 'Elérési út és fájlnév',
@@ -6493,11 +7106,13 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // the default saved snapshot file name is always the same.
   'settings.snap_export_path_ph': {
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
+    sv: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_export_path_note': {
     en: `Note: Path is relative to the downloads folder and Firefox doesn't allow to set path outside it.
 %Y - year; %M - month; %D - day; %h - hour; %m - minute; %s - second`,
+    sv: 'Obs! Sökvägen är relativ till hämtningsmappen. Firefox tillåter inte en sökväg utanför den.\n%Y - år; %M - månad; %D - dag; %h - timme; %m - minut; %s - sekund',
     de: `Hinweis: Der Pfad ist relativ zum Download-Ordner. Firefox gestattet es jedoch nicht, ihn außerhalb dessen zu setzen.
 %Y - Jahr; %M - Monat; %D - Tag; %h - Stunde; %m - Minute; %s - Sekunde`,
     fr: `Note: le chemin est relatif au dossier de téléchargement, Firefox ne permet pas de définir un chemin hors de ce dossier.
@@ -6517,6 +7132,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit': {
     en: 'Snapshots limit',
+    sv: 'Gräns för ögonblicksbilder',
     de: 'Obergrenze für Schnappschüsse',
     fr: 'Limite du nombre d’instantanés',
     hu: 'Pillanatképek korlátja',
@@ -6527,6 +7143,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit_snap': {
     en: n => (n === 1 ? 'snapshot' : 'snapshots'),
+    sv: n => (n === 1 ? 'ögonblicksbild' : 'ögonblicksbilder'),
     de: n => (n === 1 ? 'Schnappschuss' : 'Schnappschüsse'),
     fr: n => (n === 0 || n === 1 ? 'instantané' : 'instantanés'),
     hu: 'pillanatkép',
@@ -6545,6 +7162,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit_kb': {
     en: n => (n === 1 ? 'kbyte' : 'kbytes'),
+    sv: n => 'kilobyte',
     de: 'KB',
     fr: 'Ko',
     hu: 'kbyte',
@@ -6562,6 +7180,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit_day': {
     en: n => (n === 1 ? 'day' : 'days'),
+    sv: n => (n === 1 ? 'dag' : 'dagar'),
     de: n => (n === 1 ? 'Tag' : 'Tage'),
     fr: n => (n === 0 || n === 1 ? 'jour' : 'jours'),
     hu: 'nap',
@@ -6579,6 +7198,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snap_limit_note': {
     en: "Doesn't apply to auto-exported snapshots",
+    sv: 'Gäller inte automatiskt exporterade ögonblicksbilder',
     de: 'Gilt nicht für automatisch exportierte Schnappschüsse',
     fr: 'Ne s’applique pas aux instantanés exportés automatiquement',
     hu: 'Az automatikus pillanatképekre nem érvényes',
@@ -6590,6 +7210,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.snapshots_view_label': {
     en: 'View snapshots',
+    sv: 'Visa ögonblicksbilder',
     de: 'Schnappschüsse ansehen',
     fr: 'Voir les instantanés',
     hu: 'Pillanatképek megtekintése',
@@ -6601,6 +7222,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.make_snapshot': {
     en: 'Create snapshot',
+    sv: 'Skapa ögonblicksbild',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
@@ -6614,6 +7236,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Sync
   'settings.sync_title': {
     en: 'Sync',
+    sv: 'Synkronisering',
     de: 'Synchronisation',
     fr: 'Synchronisation',
     hu: 'Szinkronizálás',
@@ -6624,6 +7247,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_name': {
     en: 'Profile name for sync',
+    sv: 'Profilnamn för synkronisering',
     de: 'Profilname für Synchronisation',
     fr: 'Nom du profil de synchronisation',
     hu: 'Profilnév a szinkronizáláshoz',
@@ -6635,6 +7259,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_name_or': {
     en: 'e.g: Firefox Beta Home',
+    sv: 't.ex. Firefox Beta hemma',
     de: 'z. B. Firefox Beta Home',
     fr: 'ex. Firefox Beta maison',
     hu: 'pl.: Firefox Beta otthoni',
@@ -6645,6 +7270,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_use_ff': {
     en: 'Use Firefox Sync',
+    sv: 'Använd Firefox Sync',
     de: 'Firefox Sync verwenden',
     fr: 'Utiliser Firefox Sync',
     hu: 'Használja a Firefox Sync alkalmazást',
@@ -6657,6 +7283,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     en: `Notes:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
+    sv: 'Observera:\n- Du måste logga in på ditt Firefox-konto för att det ska fungera\n- För att säkerställa att data överförs till Firefox synkroniseringsserver måste du trycka på knappen ”Synkronisera nu” i Firefox inställningar eller i din profil i huvudmenyn (knappen med tre streck)',
     de: `Hinweise:
 - Sie müssen sich bei Ihrem Firefox-Konto anmelden, damit es funktioniert.
 - Um sicherzustellen, dass die Daten auf den Firefox-Synchronisierungsserver hochgeladen werden, müssen Sie in den Firefox-Einstellungen oder in Ihrem Profil im Hauptmenü (die Schaltfläche mit den drei Strichen) auf die Schaltfläche „Jetzt synchronisieren“ klicken.`,
@@ -6687,6 +7314,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_use_gd': {
     en: 'Use Google Drive (experimental)',
+    sv: 'Använd Google Drive (experimentellt)',
     de: 'Google Drive verwenden (experimentell)',
     fr: 'Utiliser Google Drive (expérimental)',
     hu: 'Használja a Google Drive-ot (kísérleti)',
@@ -6700,6 +7328,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     en: `Notes:
 - Sidebery doesn't have access to your files on Google Drive
 - Sidebery files are stored in JSON, so Google can read their contents (encryption is planned)`,
+    sv: 'Observera:\n- Sidebery har inte tillgång till dina filer på Google Drive\n- Sideberys filer lagras som JSON, så Google kan läsa innehållet (kryptering är planerad)',
     de: `Hinweise:
 - Sidebery hat keinen Zugriff auf Ihre Dateien auf Google Drive
 - Sidebery-Dateien werden in JSON gespeichert, sodass Google deren Inhalte lesen kann (Verschlüsselung ist geplant)`,
@@ -6724,6 +7353,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api': {
     en: 'Use your own API key',
+    sv: 'Använd en egen API-nyckel',
     de: 'Eigenen API-Schlüssel verwenden',
     fr: 'Utiliser votre propre clé d’API',
     hu: 'Használja saját API-kulcsát',
@@ -6735,6 +7365,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_note': {
     en: 'For advanced users. In case default key gets blocked due to exceeding the limits.',
+    sv: 'För avancerade användare. Om standardnyckeln blockeras för att gränserna överskridits.',
     de: 'Für fortgeschrittene Benutzer. Falls der Standardschlüssel aufgrund Überschreitung der Grenzwerte gesperrt wird.',
     fr: 'Paramètre avancé, dans le cas où la clé par défaut se fasse bloquer pour cause de dépassement des limites.',
     hu: 'Haladó felhasználóknak. Abban az esetben, ha az alapértelmezett kulcs a korlátok túllépése miatt blokkolva lesz.',
@@ -6746,6 +7377,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_link': {
     en: 'Link',
+    sv: 'Länk',
     de: 'Link',
     fr: 'Lien',
     ru: 'Ссылка',
@@ -6754,6 +7386,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_proj': {
     en: '1. Create a Google Cloud project:',
+    sv: '1. Skapa ett Google Cloud-projekt:',
     de: '1. Google-Cloud-Projekt erstellen:',
     fr: '1. Créer un project Google Cloud:',
     ru: '1. Создайте проект Google Cloud:',
@@ -6762,6 +7395,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_proj_sub': {
     en: '- Audience: External',
+    sv: '- Målgrupp (Audience): extern (External)',
     de: '- Zielgruppe: Extern',
     fr: '– Audience: Externe',
     ru: '- Целевая аудитория: Внешняя (External)',
@@ -6770,6 +7404,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_drive': {
     en: '2. Enable Drive API:',
+    sv: '2. Aktivera Drive API:',
     de: '2. Drive API aktivieren:',
     fr: '2. Activer l’API Drive:',
     ru: '2. Включите Google Drive API:',
@@ -6778,6 +7413,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_cli': {
     en: '3. Create a Client:',
+    sv: '3. Skapa en klient:',
     de: '3. Client erstellen:',
     fr: '3. Créer un Client:',
     ru: '3. Создайте учетные данные (Client ID):',
@@ -6787,6 +7423,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   'settings.sync_gd_api_cli_sub': {
     en: `- Type: Web application
 - Authorized redirect URIs:`,
+    sv: '- Typ: webbapp (Web application)\n- Auktoriserade omdirigerings-URI:er (Authorized redirect URIs):',
     de: `- Typ: Webanwendung
 - Autorisierte Weiterleitungs-URIs:`,
     fr: `– Type: Application Web
@@ -6800,6 +7437,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_id': {
     en: '4. Open created client and get the Client ID:',
+    sv: '4. Öppna den skapade klienten och hämta dess klient-ID:',
     de: '4. Erstellten Client öffnen und die Client-ID kopieren:',
     fr: '4. Ouvrir le client créé et récupérer l’ID Client:',
     ru: '4. Откройте созданный клиент и скопируйте Идентификатор клиента (Client ID):',
@@ -6808,6 +7446,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_ins': {
     en: '5. Insert that Client ID here:',
+    sv: '5. Klistra in klient-ID:t här:',
     de: '5. Diese Client-ID hier einfügen:',
     fr: '5. Insérer cet ID Client ici:',
     ru: '5. Вставьте этот Идентификатор клиента сюда:',
@@ -6816,6 +7455,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_scope': {
     en: '6. Add the following scopes in the Data Access section:',
+    sv: '6. Lägg till följande behörigheter i avsnittet Data Access:',
     de: '6. Im Abschnitt "Datenzugriff" folgende Bereiche hinzufügen:',
     fr: '6. Ajouter les portées dans la section “Accès aux données”:',
     ru: '6. Добавьте следующие области доступа в разделе "Доступ к данным":',
@@ -6824,6 +7464,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_usr': {
     en: '7. Add a test user (your email):',
+    sv: '7. Lägg till en testanvändare (din e-postadress):',
     de: '7. Testnutzer hinzufügen (Ihre E-Mail-Adresse):',
     fr: '7. Ajouter un compte de test (votre adresse email):',
     ru: '7. Добавьте тестового пользователя (ваш email):',
@@ -6832,6 +7473,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_reload': {
     en: '8. Disconnect Sidebery from your Google Drive:',
+    sv: '8. Koppla bort Sidebery från ditt Google Drive-konto:',
     de: '8. Sidebery von Ihrem Google Drive trennen:',
     fr: '8. Déconnecter Sidebery de votre Google Drive:',
     ru: '8. Отключите Sidebery от вашего Google Диска:',
@@ -6840,6 +7482,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_reload_sub': {
     en: '(if you used the default API key)',
+    sv: '(om du använde standardnyckeln)',
     de: '(falls Sie den Standard-API-Schlüssel verwendet haben)',
     fr: '(si vous utilisiez la clé d’API par défaut)',
     ru: '(если вы использовали ключ API по умолчанию)',
@@ -6848,6 +7491,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_gd_api_done': {
     en: '9. Done. On the next request to Google Drive you will see a consent screen.',
+    sv: '9. Klart. Nästa gång Sidebery ansluter till Google Drive visas en samtyckesskärm.',
     de: '9. Fertig. Bei der nächsten Anfrage an Google Drive erscheint ein Zustimmungsbildschirm.',
     fr: '9. Terminé. Lors de la prochaine requête à Google Drive, un écran de consentement apparaitra.',
     ru: '9. Готово. При следующем запросе к Google Диску вы увидите экран согласия.',
@@ -6856,6 +7500,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_save_settings': {
     en: 'Save settings to sync storage',
+    sv: 'Spara inställningar i synkroniseringsutrymmet',
     de: 'Einstellungen im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les paramètres dans l’espace de stockage synchronisé',
     hu: 'A beállítások szinkronizálása',
@@ -6867,6 +7512,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_save_ctx_menu': {
     en: 'Save context menu to sync storage',
+    sv: 'Spara snabbmenyn i synkroniseringsutrymmet',
     de: 'Kontextmenü im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder le menu contextuel dans l’espace de stockage synchronisé',
     hu: 'A környezeti menü szinkronizálása',
@@ -6878,6 +7524,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_save_styles': {
     en: 'Save styles to sync storage',
+    sv: 'Spara stilar i synkroniseringsutrymmet',
     de: 'Stile im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les styles dans l’espace de stockage synchronisé',
     hu: 'A stílusok szinkronizálása',
@@ -6889,6 +7536,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_save_kb': {
     en: 'Save keybindings to sync storage',
+    sv: 'Spara kortkommandon i synkroniseringsutrymmet',
     de: 'Tastenbelegung im Synchronisationsspeicher sichern',
     fr: 'Sauvegarder les raccourcis clavier dans l’espace de stockage synchronisé',
     hu: 'A billentyűparancsok szinkronizálása',
@@ -6900,6 +7548,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_view_btn': {
     en: 'View synced data',
+    sv: 'Visa synkroniserade data',
     de: 'Synchronisierte Daten anzeigen',
     fr: 'Voir les données synchronisées',
     ru: 'Просмотреть синхронизированные данные',
@@ -6908,6 +7557,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_settings_title': {
     en: 'Settings',
+    sv: 'Inställningar',
     de: 'Einstellungen',
     fr: 'Paramètres',
     hu: 'Beállítások',
@@ -6919,6 +7569,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_ctx_menu_title': {
     en: 'Context menu',
+    sv: 'Snabbmeny',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     hu: 'Környezeti menü',
@@ -6930,6 +7581,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_styles_title': {
     en: 'Styles',
+    sv: 'Stilar',
     de: 'Stile',
     fr: 'Styles',
     hu: 'Stílusok',
@@ -6941,6 +7593,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_kb_title': {
     en: 'Keybindings',
+    sv: 'Kortkommandon',
     de: 'Tastenbelegung',
     fr: 'Raccourcis clavier',
     hu: 'Billentyűparancsok',
@@ -6952,6 +7605,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_apply_btn': {
     en: 'Apply',
+    sv: 'Tillämpa',
     de: 'Anwenden',
     fr: 'Appliquer',
     hu: 'Alkalmaz',
@@ -6963,6 +7617,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_delete_btn': {
     en: 'Delete',
+    sv: 'Ta bort',
     de: 'Löschen',
     fr: 'Supprimer',
     hu: 'Törlés',
@@ -6974,6 +7629,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_apply_confirm': {
     en: 'Are you sure you want to apply synced data?',
+    sv: 'Vill du verkligen tillämpa synkroniserade data?',
     de: 'Möchten Sie die synchronisierten Daten wirklich anwenden?',
     fr: 'Voulez-vous vraiment appliquer les données synchronisées?',
     hu: 'Biztosan alkalmazhatók szinkronizált adatok?',
@@ -6985,6 +7641,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync.apply_err': {
     en: 'Cannot apply synchronized data',
+    sv: 'Det går inte att tillämpa synkroniserade data',
     de: 'Kann synchronisierte Daten nicht anwenden',
     fr: 'Impossible d’appliquer les données synchronisées',
     hu: 'A szinkronizált adatok alkalmazása nem sikerült',
@@ -6996,6 +7653,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_notes_title': {
     en: 'Notes:',
+    sv: 'Observera:',
     de: 'Hinweis:',
     fr: 'Notes:',
     hu: 'Megjegyzés:',
@@ -7009,6 +7667,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     en: `Sidebery uses Firefox syncronization so:
 - You need to login to Firefox account to get it working
 - To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
+    sv: 'Sidebery använder Firefox synkronisering, vilket innebär att:\n- Du måste logga in på ditt Firefox-konto för att det ska fungera\n- För att säkerställa att data överförs till Firefox synkroniseringsserver måste du trycka på knappen ”Synkronisera nu” i Firefox inställningar eller i din profil i huvudmenyn (knappen med tre streck)',
     de: `Sidebery nutzt die Synchronisation von Firefox, deshalb:
 - müssen Sie sich bei Ihrem Firefox-Konto anmelden, damit es funktioniert
 - um sicherzugehen, dass die Daten auf die Firefox-Synchronisationsserver hochgeladen werden, müssen Sie in den Firefox-Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken`,
@@ -7037,6 +7696,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.sync_update_btn': {
     en: 'Update synced data',
+    sv: 'Uppdatera synkroniserade data',
     de: 'Synchronisierte Daten aktualisieren',
     fr: 'Mettre à jour les données synchronisées',
     hu: 'A szinkronizált adatok frissítése',
@@ -7050,6 +7710,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Help
   'settings.help_title': {
     en: 'Help',
+    sv: 'Hjälp',
     de: 'Hilfe',
     fr: 'Aide',
     hu: 'Segítség',
@@ -7061,6 +7722,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.help_exp_data': {
     en: 'Export addon data',
+    sv: 'Exportera tilläggsdata',
     de: 'Add-on-Daten exportieren',
     fr: 'Exporter les données de l’extension',
     hu: 'Adatok exportálása',
@@ -7072,6 +7734,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.help_imp_data': {
     en: 'Import addon data',
+    sv: 'Importera tilläggsdata',
     de: 'Add-on-Daten importieren',
     fr: 'Importer les données de l’extension',
     hu: 'Adatok importálása',
@@ -7083,6 +7746,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.help_imp_perm': {
     en: 'Additional permissions are required',
+    sv: 'Ytterligare behörigheter krävs',
     de: 'Zusätzliche Berechtigungen werden benötigt',
     fr: 'Des permissions supplémentaires sont requises',
     hu: 'További engedélyekre van szükség',
@@ -7094,6 +7758,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.debug_info': {
     en: 'Show debug info',
+    sv: 'Visa felsökningsinformation',
     de: 'Debug-Informationen anzeigen',
     fr: 'Voir les informations de débuggage',
     hu: 'Hibakeresési információk',
@@ -7105,6 +7770,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.copy_devtools_url': {
     en: 'Copy devtools URL',
+    sv: 'Kopiera URL till utvecklarverktygen',
     de: 'Devtools-URL kopieren',
     fr: 'Copier l’URL des outils de développement',
     hu: 'Devtools URL másolása',
@@ -7116,6 +7782,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.repo_bug': {
     en: 'Report a bug',
+    sv: 'Rapportera ett fel',
     de: 'Einen Fehler melden',
     fr: 'Signaler un bug',
     hu: 'Hibajelentés',
@@ -7127,6 +7794,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.repo_feature': {
     en: 'Suggest a feature',
+    sv: 'Föreslå en funktion',
     de: 'Eine Verbesserung vorschlagen',
     fr: 'Suggérer une fonctionnalité',
     hu: 'Új funkció javaslata',
@@ -7138,6 +7806,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.reload_addon': {
     en: 'Reload add-on',
+    sv: 'Ladda om tillägget',
     de: 'Add-on neu laden',
     fr: 'Actualiser l’extension',
     hu: 'Kiegészítő újratöltése',
@@ -7149,6 +7818,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.reset_settings': {
     en: 'Reset settings',
+    sv: 'Återställ inställningar',
     de: 'Einstellungen zurücksetzen',
     fr: 'Réinitialiser les paramètres',
     hu: 'Beállítások alaphelyzetbe',
@@ -7160,6 +7830,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.reset_confirm': {
     en: 'Are you sure you want to reset settings?',
+    sv: 'Vill du verkligen återställa inställningarna?',
     de: 'Sind Sie sicher, dass Sie Ihre Einstellungen zurücksetzen möchten?',
     fr: 'Voulez-vous vraiment réinitialiser les paramètres?',
     hu: 'Biztosan alaphelyzetbe állíthatók a beállítások?',
@@ -7171,6 +7842,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.export_title': {
     en: 'Select what to export',
+    sv: 'Välj vad som ska exporteras',
     de: 'Daten zum Export auswählen',
     fr: 'Sélectionner les données à exporter',
     hu: 'Az exportálandó adatok kiválasztása',
@@ -7182,6 +7854,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.import_title': {
     en: 'Select what to import',
+    sv: 'Välj vad som ska importeras',
     de: 'Daten zum Import auswählen',
     fr: 'Sélectionner les données à importer',
     hu: 'Az importálandó adatok kiválasztása',
@@ -7193,6 +7866,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_all': {
     en: 'All',
+    sv: 'Alla',
     de: 'Alles',
     fr: 'Tout',
     hu: 'Minden',
@@ -7203,6 +7877,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_settings': {
     en: 'Settings',
+    sv: 'Inställningar',
     de: 'Einstellungen',
     fr: 'Paramètres',
     hu: 'Beállítások',
@@ -7214,6 +7889,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_menu': {
     en: 'Context menu',
+    sv: 'Snabbmeny',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     hu: 'Környezeti menü',
@@ -7225,6 +7901,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_containers': {
     en: 'Containers config',
+    sv: 'Behållarinställningar',
     de: 'Einstellungen für Umgebungen',
     fr: 'Configuration des conteneurs',
     hu: 'Konténerek beállításai',
@@ -7236,6 +7913,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_nav': {
     en: 'Panels and navigation bar',
+    sv: 'Paneler och navigeringsfält',
     de: 'Panels und Navigationsleiste',
     fr: 'Panneaux et barre de navigation',
     hu: 'Panelek és navigációs sáv',
@@ -7247,6 +7925,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_styles': {
     en: 'Styles',
+    sv: 'Stilar',
     de: 'Stile',
     fr: 'Styles',
     hu: 'Stílusok',
@@ -7258,6 +7937,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_snapshots': {
     en: 'Snapshots',
+    sv: 'Ögonblicksbilder',
     de: 'Schnappschüsse',
     fr: 'Instantanés',
     hu: 'Pillanatképek',
@@ -7268,6 +7948,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_favicons': {
     en: 'Sites icons cache',
+    sv: 'Cache för webbplatsikoner',
     de: 'Favicon-Zwischenspeicher',
     fr: 'Favicons en cache',
     hu: 'Webhelyikonok',
@@ -7279,6 +7960,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_kb': {
     en: 'Keybindings',
+    sv: 'Kortkommandon',
     de: 'Tastenbelegung',
     fr: 'Raccourcis claviers',
     hu: 'Billentyűparancsok',
@@ -7290,6 +7972,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.backup_parse_err': {
     en: 'Wrong format of imported data',
+    sv: 'De importerade uppgifterna har fel format',
     de: 'Falsches Format der importierten Daten',
     fr: 'Format d’importation de données incorrect',
     hu: 'Az importált adatok formátuma hibás',
@@ -7303,6 +7986,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // - Keybindings
   'settings.kb_input': {
     en: 'Press new shortcut',
+    sv: 'Tryck på det nya kortkommandot',
     de: 'Neues Tastenkürzel drücken',
     fr: 'Saisissez le nouveau raccourci',
     hu: 'Most le kell nyomni az új billentyűparancsot',
@@ -7314,6 +7998,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_err_duplicate': {
     en: 'Already exists',
+    sv: 'Finns redan',
     de: 'Existiert bereits',
     fr: 'Déjà affecté',
     hu: 'A billentyűparancs már foglalt',
@@ -7325,6 +8010,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_err_invalid': {
     en: 'Invalid shortcut',
+    sv: 'Ogiltigt kortkommando',
     de: 'Ungültiges Tastenkürzel',
     fr: 'Raccourci invalide',
     hu: 'Érvénytelen billentyűparancs',
@@ -7336,6 +8022,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_override_popup_title': {
     en: 'Keybinding is already in use.\nOverride?',
+    sv: 'Kortkommandot används redan.\nVill du ersätta det?',
     de: 'Tastenkürzel wird bereits verwendet.\nÜberschreiben?',
     fr: 'Le raccourci est déjà affecté.\nRemplacer?',
     hu: 'A billentyűparancs már foglalt.\nFelülírható?',
@@ -7347,6 +8034,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_override_popup_note_shortcut': {
     en: shortcut => `Shortcut: "${shortcut}"`,
+    sv: shortcut => `Kortkommando: "${shortcut}"`,
     de: shortcut => `Tastenkürzel: "${shortcut}"`,
     fr: shortcut => `Raccourci: ${shortcut}`,
     hu: shortcut => `Billentyűparancs: „${shortcut}”`,
@@ -7358,6 +8046,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_override_popup_note_used': {
     en: usedIn => `Used in: "${usedIn}"`,
+    sv: usedIn => `Används i: "${usedIn}"`,
     de: usedIn => `Verwendet in: "${usedIn}"`,
     fr: usedIn => `Utilisé pour: ${usedIn}`,
     hu: usedIn => `Jelenlegi parancs: „${usedIn}”`,
@@ -7369,6 +8058,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_general': {
     en: 'General',
+    sv: 'Allmänt',
     de: 'Allgemein',
     fr: 'Général',
     hu: 'Általános',
@@ -7384,6 +8074,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - Fold/unfold an active tab branch or a selected bookmarks folder
 - Activate selected context-menu option
 - Activate selected panel`,
+    sv: '- Aktivera markerad flik\n- Öppna markerat bokmärke\n- Fäll ihop/ut den aktiva flikgrenen eller en markerad bokmärkesmapp\n- Aktivera markerat alternativ i snabbmenyn\n- Aktivera markerad panel',
     de: `- Ausgewählten Tab aktivieren
 - Ausgewähltes Lesezeichen öffnen
 - Aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein-/ausklappen
@@ -7430,6 +8121,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
 - Reset selection
 - Exit from search mode
 - Close sub-panel and popups`,
+    sv: '- Stäng Sideberys egen snabbmeny\n- Avmarkera\n- Avsluta sökläget\n- Stäng underpanelen och popupfönster',
     de: `- Nicht natives Kontextmenü schließen
 - Auswahl zurücksetzen
 - Suchmodus beenden
@@ -7465,6 +8157,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_menu_note': {
     en: "Note: A non-native menu will open, since it's not possible to open the native menu programmatically.",
+    sv: 'Obs! Sideberys egen meny öppnas, eftersom Firefox inbyggda meny inte kan öppnas programmatiskt.',
     de: 'Hinweis: Es wird ein nicht-natives Menü geöffnet, da es nicht möglich ist, das native Menü programmgesteuert zu öffnen.',
     fr: 'Note: Cela ouvrira un menu non natif, vu qu’il n’est pas possible d’ouvrir le menu natif de manière programmatique',
     hu: 'Megjegyzés: Ténylegesen nem a natív menü fog megnyílni, mert nincs lehetőség a natív menü programozott megnyitására.',
@@ -7476,6 +8169,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_switching_panel': {
     en: 'Switching between panels',
+    sv: 'Växla mellan paneler',
     de: 'Zwischen Panels wechseln',
     fr: 'Basculement entre panneaux',
     hu: 'Panelek közötti váltás',
@@ -7487,6 +8181,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_loop_panels': {
     en: 'Loop through panels',
+    sv: 'Växla cykliskt mellan paneler',
     de: 'Durch die Panels schalten',
     fr: 'Boucle à travers les panneaux',
     hu: 'Panelek áttekintése',
@@ -7498,6 +8193,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_switching_panel.ignore_hidden': {
     en: 'Ignore hidden panels',
+    sv: 'Hoppa över dolda paneler',
     de: 'Ausgeblendete Panels ignorieren',
     fr: 'Ignorer les panneaux masqués',
     hu: 'Rejtett panelek figyelmen kívül hagyása',
@@ -7509,6 +8205,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_scroll_active_panel': {
     en: 'Scrolling the active panel',
+    sv: 'Rulla i den aktiva panelen',
     de: 'Scrollen des aktiven Panels',
     fr: 'Scroller dans le panneau actif',
     hu: 'Az aktív panel görgetése',
@@ -7520,6 +8217,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_tabs': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -7531,6 +8229,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_tabs_open': {
     en: 'Open a new tab',
+    sv: 'Öppna en ny flik',
     de: 'Neuen Tab öffnen',
     fr: 'Ouvrir un nouvel onglet',
     hu: 'Új lap',
@@ -7542,6 +8241,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_in_panel_pos': {
     en: 'Position of the new tab',
+    sv: 'Den nya flikens placering',
     de: 'Position des neuen Tabs',
     fr: 'Position du nouvel onglet',
     hu: 'Az új lap elhelyezése',
@@ -7553,6 +8253,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_in_panel_pos_general': {
     en: 'general rule',
+    sv: 'allmän regel',
     de: 'allgemeine Regel',
     fr: 'règle générale',
     hu: 'általános szabály',
@@ -7564,6 +8265,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_in_panel_pos_btn': {
     en: 'new tab button rule',
+    sv: 'regeln för knappen Ny flik',
     de: 'Regel für die Schaltfläche „Neuer Tab“',
     fr: 'Règle du bouton « nouvel onglet »',
     hu: '„új lap” gomb szabály',
@@ -7575,6 +8277,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_in_panel_pos_start': {
     en: 'panel start',
+    sv: 'panelens början',
     de: 'Am Anfang des Panels',
     fr: 'début du panneau',
     hu: 'a panel elejére',
@@ -7585,6 +8288,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.new_tab_in_panel_pos_end': {
     en: 'panel end',
+    sv: 'panelens slut',
     de: 'Am Ende des Panels',
     fr: 'fin du panneau',
     hu: 'a panel végére',
@@ -7595,6 +8299,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_rm': {
     en: 'Close tab(s) / Delete bookmarks',
+    sv: 'Stäng flikar / Ta bort bokmärken',
     ru: 'Закрыть вкладку(и) / Удалить закладки',
     de: 'Tab(s) schließen / Lesezeichen löschen',
     fr: 'Fermer des onglets / Supprimer des marque-pages',
@@ -7606,6 +8311,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_selections': {
     en: 'Selecting elements',
+    sv: 'Markera objekt',
     de: 'Elemente auswählen',
     fr: 'Sélectionner des éléments',
     hu: 'Elemkijelölés',
@@ -7617,6 +8323,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_sel_tabs_bookmarks': {
     en: 'Selecting tabs / bookmarks',
+    sv: 'Markera flikar / bokmärken',
     de: 'Tabs / Lesezeichen auswählen',
     fr: 'Sélectionner des onglets / marque-pages',
     hu: 'Lapok / könyvjelzők kijelölése',
@@ -7628,6 +8335,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_selecting_up_down': {
     en: 'Selecting up / down',
+    sv: 'Markera uppåt / nedåt',
     de: 'Nach oben / unten auswählen',
     fr: 'Sélectionner au-dessus / en dessous',
     hu: 'Kijelölés fel / le',
@@ -7639,6 +8347,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.select_active_tab_first': {
     en: 'Select the active tab first',
+    sv: 'Markera den aktiva fliken först',
     de: 'Zuerst den aktiven Tab auswählen',
     fr: 'Sélectionner l’onglet actif en premier',
     hu: 'Először az aktív lap kiválasztása',
@@ -7650,6 +8359,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.select_cyclic': {
     en: 'Cyclically',
+    sv: 'Cykliskt',
     de: 'Zyklisch',
     fr: 'De façon cyclique',
     hu: 'Ciklikusan',
@@ -7661,6 +8371,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_unloading_tabs': {
     en: 'Unload tabs',
+    sv: 'Frigör flikar',
     de: 'Tabs entladen',
     fr: 'Décharger les onglets',
     hu: 'Lapok kisöprése',
@@ -7672,6 +8383,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_branches': {
     en: 'Branches',
+    sv: 'Grenar',
     de: 'Zweige',
     fr: 'Branches',
     hu: 'Ágak',
@@ -7682,6 +8394,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_active_tabs_history': {
     en: 'Tabs activation history',
+    sv: 'Historik över flikaktivering',
     de: 'Tab-Aktivierungschronik',
     fr: 'Historique d’activation des onglets',
     hu: 'Aktív lapok előzménye',
@@ -7693,6 +8406,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',
+    sv: 'Växla mellan flikar',
     de: 'Zwischen Tabs wechseln',
     fr: 'Basculer entre les onglets',
     hu: 'Lapok közötti váltás',
@@ -7704,6 +8418,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_switch_act_note': {
     en: '- using vertical scroll settings for tabs switching',
+    sv: '- använder inställningarna för flikväxling med lodrät rullning',
     de: '- unter Verwendung der Einstellungen für den Wechsel zwischen Tabs durch vertikales Scrollen',
     fr: '– en utilisant les paramètres du scroll vertical pour le basculement d’onglet',
     hu: '– az egérgörgő is beállítható lapváltáshoz',
@@ -7715,6 +8430,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_move_tabs': {
     en: 'Moving tabs',
+    sv: 'Flytta flikar',
     de: 'Tabs verschieben',
     fr: 'Déplacer les onglets',
     hu: 'Lapok áthelyezése',
@@ -7726,6 +8442,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.kb_sort_tabs': {
     en: 'Sorting tabs',
+    sv: 'Sortera flikar',
     de: 'Tabs sortieren',
     fr: 'Trier les onglets',
     hu: 'Lapok rendezése',
@@ -7737,6 +8454,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'settings.reset_kb': {
     en: 'Reset Keybindings',
+    sv: 'Återställ kortkommandon',
     de: 'Tastenbelegung zurücksetzen',
     fr: 'Réinitialiser les raccourcis',
     hu: 'Billentyűparancsok alaphelyzetbe',
@@ -7752,6 +8470,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // -
   'styles.css_sidebar': {
     en: 'Sidebar',
+    sv: 'Sidofält',
     de: 'Seitenleiste',
     fr: 'Barre latérale',
     hu: 'Oldalsáv',
@@ -7763,6 +8482,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.css_group': {
     en: 'Group page',
+    sv: 'Gruppsida',
     de: 'Gruppenseite',
     fr: 'Page de groupe',
     hu: 'Csoportoldal',
@@ -7774,6 +8494,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.general': {
     en: 'General',
+    sv: 'Allmänt',
     de: 'Allgemein',
     fr: 'Général',
     hu: 'Általános',
@@ -7785,6 +8506,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.nav': {
     en: 'Navigation bar',
+    sv: 'Navigeringsfält',
     de: 'Navigationsleiste',
     fr: 'Barre de navigation',
     hu: 'Vezérlősáv',
@@ -7796,6 +8518,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.tabs': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     hu: 'Lapok',
     fr: 'Onglets',
@@ -7807,6 +8530,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.bookmarks': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -7818,6 +8542,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.history': {
     en: 'History',
+    sv: 'Historik',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -7829,6 +8554,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.popup': {
     en: 'Popup',
+    sv: 'Popup',
     de: 'Popup',
     fr: 'Popup',
     ru: 'Всплывающие окна',
@@ -7838,6 +8564,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.menu': {
     en: 'Context menu',
+    sv: 'Snabbmeny',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     hu: 'Környezeti menü',
@@ -7849,6 +8576,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.sub-list_title': {
     en: 'Sub-list title',
+    sv: 'Underlistans rubrik',
     de: 'Titel von Unterlisten',
     fr: 'Titre de sous-liste',
     ru: 'Заголовок подсписка',
@@ -7858,6 +8586,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.search_bar': {
     en: 'Search bar',
+    sv: 'Sökfält',
     de: 'Suchleiste',
     fr: 'Barre de recherche',
     ru: 'Строка поиска',
@@ -7867,6 +8596,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.new-tab_bar': {
     en: 'New-tab bar',
+    sv: 'Fält för nya flikar',
     de: '"Neuer Tab"-Leiste',
     fr: 'Barre de nouvel onglet',
     ru: 'Панель новой вкладки',
@@ -7876,6 +8606,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.notification': {
     en: 'Notification',
+    sv: 'Avisering',
     de: 'Benachrichtigung',
     fr: 'Notification',
     ru: 'Уведомления',
@@ -7884,6 +8615,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.buttons': {
     en: 'Buttons',
+    sv: 'Knappar',
     de: 'Schaltflächen',
     fr: 'Boutons',
     hu: 'Gombok',
@@ -7895,6 +8627,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.scroll': {
     en: 'Scroll',
+    sv: 'Rullning',
     de: 'Scrollen',
     fr: 'Scroll',
     hu: 'Görgetés',
@@ -7906,6 +8639,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.animation': {
     en: 'Animation speed',
+    sv: 'Animeringshastighet',
     de: 'Animationsgeschwindigkeit',
     fr: 'Vitesse d’animation',
     hu: 'Animáció sebessége',
@@ -7917,6 +8651,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.vars_group.other': {
     en: 'Other',
+    sv: 'Övrigt',
     de: 'Andere',
     fr: 'Autre',
     hu: 'Egyéb',
@@ -7927,6 +8662,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.reset_styles': {
     en: 'Reset CSS variables',
+    sv: 'Återställ CSS-variabler',
     de: 'CSS-Variablen zurücksetzen',
     fr: 'Réinitialiser les variables CSS',
     hu: 'CSS-változók alaphelyzetbe',
@@ -7938,6 +8674,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'styles.css_placeholder': {
     en: 'Write custom CSS here...',
+    sv: 'Skriv egen CSS här…',
     de: 'Hier eigenen CSS-Quellcode erstellen...',
     fr: 'Écrire ici votre CSS personnalisé',
     hu: 'Itt adható meg egyéni CSS…',
@@ -7956,6 +8693,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
     - Select "/sidebar/sidebar.html" for sidebar frame
     - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
+    sv: 'OBS! Använd felsökaren för att se vilka CSS-selektorer som är tillgängliga:\n  - Klicka på knappen ”Kopiera URL till utvecklarverktygen” i det nedre fältet\n  - Öppna en ny flik med den URL:en\n  - Välj den ram du vill inspektera\n    - Klicka på den rektangulära ikonen (med tre delar) uppe till höger i felsökarfönstret\n    - Välj ”/sidebar/sidebar.html” för sidofältets ram\n    - Välj ”/sidebery/group.html” för gruppsidans ram\n  - Öppna fliken ”Inspektör”',
     de: `HINWEIS: Um die derzeit verfügbaren CSS-Selektoren zu ermitteln, verwenden Sie den Debugger:
   - Klicken Sie in der unteren Leiste auf die Schaltfläche "Devtools-URL kopieren"
   - Öffnen Sie einen neuen Tab mit dieser URL
@@ -8026,6 +8764,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   // -
   'snapshot.btn_create_first': {
     en: 'Create first snapshot',
+    sv: 'Skapa den första ögonblicksbilden',
     de: 'Ersten Schnappschuss erstellen',
     fr: 'Créer un premier instantané',
     hu: 'Létrehozható az első pillanatkép',
@@ -8037,6 +8776,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_create_snapshot': {
     en: 'Create snapshot',
+    sv: 'Skapa ögonblicksbild',
     de: 'Erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
@@ -8048,6 +8788,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_import_snapshot': {
     en: 'Import snapshot',
+    sv: 'Importera ögonblicksbild',
     de: 'Importieren',
     fr: 'Importer un instantané',
     hu: 'Pillanatkép importálása',
@@ -8059,6 +8800,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_export_snapshot': {
     en: 'Export snapshot',
+    sv: 'Exportera ögonblicksbild',
     de: 'Exportieren',
     fr: 'Exporter un instantané',
     hu: 'Pillanatkép exportálása',
@@ -8070,6 +8812,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_export_snapshot_json': {
     en: 'Save as JSON',
+    sv: 'Spara som JSON',
     de: 'Als JSON speichern',
     fr: 'Sauvegarder en JSON',
     hu: 'Mentés JSON-fájlként',
@@ -8081,6 +8824,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_export_snapshot_md': {
     en: 'Save as Markdown',
+    sv: 'Spara som Markdown',
     de: 'Als Markdown speichern',
     fr: 'Sauvegarder en Markdown',
     hu: 'Mentés Makdown-fájlként',
@@ -8092,6 +8836,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_export_snapshot_md_note': {
     en: 'No reverse import support',
+    sv: 'Kan inte importeras tillbaka',
     de: 'Rückimport wird nicht unterstützt',
     fr: 'Réimport non pris en charge',
     hu: 'Az importálás nem támogatott',
@@ -8103,6 +8848,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_copy_snapshot_md': {
     en: 'Copy as Markdown',
+    sv: 'Kopiera som Markdown',
     de: 'Als Markdown kopieren',
     fr: 'Copier en Markdown',
     hu: 'Másolás mint Markdown',
@@ -8114,6 +8860,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_open_all_win': {
     en: 'Open all windows',
+    sv: 'Öppna alla fönster',
     de: 'Alle Fenster öffnen',
     fr: 'Ouvrir toutes les fenêtres',
     hu: 'Minden ablak megnyitása',
@@ -8125,6 +8872,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.snap_win': {
     en: n => (n === 1 ? 'window' : 'windows'),
+    sv: n => 'fönster',
     de: 'Fenster',
     fr: n => (n === 1 ? 'fenêtre' : 'fenêtres'),
     hu: 'ablak',
@@ -8144,6 +8892,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.snap_tab': {
     en: n => (n === 1 ? 'tab' : 'tabs'),
+    sv: n => (n === 1 ? 'flik' : 'flikar'),
     de: n => (n === 1 ? 'Tab' : 'Tabs'),
     fr: n => (n === 1 ? 'onglet' : 'onglets'),
     hu: 'lap',
@@ -8163,6 +8912,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_remove': {
     en: 'Remove snapshot',
+    sv: 'Ta bort ögonblicksbild',
     de: 'Schnappschuss entfernen',
     fr: 'Supprimer l’instantané',
     hu: 'Törlés',
@@ -8174,6 +8924,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.window_title': {
     en: 'Window',
+    sv: 'Fönster',
     de: 'Fenster',
     fr: 'Fenêtre',
     hu: 'Ablak',
@@ -8185,6 +8936,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_open_win': {
     en: 'Open window',
+    sv: 'Öppna fönster',
     de: 'Fenster öffnen',
     fr: 'Ouvrir la fenêtre',
     hu: 'Ablak megnyitása',
@@ -8196,6 +8948,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_open_as_private_win': {
     en: 'Open as private window',
+    sv: 'Öppna som privat fönster',
     de: 'Als privates Fenster öffnen',
     fr: 'Ouvrir dans une fenêtre privée',
     hu: 'Megnyitás privát ablakként',
@@ -8207,6 +8960,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.btn_open_as_norm_win': {
     en: 'Open as normal window',
+    sv: 'Öppna som vanligt fönster',
     de: 'Als normales Fenster öffnen',
     fr: 'Ouvrir dans une fenêtre normale',
     hu: 'Nyissa meg normál ablakként',
@@ -8218,6 +8972,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.global_pin_title': {
     en: 'Pinned tabs',
+    sv: 'Fästa flikar',
     de: 'Angeheftete Tabs',
     fr: 'Onglets épinglés',
     hu: 'Rögzített lapok',
@@ -8229,6 +8984,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.selected': {
     en: 'Selected:',
+    sv: 'Markerade:',
     de: 'Ausgewählt:',
     fr: 'Sélectionnés:',
     hu: 'Kijelölve:',
@@ -8240,6 +8996,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.sel.open_in': {
     en: 'Open in...',
+    sv: 'Öppna i…',
     de: 'Öffnen in...',
     fr: 'Ouvrir dans…',
     hu: 'Nyitott...',
@@ -8251,6 +9008,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.sel.open_in_window': {
     en: 'New window',
+    sv: 'Nytt fönster',
     de: 'Neues Fenster',
     fr: 'Nouvelle fenêtre',
     hu: 'Új ablakban',
@@ -8262,6 +9020,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.sel.open_in_private_window': {
     en: 'New private window',
+    sv: 'Nytt privat fönster',
     de: 'Neues privates Fenster',
     fr: 'Nouvelle fenêtre privée',
     hu: 'Új privát ablakban',
@@ -8273,6 +9032,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.sel.open_in_panel': {
     en: 'Current panel',
+    sv: 'Aktuell panel',
     de: 'Aktuelles Panel',
     fr: 'Panneau actif',
     hu: 'Aktuális panel',
@@ -8284,6 +9044,7 @@ url:github\\.com\\/.+\\/\\d+; title:(?<v>#\\d+); bg:#fff; fg:#000
   },
   'snapshot.sel.reset_sel': {
     en: 'Reset selection',
+    sv: 'Avmarkera',
     de: 'Auswahl zurücksetzen',
     fr: 'Annuler la sélection',
     hu: 'Kijelölés alaphelyzetbe',

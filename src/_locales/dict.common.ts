@@ -7,6 +7,7 @@ export const commonTranslations: Translations = {
   // -
   'bookmarks_editor.name_bookmark_placeholder': {
     en: 'Bookmark name...',
+    sv: 'Bokmärkets namn...',
     de: 'Name des Lesezeichens...',
     fr: 'Nom du marque-page…',
     hu: 'A könyvjelző neve…',
@@ -18,6 +19,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.name_folder_placeholder': {
     en: 'Folder name...',
+    sv: 'Mappens namn...',
     de: 'Name des Ordners...',
     fr: 'Nom du dossier…',
     hu: 'A mappa neve…',
@@ -29,6 +31,7 @@ export const commonTranslations: Translations = {
   },
   'bookmarks_editor.url_placeholder': {
     en: 'e.g. https://example.com',
+    sv: 't.ex. https://example.com',
     de: 'z. B. https://example.com',
     fr: 'ex: https://example.com',
     hu: 'pl.: https://pelda.hu',
@@ -43,6 +46,7 @@ export const commonTranslations: Translations = {
   // -
   'btn.create': {
     en: 'Create',
+    sv: 'Skapa',
     de: 'Erstellen',
     fr: 'Créer',
     hu: 'Létrehozás',
@@ -54,6 +58,7 @@ export const commonTranslations: Translations = {
   },
   'btn.save': {
     en: 'Save',
+    sv: 'Spara',
     de: 'Speichern',
     fr: 'Sauvegarder',
     hu: 'Mentés',
@@ -65,6 +70,7 @@ export const commonTranslations: Translations = {
   },
   'btn.restore': {
     en: 'Restore',
+    sv: 'Återställ',
     de: 'Wiederherstellen',
     fr: 'Restaurer',
     hu: 'Visszaállítás',
@@ -76,6 +82,7 @@ export const commonTranslations: Translations = {
   },
   'btn.update': {
     en: 'Update',
+    sv: 'Uppdatera',
     de: 'Aktualisieren',
     fr: 'Mise à jour',
     hu: 'Frissítés',
@@ -86,6 +93,7 @@ export const commonTranslations: Translations = {
   },
   'btn.grant_permissions': {
     en: 'Grant permissions',
+    sv: 'Ge behörigheter',
     de: 'Berechtigungen erteilen',
     fr: 'Accorder les permissions',
     hu: 'Engedélyek megadása',
@@ -97,6 +105,7 @@ export const commonTranslations: Translations = {
   },
   'btn.yes': {
     en: 'Yes',
+    sv: 'Ja',
     de: 'Ja',
     fr: 'Oui',
     hu: 'Igen',
@@ -108,6 +117,7 @@ export const commonTranslations: Translations = {
   },
   'btn.ok': {
     en: 'Ok',
+    sv: 'OK',
     de: 'OK',
     fr: 'Ok',
     ru: 'Ок',
@@ -116,6 +126,7 @@ export const commonTranslations: Translations = {
   },
   'btn.no': {
     en: 'No',
+    sv: 'Nej',
     de: 'Nein',
     fr: 'Non',
     hu: 'Nem',
@@ -126,6 +137,7 @@ export const commonTranslations: Translations = {
   },
   'btn.cancel': {
     en: 'Cancel',
+    sv: 'Avbryt',
     de: 'Abbrechen',
     fr: 'Annuler',
     hu: 'Mégsem',
@@ -136,6 +148,7 @@ export const commonTranslations: Translations = {
   },
   'btn.stop': {
     en: 'Stop',
+    sv: 'Stoppa',
     de: 'Stopp',
     fr: 'Arrêter',
     hu: 'Leállítás',
@@ -150,6 +163,7 @@ export const commonTranslations: Translations = {
   // -
   'container.new_container_name': {
     en: 'Container',
+    sv: 'Behållare',
     de: 'Umgebung',
     fr: 'Conteneur',
     hu: 'Konténer',
@@ -164,6 +178,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.tabs.title': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -179,6 +194,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.bookmarks.title': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marques-pages',
     hu: 'Könyvjelzők',
@@ -190,6 +206,7 @@ export const commonTranslations: Translations = {
   },
   'panel.bookmarks.req_perm': {
     en: 'Bookmarks panel requires "Bookmarks" permission.',
+    sv: 'Bokmärkespanelen kräver behörigheten ”Bokmärken”.',
     de: 'Lesezeichen-Panel erfordert "Lesezeichen"-Berechtigung',
     fr: 'Le panneau de marque-pages requiert la permission “Marque-pages”',
     hu: 'A könyvjelzők eléréséhez engedély szükséges.',
@@ -205,6 +222,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.history.title': {
     en: 'History',
+    sv: 'Historik',
     de: 'Chronik',
     fr: 'Historique',
     hu: 'Előzmények',
@@ -216,6 +234,7 @@ export const commonTranslations: Translations = {
   },
   'panel.history.load_more': {
     en: 'Scroll to load more',
+    sv: 'Rulla för att läsa in fler',
     de: 'Scrollen, um mehr zu laden',
     fr: 'Scroller pour charger plus',
     hu: 'Továbbiak betöltése görgetéssel',
@@ -227,6 +246,7 @@ export const commonTranslations: Translations = {
   },
   'panel.history.req_perm': {
     en: 'History panel requires "History" permission.',
+    sv: 'Historikpanelen kräver behörigheten ”Historik”.',
     de: 'Chronik-Panel erfordert "Chronik"-Berechtigung',
     fr: 'Le panneau d’historique requiert la permission “Historique”',
     hu: 'Az előzmények eléréséhez engedély szükséges.',
@@ -242,6 +262,7 @@ export const commonTranslations: Translations = {
   // -
   'panel.sync.title': {
     en: 'Sync',
+    sv: 'Synkronisering',
     de: 'Synchronisation',
     fr: 'Synchronisation',
     hu: 'Szinkronizálás',
@@ -252,6 +273,7 @@ export const commonTranslations: Translations = {
   },
   'sync.tabs_title': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     ru: 'Вкладки',
@@ -260,6 +282,7 @@ export const commonTranslations: Translations = {
   },
   'sync.ctx_menu_title': {
     en: 'Context menu',
+    sv: 'Snabbmeny',
     de: 'Kontextmenü',
     fr: 'Menu contextuel',
     ru: 'Контекстное меню',
@@ -268,6 +291,7 @@ export const commonTranslations: Translations = {
   },
   'sync.settings_title': {
     en: 'Settings',
+    sv: 'Inställningar',
     de: 'Einstellungen',
     fr: 'Paramètres',
     ru: 'Настройки',
@@ -276,6 +300,7 @@ export const commonTranslations: Translations = {
   },
   'sync.style_title': {
     en: 'Styles',
+    sv: 'Stilar',
     de: 'Stile',
     fr: 'Styles',
     ru: 'Стили',
@@ -284,6 +309,7 @@ export const commonTranslations: Translations = {
   },
   'sync.keybindings_title': {
     en: 'Keybindings',
+    sv: 'Kortkommandon',
     de: 'Tastenbelegung',
     fr: 'Raccourcis',
     ru: 'Горячие клавиши',
@@ -292,6 +318,7 @@ export const commonTranslations: Translations = {
   },
   'sync.unknown_title': {
     en: 'Unknown',
+    sv: 'Okänd',
     de: 'Unbekannt',
     fr: 'Inconnu',
     ru: 'Неизвестно',
@@ -299,6 +326,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_entries': {
     en: 'Unable to load entries from Google Drive',
+    sv: 'Det gick inte att läsa in poster från Google Drive',
     de: 'Einträge aus Google Drive können nicht geladen werden',
     fr: 'Impossible de charger les entrées depuis Google Drive',
     hu: 'Nem lehet bejegyzéseket betölteni a Google Drive-ból',
@@ -310,6 +338,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_entries_sub': {
     en: 'Try again later',
+    sv: 'Försök igen senare',
     de: 'Versuchen Sie es später erneut',
     fr: 'Réessayer plus tard',
     hu: 'Próbálja újra később',
@@ -321,6 +350,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.google_tabs': {
     en: 'Unable to load tabs from Google Drive',
+    sv: 'Det gick inte att läsa in flikar från Google Drive',
     de: 'Tabs können nicht von Google Drive geladen werden',
     fr: 'Impossible de charger les onglets de Google Drive',
     hu: 'Nem sikerült betölteni a lapokat a Google Drive-ból',
@@ -332,6 +362,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.load': {
     en: 'Unable to load synced data',
+    sv: 'Det gick inte att läsa in synkroniserade data',
     de: 'Synchronisierte Daten können nicht geladen werden',
     fr: 'Impossible de charger les données synchronisées',
     hu: 'Nem sikerült betölteni a szinkronizált adatokat',
@@ -343,6 +374,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.save': {
     en: 'Unable to save data to sync storage',
+    sv: 'Det gick inte att spara data i synkroniseringslagringen',
     de: 'Daten können nicht im Synchronisierungsspeicher gespeichert werden',
     fr: 'Impossible de sauvegarder les données vers le stockage synchronisé',
     hu: 'Nem sikerült menteni az adatokat a szinkronizálási tárhelyre',
@@ -354,6 +386,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.save_tabs': {
     en: 'Unable to save tabs to sync storage',
+    sv: 'Det gick inte att spara flikar i synkroniseringslagringen',
     de: 'Tabs können nicht im Synchronisierungsspeicher gespeichert werden',
     fr: 'Impossible de sauvegarder les onglets vers le stockage synchronisé',
     hu: 'Nem lehet lapokat menteni a szinkronizálási tárhelyre',
@@ -365,6 +398,7 @@ export const commonTranslations: Translations = {
   },
   'sync.err.rm': {
     en: 'Unable to remove data from sync storage',
+    sv: 'Det gick inte att ta bort data från synkroniseringslagringen',
     de: 'Daten können nicht aus dem Synchronisierungsspeicher entfernt werden',
     fr: 'Impossible de supprimer les données du stockage synchronisé',
     hu: 'Nem sikerült eltávolítani az adatokat a szinkronizálási tárolóból',
@@ -376,6 +410,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_keyboard': {
     en: 'Keybindings have been successfully imported',
+    sv: 'Kortkommandona har importerats',
     de: 'Tastenbelegung erfolgreich importiert',
     fr: 'Les raccourcis ont été importés avec succès',
     ru: 'Горячие клавиши успешно импортированы',
@@ -384,6 +419,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_menu': {
     en: 'Context menu has been successfully imported',
+    sv: 'Snabbmenyn har importerats',
     de: 'Kontextmenü erfolgreich importiert',
     fr: 'Le menu contextuel a été importé avec succès',
     ru: 'Контекстное меню успешно импортировано',
@@ -392,6 +428,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_settings': {
     en: 'Settings have been successfully imported',
+    sv: 'Inställningarna har importerats',
     de: 'Einstellungen erfolgreich importiert',
     fr: 'Les paramètres ont été importés avec succès',
     ru: 'Настройки успешно импортированы',
@@ -400,6 +437,7 @@ export const commonTranslations: Translations = {
   },
   'sync.success.import_styles': {
     en: 'Styles have been successfully imported',
+    sv: 'Stilarna har importerats',
     de: 'Stile erfolgreich importiert',
     fr: 'Les styles ont été importés avec succès',
     ru: 'Стили успешно импортированы',
@@ -408,6 +446,7 @@ export const commonTranslations: Translations = {
   },
   'sync.unknown_profile': {
     en: 'Unknown profile',
+    sv: 'Okänd profil',
     de: 'Unbekanntes Profil',
     fr: 'Profil inconnu',
     hu: 'Ismeretlen profil',
@@ -419,6 +458,7 @@ export const commonTranslations: Translations = {
   },
   'sync.entry.this_profile': {
     en: 'This profile',
+    sv: 'Den här profilen',
     de: 'Dieses Profil',
     fr: 'Ce profil',
     hu: 'Ezt a profilt',
@@ -430,6 +470,7 @@ export const commonTranslations: Translations = {
   },
   'sync.entry.import_btn': {
     en: 'Import',
+    sv: 'Importera',
     de: 'Importieren',
     fr: 'Importer',
     hu: 'Importálás',
@@ -440,6 +481,7 @@ export const commonTranslations: Translations = {
   },
   'sync.entry.open_tabs_btn': {
     en: 'Open',
+    sv: 'Öppna',
     de: 'Öffnen',
     fr: 'Ouvrir',
     hu: 'Megnyitás',
@@ -451,6 +493,7 @@ export const commonTranslations: Translations = {
   },
   'sync.entry.rm_btn': {
     en: 'Delete',
+    sv: 'Ta bort',
     de: 'Löschen',
     fr: 'Supprimer',
     hu: 'Törlés',
@@ -467,6 +510,7 @@ export const commonTranslations: Translations = {
   // - Bookmarks popup
   'popup.bookmarks.name_label': {
     en: 'Name',
+    sv: 'Namn',
     de: 'Name',
     fr: 'Nom',
     hu: 'Név',
@@ -478,6 +522,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.location_label': {
     en: 'Location',
+    sv: 'Plats',
     de: 'Ort',
     fr: 'Emplacement',
     hu: 'Hely',
@@ -489,6 +534,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.location_new_folder_placeholder': {
     en: 'New folder name',
+    sv: 'Namn på ny mapp',
     de: 'Neuer Ordner',
     fr: 'Nom du nouveau dossier',
     hu: 'Új mappa',
@@ -500,6 +546,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.recent_locations_label': {
     en: 'Recent locations',
+    sv: 'Senaste platserna',
     de: 'Zuletzt verwendet',
     fr: 'Emplacements récents',
     hu: 'Legutóbbi helyek',
@@ -511,6 +558,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.save_in_bookmarks': {
     en: 'Save in bookmarks',
+    sv: 'Spara som bokmärken',
     de: 'Als Lesezeichen speichern',
     fr: 'Sauvegarder dans les marque-pages',
     hu: 'Mentés a könyvjelzőkbe',
@@ -522,6 +570,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.set_folder_for_tabs_panel': {
     en: 'Set folder for this tabs panel',
+    sv: 'Ange mapp för den här flikpanelen',
     de: 'Ordner für dieses Tab-Panel festlegen',
     fr: 'Définir le dossier pour ce panneau d’onglets',
     hu: 'Mappa választása ehhez a lappanelhoz',
@@ -533,6 +582,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.edit_bookmark': {
     en: 'Edit bookmark',
+    sv: 'Redigera bokmärke',
     de: 'Lesezeichen bearbeiten',
     fr: 'Modifier le marque-page',
     hu: 'Könyvjelző szerkesztése',
@@ -544,6 +594,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.edit_folder': {
     en: 'Edit folder',
+    sv: 'Redigera mapp',
     de: 'Ordner bearbeiten',
     fr: 'Modifier le dossier',
     hu: 'Mappa szerkesztése',
@@ -555,6 +606,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.select_root_folder': {
     en: 'Select root folder',
+    sv: 'Välj rotmapp',
     de: 'Stammordner auswählen',
     fr: 'Sélectionner le dossier racine',
     hu: 'A kiinduló mappa kiválasztása',
@@ -566,6 +618,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.create_bookmark': {
     en: 'Create bookmark',
+    sv: 'Skapa bokmärke',
     de: 'Lesezeichen erstellen',
     fr: 'Créer le marque-page',
     hu: 'Új könyvjelző',
@@ -577,6 +630,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.create_folder': {
     en: 'Create folder',
+    sv: 'Skapa mapp',
     de: 'Ordner erstellen',
     fr: 'Créer un dossier',
     hu: 'Új mappa',
@@ -588,6 +642,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.move_to': {
     en: 'Move to',
+    sv: 'Flytta till',
     de: 'Verschieben nach',
     fr: 'Déplacer vers',
     hu: 'Áthelyezés ide',
@@ -599,6 +654,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.move': {
     en: 'Move',
+    sv: 'Flytta',
     de: 'Verschieben',
     fr: 'Déplacer',
     hu: 'Áthelyezés',
@@ -610,6 +666,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.create_bookmarks': {
     en: 'Create bookmark[s]',
+    sv: 'Skapa bokmärken',
     de: 'Lesezeichen erstellen',
     fr: 'Créer des marque-pages',
     hu: 'Új könyvjelző létrehozása',
@@ -621,6 +678,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.restore': {
     en: 'Restore from bookmarks folder',
+    sv: 'Återställ från bokmärkesmapp',
     de: 'Aus Lesezeichen-Ordner wiederherstellen',
     fr: 'Restaurer depuis le dossier de marque-pages',
     hu: 'Visszaállítás könyvjelzőmappából',
@@ -632,6 +690,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.convert_title': {
     en: 'Convert to bookmarks',
+    sv: 'Konvertera till bokmärken',
     de: 'In Lesezeichen konvertieren',
     fr: 'Convertir en marque-pages',
     hu: 'Átalakítás könyvjelzőkké',
@@ -643,6 +702,7 @@ export const commonTranslations: Translations = {
   },
   'popup.bookmarks.convert': {
     en: 'Convert',
+    sv: 'Konvertera',
     de: 'Konvertieren',
     fr: 'Convertir',
     hu: 'Átalakítás',
@@ -655,6 +715,7 @@ export const commonTranslations: Translations = {
 
   'popup.new_tab_shortcuts.title': {
     en: 'New Tab Shortcuts',
+    sv: 'Genvägar för nya flikar',
     de: '"Neuer Tab"-Verknüpfungen',
     fr: 'Raccourcis “Nouvel onglet”',
     hu: 'Új lap parancsikonjai',
@@ -666,6 +727,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.create_title': {
     en: 'Create shortcut',
+    sv: 'Skapa genväg',
     de: 'Verknüpfung erstellen',
     fr: 'Créer un raccourci',
     hu: 'Új parancsikon készítése',
@@ -677,6 +739,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_container_label': {
     en: 'Container',
+    sv: 'Behållare',
     de: 'Umgebung',
     fr: 'Conteneur',
     hu: 'Konténer',
@@ -687,6 +750,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_not_set_container': {
     en: 'Not set',
+    sv: 'Inte angiven',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
     hu: 'Nincs megadva',
@@ -698,6 +762,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_default_container': {
     en: 'Default container',
+    sv: 'Standardbehållare',
     de: 'Standardumgebung',
     fr: 'Conteneur par défaut',
     hu: 'Alapértelmezett konténer',
@@ -709,11 +774,13 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.new_shortcut_url_label': {
     en: 'URL',
+    sv: 'URL',
     fr: 'URL',
     ru: 'URL-адрес',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
     en: 'Default new tab',
+    sv: 'Standardsida för nya flikar',
     de: 'Standardseite für neue Tabs',
     fr: 'Nouvel onglet par défaut',
     hu: 'Alapértelmezett új lap',
@@ -725,6 +792,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.add_br_btn': {
     en: 'Add new line',
+    sv: 'Lägg till ny rad',
     de: 'Neue Zeile hinzufügen',
     fr: 'Ajouter une nouvelle ligne',
     hu: 'Elválasztó hozzáadása',
@@ -736,6 +804,7 @@ export const commonTranslations: Translations = {
   },
   'popup.new_tab_shortcuts.add_shortcut_btn': {
     en: 'Add shortcut',
+    sv: 'Lägg till genväg',
     de: 'Verknüpfung hinzufügen',
     fr: 'Ajouter un raccourci',
     hu: 'Parancsikon hozzáadása',
@@ -748,6 +817,7 @@ export const commonTranslations: Translations = {
 
   'popup.tab_move_rules.title': {
     en: 'Tab auto-move rules',
+    sv: 'Regler för automatisk flyttning av flikar',
     de: 'Regeln für das automatische Verschieben von Tabs',
     fr: 'Règles de déplacement automatique d’onglet',
     hu: 'A lapok automatikus áthelyezésének szabályai',
@@ -759,6 +829,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.editor_title.new': {
     en: 'Create auto-move rule',
+    sv: 'Skapa regel för automatisk flyttning',
     de: 'Regel erstellen',
     fr: 'Créer une règle de déplacement automatique',
     hu: 'Új automatikus áthelyezési szabály',
@@ -770,6 +841,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.editor_title.edit': {
     en: 'Edit auto-move rule',
+    sv: 'Redigera regel för automatisk flyttning',
     de: 'Regel bearbeiten',
     fr: 'Modifier la règle de déplacement automatique',
     hu: 'Automatikus áthelyezési szabály szerkesztése',
@@ -781,6 +853,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_name_label': {
     en: 'Name (optional)',
+    sv: 'Namn (valfritt)',
     de: 'Name (optional)',
     fr: 'Nom (optionnel)',
     hu: 'Név (opcionális)',
@@ -792,6 +865,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_container_label': {
     en: 'If tab is in a container',
+    sv: 'Om fliken finns i en behållare',
     de: 'Wenn der Tab sich in folgender Umgebung befindet',
     fr: 'Si l’onglet est dans un conteneur',
     hu: 'Ha a lap egy konténerben van',
@@ -803,6 +877,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_container_not_set': {
     en: 'Not set',
+    sv: 'Inte angiven',
     de: 'Nicht festgelegt',
     fr: 'Non défini',
     hu: 'Nincs megadva',
@@ -814,6 +889,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
+    sv: 'Om flikens URL matchar ("delsträng" eller "/RegExp/")',
     de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     fr: 'Si l’onglet a l’URL (“sous-chaine” ou “/RegExp/”)',
     hu: 'Ha az URL illeszkedik ("szövegrészlet" vagy /RegExp/)',
@@ -824,6 +900,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
     en: 'If tab at the top level of tree',
+    sv: 'Om fliken finns på trädets översta nivå',
     de: 'Wenn der Tab sich auf der obersten Ebene des Baumes befindet',
     fr: 'Si l’onglet est à la racine de l’arborescence',
     hu: 'Ha a lap legfelső szintű',
@@ -835,6 +912,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.add_rule_btn': {
     en: 'Add rule',
+    sv: 'Lägg till regel',
     de: 'Regel hinzufügen',
     fr: 'Ajouter la règle',
     hu: 'Hozzáadás',
@@ -846,6 +924,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.edit_rule_btn.save': {
     en: 'Save',
+    sv: 'Spara',
     de: 'Regel speichern',
     fr: 'Sauvegarder',
     hu: 'Mentés',
@@ -857,6 +936,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.edit_rule_btn.cancel': {
     en: 'Cancel',
+    sv: 'Avbryt',
     de: 'Abbrechen',
     fr: 'Annuler',
     hu: 'Mégsem',
@@ -868,6 +948,7 @@ export const commonTranslations: Translations = {
 
   'popup.tab_reopen_rules.title': {
     en: 'Tab reopening rules',
+    sv: 'Regler för att öppna flikar på nytt',
     de: 'Regeln für das Neuöffnen von Tabs',
     fr: 'Règles de réouverture d’onglets',
     hu: 'Lap újranyitásának szabályai',
@@ -879,6 +960,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.enable_label': {
     en: 'Enable listed rules',
+    sv: 'Aktivera reglerna i listan',
     de: 'Aufgeführte Regeln aktivieren',
     fr: 'Activer les règles listées',
     hu: 'A szabályok engedélyezése',
@@ -890,6 +972,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.editor_title.new': {
     en: 'Create new rule',
+    sv: 'Skapa ny regel',
     de: 'Neue Regel erstellen',
     fr: 'Créer une nouvelle règle',
     hu: 'Új szabály megadása',
@@ -901,6 +984,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.editor_title.edit': {
     en: 'Edit rule',
+    sv: 'Redigera regel',
     de: 'Regel bearbeiten',
     fr: 'Modifier la règle',
     hu: 'Szabály szerkesztése',
@@ -912,6 +996,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_name_label': {
     en: 'Name (optional)',
+    sv: 'Namn (valfritt)',
     de: 'Name (optional)',
     fr: 'Nom (optionnel)',
     hu: 'Név (opcionális)',
@@ -923,6 +1008,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_type_label': {
     en: 'Type of the rule',
+    sv: 'Regeltyp',
     de: 'Regeltyp',
     fr: 'Type de règle',
     hu: 'A szabály típusa',
@@ -934,6 +1020,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_type_include': {
     en: 'Include rule',
+    sv: 'Inkluderingsregel',
     de: 'Einschlussregel',
     fr: 'Règle d’inclusion',
     hu: 'Befoglaló szabály',
@@ -945,6 +1032,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_type_exclude': {
     en: 'Exclude rule',
+    sv: 'Exkluderingsregel',
     de: 'Ausschlussregel',
     fr: 'Règle d’exclusion',
     hu: 'Kizáró szabály',
@@ -956,6 +1044,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
+    sv: 'Om flikens URL matchar ("delsträng" eller "/RegExp/")',
     de: 'Wenn die URL des Tabs folgendes enthält ("Zeichenkette" oder "/RegExp/")',
     fr: 'Si l’onglet a l’URL (“sous-chaine” ou “/RegExp/”)',
     hu: 'Ha az URL illeszkedik ("szövegrészlet" vagy /RegExp/)',
@@ -967,6 +1056,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_suffix_include': {
     en: n => `...reopen it in "${n}" container`,
+    sv: n => `...öppna den på nytt i behållaren ”${n}”`,
     de: n => `...in Umgebung "${n}" neu öffnen`,
     fr: n => `…le rouvrir dans le conteneur “${n}”`,
     hu: n => `…újranyitás ebben a konténerben: ${n}`,
@@ -978,6 +1068,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.rule_suffix_exclude': {
     en: n => `...and it is in "${n}" container, reopen it in default container.`,
+    sv: n => `...och den finns i behållaren ”${n}”, öppna den på nytt i standardbehållaren.`,
     de: n => `...und sich in der Umgebung "${n}" befindet, in Standardumgebung neu öffnen.`,
     fr: n => `…et il est dans le conteneur “${n}”, le rouvrir dans le conteneur par défaut.`,
     hu: n => `…és a jelenlegi konténere „${n}”, akkor újranyitás az alapértelmezett konténerben.`,
@@ -989,6 +1080,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.add_rule_btn': {
     en: 'Add rule',
+    sv: 'Lägg till regel',
     de: 'Regel hinzufügen',
     fr: 'Ajouter la règle',
     hu: 'Szabály hozzáadása',
@@ -1000,6 +1092,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.edit_rule_btn.save': {
     en: 'Save',
+    sv: 'Spara',
     de: 'Regel speichern',
     fr: 'Sauvegarder',
     hu: 'Mentés',
@@ -1011,6 +1104,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_reopen_rules.edit_rule_btn.cancel': {
     en: 'Cancel',
+    sv: 'Avbryt',
     de: 'Abbrechen',
     fr: 'Annuler',
     hu: 'Mégsem',
@@ -1022,6 +1116,7 @@ export const commonTranslations: Translations = {
 
   'popup.url_rules.title': {
     en: 'Site Config',
+    sv: 'Webbplatsinställningar',
     de: 'Seitenkonfiguration',
     fr: 'Configuration du site',
     hu: 'Webhelybeállítások',
@@ -1033,6 +1128,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.match_label': {
     en: 'Select tabs by URL',
+    sv: 'Välj flikar efter URL',
     de: 'Tabs nach URL auswählen',
     fr: 'Sélectionner des onglets par URL',
     hu: 'Lapok kijelölése URL alapján',
@@ -1044,6 +1140,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.custom_match_placeholder': {
     en: '"substring" or "/RegExp/"',
+    sv: '"delsträng" eller "/RegExp/"',
     de: '"Zeichenkette" oder "/RegExp/"',
     fr: '“sous-chaine” ou “/RegExp/”',
     hu: '"szövegrészlet" vagy /RegExp/',
@@ -1054,6 +1151,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.reopen_label': {
     en: 'Reopen these tabs in container:',
+    sv: 'Öppna dessa flikar på nytt i behållaren:',
     de: 'Diese Tabs in folgender Umgebung neu öffnen:',
     fr: 'Rouvrir ces onglets dans le conteneur',
     hu: 'Újranyitás konténerben:',
@@ -1065,6 +1163,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.move_label': {
     en: 'Move these tabs to panel:',
+    sv: 'Flytta dessa flikar till panelen:',
     de: 'Diese Tabs in folgendes Panel verschieben:',
     fr: 'Déplacer ces onglets vers le panneau:',
     hu: 'Áthelyezés panelra:',
@@ -1076,6 +1175,7 @@ export const commonTranslations: Translations = {
   },
   'popup.url_rules.move_top_lvl_label': {
     en: 'If tab at the top level of tree',
+    sv: 'Om fliken finns på trädets översta nivå',
     de: 'Wenn sich der Tab auf der obersten Ebene des Baumes befindet',
     fr: 'Si l’onglet est à la racine de l’arborescence',
     hu: 'Ha a lap legfelső szintű',
@@ -1092,6 +1192,7 @@ export const commonTranslations: Translations = {
   // - Toolbar button (browserAction)
   'menu.browserAction.open_settings': {
     en: 'Open settings',
+    sv: 'Öppna inställningar',
     de: 'Einstellungen öffnen',
     fr: 'Ouvrir les paramètres',
     hu: 'Beállítások',
@@ -1103,6 +1204,7 @@ export const commonTranslations: Translations = {
   },
   'menu.browserAction.create_snapshot': {
     en: 'Create snapshot',
+    sv: 'Skapa ögonblicksbild',
     de: 'Schnappschuss erstellen',
     fr: 'Créer un instantané',
     hu: 'Pillanatkép készítése',
@@ -1126,6 +1228,10 @@ export const commonTranslations: Translations = {
       if (tabsCount === 1) return `Open cached window (${tabsCount} tab)`
       return `Open cached window (${tabsCount} tabs)`
     },
+    sv: tabsCount => {
+      if (tabsCount === 1) return `Öppna cachat fönster (${tabsCount} flik)`
+      return `Öppna cachat fönster (${tabsCount} flikar)`
+    },
     de: tabsCount => {
       if (tabsCount === 1) return `Zwischengespeichertes Fenster öffnen (${tabsCount} Tab)`
       return `Zwischengespeichertes Fenster öffnen (${tabsCount} Tabs)`
@@ -1135,6 +1241,7 @@ export const commonTranslations: Translations = {
   },
   'menu.browserAction.reopen_cached_wins': {
     en: 'Open cached window',
+    sv: 'Öppna cachat fönster',
     de: 'Zwischengespeichertes Fenster öffnen',
     ru: 'Открыть кэшированное окно',
     zh_CN: '打开已缓存窗口',
@@ -1156,6 +1263,11 @@ export const commonTranslations: Translations = {
       const p = panelsCount === 1 ? 'panel' : 'panels'
       return `${tabsCount} ${t} in ${panelsCount} ${p}`
     },
+    sv: (tabsCount, panelsCount) => {
+      const t = tabsCount === 1 ? 'flik' : 'flikar'
+      const p = panelsCount === 1 ? 'panel' : 'paneler'
+      return `${tabsCount} ${t} i ${panelsCount} ${p}`
+    },
     de: (tabsCount, panelsCount) => {
       const t = tabsCount === 1 ? 'Tab' : 'Tabs'
       const p = panelsCount === 1 ? 'Panel' : 'Panels'
@@ -1167,6 +1279,7 @@ export const commonTranslations: Translations = {
   // - New tab bar
   'menu.new_tab_bar.no_container': {
     en: 'No Container',
+    sv: 'Ingen behållare',
     de: 'Keine Umgebung',
     fr: 'Pas de conteneur',
     hu: 'Nincs konténer',
@@ -1178,6 +1291,7 @@ export const commonTranslations: Translations = {
   },
   'menu.new_tab_bar.new_container': {
     en: 'In New Container',
+    sv: 'I ny behållare',
     de: 'In neuer Umgebung',
     fr: 'Dans un nouveau conteneur',
     hu: 'Új konténer',
@@ -1188,6 +1302,7 @@ export const commonTranslations: Translations = {
   },
   'menu.new_tab_bar.manage_shortcuts': {
     en: 'Manage Shortcuts',
+    sv: 'Hantera genvägar',
     de: 'Verknüpfungen verwalten',
     fr: 'Gérer les raccourcis',
     hu: 'Parancsikonok kezelése',
@@ -1199,6 +1314,7 @@ export const commonTranslations: Translations = {
   },
   'menu.new_tab_bar.manage_containers': {
     en: 'Manage Containers',
+    sv: 'Hantera behållare',
     de: 'Umgebungen verwalten',
     fr: 'Gérer les conteneurs',
     hu: 'Konténerek kezelése',
@@ -1210,6 +1326,7 @@ export const commonTranslations: Translations = {
   // - Bookmark
   'menu.bookmark.open_in_sub_menu_name': {
     en: 'Open in',
+    sv: 'Öppna i',
     de: 'Öffnen in',
     fr: 'Ouvrir dans',
     hu: 'Megnyitás itt',
@@ -1221,6 +1338,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_new_window': {
     en: 'Open in new normal window',
+    sv: 'Öppna i nytt vanligt fönster',
     de: 'Öffnen in neuem normalen Fenster',
     fr: 'Ouvrir dans une nouvelle fenêtre normale',
     hu: 'Megnyitás itt: új ablak',
@@ -1232,6 +1350,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_new_priv_window': {
     en: 'Open in new private window',
+    sv: 'Öppna i nytt privat fönster',
     de: 'Öffnen in neuem privaten Fenster',
     fr: 'Ouvrir dans une nouvelle fenêtre privée',
     hu: 'Megnyitás itt: új privát ablak',
@@ -1243,6 +1362,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_panel_': {
     en: 'Open in panel...',
+    sv: 'Öppna i panel...',
     de: 'Öffnen in Panel...',
     fr: 'Ouvrir dans le panneau…',
     hu: 'Megnyitás itt: panel…',
@@ -1254,6 +1374,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_new_panel': {
     en: 'Open in new tabs panel',
+    sv: 'Öppna i ny flikpanel',
     de: 'Öffnen in neuem Tab-Panel',
     fr: 'Ouvrir dans un nouveau panneau',
     hu: 'Megnyitás itt: új lappanel',
@@ -1265,6 +1386,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_ctr_': {
     en: 'Open in container...',
+    sv: 'Öppna i behållare...',
     de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
     hu: 'Megnyitás itt: konténer…',
@@ -1276,6 +1398,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_default_ctr': {
     en: 'Open in default container',
+    sv: 'Öppna i standardbehållaren',
     de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
     hu: 'Megnyitás itt: alapértelmezett konténer',
@@ -1287,6 +1410,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_in_': {
     en: 'Open in ',
+    sv: 'Öppna i ',
     de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
     hu: 'Megnyitás itt: ',
@@ -1298,6 +1422,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_sub_menu_name': {
     en: 'Sort',
+    sv: 'Sortera',
     de: 'Sortieren',
     fr: 'Trier',
     hu: 'Rendezés',
@@ -1308,6 +1433,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_name_asc': {
     en: 'Sort by name (A-z)',
+    sv: 'Sortera efter namn (A–Ö)',
     de: 'Sortieren nach Name (A-z)',
     fr: 'Trier par nom (A-z)',
     hu: 'Rendezés: név szerint (A–z)',
@@ -1319,6 +1445,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_name_des': {
     en: 'Sort by name (z-A)',
+    sv: 'Sortera efter namn (Ö–A)',
     de: 'Sortieren nach Name (z-A)',
     fr: 'Trier par nom (z-A)',
     hu: 'Rendezés: név szerint (z–A)',
@@ -1330,6 +1457,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_link_asc': {
     en: 'Sort by URL (A-z)',
+    sv: 'Sortera efter URL (A–Ö)',
     de: 'Sortieren nach URL (A-z)',
     fr: 'Trier par URL (A-z)',
     hu: 'Rendezés: URL szerint (A–z)',
@@ -1341,6 +1469,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_link_des': {
     en: 'Sort by URL (z-A)',
+    sv: 'Sortera efter URL (Ö–A)',
     de: 'Sortieren nach URL (z-A)',
     fr: 'Trier par URL (z-A)',
     hu: 'Rendezés: URL szerint (z–A)',
@@ -1352,6 +1481,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
+    sv: 'Sortera efter tid (äldst först)',
     de: 'Sortieren nach Zeit (Alt-Neu)',
     fr: 'Trier par date (ancien-récent)',
     hu: 'Rendezés: idő szerint (régi–új)',
@@ -1363,6 +1493,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.sort_by_time_des': {
     en: 'Sort by time (New-Old)',
+    sv: 'Sortera efter tid (nyast först)',
     de: 'Sortieren nach Zeit (Neu-Alt)',
     fr: 'Trier par date (récent-ancien)',
     hu: 'Rendezés: idő szerint (új–régi)',
@@ -1374,6 +1505,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.create_bookmark': {
     en: 'Create bookmark',
+    sv: 'Skapa bokmärke',
     de: 'Lesezeichen erstellen',
     fr: 'Créer un marque-page',
     hu: 'Új könyvjelző',
@@ -1385,6 +1517,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.create_folder': {
     en: 'Create folder',
+    sv: 'Skapa mapp',
     de: 'Ordner erstellen',
     fr: 'Créer un dossier',
     hu: 'Új mappa',
@@ -1396,6 +1529,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.create_separator': {
     en: 'Create separator',
+    sv: 'Skapa avskiljare',
     de: 'Trennlinie hinzufügen',
     fr: 'Créer un séparateur',
     hu: 'Új elválasztó',
@@ -1407,6 +1541,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_as_bookmarks_panel': {
     en: 'Open as bookmarks panel',
+    sv: 'Öppna som bokmärkespanel',
     de: 'Als Lesezeichen-Panel öffnen',
     fr: 'Ouvrir en panneau de marque-pages',
     hu: 'Megnyitás könyvjelzőpanelként',
@@ -1418,6 +1553,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.open_as_tabs_panel': {
     en: 'Open as tabs panel',
+    sv: 'Öppna som flikpanel',
     de: 'Als Tab-Panel öffnen',
     fr: 'Ouvrir en panneau d’onglets',
     hu: 'Megnyitás lappanelként',
@@ -1429,6 +1565,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.move_to': {
     en: 'Move to...',
+    sv: 'Flytta till...',
     de: 'Verschieben nach...',
     fr: 'Déplacer vers…',
     hu: 'Áthelyezés…',
@@ -1440,6 +1577,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.edit_bookmark': {
     en: 'Edit',
+    sv: 'Redigera',
     de: 'Bearbeiten',
     fr: 'Modifier',
     hu: 'Szerkesztés',
@@ -1451,6 +1589,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.delete_bookmark': {
     en: 'Delete',
+    sv: 'Ta bort',
     de: 'Löschen',
     fr: 'Supprimer',
     hu: 'Törlés',
@@ -1463,6 +1602,7 @@ export const commonTranslations: Translations = {
   // - Bookmarks panel
   'menu.bookmark.collapse_all': {
     en: 'Collapse all folders',
+    sv: 'Fäll ihop alla mappar',
     de: 'Alle Ordner einklappen',
     fr: 'Replier tous les dossiers',
     hu: 'Mappák becsukása',
@@ -1474,6 +1614,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.switch_view': {
     en: 'View mode',
+    sv: 'Visningsläge',
     de: 'Anzeigemodus',
     fr: 'Mode d’affichage',
     hu: 'Nézet',
@@ -1485,6 +1626,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.switch_view_history': {
     en: 'History view',
+    sv: 'Historikvy',
     de: 'Chronikansicht',
     fr: 'Vue de l’historique',
     hu: 'Előzménynézet',
@@ -1496,6 +1638,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.switch_view_tree': {
     en: 'Tree view',
+    sv: 'Trädvy',
     de: 'Baumansicht',
     fr: 'Vue en arborescence',
     hu: 'Fanézet',
@@ -1507,6 +1650,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.convert_to_tabs_panel': {
     en: 'Convert to tabs panel',
+    sv: 'Konvertera till flikpanel',
     de: 'In Tab-Panel konvertieren',
     fr: 'Convertir en panneau d’onglets',
     hu: 'Átalakítás lappanellá',
@@ -1518,6 +1662,7 @@ export const commonTranslations: Translations = {
   },
   'menu.bookmark.remove_panel': {
     en: 'Remove panel',
+    sv: 'Ta bort panel',
     de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
     hu: 'Panel törlése',
@@ -1529,6 +1674,7 @@ export const commonTranslations: Translations = {
   // - Tab
   'menu.tab.undo': {
     en: 'Undo close tab',
+    sv: 'Ångra stängning av flik',
     de: 'Geschlossenen Tab wiederherstellen',
     fr: 'Rouvrir l’onglet fermé',
     hu: 'Lapbezárás visszavonása',
@@ -1540,6 +1686,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.mute': {
     en: 'Mute',
+    sv: 'Stäng av ljud',
     de: 'Stumm schalten',
     fr: 'Couper le son de l’onglet',
     hu: 'Némítás',
@@ -1551,6 +1698,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.unmute': {
     en: 'Unmute',
+    sv: 'Slå på ljud',
     de: 'Stummschaltung aufheben',
     fr: 'Réactiver le son de l’onglet',
     hu: 'Visszahangosítás',
@@ -1562,6 +1710,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reload': {
     en: 'Reload',
+    sv: 'Ladda om',
     de: 'Neu laden',
     fr: 'Actualiser',
     hu: 'Újratöltés',
@@ -1573,6 +1722,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.bookmark': {
     en: 'Add to bookmarks',
+    sv: 'Lägg till bland bokmärken',
     de: 'Zu Lesezeichen hinzufügen',
     fr: 'Ajouter aux marque-pages',
     hu: 'Könyvjelzőzés',
@@ -1584,6 +1734,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_sub_menu_name': {
     en: 'Move to',
+    sv: 'Flytta till',
     de: 'Verschieben in',
     fr: 'Déplacer vers',
     hu: 'Áthelyezés ide',
@@ -1595,6 +1746,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_new_window': {
     en: 'Move to new window',
+    sv: 'Flytta till nytt fönster',
     de: 'Verschieben in neues Fenster',
     fr: 'Déplacer vers une nouvelle fenêtre',
     hu: 'Áthelyezés ide: új ablak',
@@ -1606,6 +1758,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_new_priv_window': {
     en: 'Move to private window',
+    sv: 'Flytta till privat fönster',
     de: 'Verschieben in privates Fenster',
     fr: 'Déplacer vers une nouvelle fenêtre privée',
     hu: 'Áthelyezés ide: új privát ablak',
@@ -1617,6 +1770,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_window_': {
     en: 'Move to window...',
+    sv: 'Flytta till fönster...',
     de: 'Verschieben in Fenster...',
     fr: 'Déplacer vers une fenêtre existante…',
     hu: 'Áthelyezés ide: ablak…',
@@ -1628,6 +1782,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_another_window': {
     en: 'Move to another window',
+    sv: 'Flytta till ett annat fönster',
     de: 'Verschieben in anderes Fenster',
     fr: 'Déplacer vers une autre fenêtre',
     hu: 'Áthelyezés ide: a másik ablak',
@@ -1639,6 +1794,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_panel_label': {
     en: 'Move to panel...',
+    sv: 'Flytta till panel...',
     de: 'Verschieben in Panel...',
     fr: 'Déplacer vers le panneau…',
     hu: 'Áthelyezés ide: panel…',
@@ -1650,6 +1806,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_panel_': {
     en: 'Move to ',
+    sv: 'Flytta till ',
     de: 'Verschieben in ',
     fr: 'Déplacer vers ',
     hu: 'Áthelyezés ide: ',
@@ -1661,6 +1818,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.move_to_new_panel': {
     en: 'Move to new panel',
+    sv: 'Flytta till ny panel',
     de: 'Verschieben in neues Panel',
     fr: 'Déplacer vers un nouveau panneau',
     hu: 'Áthelyezés ide: új panel',
@@ -1672,6 +1830,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_sub_menu_name': {
     en: 'Reopen in',
+    sv: 'Öppna på nytt i',
     de: 'Neu öffnen in',
     fr: 'Rouvrir dans',
     hu: 'Újranyitás itt',
@@ -1683,6 +1842,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_window': {
     en: 'Reopen in new window of another type',
+    sv: 'Öppna på nytt i ett nytt fönster av annan typ',
     de: 'Neu öffnen in neuem Fenster eines anderen Typs',
     fr: 'Rouvrir dans une nouvelle fenêtre d’un autre type',
     hu: 'Újranyitás itt: ellenkező típusú új ablak',
@@ -1694,6 +1854,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_norm_window': {
     en: 'Reopen in new normal window',
+    sv: 'Öppna på nytt i ett nytt vanligt fönster',
     de: 'Neu öffnen in neuem normalen Fenster',
     fr: 'Rouvrir dans une nouvelle fenêtre normale',
     hu: 'Újranyitás itt: új ablak',
@@ -1705,6 +1866,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_priv_window': {
     en: 'Reopen in new private window',
+    sv: 'Öppna på nytt i ett nytt privat fönster',
     de: 'Neu öffnen in neuem privaten Fenster',
     fr: 'Rouvrir dans une nouvelle fenêtre privée',
     hu: 'Újranyitás itt: új privát ablak',
@@ -1716,6 +1878,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_window': {
     en: 'Reopen in window of another type',
+    sv: 'Öppna på nytt i ett fönster av annan typ',
     de: 'Neu öffnen in Fenster eines anderen Typs',
     fr: 'Rouvrir dans une fenêtre d’un autre type',
     hu: 'Újranyitás itt: ellenkező típusú ablak',
@@ -1727,6 +1890,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_norm_window': {
     en: 'Reopen in normal window',
+    sv: 'Öppna på nytt i ett vanligt fönster',
     de: 'Neu öffnen in normalem Fenster',
     fr: 'Rouvrir dans une fenêtre normale',
     hu: 'Újranyitás itt: normál ablak',
@@ -1738,6 +1902,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_priv_window': {
     en: 'Reopen in private window',
+    sv: 'Öppna på nytt i ett privat fönster',
     de: 'Neu öffnen in privatem Fenster',
     fr: 'Rouvrir dans une fenêtre privée',
     hu: 'Újranyitás itt: privát ablak',
@@ -1749,6 +1914,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_window_': {
     en: 'Reopen in window...',
+    sv: 'Öppna på nytt i fönster...',
     de: 'Neu öffnen in Fenster...',
     fr: 'Rouvrir dans une fenêtre…',
     hu: 'Újranyitás itt: ablak…',
@@ -1760,6 +1926,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_ctr_': {
     en: 'Reopen in container...',
+    sv: 'Öppna på nytt i behållare...',
     de: 'Neu öffnen in Umgebung...',
     fr: 'Rouvrir dans un conteneur',
     hu: 'Újranyitás itt: konténer…',
@@ -1771,6 +1938,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_default_container': {
     en: 'Reopen in default container',
+    sv: 'Öppna på nytt i standardbehållaren',
     de: 'Neu öffnen in Standardumgebung',
     fr: 'Rouvrir dans le conteneur par défaut',
     hu: 'Újranyitás itt: alapértelmezett konténer',
@@ -1782,6 +1950,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_': {
     en: 'Reopen in ',
+    sv: 'Öppna på nytt i ',
     de: 'Neu öffnen in ',
     fr: 'Rouvrir dans ',
     hu: 'Újranyitás itt: ',
@@ -1793,6 +1962,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_new_container': {
     en: 'Reopen in new container',
+    sv: 'Öppna på nytt i en ny behållare',
     de: 'Neu öffnen in neuer Umgebung',
     fr: 'Rouvrir dans un nouveau conteneur',
     hu: 'Újranyitás itt: új konténer',
@@ -1804,6 +1974,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.colorize_': {
     en: 'Set color',
+    sv: 'Ange färg',
     de: 'Farbe festlegen',
     fr: 'Définir la couleur',
     hu: 'Színbeállítás',
@@ -1815,6 +1986,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.colorize_colors': {
     en: 'Color...',
+    sv: 'Färg...',
     de: 'Farbe...',
     fr: 'Couleur…',
     hu: 'Szín…',
@@ -1826,6 +1998,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_sub_menu_name': {
     en: 'Sort',
+    sv: 'Sortera',
     de: 'Sortieren',
     fr: 'Trier',
     hu: 'Rendezés',
@@ -1836,6 +2009,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_title_asc': {
     en: 'Sort tree by title (A-z)',
+    sv: 'Sortera trädet efter titel (A–Ö)',
     de: 'Sortieren nach Titel im Zweig (A-z)',
     fr: 'Trier l’arbre par titre (A-z)',
     hu: 'Rendezés: fa cím szerint (A–z)',
@@ -1847,6 +2021,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_title_des': {
     en: 'Sort tree by title (z-A)',
+    sv: 'Sortera trädet efter titel (Ö–A)',
     de: 'Sortieren nach Titel im Zweig (z-A)',
     fr: 'Trier l’arbre par titre (z-A)',
     hu: 'Rendezés: fa cím szerint (z–A)',
@@ -1858,6 +2033,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_url_asc': {
     en: 'Sort tree by URL (A-z)',
+    sv: 'Sortera trädet efter URL (A–Ö)',
     de: 'Sortieren nach URL im Zweig (A-z)',
     fr: 'Trier l’arbre par URL (A-z)',
     hu: 'Rendezés: fa URL szerint (A–z)',
@@ -1869,6 +2045,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_url_des': {
     en: 'Sort tree by URL (z-A)',
+    sv: 'Sortera trädet efter URL (Ö–A)',
     de: 'Sortieren nach URL im Zweig (z-A)',
     fr: 'Trier l’arbre par URL (z-A)',
     hu: 'Rendezés: fa URL szerint (z–A)',
@@ -1880,6 +2057,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_time_asc': {
     en: 'Sort tree by access time (Old-Recent)',
+    sv: 'Sortera trädet efter senaste åtkomst (äldst först)',
     de: 'Sortieren nach Zugriffszeit im Zweig (Alt-Neu)',
     fr: 'Trier l’arbre par date d’accès (ancien-récent)',
     hu: 'Rendezés: fa idő szerint (régi–új)',
@@ -1891,6 +2069,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_tree_by_time_des': {
     en: 'Sort tree by access time (Recent-Old)',
+    sv: 'Sortera trädet efter senaste åtkomst (senast först)',
     de: 'Sortieren nach Zugriffszeit im Zweig (Neu-Alt)',
     fr: 'Trier l’arbre par date d’accès (récent-ancien)',
     hu: 'Rendezés: fa idő szerint (új–régi)',
@@ -1902,6 +2081,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_title_asc': {
     en: 'Sort by title (A-z)',
+    sv: 'Sortera efter titel (A–Ö)',
     de: 'Sortieren nach Titel (A-z)',
     fr: 'Trier par titre (A-z)',
     hu: 'Rendezés: cím szerint (A–z)',
@@ -1913,6 +2093,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_title_des': {
     en: 'Sort by title (z-A)',
+    sv: 'Sortera efter titel (Ö–A)',
     de: 'Sortieren nach Titel (z-A)',
     fr: 'Trier par titre (z-A)',
     hu: 'Rendezés: cím szerint (z–A)',
@@ -1924,6 +2105,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_url_asc': {
     en: 'Sort by URL (A-z)',
+    sv: 'Sortera efter URL (A–Ö)',
     de: 'Sortieren nach URL (A-z)',
     fr: 'Trier par URL (A-z)',
     hu: 'Rendezés: URL szerint (A–z)',
@@ -1935,6 +2117,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_url_des': {
     en: 'Sort by URL (z-A)',
+    sv: 'Sortera efter URL (Ö–A)',
     de: 'Sortieren nach URL (z-A)',
     fr: 'Trier par titre (z-A)',
     hu: 'Rendezés: URL szerint (z–A)',
@@ -1946,6 +2129,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_time_asc': {
     en: 'Sort by access time (Old-Recent)',
+    sv: 'Sortera efter senaste åtkomst (äldst först)',
     de: 'Sortieren nach Zugriffszeit (Alt-Neu)',
     fr: 'Trier par date d’accès (ancien-récent)',
     hu: 'Rendezés: idő szerint (régi–új)',
@@ -1957,6 +2141,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sort_by_time_des': {
     en: 'Sort by access time (Recent-Old)',
+    sv: 'Sortera efter senaste åtkomst (senast först)',
     de: 'Sortieren nach Zugriffszeit (Neu-Alt)',
     fr: 'Trier par date d’accès (récent-ancien)',
     hu: 'Rendezés: idő szerint (új–régi)',
@@ -1968,6 +2153,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.pin': {
     en: 'Pin',
+    sv: 'Fäst',
     de: 'Anheften',
     fr: 'Épingler',
     hu: 'Rögzítés',
@@ -1979,6 +2165,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.unpin': {
     en: 'Unpin',
+    sv: 'Lösgör',
     de: 'Lösen',
     fr: 'Désépingler',
     hu: 'Feloldás',
@@ -1990,6 +2177,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.duplicate': {
     en: 'Duplicate',
+    sv: 'Duplicera',
     de: 'Duplizieren',
     fr: 'Dupliquer',
     hu: 'Megkettőzés',
@@ -2001,6 +2189,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.discard': {
     en: 'Unload',
+    sv: 'Frigör',
     de: 'Entladen',
     fr: 'Décharger',
     hu: 'Kisöprés',
@@ -2012,6 +2201,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.discard_other': {
     en: 'Unload other tabs',
+    sv: 'Frigör andra flikar',
     de: 'Andere Tabs entladen',
     fr: 'Décharger les autres onglets',
     hu: 'A többi lap kisöprése',
@@ -2023,6 +2213,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.edit_title': {
     en: 'Edit title',
+    sv: 'Redigera titel',
     de: 'Titel bearbeiten',
     fr: 'Modifier le titre',
     hu: 'Cím szerkesztése',
@@ -2034,6 +2225,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.group': {
     en: 'Group',
+    sv: 'Gruppera',
     de: 'Gruppieren',
     fr: 'Grouper',
     hu: 'Csoportosítás',
@@ -2045,6 +2237,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.flatten': {
     en: 'Flatten',
+    sv: 'Placera flikarna på samma nivå',
     de: 'Abflachen',
     fr: 'Aplatir',
     hu: 'Szintcsökkentés',
@@ -2056,6 +2249,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.url_conf': {
     en: 'Configure site...',
+    sv: 'Webbplatsinställningar...',
     de: 'Seite konfigurieren...',
     fr: 'Configurer le site…',
     hu: 'Webhelybeállítások…',
@@ -2067,6 +2261,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close': {
     en: 'Close',
+    sv: 'Stäng',
     de: 'Schließen',
     fr: 'Fermer',
     hu: 'Bezárás',
@@ -2078,6 +2273,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_ctr_': {
     en: 'Open in container...',
+    sv: 'Öppna i behållare...',
     de: 'Öffnen in Umgebung...',
     fr: 'Ouvrir dans un conteneur…',
     hu: 'Megnyitás itt: konténer…',
@@ -2089,6 +2285,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_default_container': {
     en: 'Open in default container',
+    sv: 'Öppna i standardbehållaren',
     de: 'Öffnen in Standardumgebung',
     fr: 'Ouvrir dans le conteneur par défaut',
     hu: 'Megnyitás itt: alapértelmezett konténer',
@@ -2100,6 +2297,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.open_in_': {
     en: 'Open in ',
+    sv: 'Öppna i ',
     de: 'Öffnen in ',
     fr: 'Ouvrir dans ',
     hu: 'Megnyitás itt: ',
@@ -2111,6 +2309,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.sync': {
     en: 'Sync',
+    sv: 'Synkronisera',
     de: 'Synchronisieren',
     fr: 'Synchronisation',
     hu: 'Szinkronizálás',
@@ -2121,6 +2320,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.clear_cookies': {
     en: 'Clear cookies',
+    sv: 'Rensa kakor',
     de: 'Cookies löschen',
     fr: 'Effacer les cookies',
     hu: 'Sütik törlése',
@@ -2131,6 +2331,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close_descendants': {
     en: 'Close descendants',
+    sv: 'Stäng underliggande flikar',
     de: 'Untergeordnete schließen',
     fr: 'Fermer les descendants',
     hu: 'Utódlapok bezárása',
@@ -2142,6 +2343,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close_branch': {
     en: 'Close branch',
+    sv: 'Stäng gren',
     de: 'Zweig schließen',
     fr: 'Fermer la branche',
     hu: 'Ág lapjainak bezárása',
@@ -2153,6 +2355,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close_above': {
     en: 'Close tabs above',
+    sv: 'Stäng flikar ovanför',
     de: 'Tabs darüber schließen',
     fr: 'Fermer les onglets au-dessus',
     hu: 'Lapok bezárása felfelé',
@@ -2164,6 +2367,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close_below': {
     en: 'Close tabs below',
+    sv: 'Stäng flikar nedanför',
     de: 'Tabs darunter schließen',
     fr: 'Fermer les onglets en dessous',
     hu: 'Lapok bezárása lefelé',
@@ -2175,6 +2379,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.close_other': {
     en: 'Close other tabs',
+    sv: 'Stäng andra flikar',
     de: 'Andere Tabs schließen',
     fr: 'Fermer les autres onglets',
     hu: 'A többi lap bezárása',
@@ -2187,6 +2392,7 @@ export const commonTranslations: Translations = {
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute audible tabs',
+    sv: 'Stäng av ljudet på flikar som spelar ljud',
     de: 'Hörbare Tabs stummschalten',
     fr: 'Couper le son des onglets audibles',
     hu: 'Hangos lapok némítása',
@@ -2198,6 +2404,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.reload': {
     en: 'Reload tabs',
+    sv: 'Ladda om flikar',
     de: 'Tabs neu laden',
     fr: 'Actualiser les onglets',
     hu: 'Lapok újratöltése',
@@ -2209,6 +2416,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.discard': {
     en: 'Unload tabs',
+    sv: 'Frigör flikar',
     de: 'Tabs entladen',
     fr: 'Décharger les onglets',
     hu: 'Lapok kisöprése',
@@ -2220,6 +2428,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_sub_menu_name': {
     en: 'Sort tabs',
+    sv: 'Sortera flikar',
     de: 'Tabs sortieren',
     fr: 'Trier les onglets',
     hu: 'Minden lap rendezése',
@@ -2231,6 +2440,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_title_asc': {
     en: 'Sort tabs by title (A-z)',
+    sv: 'Sortera flikar efter titel (A–Ö)',
     de: 'Tabs nach Titel sortieren (A-z)',
     fr: 'Trier les onglets par titre (A-z)',
     hu: 'Minden lap rendezése: cím szerint (A–z)',
@@ -2242,6 +2452,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_title_des': {
     en: 'Sort tabs by title (z-A)',
+    sv: 'Sortera flikar efter titel (Ö–A)',
     de: 'Tabs nach Titel sortieren (z-A)',
     fr: 'Trier les onglets  par titre (z-A)',
     hu: 'Minden lap rendezése: cím szerint (z–A)',
@@ -2253,6 +2464,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_url_asc': {
     en: 'Sort tabs by URL (A-z)',
+    sv: 'Sortera flikar efter URL (A–Ö)',
     de: 'Tabs nach URL sortieren (A-z)',
     fr: 'Trier les onglets par URL (A-z)',
     hu: 'Minden lap rendezése: URL szerint (A–z)',
@@ -2264,6 +2476,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_url_des': {
     en: 'Sort tabs by URL (z-A)',
+    sv: 'Sortera flikar efter URL (Ö–A)',
     de: 'Tabs nach URL sortieren (z-A)',
     fr: 'Trier les onglets par URL (z-A)',
     hu: 'Minden lap rendezése: URL szerint (z–A)',
@@ -2275,6 +2488,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_time_asc': {
     en: 'Sort tabs by access time (Old-Recent)',
+    sv: 'Sortera flikar efter senaste åtkomst (äldst först)',
     de: 'Tabs nach Zugriffszeit sortieren (Alt-Neu)',
     fr: 'Trier les onglets par date (ancien-récent)',
     hu: 'Minden lap rendezése: idő szerint (régi–új)',
@@ -2286,6 +2500,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sort_all_by_time_des': {
     en: 'Sort tabs by access time (Recent-Old)',
+    sv: 'Sortera flikar efter senaste åtkomst (senast först)',
     de: 'Tabs nach Zugriffszeit sortieren (Neu-Alt)',
     fr: 'Trier les onglets par date (récent-ancien)',
     hu: 'Minden lap rendezése: idő szerint (új–régi)',
@@ -2297,6 +2512,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.sel_all': {
     en: 'Select tabs',
+    sv: 'Markera flikar',
     de: 'Tabs auswählen',
     fr: 'Sélectionner les onglets',
     hu: 'Minden lap kijelölése',
@@ -2308,6 +2524,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.collapse_inact_branches': {
     en: 'Collapse inactive branches',
+    sv: 'Fäll ihop inaktiva grenar',
     de: 'Inaktive Zweige einklappen',
     fr: 'Replier les branches inactives',
     hu: 'Inaktív ágak becsukása',
@@ -2319,6 +2536,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.dedup': {
     en: 'Close duplicate tabs',
+    sv: 'Stäng dubblettflikar',
     de: 'Doppelte Tabs schließen',
     fr: 'Fermer les onglets dupliqués',
     hu: 'Másodpéldányok bezárása',
@@ -2330,6 +2548,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.close': {
     en: 'Close tabs',
+    sv: 'Stäng flikar',
     de: 'Tabs schließen',
     fr: 'Fermer les onglets',
     hu: 'Lapok bezárása',
@@ -2341,6 +2560,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.bookmark': {
     en: 'Save to bookmarks',
+    sv: 'Spara som bokmärken',
     de: 'In Lesezeichen speichern',
     fr: 'Sauvegarder dans les marque-pages',
     hu: 'Könyvjelzőzés',
@@ -2352,6 +2572,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.restore_from_bookmarks': {
     en: 'Restore from bookmarks',
+    sv: 'Återställ från bokmärken',
     de: 'Aus Lesezeichen wiederherstellen',
     fr: 'Restaurer depuis les marque-pages',
     hu: 'Visszaállítás a könyvjelzőkből',
@@ -2363,6 +2584,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.convert_to_bookmarks_panel': {
     en: 'Convert to bookmarks panel',
+    sv: 'Konvertera till bokmärkespanel',
     de: 'In Lesezeichen-Panel konvertieren',
     fr: 'Convertir en panneau de marque-pages',
     hu: 'Átalakítás könyvjelzőpanellá',
@@ -2374,6 +2596,7 @@ export const commonTranslations: Translations = {
   },
   'menu.tabs_panel.remove_panel': {
     en: 'Remove panel',
+    sv: 'Ta bort panel',
     de: 'Panel entfernen',
     fr: 'Supprimer le panneau',
     hu: 'Panel törlése',
@@ -2385,6 +2608,7 @@ export const commonTranslations: Translations = {
   // - History
   'menu.history.open': {
     en: 'Open',
+    sv: 'Öppna',
     de: 'Öffnen',
     fr: 'Historique',
     hu: 'Megnyitás',
@@ -2396,6 +2620,7 @@ export const commonTranslations: Translations = {
   },
   'menu.history.delete_visits': {
     en: n => (n === 1 ? 'Forget visit' : 'Forget visits'),
+    sv: n => (n === 1 ? 'Glöm besöket' : 'Glöm besöken'),
     de: n => (n === 1 ? 'Besuch vergessen' : 'Besuche vergessen'),
     fr: n => (n === 1 ? 'Supprimer la visite' : 'Supprimer les visites'),
     hu: n => (n === 1 ? 'Megtekintés törlése' : 'Megtekintések törlése'),
@@ -2407,6 +2632,7 @@ export const commonTranslations: Translations = {
   },
   'menu.history.delete_sites': {
     en: n => (n === 1 ? 'Forget site' : 'Forget sites'),
+    sv: n => (n === 1 ? 'Glöm webbplatsen' : 'Glöm webbplatserna'),
     de: n => (n === 1 ? 'Seite vergessen' : 'Seiten vergessen'),
     fr: n => (n === 1 ? 'Oublier le site' : 'Oublier les sites'),
     hu: n => (n === 1 ? 'Webhely törlése' : 'Webhelyek törlése'),
@@ -2419,6 +2645,7 @@ export const commonTranslations: Translations = {
   // - Common
   'menu.dedupe': {
     en: 'Deduplicate',
+    sv: 'Ta bort dubbletter',
     de: 'Deduplizieren',
     fr: 'Dédupliquer',
     hu: 'Deduplikáció',
@@ -2430,6 +2657,7 @@ export const commonTranslations: Translations = {
   },
   'menu.copy_urls': {
     en: n => (n === 1 || n === undefined ? 'Copy URL' : 'Copy URLs'),
+    sv: n => (n === 1 || n === undefined ? 'Kopiera URL' : 'Kopiera URL:er'),
     de: n => (n === 1 || n === undefined ? 'URL kopieren' : 'URLs kopieren'),
     fr: n => (n === 1 || n === undefined ? 'Copier l’URL' : 'Copier les URLs'),
     hu: n => (n === 1 || n === undefined ? 'Hivatkozás másolása' : 'Hivatkozások másolása'),
@@ -2441,6 +2669,7 @@ export const commonTranslations: Translations = {
   },
   'menu.copy_titles': {
     en: n => (n === 1 || n === undefined ? 'Copy title' : 'Copy titles'),
+    sv: n => (n === 1 || n === undefined ? 'Kopiera titel' : 'Kopiera titlar'),
     de: n => (n === 1 || n === undefined ? 'Titel kopieren' : 'Mehrere Titel kopieren'),
     fr: n => (n === 1 || n === undefined ? 'Copier le titre' : 'Copier les titres'),
     hu: n => (n === 1 || n === undefined ? 'Cím másolása' : 'Címek másolása'),
@@ -2452,6 +2681,7 @@ export const commonTranslations: Translations = {
   },
   'menu.copy_by_templates': {
     en: 'Copy by templates...',
+    sv: 'Kopiera med mallar...',
     de: 'Kopieren nach Vorlagen...',
     fr: 'Copier avec modèle…',
     hu: 'Másolás sablonok alapján...',
@@ -2464,6 +2694,7 @@ export const commonTranslations: Translations = {
   'menu.copy_by_template': {
     ru: name => `Копировать ${name}`,
     en: name => 'Copy ' + name,
+    sv: name => 'Kopiera ' + name,
     de: name => name + ' kopieren',
     fr: name => `Copier ${name}`,
     zh_CN: name => '复制 ' + name,
@@ -2471,6 +2702,7 @@ export const commonTranslations: Translations = {
   },
   'menu.paste': {
     en: 'Paste',
+    sv: 'Klistra in',
     de: 'Einfügen',
     fr: 'Coller',
     hu: 'Paszta',
@@ -2482,6 +2714,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.pin_panel': {
     en: 'Pin panel',
+    sv: 'Fäst panel',
     de: 'Panel anheften',
     fr: 'Éplingler le panneau',
     hu: 'Panel rögzítése',
@@ -2493,6 +2726,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.unpin_panel': {
     en: 'Unpin panel',
+    sv: 'Lösgör panel',
     de: 'Panel lösen',
     fr: 'Désépingler le panneau',
     hu: 'Panel feloldása',
@@ -2504,6 +2738,7 @@ export const commonTranslations: Translations = {
   },
   'menu.panels.unload': {
     en: 'Unload',
+    sv: 'Frigör',
     de: 'Entladen',
     fr: 'Décharger',
     hu: 'Kisöprés',
@@ -2515,6 +2750,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.conf': {
     en: 'Configure panel',
+    sv: 'Anpassa panel',
     de: 'Panel konfigurieren',
     fr: 'Configurer le panneau',
     hu: 'Panelbeállítások',
@@ -2526,6 +2762,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.conf_tooltip': {
     en: 'Configure panel\nAlt: Basic panel config',
+    sv: 'Anpassa panel\nAlt: Grundläggande panelinställningar',
     de: 'Panel konfigurieren\nAlt: Grundkonfiguration des Panels',
     fr: 'Configurer le panneau\nAlt: Configuration basique du panneau',
     hu: 'Panelbeállítások\nAlt: alapszintű panelbeállítások',
@@ -2537,6 +2774,7 @@ export const commonTranslations: Translations = {
   },
   'menu.common.conf_in_sidebar': {
     en: 'Configure panel in sidebar',
+    sv: 'Anpassa panel i sidofältet',
     de: 'Panel in der Seitenleiste konfigurieren',
     fr: 'Configurer le panneau dans la barre latérale',
     hu: 'Panelbeállítások az oldalsávon',
@@ -2548,6 +2786,7 @@ export const commonTranslations: Translations = {
   },
   'menu.panels.hide_panel': {
     en: 'Hide panel',
+    sv: 'Dölj panel',
     de: 'Panel verstecken',
     fr: 'Cacher le panneau',
     hu: 'Panel elrejtése',
@@ -2560,6 +2799,7 @@ export const commonTranslations: Translations = {
   // - Menu Editor
   'menu.editor.reset': {
     en: 'Reset',
+    sv: 'Återställ',
     de: 'Zurücksetzen',
     fr: 'Réinitialiser',
     hu: 'Alaphelyzet',
@@ -2571,6 +2811,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.create_separator': {
     en: 'Create separator',
+    sv: 'Skapa avskiljare',
     de: 'Trennlinie hinzufügen',
     fr: 'Créer un séparateur',
     hu: 'Új elválasztó',
@@ -2582,6 +2823,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.create_sub_tooltip': {
     en: 'Create sub-menu',
+    sv: 'Skapa undermeny',
     de: 'Untermenü erstellen',
     fr: 'Créer un sous-menu',
     hu: 'Új almenü',
@@ -2593,6 +2835,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.down_tooltip': {
     en: 'Move down',
+    sv: 'Flytta nedåt',
     de: 'Nach unten verschieben',
     fr: 'Déplacer en dessous',
     hu: 'Mozgatás le',
@@ -2604,6 +2847,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.up_tooltip': {
     en: 'Move up',
+    sv: 'Flytta uppåt',
     de: 'Nach oben verschieben',
     fr: 'Déplacer au-dessus',
     hu: 'Mozgatás fel',
@@ -2615,6 +2859,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.disable_tooltip': {
     en: 'Disable',
+    sv: 'Inaktivera',
     de: 'Deaktivieren',
     fr: 'Désactiver',
     hu: 'Tiltás',
@@ -2625,6 +2870,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.tabs_title': {
     en: 'Tabs',
+    sv: 'Flikar',
     de: 'Tabs',
     fr: 'Onglets',
     hu: 'Lapok',
@@ -2636,6 +2882,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.tabs_panel_title': {
     en: 'Tabs panel',
+    sv: 'Flikpanel',
     de: 'Tab-Panel',
     fr: 'Panneau d’onglets',
     hu: 'Lappanel',
@@ -2647,6 +2894,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.bookmarks_title': {
     en: 'Bookmarks',
+    sv: 'Bokmärken',
     de: 'Lesezeichen',
     fr: 'Marque-pages',
     hu: 'Könyvjelzők',
@@ -2658,6 +2906,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.bookmarks_panel_title': {
     en: 'Bookmarks panel',
+    sv: 'Bokmärkespanel',
     de: 'Lesezeichen-Panel',
     fr: 'Panneau de marque-pages',
     hu: 'Könyvjelzőpanel',
@@ -2669,6 +2918,7 @@ export const commonTranslations: Translations = {
   },
   'menu.editor.inline_group_title': {
     en: 'Sub-menu label...',
+    sv: 'Undermenyns etikett...',
     de: 'Untermenü-Bezeichnung...',
     fr: 'Libellé du sous-menu…',
     hu: 'Az almenü neve…',
@@ -2684,6 +2934,7 @@ export const commonTranslations: Translations = {
   // -
   'settings.opt_true': {
     en: 'on',
+    sv: 'på',
     de: 'Ein',
     fr: 'on',
     hu: 'be',
@@ -2695,6 +2946,7 @@ export const commonTranslations: Translations = {
   },
   'settings.opt_false': {
     en: 'off',
+    sv: 'av',
     de: 'Aus',
     fr: 'off',
     hu: 'ki',
@@ -2710,6 +2962,7 @@ export const commonTranslations: Translations = {
   // -
   'time.month_0': {
     en: 'January',
+    sv: 'januari',
     de: 'Januar',
     fr: 'Janvier',
     hu: 'január',
@@ -2720,6 +2973,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_1': {
     en: 'February',
+    sv: 'februari',
     de: 'Februar',
     fr: 'Février',
     hu: 'február',
@@ -2730,6 +2984,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_2': {
     en: 'March',
+    sv: 'mars',
     de: 'März',
     fr: 'Mars',
     hu: 'március',
@@ -2740,6 +2995,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_3': {
     en: 'April',
+    sv: 'april',
     de: 'April',
     fr: 'Avril',
     hu: 'április',
@@ -2750,6 +3006,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_4': {
     en: 'May',
+    sv: 'maj',
     de: 'Mai',
     fr: 'Mai',
     hu: 'május',
@@ -2760,6 +3017,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_5': {
     en: 'June',
+    sv: 'juni',
     de: 'Juni',
     fr: 'Juin',
     hu: 'június',
@@ -2770,6 +3028,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_6': {
     en: 'July',
+    sv: 'juli',
     de: 'Juli',
     fr: 'Juillet',
     hu: 'július',
@@ -2780,6 +3039,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_7': {
     en: 'August',
+    sv: 'augusti',
     de: 'August',
     fr: 'Aout',
     hu: 'augusztus',
@@ -2790,6 +3050,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_8': {
     en: 'September',
+    sv: 'september',
     de: 'September',
     fr: 'Septembre',
     hu: 'szeptember',
@@ -2800,6 +3061,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_9': {
     en: 'October',
+    sv: 'oktober',
     de: 'Oktober',
     fr: 'Octobre',
     hu: 'október',
@@ -2810,6 +3072,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_10': {
     en: 'November',
+    sv: 'november',
     de: 'November',
     fr: 'Novembre',
     hu: 'november',
@@ -2820,6 +3083,7 @@ export const commonTranslations: Translations = {
   },
   'time.month_11': {
     en: 'December',
+    sv: 'december',
     de: 'Dezember',
     fr: 'Décembre',
     hu: 'december',
@@ -2830,6 +3094,7 @@ export const commonTranslations: Translations = {
   },
   'time.today': {
     en: 'Today',
+    sv: 'I dag',
     de: 'Heute',
     fr: 'Aujourd’hui',
     hu: 'Ma',
@@ -2840,6 +3105,7 @@ export const commonTranslations: Translations = {
   },
   'time.yesterday': {
     en: 'Yesterday',
+    sv: 'I går',
     de: 'Gestern',
     fr: 'Hier',
     hu: 'Tegnap',
@@ -2854,6 +3120,7 @@ export const commonTranslations: Translations = {
   // -
   'notif.open_private_windows_err': {
     en: 'Cannot open window',
+    sv: 'Det går inte att öppna fönstret',
     de: 'Fenster konnte nicht geöffnet werden',
     fr: 'Impossible d’ouvrir la fenêtre',
     ru: 'Нельзя открыть окно',
@@ -2862,6 +3129,7 @@ export const commonTranslations: Translations = {
   },
   'notif.open_private_windows_err_details': {
     en: 'Extension does not have permission for incognito mode',
+    sv: 'Tillägget saknar behörighet att köras i privata fönster',
     de: 'Die Erweiterung darf nicht in privaten Fenstern ausgeführt werden',
     fr: 'L’extension n’a pas les permissions nécessaires pour le mode de navigation privé',
     ru: 'У расширения нет разрешения на работу в приватных окнах',
@@ -2874,36 +3142,42 @@ export const commonTranslations: Translations = {
   // -
   'omnibox.default_suggestion': {
     en: 'Choose the command (default is the first one):',
+    sv: 'Välj kommando (det första används som standard):',
     de: 'Befehl auswählen (standardmäßig der erste):',
     fr: 'Choisir la commande (la première est celle par défaut)',
     ru: 'Выберите команду (по умолчанию первая в списке):',
   },
   'omnibox.reopen_in_ctr': {
     en: ctrName => `⭮ Reopen an active tab in "${ctrName}" container`,
+    sv: ctrName => `⭮ Öppna den aktiva fliken på nytt i behållaren ”${ctrName}”`,
     de: ctrName => `⭮ Aktiven Tab in Umgebung "${ctrName}" neu öffnen`,
     fr: ctrName => `⭮ Réouvrir un onglet actif dans le conteneur “${ctrName}”`,
     ru: ctrName => `⭮ Переоткрыть активную вкладку в контейнере "${ctrName}"`,
   },
   'omnibox.reopen_in_ctr.default_ctr_name': {
     en: 'Default container',
+    sv: 'Standardbehållare',
     de: 'Standardumgebung',
     fr: 'Conteneur par défaut',
     ru: 'Стандартный контейнер',
   },
   'omnibox.move_to_panel': {
     en: panelName => `↔ Move an active tab to "${panelName}" panel`,
+    sv: panelName => `↔ Flytta den aktiva fliken till panelen ”${panelName}”`,
     de: panelName => `↔ Aktiven Tab in Panel "${panelName}" verschieben`,
     fr: panelName => `↔ Déplacer un onglet actif dans le panneau “${panelName}”`,
     ru: panelName => `↔ Переместить активную вкладку в панель "${panelName}"`,
   },
   'omnibox.switch_to_panel': {
     en: panelName => `⮞ Switch to "${panelName}" panel`,
+    sv: panelName => `⮞ Växla till panelen ”${panelName}”`,
     de: panelName => `⮞ Zu Panel "${panelName}" wechseln`,
     fr: panelName => `⮞ Basculer vers le panneau “${panelName}”`,
     ru: panelName => `⮞ Переключиться на панель "${panelName}"`,
   },
   'omnibox.move_to_tab': {
     en: tabTitle => `↕ Move an active tab to group: "${tabTitle}"`,
+    sv: tabTitle => `↕ Flytta den aktiva fliken till gruppen: ”${tabTitle}”`,
     de: tabTitle => `↕ Aktiven Tab in Gruppe verschieben: "${tabTitle}"`,
     fr: tabTitle => `↕ Déplacer un onglet actif dans le groupe: “${tabTitle}”`,
     ru: tabTitle => `↕ Переместить активную вкладку в группу: "${tabTitle}"`,
