@@ -16,6 +16,10 @@
 
 ### Changed
 - Make pinned tabs global by default (for new users)
+- Context menu: options of the icon-only first row are rendered as regular menu items (e.g. 'Unload tabs' in the tabs panel menu)  
+  BREAKING CHANGE (for custom styles users):
+  - Removed `--ctx-menu-icon-opt-height` CSS var
+  - Removed `.inline-group` and `.icon-opt` classes
 
 ### Fixed
 
