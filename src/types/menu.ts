@@ -33,7 +33,7 @@ export interface MenuOption {
   onClick?: () => void
   onAltClick?: () => void
 }
-export type MenuBlockType = 'list' | 'inline' | 'sub'
+export type MenuBlockType = 'list' | 'sub'
 export interface MenuBlock {
   type: MenuBlockType
   opts: MenuOption[]

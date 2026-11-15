@@ -28,23 +28,7 @@
                     svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
         div(v-for="group in state.tickBlocks" :class="`${group.type}-group`")
-          .icon-opt(
-            v-if="group.type === 'inline'"
-            v-for="opt in group.opts"
-            :data-width="btnWidth(group.opts)"
-            :data-selected="isSelected(opt)"
-            :data-separator="opt.type === 'separator'"
-            :data-color="opt.color"
-            :data-container-color="opt.containerColor"
-            :data-inactive="opt.inactive"
-            :title="opt.tooltip ?? opt.label"
-            @mousedown="onMouseDown($event, opt)"
-            @mouseup="onMouseUp($event, opt)")
-            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
-            img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else): use(:href="'#' + opt.icon")
           .opt(
-            v-if="group.type === 'list'"
             v-for="opt in group.opts"
             :data-selected="isSelected(opt)"
             :data-separator="opt.type === 'separator'"
@@ -96,23 +80,7 @@
                     svg.icon(v-else-if="opt.icon"): use(:href="'#' + opt.icon")
                   .label {{opt.label}}
         div(v-for="group in state.tackBlocks" :class="`${group.type}-group`")
-          .icon-opt(
-            v-if="group.type === 'inline'"
-            v-for="opt in group.opts"
-            :data-width="btnWidth(group.opts)"
-            :data-selected="isSelected(opt)"
-            :data-separator="opt.type === 'separator'"
-            :data-color="opt.color"
-            :data-container-color="opt.containerColor"
-            :data-inactive="opt.inactive"
-            :title="opt.tooltip ?? opt.label"
-            @mousedown="onMouseDown($event, opt)"
-            @mouseup="onMouseUp($event, opt)")
-            svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:href="'#' + opt.badge")
-            img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else): use(:href="'#' + opt.icon")
           .opt(
-            v-if="group.type === 'list'"
             v-for="(opt, i) in group.opts"
             :key="opt.label"
             :data-selected="isSelected(opt)"
@@ -338,14 +306,6 @@ function getY(menuH: number, y: number, isAbovePointer: boolean): number {
   if (menuH >= boxH) return 0
   if (isAbovePointer && menuH > y) return boxH - 16
   return isAbovePointer ? y - 1 : y + 1
-}
-
-function btnWidth(opts: T.MenuOption[]): string {
-  let len = opts.reduce((a, v) => (v.constructor === String ? a : a + 1), 0)
-  if (len <= 5) return 'norm'
-  if (len === 6) return '3'
-  if (len === 8) return '4'
-  return 'wrap'
 }
 
 function isSelected(opt: T.MenuOption): boolean {

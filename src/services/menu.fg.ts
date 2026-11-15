@@ -240,8 +240,12 @@ function createMenuBlocks(config: T.MenuConf, customForced?: boolean): T.MenuBlo
         }
         block.opts.push({ label: name, sub: opts, inactive: allInactive })
       } else {
-        blocks.push({ type: 'inline', opts })
-        block = undefined
+        // Append to the current list block
+        if (!block) {
+          block = { type: 'list', opts: [] }
+          blocks.push(block)
+        }
+        block.opts = block.opts.concat(opts)
       }
     }
   }
