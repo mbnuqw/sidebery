@@ -261,6 +261,9 @@ function onFocusIn(e: FocusEvent): void {
 }
 
 function onFocusOut(e: FocusEvent): void {
+  // Opening a native context menu can move focus out of the sidebar.
+  // Its actions still need the selection until the menu is clicked or dismissed.
+  if (Menu.isNativeOpen) return
   if ((e as MozFocusEvent).explicitOriginalTarget === e.target && !DnD.reactive.isStarted) {
     if (Menu.isOpen) Menu.close()
     Selection.resetSelection()
