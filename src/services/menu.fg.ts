@@ -18,6 +18,7 @@ import * as Notifications from 'src/services/notifications.fg'
 import * as Menu from 'src/services/menu.fg'
 
 export let isOpen = false
+export let isNativeOpen = false
 export let tabsConf: T.MenuConf = []
 export const setTabsConf = (m: T.MenuConf) => (tabsConf = m)
 export let bookmarksConf: T.MenuConf = []
@@ -99,6 +100,7 @@ export async function importCtxMenu(ctxMenu: T.MenuConfs) {
 }
 
 function onMenuHiddenFg(): void {
+  isNativeOpen = false
   Selection.resetSelection()
 }
 
@@ -160,6 +162,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
   isOpen = true
 
   if (Settings.state.ctxMenuNative && !customForced) {
+    isNativeOpen = true
     for (const block of blocks) {
       for (const opt of block.opts) {
         if (opt.sub && opt.sub.length && opt.label) {
