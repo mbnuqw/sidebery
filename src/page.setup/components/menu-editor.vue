@@ -182,6 +182,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
   pasteTabs: 'menu.paste',
   editTabTitle: 'menu.tab.edit_title',
   colorizeTab: 'menu.tab.colorize_colors',
+  applyColorToChildren: 'menu.tab.apply_color_to_children',
   group: 'menu.tab.group',
   flatten: 'menu.tab.flatten',
   urlConf: 'menu.tab.url_conf',

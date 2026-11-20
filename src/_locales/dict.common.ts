@@ -1824,6 +1824,10 @@ export const commonTranslations: Translations = {
     zh_TW: '顏色...',
     ja: '色…',
   },
+  'menu.tab.apply_color_to_children': {
+    en: 'Apply color to child tabs',
+    fr: 'Appliquer la couleur aux onglets enfants',
+  },
   'menu.tab.sort_sub_menu_name': {
     en: 'Sort',
     de: 'Sortieren',

@@ -106,3 +106,21 @@ export function setCustomColor(tabIds: ID[], color: string): void {
 
   Tabs.cacheTabsData()
 }
+
+export function applyCustomColorToChildren(tabIds: ID[]): void {
+  Tabs.sortTabIds(tabIds)
+
+  for (const id of tabIds) {
+    const tab = Tabs.byId[id]
+    if (!tab || !tab.isParent) continue
+
+    for (const child of Tabs.getBranch(tab, false)) {
+      if (child.customColor === tab.customColor) continue
+      child.customColor = tab.customColor
+      child.reactive.customColor = child.customColor ?? null
+      Tabs.saveTabData(child.id)
+    }
+  }
+
+  Tabs.cacheTabsData()
+}

@@ -552,6 +552,19 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     if (opts.length) return opts
   },
 
+  applyColorToChildren: () => {
+    const selected = Selection.ids()
+    const option: MenuOption = {
+      label: translate('menu.tab.apply_color_to_children'),
+      icon: 'icon_dropper',
+      onClick: () => Tabs.applyCustomColorToChildren(selected),
+    }
+    const hasChildren = selected.some(id => Tabs.byId[id]?.isParent)
+    if (!Settings.state.tabsTree || !hasChildren) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   editTabTitle: () => {
     const selected = Selection.ids()
     const firstTab = Tabs.byId[selected[0]]
