@@ -13,7 +13,7 @@ export const TABS_MENU: MenuConf = [
   },
   {
     name: '%menu.tab.colorize_',
-    opts: ['colorizeTab'],
+    opts: ['colorizeTab', 'separator-7', 'applyColorToChildren'],
   },
   {
     name: '%menu.tab.sort_sub_menu_name',
