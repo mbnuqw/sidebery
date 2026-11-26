@@ -28,6 +28,17 @@
   color: var(--toolbar-fg)
   flex: 1 1
 
+.Snapshots .active-snapshot-section .error-msg
+  position: absolute
+  top: 50%
+  left: 50%
+  width: max-content
+  max-width: @css{min(80%, 640px)}
+  transform: translate(-50%, -50%)
+  color: var(--status-err)
+  font-size: rem(16)
+  white-space: pre-wrap
+
 .Snapshots .active-snapshot-section .header
   position: relative
   display: flex
@@ -665,7 +676,7 @@ for i in 1..12
     opacity: .7
   &[data-sel="true"]:after
     opacity: 1
-.Snapshots .tab[data-shift-sel="true"] .checkbox:before
+.Snapshots .tab[data-sel-focus="true"] .checkbox:before
   box-shadow: inset 0 0 0 2px var(--status-active)
 
 .Snapshots .tab .container-mark

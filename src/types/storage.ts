@@ -21,8 +21,8 @@ export interface Stored {
   sidebar?: T.SidebarConfig
   lastFocusedActivePanelId?: ID
 
-  snapshots?: T.Snapshot[]
-  lastSnapTime?: number
+  snapshots?: T.MinifiedSnapshot[] // DEPR
+  lastSnapTime?: number // DEPR
 
   contextMenu?: T.MenuConfs
 

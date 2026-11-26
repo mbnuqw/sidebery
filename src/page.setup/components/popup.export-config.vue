@@ -3,41 +3,52 @@
   h2.title {{translate('settings.export_title')}}
 
   ToggleField(label="settings.backup_all" :value="allSelected" @update:value="onAllChanged")
-  ToggleField(label="settings.backup_settings" v-model:value="state.settings")
-  ToggleField(label="settings.backup_menu" v-model:value="state.menu")
-  ToggleField(label="settings.backup_containers" v-model:value="state.containers")
-  ToggleField(label="settings.backup_nav" v-model:value="state.nav")
-  ToggleField(v-if="state.hasStyles" label="settings.backup_styles" v-model:value="state.styles")
-  ToggleField(label="settings.backup_snapshots" v-model:value="state.snapshots")
-  ToggleField(label="settings.backup_favicons" v-model:value="state.favicons")
-  ToggleField(label="settings.backup_kb" v-model:value="state.keybindings")
+  ToggleField(label="settings.backup_settings" v-model:value="state.settings" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_menu" v-model:value="state.menu" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_containers" v-model:value="state.containers" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_nav" v-model:value="state.nav" @update:value="genExportDataDebounced()")
+  ToggleField(v-if="state.hasStyles" label="settings.backup_styles" v-model:value="state.styles" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_snapshots" v-model:value="state.snapshots" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_favicons" v-model:value="state.favicons" @update:value="genExportDataDebounced()")
+  ToggleField(label="settings.backup_kb" v-model:value="state.keybindings" @update:value="genExportDataDebounced()")
 
   .ctrls
-    a.btn(ref="exportDataLink" @mouseenter="genExportData") {{translate('settings.help_exp_data')}}
+    a.btn(
+      ref="exportDataLink"
+      :href="state.dataLink"
+      :download="state.dataName"
+      :title="state.dataName"
+      :data-inactive="!state.dataLink") {{translate('settings.help_exp_data')}}
+    LoadingDots(v-if="state.fetchingData")
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import type { BackupData, Stored } from 'src/types'
+import type { BackupData, Snapshot, Stored } from 'src/types'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import * as Styles from 'src/services/styles'
 import * as Logs from 'src/services/logs'
+import * as IPC from 'src/services/ipc'
 import ToggleField from '../../components/toggle-field.vue'
+import LoadingDots from 'src/components/loading-dots.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
 const exportDataLink = ref<HTMLAnchorElement | null>(null)
 
 const state = reactive({
-  settings: true,
-  menu: true,
-  containers: true,
-  nav: true,
+  fetchingData: false,
+  dataLink: '',
+  dataName: '',
+  settings: false,
+  menu: false,
+  containers: false,
+  nav: false,
   hasStyles: false,
-  styles: true,
-  snapshots: true,
-  favicons: true,
-  keybindings: true,
+  styles: false,
+  snapshots: false,
+  favicons: false,
+  keybindings: false,
 })
 
 onMounted(async () => {
@@ -67,6 +78,8 @@ function onAllChanged(): void {
     state.snapshots = false
     state.favicons = false
     state.keybindings = false
+    state.dataLink = ''
+    state.dataName = ''
   } else {
     state.settings = true
     state.menu = true
@@ -76,6 +89,7 @@ function onAllChanged(): void {
     state.snapshots = true
     state.favicons = true
     state.keybindings = true
+    genExportDataDebounced()
   }
 }
 
@@ -87,7 +101,13 @@ function onWheel(e: WheelEvent): void {
   if (scrollOffset === maxScrollOffset && e.deltaY > 0) e.preventDefault()
 }
 
+let fetchingDataCb: (() => void) | undefined = undefined
 async function genExportData(): Promise<void> {
+  if (state.fetchingData) return
+  state.fetchingData = true
+  state.dataLink = ''
+  state.dataName = ''
+
   const storageKeys: (keyof Stored)[] = []
   if (state.containers) storageKeys.push('containers')
   if (state.settings) storageKeys.push('settings')
@@ -96,9 +116,6 @@ async function genExportData(): Promise<void> {
   if (state.hasStyles && state.styles) {
     storageKeys.push('sidebarCSS')
     storageKeys.push('groupCSS')
-  }
-  if (state.snapshots) {
-    storageKeys.push('snapshots')
   }
   if (state.favicons) {
     storageKeys.push('favicons_01')
@@ -110,32 +127,37 @@ async function genExportData(): Promise<void> {
     storageKeys.push('favDomains')
   }
 
-  let data
-  const backup: BackupData = {}
-  try {
-    data = await browser.storage.local.get<Stored>(storageKeys)
-  } catch (err) {
-    return Logs.err('genExportData: Cannot get storage data', err)
+  if (!storageKeys.length && !state.snapshots && !state.keybindings) {
+    state.fetchingData = false
+    return
   }
 
-  if (state.containers && data.containers) backup.containers = data.containers
-  if (state.settings && data.settings) backup.settings = data.settings
-  if (state.nav && data.sidebar) backup.sidebar = data.sidebar
-  if (state.menu && data.contextMenu) backup.contextMenu = data.contextMenu
+  const [storageResult, snapshotsResult] = await Promise.allSettled([
+    storageKeys.length ? browser.storage.local.get<Stored>(storageKeys) : ({} as Stored),
+    state.snapshots ? IPC.bg('getAllSnapshots') : ([] as Snapshot[]),
+  ])
+  const storage = Utils.settledOr(storageResult, {})
+  const snapshots = Utils.settledOr(snapshotsResult, [])
+  const backup: BackupData = {}
+
+  if (state.containers && storage.containers) backup.containers = storage.containers
+  if (state.settings && storage.settings) backup.settings = storage.settings
+  if (state.nav && storage.sidebar) backup.sidebar = storage.sidebar
+  if (state.menu && storage.contextMenu) backup.contextMenu = storage.contextMenu
   if (state.hasStyles && state.styles) {
-    if (data.sidebarCSS) backup.sidebarCSS = data.sidebarCSS
-    if (data.groupCSS) backup.groupCSS = data.groupCSS
+    if (storage.sidebarCSS) backup.sidebarCSS = storage.sidebarCSS
+    if (storage.groupCSS) backup.groupCSS = storage.groupCSS
   }
-  if (state.snapshots && data.snapshots) backup.snapshots = data.snapshots
-  if (state.favicons && data.favicons_01?.length && data.favDomains && data.favHashes) {
-    const fullList = data.favicons_01
-    if (data.favicons_02?.length) fullList.push(...data.favicons_02)
-    if (data.favicons_03?.length) fullList.push(...data.favicons_03)
-    if (data.favicons_04?.length) fullList.push(...data.favicons_04)
-    if (data.favicons_05?.length) fullList.push(...data.favicons_05)
+  if (state.snapshots && snapshots) backup.snapshotsV2 = snapshots
+  if (state.favicons && storage.favicons_01?.length && storage.favDomains && storage.favHashes) {
+    const fullList = storage.favicons_01
+    if (storage.favicons_02?.length) fullList.push(...storage.favicons_02)
+    if (storage.favicons_03?.length) fullList.push(...storage.favicons_03)
+    if (storage.favicons_04?.length) fullList.push(...storage.favicons_04)
+    if (storage.favicons_05?.length) fullList.push(...storage.favicons_05)
     backup.favicons = fullList
-    backup.favDomains = data.favDomains
-    backup.favHashes = data.favHashes
+    backup.favDomains = storage.favDomains
+    backup.favHashes = storage.favHashes
   }
 
   backup.ver = browser.runtime.getManifest().version
@@ -155,9 +177,22 @@ async function genExportData(): Promise<void> {
   let time = Utils.uTime(now, '.')
 
   if (exportDataLink.value) {
-    exportDataLink.value.href = URL.createObjectURL(file)
-    exportDataLink.value.download = `sidebery-data-${date}-${time}.json`
-    exportDataLink.value.title = `sidebery-data-${date}-${time}.json`
+    state.dataLink = URL.createObjectURL(file)
+    state.dataName = `sidebery-data-${date}-${time}.json`
   }
+
+  state.fetchingData = false
+  if (fetchingDataCb) {
+    fetchingDataCb()
+    fetchingDataCb = undefined
+  }
+}
+
+async function genExportDataDebounced() {
+  if (state.fetchingData) {
+    if (!fetchingDataCb) await new Promise<void>(ok => (fetchingDataCb = ok))
+    else return
+  }
+  genExportData()
 }
 </script>

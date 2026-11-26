@@ -40,6 +40,11 @@ void (async function main() {
     detachSidebarTabs: Tabs.detachSidebarTabs,
     openTabs: Tabs.openTabs,
     setActivePanelId: Sidebar.setActivePanelId,
+    saveSnapshots: Snapshots.saveSnapshots,
+    saveLegacySnapshots: Snapshots.saveLegacySnapshots,
+    getSnapshotsInfo: Snapshots.getSnapshotsInfo,
+    getSnapshot: Snapshots.getSnapshot,
+    getAllSnapshots: Snapshots.getAllSnapshots,
     createSnapshot: Snapshots.createSnapshot,
     addSnapshot: Snapshots.addSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
@@ -91,7 +96,7 @@ void (async function main() {
   Permissions.setupListeners()
   Favicons.load()
   Menu.setupListeners()
-  Snapshots.scheduleSnapshots()
+  Snapshots.load().then(() => Snapshots.scheduleSnapshots())
 
   // Update title preface on sidebar connection/disconnection
   IPC.onConnected(E.InstanceType.sidebar, winId => {

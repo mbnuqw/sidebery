@@ -25,6 +25,17 @@ export interface StoragePropInfo {
   len: string
 }
 
+// export interface OPFSFileInfo {
+//   kind: 'file' | 'directory'
+//   path: string
+//   name: string
+//   dir: string
+//   lvl: number
+//   size: number
+//   sizeStr: string
+//   parent?: FileSystemDirectoryHandle
+// }
+
 export interface SetupPageReactiveState {
   nav: SetupPageNavOption[]
   activeView: SetupPageView
@@ -47,16 +58,16 @@ export interface SetupPageReactiveState {
   storagePropsByName: Record<string, StoragePropInfo>
   storageOveral: string
   faviconsCache: { favicon: string; tooltip: string }[]
+  // opfsLoading: boolean
+  // opfsFiles: OPFSFileInfo[]
+  // opfsUsedStr: string
+  // opfsQuotaStr: string
 }
 
 let isReady = false
 let readyStateResolve: (() => void)[] = []
 let navLockTimeout: number | undefined
 const els: Record<string, HTMLElement> = {}
-
-export const snapshotsViewer: {
-  refresh?: (newSnapshots: T.Snapshot[]) => any
-} = {}
 
 export const state = {
   navLock: false,
@@ -120,6 +131,10 @@ export let reactive: SetupPageReactiveState = {
   storagePropsByName: {},
   storageOveral: '_',
   faviconsCache: [],
+  // opfsLoading: false,
+  // opfsFiles: [],
+  // opfsUsedStr: '_',
+  // opfsQuotaStr: '?',
 }
 
 export function reactivate(r: T.Reactivator<SetupPageReactiveState>) {
@@ -570,3 +585,64 @@ export async function updStorageInfo<T extends keyof T.Stored>(propKey: T, propD
   const size = SetupPage.reactive.storageProps.reduce((a, v) => a + v.size, 0)
   SetupPage.reactive.storageOveral = Utils.sizeToString(size)
 }
+
+// const opfsFiles: OPFSFileInfo[] = []
+// let opfsUsed = 0
+// let opfsQuota = 0
+
+// export async function calcOPFSStorageInfo() {
+//   opfsFiles.length = 0
+//   reactive.opfsLoading = true
+//   reactive.opfsUsedStr = '_'
+//   reactive.opfsQuotaStr = '?'
+//   opfsUsed = 0
+//   opfsQuota = 0
+//   try {
+//     const quotaInfo = await navigator.storage.estimate()
+//     opfsUsed = quotaInfo.usage ?? 0
+//     opfsQuota = quotaInfo.quota ?? 0
+//     const root = await navigator.storage.getDirectory()
+//     await walkOPFS(root, '', 0)
+//   } catch (err) {
+//     reactive.opfsLoading = false
+//     reactive.opfsFiles = []
+//     return
+//   }
+//   reactive.opfsFiles = [...opfsFiles]
+//   reactive.opfsUsedStr = opfsUsed ? Utils.sizeToString(opfsUsed) : '_'
+//   reactive.opfsQuotaStr = opfsQuota ? Utils.sizeToString(opfsQuota) : '?'
+//   reactive.opfsLoading = false
+//   Logs.info('reactive.opfsFiles:', reactive.opfsFiles)
+// }
+
+// async function walkOPFS(
+//   handle: FileSystemFileHandle | FileSystemDirectoryHandle,
+//   path: string,
+//   lvl: number,
+//   parent?: FileSystemDirectoryHandle
+// ) {
+//   const info: OPFSFileInfo = {
+//     kind: handle.kind,
+//     path: path + '/' + handle.name,
+//     name: handle.name,
+//     dir: path,
+//     lvl,
+//     size: -1,
+//     sizeStr: '',
+//     parent,
+//   }
+//   opfsFiles.push(info)
+//   if (handle.kind === 'file') {
+//     const size = (await handle.getFile()).size
+//     info.size = size
+//     info.sizeStr = Utils.sizeToString(size)
+//     return
+//   }
+//   if (handle.name) {
+//     path = path + '/' + handle.name
+//     lvl = lvl + 1
+//   }
+//   for await (const [_, h] of handle.entries()) {
+//     await walkOPFS(h, path, lvl, handle)
+//   }
+// }

@@ -1,135 +1,128 @@
 <template lang="pug">
 .Snapshots(@click="onClick")
   .wrapper
-    .snapshot-list-section
-      .snapshot-list(:data-empty="!state.snapshots.length")
-        .controls
-          .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
-          .btn
-            .label {{translate('snapshot.btn_import_snapshot')}}
-            input(type="file" accept="application/json" @input="importSnapshot")
-        .snapshot(
-          v-for="snapshot in state.snapshots"
-          :key="snapshot.id"
-          :id="String(snapshot.id)"
-          :data-active="state.activeSnapshot?.id === snapshot.id"
-          @click="activateSnapshot(snapshot)")
-          .info
-            .date-time {{snapshot.dateStr}} - {{snapshot.timeStr}}
-            .content-info {{getSnapInfo(snapshot)}}
-          .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
-            svg: use(href="#icon_trash")
-
-    .active-snapshot-section
-      .header(v-if="state.activeSnapshot" :data-empty="!state.activeSnapshot")
-        .title(@wheel="onHeaderWheel") {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
-        DropDownButton(
-          :label="translate('snapshot.btn_export_snapshot')"
-          @open="onExportSnapshotDropDownOpen")
-          a#json_snap_export_link.snapshot-export-opt
-            .label {{translate('snapshot.btn_export_snapshot_json')}}
-          a#md_snap_export_link.snapshot-export-opt
-            .label {{translate('snapshot.btn_export_snapshot_md')}}
-            .note {{translate('snapshot.btn_export_snapshot_md_note')}}
-          .snapshot-export-opt(@click="copyAsMarkdown"): .label {{translate('snapshot.btn_copy_snapshot_md')}}
-
-        .btn(@click="openAllWindows(state.activeSnapshot)").
-          {{translate('snapshot.btn_open_all_win')}}
-      .content(v-if="state.activeSnapshot")
-        .windows
-          .window(v-for="(win, i) in state.activeSnapshot.windows" :key="i")
-            .window-bar(:data-folded="win.folded")
-              .drop-down-btn(@click="win.folded = !win.folded")
-                svg.exp-icon: use(href="#icon_expand")
-              .win-name {{translate('snapshot.window_title') + ' ' + (i + 1)}}
-              svg.win-private(v-if="win.private"): use(href="#icon_priv_win")
-              .win-len ({{win.tabsLen}} {{translate('snapshot.snap_tab', win.tabsLen)}})
-              .btn(@click="openWindow(state.activeSnapshot, i, win.private)").
-                {{translate('snapshot.btn_open_win')}}
-              .btn(v-if="win.private" @click="openWindow(state.activeSnapshot, i, !win.private)").
-                {{translate('snapshot.btn_open_as_norm_win')}}
-              .btn(v-else @click="openWindow(state.activeSnapshot, i, !win.private)").
-                {{translate('snapshot.btn_open_as_private_win')}}
-            .panels(v-show="!win.folded")
-              .panel(v-for="panel in win.panels" :key="panel.id")
-                .panel-bar(:data-color="panel.color" :data-folded="panel.folded")
-                  .drop-down-btn(@click="panel.folded = !panel.folded")
-                    svg.exp-icon: use(href="#icon_expand")
-                  .icon
-                    img(v-if="panel.iconIMG" :src="panel.iconIMG")
-                    svg(v-else): use(:href="'#' + panel.iconSVG")
-                  .name {{panel.name}}
-                  .len {{panel.tabs.length}} {{translate('snapshot.snap_tab', panel.tabs.length)}}
-                .tabs(v-show="!panel.folded")
-                  SnapTab(
-                    v-for="(tab, i) in panel.tabs"
-                    v-show="!tab.invisible"
-                    :key="tab.id"
-                    :index="i"
-                    :tab="tab"
-                    :panel="panel"
-                    :snapshot="state.activeSnapshot"
-                    :viewerState="state")
-      .selection-bar(:data-active="!!selectedTabsLen")
-        .info {{translate('snapshot.selected')}} {{selectedTabsLen}}
-        DropDownButton(
-          :label="translate('snapshot.sel.open_in')")
-          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewWindow)")
-            .label {{translate('snapshot.sel.open_in_window')}}
-          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewPrivateWindow)")
-            .label {{translate('snapshot.sel.open_in_private_window')}}
-          a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.CurrentPanel)")
-            .label {{translate('snapshot.sel.open_in_panel')}}
-        .btn(@click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
-
-    .placeholder(v-if="!state.snapshots.length")
-      .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_first')}}
+    //- Empty
+    .placeholder(v-if="Snapshots.reactive.ready && !Snapshots.reactive.snapshotsInfo.length")
+      .btn(@click="Snapshots.createSnapshot()") {{translate('snapshot.btn_create_first')}}
       .btn
         .label {{translate('snapshot.btn_import_snapshot')}}
         input(type="file" accept="application/json" @input="importSnapshot")
+    //- Not ready
+    .placeholder(v-else-if="!Snapshots.reactive.ready")
+      LoadingDots
+    //- Normal state
+    template(v-else)
+      .snapshot-list-section
+        .snapshot-list(:data-empty="!Snapshots.reactive.snapshotsInfo.length")
+          .controls
+            .btn(@click="Snapshots.createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
+            .btn
+              .label {{translate('snapshot.btn_import_snapshot')}}
+              input(type="file" accept="application/json" @input="importSnapshot")
+          .snapshot(
+            v-for="snapInfo in Snapshots.reactive.snapshotsInfo"
+            :key="snapInfo.id"
+            :id="String(snapInfo.id)"
+            :data-active="Snapshots.reactive.activeSnapshot?.id === snapInfo.id"
+            @click="Snapshots.activateSnapshot(snapInfo)")
+            .info
+              .date-time {{snapInfo.dateStr}} - {{snapInfo.timeStr}}
+              .content-info {{getSnapInfo(snapInfo)}}
+            .rm-btn(:title="translate('snapshot.btn_remove')" @click.stop="removeSnapshot(snapInfo)")
+              svg: use(href="#icon_trash")
+
+      .active-snapshot-section
+        //- Error
+        template(v-if="Snapshots.reactive.activeSnapshotError")
+          .error-msg {{Snapshots.reactive.activeSnapshotError}}
+        //- Loading
+        template(v-else-if="!Snapshots.reactive.activeSnapshot")
+          LoadingDots
+        //- Normal state
+        template(v-else)
+          .header(v-if="Snapshots.reactive.activeSnapshot" :data-empty="!Snapshots.reactive.activeSnapshot")
+            .title {{Snapshots.reactive.activeSnapshot?.dateStr ?? '?'}} - {{Snapshots.reactive.activeSnapshot?.timeStr ?? '?'}}
+            DropDownButton(
+              :label="translate('snapshot.btn_export_snapshot')"
+              @open="onExportSnapshotDropDownOpen")
+              a#json_snap_export_link.snapshot-export-opt
+                .label {{translate('snapshot.btn_export_snapshot_json')}}
+              a#md_snap_export_link.snapshot-export-opt
+                .label {{translate('snapshot.btn_export_snapshot_md')}}
+                .note {{translate('snapshot.btn_export_snapshot_md_note')}}
+              .snapshot-export-opt(@click="copyAsMarkdown"): .label {{translate('snapshot.btn_copy_snapshot_md')}}
+            .btn(@click="openAllWindows(Snapshots.reactive.activeSnapshot)").
+              {{translate('snapshot.btn_open_all_win')}}
+
+          .content(v-if="Snapshots.reactive.activeSnapshot")
+            .windows
+              .window(v-for="(win, i) in Snapshots.reactive.activeSnapshot.windows" :key="i")
+                .window-bar(:data-folded="win.reactive.folded")
+                  .drop-down-btn(@click="win.reactive.folded = !win.reactive.folded")
+                    svg.exp-icon: use(href="#icon_expand")
+                  .win-name {{translate('snapshot.window_title') + ' ' + (i + 1)}}
+                  svg.win-private(v-if="win.private"): use(href="#icon_priv_win")
+                  .win-len ({{win.tabsLen}} {{translate('snapshot.snap_tab', win.tabsLen)}})
+                  .btn(@click="openWindow(Snapshots.reactive.activeSnapshot, i, win.private)").
+                    {{translate('snapshot.btn_open_win')}}
+                  .btn(v-if="win.private" @click="openWindow(Snapshots.reactive.activeSnapshot, i, !win.private)").
+                    {{translate('snapshot.btn_open_as_norm_win')}}
+                  .btn(v-else @click="openWindow(Snapshots.reactive.activeSnapshot, i, !win.private)").
+                    {{translate('snapshot.btn_open_as_private_win')}}
+                .panels(v-show="!win.reactive.folded")
+                  .panel(v-for="panel in win.panels" :key="panel.id")
+                    .panel-bar(:data-color="panel.color" :data-folded="panel.reactive.folded")
+                      .drop-down-btn(@click="panel.reactive.folded = !panel.reactive.folded")
+                        svg.exp-icon: use(href="#icon_expand")
+                      .icon
+                        img(v-if="panel.iconIMG" :src="panel.iconIMG")
+                        svg(v-else): use(:href="'#' + panel.iconSVG")
+                      .name {{panel.name}}
+                      .len {{panel.tabs.length}} {{translate('snapshot.snap_tab', panel.tabs.length)}}
+                    .tabs(v-show="!panel.reactive.folded")
+                      SnapTab(
+                        v-for="(tab, i) in panel.tabs"
+                        v-show="!tab.reactive.invisible"
+                        :key="tab.id"
+                        :index="i"
+                        :tab="tab")
+
+          .selection-bar(:data-active="!!selectedTabsLen")
+            .info {{translate('snapshot.selected')}} {{selectedTabsLen}}
+            DropDownButton(
+              :label="translate('snapshot.sel.open_in')")
+              a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewWindow)")
+                .label {{translate('snapshot.sel.open_in_window')}}
+              a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.NewPrivateWindow)")
+                .label {{translate('snapshot.sel.open_in_private_window')}}
+              a.snapshot-export-opt(@click="openSelectedTabs(SnapOpenType.CurrentPanel)")
+                .label {{translate('snapshot.sel.open_in_panel')}}
+            .btn(@click="Snapshots.reactive.activeSnapshot.resetSelection()") {{translate('snapshot.sel.reset_sel')}}
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, reactive } from 'vue'
+import { computed, nextTick } from 'vue'
 import type * as T from 'src/types'
-import { SnapOpenType, RemovingSnapshotResult } from 'src/enums'
+import { SnapOpenType } from 'src/enums'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
-import * as Store from 'src/services/storage.fg'
 import * as Windows from 'src/services/windows.fg'
 import * as Snapshots from 'src/services/snapshots.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import * as SetupPage from 'src/services/setup-page.fg'
 import DropDownButton from 'src/components/drop-down-button.vue'
+import LoadingDots from 'src/components/loading-dots.vue'
 import SnapTab from './snapshots.tab.vue'
 
-const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
-
-const dayStartMs = Utils.getDayStartMS()
-
-export interface SnapshotsViewerState {
-  snapshots: T.SnapshotState[]
-  activeSnapshot: T.SnapshotState | null
-  mouseUpShiftTabId: ID | null
-  mouseUpShiftMode: boolean
-}
-const state = reactive({
-  snapshots: [],
-  activeSnapshot: null,
-  mouseUpShiftTabId: null,
-  mouseUpShiftMode: true,
-} as SnapshotsViewerState)
-
 const selectedTabsLen = computed<number>(() => {
-  if (!state.activeSnapshot) return 0
+  if (!Snapshots.reactive.activeSnapshot) return 0
 
   let len = 0
-  for (const win of state.activeSnapshot.windows) {
+  for (const win of Snapshots.reactive.activeSnapshot.windows) {
     for (const panel of win.panels) {
       for (const tab of panel.tabs) {
-        if (tab.sel) len++
+        if (tab.reactive.sel) len++
       }
     }
   }
@@ -138,114 +131,35 @@ const selectedTabsLen = computed<number>(() => {
 })
 
 void (async function init(): Promise<void> {
-  const snapshots = []
-  let stored
-  try {
-    stored = await browser.storage.local.get<T.Stored>('snapshots')
-  } catch (err) {
-    return Logs.err('Snapshots.vue: init: Cannot get stored snapshots', err)
-  }
-  if (!stored.snapshots) stored.snapshots = []
+  Logs.info('Snapshots.vue.init')
+  if (!Snapshots.ready) await Snapshots.waitForSnapshotsReady()
+  Logs.info('Snapshots.vue.init: snapshots info loaded!')
 
-  if (stored.snapshots.length > 0) {
-    // Normalize snapshots
-    for (let i = stored.snapshots.length; i--;) {
-      const snapshot = Snapshots.parseSnapshot(stored.snapshots, i, dayStartMs)
-      if (snapshot) snapshots.push(snapshot)
-    }
+  const firstSnapInfo = Snapshots.reactive.snapshotsInfo[0]
+  if (firstSnapInfo) Snapshots.activateSnapshot(firstSnapInfo)
 
-    state.snapshots = snapshots
-    state.activeSnapshot = snapshots[0]
-  }
-
-  Store.onKeyChange('snapshots', onSnapshotsChange)
+  Logs.info('Snapshots.vue.init: done!')
 })()
 
-function onSnapshotsChange(newSnapshots?: T.Snapshot[]): void {
-  if (!newSnapshots) newSnapshots = []
-
-  SetupPage.updStorageInfo('snapshots', newSnapshots)
-
-  updateSnapshots(newSnapshots)
-}
-
-function updateSnapshots(newSnapshots: T.Snapshot[]) {
-  const snapshots = []
-
-  // Normalize snapshots
-  for (let i = newSnapshots.length; i--;) {
-    let snapshot = Snapshots.parseSnapshot(newSnapshots, i, dayStartMs)
-    if (snapshot) snapshots.push(snapshot)
-  }
-
-  let activeSnapshot = snapshots.find(s => s.id === state.activeSnapshot?.id) ?? null
-  if (!activeSnapshot) resetSelection(state.activeSnapshot)
-  if (activeSnapshot) activeSnapshot = state.activeSnapshot
-
-  state.snapshots = snapshots
-  state.activeSnapshot = activeSnapshot ?? snapshots[0]
-}
-SetupPage.snapshotsViewer.refresh = updateSnapshots
-
-function activateSnapshot(snapshot?: T.SnapshotState): void {
-  if (!snapshot || state.activeSnapshot === snapshot) return
-  resetSelection(state.activeSnapshot)
-  state.activeSnapshot = snapshot
-}
-
-function onHeaderWheel(e: WheelEvent): void {
-  e.preventDefault()
-  e.stopPropagation()
-
-  if (!state.activeSnapshot) return
-  let index = state.snapshots.findIndex(s => s.id === state.activeSnapshot?.id)
-  if (index === -1) return
-
-  resetSelection(state.activeSnapshot)
-
-  // Down / Up
-  let maxIndex = state.snapshots.length - 1
-  if (e.deltaY > 0 && index < maxIndex) index++
-  if (e.deltaY < 0 && index > 0) index--
-
-  state.activeSnapshot = state.snapshots[index]
-
-  const el = document.getElementById(state.activeSnapshot.id as string)
-  if (el) el.scrollIntoView(SCROLL_CONF)
-}
-
-function resetSelection(snapshot?: T.SnapshotState | null): void {
-  if (!snapshot && state.activeSnapshot) snapshot = state.activeSnapshot
-  if (!snapshot) return
-
-  state.mouseUpShiftTabId = null
-
-  for (const win of snapshot.windows) {
-    for (const panel of win.panels) {
-      for (const tab of panel.tabs) {
-        tab.sel = false
-      }
-    }
-  }
-}
-
 function onClick() {
-  state.mouseUpShiftTabId = null
-  state.mouseUpShiftMode = true
+  if (Snapshots.reactive.activeSnapshot) {
+    Snapshots.reactive.activeSnapshot.reactive.selectionFocusTabId = null
+    Snapshots.reactive.activeSnapshot.reactive.selectionFocusSelect = true
+  }
 }
 
 async function openSelectedTabs(how: SnapOpenType): Promise<void> {
-  if (!state.activeSnapshot) return
+  if (!Snapshots.reactive.activeSnapshot) return
 
   const items: T.ItemInfo[] = []
-  for (const win of state.activeSnapshot.windows) {
+  for (const win of Snapshots.reactive.activeSnapshot.windows) {
     const ids: Record<ID, boolean> = {}
-    const tabsByLvl: Record<number, T.SnapTabState> = {}
+    const tabsByLvl: Record<number, Snapshots.SnapshotVMTabStruct> = {}
     for (const panel of win.panels) {
       for (const tab of panel.tabs) {
         if (tab.id === undefined) continue
         tabsByLvl[tab.lvl ?? 0] = tab
-        if (!tab.sel) continue
+        if (!tab.reactive.sel) continue
         ids[tab.id] = true
 
         let url: string | undefined = tab.url
@@ -260,17 +174,16 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
           customColor: tab.customColor,
           title: tab.title,
           container: await Snapshots.adaptContainer(
-            state.activeSnapshot,
+            Snapshots.reactive.activeSnapshot,
             tab.containerId ?? CONTAINER_ID
           ),
         }
         if (tab.lvl && tab.lvl > 0) {
           let shift = 1
           let parent = tabsByLvl[tab.lvl - shift]
-          while (parent && !parent.sel) parent = tabsByLvl[tab.lvl - ++shift]
-          if (parent?.sel) item.parentId = parent.id
+          while (parent && !parent.reactive.sel) parent = tabsByLvl[tab.lvl - ++shift]
+          if (parent?.reactive.sel) item.parentId = parent.id
         }
-        if (tab.parentId !== undefined && ids[tab.parentId]) item.parentId = tab.parentId
         items.push(item)
       }
     }
@@ -323,73 +236,51 @@ async function openSelectedTabs(how: SnapOpenType): Promise<void> {
   }
 }
 
-async function createSnapshot(): Promise<void> {
-  await IPC.bg('createSnapshot')
-}
-
-async function openAllWindows(snapshot: T.SnapshotState | null): Promise<void> {
+async function openAllWindows(snapshot: Snapshots.SnapshotVMStruct | null): Promise<void> {
   if (!snapshot) return
 
-  const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
-
   try {
-    await IPC.bg('openSnapshotWindows', normSnapshot)
+    await IPC.bg('openSnapshotWindows', snapshot.getSnapshot())
   } catch (err) {
     Logs.err('Snapshots: Cannot openAllWindows', err)
   }
 }
 
 async function openWindow(
-  snapshot: T.SnapshotState | null,
+  snapshot: Snapshots.SnapshotVMStruct | null,
   winIndex: number,
   incognito: boolean
 ): Promise<void> {
   if (!snapshot) return
 
-  const normSnapshot = Snapshots.snapshotStateToNormalizedSnapshot(snapshot)
-
   try {
-    await IPC.bg('openSnapshotWindows', normSnapshot, winIndex, incognito)
+    await IPC.bg('openSnapshotWindows', snapshot.getSnapshot(), winIndex, incognito)
   } catch (err) {
     Logs.err('Snapshots: Cannot openWindow', err)
   }
 }
 
-async function removeSnapshot(snapshot: T.SnapshotState): Promise<void> {
-  const result = await IPC.bg('removeSnapshot', snapshot.id)
+let removing = false
+async function removeSnapshot(snapshot: T.SnapshotInfo): Promise<void> {
+  if (removing) return
+  Logs.info('Snapshots.removeSnapshot:', snapshot.id)
 
-  if (result === RemovingSnapshotResult.Ok) {
-    const index = state.snapshots.findIndex(s => s.id === snapshot.id)
-    if (index === -1) return
-
-    if (state.activeSnapshot?.id === snapshot.id) {
-      let nextActiveSnapshot = state.snapshots[index - 1]
-      if (!nextActiveSnapshot) nextActiveSnapshot = state.snapshots[index + 1]
-      state.activeSnapshot = nextActiveSnapshot ?? null
-    }
-
-    state.snapshots.splice(index, 1)
-    recalcSizes()
-  } else {
-    Logs.warn('Snapshots: Cannot removeSnapshot')
+  removing = true
+  try {
+    await IPC.bg('removeSnapshot', snapshot.id)
+    removing = false
+  } catch (err) {
+    removing = false
+    Logs.err('Snapshots: Unable to remove snapshot:', err)
+    return
   }
+  Logs.info('Snapshots.removeSnapshot: Done')
 }
 
-async function recalcSizes(): Promise<void> {
-  const storedSnapshots = await Snapshots.getStoredSnapshots()
-  if (!storedSnapshots) return
-
-  for (const snapshot of storedSnapshots) {
-    const snapshotState = state.snapshots.find(s => s.id === snapshot.id)
-    if (snapshotState) snapshotState.sizeStr = Utils.strSize(JSON.stringify(snapshot))
-  }
-}
-
-function getSnapInfo(s: T.SnapshotState): string {
+function getSnapInfo(s: T.SnapshotInfo): string {
   return (
     `${s.winCount} ${translate('snapshot.snap_win', s.winCount)} / ` +
-    `${s.tabsCount} ${translate('snapshot.snap_tab', s.tabsCount)} / ` +
-    `~ ${s.sizeStr}`
+    `${s.tabCount} ${translate('snapshot.snap_tab', s.tabCount)} / ${s.sizeStr}`
   )
 }
 
@@ -397,17 +288,10 @@ let exportInfo: T.SnapExportInfo | undefined
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
-  if (!state.activeSnapshot) return
+  const activeSnapshot = Snapshots.reactive.activeSnapshot
+  if (!activeSnapshot) return
 
-  const normActiveSnapshot: T.NormalizedSnapshot = {
-    id: state.activeSnapshot.id,
-    time: state.activeSnapshot.time,
-    containers: state.activeSnapshot.containers,
-    sidebar: state.activeSnapshot.sidebar,
-    tabs: state.activeSnapshot.tabs,
-  }
-
-  exportInfo = Snapshots.prepareExport(normActiveSnapshot, { JSON: true, Markdown: true })
+  exportInfo = Snapshots.prepareExport(activeSnapshot.getSnapshot(), { json: true, md: true })
   const dateStr = Utils.uDate(exportInfo.time, '.')
   const timeStr = Utils.uTime(exportInfo.time, '.')
 
@@ -428,9 +312,9 @@ async function onExportSnapshotDropDownOpen() {
 }
 
 function copyAsMarkdown() {
-  if (!state.activeSnapshot) return
+  if (!Snapshots.reactive.activeSnapshot) return
 
-  const { id, time, containers, sidebar, tabs } = state.activeSnapshot
+  const { id, time, containers, sidebar, tabs } = Snapshots.reactive.activeSnapshot
   if (exportInfo?.md) {
     navigator.clipboard.writeText(exportInfo.md)
   } else {
@@ -444,14 +328,14 @@ function importSnapshot(importEvent: Event) {
   let file = target.files?.[0]
   if (!file) return
   let reader = new FileReader()
-  reader.onload = fileEvent => {
+  reader.onload = async fileEvent => {
     if (!fileEvent.target) return Logs.err('Cannot import snapshot: No file content')
     let jsonStr = fileEvent.target.result
     if (!jsonStr || typeof jsonStr !== 'string') {
       return Logs.err('Cannot import snapshot: Wrong file content')
     }
 
-    let snapshot: T.NormalizedSnapshot | undefined
+    let snapshot: T.Snapshot | undefined
     try {
       snapshot = JSON.parse(jsonStr)
     } catch (err) {
@@ -469,7 +353,7 @@ function importSnapshot(importEvent: Event) {
       return Logs.err('Cannot import snapshot: Incomplete snapshot')
     }
 
-    Snapshots.addSnapshot(snapshot)
+    Snapshots.addSnapshot(snapshot, true)
   }
   reader.readAsText(file)
 }

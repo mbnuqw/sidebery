@@ -2,7 +2,7 @@ import type { Container } from './types/containers'
 import type { SettingsState } from './types/settings'
 import type { SidebarConfig, TabsPanel } from './types/sidebar'
 import type { MenuConfs } from './types/menu'
-import type { Snapshot } from './types/snapshots'
+import type { MinifiedSnapshot, Snapshot } from './types/snapshots'
 import type { ItemInfo } from './types/tabs'
 import type { WindowChoosingDetails } from './types/windows'
 import type { ItemBounds } from './types/sidebar'
@@ -83,7 +83,8 @@ export interface BackupData {
   sidebar?: SidebarConfig
   contextMenu?: MenuConfs
   containers?: Record<string, Container>
-  snapshots?: Snapshot[]
+  snapshots?: MinifiedSnapshot[]
+  snapshotsV2?: Snapshot[]
   sidebarCSS?: string
   groupCSS?: string
   favicons?: string[]

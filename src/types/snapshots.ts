@@ -2,25 +2,29 @@ import { SidebarConfig } from './sidebar'
 import { Container } from './containers'
 import * as E from 'src/enums'
 
-export interface Snapshot {
+export interface MinifiedSnapshot {
   id: ID
   time: number
   containers: Record<ID, Container> | E.SnapStoreMode.Unchanged
   sidebar: SidebarConfig | E.SnapStoreMode.Unchanged
   tabs: (SnapTab | E.SnapStoreMode.Unchanged)[][][]
 }
-export interface NormalizedSnapshot extends Snapshot {
+export interface Snapshot extends MinifiedSnapshot {
   containers: Record<ID, Container>
   sidebar: SidebarConfig
   tabs: SnapTab[][][]
+  auto?: boolean
 }
-export interface SnapshotState extends NormalizedSnapshot {
-  windows: SnapWindowState[]
-  dateStr: string
-  timeStr: string
-  sizeStr: string
+
+export interface SnapshotInfo {
+  id: ID
+  time: number
   winCount: number
-  tabsCount: number
+  tabCount: number
+  size: number
+  dateStr?: string
+  timeStr?: string
+  sizeStr?: string
 }
 
 export interface SnapWindowState {
@@ -68,17 +72,14 @@ export interface SnapTabState extends SnapTab {
   branchLen: number
 }
 
-export interface SnapExportTypes {
-  JSON?: boolean
-  Markdown?: boolean
+export interface SnapExportConf {
+  json?: boolean | string
+  md?: boolean | string
 }
 
 export interface SnapExportInfo {
-  id: ID
   time: number
-  containers: Record<ID, Container>
-  sidebar: SidebarConfig
-  tabs: SnapTab[][][]
+  json?: string
   jsonFile?: Blob
   md?: string
   mdFile?: Blob

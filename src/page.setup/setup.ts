@@ -1,4 +1,4 @@
-import { createApp, reactive } from 'vue'
+import { createApp, reactive, shallowReactive } from 'vue'
 import * as E from 'src/enums'
 import * as Settings from 'src/services/settings.fg'
 import * as Windows from 'src/services/windows.fg'
@@ -16,6 +16,7 @@ import * as Styles from 'src/services/styles.fg'
 import * as SidebarConfig from 'src/services/sidebar-config'
 import * as Popups from 'src/services/popups.fg'
 import * as Notifications from 'src/services/notifications.fg'
+import * as Snapshots from 'src/services/snapshots.fg'
 import Root from './setup.vue'
 
 async function main(): Promise<void> {
@@ -38,6 +39,7 @@ async function main(): Promise<void> {
   Info.reactivate(reactive)
   Styles.reactivate(reactive)
   Notifications.reactivate(reactive)
+  Snapshots.reactivate(shallowReactive)
 
   IPC.registerActions({
     storageChanged: Store.storageChangeListener,
@@ -84,6 +86,9 @@ async function main(): Promise<void> {
 
   SetupPage.finishInitialization()
   SetupPage.calcStorageInfo()
+  // SetupPage.calcOPFSStorageInfo()
+
+  Snapshots.load()
 
   Logs.info(`Init end: ${performance.now() - ts}ms`)
 }

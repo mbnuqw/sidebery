@@ -1,16 +1,15 @@
-import { SnapTab, Snapshot, NormalizedSnapshot, SnapExportInfo, SnapExportTypes } from 'src/types'
+import { SnapTab, MinifiedSnapshot, Snapshot, SnapExportInfo, SnapExportConf } from 'src/types'
 import { SnapStoreMode } from 'src/enums'
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import * as Settings from 'src/services/settings'
 
-export const MAX_SIZE_LIMIT = 10_240
 export const GLOB_PINNED_ID = 'global_pinned'
 
 export function getNormalizedSnapshot(
-  snapshots: Snapshot[],
+  snapshots: MinifiedSnapshot[],
   index: number
-): NormalizedSnapshot | undefined {
+): Snapshot | undefined {
   const snapshot = snapshots[index]
   if (!snapshot) return
 
@@ -69,27 +68,26 @@ export function getNormalizedSnapshot(
   if (!snapshot.sidebar || snapshot.sidebar === SnapStoreMode.Unchanged) return
   if (!snapshot.containers || snapshot.containers === SnapStoreMode.Unchanged) return
 
-  return snapshot as NormalizedSnapshot
+  return snapshot as Snapshot
 }
 
-export function prepareExport(snapshot: NormalizedSnapshot, type: SnapExportTypes) {
-  const { id, time, containers, sidebar, tabs } = snapshot
-  const expInfo: SnapExportInfo = { id, time, containers, sidebar, tabs }
+export function prepareExport(snapshot: Snapshot, conf: SnapExportConf) {
+  const expInfo: SnapExportInfo = { time: snapshot.time }
 
-  if (type.JSON) {
-    const jsonStr = JSON.stringify(snapshot)
-    expInfo.jsonFile = new Blob([jsonStr], { type: 'application/json' })
+  if (conf.json) {
+    expInfo.json = typeof conf.json === 'string' ? conf.json : JSON.stringify(snapshot)
+    expInfo.jsonFile = new Blob([expInfo.json], { type: 'application/json' })
   }
 
-  if (type.Markdown) {
-    expInfo.md = convertToMarkdown(snapshot)
+  if (conf.md) {
+    expInfo.md = typeof conf.md === 'string' ? conf.md : convertToMarkdown(snapshot)
     expInfo.mdFile = new Blob([expInfo.md], { type: 'text/markdown' })
   }
 
   return expInfo
 }
 
-export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
+export function convertToMarkdown(snapshot: Snapshot): string {
   const dateStr = Utils.uDate(snapshot.time, '.')
   const timeStr = Utils.uTime(snapshot.time, '.')
   const dateTimeStr = `${dateStr} - ${timeStr}`
@@ -172,92 +170,4 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   }
 
   return md.join('\n')
-}
-
-export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): void {
-  const newContainersJSON = JSON.stringify(snapshot.containers)
-  const newSidebarJSON = JSON.stringify(snapshot.sidebar)
-
-  // Containers
-  for (let i = snapshots.length; i--;) {
-    const snapN = snapshots[i]
-    if (!snapN || !snapN.containers) break
-
-    if (snapN.containers === SnapStoreMode.Unchanged) continue
-
-    const lastContainersJSON = JSON.stringify(snapN.containers)
-    if (newContainersJSON === lastContainersJSON) {
-      snapshot.containers = SnapStoreMode.Unchanged
-    }
-
-    break
-  }
-
-  // Nav and panels
-  for (let i = snapshots.length; i--;) {
-    const snapN = snapshots[i]
-    if (!snapN || !snapN.sidebar) break
-
-    if (snapN.sidebar === SnapStoreMode.Unchanged) continue
-
-    const lastSidebarJSON = JSON.stringify(snapN.sidebar)
-    if (newSidebarJSON === lastSidebarJSON) {
-      snapshot.sidebar = SnapStoreMode.Unchanged
-    }
-
-    break
-  }
-
-  // Tabs (by relative index)
-  // per win (current)
-  per_win: for (let wi = 0; wi < snapshot.tabs.length; wi++) {
-    const win = snapshot.tabs[wi]
-    if (!win) break per_win // stop tabs minimizing
-
-    // per group (current)
-    per_panel: for (let gi = 0; gi < win.length; gi++) {
-      const tabs = win[gi]
-      if (!tabs) break per_win // stop tabs minimizing
-
-      // per tab (current)
-      per_tab: for (let ti = 0; ti < tabs.length; ti++) {
-        const tab = tabs[ti]
-        if (!tab) break per_win // stop tabs minimizing
-        if (tab === SnapStoreMode.Unchanged) continue
-
-        // per snapshot (previous)
-        for (let i = snapshots.length; i--;) {
-          const snapN = snapshots[i]
-          if (!snapN) break per_win // stop tabs minimizing
-
-          const winN = snapN.tabs[wi]
-          if (!winN) break per_win // stop tabs minimizing
-
-          const panelN = winN[gi]
-          if (!panelN) break per_panel // go to the next win
-
-          const tabN = panelN[ti]
-          if (!tabN) break per_tab // go to the next panel
-
-          if (tabN === SnapStoreMode.Unchanged) continue // go to the prev snapshot
-
-          if (
-            tab.url === tabN.url &&
-            tab.title === tabN.title &&
-            tab.pinned === tabN.pinned &&
-            tab.containerId === tabN.containerId &&
-            tab.panelId === tabN.panelId &&
-            tab.lvl === tabN.lvl &&
-            tab.folded === tabN.folded &&
-            tab.customTitle === tabN.customTitle &&
-            tab.customColor === tabN.customColor
-          ) {
-            tabs[ti] = SnapStoreMode.Unchanged
-          }
-
-          break // go to the next tab
-        }
-      }
-    }
-  }
 }

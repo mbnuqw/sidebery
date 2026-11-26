@@ -2,7 +2,7 @@
 section(ref="el")
   h2
     span {{translate('settings.snapshots_title')}}
-    .title-note   ({{snapshotsLen}}: {{snapshotsSize}} / 10 mb)
+    .title-note   ({{Snapshots.reactive.lenStr}}: {{Snapshots.reactive.sizeStr}})
   span.header-shadow
   ToggleField(
     label="settings.snap_notify"
@@ -74,53 +74,32 @@ section(ref="el")
     :default-unit="DEFAULT_SETTINGS.snapLimitUnit"
     :or="'none'"
     :unitOpts="SETTINGS_OPTIONS.snapLimitUnit"
-    :maxValue="Settings.state.snapLimitUnit === 'kb' ? MAX_SIZE_LIMIT : undefined"
     :note="translate('settings.snap_limit_note')"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
   .ctrls
     .btn(@click="SetupPage.switchView('snapshots')") {{translate('settings.snapshots_view_label')}}
-    .btn(@click="createSnapshot") {{translate('settings.make_snapshot')}}
+    .btn(@click="Snapshots.createSnapshot()") {{translate('settings.make_snapshot')}}
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
-import { MAX_SIZE_LIMIT } from 'src/services/snapshots.fg'
 import * as Settings from 'src/services/settings.fg'
 import * as Permissions from 'src/services/permissions.fg'
-import * as IPC from 'src/services/ipc'
 import * as SetupPage from 'src/services/setup-page.fg'
+import * as Snapshots from 'src/services/snapshots.fg'
 import NumField from '../../components/num-field.vue'
 import TextField from '../../components/text-field.vue'
 import SelectField from '../../components/select-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 
 const el = ref<HTMLElement | null>(null)
-const state = reactive({
-  snapshotsLen: '-',
-  snapshotsSize: '-',
-})
 
 onMounted(() => {
   SetupPage.registerEl('settings_snapshots', el.value)
 })
-
-const snapshotsLen = computed(() => {
-  const storageProp = SetupPage.reactive.storagePropsByName.snapshots
-  return storageProp?.len ?? 0
-})
-
-const snapshotsSize = computed(() => {
-  const storageProp = SetupPage.reactive.storagePropsByName.snapshots
-  return storageProp?.sizeStr ? '~' + storageProp?.sizeStr : '0'
-})
-
-async function createSnapshot(): Promise<void> {
-  await IPC.bg('createSnapshot')
-  SetupPage.updStorageInfo('snapshots')
-}
 
 async function toggleAutoExport() {
   if (!Settings.state.snapAutoExport && !Permissions.reactive.downloads) {

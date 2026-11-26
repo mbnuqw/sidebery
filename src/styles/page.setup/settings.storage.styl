@@ -3,6 +3,10 @@
 .storage-section
   position: relative
   overflow: hidden
+  &[data-loading="true"]
+    opacity: .7
+    pointer-events: none
+    cursor: progress
 
 .storage-section .storage-prop
   position: relative

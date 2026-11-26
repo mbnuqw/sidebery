@@ -26,6 +26,19 @@
       .btn(@click="SetupPage.calcStorageInfo") {{translate('settings.update_storage_info')}}
       .btn.-warn(@click="clearFaviconsCache") {{translate('settings.clear_favicons_cache')}}
 
+  //- section
+  //-   h2
+  //-     span OPFS
+  //-     .title-note   ({{SetupPage.reactive.opfsUsedStr}} / ~{{SetupPage.reactive.opfsQuotaStr}})
+  //-   span.header-shadow
+  //-   .storage-section(:data-loading="SetupPage.reactive.opfsLoading")
+  //-     .storage-prop(v-for="info in SetupPage.reactive.opfsFiles" :key="info.path")
+  //-       .name {{info.path}}
+  //-       .size {{info.sizeStr || '-'}}
+  //-       .btn.-warn(@click.stop="deleteOPFSFile(info)") {{translate('settings.storage_delete_prop')}}
+  //-   .ctrls
+  //-     .btn(@click="SetupPage.calcOPFSStorageInfo") {{translate('settings.update_storage_info')}}
+
   section(v-if="Settings.state.syncUseGoogleDrive")
     h2 Google Drive Files
     span.header-shadow
@@ -122,9 +135,13 @@ async function deleteStoredData(prop: keyof Stored): Promise<void> {
     return Logs.err('deleteStoredData: Cannot remove value', err)
   }
   SetupPage.updStorageInfo(prop)
-
-  if (prop === 'snapshots') SetupPage.snapshotsViewer.refresh?.([])
 }
+
+// async function deleteOPFSFile(info: SetupPage.OPFSFileInfo) {
+//   if (!info.parent) return
+//   await info.parent.removeEntry(info.name, { recursive: true })
+//   await SetupPage.calcOPFSStorageInfo()
+// }
 
 async function clearStorage(): Promise<void> {
   if (!window.confirm(translate('settings.clear_storage_confirm'))) return

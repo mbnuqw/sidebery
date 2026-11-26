@@ -1,9 +1,9 @@
-import { Snapshot, SnapTab, NormalizedSnapshot, SnapExportInfo, Stored } from 'src/types'
-import { RemovingSnapshotResult, SnapStoreMode, PanelType } from 'src/enums'
-import { NOID, CONTAINER_ID, GROUP_URL, DEFAULT_CONTAINER_ID } from 'src/defaults'
+import * as T from 'src/types'
+import * as E from 'src/enums'
+import * as D from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
-import * as Settings from 'src/services/settings'
+import * as Settings from 'src/services/settings.bg'
 import * as Windows from 'src/services/windows.bg'
 import * as Tabs from 'src/services/tabs.bg'
 import * as Store from 'src/services/storage.bg'
@@ -12,65 +12,411 @@ import * as Containers from 'src/services/containers.bg'
 import { ItemInfo } from 'src/types/tabs'
 import * as SidebarConf from 'src/services/sidebar-config'
 
-import { GLOB_PINNED_ID, MAX_SIZE_LIMIT } from 'src/services/snapshots'
-import { getNormalizedSnapshot, minimizeSnapshot, prepareExport } from 'src/services/snapshots'
+import { GLOB_PINNED_ID } from 'src/services/snapshots'
+import { getNormalizedSnapshot, prepareExport } from 'src/services/snapshots'
 export * from 'src/services/snapshots'
 
-export interface SnapshotsState {
-  list: Snapshot[]
+class SnapshotFile {
+  #handle: FileSystemFileHandle
+  #cachedSize?: number
+
+  id: ID
+  time: number
+  winCount: number
+  tabCount: number
+
+  constructor(handle: FileSystemFileHandle) {
+    this.#handle = handle
+    const info = parseSnapshotFileName(handle.name)
+    if (!info) throw 'SnapshotFile: Unable to parse name'
+    this.id = info.id
+    this.time = info.time
+    this.winCount = info.winCount
+    this.tabCount = info.tabCount
+  }
+
+  get name(): string {
+    return this.#handle.name
+  }
+
+  async getSize() {
+    if (this.#cachedSize === undefined) {
+      const file = await this.#handle.getFile()
+      this.#cachedSize = file.size
+    }
+    return this.#cachedSize
+  }
+
+  async readSnapshot() {
+    const jsonStr = await this.#handle.getFile().then(f => f.text())
+    const parsedObject = JSON.parse(jsonStr) as T.Snapshot
+    if (!parsedObject.id) throw 'Not a snapshot: No id'
+    if (parsedObject.time === undefined) throw 'Not a snapshot: No time'
+    if (parsedObject.containers === undefined) throw 'Not a snapshot: No containers'
+    if (parsedObject.sidebar === undefined) throw 'Not a snapshot: No sidebar'
+    if (parsedObject.tabs === undefined) throw 'Not a snapshot: No tabs'
+    return parsedObject
+  }
 }
 
-export const Snapshots = {
-  state: { list: [] } as SnapshotsState,
+class SnapshotFileList {
+  static #byId: Map<ID, SnapshotFile> = new Map()
+  static #files: SnapshotFile[] = []
+  static #st: number = Number.MIN_SAFE_INTEGER
+  static #et: number = Number.MAX_SAFE_INTEGER
+  static len: number = 0
+
+  static get files(): readonly SnapshotFile[] {
+    return this.#files
+  }
+
+  static getByName(name: string) {
+    return this.#files.find(f => f.name === name)
+  }
+
+  static getByIndex(index: number): SnapshotFile | undefined {
+    return this.#files[index]
+  }
+
+  static getById(id: ID) {
+    return this.#byId.get(id)
+  }
+
+  static getRecent(): SnapshotFile | undefined {
+    return this.#files[0]
+  }
+
+  static getOldest(): SnapshotFile | undefined {
+    return this.#files[this.#files.length - 1]
+  }
+
+  static add(f: SnapshotFile) {
+    if (this.#byId.has(f.id)) return
+    if (this.#files.length === 0) {
+      this.len = this.#files.push(f)
+      this.#st = f.time
+      this.#et = f.time
+    } else {
+      if (f.time >= this.#st) {
+        this.len = this.#files.unshift(f)
+        this.#st = f.time
+      } else if (f.time <= this.#et) {
+        this.len = this.#files.push(f)
+        this.#et = f.time
+      } else {
+        const len = this.#files.length
+        let si = 0
+        let ei = len - 1
+        let insertIndex = len
+        while (si <= ei) {
+          const mi = (si + ei) >> 1
+          if (f.time >= this.#files[mi].time) ei = (insertIndex = mi) - 1
+          else si = mi + 1
+        }
+        this.#files.splice(insertIndex, 0, f)
+        this.len = this.#files.length
+      }
+    }
+    this.#byId.set(f.id, f)
+  }
+
+  static removeById(id: ID) {
+    const index = this.#files.findIndex(f => f.id === id)
+    if (index === -1) return false
+    this.#files.splice(index, 1)
+    if (!this.#files.length) {
+      this.#st = Number.MIN_SAFE_INTEGER
+      this.#et = Number.MAX_SAFE_INTEGER
+    } else if (index === 0) {
+      this.#st = this.#files[0].time
+    } else if (index === this.#files.length) {
+      this.#et = this.#files[this.#files.length - 1].time
+    }
+    this.len--
+    this.#byId.delete(id)
+    return true
+  }
+
+  static clear() {
+    this.#files.length = 0
+    this.#st = Number.MIN_SAFE_INTEGER
+    this.#et = Number.MAX_SAFE_INTEGER
+    this.len = 0
+    this.#byId.clear()
+  }
+
+  static async getSnapshotsInfo() {
+    const result: T.SnapshotInfo[] = []
+    const files = this.files
+    const sizeResults = await Promise.allSettled(files.map(f => f.getSize()))
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const sizeResult = sizeResults[i]
+      result.push({
+        id: file.id,
+        time: file.time,
+        winCount: file.winCount,
+        tabCount: file.tabCount,
+        size: Utils.settledOr(sizeResult, 0),
+      })
+    }
+    return result
+  }
+
+  static async getSnapshotsSize() {
+    const files = this.files
+    const sizeResults = await Promise.allSettled(files.map(f => f.getSize()))
+    return sizeResults.reduce((a, sr) => a + Utils.settledOr(sr, 0), 0)
+  }
 }
+
+let snapDirHandle: FileSystemDirectoryHandle | undefined
 
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
 
+let ready = false
+
+export async function load() {
+  Logs.info('Snapshots.load')
+  const ts = performance.now()
+  ready = false
+
+  // Get the OPFS handle for the snapshots dir
+  snapDirHandle = await getSnapshotsDirHandle()
+  if (!snapDirHandle) {
+    ready = true
+    Logs.err('Snapshots.load: Unable to getSnapshotsDirHandle')
+    return
+  }
+  Logs.info('Snapshots.load: snapDirHandle is ok:', !!snapDirHandle)
+
+  // Load snapshots info
+  try {
+    SnapshotFileList.clear()
+    for await (const [_, handle] of snapDirHandle.entries()) {
+      if (handle.kind !== 'file') continue
+      try {
+        SnapshotFileList.add(new SnapshotFile(handle))
+      } catch (err) {
+        Logs.warn('Snapshots.load: Unable to load snapshot:', err)
+      }
+    }
+  } catch (err) {
+    ready = true
+    Logs.err('Snapshots.load: Unable to load snapshots info:', err)
+    return
+  }
+  Logs.info('Snapshots.load: loaded:', SnapshotFileList.len)
+
+  // Check if there are old snapshots
+  try {
+    const lStore = await browser.storage.local.get<T.Stored>('snapshots').catch(() => undefined)
+    const snapshots = lStore?.snapshots
+    if (snapshots) await migrateSnapshots(snapshots, true, true)
+  } catch (err) {
+    Logs.err('Snapshots.load: Unable to migrateSnapshots:', err)
+  }
+
+  ready = true
+
+  waitingForSnapshotsReadiness.forEach(cb => cb())
+  waitingForSnapshotsReadiness.length = 0
+
+  Logs.info('Snapshots.bg.load: Done:', performance.now() - ts)
+}
+
+const waitingForSnapshotsReadiness: (() => void)[] = []
+export async function waitForSnapshotsReady(): Promise<void> {
+  if (ready) return
+  return new Promise(ok => {
+    waitingForSnapshotsReadiness.push(ok)
+  })
+}
+
+async function getSnapshotsDirHandle() {
+  let root
+  try {
+    root = await navigator.storage?.getDirectory()
+  } catch (err) {
+    Logs.err('Snapshots.getSnapshotsDirHandle: Unable to obtain the root dir handle:', err)
+    return
+  }
+  let snapDirHandle
+  try {
+    snapDirHandle = await root.getDirectoryHandle('snapshots', { create: true })
+  } catch (err) {
+    Logs.err('Snapshots.getSnapshotsDirHandle: Unable to obtain the snapshots dir handle:', err)
+    return
+  }
+  navigator.storage
+    ?.persisted()
+    .then(persisted => !persisted && navigator.storage.persist())
+    .catch(() => {})
+  return snapDirHandle
+}
+
+async function migrateSnapshots(
+  minifiedSnapshots: T.MinifiedSnapshot[],
+  rmFromLocalStorage: boolean,
+  fixSettings: boolean
+) {
+  const ts = performance.now()
+  const len = minifiedSnapshots.length
+
+  Logs.info('Snapshots.migrateSnapshots: length:', len)
+  if (len) {
+    const ids = new Set<ID>()
+    for (let i = 0; i < len; i++) {
+      // Get normalized snapshot
+      const snapshot = getNormalizedSnapshot(minifiedSnapshots, i)
+      if (!snapshot) {
+        const ms = minifiedSnapshots[i]
+        Logs.warn('Snapshots.migrateSnapshots: Unable to get normalized snapshot:', i, ms)
+        continue
+      }
+
+      // Regenerate id
+      if (ids.has(snapshot.id)) snapshot.id = genSnapshotId(snapshot.time)
+      ids.add(snapshot.id)
+
+      try {
+        await saveSnapshot(snapshot, false)
+      } catch (err) {
+        Logs.warn('Snapshots.migrateSnapshots: Unable to save snapshot:', i, snapshot.id)
+        continue
+      }
+      const time = Utils.dateTimeTemplate('%Y.%M.%D - %h:%m:%s', snapshot.time)
+      Logs.info(`Snapshots.migrateSnapshots: ${i + 1}/${len}:`, time)
+    }
+  }
+
+  // Update user defined limit by size if needed
+  if (fixSettings && Settings.state.snapLimit && Settings.state.snapLimitUnit === 'kb') {
+    const snapshotsSize = await SnapshotFileList.getSnapshotsSize().catch(() => 0)
+    Logs.info(`Snapshots.migrateSnapshots: snapshotsSize: ${Utils.sizeToString(snapshotsSize)}`)
+    Logs.info(`Snapshots.migrateSnapshots: Upd limit: ${Settings.state.snapLimit}kb`)
+    const sizeKb = Math.ceil(snapshotsSize / 1024)
+    Logs.info(`Snapshots.migrateSnapshots: Upd limit: New size: ${sizeKb}kb`)
+    if (Settings.state.snapLimit < sizeKb) {
+      Logs.info('Snapshots.migrateSnapshots: Upd limit: Updating...')
+      Settings.state.snapLimit = sizeKb + 1
+      await Settings.saveSettings().catch(() => {})
+    }
+  }
+
+  if (rmFromLocalStorage) {
+    Logs.info('Snapshots.migrateSnapshots: Removing old snapshots from local storage..')
+    try {
+      await browser.storage.local.remove<T.Stored>(['snapshots', 'lastSnapTime'])
+    } catch (err) {
+      Logs.err('Snapshots.migrateSnapshots: Unable to remove snapshots from local storage:', err)
+    }
+  }
+  Logs.info('Snapshots.migrateSnapshots: Done:', performance.now() - ts)
+  Logs.info('Snapshots.migrateSnapshots: SnapFileStorage:', SnapshotFileList.len)
+}
+
+/**
+ * timestamp-id-win-tabs-optName
+ */
+function getSnapshotFileName(s: T.Snapshot): string {
+  const winCount = s.tabs.length
+  let tabCount = 0
+  for (const win of s.tabs) {
+    for (const panel of win) {
+      tabCount += panel.length
+    }
+  }
+  let flags
+  if (s.auto !== undefined) flags = s.auto ? 'a' : 'm'
+  else flags = '_'
+  return `${s.time.toString(36)}-${s.id}-${winCount}-${tabCount}-${flags}.json`
+}
+
+const SNAP_FILE_NAME_RE =
+  /^(?<time>\w+?)-(?<id>\w+?)-(?<winCount>\d+?)-(?<tabCount>\d+?)-(?<flags>\w+?)\.json/
+function parseSnapshotFileName(name: string) {
+  const result = SNAP_FILE_NAME_RE.exec(name)
+  if (!result?.groups) return
+
+  const timeRaw = result.groups['time']
+  if (!timeRaw) return
+  const time = parseInt(timeRaw, 36)
+  if (isNaN(time)) return
+
+  const id = result.groups['id']
+
+  const winCountRaw = result.groups['winCount']
+  if (!winCountRaw) return
+  const winCount = parseInt(winCountRaw)
+  if (isNaN(winCount)) return
+
+  const tabCountRaw = result.groups['tabCount']
+  if (!tabCountRaw) return
+  const tabCount = parseInt(tabCountRaw)
+  if (isNaN(tabCount)) return
+
+  const flagsRaw = result.groups['flags']
+  let auto
+  if (flagsRaw) {
+    if (flagsRaw.includes('a')) auto = true
+    else if (flagsRaw.includes('m')) auto = false
+  }
+
+  return { id, time, winCount, tabCount, auto }
+}
+
+let creatingSnapshot = false
+let prevSnapshot: T.Snapshot | undefined
+
 /**
  * Create base snapshot
  */
-export async function createSnapshot(auto = false): Promise<Snapshot | undefined> {
-  Logs.info('Snapshots.bg.createSnapshot', auto)
+export async function createSnapshot(auto = false) {
+  if (!ready) await waitForSnapshotsReady()
+  if (creatingSnapshot) return
+  creatingSnapshot = true
 
-  // Get snapshot src data and current snapshots list
-  const [stored] = await Promise.all([
-    browser.storage.local
-      .get<Stored>(['sidebar', 'containers', 'snapshots'])
-      .catch(() => undefined),
+  // Get snapshot src data
+  const [stored, recentSnapshot] = await Promise.all([
+    browser.storage.local.get<T.Stored>(['sidebar', 'containers']).catch(() => undefined),
+    // prettier-ignore
+    !prevSnapshot ? SnapshotFileList.getRecent()?.readSnapshot().catch(() => undefined) : undefined,
     Tabs.updateBgTabsTreeData().catch(() => {}),
   ])
   if (!stored) {
     Logs.err('createSnapshot: Cannot get source data')
+    creatingSnapshot = false
     return
   }
+  if (recentSnapshot && !prevSnapshot) prevSnapshot = recentSnapshot
 
   if (!stored.containers) stored.containers = {}
   if (!stored.sidebar) stored.sidebar = SidebarConf.createDefaultSidebarConfig()
-  if (!stored.snapshots) stored.snapshots = []
 
   // Get tabs info per window per panel
-  const tabs: SnapTab[][][] = []
+  const tabs: T.SnapTab[][][] = []
   for (const window of Windows.byId.values()) {
     if (Settings.state.snapExcludePrivate && window.incognito) continue
     if (window.id === undefined || !window.tabs) continue
     if (window.type !== 'normal') continue
 
-    const winTabs: SnapTab[][] = []
-    const snapTabsById: Record<ID, SnapTab> = {}
-    let panelTabs: SnapTab[] | undefined
+    const winTabs: T.SnapTab[][] = []
+    const snapTabsById: Record<ID, T.SnapTab> = {}
+    let panelTabs: T.SnapTab[] | undefined
     let targetGroup: ID = ''
 
     for (const tab of window.tabs) {
-      const snapTab: SnapTab = { url: tab.url, title: tab.title, panelId: tab.panelId ?? NOID }
-      const parent = snapTabsById[tab.parentId ?? NOID]
+      const snapTab: T.SnapTab = { url: tab.url, title: tab.title, panelId: tab.panelId ?? D.NOID }
+      const parent = snapTabsById[tab.parentId ?? D.NOID]
       if (parent && parent.panelId === tab.panelId) snapTab.lvl = (parent.lvl ?? 0) + 1
       if (tab.pinned) {
         snapTab.pinned = true
         if (Settings.state.pinnedTabsPosition !== 'panel') snapTab.panelId = -1
       }
       if (tab.folded) snapTab.folded = true
-      if (tab.cookieStoreId !== CONTAINER_ID) snapTab.containerId = tab.cookieStoreId
+      if (tab.cookieStoreId !== D.CONTAINER_ID) snapTab.containerId = tab.cookieStoreId
       if (tab.customTitle) snapTab.customTitle = tab.customTitle
       if (tab.customColor) snapTab.customColor = tab.customColor
 
@@ -103,7 +449,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
       if (!tab.pinned && targetGroup !== tab.panelId) {
         panelTabs = []
         winTabs.push(panelTabs)
-        targetGroup = tab.panelId ?? NOID
+        targetGroup = tab.panelId ?? D.NOID
       }
 
       if (panelTabs) panelTabs.push(snapTab)
@@ -119,56 +465,127 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 
   if (!tabs.length) {
     Logs.warn('Snapshots.createSnapshot: No tabs')
+    creatingSnapshot = false
     return
   }
 
-  const currentSnapshot: NormalizedSnapshot = {
-    id: Math.random().toString(36).replace('0.', Date.now().toString(36)),
-    time: Date.now(),
+  const time = Date.now()
+  const snapshot: T.Snapshot = {
+    id: genSnapshotId(time),
+    time,
     containers: stored.containers,
     sidebar: stored.sidebar,
     tabs,
+    auto,
   }
 
-  if (Settings.state.snapAutoExport) {
-    exportSnapshot(currentSnapshot)
+  if (auto && prevSnapshot && isSnapshotRedundant(prevSnapshot, snapshot)) {
+    creatingSnapshot = false
+    return
   }
-
-  minimizeSnapshot(stored.snapshots, currentSnapshot)
-
-  const prevSnapshot = stored.snapshots[stored.snapshots.length - 1]
-  if (auto && prevSnapshot && isSnapshotRedundant(prevSnapshot, currentSnapshot)) return
-
-  stored.snapshots.push(currentSnapshot)
+  prevSnapshot = snapshot
 
   try {
-    const limited = limitSnapshots(stored.snapshots)
-    if (limited) stored.snapshots = limited
+    await saveSnapshot(snapshot, Settings.state.snapAutoExport)
+  } catch (err) {
+    Logs.err('Snapshots.createSnapshot: Unable to save snapshot:', err)
+    creatingSnapshot = false
+    throw err
+  }
+
+  try {
+    await limitSnapshots()
   } catch (err) {
     Logs.err('Cannot limit snapshots', err)
   }
-
-  await Store.set({ snapshots: stored.snapshots, lastSnapTime: currentSnapshot.time })
 
   if (Settings.state.snapNotify) {
     IPC.sendToSidebars('notifyAboutNewSnapshot')
   }
 
-  return currentSnapshot
+  SnapshotFileList.getSnapshotsInfo()
+    .then(snapshotsInfo => IPC.event('snapshotsUpd', snapshotsInfo))
+    .catch(err => Logs.err('Snapshots.createSnapshot: Unable to upd snapshots info:', err))
+
+  creatingSnapshot = false
 }
 
-export async function addSnapshot(snapshot: NormalizedSnapshot): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('snapshots').catch(() => undefined)
-  const snapshots = stored?.snapshots ?? []
+function genSnapshotId(timestamp: number) {
+  return Math.random().toString(36).replace('0.', timestamp.toString(36))
+}
+
+export async function addSnapshot(snapshot: T.Snapshot) {
   const timestamp = Date.now()
-
+  snapshot.id = genSnapshotId(timestamp)
   snapshot.time = timestamp
-  snapshots.push(snapshot)
-
-  return await Store.set({ snapshots, lastSnapTime: timestamp })
+  await saveSnapshot(snapshot, false)
+  SnapshotFileList.getSnapshotsInfo()
+    .then(snapshotsInfo => IPC.event('snapshotsUpd', snapshotsInfo))
+    .catch(err => Logs.err('Snapshots.createSnapshot: Unable to upd snapshots info:', err))
+  return snapshot.id
 }
 
-function getExportPath(expInfo: SnapExportInfo) {
+export async function saveLegacySnapshots(minifiedSnapshots: T.MinifiedSnapshot[]) {
+  await migrateSnapshots(minifiedSnapshots, false, false)
+  SnapshotFileList.getSnapshotsInfo()
+    .then(snapshotsInfo => IPC.event('snapshotsUpd', snapshotsInfo))
+    .catch(err => Logs.err('Snapshots.saveSnapshot: Unable to upd snapshots info:', err))
+}
+
+export async function saveSnapshots(snapshots: T.Snapshot[]) {
+  for (const snapshot of snapshots) {
+    await saveSnapshot(snapshot, false)
+  }
+  SnapshotFileList.getSnapshotsInfo()
+    .then(snapshotsInfo => IPC.event('snapshotsUpd', snapshotsInfo))
+    .catch(err => Logs.err('Snapshots.saveSnapshot: Unable to upd snapshots info:', err))
+}
+
+async function saveSnapshot(snapshot: T.Snapshot, download: boolean) {
+  if (!snapDirHandle) throw E.Err.NoSnapshotsDirHandle
+
+  const snapJsonStr = JSON.stringify(snapshot)
+  const maxPossibleSize = snapJsonStr.length * 3
+  const REMOVE_RETRY_COUNT = 2
+  const rmStep = Math.ceil(maxPossibleSize / REMOVE_RETRY_COUNT)
+
+  // Get snapshot file name and check if there is already existed one
+  const snapFileName = getSnapshotFileName(snapshot)
+  const existedSnapFile = SnapshotFileList.getByName(snapFileName)
+  if (existedSnapFile) return false
+
+  let newFileHandle
+  let writableStream
+  let writen = false
+  let tryCount = 0
+  while (!writen) {
+    try {
+      tryCount++
+      newFileHandle = await snapDirHandle.getFileHandle(snapFileName, { create: true })
+      writableStream = await newFileHandle.createWritable()
+      await writableStream.write(snapJsonStr)
+      await writableStream.close()
+      writen = true
+    } catch (err: any) {
+      Logs.warn('Snapshots.saveSnapshot: Error from write() or close():', err)
+      await writableStream?.abort()
+      await snapDirHandle.removeEntry(snapFileName)
+      if (err?.name === 'QuotaExceededError' && tryCount <= REMOVE_RETRY_COUNT) {
+        await removeOldestSnapshots({ size: rmStep, allOrNothing: true })
+      } else {
+        throw err
+      }
+    }
+  }
+
+  if (newFileHandle) SnapshotFileList.add(new SnapshotFile(newFileHandle))
+
+  if (download) downloadSnapshot(snapshot, snapJsonStr)
+
+  return true
+}
+
+function getExportPath(expInfo: T.SnapExportInfo) {
   let snapAutoExportPath = Settings.state.snapAutoExportPath
   if (!snapAutoExportPath) snapAutoExportPath = 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s'
   snapAutoExportPath = Utils.dateTimeTemplate(snapAutoExportPath, expInfo.time)
@@ -181,13 +598,13 @@ function getExportPath(expInfo: SnapExportInfo) {
   return normPath
 }
 
-export function exportSnapshot(snapshot: NormalizedSnapshot) {
+function downloadSnapshot(snapshot: T.Snapshot, json: string) {
   if (!browser?.downloads) return
 
   const expType = Settings.state.snapAutoExportType
   const expInfo = prepareExport(snapshot, {
-    JSON: expType === 'json' || expType === 'both',
-    Markdown: expType === 'md' || expType === 'both',
+    json: (expType === 'json' || expType === 'both') && json,
+    md: expType === 'md' || expType === 'both',
   })
 
   const path = getExportPath(expInfo)
@@ -211,59 +628,69 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
   }
 }
 
-function isSnapshotRedundant(prevSnapshot: Snapshot, snapshot: Snapshot): boolean {
-  if (snapshot.containers !== SnapStoreMode.Unchanged) return false
-  if (snapshot.sidebar !== SnapStoreMode.Unchanged) return false
-
-  if (prevSnapshot.tabs.length !== snapshot.tabs.length) return false
-
-  for (let wi = 0; wi < snapshot.tabs.length; wi++) {
-    const win = snapshot.tabs[wi]
-    const prevWin = prevSnapshot.tabs[wi]
-    if (!win) return false
-    if (prevWin?.length !== win?.length) return false
-
-    for (let pi = 0; pi < win.length; pi++) {
-      const panel = win[pi]
-      const prevPanel = prevWin[pi]
-      if (!panel) return false
-      if (prevPanel?.length !== panel?.length) return false
-
-      for (const tab of panel) {
-        if (tab !== SnapStoreMode.Unchanged) return false
-      }
-    }
-  }
+function isSnapshotRedundant(prevSnapshot: T.Snapshot, snapshot: T.Snapshot): boolean {
+  if (!Utils.compare(snapshot.containers, prevSnapshot.containers)) return false
+  if (!Utils.compare(snapshot.sidebar, prevSnapshot.sidebar)) return false
+  if (!Utils.compare(snapshot.tabs, prevSnapshot.tabs)) return false
   return true
 }
 
+export async function getSnapshotsInfo() {
+  if (!ready) await waitForSnapshotsReady()
+  return SnapshotFileList.getSnapshotsInfo()
+}
+
+export async function getSnapshot(query?: { id?: ID; index?: number }) {
+  let file
+  if (query?.id) file = SnapshotFileList.getById(query.id)
+  else file = SnapshotFileList.getByIndex(query?.index ?? 0)
+  if (!file) throw `no file with ${query?.id ? 'id: ' + query?.id : 'index: ' + query?.index}`
+
+  return await file.readSnapshot()
+}
+
+export async function getAllSnapshots() {
+  const snapshots = []
+  const snapshotsReading = []
+  const files = SnapshotFileList.files
+  for (const file of files) {
+    snapshotsReading.push(file.readSnapshot())
+  }
+  const snapshotReadingResults = await Promise.allSettled(snapshotsReading)
+  for (const snapshotReadingResult of snapshotReadingResults) {
+    const result = Utils.settledOr(snapshotReadingResult, undefined)
+    if (result) snapshots.push(result)
+    else Logs.warn('Snapshots.getAllSnapshots: Unable to get snapshot')
+  }
+  return snapshots
+}
+
+let scheduleTimeoutId: number | undefined
+let intervalId: number | undefined
 export async function scheduleSnapshots(): Promise<void> {
-  clearTimeout(scheduleTimeout)
+  clearTimeout(scheduleTimeoutId)
+  clearInterval(intervalId)
 
   const interval = getSnapInterval()
   if (interval < MIN_SNAP_INTERVAL) return
 
   const elapsed = await getLastSnapTimeElapsed()
-  let nextInterval = interval - elapsed
-  if (nextInterval < MIN_SNAP_INTERVAL) nextInterval = MIN_SNAP_INTERVAL
+  let startTimeout = interval - elapsed
+  if (startTimeout < MIN_SNAP_INTERVAL) startTimeout = MIN_SNAP_INTERVAL
 
-  scheduleNextSnapshot(nextInterval)
-}
-
-let scheduleTimeout: number | undefined
-function scheduleNextSnapshot(nextTimeout: number): void {
-  scheduleTimeout = setTimeout(() => {
-    nextTimeout = getSnapInterval()
-    if (nextTimeout < MIN_SNAP_INTERVAL) nextTimeout = MIN_SNAP_INTERVAL
-    createSnapshot(true)
-    scheduleNextSnapshot(nextTimeout)
-  }, nextTimeout)
+  scheduleTimeoutId = setTimeout(() => {
+    intervalId = setInterval(() => {
+      createSnapshot(true).catch(err => {
+        Logs.err('Snapshots.scheduleSnapshots: Cannot create snapshot:', err)
+      })
+    }, interval)
+  }, startTimeout)
 }
 
 function getSnapInterval(): number {
   let interval = Settings.state.snapInterval
   const unit = Settings.state.snapIntervalUnit
-  if (!interval || typeof interval !== 'number') return 0
+  if (typeof interval !== 'number' || interval < 1) return 0
   if (unit === 'min') interval = Settings.state.snapInterval * 60000
   if (unit === 'hr') interval = Settings.state.snapInterval * 3600000
   if (unit === 'day') interval = Settings.state.snapInterval * 86400000
@@ -271,15 +698,16 @@ function getSnapInterval(): number {
 }
 
 async function getLastSnapTimeElapsed(): Promise<number> {
-  const stored = await browser.storage.local.get<Stored>('lastSnapTime')
+  if (!ready) await waitForSnapshotsReady()
+  const snapshotFile = SnapshotFileList.getRecent()
   const now = Date.now()
-  const lastSnapTime = stored.lastSnapTime ?? now
+  const lastSnapTime = snapshotFile?.time ?? now
   const elapsed = now - lastSnapTime
   if (elapsed < 0) return 0
   return elapsed
 }
 
-async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
+async function adaptContainers(snapshot: T.Snapshot): Promise<void> {
   const currentContainers = Object.values(Containers.reactive.byId)
   const oldNewIds: Record<string, string> = {}
 
@@ -322,8 +750,8 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
   await Containers.saveContainers()
 }
 
-async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('sidebar')
+async function adaptTabsPanels(snapshot: T.Snapshot): Promise<void> {
+  const stored = await browser.storage.local.get<T.Stored>('sidebar')
   if (!stored.sidebar?.nav) return
 
   // Find last index of tabs panel
@@ -332,7 +760,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
     const storedId = stored.sidebar.nav[lastStoredTabsPanelIndex]
     if (storedId === undefined) break
     const storedPanel = stored.sidebar.panels[storedId]
-    if (storedPanel && storedPanel.type === PanelType.tabs) break
+    if (storedPanel && storedPanel.type === E.PanelType.tabs) break
   }
 
   // Recreate tabs panels
@@ -341,7 +769,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
     const snapNavId = snapshot.sidebar.nav[i]
     if (snapNavId === undefined) continue
     const snapPanel = snapshot.sidebar.panels[snapNavId]
-    if (!snapPanel || snapPanel.type !== PanelType.tabs) continue
+    if (!snapPanel || snapPanel.type !== E.PanelType.tabs) continue
 
     const storedIndex = stored.sidebar.nav.indexOf(snapNavId)
     if (storedIndex === -1) {
@@ -357,7 +785,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
     const win = snapshot.tabs[i]
     if (!win || win.length <= 1) continue
 
-    const newOrder: SnapTab[][] = []
+    const newOrder: T.SnapTab[][] = []
 
     // Pinned tabs
     if (win[0]?.[0]?.pinned) {
@@ -367,7 +795,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
 
     // Tabs list w/o panelId in the first tab
     for (const tabs of win) {
-      if (tabs[0]?.panelId === NOID) {
+      if (tabs[0]?.panelId === D.NOID) {
         Logs.warn('Snapshots.adaptTabsPanels: Tabs list without panelId, len:', tabs.length)
         newOrder.push(tabs)
       }
@@ -375,7 +803,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
 
     for (const storedId of stored.sidebar.nav) {
       const storedPanel = stored.sidebar.panels[storedId]
-      if (!storedPanel || storedPanel.type !== PanelType.tabs) continue
+      if (!storedPanel || storedPanel.type !== E.PanelType.tabs) continue
 
       const snapPanelTabs = win.find(tabs => tabs[0]?.panelId === storedPanel.id)
       if (snapPanelTabs) newOrder.push(snapPanelTabs)
@@ -392,7 +820,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
  * Open windows (all or by index) of snapshot
  */
 export async function openWindows(
-  snapshot: NormalizedSnapshot,
+  snapshot: T.Snapshot,
   winIndex?: number,
   incognito: boolean = false
 ): Promise<void> {
@@ -418,7 +846,7 @@ export async function openWindows(
  * Open window of snapshot
  */
 async function openWindow(
-  snapshot: NormalizedSnapshot,
+  snapshot: T.Snapshot,
   winIndex: number,
   incognito: boolean = false
 ): Promise<void> {
@@ -435,7 +863,7 @@ async function openWindow(
     Logs.info('Snapshots.openWindow: panel/pin panelId, len:', panel[0]?.panelId, panel.length)
 
     for (const tab of panel) {
-      if (tab.panelId === GLOB_PINNED_ID) tab.panelId = NOID
+      if (tab.panelId === GLOB_PINNED_ID) tab.panelId = D.NOID
 
       let url: string | undefined = tab.url
       if (Utils.isGroupUrl(url)) url = Utils.updateGroupUrlBase(url)
@@ -446,10 +874,10 @@ async function openWindow(
         id: index++,
         url,
         title: tab.title,
-        parentId: NOID,
+        parentId: D.NOID,
         folded: tab.folded,
-        panelId: tab.panelId ?? NOID,
-        container: tab.containerId ?? DEFAULT_CONTAINER_ID,
+        panelId: tab.panelId ?? D.NOID,
+        container: tab.containerId ?? D.DEFAULT_CONTAINER_ID,
       }
       if (tab.customTitle) tabInfo.customTitle = tab.customTitle
       if (tab.customColor) tabInfo.customColor = tab.customColor
@@ -472,82 +900,94 @@ async function openWindow(
   await Windows.createWithTabs(items, { incognito: incognito })
 }
 
-const sizeCalcBuffer = new Uint8Array(MAX_SIZE_LIMIT * 1024 + 4)
-const sizeCalcEncoder = new TextEncoder()
+async function limitSnapshots() {
+  if (SnapshotFileList.len <= MIN_LIMITING_COUNT) return
 
-function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
-  if (snapshots.length <= MIN_LIMITING_COUNT) return
+  const unit = Settings.state.snapLimitUnit
+  const limit = Settings.state.snapLimit
+  let thresholdValue = limit
+  if (limit <= 0) return
 
-  const normMaxSize = MAX_SIZE_LIMIT * 1024
-  let limit = Settings.state.snapLimit
-  let unit = Settings.state.snapLimitUnit
-
-  if (!limit || limit < 0) {
-    limit = MAX_SIZE_LIMIT
-    unit = 'kb'
-  }
-
-  let normLimit = limit
-  if (unit === 'day') normLimit = Date.now() - limit * 86400000
+  // Time threshold (ms)
+  if (unit === 'day') thresholdValue = Date.now() - limit * 86400000
+  // Size threshold (b)
   else if (unit === 'kb') {
-    if (limit > MAX_SIZE_LIMIT) limit = MAX_SIZE_LIMIT
-    normLimit = limit * 1024
+    thresholdValue = limit * 1024
   }
 
-  let index = snapshots.length
-  let accum = 0
-  let sizeAccum = 0
-  while (index--) {
-    const snapshot = snapshots[index]
-    if (!snapshot) continue
-
-    sizeAccum += sizeCalcEncoder.encodeInto(JSON.stringify(snapshot), sizeCalcBuffer).written
-
-    if (unit === 'snap') {
-      accum++
-      if (accum > normLimit) break
-    }
-
-    if (unit === 'kb' && sizeAccum > normLimit) break
-
-    if (unit === 'day' && snapshot.time < normLimit) break
-
-    if (sizeAccum > normMaxSize) break
+  const snapshotFilesInfo = await SnapshotFileList.getSnapshotsInfo()
+  const toRemove = []
+  for (const info of snapshotFilesInfo) {
+    if (unit === 'day' && info.time < thresholdValue) toRemove.push(info.id)
+    else if (unit === 'kb' && (thresholdValue -= info.size) < 0) toRemove.push(info.id)
+    else if (unit === 'snap' && thresholdValue-- <= 0) toRemove.push(info.id)
   }
 
-  index++
+  // Always keep the latest snapshot
+  if (toRemove.length === SnapshotFileList.len) toRemove.shift()
 
-  const normSnapshot = getNormalizedSnapshot(snapshots, index)
-  if (normSnapshot) snapshots[index] = normSnapshot
-  else return
-
-  return snapshots.slice(index)
+  return removeSnapshots(toRemove)
 }
 
-export async function removeSnapshot(id: ID): Promise<RemovingSnapshotResult> {
-  let stored
-  try {
-    stored = await browser.storage.local.get<Stored>(['snapshots'])
-  } catch (err) {
-    Logs.err('removeSnapshot: Cannot get snapshots', err)
-    return RemovingSnapshotResult.Err
+export async function removeSnapshot(id: ID) {
+  if (!snapDirHandle) throw E.Err.NoSnapshotsDirHandle
+
+  const snapshotFile = SnapshotFileList.getById(id)
+  if (!snapshotFile) throw E.Err.NoSnapshotFile
+
+  await snapDirHandle.removeEntry(snapshotFile.name)
+
+  SnapshotFileList.removeById(id)
+
+  const snapshotsInfo = await SnapshotFileList.getSnapshotsInfo()
+  IPC.event('snapshotsUpd', snapshotsInfo)
+}
+
+async function removeSnapshots(ids: ID[]) {
+  if (!snapDirHandle) throw 'No dir handle'
+  const removing = []
+  for (const id of ids) {
+    const file = SnapshotFileList.getById(id)
+    if (!file) continue
+    removing.push(
+      snapDirHandle.removeEntry(file.name).then(() => SnapshotFileList.removeById(file.id))
+    )
   }
-  if (!stored.snapshots) return RemovingSnapshotResult.Err
 
-  const index = stored.snapshots.findIndex(s => s.id === id)
-  const snapshot = stored.snapshots[index]
-  if (!snapshot) return RemovingSnapshotResult.Err
+  return await Promise.allSettled(removing)
+}
 
-  const nextSnapshot = stored.snapshots[index + 1]
-  if (nextSnapshot) {
-    const normSnapshot = getNormalizedSnapshot(stored.snapshots, index + 1)
-    if (!normSnapshot) return RemovingSnapshotResult.Err
-    stored.snapshots[index + 1] = normSnapshot
+async function removeOldestSnapshots(conf: {
+  size?: number
+  count?: number
+  allOrNothing?: boolean
+}) {
+  const toRemove = []
+  let size = conf.size ?? 0
+  let count = conf.count ?? 0
+  const files = SnapshotFileList.files
+  const bySize = size > 0
+  const byCount = count > 0
+
+  for (let i = files.length; i--;) {
+    const file = files[i]
+    if (size <= 0 && count <= 0) break
+    if (bySize) size -= await file.getSize()
+    if (byCount) count--
+    toRemove.push(file.id)
   }
 
-  stored.snapshots.splice(index, 1)
+  if (conf.allOrNothing) {
+    if (bySize && size > 0) return
+    if (byCount && count > 0) return
+  }
 
-  await Store.set(stored)
+  return removeSnapshots(toRemove)
+}
 
-  return RemovingSnapshotResult.Ok
+export const TESTING = {
+  SnapshotFile,
+  SnapshotFileList,
+  getSnapshotFileName,
+  parseSnapshotFileName,
 }

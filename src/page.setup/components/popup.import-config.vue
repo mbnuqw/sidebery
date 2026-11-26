@@ -69,7 +69,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import { ref, reactive, computed, onMounted } from 'vue'
-import type { BackupData, Stored, Snapshot, NormalizedSnapshot } from 'src/types'
+import type { BackupData, Stored } from 'src/types'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import * as Info from 'src/services/info'
@@ -80,7 +80,6 @@ import * as Styles from 'src/services/styles.fg'
 import * as Settings from 'src/services/settings.fg'
 import * as Logs from 'src/services/logs'
 import * as Favicons from 'src/services/favicons.fg'
-import * as Snapshots from 'src/services/snapshots.fg'
 import * as SetupPage from 'src/services/setup-page.fg'
 import * as Sync from 'src/services/sync.fg'
 import * as SidebarConfig from 'src/services/sidebar-config.fg'
@@ -170,7 +169,7 @@ const containersInactive = computed((): boolean => {
 })
 const snapshotsInactive = computed((): boolean => {
   const data = props.importedData
-  return !data.snapshots?.length
+  return !data.snapshots?.length && !data.snapshotsV2?.length
 })
 const faviconsInactive = computed((): boolean => {
   const data = props.importedData
@@ -520,60 +519,9 @@ async function importStyles(backup: BackupData): Promise<void> {
 }
 
 async function importSnapshots(backup: BackupData): Promise<void> {
-  if (!backup.snapshots) throw 'No snapshots data'
-
-  let storage
-  try {
-    storage = await browser.storage.local.get<Stored>('snapshots')
-  } catch (err) {
-    return Logs.err('importSnapshots: Cannot get stored snapshots', err)
-  }
-  if (!storage.snapshots) storage.snapshots = []
-
-  // Normalize snapshots from backup
-  const backupSnapshots: NormalizedSnapshot[] = []
-  for (let i = 0; i < backup.snapshots.length; i++) {
-    const backupSnapshot = backup.snapshots[i]
-    const storedSnapshot = storage.snapshots.find(s => s.id === backupSnapshot.id)
-    // Skip dups
-    if (storedSnapshot) continue
-
-    const backupNormSnapshot = Snapshots.getNormalizedSnapshot(backup.snapshots, i)
-    if (backupNormSnapshot) {
-      Snapshots.updateInternalUrls(backupNormSnapshot)
-      backupSnapshots.push(backupNormSnapshot)
-    }
-  }
-
-  // Nothing to do...
-  if (!backupSnapshots.length) return
-
-  // Normalize stored snapshots
-  const storedSnapshots: NormalizedSnapshot[] = []
-  for (let i = 0; i < storage.snapshots.length; i++) {
-    const storedNormSnapshot = Snapshots.getNormalizedSnapshot(storage.snapshots, i)
-    if (storedNormSnapshot) storedSnapshots.push(storedNormSnapshot)
-  }
-
-  // Concat stored and backuped
-  const allNormSnapshots = storedSnapshots.concat(backupSnapshots)
-
-  // Sort by date
-  allNormSnapshots.sort((a, b) => a.time - b.time)
-
-  // Minimize snapshots
-  const allSnapshots: Snapshot[] = []
-  for (let i = 0; i < allNormSnapshots.length; i++) {
-    const normSnapshot = allNormSnapshots[i]
-    Snapshots.minimizeSnapshot(allSnapshots, normSnapshot)
-    allSnapshots.push(normSnapshot)
-  }
-
-  await Store.set({ snapshots: allSnapshots })
-
-  // Recalc info in snapshots section
-  SetupPage.updStorageInfo('snapshots', allSnapshots)
-  SetupPage.snapshotsViewer.refresh?.(allSnapshots)
+  if (!backup.snapshots && !backup.snapshotsV2) throw 'No snapshots data'
+  if (backup.snapshots) await IPC.bg('saveLegacySnapshots', backup.snapshots)
+  if (backup.snapshotsV2) await IPC.bg('saveSnapshots', backup.snapshotsV2)
 }
 
 async function importFavicons(backup: BackupData): Promise<void> {

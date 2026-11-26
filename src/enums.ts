@@ -14,8 +14,12 @@ export const enum InstanceType {
 }
 
 export const enum Err {
-  TabsLocked = 1,
-  Canceled = 2,
+  _,
+  TabsLocked,
+  Canceled,
+  NoSnapshotsDirHandle,
+  NoSnapshotFile,
+  NoWritableStream,
 }
 
 export const enum BkmType {

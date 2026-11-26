@@ -45,6 +45,11 @@ export type BgActions = {
   detachSidebarTabs: typeof Tabs.detachSidebarTabs
   openTabs: typeof Tabs.openTabs
   setActivePanelId: typeof SidebarBg.setActivePanelId
+  saveSnapshots: typeof Snapshots.saveSnapshots
+  saveLegacySnapshots: typeof Snapshots.saveLegacySnapshots
+  getSnapshotsInfo: typeof Snapshots.getSnapshotsInfo
+  getSnapshot: typeof Snapshots.getSnapshot
+  getAllSnapshots: typeof Snapshots.getAllSnapshots
   createSnapshot: typeof Snapshots.createSnapshot
   addSnapshot: typeof Snapshots.addSnapshot
   removeSnapshot: typeof Snapshots.removeSnapshot
