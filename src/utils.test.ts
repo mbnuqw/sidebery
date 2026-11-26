@@ -293,3 +293,63 @@ describe('Utils.clone()', () => {
     expect(clone.set.size).toBe(2)
   })
 })
+
+describe('Utils.compare()', () => {
+  test('comparing stuff...', () => {
+    expect(Utils.compare(null, null)).toBe(true)
+    expect(Utils.compare(undefined, undefined)).toBe(true)
+    expect(Utils.compare(undefined, false)).toBe(false)
+    expect(Utils.compare(undefined, null)).toBe(false)
+    expect(Utils.compare(1, 1)).toBe(true)
+    expect(Utils.compare(1, 2)).toBe(false)
+    expect(Utils.compare('1', 2)).toBe(false)
+    expect(Utils.compare('abc', 'abc')).toBe(true)
+    expect(Utils.compare('abc', 'heh')).toBe(false)
+    expect(Utils.compare([], [])).toBe(true)
+    expect(Utils.compare([1], [1])).toBe(true)
+    expect(Utils.compare([1], [1, 2])).toBe(false)
+    expect(Utils.compare([], [3])).toBe(false)
+    expect(Utils.compare(new Set(), new Set())).toBe(true)
+    expect(Utils.compare(new Set([1, 2]), new Set([1, 2]))).toBe(true)
+    expect(Utils.compare(new Set([]), new Set([1, 2]))).toBe(false)
+    expect(Utils.compare(new Set(['heh']), new Set(['abc']))).toBe(false)
+    expect(Utils.compare(new Map([]), new Map([]))).toBe(true)
+    expect(Utils.compare(new Map([[1, 'abc']]), new Map([]))).toBe(false)
+    expect(Utils.compare(new Map([]), new Map([[1, 'abc']]))).toBe(false)
+    expect(Utils.compare(new Map([[1, 'abc']]), new Map([[1, 'abc']]))).toBe(true)
+    // prettier-ignore
+    expect(Utils.compare(new Map([[1, 'abc']]), new Map([[1, 'abc'], [2, 'heh']]))).toBe(false)
+    const objKey1 = { a: 123 }
+    const objKey2 = { a: 123 }
+    expect(Utils.compare(new Map([[objKey1, 'abc']]), new Map([[objKey2, 'abc']]))).toBe(false)
+    expect(Utils.compare(/reg/i, /reg/i)).toBe(true)
+    expect(Utils.compare(/reg/g, /reg/i)).toBe(false)
+    expect(Utils.compare(/abc/, /reg/i)).toBe(false)
+    expect(Utils.compare(new Date(123456), new Date(123456))).toBe(true)
+    expect(Utils.compare(new Date(123456), new Date(123))).toBe(false)
+    expect(Utils.compare(new Date(123456), new Date(123))).toBe(false)
+    expect(Utils.compare({}, {})).toBe(true)
+    expect(Utils.compare({ 1: 'some' }, { 1: 'some' })).toBe(true)
+    expect(Utils.compare({ 1: 'some' }, { 1: 'abc' })).toBe(false)
+    expect(Utils.compare({}, { 1: 'abc' })).toBe(false)
+    expect(Utils.compare({ k: [1, 2, 3] }, { k: [1, 2, 3] })).toBe(true)
+    const a: any = {}
+    const b: any = {}
+    const c: any = {}
+    a.a = b
+    a.b = c
+    a.c = a
+    b.a = c
+    b.b = a
+    b.c = b
+    c.a = a
+    c.b = b
+    c.c = c
+    a.x = 'test'
+    b.x = 'test'
+    c.x = 'test'
+    expect(Utils.compare(a, b)).toBe(true)
+    b.x = 'uh'
+    expect(Utils.compare(a, b)).toBe(false)
+  })
+})

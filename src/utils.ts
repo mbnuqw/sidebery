@@ -641,6 +641,74 @@ export function getGroupName(groupUrl: string): string | undefined {
   }
 }
 
+export function compare(a: any, b: any): boolean {
+  const checked = new WeakMap<any, any>()
+  return _compare(a, b, checked)
+}
+function _compare(a: any, b: any, checked: WeakMap<any, any>): boolean {
+  if (a === null && b === null) return true
+  if (a === undefined && b === undefined) return true
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a === b) return true
+    if (checked.has(a) && checked.get(a) === b) return true
+    checked.set(a, b)
+    if (a.length !== b.length) return false
+    else {
+      for (let i = a.length; i--;) {
+        if (!_compare(a[i], b[i], checked)) return false
+      }
+      return true
+    }
+  }
+  if (a instanceof Set && b instanceof Set) {
+    if (a === b) return true
+    if (a.size !== b.size) return false
+    else return a.difference(b).size === 0
+  }
+  if (a instanceof Map && b instanceof Map) {
+    if (a === b) return true
+    if (a.size !== b.size) return false
+    else {
+      if (checked.has(a) && checked.get(a) === b) return true
+      checked.set(a, b)
+      for (const key of a.keys()) {
+        // No deep comparing of key
+        if (!b.has(key)) return false
+        if (!_compare(a.get(key), b.get(key), checked)) return false
+      }
+      return true
+    }
+  }
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return a.source === b.source && a.flags === b.flags
+  }
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime()
+  }
+  if (
+    a instanceof Object &&
+    b instanceof Object &&
+    typeof a === 'object' &&
+    typeof b === 'object'
+  ) {
+    if (a === b) return true
+    if (checked.has(a) && checked.get(a) === b) return true
+    checked.set(a, b)
+    const aKeys = Object.keys(a)
+    const bKeys = Object.keys(b)
+    if (aKeys.length !== bKeys.length) return false
+    else {
+      for (const key of aKeys) {
+        if (bKeys.indexOf(key) === -1) return false
+        if (!_compare(a[key], b[key], checked)) return false
+      }
+      return true
+    }
+  }
+  if (typeof a === typeof b) return a === b
+  return false
+}
+
 /**
  * Clone (Not all types, check impl)
  */
