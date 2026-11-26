@@ -237,6 +237,7 @@ function onAllChanged(): void {
     if (!faviconsInactive.value) state.favicons = true
     if (!keybindingsInactive.value) state.keybindings = true
   }
+  checkPermissions()
 }
 
 function onWheel(e: WheelEvent): void {
