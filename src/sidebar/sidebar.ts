@@ -150,7 +150,7 @@ async function main(): Promise<void> {
 
   Search.init()
 
-  IPC.onDisconnected(E.InstanceType.editing, (id: ID) => {
+  IPC.onDisconnectedType(E.InstanceType.editing, (id: ID) => {
     if (Windows.id !== id) return
     if (Tabs.byId[Tabs.editableTabId]) Tabs.onOutsideEditingExit()
   })

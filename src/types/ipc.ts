@@ -26,6 +26,7 @@ export interface Message<T extends E.InstanceType, A extends ActionsKeys<T>> {
   args?: Parameters<ActionsType<T>[A]>
   result?: ReturnType<ActionsType<T>[A]>
   error?: any
+  event?: string
 }
 
 export interface IPCNodeInfo {

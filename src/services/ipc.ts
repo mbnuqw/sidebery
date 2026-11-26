@@ -38,6 +38,7 @@ export interface ConnectionInfo {
   pendingSendings: (() => void)[]
   reconnectCount: number
   reconnectingTimeout?: number
+  events?: Set<string>
   /**
    * Port from browser.runtime.connect()
    */
@@ -248,7 +249,7 @@ export function connectTo(
 
     // Run disconnection handlers
     if (!connection.remotePort) {
-      const handlers = disconnectionHandlers.get(dstType)
+      const handlers = disconnectionByTypeHandlers.get(dstType)
       if (handlers) handlers.forEach(cb => cb(connection.id))
     }
 
@@ -760,7 +761,7 @@ function onConnect(port: browser.runtime.Port) {
 
     // Run disconnection handlers
     if (connectionIsRemoved) {
-      const handlers = disconnectionHandlers.get(srcType)
+      const handlers = disconnectionByTypeHandlers.get(srcType)
       if (handlers) handlers.forEach(cb => cb(connection.id))
     }
   }
@@ -813,11 +814,72 @@ function triggerConnectionAwaiters(t: InstanceType, winOrTabId: ID) {
   w.ok()
 }
 
-const disconnectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
-export function onDisconnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
-  const handlers = disconnectionHandlers.get(type) ?? []
+const disconnectionByTypeHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
+export function onDisconnectedType(type: InstanceType, cb: (winOrTabId: ID) => void) {
+  const handlers = disconnectionByTypeHandlers.get(type) ?? []
   handlers.push(cb)
-  disconnectionHandlers.set(type, handlers)
+  disconnectionByTypeHandlers.set(type, handlers)
+}
+
+interface IPCEventHandlerRX {
+  e: string
+  cb: (arg?: any) => void
+}
+const eventHandlersRX: IPCEventHandlerRX[] = []
+
+export function on<T>(t: InstanceType, id: ID, e: string, cb: (arg?: T) => void) {
+  eventHandlersRX.push({ e, cb })
+  if (eventHandlersRX.length === 1) {
+    let localId = NOID
+    if (_localType === InstanceType.sidebar) localId = _localWinId
+    else if (_localType === InstanceType.setup) localId = _localTabId
+    else if (_localType === InstanceType.search) localId = _localWinId
+    else if (_localType === InstanceType.editing) localId = _localWinId
+    else if (_localType === InstanceType.group) localId = _localTabId
+    const msg: Message<any, any> = { dstType: t, event: '+', args: [_localType, localId, e] }
+    if (t === InstanceType.sidebar) msg.dstWinId = id
+    else if (t === InstanceType.setup) msg.dstTabId = id
+    else if (t === InstanceType.search) msg.dstWinId = id
+    else if (t === InstanceType.editing) msg.dstWinId = id
+    else if (t === InstanceType.group) msg.dstTabId = id
+    send(msg)
+  }
+}
+
+export function off<T>(t: InstanceType, id: ID, e: string, cb: (arg?: T) => void) {
+  const index = eventHandlersRX.findIndex(h => h.e === e && h.cb === cb)
+  if (index === -1) return Logs.warn(`IPC.off: There is no such event listener "${e}"`)
+  eventHandlersRX.splice(index, 1)
+  if (!eventHandlersRX.length) {
+    let localId = NOID
+    if (_localType === InstanceType.sidebar) localId = _localWinId
+    else if (_localType === InstanceType.setup) localId = _localTabId
+    else if (_localType === InstanceType.search) localId = _localWinId
+    else if (_localType === InstanceType.editing) localId = _localWinId
+    else if (_localType === InstanceType.group) localId = _localTabId
+    const msg: Message<any, any> = { dstType: t, event: '-', args: [_localType, localId, e] }
+    if (t === InstanceType.sidebar) msg.dstWinId = id
+    else if (t === InstanceType.setup) msg.dstTabId = id
+    else if (t === InstanceType.search) msg.dstWinId = id
+    else if (t === InstanceType.editing) msg.dstWinId = id
+    else if (t === InstanceType.group) msg.dstTabId = id
+    send(msg)
+  }
+}
+
+export function event<A>(e: string, arg?: A) {
+  if (state.bgConnection?.events?.has(e)) {
+    send({ dstType: InstanceType.bg, event: e, arg })
+  }
+  for (const [_, c] of state.sidebarConnections) {
+    if (c.events?.has(e)) send({ dstType: InstanceType.sidebar, dstWinId: c.id, event: e, arg })
+  }
+  for (const [_, c] of state.setupPageConnections) {
+    if (c.events?.has(e)) send({ dstType: InstanceType.setup, dstTabId: c.id, event: e, arg })
+  }
+  for (const [_, c] of state.groupPageConnections) {
+    if (c.events?.has(e)) send({ dstType: InstanceType.group, dstTabId: c.id, event: e, arg })
+  }
 }
 
 /**
@@ -865,13 +927,39 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
   }
 
   // Handle answer
-  if (!msg.action && msg.id) {
+  if (!msg.action && !msg.event && msg.id) {
     const waiting = msgsWaitingForAnswer.get(msg.id)
     if (waiting) {
       clearTimeout(waiting.timeout)
       if (msg.error && waiting.err) waiting.err(msg.error)
       else if (waiting.ok) waiting.ok(msg.result)
       msgsWaitingForAnswer.delete(msg.id)
+    }
+    return
+  }
+
+  // Handle subscribing to events on transceiver side
+  if (msg.event === '+' && msg.args) {
+    const conn = getConnection(msg.args[0] as InstanceType, msg.args[1] as ID)
+    if (!conn) return
+    if (!conn.events) conn.events = new Set()
+    conn.events.add(msg.args[2] as string)
+    return
+  }
+  // Handle unsubscribing from events on transceiver side
+  if (msg.event === '-' && msg.args) {
+    const conn = getConnection(msg.args[0] as InstanceType, msg.args[1] as ID)
+    if (conn?.events) {
+      conn.events.delete(msg.args[2] as string)
+      if (conn.events.size === 0) conn.events = undefined
+    }
+    return
+  }
+
+  // Handle event on receiver side
+  if (msg.event) {
+    for (const handler of eventHandlersRX) {
+      if (handler.e === msg.event) handler.cb(msg.arg)
     }
     return
   }
@@ -1016,7 +1104,7 @@ export function disconnectFrom(fromType: InstanceType, winOrTabId?: ID) {
 
   // Run disconnection handlers
   if (connectionIsRemoved) {
-    const handlers = disconnectionHandlers.get(fromType)
+    const handlers = disconnectionByTypeHandlers.get(fromType)
     if (handlers) handlers.forEach(cb => cb(connection.id))
   }
 }

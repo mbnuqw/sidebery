@@ -104,7 +104,7 @@ void (async function main() {
       IPC.sendToSidebar(winId, 'updWindowPreface')
     }
   })
-  IPC.onDisconnected(E.InstanceType.sidebar, winId => {
+  IPC.onDisconnectedType(E.InstanceType.sidebar, winId => {
     Logs.info('IPC.onDisconnected sidebar', winId)
 
     if (Settings.state.markWindow && Windows.byId.has(winId)) {

@@ -223,7 +223,7 @@ async function main() {
   IPC.connectTo(InstanceType.bg)
   IPC.connectTo(InstanceType.sidebar, initData.winId)
   IPC.registerActions({ updatePreview, setY: setPopupPosition, close: hide })
-  IPC.onDisconnected(InstanceType.sidebar, hide)
+  IPC.onDisconnectedType(InstanceType.sidebar, hide)
 
   // Create shadow DOM
   const shadow = state.rootEl.attachShadow({ mode: 'closed' })
