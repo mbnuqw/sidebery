@@ -31,7 +31,7 @@ export class MTab implements Tab {
   internal?: boolean | undefined
   isGroup: boolean = false
   reopening?: { id: ID } | undefined
-  reopenInContainer?: string | undefined
+  reopenOnFirstRequestInContainer?: string | undefined
   customTitle?: string | undefined
   customColor?: string | undefined
   moving?: boolean | undefined

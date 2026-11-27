@@ -112,7 +112,10 @@ export async function groupTabs(tabIds: ID[], conf?: T.NewGroupConfig): Promise<
   if (!Utils.isTabsPanel(panel)) return
 
   // Find index and create group tab
-  Tabs.setNewTabPosition(tabs[0].index, tabs[0].parentId, tabs[0].panelId)
+  Tabs.newTabPropsByIndex.set(tabs[0].index, {
+    parentId: tabs[0].parentId,
+    panelId: tabs[0].panelId,
+  })
   const groupTab = await browser.tabs.create({
     active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,

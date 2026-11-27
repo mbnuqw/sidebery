@@ -573,7 +573,7 @@ function onKeyNewTabAfter(): void {
     }
   }
 
-  Tabs.setNewTabPosition(index, activeTab.parentId, activeTab.panelId)
+  Tabs.newTabPropsByIndex.set(index, { parentId: activeTab.parentId, panelId: activeTab.panelId })
 
   const conf: browser.tabs.CreateProperties = {
     index,
@@ -1352,7 +1352,10 @@ function onKeyNewTabAsFirstChild(): void {
   const activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return
 
-  Tabs.setNewTabPosition(activeTab.index + 1, activeTab.id, activeTab.panelId)
+  Tabs.newTabPropsByIndex.set(activeTab.index + 1, {
+    parentId: activeTab.id,
+    panelId: activeTab.panelId,
+  })
   browser.tabs.create({
     index: activeTab.index + 1,
     cookieStoreId: activeTab.cookieStoreId,
@@ -1371,7 +1374,10 @@ function onKeyNewTabAsLastChild(): void {
     if (t.lvl <= activeTab.lvl) break
   }
 
-  Tabs.setNewTabPosition(activeTab.index + 1, activeTab.id, activeTab.panelId)
+  Tabs.newTabPropsByIndex.set(activeTab.index + 1, {
+    parentId: activeTab.id,
+    panelId: activeTab.panelId,
+  })
   browser.tabs.create({
     index,
     cookieStoreId: activeTab.cookieStoreId,

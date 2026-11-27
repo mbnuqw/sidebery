@@ -33,8 +33,8 @@ export interface Tab extends NativeTab {
   reopened?: boolean
   internal?: boolean
   isGroup: boolean
-  reopening?: { id: ID }
-  reopenInContainer?: string
+  reopening?: { newId: ID }
+  reopenOnFirstRequestInContainer?: string
   customTitle?: string
   customColor?: string
   moving?: boolean
@@ -143,10 +143,13 @@ export interface ActiveTabsHistory {
   actTabs: ID[]
 }
 
-export interface NewTabPosition {
-  parent: ID
-  panel: ID
+export interface NewTabPredefinedProps {
+  parentId: ID
+  panelId: ID
   unread?: boolean
+  customColor?: string
+  customTitle?: string
+  reopenedTab?: Tab
 }
 
 export interface GroupPageInitData {

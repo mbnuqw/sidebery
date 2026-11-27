@@ -26,7 +26,7 @@ export function createTabAfter(tabId: ID): void {
     index++
   }
 
-  Tabs.setNewTabPosition(index, parentId, targetTab.panelId)
+  Tabs.newTabPropsByIndex.set(index, { parentId, panelId: targetTab.panelId })
 
   browser.tabs
     .create({
@@ -52,7 +52,7 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   const conf = { openerTabId: tabId, autoGroupped: false, index: targetTab.index + 1 }
   const targetIndex = Tabs.getIndexForNewTab(panel, conf)
 
-  Tabs.setNewTabPosition(targetIndex, targetTab.id, targetTab.panelId)
+  Tabs.newTabPropsByIndex.set(targetIndex, { parentId: targetTab.id, panelId: targetTab.panelId })
 
   const config: browser.tabs.CreateProperties = {
     index: targetIndex,
@@ -115,7 +115,9 @@ export async function createTabInPanel(panel: Panel, conf?: CreateTabInPanelConf
 
   if (conf?.url) config.url = conf.url
   if (conf?.active !== undefined) config.active = conf.active
-  if (index !== undefined) Tabs.setNewTabPosition(index, parentId ?? D.NOID, panel.id)
+  if (index !== undefined) {
+    Tabs.newTabPropsByIndex.set(index, { parentId: parentId ?? D.NOID, panelId: panel.id })
+  }
   if (panel.newTabCtx !== 'none' && !conf?.cookieStoreId) config.cookieStoreId = panel.newTabCtx
   if (Windows.incognito && config.cookieStoreId) config.cookieStoreId = D.PRIVATE_CONTAINER_ID
 
@@ -142,24 +144,24 @@ export async function handleReopening(tabId: ID, dstContainerId?: string) {
 
   if (!dstContainerId) dstContainerId = D.CONTAINER_ID
 
-  targetTab.reopening = { id: D.NOID }
+  targetTab.reopening = { newId: D.NOID }
 
   let parentId: ID = -1
-  let panel: TabsPanel | undefined
+  let moveToPanel: TabsPanel | undefined
   let panelId
   let index
 
   if (Tabs.moveRules.length) {
     const rule = Tabs.findMoveRuleBy(dstContainerId, targetTab.lvl)
     if (rule) {
-      panel = Sidebar.panelsById[rule.panelId] as TabsPanel | undefined
+      moveToPanel = Sidebar.panelsById[rule.panelId] as TabsPanel | undefined
     }
   }
 
-  if (panel) {
-    index = Tabs.getIndexForNewTab(panel, {} as Tab)
-    if (index === undefined) index = panel.nextTabIndex
-    panelId = panel.id
+  if (moveToPanel) {
+    index = Tabs.getIndexForNewTab(moveToPanel, {} as Tab)
+    if (index === undefined) index = moveToPanel.nextTabIndex
+    panelId = moveToPanel.id
   } else {
     parentId = targetTab.parentId
     panelId = targetTab.panelId
@@ -167,7 +169,13 @@ export async function handleReopening(tabId: ID, dstContainerId?: string) {
 
   if (index === undefined) index = targetTab.index
 
-  Tabs.setNewTabPosition(index, parentId, panelId)
+  Tabs.newTabPropsByIndex.set(index, {
+    parentId,
+    panelId,
+    customColor: targetTab.customColor,
+    customTitle: targetTab.customTitle,
+    reopenedTab: targetTab,
+  })
 
   return index
 }
@@ -252,7 +260,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
         conf.title = result.text || result.url
       }
 
-      Tabs.setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
+      Tabs.newTabPropsByIndex.set(dst.index ?? 0, { parentId: dst.parentId, panelId: panel.id })
       browser.tabs.create(conf).catch(err => {
         Logs.err('Tabs.createFromDragEvent: Cannot create tab:', err)
       })
@@ -276,7 +284,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
       // With Ctrl: Search in inactive (background) tab
       if (e.ctrlKey) conf.active = false
 
-      Tabs.setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
+      Tabs.newTabPropsByIndex.set(dst.index ?? 0, { parentId: dst.parentId, panelId: panel.id })
       const tab = await browser.tabs.create(conf)
       tabId = tab.id
     }
@@ -324,7 +332,10 @@ export async function reopen(
   // Get ids and set removing flags
   const ids = tabsInfo.map(t => {
     const tab = Tabs.byId[t.id]
-    if (tab) tab.removing = true
+    if (tab) {
+      tab.removing = true
+      tab.reopening = { newId: idsMap[t.id] ?? D.NOID }
+    }
     return t.id
   })
 
@@ -350,7 +361,8 @@ export async function reopen(
 
     if (!treeUpdateNeeded) treeUpdateNeeded = true
     for (const childId of children) {
-      const childTab = Tabs.byId[childId]
+      let childTab = Tabs.byId[childId]
+      if (!childTab) childTab = Tabs.byId[idsMap[childId]]
       if (childTab) {
         childTab.parentId = newId
         toSave.push(childTab)
@@ -495,7 +507,7 @@ export async function open(
     }
 
     if (index !== undefined) {
-      Tabs.setNewTabPosition(index, parentId, dstPanel?.id ?? D.NOID)
+      Tabs.newTabPropsByIndex.set(index, { parentId, panelId: dstPanel?.id ?? D.NOID })
     }
 
     const tab = await browser.tabs.create(conf)
@@ -601,22 +613,6 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
 
   const items = Tabs.getTabsInfo(tabIds)
   await Tabs.reopen(items, { panelId: firstTab.panelId, containerId: container.id })
-}
-
-/**
- * Set expected position (parent/panel) of new tab by its index
- */
-export function setNewTabPosition(
-  index: number,
-  parentId: ID,
-  panelId: ID,
-  unread?: boolean
-): void {
-  Tabs.newTabsPosition[index] = {
-    parent: parentId,
-    panel: panelId,
-    unread: unread,
-  }
 }
 
 /**

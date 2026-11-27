@@ -357,10 +357,24 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   if (!targetTabs.length) return
   if (targetTabs.some(t => t.panelId !== props.panel.id)) return
 
+  // Include folded children, sort
+  const targetTabIdsSet = new Set<ID>()
+  for (const tab of targetTabs) {
+    targetTabIdsSet.add(tab.id)
+    if (tab.isParent && tab.folded) {
+      Tabs.getBranch(tab, false).forEach(t => targetTabIdsSet.add(t.id))
+    }
+  }
+  const targetTabIds = [...targetTabIdsSet]
+  Tabs.sortTabIds(targetTabIds)
+
   const targetContainerId =
     btn?.id === 'default' ? (btn?.containerId ?? D.CONTAINER_ID) : btn?.containerId
   const toReopen: ItemInfo[] = []
-  for (const tab of targetTabs) {
+  for (const tabId of targetTabIds) {
+    const tab = Tabs.byId[tabId]
+    if (!tab) continue
+
     // Updating url
     if ((!targetContainerId || tab.cookieStoreId === targetContainerId) && btn?.url) {
       await browser.tabs.update(tab.id, { url: btn.url })

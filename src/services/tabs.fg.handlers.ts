@@ -307,10 +307,12 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     }
   }
 
-  // Predefined position
-  if (Tabs.newTabsPosition[tab.index]) {
-    const position = Tabs.newTabsPosition[tab.index]
-    panel = Sidebar.panelsById[position.panel]
+  // Predefined props
+  const props = Tabs.newTabPropsByIndex.get(tab.index)
+  if (props) {
+    Tabs.newTabPropsByIndex.delete(tab.index)
+
+    panel = Sidebar.panelsById[props.panelId]
     if (!Utils.isTabsPanel(panel)) {
       const prevTab = Tabs.list[tab.index - 1]
       if (prevTab && !prevTab.pinned && prevTab.panelId !== D.NOID) {
@@ -324,20 +326,19 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
       if (index > panel.nextTabIndex) index = panel.nextTabIndex
       else if (index < panel.startTabIndex) index = panel.startTabIndex
     }
-    tab.openerTabId = position.parent
-    if (position.unread !== undefined) tab.unread = position.unread
-    delete Tabs.newTabsPosition[tab.index]
+    tab.openerTabId = props.parentId
+
+    if (props.unread !== undefined) tab.unread = props.unread
+    if (props.customColor) tab.reactive.customColor = tab.customColor = props.customColor
+    if (props.customTitle) {
+      tab.customTitle = props.customTitle
+      Tabs.renderTitle(tab)
+    }
 
     // Handle tab reopening
-    const oldTab = Tabs.list[tab.index]
-    if (oldTab?.reopening) {
-      oldTab.reopening.id = tab.id
-
-      // Restore some props
-      tab.customColor = oldTab.customColor
-      tab.reactive.customColor = oldTab.customColor ?? null
-      tab.customTitle = oldTab.customTitle
-      Tabs.renderTitle(tab)
+    if (props.reopenedTab) {
+      if (props.reopenedTab.reopening) props.reopenedTab.reopening.newId = tab.id
+      else props.reopenedTab.reopening = { newId: tab.id }
     }
   }
 
@@ -512,7 +513,7 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
     panel.newTabCtx !== 'none'
   ) {
     const container = Containers.reactive.byId[panel.newTabCtx]
-    if (container) tab.reopenInContainer = container.id
+    if (container) tab.reopenOnFirstRequestInContainer = container.id
   }
 
   // Put new tab in state
@@ -1235,8 +1236,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     const rmAllChildTabs = Settings.rmChildTabsAll && !Search.active
 
     // Handle reopening tab in different container
-    if (tab.reopening && tab.reopening.id !== D.NOID) {
-      const newTab = Tabs.byId[tab.reopening.id]
+    if (tab.reopening && tab.reopening.newId !== D.NOID) {
+      const newTab = Tabs.byId[tab.reopening.newId]
       // New tab is already created
       if (newTab) {
         newTab.folded = tab.folded
@@ -1244,7 +1245,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         newTab.isParent = tab.isParent
         newTab.reactive.isParent = tab.isParent
         Tabs.forEachDescendant(tab, t => {
-          if (t.parentId === tab.id) {
+          if (!t.reopening && t.parentId === tab.id) {
             t.parentId = newTab.id
             Tabs.saveTabData(t.id)
           }

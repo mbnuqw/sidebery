@@ -2188,7 +2188,13 @@ export async function restoreFromBookmarks(panel: T.TabsPanel, silent?: boolean)
         active: false,
         cookieStoreId: info.container,
       }
-      Tabs.setNewTabPosition(indexPinned, D.NOID, panel.id, false)
+      Tabs.newTabPropsByIndex.set(indexPinned, {
+        parentId: D.NOID,
+        panelId: panel.id,
+        unread: false,
+        customColor: info.customColor,
+        customTitle: info.customTitle,
+      })
       if (info.url) {
         const containerId = Containers.getContainerFor(info.url)
         if (containerId) conf.cookieStoreId = containerId
@@ -2197,20 +2203,6 @@ export async function restoreFromBookmarks(panel: T.TabsPanel, silent?: boolean)
       idsMap[info.id] = newNativeTab.id
       indexPinned++
       index++
-
-      if (info.customColor) {
-        const newTab = Tabs.byId[newNativeTab.id]
-        if (newTab) newTab.reactive.customColor = newTab.customColor = info.customColor
-      }
-
-      if (info.customTitle) {
-        const newTab = Tabs.byId[newNativeTab.id]
-        if (newTab) {
-          newTab.customTitle = info.customTitle
-          Tabs.renderTitle(newTab)
-        }
-      }
-
       continue
     }
 
@@ -2263,22 +2255,15 @@ export async function restoreFromBookmarks(panel: T.TabsPanel, silent?: boolean)
         conf.discarded = true
         conf.title = info.title
       }
-      Tabs.setNewTabPosition(index, parentId, panel.id, false)
+      Tabs.newTabPropsByIndex.set(index, {
+        parentId,
+        panelId: panel.id,
+        unread: false,
+        customColor: info.customColor,
+        customTitle: info.customTitle,
+      })
       const newNativeTab = await browser.tabs.create(conf)
       idsMap[info.id] = newNativeTab.id
-
-      if (info.customColor) {
-        const newTab = Tabs.byId[newNativeTab.id]
-        if (newTab) newTab.reactive.customColor = newTab.customColor = info.customColor
-      }
-
-      if (info.customTitle) {
-        const newTab = Tabs.byId[newNativeTab.id]
-        if (newTab) {
-          newTab.customTitle = info.customTitle
-          Tabs.renderTitle(newTab)
-        }
-      }
     }
 
     index++

@@ -67,7 +67,7 @@ export const setRecentlyRemoved = (r: T.RecentlyClosedTabInfo[]) => (recentlyRem
 export let removedTabs: T.RemovedTabInfo[] = []
 export const setRemovedTabs = (r: T.RemovedTabInfo[]) => (removedTabs = r)
 
-export let newTabsPosition: Record<number, T.NewTabPosition> = {}
+export const newTabPropsByIndex = new Map<number, T.NewTabPredefinedProps>()
 
 export let attachingTabs: T.Tab[] = []
 export const setAttachingTabs = (tabs: T.Tab[]) => (attachingTabs = tabs)
@@ -285,7 +285,7 @@ export function unload(): void {
 
   tabsReinitializing = false
   removedTabs = []
-  newTabsPosition = {}
+  newTabPropsByIndex.clear()
   Tabs.setMovingTabs([])
   attachingTabs = []
   detachingTabIds.clear()
@@ -1310,7 +1310,10 @@ export async function duplicateTabs(tabIds: ID[], asChild?: boolean): Promise<vo
     }
 
     const oldNewIds: Record<ID, ID> = {}
-    Tabs.setNewTabPosition(index, asChild ? tab.id : tab.parentId, dstPanelId)
+    Tabs.newTabPropsByIndex.set(index, {
+      parentId: asChild ? tab.id : tab.parentId,
+      panelId: dstPanelId,
+    })
     if (active && tab.discarded) active = false
     const dupTab = await browser.tabs.duplicate(tabId, { active, index })
     oldNewIds[tabId] = dupTab.id
@@ -1318,7 +1321,7 @@ export async function duplicateTabs(tabIds: ID[], asChild?: boolean): Promise<vo
     for (const [descendantTabId, descendantParentId] of descendantsToDuplicate) {
       index++
       const dupDescendantParentId = oldNewIds[descendantParentId]
-      Tabs.setNewTabPosition(index, dupDescendantParentId, dstPanelId)
+      Tabs.newTabPropsByIndex.set(index, { parentId: dupDescendantParentId, panelId: dstPanelId })
       const dupOpts = { active: false, index }
       const dupDescendantTab = await browser.tabs.duplicate(descendantTabId, dupOpts)
       oldNewIds[descendantTabId] = dupDescendantTab.id
@@ -2746,7 +2749,7 @@ export async function paste(dst: T.DstPlaceInfo) {
         index: dst.index,
         windowId: Windows.id,
       }
-      Tabs.setNewTabPosition(dst.index, dst.parentId, dst.panelId)
+      Tabs.newTabPropsByIndex.set(dst.index, { parentId: dst.parentId, panelId: dst.panelId })
       const tabWithSearch = await browser.tabs.create(conf)
       browser.search.search({ query, tabId: tabWithSearch.id })
     }
