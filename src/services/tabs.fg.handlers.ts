@@ -337,7 +337,18 @@ async function onTabCreated(nativeTab: NativeTab, attached?: boolean) {
       tab.customColor = oldTab.customColor
       tab.reactive.customColor = oldTab.customColor ?? null
       tab.customTitle = oldTab.customTitle
+      tab.boundUrl = oldTab.boundUrl
+      tab.boundTitle = oldTab.boundTitle
+      tab.reactive.bound = oldTab.reactive.bound
+      tab.reactive.boundAway = oldTab.reactive.boundAway
       Tabs.renderTitle(tab)
+
+      // Natively closed bound tab: finish its removal in this same task (no tree shift)
+      if (oldTab.bindRmInfo) {
+        const info = oldTab.bindRmInfo
+        oldTab.bindRmInfo = undefined
+        queueMicrotask(() => onTabRemoved(oldTab.id, info))
+      }
     }
   }
 
@@ -865,6 +876,21 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
         IPPC.onHashMsg(tab, change.url)
       }
 
+      // Handle bound tab URL change
+      if (tab.boundUrl) {
+        // Leaving the bind placeholder (e.g. "Open" with an edited URL) rebinds to the new URL
+        if (Utils.isPlaceholderUrl(tab.url) && !Utils.isPlaceholderUrl(change.url)) {
+          // Title is refilled from the new page below (see "Handle title change")
+          if (tab.boundUrl !== change.url) tab.boundTitle = tab.customTitle
+          tab.boundUrl = change.url
+        }
+        // Renamed bound group: keep its bound url in sync
+        else if (Utils.isGroupUrl(tab.boundUrl) && Utils.isGroupUrl(change.url)) {
+          tab.boundUrl = Tabs.getBoundUrlOf(change.url)
+        }
+        tab.reactive.boundAway = Tabs.isAwayFromBound(tab, change.url)
+      }
+
       // Reset favicon (to cached)
       if (tab.internal || !Utils.sameStart(change.url, tab.url, 16)) {
         change.favIconUrl = Favicons.getFavicon(change.url)
@@ -944,6 +970,32 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
   // Handle title change
   if (change.title !== undefined) {
     if (change.title.startsWith(EXT_HOST)) change.title = tab.title
+
+    // Rebound tab (edited URL on the bind placeholder): take the new page's first real title
+    if (
+      tab.boundUrl &&
+      !tab.boundTitle &&
+      nativeTab.url === tab.boundUrl &&
+      !URL_HOST_PATH_RE.test(change.title)
+    ) {
+      tab.boundTitle = change.title
+      Tabs.cacheTabsData()
+    }
+
+    // Renamed bound group: keep its title for "Back to <title>"
+    if (
+      tab.boundUrl &&
+      !tab.customTitle &&
+      Utils.isGroupUrl(tab.boundUrl) &&
+      // nativeTab, not tab.isGroup: a loading title can arrive before the url change is handled
+      Utils.isGroupUrl(nativeTab.url) &&
+      !URL_HOST_PATH_RE.test(change.title) &&
+      change.title !== D.GROUP_INITIAL_TITLE &&
+      tab.boundTitle !== change.title
+    ) {
+      tab.boundTitle = change.title
+      Tabs.cacheTabsData()
+    }
 
     // Reset custom title
     if (tab.isGroup && tab.active && change.title !== D.GROUP_INITIAL_TITLE) {
@@ -1173,6 +1225,30 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   if (!tab) {
     Logs.warn(`Tabs.onTabRemoved: Cannot find tab: ${tabId}`)
     return Tabs.reinitTabs()
+  }
+
+  // Bound tab closed natively: keep it in the tree until its placeholder replacement is created
+  if (removedExternally && !detached && tab.boundUrl && !tab.reopening) {
+    tab.reopening = { id: D.NOID }
+    tab.bindRmInfo = info
+    // shortcut: sidebar list is one tab ahead of native until the placeholder is created, so other events in that gap may misindex; defer them via Tabs.deferredEventHandling if it shows up
+    Tabs.setNewTabPosition(tab.index, tab.parentId, tab.panelId)
+    browser.tabs
+      .create({
+        index: tab.index,
+        windowId: Windows.id,
+        cookieStoreId: tab.cookieStoreId,
+        url: Tabs.getBoundReplacementUrl(tab),
+        pinned: tab.pinned,
+        active: false,
+      })
+      .catch(err => {
+        Logs.err('Tabs.onTabRemoved: Cannot create bind placeholder:', err)
+        tab.bindRmInfo = undefined
+        tab.reopening = undefined
+        onTabRemoved(tabId, info, detached)
+      })
+    return
   }
 
   const toShow: ID[] = []

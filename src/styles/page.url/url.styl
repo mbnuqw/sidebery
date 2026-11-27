@@ -85,6 +85,32 @@ main
 .btn:focus:after
   box-shadow: 0 0 0 2px var(--toolbar-fg)
 
+textarea.value
+  font-family: inherit
+  resize: none
+  padding: 8px 16px
+  overflow-y: auto
+  box-sizing: border-box
+  width: 100%
+  background-color: transparent
+  border: 1px solid var(--toolbar-fg)
+  border-radius: 4px
+  margin: 8px 0 24px
+  outline: none
+  opacity: .8
+textarea.value:focus
+  opacity: 1
+
+// Bind placeholder uses ~90% of the page width instead of a 720px column
+body[data-bind] .label
+body[data-bind] .value
+  max-width: calc(90vw - 32px)
+body[data-bind] textarea.value
+  max-width: 90vw
+
+[hidden]
+  display: none !important
+
 .note
   position: relative
   max-width: 720px

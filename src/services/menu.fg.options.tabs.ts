@@ -263,6 +263,64 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
   },
 
+  bind_tab: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab) return
+    return {
+      label: translate('menu.tab.' + (firstTab.boundUrl ? 'unbind_tab' : 'bind_tab')),
+      icon: 'icon_home',
+      onClick: firstTab.boundUrl ? () => Tabs.unbindTabs(selected) : () => Tabs.bindTabs(selected),
+    }
+  },
+
+  return_to_bound: () => {
+    const selected = Selection.ids()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab?.boundUrl) return
+    if (!firstTab.reactive.boundAway && !Utils.isPlaceholderUrl(firstTab.url)) return
+    return {
+      label: translate('menu.tab.return_to_bound'),
+      icon: 'icon_undo',
+      onClick: () => Tabs.returnToBound(firstTab.id),
+    }
+  },
+
+  bind_tab_tree: () => {
+    const selected = Selection.ids()
+    // Only for a tree with something left to bind
+    const hasUnboundInTree = (id: ID) => {
+      const tab = Tabs.byId[id]
+      if (!tab?.isParent) return false
+      let found = !tab.boundUrl
+      Tabs.forEachDescendant(tab, t => (found ||= !t.boundUrl))
+      return found
+    }
+    if (!selected.some(hasUnboundInTree)) return
+    return {
+      label: translate('menu.tab.bind_tab_tree'),
+      icon: 'icon_home',
+      onClick: () => Tabs.bindTabTrees(selected),
+    }
+  },
+
+  unbind_tab_tree: () => {
+    const selected = Selection.ids()
+    const hasBoundChild = (id: ID) => {
+      const tab = Tabs.byId[id]
+      if (!tab?.isParent) return false
+      let found = false
+      Tabs.forEachDescendant(tab, t => (found ||= !!t.boundUrl))
+      return found
+    }
+    if (!selected.some(hasBoundChild)) return
+    return {
+      label: translate('menu.tab.unbind_tab_tree'),
+      icon: 'icon_home',
+      onClick: () => Tabs.unbindTabTrees(selected),
+    }
+  },
+
   reload: () => {
     return {
       label: translate('menu.tab.reload'),
