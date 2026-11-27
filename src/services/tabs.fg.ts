@@ -540,7 +540,11 @@ function restoreTab(
     // Panel is not found
     Logs.warn(`Tabs.restoreTab: cannot find panel: "${props?.panelId}"; tab index: ${tab.index}`)
     const parentTab = Tabs.byId[tab.parentId]
-    if (!props && parentTab && parentTab.index < tab.index) {
+    const rulePanel = !props ? findPanelByMoveRule(tab, parentTab) : undefined
+    if (rulePanel) {
+      // Move unknown (new) tabs to the panel of the matching container rule
+      tab.panelId = rulePanel.id
+    } else if (!props && parentTab && parentTab.index < tab.index) {
       // Append unknown (new) tabs to the panel of parent tab
       tab.panelId = parentTab.panelId
     } else if (!props && Utils.isTabsPanel(Sidebar.panelsById[Sidebar.prevActivePanelId])) {
@@ -553,6 +557,22 @@ function restoreTab(
   }
 
   return tab
+}
+
+/**
+ * Finds the panel for unknown (new) tab by container move rule
+ * the same way as getPanelForNewTab does
+ */
+function findPanelByMoveRule(tab: T.Tab, parentTab?: T.Tab): T.TabsPanel | undefined {
+  if (!Tabs.moveRules.length) return
+  if (tab.pinned && Settings.state.pinnedTabsPosition !== 'panel') return
+
+  const hasParent = Settings.state.tabsTree && parentTab && !parentTab.pinned
+  const rule = Tabs.findMoveRuleBy(tab.cookieStoreId, hasParent ? 1 : 0)
+  if (!rule) return
+
+  const panel = Sidebar.panelsById[rule.panelId]
+  if (Utils.isTabsPanel(panel)) return panel
 }
 
 /**
