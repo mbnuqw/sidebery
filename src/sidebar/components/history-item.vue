@@ -63,7 +63,7 @@ function onMouseDown(e: MouseEvent, visit: Visit): void {
 
   // Left
   if (e.button === 0) {
-    if (e.ctrlKey) {
+    if (Mouse.isCmdOrCtrl(e)) {
       if (!visit.reactive.sel) Selection.selectHistory(visit.id)
       else Selection.deselectHistory(visit.id)
       return
@@ -119,7 +119,7 @@ function onMouseUp(e: MouseEvent, visit: Visit): void {
   }
 
   if (e.button === 2) {
-    if (e.ctrlKey || e.shiftKey) return
+    if (Mouse.isCmdOrCtrl(e) || e.shiftKey) return
 
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
@@ -146,14 +146,14 @@ function onFavMouseDown(e: MouseEvent, visit: Visit): void {
 }
 
 function onCtxMenu(e: MouseEvent, visit: Visit): void {
-  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || Mouse.isCmdOrCtrl(e) || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
     e.preventDefault()
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !visit.reactive.sel) {
+  if (!Mouse.isCmdOrCtrl(e) && !e.shiftKey && !visit.reactive.sel) {
     Selection.resetSelection()
   }
 
