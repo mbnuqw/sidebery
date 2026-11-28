@@ -324,6 +324,23 @@ section(ref="el")
       v-model:value="Settings.state.pinnedTabsList"
       :default="DEFAULT_SETTINGS.pinnedTabsList"
       @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      SelectField(
+        label="settings.pinned_tabs_list_max_rows"
+        optLabel="settings.pinned_tabs_list_max_rows_"
+        dbg="pinnedTabsListMaxRows"
+        v-model:value="Settings.state.pinnedTabsListMaxRows"
+        :default="DEFAULT_SETTINGS.pinnedTabsListMaxRows"
+        :inactive="(Settings.state.pinnedTabsPosition !== 'panel' && Settings.state.pinnedTabsPosition !== 'top') || !Settings.state.pinnedTabsList"
+        :opts="Settings.getOpts('pinnedTabsListMaxRows')"
+        @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.pinned_tabs_single_line"
+      :inactive="(Settings.state.pinnedTabsPosition !== 'panel' && Settings.state.pinnedTabsPosition !== 'top') || Settings.state.pinnedTabsList"
+      dbg="pinnedTabsSingleLine"
+      v-model:value="Settings.state.pinnedTabsSingleLine"
+      :default="DEFAULT_SETTINGS.pinnedTabsSingleLine"
+      @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.pinned.no_unload"
       dbg="pinnedNoUnload"

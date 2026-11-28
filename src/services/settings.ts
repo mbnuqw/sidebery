@@ -30,6 +30,10 @@ export let stickyAncestorTabsLayoutRow = false
 export let tabsMultiLineTitle = false
 export let tabsTitleLinesMax = 1
 
+export let pinnedTabsListCapped = false
+export let pinnedTabsListMaxRows = 5
+export let pinnedTabsBarVertical = false
+
 export function reactivate(r: Reactivator<SettingsState>) {
   state = r(state)
 }
@@ -136,6 +140,17 @@ export function updPrecalcSettings() {
   tabsTitleLinesMax = state.tabsTitleLinesMax
   if (tabsTitleLinesMax < 1) tabsTitleLinesMax = 1
   tabsMultiLineTitle = tabsTitleLinesMax > 1
+
+  pinnedTabsListCapped =
+    (state.pinnedTabsPosition === 'panel' || state.pinnedTabsPosition === 'top') &&
+    state.pinnedTabsList &&
+    typeof state.pinnedTabsListMaxRows === 'number'
+  pinnedTabsListMaxRows =
+    typeof state.pinnedTabsListMaxRows === 'number' ? state.pinnedTabsListMaxRows : 0
+  pinnedTabsBarVertical =
+    state.pinnedTabsPosition === 'left' ||
+    state.pinnedTabsPosition === 'right' ||
+    pinnedTabsListCapped
 }
 
 export function resetSettings(): void {

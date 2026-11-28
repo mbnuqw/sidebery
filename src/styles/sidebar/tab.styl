@@ -8,6 +8,8 @@
   --tabs-title-line-height: 20px
   --tabs-title-padding-top: 3px
   --tabs-title-padding-bottom: 3px
+  --tabs-title-padding-vert: calc(var(--tabs-title-padding-top) + var(--tabs-title-padding-bottom))
+  --tabs-min-height: calc(var(--tabs-padding) * 2 + var(--tabs-title-line-height) + var(--tabs-title-padding-vert))
   --tabs-indent: 10px
   --tabs-font: rem(15) var(--general-font-family)
   --tabs-count-font: rem(9) var(--general-font-family)
@@ -53,8 +55,6 @@
   --tabs-notification-badge-count-fg: #ffffff
 
 .Tab
-  --tabs-title-padding-vert: calc(var(--tabs-title-padding-top) + var(--tabs-title-padding-bottom))
-  --tabs-min-height: calc(var(--tabs-padding) * 2 + var(--tabs-title-line-height) + var(--tabs-title-padding-vert))
   --tabs-close-btn-max-width: calc(var(--tabs-min-height) - var(--tabs-close-btn-margin))
   --tabs-fav-margin: calc((var(--tabs-title-line-height) - 16px + var(--tabs-title-padding-vert)) / 2)
 
