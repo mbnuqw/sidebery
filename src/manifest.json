@@ -275,6 +275,40 @@
     "switch_to_panel_9": {
       "description": "__MSG_KbSwitchToPanel9__"
     },
+    "reopen_in_default_container": {
+      "description": "__MSG_KbReopenInDefaultContainer__"
+    },
+
+    "reopen_in_container_0": {
+      "description": "__MSG_KbReopenInContainer0__"
+    },
+    "reopen_in_container_1": {
+      "description": "__MSG_KbReopenInContainer1__"
+    },
+    "reopen_in_container_2": {
+      "description": "__MSG_KbReopenInContainer2__"
+    },
+    "reopen_in_container_3": {
+      "description": "__MSG_KbReopenInContainer3__"
+    },
+    "reopen_in_container_4": {
+      "description": "__MSG_KbReopenInContainer4__"
+    },
+    "reopen_in_container_5": {
+      "description": "__MSG_KbReopenInContainer5__"
+    },
+    "reopen_in_container_6": {
+      "description": "__MSG_KbReopenInContainer6__"
+    },
+    "reopen_in_container_7": {
+      "description": "__MSG_KbReopenInContainer7__"
+    },
+    "reopen_in_container_8": {
+      "description": "__MSG_KbReopenInContainer8__"
+    },
+    "reopen_in_container_9": {
+      "description": "__MSG_KbReopenInContainer9__"
+    },
     "switch_to_prev_panel": {
       "description": "__MSG_KbSwitchToPrevPanel__"
     },

@@ -1,11 +1,12 @@
 import * as Utils from 'src/utils'
-import { NOID } from 'src/defaults'
+import { CONTAINER_ID, NOID } from 'src/defaults'
 import * as T from 'src/types'
 import * as E from 'src/enums'
 import * as Settings from 'src/services/settings'
 import * as Windows from 'src/services/windows.fg'
 import * as Selection from 'src/services/selection.fg'
 import * as Bookmarks from 'src/services/bookmarks.fg'
+import * as Containers from 'src/services/containers'
 import * as Menu from 'src/services/menu.fg'
 import * as Sidebar from 'src/services/sidebar.fg'
 import * as Tabs from 'src/services/tabs.fg'
@@ -231,6 +232,17 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_panel_')) {
     const panel = Sidebar.panels[parseInt(name.slice(-1))]
     if (panel) Sidebar.switchToPanel(panel.id)
+  } else if (name === 'reopen_in_default_container') {
+    const ids = Selection.ids().length ? Selection.ids() : [Tabs.activeId]
+    Tabs.reopenInContainer(ids, CONTAINER_ID)
+  } else if (name.startsWith('reopen_in_container_')) {
+    const index = parseInt(name.slice(-1))
+    if (isNaN(index)) return
+    const containers = Containers.sortContainers(Object.values(Containers.reactive.byId))
+    const container = containers[index]
+    if (!container) return
+    const ids = Selection.ids().length ? Selection.ids() : [Tabs.activeId]
+    Tabs.reopenInContainer(ids, container.id)
   } else if (name === 'switch_to_prev_panel') onKeySwitchToPrevPanel()
   else if (name === 'move_tabs_to_panel_start') onKeyMoveTabsInPanel('start', true)
   else if (name === 'move_tabs_to_panel_end') onKeyMoveTabsInPanel('end', true)
